@@ -2,6 +2,7 @@ package my.ep.web.backingbean.fl.po;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -87,7 +88,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}else{
 				reqDTO.setContractRequest(false);
 			}
-
+			checkValidity(flRequest);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
@@ -233,7 +234,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-				//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
 
 			}else {
@@ -253,22 +253,18 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
-				//			FulfilmentOrderBackingBean florderBB  = new FulfilmentOrderBackingBean();
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setContractRequest(Boolean.TRUE);
 
 
-				//			FacesContext fc = FacesContext.getCurrentInstance();
-				//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/contractorder/coBasePage.xhtml");
 			}  
 		}
 		
 	}
 
 	public void preRenderViewPR() {
-		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -299,13 +295,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
-			//			FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
 			getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
 			//combineSupAddress(resDTO.getFlFulfilmentRequest());
 		}else {
@@ -328,17 +322,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}*/
 			
-			//		FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			//System.out.println("doc type::::: "+resDTO.getFlFulfilmentRequest().getDocType());
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
-			//			florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
-
-			//			FacesContext fc = FacesContext.getCurrentInstance();
-			//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/contractorder/coBasePage.xhtml");
 		}  
 	}
 	
@@ -403,6 +392,19 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			ordAmount=new BigDecimal(ordAmoun);
 			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).setOrderedAmt(ordAmount);
 			
+		}
+
+		
+		public void checkValidity(FlFulfilmentRequest flRequest) {
+			Date date = new Date();
+			
+			if(flRequest.getCtContract().isRecordStatus()){
+				if(date.compareTo(flRequest.getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) >= 0 ){
+					throw new EpException("Contract has been expired");
+				}
+			}else{
+				throw new EpException("Contract has been suspended/terminated");
+			}
 		}
 
 }
