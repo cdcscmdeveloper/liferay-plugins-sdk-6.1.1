@@ -33,11 +33,12 @@
 			<p:column rendered="#{address.checkManualAddress}">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
-					update=":form:prtabs:addManualDelAddrDialog" style="padding-right:5px">
+					update=":form:prtabs:addManualDelAddrDialog"
+					style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
-				</p:column>
+			</p:column>
 
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -80,18 +81,44 @@
 				<ac:paginator for="itemDataTable" />
 				<p:column selectionMode="multiple" width="5%" />
 				<p:column headerText="Type">
-					<h:outputText />
+					<h:outputText
+						value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType}" />
 				</p:column>
 				<p:column headerText="Item Name">
 					<h:outputText
 						value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}" />
 				</p:column>
 				<p:column headerText="VOT/fund">
-					<h:outputText />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- "  />
+						<f:selectItem itemLabel="VOT1" itemValue="1" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Prog./proj.">
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- "  />
+						<f:selectItem itemLabel="PROG1" itemValue="1" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Setia">
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- "  />
+						<f:selectItem itemLabel="SETIA1" itemValue="1" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Sub Setia">
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- "  />
+						<f:selectItem itemLabel="SUBset1" itemValue="1" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Asset Ind.">
+					<h:outputText value="AILE" >
+					</h:outputText>
 				</p:column>
 				<p:column headerText="Charge Code">
-					<p:inputText value="#{flItem.pmDo.doId}" style="text-align:right">
-					</p:inputText>
+					<h:outputText value="#{flItem.pmDo.doId}" >
+					</h:outputText>
 				</p:column>
 				<p:column headerText="Unit Price (MYR)">
 					<p:inputText disabled="true" value="#{flItem.unitPrice}"
@@ -169,14 +196,14 @@
 		</div>
 	</p:dialog>
 
-	<p:dialog id="addManualDelAddrDialog" header="Add Delivery Address"
+	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		modal="true" width="800px" height="450px" resizable="false">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Country" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmCountry.countryId}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="MALAYSIA" itemValue="1" />
@@ -185,11 +212,11 @@
 			<tr>
 				<td><p:outputLabel value="Address" /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address1}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address1}"
 						size="35" /></td>
 				<td><p:outputLabel value="City/Town" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmCity.cityCode}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCity.cityCode}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="KUALA SELANGOR" itemValue="124" />
@@ -198,11 +225,11 @@
 			<tr>
 				<td><p:outputLabel /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address2}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address2}"
 						size="35" /></td>
 				<td><p:outputLabel value="Distict" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmDistrict.districtId}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDistrict.districtId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="TAMAN MEDAN" itemValue="1" />
@@ -211,19 +238,21 @@
 			<tr>
 				<td><p:outputLabel /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address3}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address3}"
 						size="35" /></td>
 				<td><p:outputLabel value="Divison" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDivision.divisionId}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address4}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address4}"
 						size="35" /></td>
 				<td><p:outputLabel value="State" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmState.stateCode}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmState.stateCode}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="SELANGOR" itemValue="1" />
@@ -232,41 +261,43 @@
 			<tr>
 				<td><p:outputLabel value="Postal Code" /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.postcode}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.postcode}"
 						size="35" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Contact Person" /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.contactName}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.contactName}"
 						size="35" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Tel.No." /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.phoneNo}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.phoneNo}"
 						size="35" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax.No." /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.faxNo}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.faxNo}"
 						size="35" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Mobile.No." /></td>
 				<td><p:inputText
-						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.mobileNo}"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.mobileNo}"
 						size="35" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Email" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.email}"
+						size="35" /></td>
 
 			</tr>
 		</table>
