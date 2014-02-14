@@ -386,11 +386,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			if(null != fulfilmentItemAddr.getUnitPrice())
 				unitPrice= fulfilmentItemAddr.getUnitPrice().intValue();
 			if(null != fulfilmentItemAddr.getOrderedQty())
-				ordQnty = getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getOrderedQty().intValue();
+				ordQnty = fulfilmentItemAddr.getOrderedQty().intValue();
 			ordAmoun =((unitPrice) * (ordQnty));
 			BigDecimal ordAmount = new BigDecimal("0");
 			ordAmount=new BigDecimal(ordAmoun);
-			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).setOrderedAmt(ordAmount);
+			fulfilmentItemAddr.setOrderedAmt(ordAmount);
 			
 		}
 
