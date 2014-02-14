@@ -59,6 +59,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String docProcess;
 	private String buttonVal;
 	private String selectedLovDelAddr;
+	private String supplierAddress;
 	
 	private String docType;
 	private String statusDesc;
@@ -387,6 +388,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setStatusDesc(String statusDesc) {
 		this.statusDesc = statusDesc;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
 	}
 
 }
