@@ -95,7 +95,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctDateStart;
 	private String ctCircularNo;
 	private String ctSupplierId;
-	private String ctProductCode;
+	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
 	private Long ctContractStatus;
@@ -328,14 +328,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtLOANo(String ctLOANo) {
 		this.ctLOANo = ctLOANo;
-	}
-
-	public String getCtProductCode() {
-		return ctProductCode;
-	}
-
-	public void setCtProductCode(String ctProductCode) {
-		this.ctProductCode = ctProductCode;
 	}
 
 	public Long getCtContractStatus() {
@@ -591,6 +583,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtDeductionClauseList(List<CtDeductionClause> ctDeductionClauseList) {
 		this.ctDeductionClauseList = ctDeductionClauseList;
+	}
+
+	public String getCtPhysicalNo() {
+		return ctPhysicalNo;
+	}
+
+	public void setCtPhysicalNo(String ctPhysicalNo) {
+		this.ctPhysicalNo = ctPhysicalNo;
 	}
 
 }
