@@ -5,27 +5,48 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="SUPPLIER EVALUATION" toggleable="true">
+	<p:panel header="SUPPLIER RATING" toggleable="true">
 		<br />
-		<h:outputText value="Supplier Evaluation: " />
-		<h:outputLink id="grow" value="#">
-		<h:graphicImage library="ep/images/design" name="tooltips.png"
-							value="/resources/ep/images/design/tooltips.png"
-							title="" />
-		</h:outputLink>
-		<br />
-		<br />
-		<p:tooltip for="grow"
-			value="Rating Tips
-						1 - 2 Non Satisfactory
-						3 - 4 Satisfactory
-						5      Very Satisfactory"
-			showEffect="clip" hideEffect="explode"  />
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 100px;"><p:outputLabel value="EP No." /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 25px;"><p:inputText size="25"
+									disabled="true" /></td>
+							<td style="width: 109px;"><p:outputLabel value="MOF No." /></td>
+							<td><p:inputText size="25" disabled="true" /></td>
+						</tr>
+					</table></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText disabled="true" size="73" /></td>
+			</tr>
+
+		</table>
+
 		<p:panelGrid style="margin-top:10px;width: 300px ">
 			<f:facet name="header">
 				<p:row>
 					<p:column colspan="1">Criteria</p:column>
-					<p:column colspan="1">Score</p:column>
+					<p:column colspan="1">*Score
+						<h:outputLink id="grow" value="#">
+							<h:graphicImage library="ep/images/design" name="tooltips.png"
+								value="/resources/ep/images/design/tooltips.png" title="" />
+						</h:outputLink>
+						<br />
+						<br />
+						<p:tooltip for="grow"
+							value="Rating Tips
+						1 - 2 Non Satisfactory
+						3 - 4 Satisfactory
+						5      Very Satisfactory"
+							showEffect="clip" hideEffect="explode" />
+					</p:column>
+					<p:column colspan="1">Remarks</p:column>
+
 				</p:row>
 			</f:facet>
 			<p:row>
@@ -33,17 +54,26 @@
 				<p:column rowspan="1" style="font-weight: bold;">
 					<p:inputText />
 				</p:column>
+				<p:column rowspan="1" style="font-weight: bold;">
+					<p:inputText size="60" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">Quality</p:column>
 				<p:column rowspan="1" style="font-weight: bold;">
 					<p:inputText />
 				</p:column>
+				<p:column rowspan="1" style="font-weight: bold;">
+					<p:inputText size="60" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">Score</p:column>
 				<p:column rowspan="1" style="font-weight: bold;">
 					<p:inputText />
+				</p:column>
+				<p:column rowspan="1" style="font-weight: bold;">
+					<p:inputText size="60" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>

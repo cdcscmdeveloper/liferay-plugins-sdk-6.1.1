@@ -11,15 +11,12 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{receivedNoteBackingBean.preRenderView}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.docNo}" />
-				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
@@ -49,18 +46,20 @@
 				</c:if>
 			</tr>
 		</table>
+		<ui:include src="frnReviewHeaderPage.xhtml" />
+		<p:spacer height="20px" />
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="frnGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item">
+			<p:tab title="Item and Remarks">
 				<ui:include src="frnItem.xhtml" />
 			</p:tab>
 			<p:tab title="Supplier Evaluation">
 				<ui:include src="frnEvaluation.xhtml" />
 			</p:tab>
-			
-			
+
+
 		</p:tabView>
 	</ui:define>
 </ui:composition>
