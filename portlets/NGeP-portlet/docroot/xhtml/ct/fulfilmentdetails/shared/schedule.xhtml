@@ -26,10 +26,10 @@
 		                         <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		                     </p:column> 
 		                     <p:column style="width:250px;" headerText="Start Period" >
-		                         <p:calendar value="#{schedVar.fromDate}" pattern="MMM yyyy" id="popupButtonSch" navigator="true" showOn="button" />
+		                         <p:calendar value="#{schedVar.fromDate}" id="popupButtonSch" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" showOn="button" />
 		                     </p:column> 	
 		                     <p:column style="width:250px;" headerText="End Period">
-		                       	<p:calendar value="#{schedVar.toDate}" pattern="MMM yyyy" id="popupButtonSch1" navigator="true" showOn="button"/>
+		                       	<p:calendar value="#{schedVar.toDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonSch1" navigator="true" showOn="button"/>
 		                     </p:column>       
 		              </p:dataTable>  
 	                <p:spacer height="2" />
@@ -59,10 +59,10 @@
 		                        <p:inputText style="width:350px;"/>
 		                     </p:column>
                              <p:column style="width:100px;" headerText="Start Period">
-                                <p:calendar size="12" value="#{ProgVar.fromDate}" pattern="MMM yyyy" navigator="true" id="popupButtonCal" showOn="button" />
+                                <p:calendar size="12" value="#{ProgVar.fromDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" id="popupButtonCal" showOn="button" />
                              </p:column> 
                              <p:column style="width:100px;" headerText="End Period">
-                                <p:calendar size="12" value="#{ProgVar.toDate}" pattern="MMM yyyy" navigator="true" id="popupButtonCal1" showOn="button" />
+                                <p:calendar size="12" value="#{ProgVar.toDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" id="popupButtonCal1" showOn="button" />
                              </p:column> 	
                              <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
                                 <p:inputText value="#{ProgVar.percentage}" style="width:100px;" styleClass="ppRightBtn">
@@ -101,9 +101,9 @@
 			                 <p:column><p:outputLabel value="#{data.phase}" style="width:40px;" /> </p:column>  
 			                <p:column> <p:outputLabel style="width:400px;"/> </p:column>         
 			                <p:column><h:outputText value="#{data.fromDate}" style="float:left;">
-                                 <f:convertDateTime pattern="MMM yyyy" /></h:outputText></p:column>      
+                                 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText></p:column>      
 			                <p:column><h:outputText value="#{data.toDate}" style="float:left;">
-                                 <f:convertDateTime pattern="MMM yyyy" /></h:outputText></p:column>     
+                                 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText></p:column>     
 			                <p:column><h:outputLabel value="#{data.percentage}" style="width:50px;">
 			                          <f:convertNumber pattern="#,###.00" /></h:outputLabel></p:column>
 		               </p:dataTable>   
@@ -121,9 +121,9 @@
 		                     </p:columnGroup>
 		                     <p:column style="width:250px;"><p:outputLabel value="Schedule #{index+1}" style="float:left;" /></p:column>
 	                         <p:column style="width:250px;"> <h:outputText value="#{schedVar.fromDate}" style="float:left;">
-                                <f:convertDateTime pattern="MMM yyyy"/> </h:outputText></p:column>
+                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> </h:outputText></p:column>
                              <p:column style="width:250px;"> <h:outputText value="#{schedVar.toDate}" style="float:left;">
-                                <f:convertDateTime pattern="MMM yyyy" /> </h:outputText></p:column>
+                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> </h:outputText></p:column>
 		              </p:dataTable>  
 			      </h:panelGroup>    
 		 </p:outputPanel>
