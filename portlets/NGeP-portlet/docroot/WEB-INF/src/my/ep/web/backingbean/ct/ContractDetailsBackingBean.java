@@ -44,6 +44,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
@@ -85,6 +86,7 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -550,7 +552,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	/*Implementation of search methode*/
 	public void searchContract() {
-
 		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 		if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.docNo",SearchOperator.OPERATOR_EQUALS.value(),
@@ -573,7 +574,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().getCtSupplierId()));	
 		}		
 		if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtSupplierName()));	
 		}	
 		if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
@@ -595,15 +596,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 		IContractSO contractSO = null;
 		try {
-
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractSearchBean(super.createSearchBean(CtContract.class, "dataTable"));
 			reqDTO.setContractSearchBean(searchBean);
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
 			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
 			this.getManagedBean().setSelectedIndex(0);
-
 		} catch (Exception ex) {
 			log.error("Exception>>", ex);
 		} finally {
@@ -1114,5 +1112,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
 			remarks.add(0, remark);
 		}
+	}
+	
+	public SelectItem[] getSearchStatusDropdown() {
+		SelectItem[] items = null;
+		try {
+			
+			List<Long> statusIdList = new ArrayList<Long>();
+			statusIdList.add(ContractStatusConst.PENDING_CONTRACT_CREATION);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.APPROVED);
+			
+			items = new SelectItem[statusIdList.size()+1];
+			int i = 0;
+			items[i++] = new SelectItem(null, "- Select One -");
+			for(Long statusId : statusIdList) {
+				items[i++] = new SelectItem(statusId, StatusHelper.getInstance().getStatusDescById(statusId).getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
 	}
 }

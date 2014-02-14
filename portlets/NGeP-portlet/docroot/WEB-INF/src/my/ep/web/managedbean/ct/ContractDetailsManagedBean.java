@@ -98,7 +98,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctProductCode;
 	private String ctCircularName;
 	private String ctSupplierName;
-	private String ctContractStatus;
+	private Long ctContractStatus;
 	
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
@@ -338,11 +338,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctProductCode = ctProductCode;
 	}
 
-	public String getCtContractStatus() {
+	public Long getCtContractStatus() {
 		return ctContractStatus;
 	}
 
-	public void setCtContractStatus(String ctContractStatus) {
+	public void setCtContractStatus(Long ctContractStatus) {
 		this.ctContractStatus = ctContractStatus;
 	}
 
