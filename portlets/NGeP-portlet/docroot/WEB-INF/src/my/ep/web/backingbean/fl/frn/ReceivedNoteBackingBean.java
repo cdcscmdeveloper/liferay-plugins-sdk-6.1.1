@@ -69,7 +69,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+//			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
 			FulfilmentResDTO resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -130,7 +130,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			flReqDTO.setFlRequestId(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+//			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			getManagedBean().setTaskId(taskId);

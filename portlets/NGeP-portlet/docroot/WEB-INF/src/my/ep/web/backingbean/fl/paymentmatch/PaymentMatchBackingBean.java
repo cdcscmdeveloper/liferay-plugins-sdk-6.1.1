@@ -70,7 +70,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+//			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			System.out.println("action: "+action);
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -125,8 +125,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			System.out.println("fulfilment req id::: "+paymentObj.getFullfillmentRequestId());
 			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-			System.out.println("remarks list size:::: "+resDTO.getRemarkList().size());
-			System.out.println("attachemtn list size:::: "+resDTO.getAttachmentList().size());
 			// Get Remark and Attachment
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());

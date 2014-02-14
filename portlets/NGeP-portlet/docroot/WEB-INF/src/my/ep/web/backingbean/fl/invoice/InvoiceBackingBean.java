@@ -85,7 +85,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+//			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
 
 			if(resDTO.isSuccessful()) {
@@ -146,16 +146,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+//			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());//TODO remove comment after remark is fix
 			
 			getInvoiceTable(resDTO);
-			System.out.println("Doc type in inv pre render page "+resDTO.getFlFulfilmentRequest().getDocType());
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			if(getManagedBean().getInvoice().getFlInvoiceItem() == null){
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 			}
-			
+			getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().getInvoice().getFlInvoiceItem().add(getManagedBean().getInvItem());
 		
 		}
@@ -207,5 +206,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			
 		}
+	}
+	
+	public void updateNewInvoiceAmt(FlInvoiceItem invItem){
+		System.out.println("getItemAmtNew: "+invItem.getItemAmtNew());
+		invItem.setItemAmtOri(new BigDecimal(invItem.getItemAmtNew().doubleValue()));
 	}
 }
