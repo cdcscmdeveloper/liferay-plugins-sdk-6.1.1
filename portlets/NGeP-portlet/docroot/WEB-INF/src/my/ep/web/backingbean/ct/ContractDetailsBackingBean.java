@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -152,6 +154,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if(getManagedBean().getItemType()==null) {
 			getManagedBean().setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
 		}
+		initializeRemarks();
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -212,35 +215,42 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
-     public void preRenderView(){
-	
-    	 try{	
-		      System.out.println("**********preRenderView**************");
-		      HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		      HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		      String taskId = originalServletRequest.getParameter("taskId");
-		      if(taskId==null) 
-			    return;
-		      
-		      FacesScopes face = new FacesScopes();
-		      String token =face.getBPMAuthenticationCtxToken();
-		      IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+	public void preRenderView() {
+		try {
+			System.out.println("**********preRenderView**************");
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+			if (taskId == null)
+				return;
 
-		      BpmRequestDTO reqDTO = new BpmRequestDTO();
-		      reqDTO.setCtxToken(token);
-		      reqDTO.setTaskId(taskId);
+			FacesScopes face = new FacesScopes();
+			String token = face.getBPMAuthenticationCtxToken();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
 		      
-		      BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		      Object obj = res.getPojo();
-		      this.getManagedBean().setTaskName(res.getTaskName());
-		      this.getManagedBean().setAction(res.getAction());
-		      this.getManagedBean().setTaskId(taskId);
-		      
-		      ContractReqDTO ctReqDTO = new ContractReqDTO();
-		      CTContractDataType dataType = (CTContractDataType)obj;
-			  ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
-			  ctReqDTO.setContractId(new Long(dataType.getContractId()));
-	
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = "Save";
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
+				
+			this.getManagedBean().setTaskName(res.getTaskName());
+			this.getManagedBean().setAction(outcome);
+			this.getManagedBean().setTaskId(taskId);
+
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			CTContractDataType dataType = (CTContractDataType) obj;
+			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+
 		      IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		      this.getManagedBean().getApproverModel().getSource().clear();
@@ -265,6 +275,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			  ContractBackingBean ctBB = new ContractBackingBean();
 			  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	
+			  initializeRemarks();
+			  
 			  FacesContext fc = FacesContext.getCurrentInstance();
 			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 		
@@ -630,7 +642,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
-				 }
+				}
+			    initializeRemarks();
 			  }else {
 					throw new EpException("Failed.");
 			  }
@@ -1080,5 +1093,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 		}
 		return contractItemList;
+	}
+	
+	private void initializeRemarks() {
+		initiateRemark(getManagedBean().getContractVer().getAgencyRemarks());
+		initiateRemark(getManagedBean().getContractVer().getZoneRemarks());
+		initiateRemark(getManagedBean().getContractVer().getItemRemarks());
+		initiateRemark(getManagedBean().getContractVer().getDeductionRemarks());
+		initiateRemark(getManagedBean().getContractVer().getScheduleRemarks());
+		initiateRemark(getManagedBean().getContractVer().getSettingRemarks());
+	}
+	
+	private void initiateRemark(List<CtRemark> remarks) {
+		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+			CtRemark remark = new CtRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+			remarks.add(0, remark);
+		}
 	}
 }

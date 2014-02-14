@@ -9,8 +9,7 @@
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
        <div style="overflow-x:auto">
 	    <p:dataTable  id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"  
-	      lazy="false" dynamic="true" rowKey="#{data}" selection="#{contractDetailsBackingBean.selectedBondList}" 
-	      paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	      lazy="false" rowKey="#{data}" selection="#{contractDetailsBackingBean.selectedBondList}" > 
 	      <ac:paginator for="tableBond" />
 	         <p:columnGroup type="header"> 
 	            <p:row> 

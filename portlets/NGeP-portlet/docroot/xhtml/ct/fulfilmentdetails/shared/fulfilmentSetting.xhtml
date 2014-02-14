@@ -27,5 +27,47 @@
              <h:outputLabel value="#{lbl['lbl.ct.set.mto.desc']}" style="float:left;"/>
            </h:panelGrid>
          </p:panel>
+         
+	<p:panel header="Remarks" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.settingRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				</td>
+			</tr>
+		</table>
+	</p:panel>		         
+         
 </ui:composition>
        

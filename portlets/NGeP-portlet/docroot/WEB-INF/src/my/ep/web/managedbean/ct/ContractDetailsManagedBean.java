@@ -42,6 +42,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
+	private CtContractVer contractVer;
 	private CtContractItem selectedItem;
 	private CtDeduction selectedDeduction;
 	
@@ -63,7 +64,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContractItem SelectedServiceItem;
 	private List<CtContractItem> ctContractItem;
 	
-	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel;
 	private CtDeductionClause ctDeductionClauseDel;
 	
