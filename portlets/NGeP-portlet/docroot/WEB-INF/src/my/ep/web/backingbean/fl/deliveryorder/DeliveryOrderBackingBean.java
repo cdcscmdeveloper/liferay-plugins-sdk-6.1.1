@@ -83,6 +83,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlDeliveryOrder flDeliveryOrder = getManagedBean().getFlDeliveryOrder();
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
+			if(getManagedBean().getDocType().equalsIgnoreCase("CR")){
+				System.out.println("--CR calculateDelAmt--");
+				calculateDelAmt(flDeliveryOrder);
+			}
+			
 			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
 			reqDTO.setStatusId(statusId);
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
@@ -147,13 +152,16 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			orderItem.setFlFulfilmentItemAddr(itemAddr);
 			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
 			//flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType
-			itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();			
-			for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
-				if(null==item.getDeliveredAmt()){
-					item.setDeliveredAmt(itemAddr.getOrderedAmt());
-				}
-				if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
-					item.setDeliveredQty(new BigDecimal(1L));
+						
+			if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){
+				itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
+				for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
+					if(null==item.getDeliveredAmt()){
+						item.setDeliveredAmt(itemAddr.getOrderedAmt());
+					}
+					if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
+						item.setDeliveredQty(new BigDecimal(1L));
+					}
 				}
 			}
 		}
@@ -179,6 +187,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		BigDecimal delAmountTotal = new BigDecimal("0");
 		delAmountTotal=new BigDecimal(delAmoun);
 		flDelOrderItem.setDeliveredAmt(delAmountTotal);
+	}
+	
+	
+	public void calculateDelAmt(FlDeliveryOrder delOrder){
+		for(FlDelOrderItem orderItem : delOrder.getFlDelOrderItem()){
+			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
+		}
 	}
 	
 	
