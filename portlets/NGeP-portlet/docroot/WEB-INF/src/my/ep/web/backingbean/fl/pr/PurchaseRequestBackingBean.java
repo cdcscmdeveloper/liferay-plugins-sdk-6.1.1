@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
@@ -134,18 +135,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmParameter());
 			
 		}
-		if(null == getManagedBean().getPmAddressType()){
-			getManagedBean().setPmAddressType(new PmAddressType());
-			getManagedBean().getPmAddressType().setPmAddress(new PmAddress());
-			getManagedBean().getPmAddressType().getPmAddress().setAddressId(1L);
-			getManagedBean().getPmAddressType().getPmAddress().setPmCountry(new PmCountry());
-			getManagedBean().getPmAddressType().getPmAddress().getPmCountry().setCountryId(1L);
-			getManagedBean().getPmAddressType().getPmAddress().setPmState(new PmState());
-			getManagedBean().getPmAddressType().getPmAddress().getPmState().setStateId(1L);
-			getManagedBean().getPmAddressType().getPmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().getPmAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
-			getManagedBean().getPmAddressType().getPmAddress().setPmCity(new PmCity());
-			getManagedBean().getPmAddressType().getPmAddress().getPmCity().setCityId(1L);
+		if(null == getManagedBean().getFlManulaAddress()){
+			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
+			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
+			getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
+			//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().setPmAddress(new PmAddress());
+			//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmState(new PmState());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmState().setStateId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCity().setCityId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDivision().setDivisionId(1L);
 			
 		}
 		
@@ -190,13 +196,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
-			
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			
+			//System will block the submission of the purchase request 
+			//Amount of purchase request to be <= RM50K, with the exception of emergency procurement and G2G procurement.
+			
 			checkPurchaseRequestAmount();
 			
 			if(isFlFulfilmentApprover()) {
 				System.out.println("Aprover");
-				accumulativeProcurementValue();
+				// BPM Doing This Business Rule
+				//accumulativeProcurementValue();
 			}
 			
 			//FulfilmentResDTO resDTO=null;
@@ -236,17 +246,24 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
 	public void flManualDeliveryAddr() {
-		getManagedBean().setPmAddressType(new PmAddressType());
-		getManagedBean().getPmAddressType().setPmAddress(new PmAddress());
-		getManagedBean().getPmAddressType().getPmAddress().setAddressId(1L);
-		getManagedBean().getPmAddressType().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getPmAddressType().getPmAddress().getPmCountry().setCountryId(1L);
-		getManagedBean().getPmAddressType().getPmAddress().setPmState(new PmState());
-		getManagedBean().getPmAddressType().getPmAddress().getPmState().setStateId(1L);
-		getManagedBean().getPmAddressType().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getPmAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
-		getManagedBean().getPmAddressType().getPmAddress().setPmCity(new PmCity());
-		getManagedBean().getPmAddressType().getPmAddress().getPmCity().setCityId(1L);
+		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
+		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
+		getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
+		//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().setPmAddress(new PmAddress());
+		//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmState(new PmState());
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmState().setStateId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCity(new PmCity());
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCity().setCityId(1L);
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
+		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDivision().setDivisionId(1L);
+		
+		
 		
 	}
 	
@@ -273,20 +290,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 			}
 		}
+		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		
 				
 		
 	}
 	public void updateManualDeliveryAddrDt() {
-		if(null== getManagedBean().getPmAddressType()){
+		if(null== getManagedBean().getFlManulaAddress().getAddressType() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
 		PmAddressType manualAddrType=new PmAddressType();
-		manualAddrType=getManagedBean().getPmAddressType();
+		manualAddrType=getManagedBean().getFlManulaAddress().getAddressType();
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setAddressType(manualAddrType);
+		manualAddrType.setAddressType("C");
+		deliveryAddr.setPmAddress(manualAddrType.getPmAddress());
 		deliveryAddr.setCheckManualAddress(true);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 	}
@@ -828,34 +848,34 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() != null){
+	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
 	    		address.append(strSpace);
 	    		
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
 	    		address.append("\n");
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() != null){
+	    	}if(null !=fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
 	    	}
 	    	if(null != address.toString()){
@@ -924,7 +944,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.displayItemPnl = displayItemPnl;
 	}
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
-		getManagedBean().setPmAddressType(flDelAddress.getAddressType());
+		getManagedBean().setFlManulaAddress(flDelAddress);
+		flDelAddress.setEditable(true);
 		
 	}
 	 

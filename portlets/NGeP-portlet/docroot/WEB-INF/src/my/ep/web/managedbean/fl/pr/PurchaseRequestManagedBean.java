@@ -133,6 +133,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmState pmState;
 	private PmDistrict pmDistrict ;
 	private PmCity pmCity ;
+	private FlDeliveryAddress flManulaAddress;
 	
 	/**
 	 * @return the flRemark
@@ -952,5 +953,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmAddressType(PmAddressType pmAddressType) {
 		this.pmAddressType = pmAddressType;
+	}
+
+	/**
+	 * @return the flManulaAddress
+	 */
+	public FlDeliveryAddress getFlManulaAddress() {
+		return flManulaAddress;
+	}
+
+	/**
+	 * @param flManulaAddress the flManulaAddress to set
+	 */
+	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
+		this.flManulaAddress = flManulaAddress;
 	}
 }
