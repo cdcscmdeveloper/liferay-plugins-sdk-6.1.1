@@ -42,18 +42,30 @@
 			<p:column headerText="VOT/fund">
 				<h:outputText />
 			</p:column>
+			<p:column headerText="Prog./proj.">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Setia">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Sub Setia">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Asset Ind.">
+				<h:outputText />
+			</p:column>
 			<p:column headerText="Charge Code">
-				<p:inputText value="#{flItem.pmDo.doId}" style="text-align:right" disabled="true">
-				</p:inputText>
+				<h:outputText value="#{flItem.pmDo.doId}" style="text-align:right" >
+				</h:outputText>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true" value="#{flItem.unitPrice}"
-					style="text-align:right"><f:convertNumber pattern="#,###.00" /></p:inputText>
+				<h:outputText disabled="true" value="#{flItem.unitPrice}"
+					style="text-align:right"><f:convertNumber pattern="#,###.00" /></h:outputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{flItem.orderedQty}" style="text-align:right">
 					<p:ajax event="blur" update="subTotalTxt" process="@this"
-							listener="#{flOrderBB.retrieveOrderAmount()}" />
+							listener="#{flOrderBB.retrieveOrderAmount(flItem)}" />
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
