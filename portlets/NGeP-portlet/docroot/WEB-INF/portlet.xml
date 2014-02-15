@@ -2065,7 +2065,7 @@
 		</portlet>
 		<portlet>
 		<portlet-name>smCancelMofReg</portlet-name>
-		<display-name>Cancel Mof Registration</display-name>
+		<display-name>Cancel MOF Registration</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -2079,7 +2079,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Cancel Mof Registration</title>
+			<title>Cancel MOF Registration</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2164,7 +2164,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>smUpdateMofDetails</portlet-name>
-		<display-name>Update Mof Details</display-name>
+		<display-name>Update MOF Details</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -2180,7 +2180,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Update Mof Details</title>
+			<title>Update MOF Details</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2269,7 +2269,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>smRenewMof</portlet-name>
-		<display-name>Renew Mof Account</display-name>
+		<display-name>Renew MOF Account</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -2283,7 +2283,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Renew Mof Account</title>
+			<title>Renew MOF Account</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
