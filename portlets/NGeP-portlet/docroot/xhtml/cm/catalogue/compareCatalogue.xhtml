@@ -39,15 +39,15 @@
 					paginatorTemplate="{PageLinks} ">
 
 
-					<table>
+					<table style="">
 
 						<tr>
 							<td colspan="5"><p:graphicImage
 									value="/resources/ep/images/product/computer/879949914_125.jpg" height="80px"></p:graphicImage></td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5"><p:commandLink
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;"><p:commandLink
 									rendered="#{unspscCodeBackingBean.requisitioner}">
 									<p:graphicImage
 										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
@@ -72,16 +72,16 @@
 								</p:commandLink>&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.cmItem.itemName}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.cmItem.itemName}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.cmItem.extensionCode}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.cmItem.extensionCode}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.cmStandardPricing.price} <p:commandLink
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.cmStandardPricing.price} <p:commandLink
 									value="More.."
 									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
 									oncomplete="morePrice.show()"
@@ -90,24 +90,24 @@
 							</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.smSupplier.companyName}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.smSupplier.companyName}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.skuNumber}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.skuNumber}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.minOrder}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.minOrder}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.leadTime}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.leadTime}&#160;</td>
 						</tr>
 						<tr height="31px"
-							style="border-bottom: 1px solid #000 !important;">
-							<td colspan="5">#{supplierItem.itemDesc}&#160;</td>
+							style="border-bottom: 1px solid #ccc !important;">
+							<td colspan="5" style="background-color: #f5f5f5;">#{supplierItem.itemDesc}&#160;</td>
 						</tr>
 
 
