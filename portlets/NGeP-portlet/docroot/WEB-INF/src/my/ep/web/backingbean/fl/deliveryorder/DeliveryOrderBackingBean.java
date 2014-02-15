@@ -136,10 +136,20 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public void updateDeliveryAddrText(){
-		getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress1()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress2()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
+		if(getManagedBean().getSelectedDelAddr().getAddressType() != null){
+			getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress1()
+					+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress2()
+					+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
+					+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
+		}else{
+			getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getPmAddress().getAddress1()
+					+" "+getManagedBean().getSelectedDelAddr().getPmAddress().getAddress2()
+					+" "+getManagedBean().getSelectedDelAddr().getPmAddress().getAddress3()
+					+" "+getManagedBean().getSelectedDelAddr().getPmAddress().getAddress4());
+		}
+		
+		
+		
 		
 		if(!getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().isEmpty()){
 			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().clear();
