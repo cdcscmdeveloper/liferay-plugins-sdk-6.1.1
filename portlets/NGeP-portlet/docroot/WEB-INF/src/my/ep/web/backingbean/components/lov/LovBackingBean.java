@@ -58,7 +58,7 @@ public class LovBackingBean implements Serializable {
 //	private ILovEvent ?ookupEvent = null;
 	
 	private IPagingDataModel searchDataModel = new SearchPagingDataModel();
-	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_STARTS_WITH.value());
+	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private String lovId = null;
 	private ISearchBean lovSearchBean = new SearchBean();
 	private LovBean lovBean = null;
@@ -104,7 +104,7 @@ public class LovBackingBean implements Serializable {
 			try {				
 				LovReqDTO reqDTO = new LovReqDTO();
 				
-				if(lovSearchBean.getDataFilterBeans().size() <= 5) {
+				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
 					constructSearchBean(getLovBean().getConditionField());
 				}
 				searchBean.getDataFilterBeans().clear();
@@ -273,6 +273,11 @@ public class LovBackingBean implements Serializable {
 				
 				filterBean.setSearchField(fieldMapping[0]);
 				
+				if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+//					filterBean.setSearchValue(String.valueOf(filterBean.getSearchValue()).toLowerCase());
+					filterBean.setCaseInsensitive(true);
+				}
+				
 				if(fieldMapping.length >= 3) {
 					filterBean.setSearchOperator(Integer.parseInt(fieldMapping[2]));
 					
@@ -314,7 +319,8 @@ public class LovBackingBean implements Serializable {
 		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_EQUALS.value(), "EQUALS");
 		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), "STARTS WITH");
 		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), "END WITH");
-		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_BETWEEN.value(), "BETWEEN");
+//		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_BETWEEN.value(), "BETWEEN");
+		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), "LIKE");
 		
 		operatorList.add(item1);
 		operatorList.add(item2);
@@ -404,7 +410,7 @@ public class LovBackingBean implements Serializable {
 
 	public ISearchBean getLovSearchBean() {
 		if(lovSearchBean.getDataFilterBeans().size() == 0) {
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < 3; i++) {
 				SearchFilterBean filterBean = new SearchFilterBean();
 				lovSearchBean.getDataFilterBeans().add(filterBean);
 			}
