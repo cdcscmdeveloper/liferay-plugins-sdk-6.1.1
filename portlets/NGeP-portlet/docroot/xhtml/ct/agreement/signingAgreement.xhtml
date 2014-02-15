@@ -8,110 +8,126 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
         <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">
-			<p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.signOfficerList}" 
-			  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-			  emptyMessage="No Records!">
+		   <p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.ctSignParties}" 
+			 selection="#{agreementBackingBean.selectedCtAgreementParty}" rowKey="#{data}" paginator="true" 
+			 paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
 			  <ac:paginator for="signTable"/>
-			   <p:columnGroup type="header"> 
-				<p:row> 
-                   <p:column style="width:100px;"  headerText="Ministry" /> 
-                   <p:column style="width:100px;"  headerText="Department" /> 	
-                   <p:column style="width:100px;" headerText="PTJ"  /> 
-                   <p:column style="width:100px;" headerText="Officer Name"  /> 
-                   <p:column style="width:120px;" headerText="IC No"  />   
-                   <p:column style="width:180px;" headerText="Officer Position"  /> 
-                   <p:column style="width:50px;" headerText="Action"  />   
-               </p:row>	
-			  </p:columnGroup>
-			  <p:column width="100"> 
-			    <p:selectOneMenu disabled="false">
-            	   <f:selectItem itemLabel="MOF" itemValue="MOF" /> 
-                   <f:selectItem itemLabel="PJT" itemValue="PTJ" /> 
-                   <f:selectItem itemLabel="JABATAN" itemValue="JABATAN" /> 
+			     <p:column selectionMode="multiple" style="width:18px;"/>  
+		         <p:column style="width:150px;"  headerText="Ministry">
+		             <p:selectOneMenu id="ministry" value="#{agreementBackingBean.managedBean.ministryProfileId}" style="width:140px;">
+            	        <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
+            	         <p:ajax event="change" update="department" process="@this"  listener="#{agreementBackingBean.reset}"/>
                  </p:selectOneMenu>
-               </p:column>
-			   <p:column  width="100"> 
-			     <p:selectOneMenu disabled="false">
-            	   <f:selectItem itemLabel="Ministry" itemValue="ministry" /> 
-				   <f:selectItem itemLabel="PTJ" itemValue="ptj" /> 
-				   <f:selectItem itemLabel="Kewangan" itemValue="kewanngan" /> 
-    			   </p:selectOneMenu>
-    			</p:column>	
-                <p:column width="100"> 
-                  <p:selectOneMenu disabled="false">
-                  <f:selectItem itemLabel="PJT" itemValue="PTJ" /> 
-                  <f:selectItem itemLabel="JABATAN" itemValue="JABATAN" />
-			      </p:selectOneMenu>
-			     </p:column>
-                 <p:column width="100">
-                   <p:selectOneMenu disabled="false">
-				   <f:selectItem itemLabel="Khan" itemValue="khan" /> 
-				  </p:selectOneMenu>
-                </p:column>	
-                <p:column width="120"> <p:outputLabel value="6404-03-6843" /> </p:column>
-                <p:column width="180"><p:outputLabel value="PTJ Head" style="float:left;"/></p:column>	
-                 <p:column width="50" styleClass="column-align-center">
-                  <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation2.show()">
-					     <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signOfficerParty}" />
-			             <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			          </p:commandLink>
-                 </p:column> 
+		          </p:column> 
+                   <p:column style="width:150px;"  headerText="Department"> 	
+                    <p:selectOneMenu id="department" value="#{agreementBackingBean.managedBean.departmentProfileId}"  style="width:140px" >
+            		<f:selectItems value="#{agreementBackingBean.getDepartmentDropdown()}"/>
+            		<p:ajax event="change" update="ptj" process="@this" listener="#{agreementBackingBean.resetDepartment}"/> 
+                 </p:selectOneMenu>
+                   </p:column>
+                   <p:column style="width:150px;" headerText="PTJ">
+                        <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:140px" >
+            		<f:selectItems value="#{agreementBackingBean.getPtjCodeName()}"/>
+            		<p:ajax event="change" process="@this" listener="#{agreementBackingBean.resetPtj}"/> 
+                 </p:selectOneMenu>
+                   </p:column>
+                    <p:column style="width:120px;" headerText="Officer Name">
+                        <p:inputText value="#{data.officerName}" style="width:110px;"/>
+                   </p:column>  
+                   <p:column style="width:120px;" headerText="IC No">
+                    <p:inputText value="#{data.officerIc}" style="width:110px;"/>
+                   </p:column>         
+                   <p:column style="width:100px;" headerText="Officer Position">
+                      <p:inputText value="#{data.officerPosition}" style="width:100px;"/>
+                   </p:column> 
            </p:dataTable>
            </h:panelGrid>
-		 <h:panelGrid style="width:100%" columnClasses="column-align-right">
-		    <p:commandButton value="Add" process="@this" action="#{agreementBackingBean.addSignParty()}" 
-		    partialSubmit="true" icon="ui-icon-add" update="signTable"/>
-		</h:panelGrid>
+		  <div class="ppRightBtn"> 
+		    <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSignParty()}" 
+		        partialSubmit="true" icon="ui-icon-add" update="signTable"/>
+		    <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation2.show()"/>
+		  </div>
+		    <p:confirmDialog message="Do you want to delete the record?"
+		     closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation2">
+              <h:panelGrid columns="2">
+			    <p:commandButton value="Yes" icon="ui-icon-accept" update="signTable" partialSubmit="true"
+			       process="@form" actionListener="#{agreementBackingBean.deleteSignParty()}" onclick="confirmation2.hide();"/>
+			      <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation2.hide()" type="button" />
+		     </h:panelGrid>
+		</p:confirmDialog>
 		 
 	     <p:spacer width="15"/>
          <h:panelGrid style="width:100%">  
-         <p:dataTable id="supplierSign" var="data" value="#{agreementBackingBean.managedBean.signSupplierList}" widgetVar="dataTableObj" 
-            lazy="false" dynamic="true" rowIndexVar="index" paginator="true" paginatorPosition="bottom"
-            paginatorAlwaysVisible="true" emptyMessage="No Records!">
+         <p:dataTable id="supplierSign" var="data" value="#{agreementBackingBean.managedBean.ctSignSuppliers}"
+            lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedSignSuppliers}" rowKey="#{data}"
+            paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
             <ac:paginator for="supplierSign"/>
-			  <p:columnGroup type="header"> 
-               <p:row> 
-                   <p:column colspan="1"  style="width:100px" headerText="Supplier Company Name" /> 
-                   <p:column colspan="1"  style="width:150px" headerText="Officer Name" /> 	
-                   <p:column colspan="1" style="width:100px" headerText="IC No"  /> 
-                   <p:column colspan="1" style="width:100px" headerText="Officer Position"  />  
-                   <p:column colspan="1" style="width:50px" headerText="Action"  />    
-			  </p:row>	
-		    </p:columnGroup>						
-                <p:column><p:outputLabel value="XYZ SDN BHD" style="float:left;"/> </p:column>
-                <p:column><p:selectOneMenu disabled="false"  value="" style="width:150px;">
-					      <f:selectItem itemLabel="Alam" itemValue="khan" /> 
-					      </p:selectOneMenu>
-			     </p:column>	
-                 <p:column><p:outputLabel value="64043-03-6843" style="float:right;"/> </p:column>
-                <p:column><p:outputLabel value="Sales Manager" style="float:left;"/></p:column>	
-               <p:column styleClass="column-align-center">
-                <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation1.show()">
-				   <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplierParty}" />
-			       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			    </p:commandLink>
+			   <p:column selectionMode="multiple" style="width:18px;"/> 
+                   <p:column style="width:200px;" headerText="Supplier Company Name">
+                     <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.smSupplier.companyName}" style="float:left;"/>
                 </p:column> 
+                 <p:column style="width:200px;" headerText="Officer Name">
+                       <p:inputText value="#{data.officerName}" style="width:170px;"/>
+                    </p:column>
+                   <p:column style="width:200px;" headerText="IC No"> 
+                     <p:inputText value="#{data.officerIc}" style="width:170px;"/>
+                   </p:column> 	
+                   <p:column style="width:200px;" headerText="Officer Position" >
+                      <p:inputText value="#{data.officerPosition}" style="width:170px;"/>
+                   </p:column>  	
              </p:dataTable>
 		</h:panelGrid>
-		<h:panelGrid style="width:100%" columnClasses="column-align-right">
-		  <p:commandButton value="Add" process="@this" partialSubmit="true" action="#{agreementBackingBean.addSignSupplier()}" icon="ui-icon-add"
-		  update="supplierSign"/>
-	   </h:panelGrid>
-      </p:panel>
-       <p:confirmDialog message="Do you want to delete the record?"
+		 <div class="ppRightBtn"> 
+		    <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSignSupplier()}"
+		       icon="ui-icon-add" update="supplierSign"/>
+		    <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation1.show()"/>
+        </div>
+         <p:confirmDialog message="Do you want to delete the record?"
 		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation1">
           <h:panelGrid columns="2">
 			<p:commandButton value="Yes" icon="ui-icon-accept" update="supplierSign" partialSubmit="true"
-			 process="@this" actionListener="#{agreementBackingBean.deleteSignSupplier()}" onclick="confirmation1.hide();"/>
+			 process="@form" actionListener="#{agreementBackingBean.deleteSignSupplier()}" onclick="confirmation1.hide();"/>
 			  <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation1.hide()" type="button" />
 		  </h:panelGrid>
 		</p:confirmDialog>
-		 <p:confirmDialog message="Do you want to delete the record?"
-		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation2">
+      </p:panel>
+      
+	   <p:panel id="signingWitness" header="Signing Witness Details"  toggleable="true"  toggleSpeed="500">
+        <h:panelGrid style="width:100%">
+         <p:dataTable id="witnessSign" var="data" value="#{agreementBackingBean.managedBean.ctSignWitness}"
+            lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedSignWitness}" rowKey="#{data}"
+            paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+            <ac:paginator for="witnessSign"/>
+              <p:column selectionMode="multiple" style="width:18px;"/> 
+               <p:column style="width:200px;" headerText="Signing Type">
+                <p:selectOneMenu style="width:180px;" value="#{data.agreementPartyType.parameterId}">
+                       <f:selectItems value="#{agreementBackingBean.getDropdownValues('PTT')}" />
+               	     </p:selectOneMenu>
+               </p:column>
+                <p:column style="width:200px;" headerText="Name">
+                       <p:inputText value="#{data.officerName}" style="width:170px;"/>
+                    </p:column>
+              <p:column style="width:200px;" headerText="IC No"> 
+                     <p:inputText value="#{data.officerIc}" style="width:170px;"/>
+                   </p:column> 	       
+                   <p:column style="width:200px;" headerText="Position" >
+                      <p:inputText value="#{data.officerPosition}" style="width:170px;"/>
+                   </p:column>  
+        </p:dataTable>
+       </h:panelGrid>
+        <div class="ppRightBtn"> 
+		    <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSignWitness()}"
+		       icon="ui-icon-add" update="witnessSign"/>
+		    <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation3.show()"/>
+        </div>
+        <p:confirmDialog message="Do you want to delete the record?"
+		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation3">
           <h:panelGrid columns="2">
-			<p:commandButton value="Yes" icon="ui-icon-accept" update="signTable" partialSubmit="true"
-			 process="@this" actionListener="#{agreementBackingBean.deleteSignParty()}" onclick="confirmation2.hide();"/>
-			  <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation2.hide()" type="button" />
+			<p:commandButton value="Yes" icon="ui-icon-accept" update="witnessSign"
+			 process="@form" actionListener="#{agreementBackingBean.deleteSignWitness()}" onclick="confirmation3.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation3.hide()" type="button" />
 		  </h:panelGrid>
 		</p:confirmDialog>
+       </p:panel>
+		
 </ui:composition>

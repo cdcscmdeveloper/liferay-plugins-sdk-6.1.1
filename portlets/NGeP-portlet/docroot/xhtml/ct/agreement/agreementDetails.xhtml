@@ -6,27 +6,40 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
    <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
-		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
-			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />
-			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
-			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<p:calendar style="width:170px;" id="popupCal1" showOn="button" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"  />
-			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<p:calendar style="width:170px;" id="popupCal" showOn="button" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"  />				
-			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
-			<p:inputText
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractAmount}"
-				size="8" disabled="true" />			
-			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
-			<h:panelGrid columns="2">
-				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
+	  <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
+		 <p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+		 <p:inputText  value="#{agreementBackingBean.managedBean.ctContract.contractNo}"  style="width:170px;" />
+		 <p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+		 <p:inputText value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
+		
+		 <p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
+		 <p:inputText style="width:170px;" value="#{agreementBackingBean.getParameterDesc(agreementBackingBean.managedBean.ctContract.fulfillmentType)}" disabled="true"/>				
+		 <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+		 <p:inputText style="width:170px;" disabled="true" 
+				value="#{agreementBackingBean.managedBean.ctContract.loaNo}" />
+		
+		 <p:outputLabel id="edate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		 <p:inputText for="edate" style="width:130px;" disabled="true"
+				value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate)}" />
+		 <h:outputLabel id="expdate" value="#{lbl['lbl.ct.edate']}" />
+		 <p:inputText for="expdate" style="width:130px;" disabled="true"
+				value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate)}" />
+	
+		<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
+		<p:inputText for="contractAmount" value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.contractAmount}"
+		 styleClass="ppRightBtn" 
+				 disabled="true" style="width:130px;">
+				   <f:convertNumber pattern="#,###.00" />
+			</p:inputText>
+			
+		<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+		<h:panelGrid columns="3">
+				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.deliveryTerm}"   />
+				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>
-			 <h:panelGroup>
+		
+		 <h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="Contract Title" />
 			</div>
@@ -34,13 +47,12 @@
 			 <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="2" cols="30" disabled="true"
+				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim />
 			<f:verbatim />
-			<h:outputLabel
-				rendered="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
+			<h:outputLabel rendered="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
 				value="#{lbl['lbl.ct.circularNo']}" />
 			<p:commandLink
 				rendered="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
@@ -51,34 +63,6 @@
 			</p:commandLink>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel id="qtnTenderPnl" header="Procurement Details" toggleable="true" toggleSpeed="500">
-		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
-			<p:outputLabel value="Procurement Mode" />
-		    <p:inputText  style="width:170px;" disabled="true"/>
-			<p:outputLabel value="Published Date" />
-			<p:inputText style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.publishDate}">
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>			
-			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-			<p:inputText style="width:170px;" disabled="true" 
-				value="#{agreementBackingBean.managedBean.ctContract.loaNo}" />
-			<p:outputLabel value="LOA Acknowledged Date" />
-			<p:inputText style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.ackDate}" >
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>	
-			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
-			<p:inputText style="width:170px;" disabled="true"/>			
-			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
-			<h:panelGrid columns="2">
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.serviceFee}"
-				style="width:55px;" disabled="true" />	
-				<p:outputLabel value="%" />
-		</h:panelGrid>		
-		</h:panelGrid>
-		</p:panel>
-               
 		
 </ui:composition>
 	  

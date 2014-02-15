@@ -5,21 +5,79 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
 	<style>
       .column-align-right { text-align: right !important;}
+      .column-align-center { text-align: center !important;}
     </style>
-	<p:tabView id="agreementTab" orientation="left" >
-	    <p:tab id="agDetail" title="Fulfilment Details" >
-            <ui:include src="/xhtml/ct/agreement/viewAgreement.xhtml"/>
+	 <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
+	  <p:panel>
+	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+      <table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+			  			 <ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
+			              <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(outcome)}" />
+		            </ui:repeat>    			
+	    			</td>
+	    		</tr>
+	  </table>
+	  <table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Doc Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="25"
+								value="Agreement Creation (AC)"
+								disabled="true" />
+						</h6>
+					</td>		
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
+								disabled="true" />
+						</h6>
+					</td>
+								
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Status" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.latestContractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	  
+	</p:panel>
+	<p:tabView id="agreementTab" orientation="left">
+	    <p:tab id="agDetail" title="Create Agreement" >
+            <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
+             <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml"/>
+             <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
         </p:tab> 
-	     <p:tab id="agCreate" title="Create Agreement">
-            <ui:include src="/xhtml/ct/agreement/createAgreement.xhtml"/>
+	    <p:tab id="agCreate" title="Signing Agreement">
+             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
         </p:tab> 
-       <p:tab id="tabRemarks" title="#{lbl['lbl.ct.menu.remark']}">
-				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-			</p:tab>
+        <p:tab id="approverSetting" title="Approver Setting">
+             <ui:include src="/xhtml/ct/agreement/approverSetting.xhtml"/>  
+        </p:tab> 
 	</p:tabView>
 </ui:define>
    
