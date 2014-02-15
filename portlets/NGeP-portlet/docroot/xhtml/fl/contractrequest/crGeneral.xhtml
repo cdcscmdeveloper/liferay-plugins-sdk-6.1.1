@@ -25,22 +25,23 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="35" id="ministry"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="35" id="issuedJabatan"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.prepared.ptj']}" /></td>
-				<td><ac:lov id="preparedPtj" lovId="PM_ORG_PROFILE"
+				<td><ac:lov id="preparedPtj" lovId="PM_ORG_PROFILE" 
 						headerText="PreparedPtj Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
+						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}" 
+						>
 					</ac:lov> </td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><ac:lov id="issuePtj" lovId="PM_ORG_PROFILE"

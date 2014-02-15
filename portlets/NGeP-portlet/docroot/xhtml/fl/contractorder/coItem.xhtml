@@ -17,7 +17,10 @@
 			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel">
 			</p:ajax>
 			<p:column headerText="#{lbl['lbl.fl.del.addr']}">
-				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{address.addressType != null}"
+					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{address.addressType eq null}"
+					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.fl.exp.del.start']}">
@@ -46,7 +49,9 @@
 			<p:column headerText="Activity Code">
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true"></p:inputText>
+				<h:outputText disabled="true" value="#{item.unitPrice}">
+				<f:convertNumber pattern="#,#00.00" />
+				</h:outputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{item.orderedQty}" disabled="true"/>
