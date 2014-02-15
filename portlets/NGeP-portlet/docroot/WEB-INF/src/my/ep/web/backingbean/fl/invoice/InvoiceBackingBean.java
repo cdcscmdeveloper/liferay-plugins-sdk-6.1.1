@@ -171,8 +171,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	public void getInvoiceTable(FulfilmentResDTO resDTO){
 		System.out.println("--calculate sum invoice--");
 		BigDecimal sumOrderedQty = new BigDecimal("0");
-		BigDecimal sumReceivedQty = new BigDecimal("0");
+//		BigDecimal sumReceivedQty = new BigDecimal("0");
 		BigDecimal sumDeliveredQty = new BigDecimal("0");
+		BigDecimal sumOrderedAmt = new BigDecimal("0");
+		BigDecimal sumDeliveredAmt = new BigDecimal("0");
 		System.out.println("getInvoiceTable: getFlFulfilmentItems: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
 		for(FlFulfilmentItem flItem : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			getManagedBean().getInvItem().setFlFulfilmentItem(flItem);
@@ -180,30 +182,44 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			System.out.println("getInvoiceTable: getFlFulfilmentItemAddr: "+flItem.getFlFulfilmentItemAddr().size());
 			for(FlFulfilmentItemAddr itemAddr : flItem.getFlFulfilmentItemAddr()){
 				System.out.println("getOrderedQty(): "+itemAddr.getOrderedQty());
-				System.out.println("getReceivedQty(): "+itemAddr.getReceivedQty());
+				System.out.println("getOrderedAmt(): "+itemAddr.getOrderedAmt());
+//				System.out.println("getReceivedQty(): "+itemAddr.getReceivedQty());
 				sumOrderedQty = itemAddr.getOrderedQty();
-				sumReceivedQty = itemAddr.getReceivedQty();
-				
+				sumOrderedAmt = itemAddr.getOrderedAmt();
+//				sumReceivedQty = itemAddr.getReceivedQty();
+				System.out.println("sumOrderedQty(): "+sumOrderedQty);
 				for(FlDelOrderItem delOrderItem : itemAddr.getFlDelOrderItems()){
 					System.out.println("getDeliveredQty(): "+delOrderItem.getDeliveredQty());
 					sumDeliveredQty = delOrderItem.getDeliveredQty();
-					
+					sumDeliveredAmt = delOrderItem.getDeliveredAmt();
 				}
 				if(flItem.getSumDeliveredQty() != null){
 					flItem.getSumDeliveredQty().add(sumDeliveredQty);
+				}else{
+					flItem.setSumDeliveredQty(sumDeliveredQty);
 				}
-				flItem.setSumDeliveredQty(sumDeliveredQty);
+				if(flItem.getSumDeliveredAmt() != null){
+					flItem.getSumDeliveredAmt().add(sumDeliveredAmt);
+				}else{
+					flItem.setSumDeliveredAmt(sumDeliveredAmt);
+				}
+				
 			}
 			if(flItem.getSumOrderedQty() != null){
 				flItem.getSumOrderedQty().add(sumOrderedQty);
 			}else{
 				flItem.setSumOrderedQty(sumOrderedQty);
 			}
-			if(flItem.getSumReceivedQty() != null){
-				flItem.getSumReceivedQty().add(sumReceivedQty);
+			if(flItem.getSumOrderedAmt() != null){
+				flItem.getSumOrderedAmt().add(sumOrderedAmt);
 			}else{
-				flItem.setSumReceivedQty(sumReceivedQty);
+				flItem.setSumOrderedAmt(sumOrderedAmt);
 			}
+//			if(flItem.getSumReceivedQty() != null){
+//				flItem.getSumReceivedQty().add(sumReceivedQty);
+//			}else{
+//				flItem.setSumReceivedQty(sumReceivedQty);
+//			}
 			
 		}
 	}
