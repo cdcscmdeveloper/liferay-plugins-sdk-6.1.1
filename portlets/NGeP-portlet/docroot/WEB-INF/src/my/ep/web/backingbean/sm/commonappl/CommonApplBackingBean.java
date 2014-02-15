@@ -93,7 +93,7 @@ public class CommonApplBackingBean extends
 			// null, "/xhtml/sm/svositevisit/siteVisitView");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Review Application (Escalated)")
-				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")) {
+				|| resDTO.getTaskName().equalsIgnoreCase("Review Application") || resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			String applicationType = "";
