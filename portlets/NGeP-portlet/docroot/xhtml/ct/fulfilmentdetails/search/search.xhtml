@@ -78,28 +78,34 @@
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.currentContractVer.status.statusId)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}">
-						<p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" >
+						<p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
 							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 							<p:graphicImage library="ep/images/design" name="pause.png"
 								value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
 						</p:commandLink>
-						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" />
-						<p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" >
+						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
+						<p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
 							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 							<p:graphicImage library="ep/images/design" name="terminate.png"
 								value="/resources/ep/images/design/terminate.png" title="Termination" />
 						</p:commandLink>
-						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" />
-						<p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" >
+						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
+						<p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
 							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 							<p:graphicImage library="ep/images/design" name="revise.png"
 								value="/resources/ep/images/design/revise.png" title="Amendment" />
 						</p:commandLink>
-						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved}" />
+						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
+						<p:commandLink onclick="alert('Under development.'); return false;" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+							<p:graphicImage library="ep/images/design" name="evaluate.png"
+								value="/resources/ep/images/design/evaluate.png" title="Update" />
+						</p:commandLink>						
+						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
 						<p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
 							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/resources/ep/images/design/document.png" title="View Agreement" />
+								value="/resources/ep/images/design/document.png" title="View Contract" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>

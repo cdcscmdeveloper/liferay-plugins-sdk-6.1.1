@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.amendment;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -33,6 +36,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -43,7 +48,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -66,10 +70,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private TreeNode rootNodeAgency;
 	
 	public AmendmentBackingBean(){
-		
 		rootNodeAgency = new DefaultTreeNode("root", null);
 		if (this.getManagedBean().getAction() == null) {
-			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,"Submit"});
+			this.getManagedBean().setAction(new String[] {"Save","Submit"});
+		}
+		if(getManagedBean().getItemType()==null) {
+			getManagedBean().setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
+		}
+		if(getManagedBean().getContractVer()!=null && getManagedBean().getContractVer().getItemRemarks().size()==0) {
+			initiateRemark(getManagedBean().getContractVer().getItemRemarks());
 		}
 	}
 	
@@ -195,8 +204,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
 	       
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-	        this.getManagedBean().getContractVer().setDocNo("FA"+new Long(System.currentTimeMillis()).toString().substring(10));
-	        this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
+	        //TODO change it
+	        if( this.getManagedBean().getContractVer().getDocNo()==null) {
+	        	this.getManagedBean().getContractVer().setDocNo("FA"+new Long(System.currentTimeMillis()).toString().substring(10));
+	        }
 	         
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
 	            ChkComplyAP201Rule();	
@@ -209,6 +220,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 	        reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 	        
+	        if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				reqDTO.getCtContractVer().setApprover(getFacesScopes().getUserSessionBean());
+				reqDTO.getCtContractVer().setApprovedDate(new Date());
+	        }
+			
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			if(resDTO.isSuccessful()) {
 					
@@ -267,113 +283,25 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
 	 
-	 public void ChkAmendmentAction(){
-	    	
-	   try {
-		
-		  if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend())
-			  this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
-				
-		  else if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange())
-			   this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(true);
-			  
-		  else if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())
-			   this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(true);
-			  
-		  else if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange())
-			   this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(true);
-				
-		  else if(this.getManagedBean().getContractVer().getCtAmendment().isValueChange())
-			   this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
-				
-	    } catch (Exception e) {
-				System.out.println(e);
-		  }
-	 }
-	 
-	 public void changeItemTypes(){
-	    	
-	    try{
-	    	
-	    	flushItem();
-	    	if(this.getManagedBean().getItemType().equalsIgnoreCase("Service")) {
+    public void changeItemTypes(){
+    	try{
+    		flushItem();
+    		if (this.getManagedBean().getItemType().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 				this.getManagedBean().setServiceItem(true);
-				
-	    	}else if(this.getManagedBean().getItemType().equalsIgnoreCase("Product")) {
-					 this.getManagedBean().setProductItem(true);
-				
-			}else if(this.getManagedBean().getItemType().equalsIgnoreCase("ProductAndService")) {
-					  this.getManagedBean().setProductAndService(true);
-            }
-	      } catch (Exception e) {
-				System.out.println(e);
-		  }
-	    }
-	 
-	 public void flushItem(){
-	    	this.getManagedBean().setServiceItem(false);
-	    	this.getManagedBean().setProductItem(false);
-	    	this.getManagedBean().setProductAndService(false);
-	    }
-	  
-	 public void selectedItemList(){
-   	        this.getManagedBean().setServiceItem(false);
-   	        this.getManagedBean().setProductItem(true);
-       }
-	 
-	 public void  selectedServiceList(){
-		   this.getManagedBean().setServiceItem(true);
-	 	  this.getManagedBean().setProductItem(false);
-	    }
-	 
-	 /*Implementation for item details*/
-	    public List<SelectItem> getItemDetailsMethod() {
-
-			List<SelectItem> list = new ArrayList<SelectItem>();
-			list.add(new SelectItem("Item Pricing", "Item  Pricing"));
-			list.add(new SelectItem("Item Ceiling Quantity", "Item Ceiling Quantity"));
-			return list;
-		}
-	    
-	    public void changeField() {
-
-			try {
-				flush();
-				if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
-					this.getManagedBean().setItemPricing(true);
-
-				} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
-					this.getManagedBean().setItemCeilingQuantity(true);
-
-				}
-				
-			} catch (Exception e) {
-				System.out.println(e);
+			} else if (this.getManagedBean().getItemType().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+				this.getManagedBean().setProductItem(true);
 			}
+    	} catch (Exception e) {
+			System.out.println(e);
 		}
-	    
-	    public List<SelectItem> getItemTypeMethode(){
-	    	
-	    	List<SelectItem> list = new ArrayList<SelectItem>();
-			list.add(new SelectItem("Product", "Product"));
-			list.add(new SelectItem("Service", "Service"));
-			list.add(new SelectItem("ProductAndService", "Product And Service"));
-			return list;
-	    }
-
-	    private void flush() {
-	    	
-			this.getManagedBean().setItemPricing(false);
-			this.getManagedBean().setItemCeilingQuantity(false);
-		}
-	    
-	    public void onEdit(RowEditEvent event) {  
-	      
-	    }  
-	      
-	    public void onCancel(RowEditEvent event) {  
-	    	
-	    }  
+    }
+	 
+	public void flushItem() {
+		this.getManagedBean().setServiceItem(false);
+		this.getManagedBean().setProductItem(false);
+		this.getManagedBean().setSelectedItem(null);
+		this.getManagedBean().setShowItem(null);
+	}
 	    
 	    public SelectItem[] getMinistryDropdown() {
 			
@@ -422,5 +350,40 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	return str;
 	        return format.format(time); 
 	    } 
+		
+	public List<SelectItem> getItemTypeDropDown(){
+    	List<SelectItem> list = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.SC_ITEM_TYPE);
+		for(SelectItem item : items) {
+			if(item.getValue()!=null) {
+				if(item.getValue().toString().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) || item.getValue().toString().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					list.add(item);
+				}
+			}
+		}
+		return list;
+    }		
+	
+	public List<CtContractItem> getContractItemList() {
+		List<CtContractItem> contractItemList = new ArrayList<CtContractItem>();
+		for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+			if(item.getItemType().getParameterCode().equalsIgnoreCase(getManagedBean().getItemType())) {
+				contractItemList.add(item);
+			}
+		}
+		return contractItemList;
+	}	
+	
+	private void initiateRemark(List<CtRemark> remarks) {
+		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+			CtRemark remark = new CtRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+			remarks.add(0, remark);
+		}
+	}
 	 	 
 }

@@ -1,96 +1,41 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
-   <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"   toggleable="true"  toggleSpeed="500">
-     <div style="overflow-x:auto">
-    <p:treeTable id="treetableAgency" value="#{amendmentBackingBean.rootNodeAgency}" var="data">
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.name']} </f:facet>  
-             <h:outputText />  
-          </p:column>  
-          <p:column>  
-           <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.code']} </f:facet>  
-           <h:outputText />  
-          </p:column>  
-          <p:column >  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.name']}  </f:facet>  
-            <h:outputText />  
-          </p:column>  
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.amount']}  </f:facet>  
-            <p:inputText style="width:40; float:right;"></p:inputText>  
-          </p:column>  
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.efdate']}  </f:facet>  
-            <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
-              id="popupButtonCal" showOn="button" /> 
-          </p:column>  
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.exdate']}  </f:facet>  
-              <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-              id="popupButtonCal1" showOn="button" />
-          </p:column>  
-          <p:column style="width:50"  styleClass="column-align-center">  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.action']} </f:facet>  
-             <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()">
-			    <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			  </p:commandLink>
-          </p:column>  
-       </p:treeTable>
-       </div>
-       <div class="ppRightBtn"> 
-		 <p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@this" partialSubmit="true" 
-		     icon="ui-icon-add"   onclick="dlgAgency.show();">
-		 </p:commandButton>
-	  </div>
-	   </p:panel>  
-        <p:confirmDialog message="Do you want to delete the record?" 
-		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
-             <h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
-					update="treetableAgency" partialSubmit="true" process="@this"	onclick="confirmation.hide();"/>
-				<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
-			</h:panelGrid>
-		</p:confirmDialog>
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.agn.btn.add']}" widgetVar="dlgAgency" modal="true" width="600" height="400">
-		   <p:panel  id="agencyies">
-              <h:panelGrid columns="2">
-						
-							<h:outputLabel for="ministry" value="Ministry" />
-            				<p:selectOneMenu id="ministry"  style="width:230px">
-            				    <f:selectItems value="#{amendmentBackingBean.getMinistryDropdown()}" />
-                        	</p:selectOneMenu>
-							<h:outputLabel for="department" value="Department" />
-            				<p:selectOneMenu id="department"  style="width:230px" >
-            					<f:selectItem itemLabel="--Please Select--" itemValue="" /> 
-                				</p:selectOneMenu>
-						</h:panelGrid>
-             <p:dataTable id="tableAgency" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"
-                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
-                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">
-                    <h:outputText />
-					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.name']}" >
-                    <h:outputText />
-					</p:column>
-			 </p:dataTable>
-             <f:facet name="footer">
-			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="#{lbl['lbl.ct.agn.btn.select']}"   process="dialogAgency" update="treetableAgency,dialogAgency" icon="ui-icon-select" onclick="dlgAgency.hide();"/>
-                <p:commandButton value="#{lbl['lbl.ct.agn.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
-			  </h:panelGrid>
-			</f:facet>
-           </p:panel>
-	 </p:dialog>
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"	toggleable="true" toggleSpeed="500">
+		<div style="overflow-x: auto">
+			<p:dataTable id="tableAgencyDetails" var="data"
+				value="#{amendmentBackingBean.managedBean.contractVer.ctAgencies}"  rowKey="#{data}" >
+				<ac:paginator for="tableAgencyDetails" />
+				<p:column selectionMode="multiple" style="width:18px;" />
+				<p:column headerText="Ministry">
+					<h:outputText
+						value="#{data.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} - #{data.orgProfile.parentOrgProfile.parentOrgProfile.orgName}" />
+				</p:column>
+				<p:column headerText="Jabatan">
+					<h:outputText
+						value="#{data.orgProfile.parentOrgProfile.orgCode} - #{data.orgProfile.parentOrgProfile.orgName}" />
+				</p:column>
+				<p:column headerText="PTJ">
+					<h:outputText
+						value="#{data.orgProfile.orgCode} - #{data.orgProfile.orgName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}"
+					style="width:130px;">
+					<p:inputText value="#{data.ceilingAmount}" styleClass="ppRightBtn"
+						style="width:120px;">
+						<f:convertNumber pattern="#,###.00" />
+					</p:inputText>
+				</p:column>
+			</p:dataTable>
+		</div>
+	</p:panel>
 </ui:composition>
 
 
 
 
-                                       
-                                       
+

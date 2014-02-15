@@ -415,21 +415,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return list;
     }
     
-    public void changeField() {
-
-		try {
-			flush();
-			if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
-				this.getManagedBean().setItemPricing(true);
-
-			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
-				this.getManagedBean().setItemCeilingQuantity(true);
-			}	
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-    
     public void changeItemTypes(){
     	try{
     		flushItem();
@@ -452,11 +437,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	this.getManagedBean().setShowItem(null);
     }
   
-    public void selectedItemList(){
-    	this.getManagedBean().setServiceItem(false);
-    	this.getManagedBean().setProductItem(true);
-    }
-   
     public void onRowSelect(SelectEvent event) {
    	
     }/*End*//*End Item Details*/
@@ -878,7 +858,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			trBB = new TerminationBackingBean();
@@ -908,7 +888,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
             reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
+			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			suspBB = new SuspensionBackingBean();
@@ -934,13 +914,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
             reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
+			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			if(amendBB.getManagedBean().getContractVer().getCtAmendment() ==null) {
 				amendBB.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
+			} else {
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setTitle(null);
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setFileRefNo(null);
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setDescription(null);
 			}
 				
 			reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());

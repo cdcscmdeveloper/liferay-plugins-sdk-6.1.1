@@ -12,17 +12,16 @@
 	     <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
-					 <p:ajax event="change" update=":form:tabview" action="#{amendmentBackingBean.ChkAmendmentAction}" process="@this"/> 
+					 <p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				
 				<p:outputLabel value="Contract extension" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.priceChange}" >
-					 <p:ajax event="change" update=":form:tabview" listener="#{amendmentBackingBean.ChkAmendmentAction}" process="@this"/> 
+					 <p:ajax event="change" update=":form:tabview:itemId" process="@this"/> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change item price" />
@@ -31,7 +30,7 @@
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" >
-					<p:ajax event="change" update=":form:tabview" listener="#{amendmentBackingBean.ChkAmendmentAction}" process="@this"/> 
+					<p:ajax event="change" update=":form:tabview:itemId" process="@this"/> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change quantity" />
@@ -40,7 +39,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change" update=":form:tabview" listener="#{amendmentBackingBean.ChkAmendmentAction}" process="@this"/> 
+					<p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change contract value" />
@@ -49,7 +48,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
-					<p:ajax event="change" update=":form:tabview" listener="#{amendmentBackingBean.ChkAmendmentAction}" process="@this"/> 
+					<p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change clause"  />
@@ -105,9 +104,8 @@
 		   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
 		 <p:inputText style="width:150px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.additionalAmount}"
 		     rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" styleClass="ppRightBtn">    
-		       <f:convertNumber pattern="#,###.00" />
+		       <f:convertNumber pattern="#,##0.00" />
 		         <p:ajax event="blur" update="addValue" process="@this" listener="#{amendmentBackingBean.addContractValue}" /> 
-		  
 		  </p:inputText>
 		 <p:outputLabel value="New Contract Value"
 		    rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />

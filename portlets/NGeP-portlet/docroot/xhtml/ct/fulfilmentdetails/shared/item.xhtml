@@ -18,7 +18,7 @@
         	<p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
               	selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true" >
                	<ac:paginator for="itemTable"/>
-               	<p:ajax event="rowSelect" update=":form:tabview:changeField" listener="#{contractDetailsBackingBean.selectedItemList()}"/>
+               	<p:ajax event="rowSelect" update=":form:tabview:changeField" />
 		     	<p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		     	<p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
 		     	<p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
@@ -108,7 +108,7 @@
 									<table>
 										<tr>
 											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+												<h:graphicImage value="#{contractDetailsBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 											</td>
 											<td width="5"></td>
 											<td>

@@ -13,6 +13,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -27,6 +28,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
+	
+	private CtContractItem selectedItem;
 	
 	private String taskName;
 	private String[] action;
@@ -228,6 +231,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
 		this.amendHistoryList = amendHistoryList;
+	}
+
+	public CtContractItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(CtContractItem selectedItem) {
+		this.selectedItem = selectedItem;
 	}
 	
 	

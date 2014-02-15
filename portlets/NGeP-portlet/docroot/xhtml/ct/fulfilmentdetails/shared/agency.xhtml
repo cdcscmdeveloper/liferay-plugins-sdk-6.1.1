@@ -10,8 +10,7 @@
    <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"   toggleable="true"  toggleSpeed="500">
      <div style="overflow-x:auto">
        <p:dataTable id="tableAgencyDetails" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
-            selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{data}" paginator="true" 
-            paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+            selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{data}">
              <ac:paginator for="tableAgencyDetails"/>
              <p:ajax event="rowSelect" update=":form:tabview:agencyId" />
              <p:column selectionMode="multiple" style="width:18px;" />
@@ -107,7 +106,7 @@
 									<table>
 										<tr>
 											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+												<h:graphicImage value="#{contractDetailsBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 											</td>
 											<td width="5"></td>
 											<td>

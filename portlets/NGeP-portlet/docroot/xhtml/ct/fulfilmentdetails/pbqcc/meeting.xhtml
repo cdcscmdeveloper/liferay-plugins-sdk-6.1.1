@@ -8,8 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="meetingPanel" header="Meeting Details" toggleable="true"  toggleSpeed="500">
       <div style="overflow-x:auto">
-      <p:dataTable id="meetingTable" var="data" value=" " paginator="true" 
-            paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
+      <p:dataTable id="meetingTable" var="data" value="">
              <ac:paginator for="meetingTable" />
             
                <p:columnGroup type="header"> 
@@ -31,8 +30,7 @@
       	</p:panel>
       <p:panel id="committePanel" header="Committe Member" toggleable="true"  toggleSpeed="500">
         <div style="overflow-x:auto">
-      <p:dataTable id="committeTable" var="data" value=" " paginator="true" 
-       paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
+      <p:dataTable id="committeTable" var="data" value="">
             <ac:paginator for="committeTable" />
             <p:columnGroup type="header"> 
 			  <p:row> 
