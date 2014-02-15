@@ -405,6 +405,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void addSignParty(){
 		CtAgreementParty ctAgreementParty = new CtAgreementParty();
 		ctAgreementParty.setAgreementPartyType(new PmParameter());
+		ctAgreementParty.getAgreementPartyType().setParameterId(92L);
 		if(ctAgreementParty.getOrgProfile() == null){
 		   ctAgreementParty.setOrgProfile(new PmOrgProfile());
 			
@@ -428,6 +429,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void addSignSupplier(){
 		CtAgreementParty ctAgreementParty = new CtAgreementParty();
 		ctAgreementParty.setAgreementPartyType(new PmParameter());
+		ctAgreementParty.getAgreementPartyType().setParameterId(93L);
 		if(ctAgreementParty.getOrgProfile() == null)
 			ctAgreementParty.setOrgProfile(new PmOrgProfile());
 	    this.getManagedBean().getCtSignSuppliers().add(ctAgreementParty);
