@@ -409,7 +409,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add("Supplier Name");
 		compareLabel.add("SKU No");
 		compareLabel.add("Min Order");
-		compareLabel.add("Max Order");
 		compareLabel.add("Delivery Term");
 		compareLabel.add("Additional Desc");
 
