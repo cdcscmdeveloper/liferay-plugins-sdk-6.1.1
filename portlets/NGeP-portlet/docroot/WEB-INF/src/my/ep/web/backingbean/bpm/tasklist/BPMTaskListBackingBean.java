@@ -232,11 +232,11 @@ public class BPMTaskListBackingBean extends
 			   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || 
 			   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||
 					res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
-				url = "procurement-board";
+				url = "review-amendment";
 			}
 			
 			if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
-				url = "procurement-board";
+				url = "review-amendment";
 			}
 			
 			FacesScopes facesScope = new FacesScopes();
