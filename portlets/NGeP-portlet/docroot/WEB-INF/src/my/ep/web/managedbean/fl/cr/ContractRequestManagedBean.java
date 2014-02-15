@@ -60,6 +60,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
+	private FlDeliveryAddress flManualAddress;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -73,6 +74,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long docStatusId;
 	private Long contractId;
 	private Long testOrg;
+	
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -785,6 +787,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setActiveContractList(List<VCtActiveContract> activeContractList) {
 		this.activeContractList = activeContractList;
+	}
+
+
+	/**
+	 * @return the flManualAddress
+	 */
+	public FlDeliveryAddress getFlManualAddress() {
+		return flManualAddress;
+	}
+
+
+	/**
+	 * @param flManualAddress the flManualAddress to set
+	 */
+	public void setFlManualAddress(FlDeliveryAddress flManualAddress) {
+		this.flManualAddress = flManualAddress;
 	}
 
 }
