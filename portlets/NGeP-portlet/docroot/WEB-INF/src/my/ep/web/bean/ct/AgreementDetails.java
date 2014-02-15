@@ -9,27 +9,27 @@ public class AgreementDetails implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-     private String agrementTitle;
-     private String agrementType;
-     private String appendexType;
+     private String filePath;
+     private String fileName;
+     private String fileType;
      
-     public String getAppendexType() {
-		return appendexType;
+	 public String getFilePath() {
+		return filePath;
 	}
-	public void setAppendexType(String appendexType) {
-		this.appendexType = appendexType;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
-	public String getAgrementTitle() {
-		return agrementTitle;
+	public String getFileName() {
+		return fileName;
 	}
-	public void setAgrementTitle(String agrementTitle) {
-		this.agrementTitle = agrementTitle;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
-	public String getAgrementType() {
-		return agrementType;
+	public String getFileType() {
+		return fileType;
 	}
-	public void setAgrementType(String agrementType) {
-		this.agrementType = agrementType;
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
-	
+     	
 }

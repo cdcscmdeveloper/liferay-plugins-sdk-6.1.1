@@ -53,6 +53,7 @@ import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -218,77 +219,86 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			ContractAgreementReqDTO ctReqDTO = new ContractAgreementReqDTO();
 			CTAgreementDataType dataType = (CTAgreementDataType)obj;
+			
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
-			
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-			ContractAgreementResDTO resDTO = agreementSO.retrieveAgreement(ctReqDTO);
-		   
-			if(resDTO.getAgreement().getPmUserGroup()!=null) {
+			ContractAgreementResDTO resDTO;
+		
+			if(dataType.getAgreementType().equalsIgnoreCase("supplemental")){   
+			    this.getManagedBean().setAgreementType(dataType.getAgreementType());
+				ctReqDTO.setAmendmentId(88L);
+				resDTO = agreementSO.retrieveSupAgreement(ctReqDTO);
+				 this.getManagedBean().setCtContract(resDTO.getCtAmendment().getCtContractVer().getCtContract());
+				if(resDTO.getAgreement() != null)
+					this.getManagedBean().setCtAgreement(resDTO.getAgreement());
+				  this.getManagedBean().getCtAgreement().setCtAmendment(resDTO.getCtAmendment());
+				  
+			
+			}else{
+				 resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+			} 
+			
+			if(resDTO.getAgreement() != null){
+				if(resDTO.getAgreement().getPmUserGroup()!=null) {
 				  this.getManagedBean().getApproverModel().getSource().clear();
 					for(PmUserGroupUser user : resDTO.getAgreement().getPmUserGroup().getPmUserGroupUsers()) {
 						this.getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
 					}
-			}else{
-				resDTO.getAgreement().setPmUserGroup(new PmUserGroup());
-			}
+			      }else{
+				    resDTO.getAgreement().setPmUserGroup(new PmUserGroup());
+			      }
 			
-			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			}
+			   if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			     this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			     this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		  	   }
 			  
-			this.getManagedBean().setCtAgreement(resDTO.getAgreement());  
-			this.getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
-			if(this.getManagedBean().getCtContract().getFulfillmentType() == null){
-			   this.getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
-			}
+			   this.getManagedBean().setCtAgreement(resDTO.getAgreement());  
+			   this.getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
+			   if(this.getManagedBean().getCtContract().getFulfillmentType() == null){
+			     this.getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
+			   }
 			
-			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			ContractBackingBean ctBB = new ContractBackingBean();
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			   this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			   this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			   ContractBackingBean ctBB = new ContractBackingBean();
+			   ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
-			if(this.getManagedBean().getCtSignParties().size()>0)
-				this.getManagedBean().getCtSignParties().clear();
+			   if(this.getManagedBean().getCtSignParties().size()>0)
+				  this.getManagedBean().getCtSignParties().clear();
 			
-				if(this.getManagedBean().getCtSignSuppliers().size()>0)
-					   this.getManagedBean().getCtSignSuppliers().clear();
+			   if(this.getManagedBean().getCtSignSuppliers().size()>0)
+				  this.getManagedBean().getCtSignSuppliers().clear();
 			
-				 if(this.getManagedBean().getCtSignWitness().size()>0)
-					 this.getManagedBean().getCtSignWitness().clear();
+			   if(this.getManagedBean().getCtSignWitness().size()>0)
+				  this.getManagedBean().getCtSignWitness().clear();
 			
-			 for(CtAgreementParty ctAgreementParty : this.getManagedBean().getCtAgreement().getCtSignParties()){
-				 if(ctAgreementParty.getAgreementPartyType().getParameterId() .equals(92L)){
-					 if(ctAgreementParty.getOrgProfile() == null){
-						 ctAgreementParty.setOrgProfile(new PmOrgProfile());
-					 }
-					 ctAgreementParty.getOrgProfile().setOrgProfileId(1038L);
-					 this.getManagedBean().setMinistryProfileId(211L);
-					 this.getManagedBean().setDepartmentProfileId(1003L);
-					 this.getManagedBean().getCtSignParties().add(ctAgreementParty);
+			   for(CtAgreementParty ctAgreementParty : this.getManagedBean().getCtAgreement().getCtSignParties()){
+				  if(ctAgreementParty.getAgreementPartyType().getParameterId() .equals(92L)){
+					if(ctAgreementParty.getOrgProfile() == null){
+						ctAgreementParty.setOrgProfile(new PmOrgProfile());
+					}
+					ctAgreementParty.getOrgProfile().setOrgProfileId(1038L);
+					this.getManagedBean().setMinistryProfileId(211L);
+					this.getManagedBean().setDepartmentProfileId(1003L);
+					this.getManagedBean().getCtSignParties().add(ctAgreementParty);
 				 }else if(ctAgreementParty.getAgreementPartyType().getParameterId() .equals(93L)){
-					   
-					 this.getManagedBean().getCtSignSuppliers().add(ctAgreementParty);
+					   this.getManagedBean().getCtSignSuppliers().add(ctAgreementParty);
 				 }else{
 					 this.getManagedBean().getCtSignWitness().add(ctAgreementParty);
 				 }
-			 }
-		
-			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)){
-			   if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME) ||
-					   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)){
-				   this.getManagedBean().setUploadFinalAgreement("Upload");
+			  }
+		   }
+		  
+		   if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)){
+			  if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME) ||
+				  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)){
+				  this.getManagedBean().setUploadFinalAgreement("Upload");
 			   }
-			   if(dataType.getAgreementType().equalsIgnoreCase("supplemental")){	
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setAgreementType("supplemental");
-				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_SUP_AGREEMENT);
-			   }else{
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_AGREEMENT);
-			   }
+			  FacesContext fc = FacesContext.getCurrentInstance();
+			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_AGREEMENT);   
 		    }
 		}catch(Exception e){
 			e.printStackTrace();
@@ -305,7 +315,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			
+			if(this.getManagedBean().getAgreementType().equalsIgnoreCase("supplemental")){
+				reqDTO.setAgreementType("supplemental");
+			}else{
 			reqDTO.setAgreementType("agreement");
+			}
+			
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);

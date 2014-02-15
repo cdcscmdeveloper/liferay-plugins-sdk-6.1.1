@@ -1,47 +1,85 @@
 <ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	 <p:panel id="suplimental" header="Supplemental Agreement"   toggleable="true"  toggleSpeed="500">
-	  <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
-	  <p:outputLabel value="Change of quantity" />
-	   <p:selectBooleanCheckbox value=" " disabled="true" />
-	  <p:outputLabel value="Change contract value" />
-	   <p:selectBooleanCheckbox value=" " disabled="true" /> 
-	    <p:spacer height="1"/> <f:verbatim></f:verbatim>
-	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
-	     <p:outputLabel value="Change item price" />
-	  <p:selectBooleanCheckbox value="false" disabled="True" />
-	  
-	    <p:outputLabel value="Extension of Contract" />
-	  <p:selectBooleanCheckbox value="true" disabled="true" />
-	    
-	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
-	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
-	   <p:outputLabel value="Request No" />  
-      <p:commandLink style="margin-right:20px;">  
-       <p:outputLabel value="FA00099234242" style="float:left;" />  
-      </p:commandLink> 
-          <p:outputLabel value="File Ref No."/>  
-      <p:inputText value="FA00099234242" style="width:170px;" disabled="true" /> 
-      
-        <p:outputLabel value="Title / Name" />  
-      <p:inputText style="width:170px;"/>
-       <p:outputLabel value="Request Date" />  
-      <p:inputText value="02 DEC 2013" style="width:170px;"  disabled="true" />
-         
-	  <h:panelGroup>
-		<div style="height: 40px; vertical-align: top;">
-		   <p:outputLabel for="amendmentD" value="Description" />
-		</div>
-		</h:panelGroup>
-		<h:panelGrid>
-		  <p:inputTextarea id="amendmentD"  rows="2" cols="31"  autoResize="false" />
-		</h:panelGrid>
-	</h:panelGrid>
+	<ui:define name="contentSection">
+	<style>
+      .column-align-right { text-align: right !important;}
+        .column-align-center { text-align: center !important;}
+    </style>
+	 <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
+	  <p:panel>
+	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+      <table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+			  			 <ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
+			              <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(outcome)}" />
+		            </ui:repeat>    			
+	    			</td>
+	    		</tr>
+	  </table>
+	  <table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Doc Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="25"
+								value="Agreement Creation (AC)"
+								disabled="true" />
+						</h6>
+					</td>		
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
+								disabled="true" />
+						</h6>
+					</td>
+								
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Status" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentContractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	  
 	</p:panel>
+	<p:tabView id="agreementTab" orientation="left">
+	    <p:tab id="agDetail" title="Create Agreement" >
+            <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
+             <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml"/>  
+            <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml"/>
+            <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
+        </p:tab> 
+	    <p:tab id="agCreate" title="Signing Agreement">
+             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
+        </p:tab> 
+        <p:tab id="approverSetting" title="Approver Setting">
+             <ui:include src="/xhtml/ct/agreement/approverSetting.xhtml"/>  
+        </p:tab> 
+	</p:tabView>
+</ui:define>
+   
 </ui:composition>
-	  

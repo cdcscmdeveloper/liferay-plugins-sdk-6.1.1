@@ -14,6 +14,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -39,6 +40,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtContract ctContract;
 	private CtAgreement ctAgreement;
 	private CtContractVer ctContractVer;
+	private CtAmendment ctAmendment;
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -49,7 +51,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmOrgProfile pmOrgProfile;
 	
 	private Long contractId;
-	private String agreementType="view";
+	private String agreementType = "supplemental";
 	
 	List<AgreementDetails> agreementList;
 	private CtAgreementAppendix ctAgreementAppendix;
@@ -67,6 +69,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmParameter pmParameter;
 	
 	private String uploadFinalAgreement;
+	
 	
 	public AgreementManagedBean(){
 		
@@ -304,5 +307,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setUploadFinalAgreement(String uploadFinalAgreement) {
 		this.uploadFinalAgreement = uploadFinalAgreement;
+	}
+
+	public CtAmendment getCtAmendment() {
+		return ctAmendment;
+	}
+
+	public void setCtAmendment(CtAmendment ctAmendment) {
+		this.ctAmendment = ctAmendment;
 	}	
 }
