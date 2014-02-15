@@ -53,6 +53,9 @@
 				<h:outputText
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}"
 					value="#{item.receivedQty}" />
+				<p:inputText value="#{item.receivedQty}"
+				rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}"/>
+					
 			</p:column>
 			<p:column headerText="Ordered Amt.(RM)">
 				<h:outputText
@@ -71,6 +74,10 @@
 						value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#,###.00" />
 					</h:outputText>
+					<p:inputText value="#{item.flDelOrderItem.deliveredAmt}"
+					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
+						<f:convertNumber pattern="#,#00.00" />
+					</p:inputText>
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="Received Amt.(RM)">
@@ -83,6 +90,11 @@
 					value="#{item.receivedAmt}"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
 					<f:convertNumber pattern="#,###.00" />
+				</h:outputText>
+				<h:outputText
+					value="#{item.receivedAmt}"
+					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
+					<f:convertNumber pattern="#,#00.00" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>

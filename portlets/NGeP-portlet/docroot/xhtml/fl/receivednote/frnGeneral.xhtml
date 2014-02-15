@@ -28,7 +28,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
+					<p:spacer width="5" /> <p:inputText size="37" id="preparedPtj"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
@@ -36,7 +36,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
+					<p:spacer width="5" /> <p:inputText size="37" id="issuePtj"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
@@ -60,10 +60,16 @@
 			<tr>
 				<td style=" width:86px;" rowspan="2" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td style=" width:50px;" rowspan="2"><p:inputTextarea id="delAddrText" cols="50"
-						rows="6" style=" margin-bottom:5px;" disabled="true" /></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.frn.create.date']}" /></td>
-				<td style=" width:387px; height:6%" ><p:inputText size="25" disabled="true" /></td>
+				<td style=" width:50px;" rowspan="2">
+						<p:inputTextarea id="delAddrText1" cols="50" rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.addressType != null}"
+						rows="6" style=" margin-bottom:5px;" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.addressType.pmAddress.address1}"/>
+						
+						<p:inputTextarea id="delAddrText2" cols="50" rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.addressType eq null}"
+						rows="6" style=" margin-bottom:5px;" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress.address1}"/>
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.create.date']}" /></td>
+				
+				<td><p:inputText size="25" disabled="true" /></td>
 			</tr>
 			<tr >
 				<td ><p:outputLabel
