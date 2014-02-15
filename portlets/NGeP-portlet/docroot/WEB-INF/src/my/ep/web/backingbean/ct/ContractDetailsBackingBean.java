@@ -69,6 +69,7 @@ import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -863,6 +864,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			trBB = new TerminationBackingBean();
 			
+			if(resDTO.getCtContractVer().getCtTermination()==null) {
+				resDTO.getCtContractVer().setCtTermination(new CtTermination());
+			}
 			if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
 				resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
 			
@@ -891,6 +895,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
+			
+			for(CtAgency agency : resDTO.getCtContractVer().getCtAgencies()) {
+				PmParameter parameter = new PmParameter();
+				parameter.setParameterId(-1L);
+				agency.setSuspensionType(parameter);
+			}
+			for(CtContractItem item : resDTO.getCtContractVer().getCtContractItems()) {
+				PmParameter parameter = new PmParameter();
+				parameter.setParameterId(-1L);
+				item.setSuspensionType(parameter);
+			}			
+			
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 		} catch(Exception e) {
