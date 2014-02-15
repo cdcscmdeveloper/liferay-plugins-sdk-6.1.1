@@ -21,106 +21,99 @@
 			<h:panelGrid columns="2" style="width:100%;"
 				columnClasses="comparelabelCss compareValueCss">
 
-				<h:panelGroup>
 
-					<ui:repeat var="label"
-						value="#{catalogueBackingBean.managedBean.compareLabel}">
-						<p:panel styleClass="comparePanelLabel">
-							<h:outputLabel value="#{label}" />
-						</p:panel>
-					</ui:repeat>
+				
+				<ui:repeat var="label"
+					value="#{catalogueBackingBean.managedBean.compareLabel}">
+					<p:panel styleClass="comparePanelLabel">
+						<h:outputLabel value="#{label}" />
+					</p:panel>
+				</ui:repeat>
 
-				</h:panelGroup>
+
 
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
 					paginator="true" styleClass="datagridfloat"
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
 					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom"
 					paginatorTemplate="{PageLinks} ">
-					<h:panelGroup>
-						<table>
-							<tr>
-								<td height="40px"></td>
-							</tr>
-						</table>
-
-						<h:panelGroup styleClass="comparePanel">
-
-							<table>
-								<tr>
-									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}">
-											<p:graphicImage
-												value="/resources/ep/images/design/icon_txt.png"
-												height="15px"></p:graphicImage>
-										</p:commandLink></td>
-									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
-											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
-											<p:graphicImage
-												value="/resources/ep/images/design/icon_txt.png"
-												height="15px"></p:graphicImage>
-										</p:commandLink></td>
-									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
-											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
-											<p:graphicImage
-												value="/resources/ep/images/design/icon_txt.png"
-												height="15px"></p:graphicImage>
-										</p:commandLink></td>
-									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
-											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
-											<p:graphicImage library="ep/images/design"
-												name="cart_add.png" />
-										</p:commandLink></td>
-									<td><p:commandLink
-											action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
-											update=":form:compareDataList">
-											<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-										</p:commandLink></td>
-								</tr>
-							</table>
-						</h:panelGroup>
-
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.cmItem.itemName}
-				</h:panelGrid>
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.cmItem.extensionCode}
-				</h:panelGrid>
-
-						<h:panelGrid columns="2" styleClass="comparePanel">
-						
-					#{supplierItem.cmStandardPricing.price} 
-					<p:commandLink value="More.."
-								action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
-								oncomplete="morePrice.show()" rendered="#{unspscCodeBackingBean.requisitioner}"
-								update=":form:catalogueViewPricingId"></p:commandLink>
-						</h:panelGrid>
-
-						<h:panelGrid styleClass="comparePanel">
-
-						</h:panelGrid>
-
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.skuNumber}
-				</h:panelGrid>
 
 
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.minOrder}
-				</h:panelGrid>
+					<table>
 
-						
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.leadTime}
-				</h:panelGrid>
+						<tr>
+							<td colspan="5"><p:graphicImage
+									value="/resources/ep/images/product/computer/879949914_125.jpg" height="80px"></p:graphicImage></td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5"><p:commandLink
+									rendered="#{unspscCodeBackingBean.requisitioner}">
+									<p:graphicImage
+										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
+								</p:commandLink> <p:commandLink
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<p:graphicImage
+										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
+								</p:commandLink> <p:commandLink
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<p:graphicImage
+										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
+								</p:commandLink> <p:commandLink
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<p:graphicImage library="ep/images/design" name="cart_add.png" />
+								</p:commandLink> <p:commandLink
+									action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
+									update=":form:compareDataList">
+									<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								</p:commandLink>&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.cmItem.itemName}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.cmItem.extensionCode}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.cmStandardPricing.price} <p:commandLink
+									value="More.."
+									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
+									oncomplete="morePrice.show()"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									update=":form:catalogueViewPricingId"></p:commandLink>&#160;
+							</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.smSupplier.companyName}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.skuNumber}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.minOrder}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.leadTime}&#160;</td>
+						</tr>
+						<tr height="31px"
+							style="border-bottom: 1px solid #000 !important;">
+							<td colspan="5">#{supplierItem.itemDesc}&#160;</td>
+						</tr>
 
 
+					</table>
 
 
-						<h:panelGrid styleClass="comparePanel">
-					#{supplierItem.itemDesc}
-				</h:panelGrid>
-
-					</h:panelGroup>
 				</p:dataGrid>
 
 

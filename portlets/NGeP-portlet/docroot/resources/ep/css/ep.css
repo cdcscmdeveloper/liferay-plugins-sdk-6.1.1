@@ -2183,7 +2183,7 @@ td {
 .comparePanelLabel{
 	height: 30px;
 	width: 100%;
-	border: 0;
+	border-bottom: 1px solid #000 !important;
 	padding: 0px;
 }
 
@@ -4612,4 +4612,5 @@ table.rptTbl {
 
 .comparelabelCss{
 	width: 10%;
+	padding-top: 51px;
 }
