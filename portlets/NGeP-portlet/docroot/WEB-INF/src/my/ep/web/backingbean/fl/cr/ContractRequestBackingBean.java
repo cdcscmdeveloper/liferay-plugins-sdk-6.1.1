@@ -57,11 +57,18 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmSo;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -120,7 +127,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
-
+			
+		}
+		
+		if(getManagedBean().getFlManualAddress() == null){
+			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
+			getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
+			getManagedBean().getFlManualAddress().setPmAddress(new PmAddress());
+			//getManagedBean().getFlManualAddress().getPmAddress().setAddressId(1L);
+			getManagedBean().getFlManualAddress().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManualAddress().getPmAddress().getPmCountry().setCountryId(1L);
+			getManagedBean().getFlManualAddress().getPmAddress().setPmState(new PmState());
+			getManagedBean().getFlManualAddress().getPmAddress().getPmState().setStateId(1L);
+			getManagedBean().getFlManualAddress().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getFlManualAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
+			getManagedBean().getFlManualAddress().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getFlManualAddress().getPmAddress().getPmCity().setCityId(1L);
+			getManagedBean().getFlManualAddress().getPmAddress().setPmDivision(new PmDivision());
+			getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
+			
 		}
 		
 		if(getManagedBean().getActiveContractList()==null) {
@@ -167,7 +192,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
-			
 			checkCeilingAmount(flRequest);
 			checkCeilingQty(flRequest);
 			
@@ -563,6 +587,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			getManagedBean().setMinistryName(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile()
 							.getOrgName());
+			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
+			getManagedBean().getFlManualAddress().setPmAddress(new PmAddress());
+			getManagedBean().getFlManualAddress().getPmAddress().setPmDivision(new PmDivision());
+			getManagedBean().getFlManualAddress().getPmAddress().setPmState(new PmState());
+			getManagedBean().getFlManualAddress().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getFlManualAddress().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getFlManualAddress().getPmAddress().setPmCountry(new PmCountry());
 		}else if(contractId != null){
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -867,8 +898,62 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setSelectedItemsRows(null);
 	}
 	
-	public void retrieveZonalPrice() {
+	public void retrieveZonalPrice(FlFulfilmentItemAddr flItemAddr) {
+		System.out.println("event "+flItemAddr.getFulfilmentItemAddrId());
+		int unitPrice = 0;
+		int orderedQty = 0;
+		int orderedAmt = 0;
+		if(null != flItemAddr.getUnitPrice()){
+			unitPrice= flItemAddr.getUnitPrice().intValue();
+			{
+				if(null != flItemAddr.getOrderedQty()){
+					orderedQty = flItemAddr.getOrderedQty().intValue();
+				}
+				orderedAmt =((unitPrice) * (orderedQty));
+				flItemAddr.setOrderedAmt(new BigDecimal(orderedAmt) );
+			}
+		}
+	}
+	
+	public void editManualAddress(FlDeliveryAddress flDelAddress){
+		getManagedBean().setFlManualAddress(flDelAddress);
+		flDelAddress.setEditable(true);
 		
 	}
-
+	
+	public void updateManualDeliveryAddrDt() {
+		if(null== getManagedBean().getFlManualAddress().getPmAddress() ||  getManagedBean().getFlManualAddress().isEditable()){
+			return;
+		}
+		FlDeliveryAddress deliveryAddr = null;
+		PmAddress manualAddrType = new PmAddress();
+		manualAddrType = getManagedBean().getFlManualAddress().getPmAddress();
+		deliveryAddr = new FlDeliveryAddress();
+		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+		deliveryAddr.setPmAddress(manualAddrType);
+		deliveryAddr.setCheckManualAddress(true);
+		getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
+	}
+	
+	public void flManualDeliveryAddr() {
+		getManagedBean().setFlManualAddress(new FlDeliveryAddress());
+		getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
+		getManagedBean().getFlManualAddress().setAddressType(new PmAddressType());
+		//getManagedBean().getFlManualAddress().getAddressType().setAddressTypeId(1L);
+		getManagedBean().getFlManualAddress().setPmAddress(new PmAddress());
+		//getManagedBean().getFlManualAddress().getAddressType().getPmAddress().setAddressId(1L);
+		getManagedBean().getFlManualAddress().getPmAddress().setPmCountry(new PmCountry());
+		getManagedBean().getFlManualAddress().getPmAddress().getPmCountry().setCountryId(1L);
+		getManagedBean().getFlManualAddress().getPmAddress().setPmState(new PmState());
+		getManagedBean().getFlManualAddress().getPmAddress().getPmState().setStateId(1L);
+		getManagedBean().getFlManualAddress().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getFlManualAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
+		getManagedBean().getFlManualAddress().getPmAddress().setPmCity(new PmCity());
+		getManagedBean().getFlManualAddress().getPmAddress().getPmCity().setCityId(1L);
+		getManagedBean().getFlManualAddress().getPmAddress().setPmDivision(new PmDivision());
+		getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
+		
+		
+		
+	}
 }
