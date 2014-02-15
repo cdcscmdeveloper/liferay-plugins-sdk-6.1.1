@@ -33,6 +33,7 @@
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchValue}" />
+		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchField}">
 			<f:selectItem itemLabel="Select One" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
@@ -51,6 +52,7 @@
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchValue}" />
+		</ui:remove>
 	</h:panelGrid>
    	
 </ui:composition>
