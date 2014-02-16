@@ -5,16 +5,63 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">   
 	<ui:define name="contentSection">
-	<p:panel>
-     <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
-	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	 <div class="ppRightBtn">
-	  <ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
-		<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{supplierBackingBean.saveChangeBankRequest(outcome)}" />
-	  </ui:repeat>		
-    </div>
+	 <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
+		<p:panel>
+		   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	    	<table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+	    			<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
+							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
+								action="#{supplierBackingBean.saveChangeBankRequest(outcome)}" />
+						</ui:repeat>	    			
+	    			</td>
+	    		</tr>
+	    	</table>
+			<table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Document Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="Change Bank Account"
+								disabled="true" />
+						</h6>
+					</td>				
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo == null ? '-- User Input --':supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}"
+								disabled="true" />
+						</h6>
+					</td>
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	    	
 	</p:panel>
     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
     <p:outputPanel id="ChangeBankAcc">
@@ -53,7 +100,7 @@
 			   </td>
 		   	   <td>
 			           <p:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.contractVer.ctContract.contractName}" 
-			           rows="3" cols="34" disabled="true" autoResize="false" />	
+			           rows="3" cols="31" disabled="true" autoResize="false" />	
 			      
 			 </td>
 			 <td></td>
@@ -73,8 +120,8 @@
 			                </p:selectOneMenu>
 			                 <p:inputText value="12367546543" style="width:170px;" disabled="true"
 			                     rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText> </td>
-                            <td></td>
-                            <td></td>
+                            <td><p:spacer height="15"/></td>
+                            <td><p:spacer height="15"/></td>
                      </tr>
                      <tr>
                         <td> <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  </td>
@@ -92,7 +139,7 @@
 			             </td>
 			             <td>
 			                
-				                <p:inputTextarea id="bankAddress" value="CIMB Berhad, CyberView, CyberJaya, Selangor Malaysia" rows="3" cols="34" disabled="true" maxlength="250" />
+				                <p:inputTextarea id="bankAddress" value="CIMB Berhad, CyberView, CyberJaya, Selangor Malaysia" rows="3" cols="31" disabled="true" maxlength="250" />
 			               
                          </td>
                           <td valign="top">  <p:outputLabel  value="Tel No" />  </td>
@@ -107,20 +154,20 @@
                       <td style="width:200px;">   <p:outputLabel value="EP No." />  </td>
                       <td> <h:panelGrid columns="4">
                                 <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.epNo}" 
-                                    disabled="true" size="12"/>
-                                <p:spacer width="3"/>
+                                    disabled="true" size="11"/>
+                                <p:spacer width="2"/>
                                 <p:outputLabel value="MOF No." />  
                                 <p:inputText value="123"
-                                   disabled="true" size="12"/>
+                                   disabled="true" size="11"/>
                              </h:panelGrid> 
                        </td>
-                       <td style="width:130px;">  <p:outputLabel  value="Contact Person"/>  </td>
+                       <td style="width:120px;">  <p:outputLabel  value="Contact Person"/>  </td>
                        <td>  <p:inputText   disabled="true"   style="width:170px;" /></td>
                 </tr> 
                 <tr>       
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.companyName}"
-                               disabled="true" style="width:215px;"/> </td>
+                               disabled="true" style="width:210px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
                      <td> <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.smAppl.smCompanyBasic.phoneNo}" disabled="true"  style="width:110px;" /></td>
                     
@@ -140,9 +187,9 @@
 			                 </h:panelGroup></td>
 			              <td>
 			                   <h:panelGrid>
-				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="34"   />
+				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="31"   />
 			                   </h:panelGrid></td>
-			                 <td style="width:130px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
+			                 <td style="width:120px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
                              <td valign="top">  <p:inputText value="1234"  disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>

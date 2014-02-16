@@ -96,7 +96,7 @@
 								value="/resources/ep/images/design/revise.png" title="Amendment" />
 						</p:commandLink>
 						<p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
-						<p:commandLink onclick="alert('Under development.'); return false;" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+						<p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
 							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 								value="/resources/ep/images/design/evaluate.png" title="Update" />

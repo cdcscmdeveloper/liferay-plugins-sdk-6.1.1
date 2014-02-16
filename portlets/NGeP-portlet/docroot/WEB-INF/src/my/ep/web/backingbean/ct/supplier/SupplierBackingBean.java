@@ -19,20 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -45,13 +43,12 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -84,7 +81,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	ContractBackingBean ctBB = null;
 	
 	public SupplierBackingBean(){
-		getFactoringDropdownValues();
+		 if(this.getManagedBean().getAction() == null) {
+	 			this.getManagedBean().setAction(new String[]{"Save", "Submit"});
+	 		}
+	//	getFactoringDropdownValues();
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -122,16 +122,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getStatus().setStatusId(1L);
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType("RF");
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocNo("8888878");
+			if(this.getManagedBean().getFactoring().getLoa() == null)
+				this.getManagedBean().getFactoring().setLoa(new ScLoa());
 		}
 		 
 		if(this.getManagedBean().getCtTerminationReason() == null){
 		    	this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
 		 }
 		
-         if(this.getManagedBean().getAction() == null) {
- 			this.getManagedBean().setAction(new String[]{"Save", "Submit"});
- 		}
-         
+        
 	}
     
     public void preRenderView(){
@@ -162,7 +161,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		this.getManagedBean().setAction(res.getAction());
     		this.getManagedBean().setTaskName(res.getTaskName());
     		
-    		if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
+    		if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)){
     			CTBankAccountDataType dataType = (CTBankAccountDataType)obj;
     			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
@@ -173,7 +172,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
     		
-    		}else if(res.getProcessName().equalsIgnoreCase("Factoring Company Request")){
+    		}else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)){
     			CTFactoringDataType dataType = (CTFactoringDataType)obj;
     			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
@@ -185,12 +184,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
     		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 
-    		if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
+    		if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_BANK_ACCOUNT);
     	
-    		}else if(res.getProcessName().equalsIgnoreCase("Factoring Company Request")){
+    		}else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_FACTORING);

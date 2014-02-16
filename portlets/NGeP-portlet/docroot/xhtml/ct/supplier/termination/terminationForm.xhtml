@@ -5,17 +5,63 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
-	<p:panel>
-        <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
-	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	   <div class="ppRightBtn">
-				<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" 
-					   action="#{supplierBackingBean.saveTerminationRequest(outcome)}" />
-				</ui:repeat>		
-    </div>
+	 <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
+		<p:panel>
+		   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	    	<table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+	    			<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
+							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
+								action="#{supplierBackingBean.saveTerminationRequest(outcome)}" />
+						</ui:repeat>	    			
+	    			</td>
+	    		</tr>
+	    	</table>
+			<table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Document Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="Termination Request"
+								disabled="true" />
+						</h6>
+					</td>				
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo == null ? '-- User Input --':supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}"
+								disabled="true" />
+						</h6>
+					</td>
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	    	
 	</p:panel>
 	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
 	    <p:outputPanel id="terminationRequest">
@@ -26,9 +72,9 @@
 			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" style="width:180px;" disabled="false">
 				     <f:selectItem itemLabel="-Select One-" itemValue="" />
 				      <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				      <p:ajax event="change" process="@this" update="terminationRequest" listener="#{supplierBackingBean.changeContractActionListener}"/>
+				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
 			         </p:selectOneMenu></td>
-		         <td style="width:200px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
+		         <td style="width:205px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
 			               value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"/>	</td>
 		   </tr>
@@ -68,20 +114,20 @@
                       <td style="width:200px;">   <p:outputLabel value="EP No." />  </td>
                       <td> <h:panelGrid columns="4">
                                 <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContract.smSupplier.epNo}" 
-                                    disabled="true" size="12"/>
+                                    disabled="true" size="11"/>
                                 <p:spacer width="3"/>
                                 <p:outputLabel value="MOF No." />  
                                 <p:inputText value="123"
-                                   disabled="true" size="12"/>
+                                   disabled="true" size="11"/>
                              </h:panelGrid> 
                        </td>
-                       <td style="width:130px;">  <p:outputLabel  value="Contact Person"/>  </td>
+                       <td style="width:120px;">  <p:outputLabel  value="Contact Person"/>  </td>
                        <td>  <p:inputText   disabled="true"   style="width:170px;" /></td>
                 </tr> 
                 <tr>       
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}"
-                               disabled="true" style="width:215px;"/> </td>
+                               disabled="true" style="width:210px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
                      <td> <p:inputText value="123" disabled="true"  style="width:110px;" /></td>
                     
@@ -101,9 +147,9 @@
 			                 </h:panelGroup></td>
 			              <td>
 			                   <h:panelGrid>
-				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="34"   />
+				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="31"   />
 			                   </h:panelGrid></td>
-			                 <td style="width:130px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
+			                 <td style="width:120px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
                              <td valign="top">  <p:inputText value="1234"  disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>

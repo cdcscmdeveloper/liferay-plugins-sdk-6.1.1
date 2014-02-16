@@ -31,6 +31,7 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -40,6 +41,8 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -53,7 +56,6 @@ import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -224,18 +226,23 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-			ContractAgreementResDTO resDTO;
-		
+			
+			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
 			if(dataType.getAgreementType().equalsIgnoreCase("supplemental")){   
 			    this.getManagedBean().setAgreementType(dataType.getAgreementType());
-				ctReqDTO.setAmendmentId(88L);
-				resDTO = agreementSO.retrieveSupAgreement(ctReqDTO);
-				 this.getManagedBean().setCtContract(resDTO.getCtAmendment().getCtContractVer().getCtContract());
-				if(resDTO.getAgreement() != null)
-					this.getManagedBean().setCtAgreement(resDTO.getAgreement());
-				  this.getManagedBean().getCtAgreement().setCtAmendment(resDTO.getCtAmendment());
-				  
-			
+			    
+			    if(dataType.getAgreementId().intValue() == 0){
+			    	 
+			    	ContractReqDTO conReqDTO = new ContractReqDTO();
+					 conReqDTO.setContractId(ctReqDTO.getContractId());
+					 IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+					 ContractResDTO conResDTO = contractSO.retrieveContract(conReqDTO);
+					 this.getManagedBean().setCtContract(conResDTO.getContract());
+					 this.getManagedBean().getCtAgreement().setCtAmendment(conResDTO.getContract().getLatestContractVer().getCtAmendment());
+			    	
+			    }else{
+			    	resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+			  }
 			}else{
 				 resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 			} 

@@ -115,6 +115,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml";
 	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementViewTab.xhtml";
+	private static final String CONTRACT_PAGE ="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";;
 		
 	private TreeNode rootNode;
 	private TreeNode selectedNode;
@@ -982,6 +983,37 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			aBB= null;
 		}
 		return PROCESS_VIEW_PAGE;
+	}
+	
+	public String gotoContractPage(){
+		ContractReqDTO ctReqDTO = new ContractReqDTO();
+    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+	
+	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	      this.getManagedBean().getApproverModel().getSource().clear();
+		  if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
+			}
+		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		  } 
+		 
+	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+          CombineSupAddress(resDTO.getCtContractVer());
+          
+          this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		  ContractBackingBean ctBB = new ContractBackingBean();
+		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		  initializeRemarks();
+		return CONTRACT_PAGE;
 	}
 	
 	public String convertTime(Date time){ 

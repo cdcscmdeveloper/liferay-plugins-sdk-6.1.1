@@ -46,7 +46,7 @@
 					<td>
 						<h6>
 							<p:inputText size="20"
-								value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
+								value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
 								disabled="true" />
 						</h6>
 					</td>
@@ -59,7 +59,7 @@
 					<td>
 						<h6>
 							<p:inputText size="20"
-								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.latestContractVer.status.statusId)}"
+								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentContractVer.status.statusId)}"
 								disabled="true" />
 						</h6>
 					</td>
@@ -69,7 +69,7 @@
 	<p:tabView id="agreementTab" orientation="left">
 	    <p:tab id="agDetail" title="Create Agreement" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
-             <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml"/>
+            <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml"/>
              <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
         </p:tab> 
 	    <p:tab id="agCreate" title="Signing Agreement">
