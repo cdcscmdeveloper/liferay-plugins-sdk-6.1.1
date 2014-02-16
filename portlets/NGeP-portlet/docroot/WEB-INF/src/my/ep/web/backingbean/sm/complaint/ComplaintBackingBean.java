@@ -32,11 +32,13 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplaint;
 import my.ep.persistence.entity.sm.SmComplaintReview;
+import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 @ManagedBean(name = "complaintBackingBean")
 @RequestScoped
@@ -44,6 +46,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public static Logger log = Logger.getLogger(ComplaintManagedBean.class);
 
 	public ComplaintBackingBean() {
+		
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
 		
 		if (this.getManagedBean().getSmComplaint() == null) {
 			log.info("--------------BackingBean is Null--------------------");
@@ -86,6 +92,18 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().getSmComplainant().setSmComplaint(this.getManagedBean().getSmComplaint());
 		this.getManagedBean().getSmComplaint().getSmComplainants().add(this.getManagedBean().getSmComplainant());
 
+		PmCity pmCity = new PmCity();
+		PmState pmState = new PmState();
+		PmDistrict pmDist = new PmDistrict();
+		
+		//temporary set
+		pmCity.setCityId(1L);
+		pmState.setStateId(1L);
+		//pmDist.setDistrictId(1L);
+		
+		this.getManagedBean().getSmComplainant().setPmCity(pmCity);
+		this.getManagedBean().getSmComplainant().setPmState(pmState);
+		
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IComplaintSO.class);
