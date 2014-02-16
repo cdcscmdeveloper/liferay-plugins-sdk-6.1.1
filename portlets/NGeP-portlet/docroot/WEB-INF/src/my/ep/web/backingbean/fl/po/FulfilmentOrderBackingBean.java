@@ -85,16 +85,17 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 			if(getManagedBean().isContractRequest() == Boolean.TRUE){
 				reqDTO.setContractRequest(getManagedBean().isContractRequest());
+				checkValidity(flRequest);
 			}else{
 				reqDTO.setContractRequest(false);
 			}
-			checkValidity(flRequest);
+			
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			if(getManagedBean().isContractRequest() == Boolean.FALSE){
 				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				//reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
@@ -170,7 +171,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 		resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		//flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
@@ -316,11 +317,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
-			/*if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
+			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
 				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
 			}else{
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-			}*/
+			}
 			
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
