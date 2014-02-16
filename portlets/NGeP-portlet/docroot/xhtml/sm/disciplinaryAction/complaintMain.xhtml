@@ -14,7 +14,7 @@
 		<!--  <p:commandButton value="Download Investigation Report"></p:commandButton>-->
 		<p:tabView id="tabComplaint" dynamic="true" orientation="left">
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 0 }">
 				<p:tab title="Initial Review">
 					<ui:include src="initialReview.xhtml" />
 				</p:tab>
