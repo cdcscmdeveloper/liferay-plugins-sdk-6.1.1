@@ -39,9 +39,7 @@
 	</p:panel>
 
 	<p:outputPanel id="svRptPanel" toggleable="true">
-		<c:choose>
-			<c:when
-				test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
+		<h:panelGroup rendered="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
 				<p:panel header="Report">
 					<table class="customTbl">
 						<tr>
@@ -60,17 +58,16 @@
 						</tr>
 					</table>
 				</p:panel>
-			</c:when>
+			</h:panelGroup>
 
-			<c:otherwise>
+			<h:panelGroup rendered="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Online'}">
 				<p:panel header="Report">
 					<div align="right">
 						<p:commandButton value="Save" />
 					</div>
 					<ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml"></ui:include>
 				</p:panel>
-			</c:otherwise>
-		</c:choose>
+			</h:panelGroup>
 	</p:outputPanel>
 
 
