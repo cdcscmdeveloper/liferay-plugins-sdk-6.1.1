@@ -21,9 +21,9 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Business Type" /></td>
 					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}"
-							disabled="true" size="40" /></td>
-
+							value="ROB Perkongsian Semenanjung" disabled="true" size="40" /></td>
+						<!-- 					<td class="tdContent"><p:inputText --> <!-- 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" -->
+						<!-- 							disabled="true" size="40" /></td> -->
 					<td class="tdTitle"><p:outputLabel value="No. ROC/ROB/ROS" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}"
@@ -32,29 +32,34 @@
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Income Tax No." /></td>
-					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}"
+					<td class="tdContent"><p:inputText value="S00033625414"
 							disabled="true" size="40" /></td>
+					<!-- 					<td class="tdContent"><p:inputText -->
+					<!-- 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}" -->
+					<!-- 							disabled="true" size="40" /></td> -->
 
 					<td class="tdTitle"><p:outputLabel value="Established Date" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}"
-							disabled="true" size="40" /></td>
+							disabled="true" size="40">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</p:inputText></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Total Staff" /></td>
-					<td class="tdContent"><p:inputText disabled="true" size="40" /></td>
+					<td class="tdContent"><p:inputText disabled="true" size="40" value="10" /></td>
 
 					<td class="tdTitle"><p:outputLabel value="Yearly Income" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText value="100,000"
+							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Address" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText
+							value="44, Jalan Universiti 10/15" disabled="true" size="40" /></td>
 
 					<td class="tdTitle"><p:outputLabel value="Postcode" /></td>
 					<td class="tdContent"><p:inputText value="a" disabled="true"
@@ -62,39 +67,51 @@
 				</tr>
 
 				<tr>
+					<td class="tdTitle"></td>
+					<td class="tdContent"><p:inputText value="Taman Universiti"
+							disabled="true" size="40" /></td>
+				</tr>
+				<tr>
+					<td class="tdTitle"></td>
+					<td class="tdContent"><p:inputText disabled="true" size="40" /></td>
+				</tr>
+				<tr>
+					<td class="tdTitle"></td>
+					<td class="tdContent"><p:inputText disabled="true" size="40" /></td>
+				</tr>
+
+				<tr>
 					<td class="tdTitle"><p:outputLabel value="City" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText value="Petaling Jaya"
+							disabled="true" size="40" /></td>
 
 					<td class="tdTitle"><p:outputLabel value="State" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText value="Selangor"
+							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="District" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText disabled="true" size="40" /></td>
 
 					<td class="tdTitle"><p:outputLabel value="Country" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText value="Malaysia"
+							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Phone No." /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
+					<td class="tdContent"><p:inputText value="03-79001200" disabled="true"
 							size="40" /></td>
 
 					<td class="tdTitle"><p:outputLabel value="Fax No." /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
+					<td class="tdContent"><p:inputText value="03-79001201" disabled="true"
 							size="40" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Website" /></td>
-					<td class="tdContent"><p:inputText value="a" disabled="true"
-							size="40" /></td>
+					<td class="tdContent"><p:inputText  disabled="true" size="40" /></td>
 				</tr>
 			</table>
 		</p:panel>
