@@ -15,8 +15,8 @@
 							var="c" itemLabel="#{c.smAddress.address1}"
 							itemValue="#{c.smAddress.address1}" />
 					</p:selectOneMenu></td>
-				<td class="tdTitle"></td>
-				<td class="tdContent"></td>
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent">&#160;</td>
 			</tr>
 		</table>
 	</p:panel>
@@ -24,47 +24,53 @@
 	<p:panel header="Report Submission" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Report Submit" /></td>
-				<td id="tdContent"><p:selectOneRadio id="rptMethod"
+				<td class="tdTitle"><p:outputLabel value="Report Submit" /></td>
+				<td class="tdContent"><p:selectOneRadio id="rptMethod"
 						value="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod}">
 						<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
 						<f:selectItem itemLabel="Online Submit" itemValue="Online" />
-						<p:ajax event="change" update="svRptPanel"
-							listener="#{svoSiteVisitBackingBean.changeRptSubsMethod}" />
+						<p:ajax event="change" update="svRptPanel" />
 					</p:selectOneRadio></td>
 
-				<td id="tdTitle"></td>
-				<td id="tdContent"></td>
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent">&#160;</td>
 			</tr>
 		</table>
 	</p:panel>
 
 	<p:outputPanel id="svRptPanel" toggleable="true">
+		<c:choose>
+			<c:when
+				test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
+				<p:panel header="Report">
+					<table class="customTbl">
+						<tr>
+							<td class="tdTitle"><p:outputLabel value="File" /></td>
+							<td class="tdContent" colspan="2"><p:fileUpload
+									mode="simple" /> <p:commandButton value="Upload"
+									action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" /></td>
+						</tr>
 
-		<c:if
-			test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
-			<p:panel header="Report">
-				<table class="customTbl">
-					<tr>
-						<td class="tdTitle"><p:fileUpload mode="simple" /></td>
-						<td class="tdContent"><p:commandButton value="Upload"
-								action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" /></td>
-					</tr>
-				</table>
-			</p:panel>
-		</c:if>
+						<tr>
+							<td class="tdTitle">&#160;</td>
+							<td class="tdContent">&#160;</td>
 
+							<td class="tdTitle">&#160;</td>
+							<td class="tdContent">&#160;</td>
+						</tr>
+					</table>
+				</p:panel>
+			</c:when>
 
-
-		<c:if
-			test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Online'}">
-			<p:panel header="Report">
-				<div align="right">
-					<p:commandButton value="Save" />
-				</div>
-				<ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml"></ui:include>
-			</p:panel>
-		</c:if>
+			<c:otherwise>
+				<p:panel header="Report">
+					<div align="right">
+						<p:commandButton value="Save" />
+					</div>
+					<ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml"></ui:include>
+				</p:panel>
+			</c:otherwise>
+		</c:choose>
 	</p:outputPanel>
 
 

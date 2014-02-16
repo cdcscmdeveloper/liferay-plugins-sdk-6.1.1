@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
 	<p:panel header="Individual Registration Information" toggleable="true">
 		<table class="customTbl">
 			<tr>
@@ -14,23 +13,23 @@
 						value="#{registrationBackingBean.managedBean.smSupp.serviceCategory}">
 						<f:selectItem itemLabel="Professional Service" itemValue="P" />
 						<f:selectItem itemLabel="Special Service" itemValue="S" />
-						<p:ajax event="change" update="outPnl" />
+						<p:ajax event="change" update="outPnl,serviceTypeId" />
 					</p:selectOneRadio></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="* Service" /></td>
 				<td class="tdContent"><p:selectOneMenu
-						value="#{registrationBackingBean.managedBean.smSupp.serviceType}">
+						value="#{registrationBackingBean.managedBean.smSupp.serviceType}"
+						id="serviceTypeId">
 						<f:selectItem itemLabel="Select" itemValue="0" />
-						<f:selectItem itemLabel="Bomoh hujan" itemValue="1" />
-						<f:selectItem itemLabel="Penggali kubur" itemValue="2" />
-						<f:selectItem itemLabel="Bidan" itemValue="3" />
-						<f:selectItem itemLabel="Penyewaan sampan" itemValue="4" />
+						<f:selectItems
+							value="#{registrationBackingBean.managedBean.serviceLs.entrySet()}"
+							var="entry" itemValue="#{entry.key}" itemLabel="#{entry.value}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Identification No" /></td>
+				<td class="tdTitle"><p:outputLabel value="* New I/C No" /></td>
 				<td class="tdContent"><p:inputMask
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						size="40" mask="999999999999"
@@ -75,7 +74,7 @@
 				<td class="tdTitle"><p:outputLabel value="* State" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermState"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
-
+						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
@@ -89,6 +88,8 @@
 				<td class="tdTitle"><p:outputLabel value="* District" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
+
+						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
@@ -100,6 +101,7 @@
 				<td class="tdTitle"><p:outputLabel value="* Town/ City" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermCity"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
@@ -139,6 +141,8 @@
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 		<div align="right">
+			<p:commandButton value="Back"
+				action="#{registrationBackingBean.returnToSignUp}" />
 			<p:commandButton value="Submit"
 				action="#{registrationBackingBean.submitRegistration}" />
 		</div>

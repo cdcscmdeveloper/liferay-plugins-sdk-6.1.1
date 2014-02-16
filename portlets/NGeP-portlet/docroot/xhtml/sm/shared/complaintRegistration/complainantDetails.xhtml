@@ -71,8 +71,7 @@
 						value="#{complaintBackingBean.managedBean.smComplainant.postcode}"
 						size="40" /></td>
 				<td class="tdTitle"><p:outputLabel value="* State" /></td>
-				<td class="tdContent"><p:selectOneMenu id="stateId"
-						value="#{complaintBackingBean.managedBean.smComplainant.pmState.stateId}">
+				<td class="tdContent"><p:selectOneMenu id="stateId">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="state"
 							value="#{complaintBackingBean.managedBean.stateLs}"
@@ -88,8 +87,7 @@
 					</p:selectOneMenu></td>
 
 				<td class="tdTitle"><p:outputLabel value="* City" /></td>
-				<td class="tdContent"><p:selectOneMenu id="cityId"
-						value="#{complaintBackingBean.managedBean.smComplainant.pmCity.cityId}">
+				<td class="tdContent"><p:selectOneMenu id="cityId">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="city"
 							value="#{complaintBackingBean.managedBean.cityLs}"

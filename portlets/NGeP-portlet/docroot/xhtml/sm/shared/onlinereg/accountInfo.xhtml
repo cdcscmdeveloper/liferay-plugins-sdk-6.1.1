@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -16,7 +15,7 @@
 							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
 					<td class="tdContent"><p:selectOneMenu
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}">
-							<f:selectItem itemLabel="Select" itemValue="" />
+							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItem itemLabel="Contractor" itemValue="K" />
 							<f:selectItem itemLabel="Consultant" itemValue="P" />
 							<p:ajax event="change" update="busTypeId" listener="#{registrationBackingBean.suppTypeOnChange}"/>
@@ -26,7 +25,8 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="busTypeId"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+						value="#{registrationBackingBean.managedBean.smSupp.businessType}" readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems value="#{registrationBackingBean.managedBean.businessTypeLs}" var="busTypeLs" itemValue="#{busTypeLs.pmParameter.parameterCode}" itemLabel="#{busTypeLs.codeName}"></f:selectItems>
 						<p:ajax event="change" update="@form" listener="#{registrationBackingBean.businessTypeOnChange}"/>
 					

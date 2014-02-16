@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	
 	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 
@@ -48,6 +48,8 @@
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div align="right">
+			<p:commandButton value="Back"
+				action="#{registrationBackingBean.returnToSignUp}" />
 			<p:commandButton value="Next"
 				action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
 		</div>

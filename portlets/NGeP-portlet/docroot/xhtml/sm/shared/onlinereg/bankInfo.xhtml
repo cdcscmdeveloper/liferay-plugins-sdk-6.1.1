@@ -26,15 +26,19 @@
 			value="#{registrationBackingBean.managedBean.smSuppBanks}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}"
 			id="bankInfoId" rowKey="#{bankInfo}">
-			
+
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="Bank Name">
 				<p:selectOneMenu value="#{bankInfo.pmFinancialOrg.financialOrgId}">
-					<f:selectItems value="#{registrationBackingBean.managedBean.financialOrgLs}" var="finOrg" itemValue="#{finOrg.financialOrgId}" itemLabel="#{finOrg.finOrgName}" />
+					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItems
+						value="#{registrationBackingBean.managedBean.financialOrgLs}"
+						var="finOrg" itemValue="#{finOrg.financialOrgId}"
+						itemLabel="#{finOrg.finOrgName}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Account Number">
-				<p:inputText value="#{bankInfo.accountNo}"/>
+				<p:inputText value="#{bankInfo.accountNo}" />
 			</p:column>
 		</p:dataTable>
 

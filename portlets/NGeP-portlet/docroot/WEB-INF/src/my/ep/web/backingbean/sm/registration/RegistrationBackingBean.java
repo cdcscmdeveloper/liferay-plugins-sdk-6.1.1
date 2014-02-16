@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -62,13 +63,17 @@ public class RegistrationBackingBean extends
 	public static Logger log = Logger.getLogger(RegistrationBackingBean.class);
 	public static String newICMasking = "999999999999";
 	private static String accountRegistration = "registrationInfo";
-	// private static String accountRegistration = "testSignUp";
+	private static String signUp = "signUp";
 	private static String firstUserRegistration = "firstUserRegistration";
 	private static long nationality = 1;
 
 	public RegistrationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
+		}
+		
+		if(this.getManagedBean().getApplType() == null){
+			this.getManagedBean().setApplType("M");
 		}
 
 	}
@@ -132,6 +137,9 @@ public class RegistrationBackingBean extends
 			this.populateStateByAddType("residential");
 			this.populateStateByAddType("business");
 			this.retrieveFinancialOrgList();
+			
+			log.info("**********permenant" + this.getManagedBean().getPermenantStateLs().size());
+			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
 			// this.retrievePmBusinessType("BTB");
 
 			// for(PmParameterDesc test :
@@ -157,13 +165,26 @@ public class RegistrationBackingBean extends
 		}
 		this.getManagedBean().getSmAppl()
 				.setApplType(this.getManagedBean().getApplType());
+//		this.getManagedBean().setServiceLs(new HashMap<String,String>());
+//		this.getManagedBean().getServiceLs().size();
 		log.info("-------onlineAccountAgreement end-------------");
-
+		
+//		this.getManagedBean().getSmSupp().setServiceCategory("P");
+//		log.info("******Service List******"  + this.getManagedBean().getServiceLs().size());
+		
 		return accountRegistration;
 	}
 
 	public String proceedToFirstUserRegistration() {
 		return firstUserRegistration;
+	}
+	
+	public String returnToSignUp(){
+		return signUp;
+	}
+	
+	public String returnToCompanyInfo(){
+		return accountRegistration;
 	}
 
 	public void identificationTypeOnChange() {
@@ -270,14 +291,13 @@ public class RegistrationBackingBean extends
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Successful Registered.", ""));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Successful Registered.", ""));
+			this.getManagedBean().setSmAppl(null);
+			this.getManagedBean().setSmSupp(null);
 			return "/xhtml/sm/disciplinaryAction/outputMsg";
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			log.info("-------------------Error SubmitRegistration----------------");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", ""));
 			return "";
 		}
 	}
@@ -407,6 +427,15 @@ public class RegistrationBackingBean extends
 	}
 
 	public void suppOwnerIdTypeOnChange() {
+		if (this.getManagedBean().getSmSuppOwner().getIdentificationType()
+				.equals("I")) {
+			this.getManagedBean().setSuppOwnerIdMask(newICMasking);
+		} else {
+			this.getManagedBean().setSuppOwnerIdMask("");
+		}
+	}
+	
+	public void firstIdTypeOnChange() {
 		if (this.getManagedBean().getSmSuppOwner().getIdentificationType()
 				.equals("I")) {
 			this.getManagedBean().setSuppOwnerIdMask(newICMasking);

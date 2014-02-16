@@ -1,6 +1,9 @@
 package my.ep.web.managedbean.sm.registration;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -26,28 +29,27 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class RegistrationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+
 	private SmAppl smAppl;
 	private SmSupplier smSupp;
-	
+
 	private List<PmCountry> countryLs;
 	private List<PmState> businessStateLs;
 	private List<PmState> residentialStateLs;
 	private List<PmState> permenantStateLs;
-	
+
 	private List<PmDistrict> businessDistrictLs;
 	private List<PmDistrict> residentialDistrictLs;
 	private List<PmDistrict> permenantDistrictLs;
-	
+
 	private List<PmCity> businessCityLs;
 	private List<PmCity> residentialCityLs;
 	private List<PmCity> permenantCityLs;
-	
+
 	private boolean sameAddress;
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<SmSupplierBank> smSuppBanks;
-	
-	
+
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
 	private SmPersonnelAddress smPersonnelAdd;
@@ -55,16 +57,17 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmAddress smBusinessAdd;
 	private SmAddress smPermenantAdd;
 	private SmAddress smResAdd;
-	
+
 	private String applType;
 	private String suppOwnerIdMask;
 	private List<PmParameterDesc> businessTypeLs;
 	private List<PmFinancialOrg> financialOrgLs;
 	private List<PmCertBody> profCertBodyLs;
-	
+
 	private SmSupplierCert[] selectedSuppCerts;
 	private List<SmSupplierCert> smSuppCerts;
-	
+	private Map<String, String> serviceLs;
+
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -72,7 +75,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setSmSupp(SmSupplier smSupp) {
 		this.smSupp = smSupp;
 	}
-
 
 	public List<PmCountry> getCountryLs() {
 		return countryLs;
@@ -217,7 +219,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
 	}
-	
+
 	public List<SmSupplierBank> getSmSuppBanks() {
 		return smSuppBanks;
 	}
@@ -288,6 +290,29 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setProfCertBodyLs(List<PmCertBody> profCertBodyLs) {
 		this.profCertBodyLs = profCertBodyLs;
+	}
+
+	public Map<String, String> getServiceLs() {
+		serviceLs = new LinkedHashMap<String, String>();
+
+		if (this.smSupp.getServiceCategory() != null){
+			if (this.smSupp.getServiceCategory().equals("P")) {
+				serviceLs.put("1", "Accountant");
+				serviceLs.put("2", "Doctor");
+				serviceLs.put("3", "Lawyer");
+			} else if (this.smSupp.getServiceCategory().equals("S")) {
+				serviceLs.put("4", "Bomoh hujan");
+				serviceLs.put("5", "Penggali kubur");
+				serviceLs.put("6", "Bidan");
+				serviceLs.put("7", "Penyewaan sampan");
+			}
+		}
+
+		return this.serviceLs;
+	}
+
+	public void setServiceLs(Map<String, String> serviceLs) {
+		this.serviceLs = serviceLs;
 	}
 
 }
