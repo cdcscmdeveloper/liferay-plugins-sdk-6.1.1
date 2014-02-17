@@ -49,8 +49,8 @@
 					<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
 					<td colspan="3" style="padding-bottom: 2px;"><p:selectOneRadio
 							value="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType}">
-							<f:selectItem itemLabel="Owned" itemValue="O" />
-							<f:selectItem itemLabel="Rented" itemValue="R" />
+							<f:selectItem itemLabel="Own" itemValue="O" />
+							<f:selectItem itemLabel="Rent" itemValue="R" />
 							<p:ajax update="ofp" event="change"
 								listener="#{backingBean.officeFacilitySelected}" />
 						</p:selectOneRadio></td>

@@ -143,8 +143,8 @@
 				<td><p:outputLabel value="Ownership Type" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
-						<f:selectItem itemLabel="Rented " itemValue="R" />
-						<f:selectItem itemLabel="Owned" itemValue="O" />
+						<f:selectItem itemLabel="Rent " itemValue="R" />
+						<f:selectItem itemLabel="Own" itemValue="O" />
 						<p:ajax event="change"
 							listener="#{backingBean.factoryOwnerTypeSel}"
 							update="workPan,workPanLbl" />
