@@ -60,21 +60,28 @@ SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	
 	public SelectItem[] getApprovalCategories() {
-		SelectItem[] selectItems = new SelectItem[6];
+		SelectItem[] selectItems = new SelectItem[7];
+
 
 		selectItems[0] = new SelectItem(
 				ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
-		selectItems[1] = new SelectItem(ApprovalCategory.ICT_APPROVAL.value(),
-				"ICT Project Approval");
-		selectItems[2] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(),
+		selectItems[1] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(),
 				"BPK Approval");
+		selectItems[2] = new SelectItem(
+				ApprovalCategory.COMMITTEE_APPROVAL.value(),
+				"Committee Approval");
 		selectItems[3] = new SelectItem(
-				ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value(),
-				"Finalization Committee Approval");
-		selectItems[4] = new SelectItem(ApprovalCategory.MITI_APPROVAL.value(),
-				"MITI Approval");
+				ApprovalCategory.PUBLICATION_APPROVAL.value(),
+				"Publication Approval");
+		selectItems[4] = new SelectItem(
+				ApprovalCategory.PTJ_APPROVAL.value(), "PTJ Approval");
 		selectItems[5] = new SelectItem(
-				ApprovalCategory.DIVISION_APPROVAL.value(), "PTJ Approval");
+				ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value(),
+				"Procurement Board Approval");
+		selectItems[6] = new SelectItem(
+				ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
+
+
 
 		return selectItems;
 	}
