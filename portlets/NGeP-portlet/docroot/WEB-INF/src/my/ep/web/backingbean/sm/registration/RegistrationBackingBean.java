@@ -293,10 +293,10 @@ public class RegistrationBackingBean extends
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Successful Registered.", ""));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Successful Registered.To activate account please check your email. Within the email you will find a link which you must click in order to activate your account.", ""));
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
-			return "/xhtml/sm/disciplinaryAction/outputMsg";
+			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			log.info("-------------------Error SubmitRegistration----------------");
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", ""));
