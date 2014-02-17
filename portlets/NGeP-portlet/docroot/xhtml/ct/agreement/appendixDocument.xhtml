@@ -9,135 +9,56 @@
     <p:panel id="apedixDoc" header="APPENDIXES DOCUMENT"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">  
           <p:dataTable id="appendixes" var="data" value="#{agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs}" 
-             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" 
+             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" rowIndexVar="rowIndex"
              paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
              emptyMessage="No Records!">
              <ac:paginator for="appendixes"/>
 	 		  <p:column selectionMode="multiple" style="width:18px;"/>  
 			  <p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.type']}">
-			    <p:outputLabel value="#{agreementBackingBean.getParameterDesc(data.appendixType)}" style="width:150px;float:left;"/>
-			  </p:column> 	
+			  <h:outputText value="#{agreementBackingBean.retrieveParameterObj(data.appendixType.parameterId)}"
+					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />
+			   <p:selectOneMenu style="width:140px;" value="#{data.appendixType.parameterId}"
+			     rendered="#{rowIndex eq agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" >
+                    <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.agreementAppendixType)}" />
+               	 </p:selectOneMenu>
+			 </p:column> 	
 			  <p:column style="width:450px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
-			     <p:outputLabel value="#{data.title}" style="width:450px;float:left;"/>
+			      <h:outputText value="#{data.title}"
+					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />
+			       <p:inputText value="#{data.title}" style="width:450px;"  rendered="#{rowIndex eq agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}"  />  
 			  </p:column> 
 			  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.ag.table.action']}" styleClass="column-align-center">
-			  <h:panelGroup id="uploadAppendixPg">
-			     <h:commandLink value="#{agreementBackingBean.fileNames(data.filePath)}" styleClass="blue_font" 
-				     action="#{agreementBackingBean.downloadFile(data.filePath)}" />					
-			  </h:panelGroup>
-			  </p:column> 
+	     	     <h:panelGroup id="userDefinedPg">
+			       <p:commandButton oncomplete="userDefinedDlg.show();return false;" icon="iconAttachment" 
+					  update="appendixes" rendered="#{data.filePath == null}" >
+					  <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.ctAgreementAppendix}" /></p:commandButton>	
+				      <h:commandLink value="#{agreementBackingBean.fileNames(data.filePath)}" styleClass="blue_font" 
+				      action="#{agreementBackingBean.downloadFile(data.filePath)}" />					
+			     </h:panelGroup>
+			   </p:column> 
 		  </p:dataTable>  
+		  <p:dialog id="userDefinedDlg" widgetVar="userDefinedDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		             <p:ajax event="close" />
+		             <p:fileUpload style="display:inline;" mode="advanced" fileUploadListener="#{agreementBackingBean.fileUpload}" 
+			            allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			            invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			            update="appendixes">
+		              </p:fileUpload> 
+	               </p:dialog> 
 	   </h:panelGrid>
 	   <div class="ppRightBtn"> 	
-	     <p:commandButton value="Add" process="@this" icon="ui-icon-add" onclick="dlg2.show();"/>
+	     <p:commandButton value="Add" process="@form" update="appendixes" icon="ui-icon-add" action="#{agreementBackingBean.addAppendix()}" />
 		 <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation.show()"/>
 	   </div>
 	   <p:confirmDialog message="Do you want to delete the record?" closable="true" 
 	      appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
           <h:panelGrid columns="2">
-			<p:commandButton value="Yes" icon="ui-icon-accept" update="appendixes" 
+			<p:commandButton value="Yes" icon="ui-icon-accept" update=":form" 
 			  process="@form" action="#{agreementBackingBean.deleteAppendix()}"
 				onclick="confirmation.hide();"/>
 			<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
 		  </h:panelGrid>
 	   </p:confirmDialog>
-	 
-	   <p:dialog id="modalDialog" header="#{lbl['lbl.ct.ag.dailog.header']}" widgetVar="dlg2" modal="true" width="700" height="350">
-	   
-		   <p:panel id="appendix">
-			 <div class="ppRightBtn"> 	
-				 <p:commandButton value="Ok" process="@form" actionListener="#{agreementBackingBean.addAgreementAppendex}" 
-				   update="appendixes,modalDialog" onclick="dlg2.hide();"/>
-			     <p:commandButton value="#{lbl['lbl.ct.ag.btn.cancel']}" type="button" ajax="false" onclick="dlg2.hide();" icon="ui-icon-cancel" />
-		     </div>
-             <h:panelGrid columns="2" style="width:350px;">
-			     <p:outputLabel  value="Document Type" style="width:40px;"  />
-            	 <p:selectOneMenu style="width:140px;" value="#{agreementBackingBean.managedBean.parameterId}">
-                    <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.agreementAppendixType)}" />
-                    <p:ajax event="change" update="changeField" listener="#{agreementBackingBean.changeApendexType}" process="@this"/>  
-               	 </p:selectOneMenu>
-			  </h:panelGrid>
-			  <p:spacer height="5"/>
-            
-            <p:outputPanel id="changeField"> 
-			   
-			   <h:panelGrid  style="width:100%;" rendered="#{agreementBackingBean.managedBean.userDefined}">
-			      <p:dataTable id="userDefined" var="data" value="#{agreementBackingBean.managedBean.ctUserAppendixList}" 
-                     lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" 
-                     paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"  emptyMessage="No Records!">
-                     <ac:paginator for="userDefined"/>
-	 		           <p:column selectionMode="multiple" style="width:18px;"/>  
-			           <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
-			             <p:inputText value="#{data.title}" style="width:400px;" /> </p:column> 
-			           <p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.action']}" styleClass="column-align-center">
-			             <h:panelGroup id="userDefinedPg">
-			               <p:commandButton oncomplete="userDefinedDlg.show();return false;" icon="iconAttachment" 
-					         update="userDefined" rendered="#{data.filePath == null}" >
-					         <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.ctAgreementAppendix}" /></p:commandButton>	
-				           <h:commandLink value="#{agreementBackingBean.fileNames(data.filePath)}" styleClass="blue_font" 
-				             action="#{agreementBackingBean.downloadFile(data.filePath)}" />					
-			             </h:panelGroup>
-			           </p:column> 
-		          </p:dataTable>
-		          <p:dialog id="userDefinedDlg" widgetVar="userDefinedDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-		             <p:ajax event="close" />
-		             <p:fileUpload style="display:inline;" mode="advanced" fileUploadListener="#{agreementBackingBean.fileUpload}" 
-			            allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			            invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			            update="userDefined">
-		              </p:fileUpload> 
-	               </p:dialog> 
-		      </h:panelGrid>
-		       <p:confirmDialog message="Do you want to delete the record?" closable="true"  appendToBody="true" 
-		          header="Delete Confirmation" severity="alert" widgetVar="userConfirmation">
-                  <h:panelGrid columns="2">
-			        <p:commandButton value="Yes" icon="ui-icon-accept" update="userDefined" 
-			          process="@form" action="#{agreementBackingBean.deleteUserDefinedAppendix()}" onclick="userConfirmation.hide();"/>
-			        <p:commandButton value="No" icon="ui-icon-reject" onclick="userConfirmation.hide()" type="button" />
-		          </h:panelGrid>
-	           </p:confirmDialog>
-		      <div class="ppRightBtn"> 	
-	            <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addAppendix()}"
-	               rendered="#{agreementBackingBean.managedBean.userDefined}" icon="ui-icon-add" update="userDefined"/>
-		        <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="userConfirmation.show()" 
-		          rendered="#{agreementBackingBean.managedBean.userDefined}"/>
-	           </div>
-	          
-		           
-		       <h:panelGrid  style="width:100%;" rendered="#{agreementBackingBean.managedBean.sysDefined}">
-			      <p:dataTable id="systemDefined" var="data" value="#{agreementBackingBean.managedBean.ctSystemAppendixList}" 
-                     lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" 
-                     paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"  emptyMessage="No Records!">
-                      <ac:paginator for="userDefined"/>
-	 		            <p:column selectionMode="multiple" style="width:18px;"/>  
-			            <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
-			               <p:inputText value="#{data.title}" style="width:400px;" /> </p:column> 
-			            <p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.action']}" styleClass="column-align-center">
-			               <h:panelGrid>
-			                 <p:selectOneMenu style="width:140px;">
-                               <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.agreementAppendixType)}" />
-               	             </p:selectOneMenu>
-			               </h:panelGrid>
-			             </p:column> 
-		             </p:dataTable>
-		         </h:panelGrid>
-		          <p:confirmDialog message="Do you want to delete the record?" closable="true"  appendToBody="true" 
-		          header="Delete Confirmation" severity="alert" widgetVar="systemConfirmation">
-                  <h:panelGrid columns="2">
-			        <p:commandButton value="Yes" icon="ui-icon-accept" update="systemDefined" 
-			          process="@form" action="#{agreementBackingBean.deleteSystemDefinedAppendix()}" onclick="systemConfirmation.hide();"/>
-			        <p:commandButton value="No" icon="ui-icon-reject" onclick="systemConfirmation.hide()" type="button" />
-		          </h:panelGrid>
-	           </p:confirmDialog>
-				 <div class="ppRightBtn"> 	
-	                 <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSystemAppendix()}" 
-	                   rendered="#{agreementBackingBean.managedBean.sysDefined}" icon="ui-icon-add" update="systemDefined"/>
-		             <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="systemConfirmation.show()" 
-		               rendered="#{agreementBackingBean.managedBean.sysDefined}"/>
-	             </div>
-			 </p:outputPanel>
-		  </p:panel>
-	   </p:dialog>
 	</p:panel>	    	  
 </ui:composition>
                        

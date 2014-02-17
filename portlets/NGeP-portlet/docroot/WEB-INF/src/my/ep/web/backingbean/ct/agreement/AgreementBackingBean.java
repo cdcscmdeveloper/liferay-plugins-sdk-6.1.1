@@ -485,8 +485,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void addAppendix(){
 		CtAgreementAppendix ctAgreementAppendix = new CtAgreementAppendix();
 	    ctAgreementAppendix.setAppendixType(new PmParameter());
-		ctAgreementAppendix.setAppendixType(this.getManagedBean().getPmParameter());
-		this.getManagedBean().getCtUserAppendixList().add(ctAgreementAppendix);
+		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().add(ctAgreementAppendix);
 	}
 	
 	public void deleteUserDefinedAppendix(){
@@ -527,21 +526,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-	/*    int i=0;
+	    int i=0;
 	    for(CtAgreementAppendix ctAgreementAppendix : this.getManagedBean().getCtAgreement().getCtAgreementAppendixs()){
 	    	if(ctAgreementAppendix.equals(this.getManagedBean().getCtAgreementAppendix())){
 	    		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().get(i).setFilePath(filePath);
 	    		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().get(i).setFileName(fileName);
 	    	 }i++;
-	     }*/
+	     }
 	    
-	    int i=0;
+	  /*  int i=0;
 	    for(CtAgreementAppendix ctAgreementAppendix : this.getManagedBean().getCtUserAppendixList()){
 	    	if(ctAgreementAppendix.equals(this.getManagedBean().getCtAgreementAppendix())){
 	    		this.getManagedBean().getCtUserAppendixList().get(i).setFilePath(filePath);
 	    		this.getManagedBean().getCtUserAppendixList().get(i).setFileName(fileName);
 	    	 }i++;
-	     }
+	     }*/
 	}
 	
 	public void uploadDocument(FileUploadEvent event) throws Exception{
@@ -769,20 +768,41 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 }/*End approval details*/
 	
 	 public void changeApendexType(){
-		flush();
-		try {
+/*//		flush();
+//		try {
+//			
+//			String parameterCode = retrieveParameterById(this.getManagedBean().getParameterId());
+//			if(parameterCode.equalsIgnoreCase("S")){
+//				this.getManagedBean().setSysDefined(true);
+//			}if(parameterCode.equalsIgnoreCase("U")){
+//				this.getManagedBean().setUserDefined(true);
+//			}
+//		} catch (NamingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+*/	 }
+	  
+	 public String retrieveParameterObj(Long parameterId) throws NamingException {
 			
-			String parameterCode = retrieveParameterById(this.getManagedBean().getParameterId());
-			if(parameterCode.equalsIgnoreCase("S")){
-				this.getManagedBean().setSysDefined(true);
-			}if(parameterCode.equalsIgnoreCase("U")){
-				this.getManagedBean().setUserDefined(true);
-			}
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	 }
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			return getParameterDesc(resDTO.getPmParameter());
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return null;
+	 } 
 	 
 	 public void flush(){
 		this.getManagedBean().setUserDefined(false);
