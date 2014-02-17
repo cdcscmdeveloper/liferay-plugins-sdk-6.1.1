@@ -8,7 +8,7 @@ Body {
 }
 
 a.cart_menu_price {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 17px;
 	color: #b1b1b1;
 	font-weight: bold;
@@ -16,7 +16,7 @@ a.cart_menu_price {
 }
 
 a:hover.cart_menu_price {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 17px;
 	color: #dddddd;
 	font-weight: bold;
@@ -24,7 +24,7 @@ a:hover.cart_menu_price {
 }
 
 a.menu1 {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
@@ -35,7 +35,7 @@ a.menu1 {
 }
 
 a:visited.menu1 {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
@@ -43,7 +43,7 @@ a:visited.menu1 {
 }
 
 a:active.menu1 {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
@@ -51,7 +51,7 @@ a:active.menu1 {
 }
 
 a:hover.menu1 {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #7fb713;
 	font-weight: bold;
@@ -59,7 +59,7 @@ a:hover.menu1 {
 }
 
 .button_default {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	font-weight: bold;
 	color: #333333;
@@ -72,7 +72,7 @@ a:hover.menu1 {
 }
 
 a.top_nav1 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	font-weight: bold;
 	color: #5b69a4;
@@ -80,7 +80,7 @@ a.top_nav1 {
 }
 
 a:hover.top_nav1 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	font-weight: bold;
 	color: #888888;
@@ -88,21 +88,21 @@ a:hover.top_nav1 {
 }
 
 a.top_nav2 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	color: #5b69a4;
 	text-decoration: none;
 }
 
 a:hover.top_nav2 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	color: #888888;
 	text-decoration: none;
 }
 
 a.left_nav1 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	font-weight: bold;
 	color: #999999;
@@ -110,7 +110,7 @@ a.left_nav1 {
 }
 
 a:hover.left_nav1 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	font-weight: bold;
 	color: #777777;
@@ -118,7 +118,7 @@ a:hover.left_nav1 {
 }
 
 a.left_nav2 {
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	text-decoration: none;
@@ -152,7 +152,7 @@ a:hover.left_nav3 {
 
 .outputlabel {
 	padding-right: 120px;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #555;
 	font-weight: bold;
@@ -179,7 +179,7 @@ a:hover.left_nav3 {
 }
 
 .boldsubLabelgrayText {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #7fb713;
 	font-weight: bold;
@@ -187,7 +187,7 @@ a:hover.left_nav3 {
 }
 
 a:hover.boldsubLabelgrayText {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #9ecd44;
 	font-weight: bold;
@@ -216,7 +216,7 @@ a:hover.boldsubLabelgrayText {
 }
 
 .colFont3 {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #777777;
 	font-weight: bold;
@@ -266,7 +266,7 @@ a:hover.cart_menu_price {
 
 /* General */
 .menu_title {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #777777;
 	text-decoration: none;
@@ -341,7 +341,7 @@ a:hover.menu2 {
 
 /* Header */
 a:hover.liferay_menu {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #828282;
 	font-weight: bold;
@@ -349,7 +349,7 @@ a:hover.liferay_menu {
 }
 
 a.nav_top {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #dddddd;
 	font-weight: bold;
@@ -599,7 +599,7 @@ no-repeat
 	color: #333333;
 	font-size: 11px;
 	font-weight: bold;
-	font-family: Tahoma;
+	font-family: Arial;
 	white-space: nowrap;
 	border-bottom: 1px solid #DDDDDD;
 	text-align: left;
@@ -630,7 +630,7 @@ no-repeat
 }
 
 a.menuItemLink {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
@@ -638,7 +638,7 @@ a.menuItemLink {
 }
 
 a:hover.menuItemLink {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
@@ -646,7 +646,7 @@ a:hover.menuItemLink {
 }
 
 a:visited.menuItemLink {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
@@ -654,7 +654,7 @@ a:visited.menuItemLink {
 }
 
 a.menuItemLink-selected {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
@@ -662,7 +662,7 @@ a.menuItemLink-selected {
 }
 
 a:hover.menuItemLink-selected {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
@@ -670,7 +670,7 @@ a:hover.menuItemLink-selected {
 }
 
 a:visited.menuItemLink-selected {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
@@ -755,14 +755,14 @@ a:visited.menuItemLink-selected {
 	border: 1px solid #CCCCCC;
 	color: #FFFFFF !important;
 	cursor: pointer;
-	font-family: Tahoma;
-	font-size: 11px;
+	font-family: Arial;
+	font-size: 12px !important;
 	font-weight: bold;
 	text-decoration: none;
 	height: 25px !important;
 	margin:5px;
 	border-radius: 5px !important;
-	background: #919191 !important; /* Old browsers */
+	background: #7A9BD7 !important; /* Old browsers */
 
 }
 
@@ -824,7 +824,7 @@ a:hover.blue_font {
 .ui-dialog .ui-dialog-titlebar {
 	position: relative;
 	border: 0px;
-	font-family: Tahoma, Arial;
+	font-family: Arial;
 	font-size: 14px;
 	font-weight: bold;
 	color: #666666;
@@ -955,7 +955,7 @@ px
 .ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-highlight
 	{
 	color: #ffffff;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	text-decoration: none;
 	background: #97d832 !important;
@@ -1021,7 +1021,7 @@ px
 
 .ui-selectonemenu-item {
 	color: #333333;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	text-decoration: none;
 }
@@ -1036,7 +1036,7 @@ px
 
 /* Start DataTable and Paginator */
 .ui-datatable {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333 !important;
 	text-decoration: none;
@@ -1048,9 +1048,9 @@ px
 
 .ui-datatable-header.ui-widget-header,.ui-datatable th.ui-state-default
 	{
-	font-family: Tahoma;
+	font-family: Arial;
 	font-weight: bold !important;
-	font-size: 11px;
+	font-size: 12px;
 	color: #333333;
 	text-decoration: none;
 	/* height: 20px;  */
@@ -1078,6 +1078,7 @@ px
 .ui-datatable-data.ui-widget-content,.ui-datatable-data .ui-widget-content
 	{
 	border: none;
+	border-bottom: 1px solid #CCCCCC;
 }
 
 .ui-datatable-data .ui-widget-content.ui-state-hover {
@@ -1092,31 +1093,31 @@ px
 }
 
 .ui-datatable-data .ui-widget-content.ui-state-highlight {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	text-decoration: none;
 	text-shadow: 1px 1px 1px #555555;
 	border: 0px 1px 1px 1px solid #888888;
-	background: #FDD655; /* Old browsers */
-	background: -moz-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	background: #DBEAF9 !important; /* Old browsers */
+	/*background: -moz-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);*/
 	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCEAAE),
-		color-stop(100%, #FDD655) ); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCEAAE),
+		color-stop(100%, #FDD655) );*/ /* Chrome,Safari4+ */
+	/*background: -webkit-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);*/
 	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/*background: -o-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);*/
 	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/*background: -ms-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);*/
 	/* IE10+ */
-	background: linear-gradient(to bottom, #FCEAAE 0%, #FDD655 100%);
+	/*background: linear-gradient(to bottom, #FCEAAE 0%, #FDD655 100%);*/
 	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
-		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
+	/*filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
+		endColorstr='#FDD655', GradientType=0 );*/ /* IE6-8 */
 }
 
 .ui-widget-content.ui-state-highlight a {
-	COLOR: #FFFFFF;
+	COLOR: #0000FF;
 }
 
 .ui-datatable-header,.ui-datatable th div.ui-dt-c,.ui-datatable-data td div.ui-dt-c
@@ -1161,7 +1162,7 @@ center
 	text-align: left !important;
 	padding: 5px 10px 3px 10px !important;
 	background: none !important;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	color: #333333;
 	text-decoration: none;
@@ -1182,7 +1183,7 @@ repeat-x
 
 }
 .ui-paginator-jtp-select {
-	font-family: Tahoma, Arial !important;
+	font-family: Arial !important;
 	font-size: 11px !important;
 	font-weight: normal !important;
 	color: #333333 !important;
@@ -1542,7 +1543,7 @@ important
 
 .ui-inputfield.ui-inputtext {
 	font-size: 11px;
-	font-family: Tahoma;
+	font-family: Arial;
 	padding-left: 4px;
 	padding-right: 4px;
 	margin-bottom: 5px;
@@ -1577,7 +1578,7 @@ important
 
 /* --------------------------          Check Box         ------------------------------ */
 .ui-chkbox {
-	/* display: block !important; */	
+	display: block !important;
 }
 
 .ui-chkbox .ui-chkbox-box {
@@ -1587,7 +1588,7 @@ important
 	-webkit-border-radius: 0px;
 	border-radius: 0px;
 	border-collapse: separate;
-	/* display: block !important; */
+	display: block !important;
 	margin-right: 5px;
 }
 
@@ -1621,6 +1622,7 @@ important
 }
 
 .ui-panel-title {
+	font-family: Arial;
 	margin: 0 0 0 5px !important;
 	border: 0px !important;
 	-webkit-border-radius: 0px !important;
@@ -1898,8 +1900,8 @@ padding-left
 .ui-tabs .ui-tabs-nav li a {
 	font-weight: normal;
 	padding: 5px 15px;
-	font-family: Tahoma;
-	font-size: 11px;
+	font-family: Arial;
+	font-size: 12px;
 	color: #3c8bc2;
 	text-decoration: none;
 }
@@ -1911,6 +1913,7 @@ padding-left
 .ui-tabs .ui-tabs-nav .ui-state-hover a {
 	color: #FFFFFF;
 	text-shadow: none !important;
+	font-size: 12px;
 }
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
@@ -2183,7 +2186,6 @@ td {
 .comparePanelLabel{
 	height: 30px;
 	width: 100%;
-	border-bottom: 1px solid #000 !important;
 	padding: 0px;
 }
 
@@ -3977,7 +3979,7 @@ label {
 	vertical-align:middle;
 	float:right;
 	padding:0 10px 0 0;
-	font-family: Tahoma;
+	font-family: Arial;
 }
 
 .ui-widget-header {
@@ -4003,7 +4005,7 @@ label {
 thead > tr > th.ui-state-default {
 	border: 0px !important;
 	color:#555555 !important;
-	font-size:11px !important;
+	font-size:12px !important;
 	font-weight:bold !important;
 	text-align:left;
 }
@@ -4032,7 +4034,7 @@ thead > tr > th.ui-state-default {
 .ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-hover
 	{
 	color: #ffffff;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	text-decoration: none;
 	background: #97d832 !important;
@@ -4054,7 +4056,7 @@ select {
 
 li[role=tab].ui-state-hover > a {
 	color: #333333 !important;
-	font-size: 11px !important;
+	font-size: 12px !important;
 }
 
 li[role=tab].ui-tabs-selected {
@@ -4070,7 +4072,7 @@ li[role=tab].ui-tabs-selected {
 .ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li> a {
 	font-weight: bold !important;
 	color: #333333 !important;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 textarea {
@@ -4111,7 +4113,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-menu > ul > li.ui-widget-header {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 12px;
 	color: #FFFFFF;
 	background: none !important;
@@ -4144,7 +4146,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .ui-menuitem > a:hover > span {
 	color: #FFFFFF !important;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 }
 
@@ -4171,7 +4173,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-	font-family: Tahoma !important;
+	font-family: Arial !important;
 }
 
 .ui-state-hover > .ui-menuitem-text {
@@ -4290,7 +4292,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .tablePanel > thead > tr > td {
 	text-align: left;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	border: none;
 	background: #BCE18A; /* Old browsers */
@@ -4328,7 +4330,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 table[role="treegrid"] > thead > tr > th {
 	text-align: left;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	background: #BCE18A !important; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
@@ -4391,7 +4393,7 @@ label > span.ui-button-text {
 }
 
 .ui-picklist .ui-picklist-caption {
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	border: 1px solid #AAAAAA;
 	background: #BCE18A !important; /* Old browsers */
@@ -4509,7 +4511,7 @@ label > span.ui-button-text {
 	float: left;
 	width: 100px;
 	text-align: center;
-	font-family: Tahoma;
+	font-family: Arial;
 	font-size: 11px;
 	list-style-position: inside;
 	display: list-item;
