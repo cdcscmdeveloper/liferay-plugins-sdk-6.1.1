@@ -2046,7 +2046,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Catalogue DashBoard</title>
+				<title>Pending Approval Item</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>

@@ -21,7 +21,8 @@
 					icon="ui-icon-submit"
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
 					update="@form"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}" icon="ui-icon-save"
+				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
+					icon="ui-icon-save"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 					icon="ui-icon-cancel"
@@ -83,8 +84,8 @@
 					<td><p:inputText disabled="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputText disabled="true" size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputText></td>
+					<td><p:inputTextarea disabled="true" style="width: 195px;"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
 
 				</tr>
 
@@ -93,8 +94,7 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.uom']}" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
 							headerText="UOM Lov"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
@@ -132,7 +132,7 @@
 				<tr style="height: 30px;">
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea style="width:510px;"
+					<td colspan="3"><p:inputTextarea style="width:660px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
 				</tr>
@@ -199,7 +199,8 @@
 			</p:tab>
 
 			<p:tab id="remarkId" title="Reject Reason"
-				rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				rendered="#{(unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin)
+				and (catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' )}">
 
 				<ui:include src="remark.xhtml"></ui:include>
 

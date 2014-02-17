@@ -13,7 +13,7 @@
 		<h:panelGroup id="compareCatalogueId">
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-cancel"
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
 					action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
 			</div>
 
@@ -33,7 +33,7 @@
 
 
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
-					paginator="true" styleClass="datagridfloat"
+					paginator="true" styleClass="datagridfloat" 
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
 					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom"
 					paginatorTemplate="{PageLinks} ">

@@ -219,7 +219,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public String navigateToCatalogDet(int index){
 
 		log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"+this.getManagedBean().getMaintainItemList().get(index).getCmImages().size());
-
+		ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
+		bb.getManagedBean().setCatDetTabActiveIndex(0);
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -1494,6 +1495,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setRejectedItemList(resDTO.getSupplierItemList());
+
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Expired")){
+
+			reqDTO.setItemStatus("E");
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setExpiredItemList(resDTO.getSupplierItemList());
 
 		}
 

@@ -177,11 +177,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			}
 		}
 		
-/*		System.out.println("*****size*******"+bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().size());
-		for(CmItemRejectReason reason : bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
-			System.out.println("*******getItemRejectReasonId******"+reason.getItemRejectReasonId());
-			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-		}*/
+
 		
 	
 		for(int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
@@ -199,29 +195,12 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);			
 		}
 		
-/*		for(Long reasonStatusId : bb.getManagedBean().getRejectReasonIds()) {
-			CmItemRejectReason reason = new CmItemRejectReason();
-			PmStatus reasonStatus = new PmStatus();
-			reasonStatus.setStatusId(reasonStatusId);
-			reasonStatus.setBrandNew(false);
 
-			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			reason.setPmStatus(reasonStatus);
-			bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);
-		}*/
-		
 		
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
-	/*	for(CmItemRejectReason reason : bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
-			if(reason.isBrandNew()){
-				this.getManagedBean().setRejectReason(true);
-			}
-		}*/
-		
-	//	System.out.println("isRejectReason:"+this.getManagedBean().isRejectReason());
-		
-		/*if(!this.getManagedBean().isRejectReason()){
+
+		if(bb.getManagedBean().getRejectReasonIds().isEmpty()){
 			
 			this.getManagedBean().setCatDetTabActiveIndex(2);
 			
@@ -229,7 +208,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Item Reject Reason Required!", ""));
 			
 			return "addCatalogView";
-		}*/
+		}
 		
 		
 		try {

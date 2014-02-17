@@ -45,14 +45,14 @@
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-				#{lbl['lbl.cm.price']}
+				#{lbl['lbl.cm.price']}*
 			</f:facet>
 			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10"></p:inputText>
 
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-				#{lbl['lbl.cm.uom']}
+				#{lbl['lbl.cm.uom']}*
 			</f:facet>
 			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20"
 				headerText="UOM Lov"
@@ -63,7 +63,7 @@
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-				#{lbl['lbl.cm.start.date']}
+				#{lbl['lbl.cm.start.date']}*
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
 				showOn="button" size="10"
@@ -72,7 +72,7 @@
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
-				#{lbl['lbl.cm.end.date']}
+				#{lbl['lbl.cm.end.date']}*
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
 				showOn="button" size="10"
@@ -84,11 +84,11 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandLink
+			<p:commandLink title="Edit"
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
 				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-			<p:commandLink style="margin-left: 10px;"
+			<p:commandLink style="margin-left: 10px;" title="Delete"
 				action="#{catalogueBackingBean.deleteDraftItem(rowIndex)}"
 				update=":form:maintenanceTabId:draftSupplierItemID :form:catalogFileMsg">
 				<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
