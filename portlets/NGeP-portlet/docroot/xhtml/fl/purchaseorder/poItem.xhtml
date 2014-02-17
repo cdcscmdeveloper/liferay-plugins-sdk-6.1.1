@@ -14,8 +14,10 @@
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect" update=":form:poTabs:itemDetPanel" />
 			<p:column headerText="Delivery Address">
-				<h:outputText
+				<h:outputText rendered="#{address.addressType != null}"
 					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{address.addressType eq null}"
+					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">

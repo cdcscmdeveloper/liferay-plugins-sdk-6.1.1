@@ -138,20 +138,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(null == getManagedBean().getFlManulaAddress()){
 			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
-			getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
+			//getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
 			//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().setPmAddress(new PmAddress());
+			getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
 			//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmState(new PmState());
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmState().setStateId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCity(new PmCity());
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCity().setCityId(1L);
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
-			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDivision().setDivisionId(1L);
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmState(new PmState());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmState().setStateId(1L);
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmCity().setCityId(1L);
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 			
 		}
 		
@@ -248,20 +248,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void flManualDeliveryAddr() {
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
-		getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
+		//getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
 		//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().setPmAddress(new PmAddress());
+		getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
 		//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmState(new PmState());
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmState().setStateId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCity(new PmCity());
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCity().setCityId(1L);
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
-		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDivision().setDivisionId(1L);
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmState(new PmState());
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmState().setStateId(1L);
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmCity(new PmCity());
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmCity().setCityId(1L);
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 	}
 	
 	public void updateDeliveryAddrDt() {
@@ -293,17 +293,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	public void updateManualDeliveryAddrDt() {
-		if(null== getManagedBean().getFlManulaAddress().getAddressType() ||  getManagedBean().getFlManulaAddress().isEditable()){
+		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
-		PmAddressType manualAddrType=new PmAddressType();
-		manualAddrType=getManagedBean().getFlManulaAddress().getAddressType();
+		PmAddress manualAddr=new PmAddress();
+		manualAddr=getManagedBean().getFlManulaAddress().getPmAddress();
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-		deliveryAddr.setAddressType(manualAddrType);
-		manualAddrType.setAddressType("C");
-		deliveryAddr.setPmAddress(manualAddrType.getPmAddress());
+		deliveryAddr.setPmAddress(manualAddr);
 		deliveryAddr.setCheckManualAddress(true);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 	}
