@@ -384,25 +384,25 @@ public class RegistrationBackingBean extends
 
 	public void checkSameAddress() {
 		if (this.getManagedBean().isSameAddress()) {
-			this.getManagedBean().setSmResAdd(
-					this.getManagedBean().getSmPermenantAdd());
-			this.getManagedBean().setResidentialStateLs(
-					this.getManagedBean().getPermenantStateLs());
-			this.getManagedBean().setResidentialDistrictLs(
-					this.getManagedBean().getPermenantDistrictLs());
-			this.getManagedBean().setResidentialCityLs(
-					this.getManagedBean().getPermenantCityLs());
-			log.info("-----------is same address---------------"
-					+ this.getManagedBean().getSmPermenantAdd().getAddress1());
+//			this.getManagedBean().setSmResAdd(
+//					this.getManagedBean().getSmPermenantAdd());
+//			this.getManagedBean().setResidentialStateLs(
+//					this.getManagedBean().getPermenantStateLs());
+//			this.getManagedBean().setResidentialDistrictLs(
+//					this.getManagedBean().getPermenantDistrictLs());
+//			this.getManagedBean().setResidentialCityLs(
+//					this.getManagedBean().getPermenantCityLs());
+//			log.info("-----------is same address---------------"
+//					+ this.getManagedBean().getSmPermenantAdd().getAddress1());
 		} else {
-			log.info("-----------is diff address---------------");
-			this.getManagedBean().getSmResAdd().setAddress1(null);
-			this.getManagedBean().getSmResAdd().setAddress2(null);
-			this.getManagedBean().getSmResAdd().setAddress3(null);
-			this.getManagedBean().getSmResAdd().setAddress4(null);
-			this.getManagedBean().getSmResAdd().setPostcode(null);
-			this.getManagedBean().setResidentialDistrictLs(null);
-			this.getManagedBean().setResidentialCityLs(null);
+//			log.info("-----------is diff address---------------");
+//			this.getManagedBean().getSmResAdd().setAddress1(null);
+//			this.getManagedBean().getSmResAdd().setAddress2(null);
+//			this.getManagedBean().getSmResAdd().setAddress3(null);
+//			this.getManagedBean().getSmResAdd().setAddress4(null);
+//			this.getManagedBean().getSmResAdd().setPostcode(null);
+//			this.getManagedBean().setResidentialDistrictLs(null);
+//			this.getManagedBean().setResidentialCityLs(null);
 
 		}
 	}
