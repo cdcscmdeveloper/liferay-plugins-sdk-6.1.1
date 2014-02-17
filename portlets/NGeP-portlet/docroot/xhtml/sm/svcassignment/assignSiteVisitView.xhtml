@@ -82,7 +82,9 @@
 			<table class="rptTbl">
 				<tr>
 					<td><p:outputLabel value="Expected Date" /></td>
-					<td><p:calendar id="popupButtonCal" showOn="button" value="#{svcSiteAssignBackingBean.managedBean.smApplSv.expectedDate}" /></td>
+					<td><p:calendar id="popupButtonCal" showOn="button"
+							value="#{svcSiteAssignBackingBean.managedBean.smApplSv.expectedDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 
 					<td></td>
 					<td></td>

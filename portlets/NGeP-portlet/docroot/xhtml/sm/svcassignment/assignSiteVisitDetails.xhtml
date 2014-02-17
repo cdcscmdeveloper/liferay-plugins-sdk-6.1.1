@@ -32,7 +32,7 @@
 
 				<p:column headerText="Expected Visit Date">
 					<p:calendar value="#{sva.siteVisitDate}" id="popupButtonCal"
-						showOn="button" />
+						showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</p:column>
 
 				<p:column headerText="Assign Site Visit Officer(Mins 2)">

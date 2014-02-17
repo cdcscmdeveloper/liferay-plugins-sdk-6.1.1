@@ -26,12 +26,12 @@
 
 				<p:column headerText="Start Date">
 					<p:calendar value="#{suppCert.certStartDate}" id="startDateId"
-						showOn="button" />
+						showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</p:column>
 
 				<p:column headerText="End Date">
 					<p:calendar value="#{suppCert.certEndDate}" id="endDateId"
-						showOn="button" />
+						showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</p:column>
 			</p:dataTable>
 
