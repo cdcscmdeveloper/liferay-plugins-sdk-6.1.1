@@ -209,12 +209,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	this.getManagedBean().getContractVer().setDocNo("FA"+new Long(System.currentTimeMillis()).toString().substring(10));
 	        }
 	         
-	      //  if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
-	        //    ChkComplyAP201Rule();	
-	       // }
-	        
-	        this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
-	        
+	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
+	            ChkComplyAP201Rule();	
+	        }   
 	            
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 	        reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
