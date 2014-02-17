@@ -12,7 +12,9 @@
 		<f:event listener="#{complaintBackingBean.retrieveAllActiveComplaint}"
 			type="preRenderView" />
 		<div align="right">
-			<p:commandLink value="Pending Show Cause/ Accusation Response" style="color:blue;" action="#{complaintBackingBean.pendingResponseLetterView}"></p:commandLink>
+			<p:commandLink value="Pending Show Cause/ Accusation Response"
+				style="color:blue;"
+				action="#{complaintBackingBean.pendingResponseLetterView}"></p:commandLink>
 		</div>
 		<p:panel header="Search" toggleable="true" id="pnlSearch">
 			<div align="center">
@@ -42,22 +44,22 @@
 				</table>
 			</div>
 		</p:panel>
-		<p:remoteCommand name="viewComplaint"
-			action="#{complaintBackingBean.onComplaintRowSelect}" />
+
 		<p:panel header="Complaint" toggleable="true" id="pnlCompList">
 			<p:dataTable value="#{complaintBackingBean.managedBean.smComplLs}"
 				var="compl" id="complaintDt"
-				selection="#{complaintBackingBean.managedBean.selectedComplaint}"
-				rowKey="#{compl.complaintId}" selectionMode="single">
-				<ac:paginator for="complaintDt" />
+				selection="#{complaintBackingBean.managedBean.selectedComplaint}" rowKey="#{compl}">
 
-				<p:ajax event="rowSelect" oncomplete="viewComplaint();" />
+				<ac:paginator for="complaintDt" />
 				<p:column headerText="Complaint No">
 					#{compl.complaintNo}
 				</p:column>
 
 				<p:column headerText="Complaint Date">
-					#{compl.createdDate}
+					<h:outputText value="#{compl.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
 				</p:column>
 
 				<!-- 				<p:column headerText="Complaint Type"> -->
@@ -78,6 +80,13 @@
 				<p:column headerText="Status">
 				</p:column>
 
+				<p:column headerText="Action">
+					<p:commandLink
+						action="#{complaintBackingBean.onComplaintRowSelect(compl.complaintId)}">
+						<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+					</p:commandLink>
+				</p:column>
+				
 				<p:column selectionMode="multiple" style="width:2%" />
 			</p:dataTable>
 		</p:panel>

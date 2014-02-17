@@ -30,7 +30,7 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private String[] bpmAction;
 	private String taskName;
 	private List<SmComplaint> smComplLs;
-	private SmComplaint selectedComplaint;
+	private SmComplaint[] selectedComplaint;
 	
 	private SmComplainant smComplainant;
 	private List<PmCountry> countryLs;
@@ -115,11 +115,11 @@ public class ComplaintManagedBean extends BaseManagedBean {
 		this.smComplLs = smComplLs;
 	}
 
-	public SmComplaint getSelectedComplaint() {
+	public SmComplaint[] getSelectedComplaint() {
 		return selectedComplaint;
 	}
 
-	public void setSelectedComplaint(SmComplaint selectedComplaint) {
+	public void setSelectedComplaint(SmComplaint[] selectedComplaint) {
 		this.selectedComplaint = selectedComplaint;
 	}
 

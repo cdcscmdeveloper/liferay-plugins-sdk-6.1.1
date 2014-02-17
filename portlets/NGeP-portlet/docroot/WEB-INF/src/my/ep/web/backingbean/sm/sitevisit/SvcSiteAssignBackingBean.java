@@ -42,11 +42,11 @@ public class SvcSiteAssignBackingBean extends
 		/*****************Dummy data**********************/
 		 List<String> svOfficer = new ArrayList<String>(); 
 		 List<String> conSvOfficer = new ArrayList<String>(); 
-		 svOfficer.add("Istanbul");
-		 svOfficer.add("Ankara");
-		 svOfficer.add("Izmir");
-		 svOfficer.add("Antalya");
-		 svOfficer.add("Bursa");
+		 svOfficer.add("Mohammad Rizam");
+		 svOfficer.add("Siti Nurul");
+		 svOfficer.add("Mohammad Amin");
+		 svOfficer.add("Haiza Aida");
+		 svOfficer.add("Nurul Azlina");
 		 
 		 
 		 officers = new DualListModel<String>(svOfficer, conSvOfficer);  

@@ -261,12 +261,14 @@ public class RegistrationBackingBean extends
 							this.getManagedBean().getSmSupp().getRegNo());
 		}
 
+		this.getManagedBean().getSmSupp().setCompanyName(this.getManagedBean().getSmAppl().getSmCompanyBasic().getCompanyName());
 		// smSupp.setSmAppl(smAppl);
 		// smAppl.getSmSupplier().setSmAppl(smAppl); //
 
 		smAppl.setSmSupplier(smSupp);
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(0);
+		
 		// for(SmSupplierBank suppBank :
 		// this.getManagedBean().getSmSuppBanks()){
 		// suppBank.setSmAppl(smAppl);

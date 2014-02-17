@@ -29,18 +29,18 @@
 				<!-- 				<td class="tdContent"><p:inputText readonly="true" -->
 				<!-- 						disabled="true" value="Read Only" id="complTypeId" /></td> -->
 			</tr>
-			
+
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="Complainant Name" /></td>
 				<td class="tdContent"><p:inputText disabled="true" /></td>
 				<td class="tdTitle"><p:outputLabel value="Identification No." /></td>
 				<td class="tdContent"><p:inputText disabled="true" /></td>
 			</tr>
-			
+
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="Complaint Type" /></td>
-				<td class="tdContent" colspan="3"><p:selectManyCheckbox id="basicComplType"
-						layout="grid" columns="2" readonly="true">
+				<td class="tdContent" colspan="3"><p:selectManyCheckbox
+						id="basicComplType" layout="grid" columns="2" readonly="true">
 						<f:selectItems
 							value="#{complaintBackingBean.managedBean.complType.entrySet()}"
 							var="ctype" itemVlue="#{ctype.key}" itemLabel="#{ctype.value}" />
@@ -50,14 +50,18 @@
 				<td class="tdTitle"><p:outputLabel value="Lodged On" /></td>
 				<td class="tdContent"><p:inputText readonly="true"
 						disabled="true"
-						value="#{complaintBackingBean.managedBean.smComplaint.createdDate}" /></td>
+						value="#{complaintBackingBean.managedBean.smComplaint.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</p:inputText></td>
 				<td class="tdTitle"><p:outputLabel
 						value="Complaint Stage /Status" /></td>
 				<td class="tdContent"><p:inputText readonly="true"
 						disabled="true" value="-- Read Only --" /></td>
 			</tr>
 			<tr>
-				<td class="tdTitle" valign="top"><p:outputLabel value="Complaint Details" /></td>
+				<td class="tdTitle" valign="top"><p:outputLabel
+						value="Complaint Details" /></td>
 				<td colspan="3" class="tdContent"><p:inputTextarea
 						readonly="true" rows="8" cols="100" disabled="true"
 						id="complDetailId"

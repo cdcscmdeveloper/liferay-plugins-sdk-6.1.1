@@ -11,17 +11,17 @@
 			<tr>
 				<td id="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
 				<td id="tdContent"><p:calendar showOn="button"
-						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}" /></td>
+						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 				<td id="tdTitle"><p:outputLabel
 						value="* Meeting Minutes Ref No." /></td>
 				<td id="tdContent"><p:inputText
-						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}" /></td>
+						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}"  /></td>
 			</tr>
 
 			<tr>
 				<td id="tdTitle"><p:outputLabel
 						value="* Report Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
+				<td id="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 				<td id="tdTitle"><p:outputLabel value="* Decesion" /></td>
 				<td id="tdContent"><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">

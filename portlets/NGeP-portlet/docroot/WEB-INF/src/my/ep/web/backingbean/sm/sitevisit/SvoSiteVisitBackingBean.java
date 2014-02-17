@@ -60,7 +60,7 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 	public void retrieveSiteVisitInfo(){
-		this.getManagedBean().setAppId(22);
+		//this.getManagedBean().setAppId(22);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		//reqDTO.setAppId(2);
@@ -68,6 +68,7 @@ public class SvoSiteVisitBackingBean extends
 				.getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
 		this.getManagedBean().setSmApplSv(resDTO.getSmApplSv());
+		this.getManagedBean().setRptSubsMethod("Online");
 		//log.info("----------retrieveSiteVisitInfo---------" + this.getManagedBean().getSmApplSv().getSmAppl().getSmSupplier().getSupplierName());
 		
 	}
@@ -117,6 +118,7 @@ public class SvoSiteVisitBackingBean extends
 	}
 	
 	public void changeRptSubsMethod(){
+		
 		log.info("----------Report Subs Method-------------" + this.getManagedBean().getRptSubsMethod());
 	}
 	

@@ -6,12 +6,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-		type="preRenderView"></f:event>
-
 	<div align="right">
-		<p:commandButton value="Update"
-			action="#{complaintBackingBean.updateComplaint}" />
+		<p:commandButton value="Update" />
 		<p:commandButton value="Submit"
 			action="#{complaintBackingBean.issueShowCauseLetter}" />
 	</div>
@@ -30,18 +26,22 @@
 
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
+				<td class="tdTitle"><p:outputLabel
+						value="Report Sent to PTPK *" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Expected Conven Date *" /></td>
-				<td id="tdContent"><p:calendar showOn="button"
-						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
+				<td class="tdTitle"><p:outputLabel
+						value="Expected Conven Date *" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
+						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="Initial Invesitgation Report*"></p:outputLabel></td>
-				<td id="tdContent"><p:fileUpload mode="simple" /></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 
 			<!-- 

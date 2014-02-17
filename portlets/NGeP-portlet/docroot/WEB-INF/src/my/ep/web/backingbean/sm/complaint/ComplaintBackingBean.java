@@ -46,37 +46,43 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public static Logger log = Logger.getLogger(ComplaintManagedBean.class);
 
 	public ComplaintBackingBean() {
-		
+
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
+
 		if (this.getManagedBean().getSmComplaint() == null) {
 			log.info("--------------BackingBean is Null--------------------");
 			this.getManagedBean().setSmComplaint(new SmComplaint());
-			this.getManagedBean().getSmComplaint().setSmComplainants(new ArrayList<SmComplainant>());
+			this.getManagedBean().getSmComplaint()
+					.setSmComplainants(new ArrayList<SmComplainant>());
 			this.getManagedBean().setSmComplainant(new SmComplainant());
-			this.getManagedBean().getSmComplainant().setPmCountry(new PmCountry());
+			this.getManagedBean().getSmComplainant()
+					.setPmCountry(new PmCountry());
 			this.getManagedBean().getSmComplainant().setPmState(new PmState());
-			//this.getManagedBean().getSmComplainant().setPmCity(new PmCity());
+			// this.getManagedBean().getSmComplainant().setPmCity(new PmCity());
 			this.getManagedBean().getSmComplainant().setPmCity(new PmCity());
-			
-			this.getManagedBean().getSmComplainant().getPmCountry().setCountryId(1L);
-			
-			//temporary set due to no district in table
+
+			this.getManagedBean().getSmComplainant().getPmCountry()
+					.setCountryId(1L);
+
+			// temporary set due to no district in table
 			this.getManagedBean().setCountryLs(new ArrayList<PmCountry>());
 			this.getManagedBean().setStateLs(new ArrayList<PmState>());
-		
+
 			this.getManagedBean().setComplType(new HashMap<String, String>());
-			this.getManagedBean().getComplType().put("R","Breach the obligation of registration");
-			this.getManagedBean().getComplType().put("T","Breach the obligation of Tender/ Contract");
-			this.getManagedBean().getComplType().put("C","Criminal or Civil Offenses");
-			this.getManagedBean().getComplType().put("O","Others");
-			
+			this.getManagedBean().getComplType()
+					.put("R", "Breach the obligation of registration");
+			this.getManagedBean().getComplType()
+					.put("T", "Breach the obligation of Tender/ Contract");
+			this.getManagedBean().getComplType()
+					.put("C", "Criminal or Civil Offenses");
+			this.getManagedBean().getComplType().put("O", "Others");
+
 			retrievePmCountryList();
 			retrievePmStateList();
 			retrievePmCityList(1L);
-			
+
 		}
 	}
 
@@ -88,22 +94,25 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().getSmComplaint().setComplaintDate(currDate);
 		this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
 		this.getManagedBean().getSmComplaint().setComplaintCategory("O");
-		
-		this.getManagedBean().getSmComplainant().setSmComplaint(this.getManagedBean().getSmComplaint());
-		this.getManagedBean().getSmComplaint().getSmComplainants().add(this.getManagedBean().getSmComplainant());
+		// this.getManagedBean().getSmComplaint().setStatusId(1);
+
+		this.getManagedBean().getSmComplainant()
+				.setSmComplaint(this.getManagedBean().getSmComplaint());
+		this.getManagedBean().getSmComplaint().getSmComplainants()
+				.add(this.getManagedBean().getSmComplainant());
 
 		PmCity pmCity = new PmCity();
 		PmState pmState = new PmState();
 		PmDistrict pmDist = new PmDistrict();
-		
-		//temporary set
+
+		// temporary set
 		pmCity.setCityId(1L);
 		pmState.setStateId(1L);
-		//pmDist.setDistrictId(1L);
-		
+		// pmDist.setDistrictId(1L);
+
 		this.getManagedBean().getSmComplainant().setPmCity(pmCity);
 		this.getManagedBean().getSmComplainant().setPmState(pmState);
-		
+
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IComplaintSO.class);
@@ -141,7 +150,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		this.getManagedBean().setSmComplaint(resDTO.getSmComplaint());
 		this.getManagedBean().setSmComplReview(new SmComplaintReview());
-		this.getManagedBean().getSmComplaint().setSmComplaintReviews(new ArrayList<SmComplaintReview>());
+		this.getManagedBean().getSmComplaint()
+				.setSmComplaintReviews(new ArrayList<SmComplaintReview>());
 	}
 
 	public void searchSupplier() {
@@ -155,10 +165,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setSmSupplierLs(resDTO.getSmSuppLs());
 	}
 
-	public String onComplaintRowSelect() {
+	public String onComplaintRowSelect(long complId) {
 		log.info("---------------onComplaintRowSelect------------------");
-		this.getManagedBean().setComplaintId(
-				this.getManagedBean().getSelectedComplaint().getComplaintId());
+		this.getManagedBean().setComplaintId(complId);
 		this.retrieveComplaintInfo();
 		return "complaintMain";
 	}
@@ -174,7 +183,6 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			return "";
 		}
 	}
-	
 
 	public void retrieveAllActiveComplaint() {
 		// SmComplaintReview bBean = this.getManagedBean().getSmComplReview();
@@ -193,24 +201,26 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				.getServiceObject("sm", IComplaintSO.class);
 		int count = this.getManagedBean().getSmComplaint().getStatusId() + 1;
 		this.getManagedBean().getSmComplaint().setStatusId(count);
-		
-//		this.getManagedBean().getSmComplaint().setStatusId(this.getManagedBean().getSmComplaint().getStatusId() + 1);
-//		long curStatus = this.getManagedBean().getSmComplaint().getStatusId();
-//		if(curStatus == 29001){
-//			this.getManagedBean().getSmComplaint().setStatusId(29002);
-//			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
-//			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
-//			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
-//		}else if(curStatus == 29002){
-//			this.getManagedBean().getSmComplaint().setStatusId(29003);
-//			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
-//			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
-//			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
-//		}
+
+		// this.getManagedBean().getSmComplaint().setStatusId(this.getManagedBean().getSmComplaint().getStatusId()
+		// + 1);
+		// long curStatus =
+		// this.getManagedBean().getSmComplaint().getStatusId();
+		// if(curStatus == 29001){
+		// this.getManagedBean().getSmComplaint().setStatusId(29002);
+		// this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+		// this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+		// this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
+		// }else if(curStatus == 29002){
+		// this.getManagedBean().getSmComplaint().setStatusId(29003);
+		// this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+		// this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+		// this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
+		// }
 
 		reqDTO.setSmComplaint(this.getManagedBean().getSmComplaint());
 		ComplaintResDTO resDTO = reqSO.updateComplaint(reqDTO);
-		
+
 		return outputMsg(resDTO.isSuccessful(), "Complaint has been updated.");
 	}
 
@@ -221,17 +231,18 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
 	}
-	
+
 	public void retrievePmStateList() {
 		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(this.getManagedBean().getSmComplainant().getPmCountry().getCountryId());
+		reqDTO.setCountryId(this.getManagedBean().getSmComplainant()
+				.getPmCountry().getCountryId());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		
+
 		this.getManagedBean().setStateLs(resDTO.getStateList());
 	}
-	
+
 	public List<PmDistrict> retrievePmDistrictList(long stateId) {
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setStateId(stateId);
@@ -240,7 +251,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
 		return resDTO.getDistrictList();
 	}
-	
+
 	public void retrievePmCityList(long districtId) {
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setDistrictId(districtId);
@@ -249,12 +260,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		this.getManagedBean().setCityLs(resDTO.getCityList());
 	}
-	
-	public String issueShowCauseLetter(){
+
+	public String issueShowCauseLetter() {
 		return "issueShowCauseLetter";
 	}
-	
-	public String pendingResponseLetterView(){
+
+	public String pendingResponseLetterView() {
 		return "pendingLetterResponse";
 	}
 }
