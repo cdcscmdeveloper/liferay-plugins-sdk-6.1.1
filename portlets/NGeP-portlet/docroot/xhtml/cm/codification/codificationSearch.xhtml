@@ -9,7 +9,7 @@
 
 
 	<h:panelGroup id="cmUNSPSCsearchID">
-		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser}">
+		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUserOrTempSupplierAdmin}">
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
@@ -56,6 +56,47 @@
 				action="#{codificationBackingBean.unspscSearch}"
 				update="cmUNSPSCsearchID" />
 
+			<ui:remove>
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+			    <p:graphicImage value="/design/ajaxloadingbar.gif" />  
+			</p:dialog>  
+
+			  
+			<p:commandButton id="downloadLink" value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
+			        icon="ui-icon-arrowthichk-s">  
+			    <p:fileDownload value="#{codificationBackingBean.pdfFile}" />  
+			</p:commandButton>  
+			
+			<br />
+			
+			<ac:lov id="catl1" lovId="PM_CATEGORY_L1"
+				headerText="Segment Lov" 
+				saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
+				value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
+				conditionField="recordStatus^1" />
+			<ac:lov id="catl2" lovId="PM_CATEGORY_L2"
+				headerText="Segment Lov" 
+				saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
+				value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
+				conditionField="recordStatus^1" />
+			<ac:lov id="catl3" lovId="PM_CATEGORY_L3"
+				headerText="Segment Lov" 
+				saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
+				value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
+				conditionField="recordStatus^1" />
+			<ac:lovPopup />
+			
+			
+			<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
+				headerText="Segment Lov" update=":form:tablePanelId"
+				saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
+				value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
+				conditionField="recordStatus^1|unspscLevel^0,1,2,3^9">
+			</ac:lov>
+			</ui:remove>
+			<ui:remove>
+			<p:commandButton value="velocity" action="#{codificationBackingBean.velocityTest}"></p:commandButton>
+			</ui:remove>
 		</div>
 
 

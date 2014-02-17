@@ -85,6 +85,11 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		return fs.hasRoleUser("SUPPLIER_USER");
 	}
 
+	public boolean isSupplierUserOrTempSupplierAdmin(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_USER") || fs.hasRoleUser("SUPPLIER_TEMP") || fs.hasRoleUser("SUPPLIER_ADMIN");
+	}
+	
 	public boolean isSupplierAdmin(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("SUPPLIER_ADMIN");
