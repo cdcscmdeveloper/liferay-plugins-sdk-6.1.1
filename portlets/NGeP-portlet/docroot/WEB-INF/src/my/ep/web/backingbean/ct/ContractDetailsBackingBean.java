@@ -66,6 +66,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
+import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -1004,7 +1005,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 		  } 
 		 
+		  
+			  
 	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	      if(this.getManagedBean().getContractVer().getCtPerformanceBonds() == null || this.getManagedBean().getContractVer().getCtPerformanceBonds().size() == 0)
+	    	  this.getManagedBean().getContractVer().setCtPerformanceBonds(new ArrayList<CtPerformanceBond>());
+	      
+	      if(this.getManagedBean().getContractVer().getCtSetting() == null)
+	    	  this.getManagedBean().getContractVer().setCtSetting(new CtSetting());
+	      
 	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
           CombineSupAddress(resDTO.getCtContractVer());
           
