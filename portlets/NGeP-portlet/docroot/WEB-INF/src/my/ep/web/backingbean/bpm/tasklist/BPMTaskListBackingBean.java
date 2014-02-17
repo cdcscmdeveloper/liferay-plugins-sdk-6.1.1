@@ -219,13 +219,6 @@ public class BPMTaskListBackingBean extends
 				
 			}
 			
-			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)) {
-				CTAgreementDataType dataType = (CTAgreementDataType) obj;
-				if(dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
-					url = "supplemental-agreement";
-				} 
-			}
-			
 			// TODO
 			if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) ||
 			   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) ||
