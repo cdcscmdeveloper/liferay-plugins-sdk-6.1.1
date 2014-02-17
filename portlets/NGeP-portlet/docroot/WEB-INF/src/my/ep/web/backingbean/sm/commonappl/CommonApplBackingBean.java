@@ -87,7 +87,7 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml");
+							"/xhtml/sm/shared/paymentProcess/finalPayment.xhtml");
 			// FacesContext fc = FacesContext.getCurrentInstance();
 			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
 			// null, "/xhtml/sm/svositevisit/siteVisitView");
