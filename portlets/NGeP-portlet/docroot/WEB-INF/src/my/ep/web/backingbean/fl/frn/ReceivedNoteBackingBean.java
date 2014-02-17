@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.frn;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -131,7 +132,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
 			getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
@@ -139,15 +142,23 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(delOrderResDTO.getFlDeliveryOrder());
+			List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 			for (FlDelOrderItem delOrderItem : delOrderResDTO.getFlDeliveryOrder().getFlDelOrderItem()){
-				getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
-				getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+				FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+				noteItem.setFlDelOrderItem(delOrderItem);
+				noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+				noteItemList.add(noteItem);
+				//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
+				//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 			}
+			//Add noteItemList to Managed Bean List.
+			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 			
-			if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
-				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(new ArrayList<FlFulfilmentNoteItem>());
-			}
-			getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
+			getManagedBean().getFulfilmentNoteItem();
+			/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
+				
+			}*/
+			//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
 			
 
 		}

@@ -9,7 +9,7 @@
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		<br />
 		<p:dataTable id="frnItemDt" var="item" width="100%"
-			value="#{receivedNoteBackingBean.managedBean.fulfilmentNoteItem}">
+			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}">
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Type">
 				<h:outputText
