@@ -82,7 +82,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("A");
 		
-		
+		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 		
 		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
 
@@ -141,7 +141,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
 		this.getManagedBean().setRejectReason(false);
 		
-		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
+		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 		System.out.println("bb.getManagedBean().getRejectReasonIds(): " + bb.getManagedBean().getRejectReasonIds());
 		
 		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
