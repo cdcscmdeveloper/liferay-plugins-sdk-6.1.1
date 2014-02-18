@@ -816,7 +816,7 @@ a:hover.blue_font {
 	position: fixed;
 	padding: 0;
 	overflow: hidden;
-	border: 10px solid #000000;
+	border: 5px solid #000000;
 	border-radius: 10px;
 	background-color: #000000;
 }
@@ -828,7 +828,7 @@ a:hover.blue_font {
 	font-size: 14px;
 	font-weight: bold;
 	color: #666666;
-	background-color: #FFFFFF;
+	background-color: #DBEAF9;
 	padding-left: 15px;
 	height: 30px;
 	padding: 0 0 0 1em;
@@ -1078,7 +1078,7 @@ px
 .ui-datatable-data.ui-widget-content,.ui-datatable-data .ui-widget-content
 	{
 	border: none;
-	border-bottom: 1px solid #CCCCCC;
+	border-bottom: 1px solid #DDDDDD;
 }
 
 .ui-datatable-data .ui-widget-content.ui-state-hover {
