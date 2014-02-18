@@ -21,8 +21,8 @@
                	<p:ajax event="rowSelect" update=":form:tabview:changeField" />
 		     	<p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		     	<p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		     	<p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
-		     	<p:column headerText="Maximum Qty." style="text-align: right;" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
+		     	<p:column headerText="Minimum Order Qty." rendered="#{contractDetailsBackingBean.managedBean.productItem}" style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
+		     	<p:column headerText="Maximum Qty." style="text-align: right;" >
 		     		<p:outputLabel value="#{data.maxProcureAmount}"/>
 		     	</p:column>     
 		     	<p:column headerText="Type Of Goods" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
