@@ -9,8 +9,7 @@
         <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">
 		   <p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.ctSignParties}" 
-			 selection="#{agreementBackingBean.selectedCtAgreementParty}" rowKey="#{data}" paginator="true" 
-			 paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+			 selection="#{agreementBackingBean.selectedCtAgreementParty}" rowKey="#{data}">
 			  <ac:paginator for="signTable"/>
 			     <p:column selectionMode="multiple" style="width:18px;"/>  
 		         <p:column style="width:150px;"  headerText="Ministry">
@@ -31,13 +30,13 @@
             		<p:ajax event="change" process="@this" listener="#{agreementBackingBean.resetPtj}"/> 
                  </p:selectOneMenu>
                    </p:column>
-                    <p:column style="width:120px;" headerText="Officer Name">
+                    <p:column style="width:120px;" headerText="Contract Signer">
                         <p:inputText value="#{data.officerName}" style="width:110px;"/>
                    </p:column>  
                    <p:column style="width:120px;" headerText="IC No">
                     <p:inputText value="#{data.officerIc}" style="width:110px;"/>
                    </p:column>         
-                   <p:column style="width:100px;" headerText="Officer Position">
+                   <p:column style="width:100px;" headerText="Position">
                       <p:inputText value="#{data.officerPosition}" style="width:100px;"/>
                    </p:column> 
            </p:dataTable>
@@ -63,16 +62,16 @@
             paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
             <ac:paginator for="supplierSign"/>
 			   <p:column selectionMode="multiple" style="width:18px;"/> 
-                   <p:column style="width:200px;" headerText="Supplier Company Name">
+                   <p:column style="width:200px;" headerText="Company Name">
                      <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.smSupplier.companyName}" style="float:left;"/>
                 </p:column> 
-                 <p:column style="width:200px;" headerText="Officer Name">
+                 <p:column style="width:200px;" headerText="Contract Signer">
                        <p:inputText value="#{data.officerName}" style="width:170px;"/>
                     </p:column>
                    <p:column style="width:200px;" headerText="IC No"> 
                      <p:inputText value="#{data.officerIc}" style="width:170px;"/>
                    </p:column> 	
-                   <p:column style="width:200px;" headerText="Officer Position" >
+                   <p:column style="width:200px;" headerText="Position" >
                       <p:inputText value="#{data.officerPosition}" style="width:170px;"/>
                    </p:column>  	
              </p:dataTable>
@@ -91,7 +90,6 @@
 		  </h:panelGrid>
 		</p:confirmDialog>
       </p:panel>
-      
 	   <p:panel id="signingWitness" header="Signing Witness Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">
          <p:dataTable id="witnessSign" var="data" value="#{agreementBackingBean.managedBean.ctSignWitness}"
@@ -99,12 +97,12 @@
             paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
             <ac:paginator for="witnessSign"/>
               <p:column selectionMode="multiple" style="width:18px;"/> 
-               <p:column style="width:200px;" headerText="Signing Type">
+               <p:column style="width:200px;" headerText="Witness Type">
                 <p:selectOneMenu style="width:180px;" value="#{data.agreementPartyType.parameterId}">
                        <f:selectItems value="#{agreementBackingBean.getDropdownValues('PTT')}" />
                	     </p:selectOneMenu>
                </p:column>
-                <p:column style="width:200px;" headerText="Name">
+                <p:column style="width:200px;" headerText="Witness Name">
                        <p:inputText value="#{data.officerName}" style="width:170px;"/>
                     </p:column>
               <p:column style="width:200px;" headerText="IC No"> 
@@ -129,5 +127,44 @@
 		  </h:panelGrid>
 		</p:confirmDialog>
        </p:panel>
-		
+       <p:panel header="Remarks" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.zoneRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{contractDetailsBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				</td>
+			</tr>
+		</table>
+	</p:panel>		   	
 </ui:composition>

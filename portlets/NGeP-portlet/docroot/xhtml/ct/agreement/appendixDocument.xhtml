@@ -9,11 +9,14 @@
     <p:panel id="apedixDoc" header="APPENDIXES DOCUMENT"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">  
           <p:dataTable id="appendixes" var="data" value="#{agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs}" 
-             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" rowIndexVar="rowIndex"
-             paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
-             emptyMessage="No Records!">
+             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" rowIndexVar="rowIndex">
              <ac:paginator for="appendixes"/>
 	 		  <p:column selectionMode="multiple" style="width:18px;"/>  
+	 		    <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
+			      <h:outputText value="#{data.title}"
+					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />
+			       <p:inputText value="#{data.title}" style="width:400px;"  rendered="#{rowIndex eq agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}"  />  
+			  </p:column> 
 			  <p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.type']}">
 			  <h:outputText value="#{agreementBackingBean.retrieveParameterObj(data.appendixType.parameterId)}"
 					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />
@@ -22,11 +25,7 @@
                     <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.agreementAppendixType)}" />
                	 </p:selectOneMenu>
 			 </p:column> 	
-			  <p:column style="width:450px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
-			      <h:outputText value="#{data.title}"
-					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />
-			       <p:inputText value="#{data.title}" style="width:450px;"  rendered="#{rowIndex eq agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}"  />  
-			  </p:column> 
+			
 			  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.ag.table.action']}" styleClass="column-align-center">
 	     	     <h:panelGroup id="userDefinedPg">
 			       <p:commandButton oncomplete="userDefinedDlg.show();return false;" icon="iconAttachment" 

@@ -9,55 +9,33 @@
     <p:panel id="createAgreement" header="STANDARD DOCUMENT"  toggleable="true"  toggleSpeed="500">
        <h:panelGrid style="width:100%">  
           <p:spacer height="5"/>
-              
-          <p:dataTable id="standard" var="data" value="#{agreementBackingBean.detailsList}"  lazy="false" dynamic="true"
-             widgetVar="dataTableObj" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
-             emptyMessage="No Records!">
-             <ac:paginator for="standard"/>
-			   <p:columnGroup type="header"> 
-				 <p:row> 
-				    <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}" /> 
-					<p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.type']}" /> 	
-					<p:column style="width:100px;" styleClass="column-align-center"
-					          headerText="#{lbl['lbl.ct.ag.table.action']}"  /> 
-			     </p:row>	
-			   </p:columnGroup> 							
-				 <p:column> <p:outputLabel value="#{data.fileName}" style="float:left;"/> </p:column>
-			     <p:column><p:outputLabel value="#{data.fileType}" style="float:left;"/> </p:column>	
-				 <p:column  styleClass="column-align-center">
-			       <p:commandButton  styleClass="blue_font" icon="iconAttachment" process="@form" 
-			           action="#{agreementBackingBean.downloadFile(data.filePath)}">					
-			       </p:commandButton>  
-				</p:column> 
-		  </p:dataTable>
+            <p:dataTable id="standard" var="data" value="#{agreementBackingBean.detailsList}" rowIndexVar="rowIndex" >
+				<ac:paginator for="standard" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}" />
+						<p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.type']}" />
+						<p:column style="width:100px;" styleClass="column-align-center" headerText="#{lbl['lbl.ct.ag.table.action']}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<p:outputLabel value="#{data.fileName}" style="float:left;" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{data.fileType}" style="float:left;" />
+				</p:column>
+				<p:column styleClass="column-align-center">
+				 <p:commandLink partialSubmit="true" process="@form"
+				    action="#{agreementBackingBean.downloadFile(data.filePath)}">
+					<p:graphicImage library="ep/images/design" name="document.png"
+					  value="/resources/ep/images/design/document.png" title="View Document" rendered="#{rowIndex lt 3 }" />
+					  <p:graphicImage library="ep/images/design" name="download.png"
+					  value="/resources/ep/images/design/download.png" title="File Download" rendered="#{rowIndex gt 2 }" />
+			     </p:commandLink>
+				</p:column>
+			</p:dataTable>
 		</h:panelGrid>
     </p:panel>
      <ui:include src="appendixDocument.xhtml" /> 
-    
-     <p:panel id="uploadAgreements" header="#{lbl['lbl.ct.ag.upload']}" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement eq 'Upload'}" 
-        toggleable="true"  toggleSpeed="500" widgetVar="uploadsagreement">
-        <p:spacer width="15"/>
-          <h:panelGrid style="width:100%">
-            <p:outputLabel value="User is allowed to export the agreement into word document and modifies in word application such as adding image.
-               User is required to upload the modified agreement document in this section. If there is no modification on the agreement generated, 
-               system will automatic generate the agreement in word format for approver review during submission." />
-          </h:panelGrid>
-           <h:panelGroup id="uploadAgreementPg">
-                <p:commandButton icon="iconAttachment" rendered="#{!agreementBackingBean.isContractAdmin()}" value="Download Document"/>		
-				<p:commandButton oncomplete="uploadAgreementDlg.show();return false;" icon="iconAttachment" 
-					update="uploadAgreementPg" value="Upload Document" rendered="#{agreementBackingBean.isContractAdmin()}" />
-				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}" styleClass="blue_font" 
-					action="#{agreementBackingBean.downloadUploadFile()}" />					
-			</h:panelGroup>
-    </p:panel>
-    <p:dialog id="uploadAgreementDlg" widgetVar="uploadAgreementDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-			fileUploadListener="#{agreementBackingBean.uploadDocument}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploadAgreementPg">
-		</p:fileUpload> 
-	</p:dialog>
 </ui:composition>
                        
