@@ -13,17 +13,20 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			styleClass="noBorders tr,noBorders td" >
 			<p:row>
 				<p:column width="100%" style="text-align:right">
+				 <p:commandButton  immediate="true" value="#{lbl['lbl.ss.purchase.in.default.back.btn']}" icon="ui-icon-back"
+					 style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}" />
+					 
 				   <p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
-				      oncomplete="prInquiry.hide();"  icon="ui-icon-submit" update="mailPanel"/>
+				    icon="ui-icon-submit" update="mailPanel"/>
 				</p:column>
 			</p:row>
 	   </p:panelGrid>
-	  <p:spacer height="10px" />
+	  <p:spacer height="5px" />
 		<table style="border: 0px;width:1000 px; align:center">
 			<tr>
-				<td><td width="100%" align="left" valign="top" style="border: 0px;width:1000 px; 
+				<td> <td width="100%" align="left" valign="top" style="border: 0.5px;width:1000 px; 
 				     align:center; padding-right: 10px; padding-bottom: 10px;padding-left: 10px; background-color: #F2F2F2;">
-				      <ui:include src="/xhtml/sc/directpurchase/purchaseInDefault.xhtml" />
+				   <ui:include src="/xhtml/sc/directpurchase/purchaseInDefault.xhtml" />
 				</td></td>
 			</tr>
 		</table>
