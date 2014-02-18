@@ -115,7 +115,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml";
-	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementViewTab.xhtml";
+	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
 	private static final String CONTRACT_PAGE ="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";;
 		
 	private TreeNode rootNode;
@@ -963,26 +963,42 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public String gotoViewPage() {
 
-		IContractSO contractSO = null;
-		ContractResDTO resDTO  = null;
-		ContractReqDTO reqDTO  = null;
-		AgreementBackingBean aBB = null;
-		try{
-
-			reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
-			resDTO = contractSO.retrieveContract(reqDTO);
-			aBB = new AgreementBackingBean();
-			aBB.getManagedBean().setCtContract(resDTO.getContract());		
-		}catch(Exception e) {
-				e.printStackTrace();
-		}finally {
-			contractSO = null;
-			resDTO = null;
-			reqDTO = null;
-			aBB= null;
-		}
+		ContractReqDTO ctReqDTO = new ContractReqDTO();
+    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+	
+	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	      this.getManagedBean().getApproverModel().getSource().clear();
+		  if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
+			}
+		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		  } 
+		 
+		  
+			  
+	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	      if(this.getManagedBean().getContractVer().getCtPerformanceBonds() == null || this.getManagedBean().getContractVer().getCtPerformanceBonds().size() == 0)
+	    	  this.getManagedBean().getContractVer().setCtPerformanceBonds(new ArrayList<CtPerformanceBond>());
+	      
+	      if(this.getManagedBean().getContractVer().getCtSetting() == null)
+	    	  this.getManagedBean().getContractVer().setCtSetting(new CtSetting());
+	      
+	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+          CombineSupAddress(resDTO.getCtContractVer());
+          
+          this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		  ContractBackingBean ctBB = new ContractBackingBean();
+		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		  initializeRemarks();
+		  this.getManagedBean().setViewContract(true);
 		return PROCESS_VIEW_PAGE;
 	}
 	
@@ -1022,6 +1038,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  ContractBackingBean ctBB = new ContractBackingBean();
 		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		  initializeRemarks();
+		  this.getManagedBean().setViewContract(false);
 		return CONTRACT_PAGE;
 	}
 	

@@ -113,7 +113,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean showZoneDetails;
 	private boolean disableScheduleRadio;
 	private boolean disableProgessiveRadio;
-	
+	private boolean viewContract = false;
 	private List<CtAgency> listOfAgency;
 	
 	
@@ -591,6 +591,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtPhysicalNo(String ctPhysicalNo) {
 		this.ctPhysicalNo = ctPhysicalNo;
+	}
+
+	public boolean isViewContract() {
+		return viewContract;
+	}
+
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
 	}
 
 }

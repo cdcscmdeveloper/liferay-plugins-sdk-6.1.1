@@ -20,7 +20,7 @@
 	    			<td class="ppRightBtn">
 			  			<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.action}">
 							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
-								action="#{contractDetailsBackingBean.saveContract(action)}" />
+								action="#{contractDetailsBackingBean.saveContract(action)}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 						</ui:repeat>	    			
 	    			</td>
 	    		</tr>
