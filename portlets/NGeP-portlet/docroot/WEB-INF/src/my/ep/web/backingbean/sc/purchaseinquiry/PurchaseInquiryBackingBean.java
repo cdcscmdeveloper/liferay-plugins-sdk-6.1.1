@@ -1,28 +1,32 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.sc.purchaseinquiry;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -55,9 +59,6 @@ import com.liferay.portal.model.User;
 @RequestScoped
 public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseInquiryBackingBean.class);
-	private static final String NAV_TO_PURCHASE_INQUIRY_PAGE = "prInquiryMain";
-	private static final String NAV_TO_DIRECT_PURCHASE_PAGE = "/xhtml/ss/directpurchase/directPurchase.xhtml";
-	
     public PurchaseInquiryBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -76,21 +77,18 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
     
 	/**
 	  * pricingDetails for getting pricing details in Purchase Inquiry
+	 * @return 
 	  */
-	  public void pricingDetails(VCmSupplierItem vCmSupplierItem){
-		   debugLogger("pricingDetails");
-		   ICatalogueSO catalogueSO	=	(ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		   CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
+		   debugLogger("prInquiryAction");
 		   ScPrInquiry scPrInquiry = new ScPrInquiry(); 
-		   catReqDTO.setDocId(vCmSupplierItem.getDocId());
-		   CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
-			
-		   if(catResDTO.getSupplierItemList() != null) {
+		   ScRequestItem scRequestItem = new ScRequestItem();
+		   if(cmSupplierItem != null) {
 			  ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-			  CmSupplierItem cmSupplierItem= catResDTO.getSupplierItemList().get(0);
 			  this.getManagedBean().setSupplierItem(cmSupplierItem);
 			  requestSupplierItem.setPricing(cmSupplierItem.getCmPricings().get(0));
-			  requestSupplierItem.setSmSupplier(catResDTO.getSupplierItemList().get(0).getSmSupplier());
+			  requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
+			  requestSupplierItem.setRequestNoteItem(scRequestItem);
 		      // WorkFlow Status
 			  List<ScPRIWorkFlowStatus> wflowStatus =  new  ArrayList<ScPRIWorkFlowStatus>();
 			  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus(SourcingConstants.PRI_PENDING_SUBMISSION);
@@ -98,57 +96,95 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  workFlowStatus.setPrInquiry(scPrInquiry);
 			  wflowStatus.add(workFlowStatus);
 			  scPrInquiry.setWorkflowStatuses(wflowStatus);
+			  scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			  scPrInquiry.setDayToResponse(7); // by default days
+			  scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
 			  // Initializing Remarks 
 			  scPrInquiry.setRemarks(initializeRemarks(scPrInquiry));
+			  // requestNoteItem
 			  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		      getManagedBean().setScPrInquiry(scPrInquiry);
 
-			 if (cmSupplierItem.getCmPricings() != null
+		  	if (cmSupplierItem.getCmPricings() != null
 					&& cmSupplierItem.getCmPricings().size() > 0) {
-				List<CmPricing> cmPricings = new ArrayList<CmPricing>();
+				List<String> priceTypes = new ArrayList<String>();
 				for (CmPricing princing : cmSupplierItem.getCmPricings()) {
-					if (!getManagedBean().getPriceTypes().contains(princing.getPricingType())) {
-						CmPricing ptype = new CmPricing();
-						ptype.setPricingType(princing.getPricingType());
-						cmPricings.add(ptype);
-						getManagedBean().setPriceTypes(cmPricings);
-					}
-				 }
-			 }
-		  }
-		    FacesContext fc = FacesContext.getCurrentInstance();
-		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_PURCHASE_INQUIRY_PAGE);
-		}
-		
-		 /**
-	      *  priceTypeChangeListener for getting Item Pricing list in Purchase inquiry
-		  */
-		  public void priceTypeChangeListener(){
-			debugLogger("priceTypeChangeListener");
-			List<CmPricing> princings = new ArrayList<CmPricing>();
-			if (getManagedBean().getSupplierItem() != null) {
-				for (CmPricing cmPricing : getManagedBean().getSupplierItem()
-						.getCmPricings()) {
-					if (getManagedBean().getPriceType().equalsIgnoreCase(
-							cmPricing.getPricingType())) {
-						princings.add(cmPricing);
+					if (!priceTypes.contains(princing.getPricingType())) {
+						priceTypes.add(princing.getPricingType());
 					}
 				}
+				// TODO PriceType drop down list in AddToCart
+				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(
+						ParameterTypeConst.PRICE_TYPE, priceTypes));
 			}
-			List<ScRequestSupplierItem> ScRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
-			for (CmPricing price : princings) {
-				ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-				requestSupplierItem.setPricing(price);
-				// set request Item
-				ScRequestItem requestItem = new ScRequestItem();
-				requestSupplierItem.setRequestNoteItem(requestItem);
-				requestSupplierItem.setSmSupplier(getManagedBean()
-						.getSupplierItem().getSmSupplier());
-				ScRequestSupplierItems.add(requestSupplierItem);
-			}
-			getManagedBean().getScPrInquiry().setScRequestSupplierItems(
-					ScRequestSupplierItems);
+		  }
+           return "prInquiryMain";		 
 		}
+	  
+	  
+	public Date calcDayToResponse(ScPrInquiry scPrInquiry) {
+		Date dayToResp = null;
+		if (scPrInquiry.getDayToResponse() != null) {
+		Calendar cal = Calendar.getInstance();  
+		cal.setTime(scPrInquiry.getCreatedDate());  
+		cal.add(Calendar.DATE, scPrInquiry.getDayToResponse());
+		dayToResp = cal.getTime();
+		scPrInquiry.setDateToResponse(cal.getTime());
+		getManagedBean().setScPrInquiry(scPrInquiry);
+		}
+		return dayToResp;
+	}
+		
+	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
+			List<String> priceTypes) {
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[priceTypes.size() + 1];
+			items[0] = new SelectItem(null, "- Select One -");
+			int i = 1;
+			for (String priceTypeCode : priceTypes) {
+				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
+						parameterType, priceTypeCode));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+		
+   /**
+	 *  priceTypeChangeListener for getting Item Pricing list in Purchase inquiry
+    */
+	public void priceTypeChangeListener() {
+		debugLogger("priceTypeChangeListener");
+		List<CmPricing> princings = new ArrayList<CmPricing>();
+		if (getManagedBean().getSupplierItem() != null) {
+			for (CmPricing cmPricing : getManagedBean().getSupplierItem()
+					.getCmPricings()) {
+				if (getManagedBean().getPriceType().equalsIgnoreCase(
+						cmPricing.getPricingType())) {
+					princings.add(cmPricing);
+				}
+			}
+		}
+		List<ScRequestSupplierItem> ScRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+		for (CmPricing price : princings) {
+			ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
+			requestSupplierItem.setPricing(price);
+			// set request Item
+			ScRequestItem requestItem = new ScRequestItem();
+			requestSupplierItem.setRequestNoteItem(requestItem);
+			requestSupplierItem.setSmSupplier(getManagedBean()
+					.getSupplierItem().getSmSupplier());
+			ScRequestSupplierItems.add(requestSupplierItem);
+		}
+		getManagedBean().getScPrInquiry().setScRequestSupplierItems(
+				ScRequestSupplierItems);
+	}
 		
 	 /**
 	  *  submitPrEnquiryDtl  method to submit purchase inquiry details  in Purchase inquiry
@@ -198,7 +234,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 		
 	  /**
-	   *  initializeRemarks  method for initializing remarks  in Purchase inquiry
+	   * Initializing remarks  in Purchase inquiry
       */	
 		private List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
 			List<ScPRIRemark> results = new ArrayList<ScPRIRemark>();
@@ -246,32 +282,79 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				getManagedBean().setUserDivisionList(userDivisionList);
 			}
 		}
-			
-	   /**
-	     *  Page navigation to Catalogue main page in Purchase inquiry
-		*/
-			public String backToDirectPurchase() {
-				debugLogger("backToSearchCatalogue");
-				return NAV_TO_DIRECT_PURCHASE_PAGE;
-			}
+		
+		/**
+		 * Event for procurement type  drop down in Purchase inquiry
+		 */
+		public void procurementTypeEvent() {
+			log.info("procurementTypeEvent"); 
+			if (getManagedBean().getRequestNoteDtl().getProcurementType()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+				getManagedBean().setProcTypeOption(false);
+				getManagedBean().setJustTypeOption(false);
 				
-			private void debugLogger(Object message) {
-				if (log.isDebugEnabled()) {
-					log.debug(message);
-				}
-				log.info(message);
-			}
+			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+				getManagedBean().setProcTypeOption(false);
+				getManagedBean().setJustTypeOption(false);
 			
-			public String getCurrentStatus(){
-				String result = "";
-				if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
-				for(ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry().getWorkflowStatuses()){
-					if(status.isCurrent()){
-						result = getStatusDescById(status.getPmStatus().getStatusId());
-						break;
-					}
-				}
-				}
-				return result;
+			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+				getManagedBean().setProcTypeOption(true);
+			    getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
+				
+			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
+	            getManagedBean().setProcTypeOption(true);
+	            getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
 			}
+		}
+		
+		/**
+		 * Event for justification type drop down in Purchase inquiry
+		 */
+		public void justificationTypeEvent() {
+			log.info("justificationTypeEvent");
+			if (getManagedBean().getRequestNoteDtl().getJustificationType()
+					.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
+				getManagedBean().setJustTypeOption(true);
+			} else {
+				getManagedBean().setJustTypeOption(false);
+			}
+		}
+		
+		/**
+		 * Page navigation to catalogue search page in Purchase inquiry
+		 */
+		public String backToPervious() {
+			log.info("backToPervious");
+			return "catalogueSearch";
+		}
+	
+		private void debugLogger(Object message) {
+			if (log.isDebugEnabled()) {
+				log.debug(message);
+			}
+			log.info(message);
+		}
+			
+		public String getCurrentStatus(){
+			String result = "";
+			if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
+			for(ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry().getWorkflowStatuses()){
+				if(status.isCurrent()){
+				result = getStatusDescById(status.getPmStatus().getStatusId());
+				if(result.equalsIgnoreCase("Pending Submission")){
+				  getManagedBean().setEditFlag(false);
+				  getManagedBean().setButtonFlag(false);
+				} else{
+				  getManagedBean().setEditFlag(true);
+				  getManagedBean().setButtonFlag(true);
+				}
+				break;
+			}
+		    }
+		  }
+		  return result;
+	  }
 }
