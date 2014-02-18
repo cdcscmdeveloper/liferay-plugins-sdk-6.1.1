@@ -179,8 +179,8 @@ public class FacesScopes {
 				System.out.println("id "+ user.getUserId());
 				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
-				e.printStackTrace();
-
+				log.error(e.getMessage());
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR, 
@@ -201,7 +201,7 @@ public class FacesScopes {
 					.getRequest().getRemoteUser()));
 			screenName = user.getScreenName();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		return screenName;
 	}
