@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -27,6 +28,8 @@ import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
@@ -85,11 +88,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		return fs.hasRoleUser("SUPPLIER_USER");
 	}
 
-	public boolean isSupplierUserOrTempSupplierAdmin(){
-		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("SUPPLIER_USER") || fs.hasRoleUser("SUPPLIER_TEMP") || fs.hasRoleUser("SUPPLIER_ADMIN");
-	}
-	
 	public boolean isSupplierAdmin(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("SUPPLIER_ADMIN");
@@ -109,6 +107,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("CD_COMMITTEE");
 	}
+	
+	public boolean isSupplierUserOrTempSupplierAdmin(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_USER") || fs.hasRoleUser("SUPPLIER_TEMP") || fs.hasRoleUser("SUPPLIER_ADMIN");
+	}
+	
 
 
 
@@ -1204,34 +1208,34 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					}
 
 					try{
-					System.out.println("***********55555********************");
-					/////// checking remark required 2 and consensus checking
+						System.out.println("***********55555********************");
+						/////// checking remark required 2 and consensus checking
 
-					if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
+						if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
 
-						if(!code.getReviewedBrandNameII().equalsIgnoreCase(code.getReviewedBrandName()) ||
-								!code.getReviewedTypeNameII().equalsIgnoreCase(code.getReviewedTypeName()) ||
-								!code.getReviewedMeasurementNameII().equalsIgnoreCase(code.getReviewedMeasurementName()) ||
-								!code.getReviewedColorNameII().equalsIgnoreCase(code.getReviewedColorName())){
-							System.out.println("********setConsensus false**********");
-							reqDTO.setConsensus(false);
+							if(!code.getReviewedBrandNameII().equalsIgnoreCase(code.getReviewedBrandName()) ||
+									!code.getReviewedTypeNameII().equalsIgnoreCase(code.getReviewedTypeName()) ||
+									!code.getReviewedMeasurementNameII().equalsIgnoreCase(code.getReviewedMeasurementName()) ||
+									!code.getReviewedColorNameII().equalsIgnoreCase(code.getReviewedColorName())){
+								System.out.println("********setConsensus false**********");
+								reqDTO.setConsensus(false);
 
-							if(!code.isAddedRemark()){
-								code.setRemarkRequiredII(true);
+								if(!code.isAddedRemark()){
+									code.setRemarkRequiredII(true);
+								}
+
+
+							}else{
+								code.setRemarkRequiredII(false);
 							}
-
-
-						}else{
-							code.setRemarkRequiredII(false);
 						}
-					}
 
 
-					System.out.println("***********0000000********************");
+						System.out.println("***********0000000********************");
 
 
-					reqDTO.getRequestExtList().add(code);
-					System.out.println("***********hhhhh********************");
+						reqDTO.getRequestExtList().add(code);
+						System.out.println("***********hhhhh********************");
 					}catch(Exception ex){
 						System.out.println("getMessage"+ex.getMessage());
 					}
@@ -1478,6 +1482,21 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
+		
+		
+		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		
+		StatusReqDTO reqStatusDTO = new StatusReqDTO();
+		
+		reqStatusDTO.setLanguageCode(languageCode);
+		reqStatusDTO.setStatusId(res.getDocStatus().longValue()); 
+		StatusResDTO resStatusDTO = statusSO.retrieveStatusDescById(reqStatusDTO);
+		
+
+		this.getManagedBean().setDocStatus(resStatusDTO.getPmStatusDesc()!=null?resStatusDTO.getPmStatusDesc().getStatusName():"Review");
+		
+		
 
 		System.out.println("********res.getTaskName()********"+res.getTaskName());
 		if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
@@ -1539,6 +1558,20 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
+		
+		
+		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		
+		StatusReqDTO reqStatusDTO = new StatusReqDTO();
+		
+		reqStatusDTO.setLanguageCode(languageCode);
+		reqStatusDTO.setStatusId(res.getDocStatus().longValue()); 
+		StatusResDTO resStatusDTO = statusSO.retrieveStatusDescById(reqStatusDTO);
+		
+
+		this.getManagedBean().setDocStatus(resStatusDTO.getPmStatusDesc()!=null?resStatusDTO.getPmStatusDesc().getStatusName():"Review");
+
 
 		if(res.getTaskName().equalsIgnoreCase("Create Temporary Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1708,4 +1741,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
 	}
 
+	
+	public String requestUnspscCode(){
+		
+		return "unspscRequestForm";
+	}
 }

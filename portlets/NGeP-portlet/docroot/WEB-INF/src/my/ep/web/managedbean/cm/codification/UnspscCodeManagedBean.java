@@ -94,6 +94,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private CmUnspsc commodityObj;
 	private Long unspscId;
 	
+	private String docStatus;
 	
 	
 	
@@ -101,6 +102,14 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	
 	
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+
 	public Long getUnspscId() {
 		return unspscId;
 	}
