@@ -64,6 +64,28 @@ public class UserHelper {
 
 		return user;
 	}
+	
+	public PmUser saveUser(PmUser pmUser) {
+		IUserSO userSO;
+		try {
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setPmUser(pmUser);
+
+			UserResDTO resDTO = userSO.saveUser(reqDTO);
+			
+			pmUser = resDTO.getPmUser();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			userSO = null;
+		}
+		
+		return pmUser;
+	}
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
