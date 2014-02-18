@@ -110,7 +110,6 @@
 		<portlet id="NGeP" />
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
-		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
 
 	</category>
