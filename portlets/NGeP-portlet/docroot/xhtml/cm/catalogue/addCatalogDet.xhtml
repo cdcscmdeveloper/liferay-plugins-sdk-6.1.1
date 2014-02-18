@@ -78,13 +78,13 @@
 								<p:graphicImage id="imageId" height="150" width="200"
 									value="/images/#{imageObj.imageName}" />
 							</p:galleria>
-						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
+						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}" readonly="#{unspscCodeBackingBean.catalogueAdmin}"
 							icon="ui-icon-upload" onclick="imageDialog.show()" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-					<td><p:inputText disabled="true" size="35"
+					<td><p:inputText readonly="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputTextarea disabled="true" style="width: 195px;"
+					<td><p:inputTextarea readonly="true" style="width: 195px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
 
 				</tr>
@@ -103,7 +103,7 @@
 						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
@@ -111,19 +111,19 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" />
 						<p:inputText style="margin-left: 2px;" size="3" value="days"
 							disabled="true" /></td>
 				</tr>
@@ -133,7 +133,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
 					<td colspan="3"><p:inputTextarea style="width:660px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" /></td>
 
 				</tr>
 
