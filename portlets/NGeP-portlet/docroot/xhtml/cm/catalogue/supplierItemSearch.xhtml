@@ -239,11 +239,27 @@
 								rendered="#{unspscCodeBackingBean.requisitioner}">
 								<table>
 									<tr>
-										<td><cc:renderFacet name="cartButton" /></td>
-										<td><p:commandLink
-												rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }">
-												PID
-											</p:commandLink></td>
+									  <td>
+										 <p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem)}" 
+											   process="@this" update="@([id$=addToCartId])"
+											   oncomplete="addToCartPopup.show();return false;" partialSubmit="true" 
+											   rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }" >
+											 <p:graphicImage library="ep/images/design" name="cart_add.png"  id="addToCartId"/>
+										   </p:commandLink>
+										   <p:tooltip for="addToCartId" value="#{lbl['lbl.ss.add.to.cart']}" showEffect="fade" hideEffect="fade"  />
+										
+										</td>
+										<td>
+										   <p:commandLink   
+									         action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
+									          rendered="#{supplierItem.contractNo ne null and supplierItem.circularNo ne null }">
+											<p:graphicImage id="pid"
+												value="/resources/ep/images/design/icon_txt.png"
+												height="15px"></p:graphicImage>
+										   </p:commandLink> 
+										   <p:tooltip for="pid" value="#{lbl['lbl.ss.pid']}" showEffect="fade" hideEffect="fade"  />
+											
+										</td>
 
 									</tr>
 
@@ -271,7 +287,7 @@
 			<ui:include src="viewWishListItem.xhtml"></ui:include>
 		</p:dialog> -->
 	</h:panelGroup>
-
+   <ui:include src="/xhtml/sc/directpurchase/common/addToCartPopup.xhtml" /> 
 
 
 
