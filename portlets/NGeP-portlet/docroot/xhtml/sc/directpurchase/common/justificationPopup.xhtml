@@ -4,35 +4,24 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:dialog widgetVar="justPopup" modal="true" width="725" height="250"
-		resizable="false">
-		<p:panel header="Justification">
-			<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:100%">
-				<p:row>
-					<p:column width="25%">
-						<p:outputLabel value="#{lbl['lbl.ss.procurement.type']}" />
-					</p:column>
-					<p:column width="25%">
-						<p:inputText disabled="true"
-							value="#{directPurchaseBackingBean.managedBean.procurementType}" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column width="25%">
-						<p:outputLabel value="#{lbl['lbl.ss.justification']}" />
-					</p:column>
-					<p:column width="25%">
-						<p:inputText disabled="true"  />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column width="25%"></p:column>
-					<p:column colspan="3">
-						<p:inputTextarea disabled="true" rows="2" cols="80"/>
-					</p:column>
-				</p:row>
+	<p:dialog widgetVar="justPopup" header="JUSTIFICATION" modal="true" width="550" height="180"
+		resizable="false" >
+		<p:spacer height="10px"/>
+		<table style="width: 500px">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ss.procurement.type']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType}" /></td>
+	    	</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ss.justification']}" /></td>
+				<td><p:inputText disabled="true"  value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justificationType}"/></td>
+			 </tr>
+			 <tr>
+				<td></td>
+				<td><p:inputTextarea disabled="true" rows="4" cols="70" rendered="#{requestNoteBackingBean.managedBean.justTypeOption}"/> </td>
+			</tr>
+		</table>
 
-			</p:panelGrid>
-		</p:panel>
 	</p:dialog>
 </ui:composition>

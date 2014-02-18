@@ -9,11 +9,11 @@
 		header="#{lbl['lbl.ss.panel.title.approve.list']}" toggleable="true"
 		toggleSpeed="500">
 		<div style="width: 100%">
-			<p:pickList value="#{directPurchaseBackingBean.managedBean.approvalUsers}" var="approverUser"
+			<p:pickList value="#{requestNoteBackingBean.managedBean.approvalUsers}" var="approverUser"
 				showTargetControls="true" itemLabel="#{approverUser.userName}"
 				itemValue="#{approverUser}" converter="approverConverter">
-				<f:facet name="sourceCaption">Available</f:facet>
-				<f:facet name="targetCaption">Selected</f:facet>
+				<f:facet name="sourceCaption">Available Aprover</f:facet>
+				<f:facet name="targetCaption">Aprover List Name</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>

@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<!--  Supplier Details dialog -->
+	<p:dialog id="popupSuppDtl" widgetVar="suppDetailsPopup" resizable="false"
+		styleClass="pop_up_top" header="SUPPLIER DETAILS" width="750"
+		height="350">
+		<p:spacer height="5px"/>
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 154px;"><p:outputLabel
+						value="#{lbl['lbl.ss.business.req.no']}"/></td>
+				<td><p:inputText size="30" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.regNo}" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.ss.ep.no']}"/></td>
+				<td><p:inputText size="30" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.epNo}"  disabled="true"/></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.ss.mof.no']}"/></td>
+				<td><p:inputText size="30" value=""  disabled="true"/></td>
+			</tr>
+			<tr>
+				<td style="width: 154px;"><p:outputLabel
+						value="#{lbl['lbl.ss.comp.name']}"/></td>
+				<td><p:inputText size="30" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>
+		  	<tr>
+				<td style="width: 154px;"><p:outputLabel
+						value="#{lbl['lbl.ss.comp.address']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>
+			<tr>
+				<td style="width: 154px;"></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>
+			<tr>
+				<td style="width: 154px;"></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>		
+			<tr>
+				<td style="width: 154px;"></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>		
+			<tr>
+				<td style="width: 154px;"></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td></td><td></td>
+			</tr>	
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ss.post.code']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true"  /></td>
+				<td><p:outputLabel value="#{lbl['lbl.ss.state']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ss.district']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true"  /></td>
+				<td><p:outputLabel value="#{lbl['lbl.ss.town']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.ss.telephone.no']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true"  /></td>
+				<td><p:outputLabel value="#{lbl['lbl.ss.fax.no']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+			</tr>
+			
+		</table>
+
+	</p:dialog>
+
+</ui:composition>

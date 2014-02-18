@@ -1,37 +1,28 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td">
+		<p:row>
+			<p:column width="100%" style="text-align:right">
+				<p:commandButton value="#{lbl['lbl.sc.action.back']}"
+					icon="ui-icon-back" style="float:left;"
+					action="#{requestNoteBackingBean.backToPervious}" />
 
-	<ui:define name="contentSection">
-		<p:messages showDetail="true" autoUpdate="true" closable="true"
-			severity="error, info" />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.ss.price.inquiry.back.btn']}"
-						icon="ui-icon-back" style="float:left;"
-						action="#{directPurchaseBackingBean.backToDirectPurchase}" />
+				<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
+				   	action="#{requestNoteBackingBean.saveAction}" />
 
-					<p:commandButton value="#{lbl['lbl.ss.price.inquiry.proceed.btn']}"
-						icon="ui-icon-ok" />
+				<p:commandButton value="#{lbl['lbl.ss.submit']}"
+					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction}"/>
 
-					<p:commandButton
-						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-						icon="ui-icon-cancel" />
+				<p:commandButton
+					value="#{lbl['lbl.sc.action.cancel']}"
+					icon="ui-icon-cancel" style="float:right;" />
 
-					<p:commandButton value="#{lbl['lbl.ss.submit']}"
-						action="#{directPurchaseBackingBean.submitAction}"
-						style="float:right;" icon="ui-icon-submit" />
-
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-		<p:spacer height="15px" />
-	</ui:define>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+	<p:spacer height="10px" />
 </ui:composition>
