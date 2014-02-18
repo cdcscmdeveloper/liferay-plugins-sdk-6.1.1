@@ -1,0 +1,22 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="templateSpecBean" />
+		<cc:attribute name="scrollWidth" default="1215" />
+		<cc:attribute name="isCeilingValueReq" type="java.lang.Boolean" default="false" />
+	</cc:interface>
+
+	<cc:implementation>
+		
+		<ui:param name="templateSpecBean" value="#{cc.attrs.templateSpecBean}" />
+		
+		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
+		
+	</cc:implementation>
+	
+</ui:component>

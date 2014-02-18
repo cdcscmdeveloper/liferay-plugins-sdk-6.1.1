@@ -10,6 +10,7 @@ import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -42,6 +43,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	//private ScAttachment scAttachment = new ScAttachment();
 	private List<ScAttachment> scAttachmentList; 
+	
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
@@ -191,6 +195,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 
 }

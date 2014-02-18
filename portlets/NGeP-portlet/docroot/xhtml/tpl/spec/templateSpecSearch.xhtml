@@ -65,7 +65,7 @@
 			<table style="width:100%">
 				<tr>
 					<td>
-						<p:dataTable id="resultID" selectionMode="single" selection="#{templateSpecBackingBean.managedBean.specMaster}"
+						<p:dataTable id="resultID" selectionMode="single" selection="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}"
 							value="#{templateSpecBackingBean.managedBean.specMasterList}" 
 							var="tplMasterObj" rowKey="#{tplMasterObj.specMasterId}" width="100%">
 							<p:columnGroup type="header">
@@ -114,7 +114,7 @@
 						<p:commandButton value="Create New" process="@this" action="#{templateSpecBackingBean.newAction}" />
 						<p:spacer width="5px" />
 						<p:commandButton value="View Template"
-							action="#{templateSpecBackingBean.retrieveTemplateSpecMaster}"/>
+							action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}"/>
 					</td>
 				</tr>
 			</table>

@@ -55,6 +55,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -412,9 +413,8 @@ public class EvaluationBackingBean extends
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 
-			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			// this.getManagedBean().getSpecMaster().setTplSpecQuestions(specBB.getManagedBean().getSpecMaster().getTplSpecQuestions());
-			reqDTO.setSpecQuestions(specBB.getManagedBean().getSpecMaster()
+			reqDTO.setSpecQuestions(getManagedBean().getTemplateSpecBean().getSpecMaster()
 					.getTplSpecQuestions());
 			reqDTO.setEvaluationResultDtls(this.getManagedBean()
 					.getScQtEvaluationResult().getEvaluationResultDtls());
@@ -652,9 +652,7 @@ public class EvaluationBackingBean extends
 				retrives1Details();
 			}
 			if (outputTab == 2) {
-				TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-				templateSpecBackingBean.getManagedBean()
-						.setSelectedSpecQuestion(new TplSpecQuestion());
+				getManagedBean().getTemplateSpecBean().setSelectedSpecQuestion(new TplSpecQuestion());
 				retrives2Details();
 			}
 			if (outputTab == 3) {
@@ -959,10 +957,11 @@ public class EvaluationBackingBean extends
 			ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 
 			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 			this.getManagedBean().setSpecMaster(specMaster);
-			templateSpecBackingBean.getManagedBean().setSpecMaster(specMaster);
-			templateSpecBackingBean.getManagedBean().setContentType(
+			templateSpecBean.setSpecMaster(specMaster);
+			templateSpecBean.setContentType(
 					TemplateSpecConst.CONTENT_TYPE_SCORE);
 			registrationSO = BusinessDelegate.getInstance().getServiceObject(
 					"sm", IRegistrationSO.class);
@@ -971,10 +970,10 @@ public class EvaluationBackingBean extends
 			registrationReqDTO.setSupplierId(1L);
 			RegistrationResDTO registrationResDTO = registrationSO
 					.retrieveSuppOnlineAcc(registrationReqDTO);
-			templateSpecBackingBean.getManagedBean().setSupplier(
+			templateSpecBean.setSupplier(
 					registrationResDTO.getSmSupp());
 
-			templateSpecBackingBean.retrieveTemplateSpecMaster();
+			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(QTConstants.SS_MODULE,
@@ -1002,10 +1001,11 @@ public class EvaluationBackingBean extends
 			ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 
 			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
-			templateSpecBackingBean.getManagedBean().setSpecMaster(specMaster);
-			templateSpecBackingBean.getManagedBean().setContentType(
+			templateSpecBean.setSpecMaster(specMaster);
+			templateSpecBean.setContentType(
 					TemplateSpecConst.CONTENT_TYPE_SCORE);
 			registrationSO = BusinessDelegate.getInstance().getServiceObject(
 					"sm", IRegistrationSO.class);
@@ -1014,9 +1014,9 @@ public class EvaluationBackingBean extends
 			registrationReqDTO.setSupplierId(1L);
 			RegistrationResDTO registrationResDTO = registrationSO
 					.retrieveSuppOnlineAcc(registrationReqDTO);
-			templateSpecBackingBean.getManagedBean().setSupplier(
+			templateSpecBean.setSupplier(
 					registrationResDTO.getSmSupp());
-			templateSpecBackingBean.retrieveTemplateSpecMaster();
+			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(QTConstants.SS_MODULE,
 							IQTEvaluationSO.class);

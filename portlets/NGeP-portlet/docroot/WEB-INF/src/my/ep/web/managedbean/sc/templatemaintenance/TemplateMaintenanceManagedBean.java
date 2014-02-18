@@ -11,6 +11,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -41,6 +42,8 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean {
 	private String qtNum;
 	private Long statusId;
 	private boolean isRecordStatus;
+	
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
 	public TemplateMaintenanceManagedBean() {
 		
@@ -284,6 +287,20 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean {
 	 */
 	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 
 }

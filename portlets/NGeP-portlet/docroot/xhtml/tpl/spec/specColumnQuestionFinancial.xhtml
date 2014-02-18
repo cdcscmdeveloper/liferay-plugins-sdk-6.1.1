@@ -5,18 +5,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="#{columnStyle}width:155px;">
-		<h:outputLabel value="Total Amount" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText size="18" 
-			rendered="#{!isQuestionTypeHeader}" disabled="true" />	
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" rendered="#{!isQuestionTypeHeader}" disabled="#{(isAnswerTypeText)}" 
+	<p:column style="width:155px;" headerText="#{lbl['lbl.sc.tpl.total.amount']}">
+		<p:inputText size="18" disabled="true" />	
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" disabled="#{(isAnswerTypeText)}" 
 			oncomplete="scoringSetting.show();"
 			partialSubmit="true" process="@this" update="@this">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedIndex}" value="#{row}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="#{columnStyle}width:80px;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
-		<h:outputLabel value="Estimate Cost" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" rendered="#{!isQuestionTypeHeader}" required="true" />
+	<p:column style="width:80px;" rendered="#{isEstCostReq}" headerText="#{lbl['lbl.sc.tpl.estimate.cost']}">
+		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" required="true" />
+	</p:column>
+	<p:column style="width:80px;" rendered="#{isCeilingValueReq}" headerText="#{lbl['lbl.sc.tpl.ceiling.value']}">
+		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clCeilingValue}" required="true" />
 	</p:column>
 </ui:composition>

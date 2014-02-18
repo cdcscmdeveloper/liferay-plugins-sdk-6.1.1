@@ -5,16 +5,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="#{columnStyle}width:130px;">
-		<h:outputLabel value="Item" style="float: left" rendered="#{isQuestionTypeHeader}" />	
+	<p:column style="width:130px;" headerText="#{lbl['lbl.sc.tpl.item']}">	
 		<p:inputText size="19" value="#{question.clItem}" rendered="#{isQuestionTypeItem}" required="true" />
 	</p:column>
-	<p:column style="#{columnStyle}width:130px;">
-		<h:outputLabel value="Specification" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText size="19" value="#{question.clSpecDetail}" rendered="#{!isQuestionTypeHeader}" />
+	<p:column style="width:130px;" headerText="#{lbl['lbl.sc.tpl.specification']}">
+		<p:inputText size="19" value="#{question.clSpecDetail}"  />
 	</p:column>
-	<p:column style="#{columnStyle}width:70px;">
-		<h:outputLabel value="UOM" style="float: left" rendered="#{isQuestionTypeHeader}" />
+	<p:column style="width:70px;" headerText="#{lbl['lbl.sc.tpl.uom']}">
 		<h:selectOneMenu style="width:80px;" value="#{question.clUom.uomId}" rendered="#{isQuestionTypeItem}" required="true">
 			<f:selectItems value="#{templateSpecBackingBean.uomList}" 
 				var="pmUom" itemLabel="#{pmUom.uomName}" itemValue="#{pmUom.uomCode}" />
@@ -22,55 +19,58 @@
 	</p:column>
 	
 	<c:if test="#{isItemTypeService}">
-		<p:column style="#{columnStyle}width:50px;">
-			<h:outputLabel value="Frequency per UOM" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+		<p:column style="width:50px;" headerText="#{lbl['lbl.sc.tpl.frequency.per.uom']}">
 			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomFrequency}" rendered="#{isQuestionTypeItem}" required="true" />
 		</p:column>
-		<p:column style="#{columnStyle}width:55px;">
-			<h:outputLabel value="No. UOM per day" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+		<p:column style="width:55px;" headerText="#{lbl['lbl.sc.tpl.no.uom.per.day']}">
 			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem}" required="true" />
 		</p:column>
-		<p:column style="#{columnStyle}width:60px;">
-			<h:outputLabel value="No. UOM per month" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+		<p:column style="width:60px;" headerText="#{lbl['lbl.sc.tpl.no.uom.per.month']}">
 			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem}" required="true" />
 		</p:column>
-		<p:column style="#{columnStyle}width:70px;">
-			<h:outputLabel value="No. Months per year" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
-			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clMonthPerYear}" rendered="#{isQuestionTypeItem}" required="true" />
+		<p:column style="width:70px;" headerText="#{lbl['lbl.sc.tpl.duration.month']}" rendered="#{isDurationByItem}">
+			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clDurationMonth}" rendered="#{isQuestionTypeItem}" required="true" />
 		</p:column>
 	</c:if>
 	
-	<p:column style="#{columnStyle}width:50px;">
-		<h:outputLabel value="Quantity" style="float: left" rendered="#{isQuestionTypeHeader}" />
+	<p:column style="width:50px;" headerText="#{lbl['lbl.sc.tpl.quantity']}">
 		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clQuantity}" rendered="#{isQuestionTypeItem}" required="true" />
 	</p:column>	
-	<p:column style="#{columnStyle}width:50px;">
-		<h:outputLabel value="Mandatory" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:selectBooleanCheckbox value="#{question.clAnswerRequired}" rendered="#{!isQuestionTypeHeader}" />
+	<p:column style="width:50px;" headerText="#{lbl['lbl.sc.tpl.mandatory']}">
+		<p:selectBooleanCheckbox value="#{question.clAnswerRequired}" />
 	</p:column>
-	<p:column style="#{columnStyle}width:155px;">
-		<h:outputLabel value="Answer" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<h:selectOneMenu id="answerTypeId" rendered="#{!isQuestionTypeHeader}" value="#{question.answerTypeCode.parameterId}" required="true">
+	<p:column style="width:155px;" headerText="#{lbl['lbl.sc.tpl.answer']}">
+		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" required="true">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" rendered="#{!isQuestionTypeHeader}" disabled="#{(isAnswerTypeText)}" 
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" disabled="#{(isAnswerTypeText)}" 
 			oncomplete="scoringSetting.show();"
 			partialSubmit="true" process="@this" update="@this">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedIndex}" value="#{row}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="#{columnStyle}width:90px;">
-		<p:menuButton value="Add">
-			<p:menuitem value="Item" action="#{templateSpecBackingBean.addQuestion(row,TplSpecConst.questionTypeItem)}"  
+	<p:column style="width:90px;">
+		<f:facet name="header">
+			<p:menuButton value="#{lbl['lbl.sc.tpl.btn.add']}">
+				<p:menuitem value="#{lbl['lbl.sc.tpl.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
+					update="questionTbl" partialSubmit="true" process="questionTbl">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.sc.tpl.specification']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItemSpec)}" 
+					update="questionTbl" partialSubmit="true" process="questionTbl">
+				</p:menuitem>
+			</p:menuButton>
+		</f:facet>
+		<p:menuButton value="#{lbl['lbl.sc.tpl.btn.add']}">
+			<p:menuitem value="#{lbl['lbl.sc.tpl.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl">
 			</p:menuitem>
-			<p:menuitem value="Specification" action="#{templateSpecBackingBean.addQuestion(row,TplSpecConst.questionTypeItemSpec)}" 
+			<p:menuitem value="#{lbl['lbl.sc.tpl.specification']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}" 
 				update="questionTbl" partialSubmit="true" process="questionTbl">
 			</p:menuitem>
 		</p:menuButton>
 		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none;"
-			rendered="#{!isQuestionTypeHeader}" process="@form" oncomplete="pp2.show();">
+			process="@form" oncomplete="pp2.show();">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedIndex}" value="#{row}" />
 		</p:commandButton>
 	</p:column>

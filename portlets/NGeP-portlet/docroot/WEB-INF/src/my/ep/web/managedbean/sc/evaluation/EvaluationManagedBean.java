@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalLabel;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "evaluationMB")
@@ -71,6 +72,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String viewBy = "P";
 	private List<ScQtEvaluationResult> requestDemoSelect;
 	private String fileName;
+	
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
 
 	// private String stage1committeeType="OC";
@@ -786,6 +789,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 
 	

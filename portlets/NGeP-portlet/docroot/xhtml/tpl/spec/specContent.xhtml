@@ -8,9 +8,9 @@
 	xmlns:p="http://primefaces.org/ui">
 		
 		<p:panel id="spg" header="Specification Content" toggleable="true">
-			<h:panelGroup rendered="false">
+			<h:panelGroup rendered1="false">
 			Content Type: 
-			<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.contentType}">
+			<p:selectOneMenu value="#{templateSpecBean.contentType}">
 				<f:selectItem itemLabel="Question" itemValue="#{TplSpecConst.contentTypeQuestion}" />
 				<f:selectItem itemLabel="Review" itemValue="#{TplSpecConst.contentTypeReview}" />
 				<f:selectItem itemLabel="Answer" itemValue="#{TplSpecConst.contentTypeAnswer}" />
@@ -20,50 +20,67 @@
 			
 			<h:panelGroup id="saveAnsPG" >
 				<p:commandButton value="Save Answer" action="#{templateSpecBackingBean.saveAnswerAction}" 
-					rendered="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion
-							and templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeReview}" />
+					rendered="#{templateSpecBean.contentType != TplSpecConst.contentTypeQuestion
+							and templateSpecBean.contentType != TplSpecConst.contentTypeReview}" />
 			</h:panelGroup>
 			</h:panelGroup>
-			<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
-				value="#{templateSpecBackingBean.managedBean.specMaster.tplSpecQuestions}"
-				scrollable="true" scrollWidth="965">
-				
-				<ui:param name="isQuestionTypeHeader" value="#{question.questionType == TplSpecConst.questionTypeHeader}" />
-				<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
-				<ui:param name="isContentTypeQuestion" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeQuestion}" />
-				<ui:param name="isContentTypeReview" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeReview}" />
-				<ui:param name="isContentTypeAnswer" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeAnswer}" />
-				<ui:param name="isContentTypeScore" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeScore}" />
-				<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
-				<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
-				<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
-				<ui:param name="isItemTypeService" value="#{templateSpecBackingBean.managedBean.specMaster.itemTypeCode.parameterCode == TplSpecConst.itemTypeService}" />
-				<ui:param name="isSpecTypeTechnical" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeTechnical}" />
-				<ui:param name="isSpecTypeFinancial" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeFinancial}" />
-				<ui:param name="isEstCostReq" value="#{templateSpecBackingBean.managedBean.specMaster.estCostReq}" />
-				<ui:param name="isScoring" value="#{question.scoring}" />
-				<ui:param name="noOfYear" value="#{templateSpecBackingBean.managedBean.specMaster.noOfYear}" />
-				<ui:param name="columnStyle" value="#{isQuestionTypeHeader ? 'background-color:#dddddd;' : ''}" />
-				
-				<c:if test="#{isContentTypeQuestion and isSpecTypeTechnical}">
-					<ui:decorate template="specColumnQuestionTechnical.xhtml" />
-				</c:if>
-				<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial}">
-					<ui:decorate template="specColumnQuestionView.xhtml" />
-					<ui:decorate template="specColumnQuestionFinancial.xhtml" />
-				</c:if>
-				<c:if test="#{isContentTypeReview}">
-					<ui:decorate template="specColumnQuestionView.xhtml" />
-					<ui:decorate template="specColumnReview.xhtml" />
-				</c:if>
-				<c:if test="#{isContentTypeAnswer}">
-					<ui:decorate template="specColumnAnswer.xhtml" />
-				</c:if>
-				<c:if test="#{isContentTypeScore}">
-					<ui:decorate template="specColumnAnswerView.xhtml" />
-					<ui:decorate template="specColumnScore.xhtml" />
-				</c:if>
-			</p:dataTable>
+			
+			<ui:param name="isContentTypeQuestion" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeQuestion}" />
+			<ui:param name="isContentTypeReview" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeReview}" />
+			<ui:param name="isContentTypeAnswer" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeAnswer}" />
+			<ui:param name="isContentTypeScore" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeScore}" />	
+			<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == TplSpecConst.itemTypeService}" />
+			<ui:param name="isSpecTypeTechnical" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeTechnical}" />
+			<ui:param name="isSpecTypeFinancial" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeFinancial}" />
+			<ui:param name="isEstCostReq" value="#{templateSpecBean.specMaster.estCostReq}" />
+			<ui:param name="isDurationByItem" value="#{templateSpecBean.specMaster.durationByItem}" />
+			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
+			
+			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
+				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
+					scrollable1="true" scrollWidth1="#{cc.attrs.scrollWidth}">
+					
+					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+					
+					<c:if test="#{isContentTypeQuestion and isSpecTypeTechnical}">
+						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
+					</c:if>
+					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial}">
+						<ui:decorate template="specColumnQuestionView.xhtml" />
+						<ui:decorate template="specColumnQuestionFinancial.xhtml" />
+					</c:if>
+					<c:if test="#{isContentTypeReview}">
+						<ui:decorate template="specColumnQuestionView.xhtml" />
+						<ui:decorate template="specColumnReview.xhtml" />
+					</c:if>
+				</p:dataTable>
+			</c:if>
+			
+			<c:if test="#{isContentTypeAnswer or isContentTypeScore}">
+				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
+					value="#{templateSpecBean.specAnswerList}"
+					scrollable1="true" scrollWidth1="#{cc.attrs.scrollWidth}">
+					
+					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
+					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+					<ui:param name="isScoring" value="#{question.scoring}" />
+					
+					<c:if test="#{isContentTypeAnswer}">
+						<ui:decorate template="specColumnAnswer.xhtml" />
+					</c:if>
+					<c:if test="#{isContentTypeScore}">
+						<ui:decorate template="specColumnAnswerView.xhtml" />
+						<ui:decorate template="specColumnScore.xhtml" />
+					</c:if>
+				</p:dataTable>
+			</c:if>
 		</p:panel>
 
 		<p:dialog header="Delete Confirmation" widgetVar="pp2" showEffect="fade" hideEffect="fade"
@@ -75,7 +92,7 @@
 			<br />
 			<h:outputText value="All child nodes belong to this node will be deleted as well" />
 			<br />
-			<p:commandButton value="Ok" oncomplete="pp2.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion}"
+			<p:commandButton value="Ok" oncomplete="pp2.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
 				partialSubmit="true" pprocess="@this,spg" update="spg" />
 			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
 		</p:dialog>
@@ -91,7 +108,7 @@
 							<p:outputLabel value="Scoring:"	/>
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="checkScore" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.scoring}" >
+							<p:selectBooleanCheckbox id="checkScore" value="#{templateSpecBean.selectedSpecQuestion.scoring}" >
 								<p:ajax update="panelOcl" />
 							</p:selectBooleanCheckbox>
 						</td>

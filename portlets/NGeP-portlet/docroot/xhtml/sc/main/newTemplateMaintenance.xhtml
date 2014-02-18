@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -150,7 +151,8 @@
 		</p:panel>
 
 
-		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
+		<ac:templateSpec templateSpecBean="#{TemplateMBB.managedBean.templateSpecBean}" />
+		
 		<h:panelGrid columns="2">
 			<h:outputLabel value="#{lbl['lbl.sc.tpl.total']}"></h:outputLabel>
 			<p:inputText

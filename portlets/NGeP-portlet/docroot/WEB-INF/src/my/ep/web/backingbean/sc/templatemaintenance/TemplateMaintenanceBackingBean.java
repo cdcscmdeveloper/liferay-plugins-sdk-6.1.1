@@ -46,6 +46,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.templatemaintenance.TemplateMaintenanceManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -146,14 +147,15 @@ public class TemplateMaintenanceBackingBean extends
 						new ScQtZoneCriteria());
 			}
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 			TplSpecMaster specMaster1 = new TplSpecMaster();
 			specMaster1.setSpecMasterId(new Long(scqtDoc.getTplSpecMaster()
 					.getSpecMasterId()));
 			// specMaster.setSpecMasterId(1L);
-			specBB.getManagedBean().setContentType(
+			templateSpecBean.setContentType(
 					TemplateSpecConst.CONTENT_TYPE_QUESTION);
-			specBB.getManagedBean().setSpecMaster(specMaster1);
-			specBB.retrieveTemplateSpecMaster();
+			templateSpecBean.setSpecMaster(specMaster1);
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
 			// scqtDoc.getTplSpecMaster().getProcurementCategory()
 			// .getParameterId()
 			if (this.getManagedBean().getScqtDoc().getScQtCheckList() == null) {
@@ -369,10 +371,10 @@ public class TemplateMaintenanceBackingBean extends
 
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 
-			List<TplSpecQuestion> questions = specBB.getManagedBean()
+			List<TplSpecQuestion> questions = getManagedBean().getTemplateSpecBean()
 					.getSpecMaster().getTplSpecQuestions();
 			;
-			TplSpecQuestion queston = questions.remove(0);
+			//TplSpecQuestion queston = questions.remove(0);
 			List<TplSpecQuestion> questions1 = new ArrayList<TplSpecQuestion>();
 
 			questions1.addAll(questions);
@@ -386,7 +388,7 @@ public class TemplateMaintenanceBackingBean extends
 				tpl1.setTplSpecMaster(specMaster);
 				tpl1.setTplSpecAnswers(null);
 				tpl1.setTplSpecScorings(null);
-				tpl1.setTplSpecTierPriceQuestions(null);
+				tpl1.setTplSpecTierQties(null);
 				questions2.add(tpl1);
 			}
 
@@ -394,7 +396,7 @@ public class TemplateMaintenanceBackingBean extends
 			specMaster.setTemplateTypeCode(parameter);
 			specMaster.setProcessType("SS");
 			specMaster.setOrgProfile(profileRes.getPmOrgProfile());
-			specMaster.setNoOfYear(1);
+			specMaster.setDurationMonth(12);
 			specMaster.setTemplateStatus("D");
 			specMaster.setScQtDocs(null);
 			specMaster.setChangedBy(2L);

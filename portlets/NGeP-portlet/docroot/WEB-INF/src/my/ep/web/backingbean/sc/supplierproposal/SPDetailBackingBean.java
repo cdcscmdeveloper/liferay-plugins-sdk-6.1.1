@@ -44,11 +44,12 @@ import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationServiceLocato
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
@@ -77,8 +78,7 @@ public class SPDetailBackingBean extends
 
 		log.info("inside constructor");
 
-		TemplateSpecBackingBean tmpSpecBB = new TemplateSpecBackingBean();
-		tmpSpecBB.getManagedBean().setSelectedSpecQuestion(
+		getManagedBean().getTemplateSpecBean().setSelectedSpecQuestion(
 				new TplSpecQuestion());
 
 	}
@@ -256,10 +256,11 @@ public class SPDetailBackingBean extends
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+		TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
-		templateSpecBackingBean.getManagedBean().setSpecMaster(specMaster);
-		templateSpecBackingBean.getManagedBean().setContentType(
+		templateSpecBean.setSpecMaster(specMaster);
+		templateSpecBean.setContentType(
 				TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
@@ -270,10 +271,10 @@ public class SPDetailBackingBean extends
 		registrationReqDTO.setSupplierId(userId);
 		RegistrationResDTO registrationResDTO = registrationSO
 				.retrieveSuppOnlineAcc(registrationReqDTO);
-		templateSpecBackingBean.getManagedBean().setSupplier(
+		templateSpecBean.setSupplier(
 				registrationResDTO.getSmSupp());
 
-		templateSpecBackingBean.retrieveTemplateSpecMaster();
+		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 	}
 
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)

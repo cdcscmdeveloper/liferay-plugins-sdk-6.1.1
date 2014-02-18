@@ -4,14 +4,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-		<p:commandButton value="Save" action="#{templateSpecBackingBean.saveAction}" />
+		<p:commandButton value="Save" action="#{templateSpecBackingBean.saveAction(templateSpecBackingBean.managedBean.templateSpecBean)}" />
 
 		<p:spacer height="10px" />
 
@@ -20,37 +21,37 @@
 				<tr>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Template Category" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu style="width:200px" value="#{templateSpecBackingBean.managedBean.specMaster.procurementCategory.parameterId}">
+						<p:selectOneMenu style="width:200px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.procurementCategory.parameterId}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Title" /></td>
 					<td class="TableFieldRight">
-						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.specMaster.specName}" />
+						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specName}" />
 					</td>
 				</tr>		
 				<tr>
 					<td class="TableFieldLeft"><h:outputLabel value="Item Type" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.specMaster.itemTypeCode.parameterId}" >
+						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.itemTypeCode.parameterId}" >
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.itemType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Description" /></td>
 					<td class="TableFieldRight">
-						<p:inputTextarea rows="2" style="width:280px" value="#{templateSpecBackingBean.managedBean.specMaster.specDesc}" />
+						<p:inputTextarea rows="2" style="width:280px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specDesc}" />
 					</td>
 				</tr>				
 				<tr>
 					<td class="TableFieldLeft"><h:outputLabel value="Template Type" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.specMaster.templateTypeCode.parameterId}" >
+						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterId}" >
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft"><h:outputLabel value="Ministry Id" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.specMaster.orgProfile.orgProfileId}">
+						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgProfileId}">
 							<f:selectItems value="#{templateSpecBackingBean.ministryList}" />
 						</p:selectOneMenu>
 					</td>
@@ -58,40 +59,41 @@
 				<tr>
 					<td class="TableFieldLeft"><h:outputLabel value="Specification Type" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.parameterId}">
+						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specTypeCode.parameterId}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.specificationType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Is Estimated Cost Required" /></td>
 					<td class="TableFieldRight">
-						<p:selectBooleanCheckbox value="#{templateSpecBackingBean.managedBean.specMaster.estCostReq}"  />
+						<p:selectBooleanCheckbox value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.estCostReq}"  />
 					</td>					
 				</tr>	
 				<tr>
 					<td class="TableFieldLeft"><h:outputLabel value="Specification Total" /></td>
 					<td class="TableFieldRight">
-						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.specMaster.specTotal}" />
+						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specTotal}" />
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Is Tier Price" /></td>
 					<td class="TableFieldRight">
-						<p:selectBooleanCheckbox value="#{templateSpecBackingBean.managedBean.specMaster.tierPrice}"  />
+						<p:selectBooleanCheckbox value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.tierPrice}"  />
 					</td>					
 				</tr>	
 				<tr>
-					<td class="TableFieldLeft"><h:outputLabel value="No. of year" /></td>
+					<td class="TableFieldLeft"><h:outputLabel value="Duration Month" /></td>
 					<td class="TableFieldRight" colspan="3">
-						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.specMaster.noOfYear}" />
+						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.durationMonth}" />
 					</td>			
 				</tr>								
 				<tr>
 					<td colspan="4">
 						<p:commandButton value="Render Table" actionListener="#{templateSpecBackingBean.renderTable}" 
-							partialSubmit="true" process="smpg" update="spg" />
+							partialSubmit="true" process="smpg" update1="spg" />
 					</td>
 				</tr>
 			</table>
 		</p:panel>
-		<ui:include src="specContent.xhtml" />
+		
+		<ac:templateSpec templateSpecBean="#{templateSpecBackingBean.managedBean.templateSpecBean}" />
 	</ui:define>
 
 	<ui:define name="footerSection" />

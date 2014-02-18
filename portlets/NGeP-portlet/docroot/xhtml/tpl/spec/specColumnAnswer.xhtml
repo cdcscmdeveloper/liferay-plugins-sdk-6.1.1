@@ -7,37 +7,33 @@
 	
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="answerSection">
-			<p:column style="#{columnStyle}width:55px;" rendered="#{isSpecTypeFinancial}">
-				<h:outputLabel value="Rate per UOM" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
-				<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.tplSpecAnswer.ratePerUom}"
-					rendered="#{isQuestionTypeItem and !empty question.tplSpecAnswer}">
-					<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(question.tplSpecAnswer, isItemTypeService)}" />
+			<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.sc.tpl.rate.per.uom']}">
+				<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{tplSpecAnswer.ratePerUom}"
+					rendered="#{isQuestionTypeItem}">
+					<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(tplSpecAnswer, isItemTypeService)}" />
 				</p:inputText>
 			</p:column>
 		</ui:define>
 	</ui:decorate>
 	
-	<p:column style="#{columnStyle}width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial and noOfYear > 1}">
-		<h:outputLabel value="Amount per year" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.sc.tpl.amount.per.year']}">
 		<h:panelGroup id="ansYearPG">
-			<p:inputText style="min-width:0px !important" size="13" dir="rtl" value="#{question.tplSpecAnswer.amountPerYear}"
-				rendered="#{isQuestionTypeItem and !empty question.tplSpecAnswer}" disabled="true" />
+			<p:inputText style="min-width:0px !important" size="13" dir="rtl" value="#{tplSpecAnswer.amountPerYear}"
+				rendered="#{isQuestionTypeItem}" disabled="true" />
 		</h:panelGroup>
 	</p:column>
-	<p:column style="#{columnStyle}width:130px;">
-		<h:outputLabel value="#{isSpecTypeFinancial ? 'Total Amount' : 'Answer'}" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<h:panelGroup id="ansPG" rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer}">
-			<p:inputText size="19" value="#{question.tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
-			<p:inputText size="19" dir="rtl" value="#{question.tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}" />
-			<h:selectOneMenu style="width:120px;" value="#{question.tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
+	<p:column style="width:130px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.sc.tpl.total.amount' : 'lbl.sc.tpl.answer']}">
+		<h:panelGroup id="ansPG">
+			<p:inputText size="19" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
+			<p:inputText size="19" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}" />
+			<h:selectOneMenu style="width:120px;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
 				<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
 				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 			</h:selectOneMenu>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="#{columnStyle}width:130px;">
-		<h:outputLabel value="Note" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText size="19" value="#{question.tplSpecAnswer.answerRemark}" rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer}" />
+	<p:column style="width:130px;" headerText="#{lbl['lbl.sc.tpl.note']}">
+		<p:inputText size="19" value="#{tplSpecAnswer.answerRemark}" />
 	</p:column>
 </ui:composition>

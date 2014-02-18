@@ -9,11 +9,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -36,32 +35,13 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private Long searchTemplateTypeId;
 	private Long searchOrgProfileId;
 	private Long searchItemTypeId;
-	private Long searchSpecTypeId;	
-	private TplSpecMaster specMaster;
-	private TplSpecQuestion selectedSpecQuestion;
+	private Long searchSpecTypeId;
 	
-	private String contentType = TemplateSpecConst.CONTENT_TYPE_QUESTION;
-	private SmSupplier supplier;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
 	private List<TplSpecMaster> specMasterList;
 	private List<TplSpecQuestion> deletedQuestions;
 	private List<TplSpecScoring> specScoringList;
-	
-	public TplSpecMaster getSpecMaster() {
-		return specMaster;
-	}
-	
-	public void setSpecMaster(TplSpecMaster specMaster) {
-		this.specMaster = specMaster;
-	}
-	
-	public TplSpecQuestion getSelectedSpecQuestion() {
-		return selectedSpecQuestion;
-	}
-	
-	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
-		this.selectedSpecQuestion = selectedSpecQuestion;
-	}
 	
 	public List<TplSpecQuestion> getDeletedQuestions() {
 		if(deletedQuestions==null) {
@@ -72,28 +52,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	public void setDeletedQuestions(List<TplSpecQuestion> deletedQuestions) {
 		this.deletedQuestions = deletedQuestions;
-	}
-
-	/**
-	 * @return the contentType
-	 */
-	public String getContentType() {
-		return contentType;
-	}
-
-	/**
-	 * @param contentType the contentType to set
-	 */
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
-
-	public SmSupplier getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(SmSupplier supplier) {
-		this.supplier = supplier;
 	}
 
 	public String getSearchSpecName() {
@@ -170,6 +128,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setSearchProcurementCategoryId(
 			Long searchProcurementCategoryId) {
 		this.searchProcurementCategoryId = searchProcurementCategoryId;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 
 }
