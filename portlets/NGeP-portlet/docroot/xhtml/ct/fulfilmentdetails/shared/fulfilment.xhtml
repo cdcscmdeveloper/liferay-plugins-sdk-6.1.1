@@ -12,10 +12,12 @@
 			<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
 			<p:inputText for="physicalNo" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox
+				<p:selectBooleanCheckbox rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"
 					value="false" disabled="false" />
+				<p:selectBooleanCheckbox rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
+					value="false" disabled="false" />					
 				<p:spacer width="2" />
-				<p:outputLabel value="Concession" />
+				<p:outputLabel value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry?'Concession':'Agreement'}" />
 			</h:panelGrid>
 			<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			<p:inputText for="effectiveDate" style="width:130px;" disabled="true"
@@ -24,9 +26,9 @@
 			<p:inputText for="edate" style="width:130px;" disabled="true"
 				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox value="true" disabled="true" />
+				<p:selectBooleanCheckbox value="true" disabled="true" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 				<p:spacer width="2" />	
-				<p:outputLabel value="Exempted" />
+				<p:outputLabel value="Exempted" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 			</h:panelGrid>
 			
 				<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
@@ -36,10 +38,10 @@
 			</p:inputText>		
 				<f:verbatim></f:verbatim><f:verbatim></f:verbatim>		
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox
+				<p:selectBooleanCheckbox rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"
 					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
 				<p:spacer width="2" />	
-				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 			</h:panelGrid>	
 			 <h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="3">
@@ -50,11 +52,11 @@
 			</h:panelGrid>	
 			<f:verbatim></f:verbatim><f:verbatim></f:verbatim>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox
+				<p:selectBooleanCheckbox rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"
 					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
 					disabled="true" style="text-align:top;" />
 				<p:spacer width="2" />	
-				<p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
+				<p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 			</h:panelGrid>		
 			 <h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">

@@ -57,7 +57,7 @@
 					<td>
 						<h6>
 							<p:inputText size="20"
-								value="#{panelBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}"
+								value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}"
 								disabled="true" />
 						</h6>
 					</td>
@@ -72,19 +72,19 @@
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 			</p:tab>
-			<p:tab id="tabAgency" title="#{lbl['lbl.ct.menu.agency']}">
+			<p:tab id="tabAgency" title="#{lbl['lbl.ct.menu.agency']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" >
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
 			</p:tab>
-			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}">
+			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" >
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
 			</p:tab>
 			<p:tab id="tabItem" title="#{lbl['lbl.ct.menu.item']}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/item.xhtml" />
 			</p:tab>
-			<p:tab id="tabDeduction" title="#{lbl['lbl.ct.menu.dedu']}">
+			<p:tab id="tabDeduction" title="#{lbl['lbl.ct.menu.dedu']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" >
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 			</p:tab>
-			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}">
+			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" >
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 			</p:tab>
 			<p:tab id="tabSetting" title="#{lbl['lbl.ct.menu.sett']}">
