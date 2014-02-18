@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
@@ -5,13 +8,15 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.cm.catalog.CmPricing;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -25,26 +30,32 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-	
+	private String method = ParameterConst.METHOD_PIQ;
 	private String stockAvailability;
 	private Long orgProfileId;
-	
+	private String procurementType;
+	private String justificationType;
 	private String priceType;
+	
 	private ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
 	private ScPrInquiry scPrInquiry = new ScPrInquiry();
 	private CmSupplierItem supplierItem;
-	
 	private	DualListModel<PmUser>	approvalUsers;
-	private	List<CmPricing>	priceTypes = new ArrayList<CmPricing>();
 	private List<PmOrgProfile> userDivisionList;
-	
 	private List<ScRequestSupplierItem>	scRequestSupplierItems;
+	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+	
+	private boolean justTypeOption;
+	private boolean procTypeOption;
+	private SelectItem[] justDropdown;
+	private SelectItem[] priceTypes; // price type drop down 
+	private boolean editFlag; // flat for editing fields in pr inquiry
+	private boolean buttonFlag; // flat for enabled and disabled buttons in pr inquiry
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
 	}
-	
 	
 	/**
 	 * @return the scRequestSupplierItem
@@ -60,7 +71,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.scRequestSupplierItem = scRequestSupplierItem;
 	}
 
-
 	/**
 	 * @return the stockAvailability
 	 */
@@ -74,23 +84,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setStockAvailability(String stockAvailability) {
 		this.stockAvailability = stockAvailability;
 	}
-
-
-	/**
-	 * @return the priceTypes
-	 */
-	public List<CmPricing> getPriceTypes() {
-		return priceTypes;
-	}
-
-
-	/**
-	 * @param priceTypes the priceTypes to set
-	 */
-	public void setPriceTypes(List<CmPricing> priceTypes) {
-		this.priceTypes = priceTypes;
-	}
-
 
 	/**
 	 * @return the priceType
@@ -133,7 +126,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setApprovalUsers(DualListModel<PmUser> approvalUsers) {
 		this.approvalUsers = approvalUsers;
 	}
-
 	/**
 	 * @return the userDivisionList
 	 */
@@ -147,14 +139,12 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
 		this.userDivisionList = userDivisionList;
 	}
-
 	/**
 	 * @return the orgProfileId
 	 */
 	public Long getOrgProfileId() {
 		return orgProfileId;
 	}
-
 	/**
 	 * @param orgProfileId the orgProfileId to set
 	 */
@@ -175,16 +165,12 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setSupplierItem(CmSupplierItem supplierItem) {
 		this.supplierItem = supplierItem;
 	}
-
-
 	/**
 	 * @return the scRequestSupplierItems
 	 */
 	public List<ScRequestSupplierItem> getScRequestSupplierItems() {
 		return scRequestSupplierItems;
 	}
-
-
 	/**
 	 * @param scRequestSupplierItems the scRequestSupplierItems to set
 	 */
@@ -193,7 +179,146 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.scRequestSupplierItems = scRequestSupplierItems;
 	}
 
-	
+	/**
+	 * @return the procurementType
+	 */
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	/**
+	 * @param procurementType the procurementType to set
+	 */
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+
+	/**
+	 * @return the justificationType
+	 */
+	public String getJustificationType() {
+		return justificationType;
+	}
+
+	/**
+	 * @param justificationType the justificationType to set
+	 */
+	public void setJustificationType(String justificationType) {
+		this.justificationType = justificationType;
+	}
+
+	/**
+	 * @return the requestNoteDtl
+	 */
+	public ScRequestNoteDtl getRequestNoteDtl() {
+		return requestNoteDtl;
+	}
+
+	/**
+	 * @param requestNoteDtl the requestNoteDtl to set
+	 */
+	public void setRequestNoteDtl(ScRequestNoteDtl requestNoteDtl) {
+		this.requestNoteDtl = requestNoteDtl;
+	}
+
+	/**
+	 * @return the justTypeOption
+	 */
+	public boolean isJustTypeOption() {
+		return justTypeOption;
+	}
+
+	/**
+	 * @param justTypeOption the justTypeOption to set
+	 */
+	public void setJustTypeOption(boolean justTypeOption) {
+		this.justTypeOption = justTypeOption;
+	}
+
+	/**
+	 * @return the procTypeOption
+	 */
+	public boolean isProcTypeOption() {
+		return procTypeOption;
+	}
+
+	/**
+	 * @param procTypeOption the procTypeOption to set
+	 */
+	public void setProcTypeOption(boolean procTypeOption) {
+		this.procTypeOption = procTypeOption;
+	}
+
+	/**
+	 * @return the justDropdown
+	 */
+	public SelectItem[] getJustDropdown() {
+		return justDropdown;
+	}
+
+	/**
+	 * @param justDropdown the justDropdown to set
+	 */
+	public void setJustDropdown(SelectItem[] justDropdown) {
+		this.justDropdown = justDropdown;
+	}
+
+	/**
+	 * @return the priceTypes
+	 */
+	public SelectItem[] getPriceTypes() {
+		return priceTypes;
+	}
+
+	/**
+	 * @param priceTypes the priceTypes to set
+	 */
+	public void setPriceTypes(SelectItem[] priceTypes) {
+		this.priceTypes = priceTypes;
+	}
+
+	/**
+	 * @return the method
+	 */
+	public String getMethod() {
+		return method;
+	}
+
+	/**
+	 * @param method the method to set
+	 */
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	/**
+	 * @return the editFlag
+	 */
+	public boolean isEditFlag() {
+		return editFlag;
+	}
+
+	/**
+	 * @param editFlag the editFlag to set
+	 */
+	public void setEditFlag(boolean editFlag) {
+		this.editFlag = editFlag;
+	}
+
+	/**
+	 * @return the buttonFlag
+	 */
+	public boolean isButtonFlag() {
+		return buttonFlag;
+	}
+
+	/**
+	 * @param buttonFlag the buttonFlag to set
+	 */
+	public void setButtonFlag(boolean buttonFlag) {
+		this.buttonFlag = buttonFlag;
+	}
+
 	
 	
 }
