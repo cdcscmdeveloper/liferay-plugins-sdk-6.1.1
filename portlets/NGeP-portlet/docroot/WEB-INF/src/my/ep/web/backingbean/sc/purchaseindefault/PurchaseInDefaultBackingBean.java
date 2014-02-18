@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.sc.purchaseindefault;
 
 import java.sql.Timestamp;
@@ -8,42 +11,51 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.type.pm.ReasonCategory;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
-
 /**
  * 
  * @author sri
@@ -51,10 +63,8 @@ import com.liferay.portal.model.User;
  */
 @ManagedBean(name = "purchaseInDefaultBackingBean")
 @RequestScoped
-public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefaultManagedBean> {
+public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<PurchaseInDefaultManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseInDefaultBackingBean.class);
-	private static final String NAV_TO_PURCHASE_IN_DEFAULT_PAGE = "purchaseInDefaultMain";
-	
 	public PurchaseInDefaultBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -68,16 +78,18 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 				}
 			}
 		}
+		retrieveReasonDescListByCategory();
 	}
 	
-	/**
+	 /**
 	  * pricingDetails for getting pricing details in PID
+	  * @return 
 	  */
-		public void pricingDetails(VCmSupplierItem vCmSupplierItem){
-			debugLogger("pricingDetails");
+		public String pidAction(VCmSupplierItem vCmSupplierItem){
+			debugLogger("pidAction");
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
 			ContractReqDTO ConIreqDTO = new ContractReqDTO();
-			ConIreqDTO.setContractItemId(vCmSupplierItem.getDocId());
+			ConIreqDTO.setContractItemId(4l);
 			ContractResDTO ConIresDTO = contractItemSO.getContractItem(ConIreqDTO);
 		    this.getManagedBean().setCtContractItem(ConIresDTO.getCtContractItem());
 		    
@@ -91,6 +103,7 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 			catReqDTO.setDocId(vCmSupplierItem.getDocId());
 			CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
+			
 			if (catResDTO.getSupplierItemList() !=null) {
 			   ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 			   CmPricing cmPricing = new CmPricing();
@@ -109,66 +122,54 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 			   wflowStatus.add(workFlowStatus);
 			   scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 		       getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-			
-			   FacesContext fc = FacesContext.getCurrentInstance();
-		       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_PURCHASE_IN_DEFAULT_PAGE);
 		   }
+			return "purchaseInDefaultMain";
 		}	
 		 
-		 /**
-		  *  submitPurchaseInDefault  method to submit PID details in Purchase In Default
-		  */	
-		  public String submitPurchaseInDefault() {
-			  debugLogger("submitPurchaseInDefault");
-			  IPurchaseInDefaultSO purchaseInDefaultSO = null;
-			    try {
-			    	purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IPurchaseInDefaultSO.class);
-			    	PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-					
-					ScPurchaseInDefault scPurchaseInDefault =  new ScPurchaseInDefault();
-					List<ScPIDWorkFlowStatus> wflowStatuses =  new  ArrayList<ScPIDWorkFlowStatus>();
-		 		    scPurchaseInDefault.setPurchaseInDefaultNo("123");
-		 		    scPurchaseInDefault.setReasonType("R");
-		 		    scPurchaseInDefault.setRecordStatus(true);
-		 		    scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
-				    // Target Approver
-				    ScPIDApprovalUser approvalUser = new ScPIDApprovalUser();
-				    scPurchaseInDefault.setApprovalUsers(createTargetApprover(approvalUser));
-				    // Contract Item
-				    scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
-				    // WorkFlow Status 
-				    ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PID_PENDING_SUBMISSION);
-					workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-					wflowStatuses.add(workFlowStatus);
-					scPurchaseInDefault.setWorkFlowStatuses(wflowStatuses);
-					 // remarks
-				    scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
-					reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
-					PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
-					
-					if (resDTO.isSuccessful()) {
-						FacesContext.getCurrentInstance().addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_INFO,
-										"Record saved successfully.", ""
-								));
-						//return "/xhtml/shared/acknowledge.xhtml";
-					} 
-					
-				} catch (Exception ex) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
+    /**
+	 *  submitPurchaseInDefault  method to submit PID details 
+     *  in Purchase In Default
+	*/	
+	 public String submitPurchaseInDefault() {
+		  debugLogger("submitPurchaseInDefault");
+		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		  try {
+			    purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IPurchaseInDefaultSO.class);
+			    PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+				List<ScPIDWorkFlowStatus> wflowStatuses =  new  ArrayList<ScPIDWorkFlowStatus>();
+		 		scPurchaseInDefault.setPurchaseInDefaultNo("123");
+		 		scPurchaseInDefault.setReasonType("R");
+		 		scPurchaseInDefault.setRecordStatus(true);
+		 		scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
+				// Target Approver
+				ScPIDApprovalUser approvalUser = new ScPIDApprovalUser();
+				scPurchaseInDefault.setApprovalUsers(createTargetApprover(approvalUser));
+				// Contract Item
+				scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
+				// WorkFlow Status 
+				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PID_PENDING_SUBMISSION);
+				workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
+				wflowStatuses.add(workFlowStatus);
+				scPurchaseInDefault.setWorkFlowStatuses(wflowStatuses);
+				// remarks
+				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
+				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", ""));
+			} catch (Exception ex) {
+			    FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"Sorry We are unable to process.", ""));
 					ex.printStackTrace();
-				} finally {
+			} finally {
 					purchaseInDefaultSO = null;
-				}
-				return null;
+			}
+			  return null;
 			}
 			
 		/**
-		  * initializing remarks in Purchase In Default
+		 * initializing remarks in Purchase In Default
 		 */
 		private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
 			List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
@@ -182,21 +183,24 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 				remark.setChangedDate(remark.getCreatedDate());
 				remark.setUser(facesScopes.getUserSessionBean());
 				if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
-				  remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
-				} else {
-					remark.setRemark("");
-				}
+				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
+				} 
 				PmStatus status = new PmStatus();
 				status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
 				remark.setPmStatus(status);
 				remark.setPurchaseInDefault(scPurchaseInDefault);
 				results.add(0, remark);
+				
+			    // initializing attachment
+				List<ScPurchaseInDefaultAttachment> attachments = null;
+				getManagedBean().setAttachments(null);
+				
 			}
 			return results;
 		}
 		
 		/**
-		  * To get Approver Pick List  in Purchase In Default
+		 * To get Approver Pick List  in Purchase In Default
 		 */
 		private	List<ScPIDApprovalUser> createTargetApprover(ScPIDApprovalUser scPIDApprovalUser){
 			List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
@@ -207,7 +211,10 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 			}
 			return results;
 		}
-	  
+		
+		/**
+		  * To get status for approval in Purchase In Default
+		 */
 	    public String  getCurrentStatus() {
 			String result = "";
 			if (getManagedBean().getPurchaseInDefault().getWorkFlowStatuses() != null) {
@@ -216,13 +223,143 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 					if (status.isCurrent()) {
 						result = getStatusDescById(status.getPmStatus()
 								.getStatusId());
+					    if(result.equalsIgnoreCase("Pending Submission")){
+							  getManagedBean().setEditFlag(false);
+					    } 
 						break;
 					}
 				}
 			}
 			return result;
 		}
+	    
+	    /**
+		 * Event for justification type drop down in pid
+		 */
+		public void justificationTypeEvent() {
+			log.info("justificationTypeEvent"); 
+			
+			// TODO  have to change justification type values 
+			if (getManagedBean().getJustificationType().equalsIgnoreCase("CP") || getManagedBean().getJustificationType().equalsIgnoreCase("SS") ) {
+				getManagedBean().setVisibleOrderQty(false);
+				getManagedBean().setVisibleRemarkAttach(true);
+				
+			} else if (getManagedBean().getJustificationType().equalsIgnoreCase("RI") || getManagedBean().getJustificationType().equalsIgnoreCase("EQ") ) {
+				getManagedBean().setVisibleOrderQty(true);
+				getManagedBean().setVisibleRemarkAttach(true);
+				
+			} else {
+				getManagedBean().setVisibleOrderQty(false);
+				getManagedBean().setVisibleRemarkAttach(true);
+			}
+		}
+		
+	   /**
+		*  handleFileUpload event for file upload in pid
+	   */
+		public void handleFileUpload(FileUploadEvent event) {
+			debugLogger("handleFileUpload");
+			FacesScopes facesScopes = new FacesScopes();
+			List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+			if (event.getFile() != null){
+			ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+			ScPurchaseInDefaultAttachment attachment = getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment();
+			if (null == attachment) {
+				attachment = new ScPurchaseInDefaultAttachment();
+				attachment.setScPurchaseInDefault(purchaseInDefault);
+			}
+			attachment.setUser(facesScopes.getUserSessionBean());
+			attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+			uploadAttachment(event.getFile(), attachment);
+			attachments.add(attachment);
+			//purchaseInDefault.setScPurchaseInDefaultAttachment(attachment);
+			//getManagedBean().setPurchaseInDefault(purchaseInDefault);
+			getManagedBean().setAttachments(attachments);
+			}
+		}
+		
+	   /**
+		*  determineIcon for displaying image icon in  pid
+	    */	
+		public String determineIcon(ScPurchaseInDefaultAttachment attachment) {
+			debugLogger("determineIcon");
+			String imageFileName = "icon_file_default.png";
+			String ext = "";
+			
+			if(attachment != null){
+			   String fileName = attachment.getFileName();
+			   
+			if(fileName != null){
+				int mid= fileName.lastIndexOf(".");
+				ext = fileName.substring(mid+1,fileName.length());  
+			}
+
+			if ("doc".equals(ext) || "docx".equals(ext)){
+				imageFileName ="icon_doc.png";
+			}
+			else if ("pdf".equals(ext)){
+				imageFileName ="icon_pdf.png";
+			}
+			else if("xls".equals(ext) || "xlsx".equals(ext) || "csv".equals(ext)){
+				imageFileName ="icon_exel.png";
+			}
+			else if("jpg".equals(ext) || "bmp".equals(ext) || "png".equals(ext) || "gif".equals(ext)){
+				imageFileName ="icon_image.png";
+			}
+			else if("txt".equals(ext)){
+				imageFileName ="icon_txt.png";
+			}
+			}
+			return imageFileName;
+		}
+		
+	   public void retrieveReasonDescListByCategory () {
+			ReasonReqDTO reqDTO = new ReasonReqDTO();
+			reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
+			reqDTO.setLanguage("en");
+			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
+			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
+			getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+		}
+		
+		public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
+			SelectItem[] items = null;
+			try {
+			    items = new SelectItem[list.size()+1];
+			    items[0] = new SelectItem(null, "- Select One -");
+			    int i = 1;
+			    for(PmReasonDesc reasonDesc : list) {
+			    	items[i++] = new SelectItem(
+			    			reasonDesc.getPmReason().getReasonCode(),
+			    			reasonDesc.getReasonDesc());
+			    }
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null, 
+						new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,
+								e.toString(), 
+								e.getMessage()));
+			}
+		    return items;
+		}
+		
+	   /**
+		*  deleteUploadFile method for deleting upload fine in pid
+	    */
+		public void deleteUploadFile() {
+			debugLogger("deleteUploadFile");
+			getManagedBean().getAttachments().clear();
+		}
 	  
+	  /**
+		* Page navigation to catalogue search page in Purchase in default
+	   */
+		public String backToPervious() {
+			log.info("backToPervious");
+			return "catalogueSearch";
+		}		
 		private void debugLogger(Object message) {
 			if (log.isDebugEnabled()) {
 				log.debug(message);
