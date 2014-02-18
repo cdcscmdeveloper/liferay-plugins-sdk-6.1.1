@@ -25,13 +25,12 @@
 					<p:outputLabel value="#{data.fileType}" style="float:left;" />
 				</p:column>
 				<p:column styleClass="column-align-center">
-				 <p:commandLink partialSubmit="true" process="@form"
-				    action="#{agreementBackingBean.downloadFile(data.filePath)}">
+				 <h:commandLink  action="#{agreementBackingBean.downloadFile(data.filePath)}">
 					<p:graphicImage library="ep/images/design" name="document.png"
 					  value="/resources/ep/images/design/document.png" title="View Document" rendered="#{rowIndex lt 3 }" />
 					  <p:graphicImage library="ep/images/design" name="download.png"
 					  value="/resources/ep/images/design/download.png" title="File Download" rendered="#{rowIndex gt 2 }" />
-			     </p:commandLink>
+			     </h:commandLink>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
