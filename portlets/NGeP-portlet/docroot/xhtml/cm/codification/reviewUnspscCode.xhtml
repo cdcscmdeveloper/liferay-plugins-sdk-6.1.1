@@ -23,6 +23,9 @@
 
 			</div>
 
+			<ui:include src="DocumentHeader.xhtml"></ui:include>
+
+
 			<p:panel header="Request Info" toggleable="true">
 
 				<table style="width: 66%; margin-bottom: 4px;">
@@ -45,32 +48,32 @@
 					<tr>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
+								disabled="true" size="40"></p:inputText></td>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
+								disabled="true" size="40"></p:inputText></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
+								disabled="true" size="40"></p:inputText></td>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
+								disabled="true" size="40"></p:inputText></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
+								disabled="true" size="40"></p:inputText></td>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
 						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}" disabled="true"
-								size="40"></p:inputText></td>
+								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
+								disabled="true" size="40"></p:inputText></td>
 					</tr>
 
 				</table>
@@ -81,7 +84,8 @@
 
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.search']}" update="@form"
-						action="#{unspscCodeBackingBean.navigateToSearch}" rendered="#{unspscCodeBackingBean.catalogueAdmin}"
+						action="#{unspscCodeBackingBean.navigateToSearch}"
+						rendered="#{unspscCodeBackingBean.catalogueAdmin}"
 						icon="ui-icon-search"></p:commandButton>
 				</div>
 
@@ -114,7 +118,8 @@
 							#{lbl['lbl.cm.action']}
 						</f:facet>
 						<p:commandLink
-							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}" update=":form:recomemendUnspscId">
+							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
+							update=":form:recomemendUnspscId">
 							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
 

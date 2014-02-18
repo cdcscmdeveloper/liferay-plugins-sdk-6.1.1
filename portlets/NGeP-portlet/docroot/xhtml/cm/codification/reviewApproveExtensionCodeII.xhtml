@@ -11,9 +11,9 @@
 
 
 	<ui:define name="contentSection">
-	
-	
-	<p:messages id="reviewApproveExt2" globalOnly="true"></p:messages>
+
+
+		<p:messages id="reviewApproveExt2" globalOnly="true"></p:messages>
 
 		<h:panelGroup id="extensionFlowReviewID">
 
@@ -21,9 +21,13 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}" update="@form"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"
+						update="@form"></p:commandButton>
 				</ui:repeat>
 			</div>
+
+			<ui:include src="DocumentHeader.xhtml"></ui:include>
+
 
 			<p:panel header="Extension Code Request" toggleable="true">
 
@@ -43,13 +47,13 @@
 				<p:dataTable style="width:100%;"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
-					
+
 					<p:column>
 						<f:facet name="header">
 						Extension
 					</f:facet>
 
-						<table style="height:140px;">
+						<table style="height: 140px;">
 							<tr>
 								<td>#{lbl['lbl.cm.type']}</td>
 							</tr>
@@ -67,9 +71,9 @@
 
 
 					</p:column>
-					
 
-					
+
+
 					<p:column>
 						<f:facet name="header">
 							Supplier
@@ -211,8 +215,8 @@
 							</tr>
 							<tr>
 								<td><h:outputText value="#{bpmRemark.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-								</h:outputText></td>
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
 							</tr>
 						</table>
 					</p:column>
@@ -229,7 +233,8 @@
 				<div style="text-align: right;">
 					<p:commandButton value="Add"
 						action="#{unspscCodeBackingBean.addNewBpmRemark}"
-						update="bpmRemarkId" rendered="#{unspscCodeBackingBean.cdCommittee}" />
+						update="bpmRemarkId"
+						rendered="#{unspscCodeBackingBean.cdCommittee}" />
 
 				</div>
 

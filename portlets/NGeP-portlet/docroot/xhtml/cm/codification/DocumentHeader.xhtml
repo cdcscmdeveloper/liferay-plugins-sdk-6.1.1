@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+		<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="Doc No."></p:outputLabel></td>
+					<td><p:inputText value="CD201402115898" disabled="true"
+							size="30"></p:inputText></td>
+
+					<td><p:outputLabel value="Status"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.docStatus}"
+							disabled="true" size="30"></p:inputText></td>
+
+					<td><p:outputLabel value="Company Name"></p:outputLabel></td>
+					<td><p:inputText value="Sun Holiday Sdn Bhd" disabled="true"
+							size="30"></p:inputText></td>
+
+					<td><p:outputLabel value="Ep No."></p:outputLabel></td>
+					<td><p:inputText value="EP2014001245" disabled="true"
+							size="30"></p:inputText></td>
+				</tr>
+			</table>
+
+
+</ui:composition>
