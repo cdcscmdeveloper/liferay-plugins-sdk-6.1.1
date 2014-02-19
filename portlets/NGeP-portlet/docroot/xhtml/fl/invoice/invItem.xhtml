@@ -74,6 +74,7 @@
 				</p:column>
 				<p:column>
 					<p:inputText value="#{item.itemAmtNew}" style="text-align:right">
+					<f:convertNumber pattern="#,#0.00" />
 						<p:ajax event="blur"
 							listener="#{invoiceBackingBean.updateNewInvoiceAmt(item)}"
 							process="@this">

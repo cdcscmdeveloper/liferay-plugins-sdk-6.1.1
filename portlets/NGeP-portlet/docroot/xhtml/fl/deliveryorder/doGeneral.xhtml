@@ -8,7 +8,7 @@
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width:98px"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td style="width: 10px;"><p:inputText size="50" id="ministry"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
@@ -28,7 +28,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="37" id="preparedPtj"
+					<p:spacer width="2" /> <p:inputText size="37" id="preparedPtj"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
@@ -36,7 +36,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="37" id="issuePtj"
+					<p:spacer width="2" /> <p:inputText size="37" id="issuePtj"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>

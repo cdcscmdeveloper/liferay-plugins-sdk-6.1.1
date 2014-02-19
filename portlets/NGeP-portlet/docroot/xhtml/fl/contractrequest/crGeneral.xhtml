@@ -23,15 +23,15 @@
 	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width:98px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="35" id="ministry"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="35" id="issuedJabatan"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -40,16 +40,18 @@
 						headerText="PreparedPtj Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}" 
-						>
-					</ac:lov> </td>
+						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
+					</ac:lov></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><ac:lov id="issuePtj" lovId="PM_ORG_PROFILE"
-						headerText="IssuePtj Lov"
+						headerText="IssuePtj Lov" 
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov> </td>
+						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}"
+						update=":form:cotabs:ministry,:form:cotabs:issuedJabatan">
+					</ac:lov></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
@@ -58,16 +60,14 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgName}"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov> </td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText id="chargedPtj" size="35" disabled="true"></p:inputText></td>
+					</ac:lov></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width:137px;"><p:outputLabel
+				<td rowspan="4" valign="top" style="width:98px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="4"><p:inputTextarea cols="36" rows="8"
 						style=" margin-bottom:5px;"
@@ -117,7 +117,7 @@
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 125px;"><p:outputLabel value="EP No." /></td>
+				<td style="width: 98px;"><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="5"
