@@ -107,12 +107,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("CD_COMMITTEE");
 	}
-	
+
 	public boolean isSupplierUserOrTempSupplierAdmin(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("SUPPLIER_USER") || fs.hasRoleUser("SUPPLIER_TEMP") || fs.hasRoleUser("SUPPLIER_ADMIN");
 	}
-	
+
 
 
 
@@ -1191,24 +1191,35 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 					System.out.println("***********4444********************");
 					/////// checking remark reSystem.out.println(""+);
-					if(!code.isAddedRemark()){
-						if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
+					System.out.println("isAddedRemark:"+code.isAddedRemark());
 
-							if(!code.getReviewedColorName().equalsIgnoreCase(code.getColorName())||
-									!code.getReviewedMeasurementName().equalsIgnoreCase(code.getMeasurementName())||
-									!code.getReviewedTypeName().equalsIgnoreCase(code.getTypeName())||
-									!code.getReviewedBrandName().equalsIgnoreCase(code.getBrandName())){
 
-								code.setRemarkRequired(true);
+					//////////////////////problem////////////////////////////
+					if(!this.isCatalogueAdmin()){
+						if(!code.isAddedRemark()){
+							if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
 
-							}else{
-								code.setRemarkRequired(false);
+								if(!code.getReviewedColorName().equalsIgnoreCase(code.getColorName())||
+										!code.getReviewedMeasurementName().equalsIgnoreCase(code.getMeasurementName())||
+										!code.getReviewedTypeName().equalsIgnoreCase(code.getTypeName())||
+										!code.getReviewedBrandName().equalsIgnoreCase(code.getBrandName())){
+
+
+									code.setRemarkRequired(true);
+
+								}else{
+
+									code.setRemarkRequired(false);
+								}
 							}
+
 						}
 					}
 
+					//////////////////////problem////////////////////////////
+
 					try{
-						System.out.println("***********55555********************");
+
 						/////// checking remark required 2 and consensus checking
 
 						if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
@@ -1482,21 +1493,21 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
-		
-		
+
+
 		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		
+
 		StatusReqDTO reqStatusDTO = new StatusReqDTO();
-		
+
 		reqStatusDTO.setLanguageCode(languageCode);
 		reqStatusDTO.setStatusId(res.getDocStatus().longValue()); 
 		StatusResDTO resStatusDTO = statusSO.retrieveStatusDescById(reqStatusDTO);
-		
+
 
 		this.getManagedBean().setDocStatus(resStatusDTO.getPmStatusDesc()!=null?resStatusDTO.getPmStatusDesc().getStatusName():"Review");
-		
-		
+
+
 
 		System.out.println("********res.getTaskName()********"+res.getTaskName());
 		if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
@@ -1558,17 +1569,17 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
-		
-		
+
+
 		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		
+
 		StatusReqDTO reqStatusDTO = new StatusReqDTO();
-		
+
 		reqStatusDTO.setLanguageCode(languageCode);
 		reqStatusDTO.setStatusId(res.getDocStatus().longValue()); 
 		StatusResDTO resStatusDTO = statusSO.retrieveStatusDescById(reqStatusDTO);
-		
+
 
 		this.getManagedBean().setDocStatus(resStatusDTO.getPmStatusDesc()!=null?resStatusDTO.getPmStatusDesc().getStatusName():"Review");
 
@@ -1741,9 +1752,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
 	}
 
-	
+
 	public String requestUnspscCode(){
-		
+
 		return "unspscRequestForm";
 	}
 }
