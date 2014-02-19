@@ -7,7 +7,7 @@
 
 
 
-	<p:panel header="SEARCH CRITERIA">
+	<p:panel header="SEARCH CRITERIA" style="width:350px;">
 
 		<p:panel header="Title" toggleable="true">
 
@@ -17,7 +17,7 @@
 					size="50"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="PublishDate" id="publishdtl" toggleable="true">
+		<p:panel header="Publish Date" id="publishdtl" toggleable="true">
 
 			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 				width="100%" columnClasses="columnHeight20">
@@ -197,7 +197,7 @@
 
 
 		</p:panel>
-		<p:panel header="Ministry/Jabatan/PTJ" toggleable="true"
+		<p:panel header="Ministry / Jabatan / PTJ" toggleable="true"
 			collapsed="true">
 
 			<p:ajax event="toggle"
@@ -244,7 +244,7 @@
 
 		</p:panel>
 
-		<p:panel header="CategoryCode" toggleable="true" collapsed="true">
+		<p:panel header="Category Code" toggleable="true" collapsed="true">
 			<p:ajax event="toggle"
 				listener="#{noticeBoardBackingBean.retriveCategoriesCode1}"
 				update="categoryCode"></p:ajax>
