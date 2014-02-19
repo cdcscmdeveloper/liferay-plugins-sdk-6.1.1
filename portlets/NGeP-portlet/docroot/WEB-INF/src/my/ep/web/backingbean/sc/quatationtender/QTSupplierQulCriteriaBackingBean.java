@@ -51,7 +51,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.sc.quationtender.Node;
@@ -211,7 +210,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		if (state != null && state.getStateId() != null) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(state.getStateId());
-			IDistrictSO districtSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			IDistrictSO districtSO=BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
 					.retriveDistrictListByStateID(reqDTO);
 			if (resDTO != null && !resDTO.getDistrictList().isEmpty()) {

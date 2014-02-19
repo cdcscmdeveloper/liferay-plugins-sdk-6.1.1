@@ -50,7 +50,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.LoiLoaDocType;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loiloa.LOADetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -156,7 +155,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+				IOrgProfileSO orgProfileSO = BusinessDelegate
 						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
@@ -196,7 +195,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+				IOrgProfileSO orgProfileSO = BusinessDelegate
 						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO

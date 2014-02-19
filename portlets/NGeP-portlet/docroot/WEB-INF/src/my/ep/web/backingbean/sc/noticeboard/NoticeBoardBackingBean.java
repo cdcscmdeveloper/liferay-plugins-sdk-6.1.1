@@ -51,7 +51,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
@@ -365,7 +364,7 @@ public class NoticeBoardBackingBean extends
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
@@ -619,7 +618,7 @@ public class NoticeBoardBackingBean extends
 					reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 					reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-					IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+					IOrgProfileSO orgProfileSO = BusinessDelegate
 							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IOrgProfileSO.class);
 					OrgProfileResDTO resDTO = orgProfileSO
@@ -639,7 +638,7 @@ public class NoticeBoardBackingBean extends
 					reqDTO.setOrgType(OrganizationType.DIVISION.value());
 					reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-					IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+					IOrgProfileSO orgProfileSO = BusinessDelegate
 							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IOrgProfileSO.class);
 					OrgProfileResDTO resDTO = orgProfileSO
@@ -708,7 +707,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setLocationSearchBean(null);
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(((PmState) obj).getStateId());
-				IDistrictSO districtSO = EpEjbBusinessDelegate.getInstance()
+				IDistrictSO districtSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 				DistrictResDTO resDTO = districtSO
 						.retriveDistrictListByStateID(reqDTO);
@@ -723,7 +722,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setLocationSearchBean(null);
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(((PmDistrict) obj).getDistrictId());
-				ICitySO citySO = EpEjbBusinessDelegate.getInstance()
+				ICitySO citySO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 				CityResDTO resDTO = citySO.retriveCityListByDistrictId(reqDTO);
 				List<PmCity> cityList = resDTO.getCityList();

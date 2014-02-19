@@ -38,7 +38,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
@@ -272,7 +271,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				reqDTO.setUserId(user.getUserId());
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
 	
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);

@@ -42,7 +42,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType;
 import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationPortType;
 import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationServiceLocator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -421,7 +420,7 @@ public class SPDetailBackingBean extends
 	}
 
 	private IQTProposalSO getProposalSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 	}
 

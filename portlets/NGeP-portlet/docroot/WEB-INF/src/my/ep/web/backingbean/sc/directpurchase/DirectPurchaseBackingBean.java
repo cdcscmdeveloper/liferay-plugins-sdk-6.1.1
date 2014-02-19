@@ -53,7 +53,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.constant.SourcingConst;
@@ -308,7 +307,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 				//Procurement plan
 				ScRequestNote	requestNote	=	new	ScRequestNote();
 				getManagedBean().setRequestNote(requestNote);
-				IProcurementPlanSO procurementSO	=	EpEjbBusinessDelegate.getInstance().getServiceObject(SourcingConst.PROCUREMENT_MODULE, IProcurementPlanSO.class);
+				IProcurementPlanSO procurementSO	=	BusinessDelegate.getInstance().getServiceObject(SourcingConst.PROCUREMENT_MODULE, IProcurementPlanSO.class);
 				//get procurement plan and set to the request Note
 				ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
 				planReqDTO.setPlanId(Long.valueOf(directPurchaseDataType.getDpId()));
@@ -498,7 +497,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			reqDTO.setUserId(user.getUserId());
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 
 			List<PmOrgProfile> userDivisionList = resDTO.getOrgProfileList();

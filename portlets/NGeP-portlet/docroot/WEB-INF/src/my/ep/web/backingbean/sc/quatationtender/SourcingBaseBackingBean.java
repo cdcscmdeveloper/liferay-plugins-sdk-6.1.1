@@ -34,12 +34,12 @@ import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.UploadedFile;
 
@@ -59,7 +59,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public List<PmOrgProfile> retriveOrgProfiles(OrgProfileReqDTO profileReqDTO) {
 
-		IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(profileReqDTO);
@@ -145,7 +145,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();

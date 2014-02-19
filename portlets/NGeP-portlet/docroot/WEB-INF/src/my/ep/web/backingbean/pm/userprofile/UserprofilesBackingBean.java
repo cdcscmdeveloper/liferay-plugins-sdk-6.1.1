@@ -20,12 +20,12 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.userprofile.UserprofilesManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -103,7 +103,7 @@ public class UserprofilesBackingBean extends
 		userReqDTO.setUserSearchBean(searchBean);
 
 		try {
-			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
+			IUserSO userSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDto = userSO.searchUserProfile(userReqDTO);
 			if(resDto !=null){
@@ -141,7 +141,7 @@ public class UserprofilesBackingBean extends
 		userReqDTO.setUserGroupSearchBean(searchBean);
 
 		try {
-			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
+			IUserSO userSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDto = userSO.searchUserProfile(userReqDTO);
 			if(resDto !=null){

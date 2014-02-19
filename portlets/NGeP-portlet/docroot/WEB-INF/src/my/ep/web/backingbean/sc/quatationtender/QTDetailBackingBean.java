@@ -62,7 +62,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -172,7 +171,7 @@ public class QTDetailBackingBean extends
 			ObjectReqDTO reqDTO = new ObjectReqDTO();
 			reqDTO.setGoId(pmGo.getGoId());
 
-			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
+			IObjectSO objectSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveSOListByGOCode(reqDTO);
 			this.getManagedBean().setSoList(objResDTO.getPmSoList());
@@ -206,7 +205,7 @@ public class QTDetailBackingBean extends
 			ObjectReqDTO reqDTO = new ObjectReqDTO();
 			reqDTO.setSoId(pmSo.getSoId());
 
-			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
+			IObjectSO objectSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveDOListBySOCode(reqDTO);
 
@@ -359,7 +358,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+				IOrgProfileSO orgProfileSO = BusinessDelegate
 						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
@@ -399,7 +398,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
+				IOrgProfileSO orgProfileSO = BusinessDelegate
 						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
@@ -427,7 +426,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setUserId(user.getUserId());
 			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
@@ -444,7 +443,7 @@ public class QTDetailBackingBean extends
 		List<PmGo> goList = this.getManagedBean().getGoList();
 
 		if (goList == null) {
-			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
+			IObjectSO objectSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveGOList();
 
@@ -496,7 +495,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
@@ -742,7 +741,7 @@ public class QTDetailBackingBean extends
 
 	public void onChangeAction() {
 
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO dto = new QuationTenderReqDTO();
 
@@ -857,7 +856,7 @@ public class QTDetailBackingBean extends
 
 		log.info("requestList Id: ..........."
 				+ quotationTenderDataType.getQtId());
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
@@ -897,7 +896,7 @@ public class QTDetailBackingBean extends
 		try {
 			qtReqDTO.setOutcome(BPMOutComeTypes.getValue(this.getManagedBean()
 					.getOutCome()));
-			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
@@ -941,7 +940,7 @@ public class QTDetailBackingBean extends
 
 		qtReqDTO.setOutcome(outcome);
 		try {
-			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
@@ -1008,7 +1007,7 @@ public class QTDetailBackingBean extends
 
 		log.info("requestList Id: ..........."
 				+ quotationTenderDataType.getQtId());
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
@@ -1222,7 +1221,7 @@ public class QTDetailBackingBean extends
 		String screnName = null;
 		if (remarkList != null && !remarkList.isEmpty()) {
 			Long userId = remarkList.get(0).getCreatedBy();
-			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
+			IUserSO userSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO dto = new UserReqDTO();
 

@@ -24,7 +24,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -79,14 +78,14 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			scQt.setPmOrgProfile(ppPlan.getPtjOrgProfile());
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(1l);
-			IStatusSO iStatusSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			IStatusSO iStatusSO=BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusResDTO pmStatus = iStatusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
 			scQt.setPmStatus(status);
 			QTDetailBackingBean backingBean= new QTDetailBackingBean();
 			backingBean.getManagedBean().setQt(scQt);
 			QuationTenderReqDTO tenderReqDTO = backingBean.prepareQTInfo();
-			IQTDetailSO detailSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
 			
 			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO.createQTforPPlan(tenderReqDTO);
 			
@@ -154,6 +153,6 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 	}
 
 	private IProcurementPlanSO getProcurementSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
+		return BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
 	}
 }

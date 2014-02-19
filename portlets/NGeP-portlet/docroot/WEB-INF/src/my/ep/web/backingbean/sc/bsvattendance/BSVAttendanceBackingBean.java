@@ -34,7 +34,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
@@ -497,7 +496,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setOutComes(res.getAction());
 		SCSiteVisitProposalDataType siteVisitDatatype = (SCSiteVisitProposalDataType) obj;
 		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(siteVisitDatatype.getQtId())
@@ -562,7 +561,7 @@ public String updateBpmTask(String action) {
 	}
 
 	private IQTBriefingSO getBriefingSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 
 	}

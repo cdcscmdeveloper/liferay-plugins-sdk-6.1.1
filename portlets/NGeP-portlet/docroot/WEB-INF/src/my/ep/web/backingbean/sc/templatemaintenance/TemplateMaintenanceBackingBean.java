@@ -42,7 +42,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -499,7 +498,7 @@ public class TemplateMaintenanceBackingBean extends
 	public IQTTemplateSO getTemplateSO() {
 		IQTTemplateSO qtTemplateSO = null;
 		try {
-			qtTemplateSO = EpEjbBusinessDelegate.getInstance()
+			qtTemplateSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTTemplateSO.class);
 		} catch (Exception e) {

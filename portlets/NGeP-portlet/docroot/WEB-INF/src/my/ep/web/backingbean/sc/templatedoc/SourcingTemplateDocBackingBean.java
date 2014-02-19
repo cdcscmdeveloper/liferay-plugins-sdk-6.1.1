@@ -37,7 +37,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -409,7 +408,7 @@ public class SourcingTemplateDocBackingBean extends
 		IQTTemplateSO templateSO = null;
 
 		try {
-			templateSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+			templateSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 
 		} catch (Exception e) {

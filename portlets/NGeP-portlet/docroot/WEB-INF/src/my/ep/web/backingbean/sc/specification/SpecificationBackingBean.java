@@ -57,7 +57,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
@@ -951,7 +950,7 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setSpecificationDataType(specificationDataType);
 
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
@@ -1084,7 +1083,7 @@ public class SpecificationBackingBean extends
 	}
 
 	private IQTSpecSO getSpecSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 
