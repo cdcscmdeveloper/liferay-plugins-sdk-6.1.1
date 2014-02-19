@@ -20,9 +20,6 @@ public interface QTConstants {
 	
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	
-	public static final String PM_MODULE="pm";
-	public static final String SS_MODULE="ss";
-	
 	public static final String QT_DETAILS_TAB="Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB="Supplier Qualification Criteria";
 	public static final String QT_APPROVAL_TAB="Approval Workflow";

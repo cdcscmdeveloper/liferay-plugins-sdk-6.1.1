@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -56,7 +57,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
 			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
@@ -133,7 +134,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
 			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 
@@ -185,7 +186,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
 			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			/*
@@ -248,7 +249,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTEvaluationReportSO evaluationReportSO = null;
 		try {
 			evaluationReportSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationReportSO.class);
 
 			if (getManagedBean().getQualifiedSupplist() != null) {
@@ -281,7 +282,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		ScQtMeeting meetingDetails = new ScQtMeeting();
 		suppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTSuppFinalizationSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		try {
 			List<ScQtMeeting> meetingDtllist = getManagedBean()
@@ -311,7 +312,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTEvaluationReportSO evaluationReportSO = null;
 		try {
 			evaluationReportSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationReportSO.class);
 			EvaluationReportReqDTO reqDTO = new EvaluationReportReqDTO();
 			reqDTO.setQtId(146L);
@@ -385,7 +386,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
 			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			System.out.println("Zone Id : "
@@ -415,7 +416,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
 			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 

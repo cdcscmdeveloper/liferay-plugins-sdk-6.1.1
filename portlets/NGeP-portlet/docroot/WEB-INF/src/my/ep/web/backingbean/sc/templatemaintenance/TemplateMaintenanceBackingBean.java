@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -48,7 +49,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.templatemaintenance.TemplateMaintenanceManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -336,7 +336,7 @@ public class TemplateMaintenanceBackingBean extends
 		IQTDetailSO QtDetailsSO;
 		try {
 
-			statussO = BusinessDelegate.getInstance().getServiceObject("pm",
+			statussO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IStatusSO.class);
 
 			StatusReqDTO statusreq = new StatusReqDTO();
@@ -345,7 +345,7 @@ public class TemplateMaintenanceBackingBean extends
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
 
-			ProfileSo = BusinessDelegate.getInstance().getServiceObject("pm",
+			ProfileSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 
 			OrgProfileReqDTO profileReq = new OrgProfileReqDTO();
@@ -410,7 +410,7 @@ public class TemplateMaintenanceBackingBean extends
 
 			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject("ss",
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTDetailSO.class);
 
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -500,7 +500,7 @@ public class TemplateMaintenanceBackingBean extends
 		IQTTemplateSO qtTemplateSO = null;
 		try {
 			qtTemplateSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTTemplateSO.class);
 		} catch (Exception e) {
 			e.printStackTrace();

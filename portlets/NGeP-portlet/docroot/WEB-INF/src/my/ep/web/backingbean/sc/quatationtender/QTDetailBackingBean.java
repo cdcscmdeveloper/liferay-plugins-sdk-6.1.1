@@ -25,6 +25,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -90,8 +91,6 @@ public class QTDetailBackingBean extends
 
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
-
-	private static final String MODULE_NAME = "ss";
 
 	public QTDetailBackingBean() {
 		log.info("inside constructor");
@@ -174,7 +173,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setGoId(pmGo.getGoId());
 
 			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IObjectSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveSOListByGOCode(reqDTO);
 			this.getManagedBean().setSoList(objResDTO.getPmSoList());
 		} else {
@@ -208,7 +207,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setSoId(pmSo.getSoId());
 
 			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IObjectSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveDOListBySOCode(reqDTO);
 
 			this.getManagedBean().setDoList(objResDTO.getPmDoList());
@@ -245,7 +244,7 @@ public class QTDetailBackingBean extends
 
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 
@@ -272,7 +271,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 
@@ -361,7 +360,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -401,7 +400,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -429,7 +428,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
 			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -446,7 +445,7 @@ public class QTDetailBackingBean extends
 
 		if (goList == null) {
 			IObjectSO objectSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IObjectSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveGOList();
 
 			goList = objResDTO.getPmGoList();
@@ -472,7 +471,7 @@ public class QTDetailBackingBean extends
 		handlePTJName();
 		populateUserMinistryList();
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				MODULE_NAME, IQTDetailSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderResDTO dto = detailSO
 				.retriveQTDetails(new QuationTenderReqDTO());
 		this.getManagedBean().setGoList(dto.getGoList());
@@ -498,7 +497,7 @@ public class QTDetailBackingBean extends
 			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -516,7 +515,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
@@ -581,7 +580,7 @@ public class QTDetailBackingBean extends
 		IStatusSO statusSO;
 		PmStatus status = null;
 		try {
-			statusSO = BusinessDelegate.getInstance().getServiceObject("pm",
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IStatusSO.class);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			status = pmStatus.getPmStatus();
@@ -744,7 +743,7 @@ public class QTDetailBackingBean extends
 	public void onChangeAction() {
 
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO dto = new QuationTenderReqDTO();
 
 		dto.setQtdetail(getManagedBean().getQt());
@@ -802,7 +801,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						QTConstants.SS_MODULE, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 
@@ -859,7 +858,7 @@ public class QTDetailBackingBean extends
 		log.info("requestList Id: ..........."
 				+ quotationTenderDataType.getQtId());
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
 				.longValue());
@@ -899,7 +898,7 @@ public class QTDetailBackingBean extends
 			qtReqDTO.setOutcome(BPMOutComeTypes.getValue(this.getManagedBean()
 					.getOutCome()));
 			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
@@ -943,7 +942,7 @@ public class QTDetailBackingBean extends
 		qtReqDTO.setOutcome(outcome);
 		try {
 			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
@@ -1010,7 +1009,7 @@ public class QTDetailBackingBean extends
 		log.info("requestList Id: ..........."
 				+ quotationTenderDataType.getQtId());
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
 				.longValue());
@@ -1035,7 +1034,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtdetail(getManagedBean().getQt());
@@ -1078,7 +1077,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
@@ -1113,7 +1112,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
@@ -1155,7 +1154,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
@@ -1189,7 +1188,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
@@ -1224,7 +1223,7 @@ public class QTDetailBackingBean extends
 		if (remarkList != null && !remarkList.isEmpty()) {
 			Long userId = remarkList.get(0).getCreatedBy();
 			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.PM_MODULE, IUserSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO dto = new UserReqDTO();
 
 			dto.setUserId(userId);
@@ -1285,7 +1284,7 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTDetailSO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 

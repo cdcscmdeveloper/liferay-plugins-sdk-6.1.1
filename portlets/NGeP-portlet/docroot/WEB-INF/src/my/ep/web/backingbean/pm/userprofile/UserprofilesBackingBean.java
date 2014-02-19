@@ -12,26 +12,24 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.userprofile.UserprofilesManagedBean;
-import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
-
-import org.primefaces.event.FileUploadEvent;  
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * @author DK
@@ -106,7 +104,7 @@ public class UserprofilesBackingBean extends
 
 		try {
 			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.PM_MODULE, IUserSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDto = userSO.searchUserProfile(userReqDTO);
 			if(resDto !=null){
 				this.getManagedBean().setUsers(resDto.getUserResultBean().getResultList());
@@ -144,7 +142,7 @@ public class UserprofilesBackingBean extends
 
 		try {
 			IUserSO userSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.PM_MODULE, IUserSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDto = userSO.searchUserProfile(userReqDTO);
 			if(resDto !=null){
 				this.getManagedBean().setUsers(resDto.getUserResultBean().getResultList());

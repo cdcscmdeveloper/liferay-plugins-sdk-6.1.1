@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -94,7 +95,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 			IUserSO userSO = null;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(
-						QTConstants.PM_MODULE, IUserSO.class);
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();
@@ -124,7 +125,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 	 * ArrayList<SelectItem>();
 	 * 
 	 * try { IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-	 * "pm", IUserSO.class); List<PmUser> comitteeUsersUsers = new
+	 * ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class); List<PmUser> comitteeUsersUsers = new
 	 * ArrayList<PmUser>(); if (getManagedBean().getComitteeUsers() == null) {
 	 * UserReqDTO reqDTO = new UserReqDTO();
 	 * reqDTO.setRoleCode(RoleCode.APPROVER.value()); UserResDTO resDTO =
@@ -187,7 +188,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setTermType(TermType.TERM_LOI.value());
 			reqDTO.setLanguageCode("en");
@@ -248,7 +249,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.PM_MODULE,
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -288,7 +289,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.PM_MODULE,
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -334,7 +335,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 			long id = scQtEvaluationResult.getEvaluationResultId();
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(id);
@@ -508,7 +509,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 					user.getDesignation());
 
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IAddressSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO addReqDTO = new AddressReqDTO();
 			addReqDTO.setUserId(user.getUserId());
 			addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -576,16 +577,16 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		try {
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IStatusSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			userSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IUserSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			scLoi.setIssueDate(new Date());

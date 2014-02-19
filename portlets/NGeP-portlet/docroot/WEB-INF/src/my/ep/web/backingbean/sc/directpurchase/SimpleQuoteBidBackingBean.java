@@ -11,6 +11,7 @@ import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
@@ -25,7 +26,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteBidManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -50,7 +50,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	public void saveQuoteBid(String action) {
 		QuoteReqDTO reqDTO = new QuoteReqDTO();
 		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
-		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteSO.class);
+		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		QuoteResDTO resDTO = quoteBidSO.saveQuoteDtl(reqDTO);
 		getManagedBean().setScQuoteBid(reqDTO.getQuoteBidDtl());
 
@@ -77,7 +77,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	public	void	submitQuoteBid(String action){
 		QuoteReqDTO reqDTO = new QuoteReqDTO();
 		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
-		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteSO.class);
+		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		QuoteResDTO resDTO = quoteBidSO.saveQuoteDtl(reqDTO);
 		getManagedBean().setScQuoteBid(reqDTO.getQuoteBidDtl());
 		createBPMTask(true);

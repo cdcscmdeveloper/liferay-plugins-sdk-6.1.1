@@ -8,6 +8,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
@@ -15,7 +16,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loiloa.LOILOADetailManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -30,8 +30,6 @@ public class LOILOADetailsBackingBean extends
 		SourcingBaseBackingBean<LOILOADetailManagedBean> {
 	public static Logger log = EpLogger
 			.getLogger(LOILOADetailsBackingBean.class);
-
-	//private static final String MODULE_NAME = "ss";
 
 	public LOILOADetailsBackingBean() {
 		log.info("inside LOILOADetailsBackingBean constructor");
@@ -55,7 +53,7 @@ public class LOILOADetailsBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(146L);
 

@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -111,7 +112,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			IUserSO userSO = null;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(
-						QTConstants.PM_MODULE, IUserSO.class);
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();
@@ -156,7 +157,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.PM_MODULE,
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -196,7 +197,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.PM_MODULE,
+						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -242,7 +243,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			long id = scQtEvaluationResult.getEvaluationResultId();
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(id);
@@ -462,7 +463,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			ScLoa loa = new ScLoa();
 			loa.setLoaId(scLoa.getLoaId());
@@ -498,7 +499,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 					user.getDesignation());
 
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IAddressSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO addReqDTO = new AddressReqDTO();
 			addReqDTO.setUserId(user.getUserId());
 			addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -564,15 +565,15 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		try {
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTAwardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IStatusSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			userSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IUserSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			scLoa.setIssueDate(new Date());
@@ -640,7 +641,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		IUserSO userSO;
 		try {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IUserSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setOrgProfileId(1l);
@@ -665,7 +666,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		IUserSO userSO;
 		try {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IUserSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			UserReqDTO reqDTO = new UserReqDTO();
 			System.out.println("User Id : "
@@ -700,7 +701,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			IUserSO userSO = null;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(
-						QTConstants.PM_MODULE, IUserSO.class);
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();

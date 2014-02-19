@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
@@ -73,7 +74,7 @@ public class ParameterHelper {
 			IParameterSO parameterSO;
 			
 			try {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterType(parameterType);

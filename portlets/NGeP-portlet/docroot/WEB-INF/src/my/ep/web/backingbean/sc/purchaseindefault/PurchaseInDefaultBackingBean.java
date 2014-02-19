@@ -19,6 +19,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -31,7 +32,6 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
@@ -43,12 +43,10 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -134,7 +132,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		  debugLogger("submitPurchaseInDefault");
 		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		  try {
-			    purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IPurchaseInDefaultSO.class);
+			    purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			    PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 				List<ScPIDWorkFlowStatus> wflowStatuses =  new  ArrayList<ScPIDWorkFlowStatus>();
@@ -317,7 +315,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
 			reqDTO.setLanguage("en");
-			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
+			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 			getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
 		}

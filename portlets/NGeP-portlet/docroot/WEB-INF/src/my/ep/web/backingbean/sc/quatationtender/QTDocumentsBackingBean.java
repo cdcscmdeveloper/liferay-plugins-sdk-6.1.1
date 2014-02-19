@@ -9,6 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.report.IReportSectionSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.ReportSectionResDTO;
 import my.ep.dto.pm.common.report.ReportSectionReqDTO;
 import my.ep.factory.EpLogger;
@@ -16,7 +17,6 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -68,7 +68,7 @@ public class QTDocumentsBackingBean extends
 		IReportSectionSO reportSectionSO = null;
 		try {
 			reportSectionSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.PM_MODULE, IReportSectionSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IReportSectionSO.class);
 			ReportSectionReqDTO reportSectionReqDTO = new ReportSectionReqDTO();
 			reportSectionReqDTO.setReportType(9);
 			ReportSectionResDTO resDto = reportSectionSO

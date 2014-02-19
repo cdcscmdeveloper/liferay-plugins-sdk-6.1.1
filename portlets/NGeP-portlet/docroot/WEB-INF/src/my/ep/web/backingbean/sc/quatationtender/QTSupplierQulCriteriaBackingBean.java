@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -146,7 +147,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			CategoryCodeReqDTO reqDTO= new CategoryCodeReqDTO();
 			reqDTO.setCategoryL1Id(categoryL1.getCategoryL1Id());
 			
-			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 			CategoryCodeResDTO resDTO=categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO);
 			this.getManagedBean().setCategoryL2s(resDTO.getCategoryL2List());
 		}
@@ -176,7 +177,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			CategoryCodeReqDTO reqDTO=new CategoryCodeReqDTO();
 			reqDTO.setCategoryL2Id(categoryL2.getCategoryL2Id());
 			
-			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject("pm",ICategoryCodeSO.class);
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 			CategoryCodeResDTO resDTO=categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO);
 			this.getManagedBean().setCategoryL3s(resDTO.getCategoryL3List());
 		}
@@ -210,7 +211,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		if (state != null && state.getStateId() != null) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(state.getStateId());
-			IDistrictSO districtSO=EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
+			IDistrictSO districtSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
 					.retriveDistrictListByStateID(reqDTO);
 			if (resDTO != null && !resDTO.getDistrictList().isEmpty()) {

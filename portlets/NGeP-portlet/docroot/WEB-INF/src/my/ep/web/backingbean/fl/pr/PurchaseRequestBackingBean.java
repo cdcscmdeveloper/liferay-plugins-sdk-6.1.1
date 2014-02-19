@@ -28,6 +28,7 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -397,7 +398,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		setDisplayItemPnl(true);
 	}
 	public void addPurchsedItems() {
-		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject("ss", IPurchaseRequestSO.class);
+		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setAssignedTo(13L);
 		reqDTO.setIncludeDetail(true);
@@ -559,7 +561,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	public void retrieveRequestNoteList() {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject("ss", IRequestNoteSO.class);
+		IRequestNoteSO requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 		reqDTO.setAssignedTo(2L);
 		reqDTO.setFulfillmentType("O");

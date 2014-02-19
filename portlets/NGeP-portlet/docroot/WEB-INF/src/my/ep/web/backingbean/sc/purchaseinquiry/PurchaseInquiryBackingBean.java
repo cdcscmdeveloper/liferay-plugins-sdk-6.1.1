@@ -18,6 +18,7 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -39,7 +40,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -193,7 +193,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  debugLogger("submitPrEnquiryDtl");
 		    IPrInquirySO prInquirySO = null;
 		    try {
-			     prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IPrInquirySO.class);
+			     prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 				 PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 				 ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			     prInquiry.setDateToResponse(new Timestamp(System.currentTimeMillis()));
@@ -273,7 +273,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
 	
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject("pm", IOrgProfileSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
 	

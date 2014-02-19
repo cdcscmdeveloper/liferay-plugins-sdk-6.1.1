@@ -32,6 +32,7 @@ import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
@@ -57,7 +58,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -103,7 +103,7 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			this.getManagedBean().setEvaluateStatus(true);
 			if (this.getManagedBean().getScQtMeetings() == null) {
@@ -112,7 +112,7 @@ public class EvaluationBackingBean extends
 				resDTO = evaluationSO
 						.retrieveEvaluationPreparationDtlsByQtId(reqDTO);
 				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(QTConstants.SS_MODULE,
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setQtId(146L);
@@ -149,7 +149,7 @@ public class EvaluationBackingBean extends
 		try {
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO1 = new EvaluationReqDTO();
 			EvaluationResDTO resDTO1 = new EvaluationResDTO();
@@ -177,7 +177,7 @@ public class EvaluationBackingBean extends
 		try {
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO1 = new EvaluationReqDTO();
 			EvaluationResDTO resDTO1 = new EvaluationResDTO();
@@ -207,7 +207,7 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO supplierReqDTO = new EvaluationReqDTO();
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			/*
 			 * supplierReqDTO.setQtId(146L); supplierReqDTO.setSpecType("F");
@@ -271,7 +271,7 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			reqDTO.setQtId(146L);
 			reqDTO.setEvaluationStg("1");
@@ -299,7 +299,7 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			reqDTO.setQtId(146L);
 			reqDTO.setCommType("QC");
@@ -324,7 +324,7 @@ public class EvaluationBackingBean extends
 					.getObject();
 
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -352,7 +352,7 @@ public class EvaluationBackingBean extends
 					.getObject();
 
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setEvaluationResultId(result.getEvaluationResultId());
@@ -380,7 +380,7 @@ public class EvaluationBackingBean extends
 					.getComplianceList();
 			if (null != complianceList) {
 				evaluationSo = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(QTConstants.SS_MODULE,
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTEvaluationSO.class);
 
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -408,7 +408,7 @@ public class EvaluationBackingBean extends
 		try {
 
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -497,7 +497,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTSpecSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
 			SpecificationResDTO resDTO = null;
 			List<ScQtManualEvaluation> manualList = this.getManagedBean()
@@ -523,7 +523,7 @@ public class EvaluationBackingBean extends
 				}
 
 				evaluationSo = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(QTConstants.SS_MODULE,
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTEvaluationSO.class);
 
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -731,7 +731,7 @@ public class EvaluationBackingBean extends
 
 			ScQtMeeting meeting = new ScQtMeeting();
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(146L);
 			// tenderReqDTO.setQtTndrNo("xxx");
@@ -778,7 +778,7 @@ public class EvaluationBackingBean extends
 
 			IQTMeetingSO meetingso = EpEjbBusinessDelegate
 					.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, IQTMeetingSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 
 			MeetingReqDTO metReqDtO = new MeetingReqDTO();
 
@@ -815,7 +815,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -834,7 +834,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -853,7 +853,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -892,7 +892,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setEvaluationResultId(results.getEvaluationResultId());
@@ -921,7 +921,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo;
 		try {
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -976,7 +976,7 @@ public class EvaluationBackingBean extends
 			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setProposalChecklist(evaluation);
@@ -1018,7 +1018,7 @@ public class EvaluationBackingBean extends
 					registrationResDTO.getSmSupp());
 			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 			evaluationSo = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE,
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setProposalChecklist(evaluation);

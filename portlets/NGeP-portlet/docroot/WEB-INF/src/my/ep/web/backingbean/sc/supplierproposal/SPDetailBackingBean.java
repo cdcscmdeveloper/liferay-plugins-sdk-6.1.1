@@ -24,6 +24,7 @@ import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
@@ -46,7 +47,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -63,12 +63,11 @@ public class SPDetailBackingBean extends
 		SourcingBaseBackingBean<SPDetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
-	private static final String MODULE_NAME = "ss";
 	private IQTProposalSO proposalSO = null;
 
 	public SPDetailBackingBean() {
 		IQTProposalSO proposalSO = BusinessDelegate.getInstance()
-				.getServiceObject(MODULE_NAME, IQTProposalSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 		this.proposalSO = proposalSO;
 
@@ -97,7 +96,7 @@ public class SPDetailBackingBean extends
 
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTProposalSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtSupplierId(supplierId);
@@ -423,7 +422,7 @@ public class SPDetailBackingBean extends
 
 	private IQTProposalSO getProposalSO() {
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTProposalSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 	}
 
 	private ProposalReqDTO constructReqDTO() {

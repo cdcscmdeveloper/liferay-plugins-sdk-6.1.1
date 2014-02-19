@@ -21,6 +21,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -38,7 +39,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 
 import org.primefaces.model.UploadedFile;
@@ -60,7 +60,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public List<PmOrgProfile> retriveOrgProfiles(OrgProfileReqDTO profileReqDTO) {
 
 		IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.PM_MODULE, IOrgProfileSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(profileReqDTO);
 		return resDTO.getOrgProfileList();
@@ -146,7 +146,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		this.getManagedBean().setOutComes(res.getAction());
 
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 

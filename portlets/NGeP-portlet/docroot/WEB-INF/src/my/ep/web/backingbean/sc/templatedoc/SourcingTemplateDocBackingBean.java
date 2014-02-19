@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -42,7 +43,6 @@ import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sc.templatedoc.SourcingTemplateDocManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -191,7 +191,7 @@ public class SourcingTemplateDocBackingBean extends
 			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-					.getServiceObject("ss", IQTDetailSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 
@@ -218,7 +218,7 @@ public class SourcingTemplateDocBackingBean extends
 				checkList.setCreatedDate(new Timestamp(System
 						.currentTimeMillis()));
 				IStatusSO statussO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", IStatusSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 				StatusReqDTO statusreq = new StatusReqDTO();
 				statusreq.setStatusId(1L);
@@ -230,7 +230,7 @@ public class SourcingTemplateDocBackingBean extends
 
 			ICodeCategorySO objectSO = (ICodeCategorySO) BusinessDelegate
 					.getInstance()
-					.getServiceObject("pm", ICodeCategorySO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICodeCategorySO.class);
 			CodeCategoryReqDTO objreqDTO = new CodeCategoryReqDTO();
 			objreqDTO.setCodeId(new Long(1L));
 			CodeCategoryResDTO objresDTO = objectSO.retrieveCodeById(objreqDTO);
@@ -410,7 +410,7 @@ public class SourcingTemplateDocBackingBean extends
 
 		try {
 			templateSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTTemplateSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();

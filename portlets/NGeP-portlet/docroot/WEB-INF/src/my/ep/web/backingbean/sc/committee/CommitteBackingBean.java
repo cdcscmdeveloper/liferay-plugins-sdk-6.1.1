@@ -24,6 +24,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -50,7 +51,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
@@ -60,7 +60,6 @@ import my.ep.web.type.sc.quationtender.MemberRole;
 import my.ep.web.type.sc.quationtender.MemberType;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
@@ -123,7 +122,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		committeReqDTO.setOutcome(action);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		try {
 			commso.updateBPMTask(committeReqDTO);
 			if (true) {
@@ -158,7 +157,7 @@ public class CommitteBackingBean extends
 
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		try {
 			CommitteResDTO resDTO = committeSO
 					.saveOrUpdateCommitte(committeReqDTO);
@@ -197,7 +196,7 @@ public class CommitteBackingBean extends
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		committeReqDTO.setToken(ctxToken);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		CommitteResDTO resDTO = null;
 
 		try {
@@ -274,7 +273,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setQtCommittee(scQtCommittee);
 		/*
 		 * ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-		 * .getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		 * CommitteResDTO resDTO =
 		 * committeSO.saveOrUpdateCommitte(committeReqDTO);
 		 */
@@ -358,7 +357,7 @@ public class CommitteBackingBean extends
 
 		try {
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDto = committeSO.searchQTCommittees(committeReqDTO);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -375,7 +374,7 @@ public class CommitteBackingBean extends
 	public void showQtDetailAction(Long qtId) {
 
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtId(qtId);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQtById(reqDTO);
@@ -438,7 +437,7 @@ public class CommitteBackingBean extends
 			resetCommitte();
 
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			CommitteResDTO committeResDTO = committeSO
 					.retriveQTCommitteDetails(new CommitteReqDTO());
 			ScQtCommittee qtCommittee = committeResDTO.getCommittee();
@@ -549,7 +548,7 @@ public class CommitteBackingBean extends
 	 */
 	public void retriveGovUsers() {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				"pm", IUserSO.class);
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		if (getManagedBean().getGovUsers() == null) {
 			UserResDTO resDTO = userSO.retrieveGovUserList();
 			List<PmUser> userList = resDTO.getUserList();
@@ -576,7 +575,7 @@ public class CommitteBackingBean extends
 
 	public void cloneCommitteMembersAcition(long committeId) {
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(SourcingConst.SOURCING_MODULE,
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setCommitteId(committeId);
@@ -645,7 +644,7 @@ public class CommitteBackingBean extends
 	public void retriveUserDetails(Long userid) {
 
 		IUserSO iUserSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				QTConstants.PM_MODULE, IUserSO.class);
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(getManagedBean().getCommitteMember().getPmUser()
 				.getUserId());
@@ -697,7 +696,7 @@ public class CommitteBackingBean extends
 			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -733,7 +732,7 @@ public class CommitteBackingBean extends
 			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -755,7 +754,7 @@ public class CommitteBackingBean extends
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
 		IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject("pm", IOrgProfileSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(reqDTO);
 		this.getManagedBean().setMinstryList(resDTO.getOrgProfileList());
@@ -795,7 +794,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setCommitteId(committee.getQtCommitteeId());
 		// committeReqDTO.setQtCommittee(committee);
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		CommitteResDTO resDTO = committeSO
 				.retriveQTCommitteDetails(committeReqDTO);
 		this.getManagedBean().setQtCommittee(resDTO.getCommittee());
@@ -834,7 +833,7 @@ public class CommitteBackingBean extends
 		SCCommitteeDataType committeDataType = (SCCommitteeDataType) obj;
 
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setCommitteId(new Long(committeDataType.getComId())

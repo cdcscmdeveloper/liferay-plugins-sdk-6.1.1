@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -55,7 +56,7 @@ public class LocationSingleton {
 
 	public List<PmState> initialStatesForCountry(Long countryId) {
 		// initialization for country with countryId
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 
 		StateReqDTO stateReqDTO = new StateReqDTO();
 		stateReqDTO.setCountryId(countryId);

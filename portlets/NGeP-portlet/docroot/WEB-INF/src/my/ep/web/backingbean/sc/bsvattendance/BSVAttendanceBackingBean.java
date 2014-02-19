@@ -16,6 +16,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
@@ -36,9 +37,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -72,7 +71,7 @@ public class BSVAttendanceBackingBean extends
 		
 		try {
 			qTBriefingSO =(IQTBriefingSO) BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTBriefingSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
 			
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
@@ -135,7 +134,7 @@ public class BSVAttendanceBackingBean extends
 		
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTBriefingSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			
 			if (getManagedBean().getScQtBriefing() != null) {
 
@@ -256,7 +255,7 @@ public class BSVAttendanceBackingBean extends
 			IUserSO userSO = null;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(
-						QTConstants.PM_MODULE, IUserSO.class);
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				
 				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();
@@ -288,7 +287,7 @@ public class BSVAttendanceBackingBean extends
 		IQTBriefingSO qTBriefingSO = null;
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTBriefingSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			List<ScQtBriefing> briefingDetails=new ArrayList<ScQtBriefing>();
 			
 			// Save Briefing Details Status
@@ -337,7 +336,7 @@ public class BSVAttendanceBackingBean extends
 	public void saveBriefingAttendance() {
 		try {
 			IQTBriefingSO qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTBriefingSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			List<ScQtBriefing> briefingDetails=new ArrayList<ScQtBriefing>();
 			
@@ -376,7 +375,7 @@ public class BSVAttendanceBackingBean extends
 		IQTBriefingSO qTBriefingSO;
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTBriefingSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			List<ScQtBriefing> briefingDetails = new ArrayList<ScQtBriefing>();
 			List<ScQtBriefing> selectedBriefingDetails = getManagedBean().getSelectedBriefingDetails();
@@ -499,7 +498,7 @@ public class BSVAttendanceBackingBean extends
 		SCSiteVisitProposalDataType siteVisitDatatype = (SCSiteVisitProposalDataType) obj;
 		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(siteVisitDatatype.getQtId())
 				.longValue());
@@ -564,7 +563,7 @@ public String updateBpmTask(String action) {
 
 	private IQTBriefingSO getBriefingSO() {
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(
-				SourcingConst.SOURCING_MODULE, IQTBriefingSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 
 	}
 	private BriefingReqDTO prepareBriefingDtls(){

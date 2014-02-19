@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
@@ -78,7 +79,7 @@ public class StatusHelper {
 			IStatusSO statusSO;
 			
 			try {
-				statusSO = BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setModuleCode(moduleCode);
@@ -135,7 +136,7 @@ public class StatusHelper {
 			IStatusSO statusSO;
 			
 			try {
-				statusSO = BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setStatusId(statusId);

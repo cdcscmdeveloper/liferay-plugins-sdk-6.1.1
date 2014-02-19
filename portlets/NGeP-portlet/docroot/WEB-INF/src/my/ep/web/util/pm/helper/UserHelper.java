@@ -4,6 +4,7 @@
 package my.ep.web.util.pm.helper;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -46,7 +47,7 @@ public class UserHelper {
 			IUserSO userSO;
 			try {
 				userSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", IUserSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
@@ -69,7 +70,7 @@ public class UserHelper {
 		IUserSO userSO;
 		try {
 			userSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", IUserSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(pmUser);

@@ -20,6 +20,7 @@ import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -103,7 +104,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	}
 
 	public String submitAction(String action) {
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		/*RequestNoteReqDTO requestListReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestList = getManagedBean().getRequestList();
 		if (this.getManagedBean().getRequestNoteDtls() != null && this.getManagedBean().getRequestNoteDtls().size() > 0) {
@@ -129,7 +130,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	
 	
 	public String submitAction() {
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
    try {
@@ -189,7 +190,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	 */
 	public void requestNote() {
 		log.info("start DirectPurchaseBackingBean.saveRequestList()");
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		requestNote = removeEmptyRemarkBeforeSave(requestNote);
@@ -211,7 +212,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			quoteBidBackingBean = new SimpleQuoteBidBackingBean();
 		}
 		// save request list and information
-		/*IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		/*IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		PmStatus status = new PmStatus();
 		status.setStatusId(61000L);
@@ -289,7 +290,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			getManagedBean().setOutComes(res.getAction());
 			if (SourcingConst.SIMPLE_QUOTE.equalsIgnoreCase(directPurchaseDataType.getDpMode())) {
 				//simple quote
-				IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteSO.class);
+				IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				QuoteReqDTO quoteBidReqDTO = new QuoteReqDTO();
 				quoteBidReqDTO.setRequestListId(Long.valueOf(directPurchaseDataType.getDpId()));
 				QuoteResDTO quoteBidResDTO = quoteBidSO.getQuoteDtl(quoteBidReqDTO);
@@ -326,7 +327,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			}else {
 				directPurchaseDataType.getRecommend();
 				log.info("requestList Id: ..........." + directPurchaseDataType.getDpId());
-				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 				RequestNoteReqDTO requestListReqDTO = new RequestNoteReqDTO();
 				requestListReqDTO.setRequestNoteId(Long.valueOf(directPurchaseDataType.getDpId()));
 				ScRequestNote requestList = directPurchaseSO.getRequestNoteWithDtls(requestListReqDTO).getRequestNoteDetail();
@@ -341,7 +342,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 				//List<PmUser> approvalUsers = ApprovalUserHelper.getListApprovalUser(requestList.getApprovalUsers());
 				DualListModel<PmUser>	dualListDataModel = new DualListModel<PmUser>();
 				dualListDataModel.setTarget(approvalUsers);
-				IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+				IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO userReqDto = new UserReqDTO();
 				userReqDto.setRoleCode(RoleCode.APPROVER.value());
 				UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
@@ -375,7 +376,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 
 	public void savePrInquiry() {
 		log.info("start method savePrInquiry().............");
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestListReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestList = getManagedBean().getRequestNote();
 		ScRequestSupplierItem inquirySupplierItem = getManagedBean().getInquirySupplierItem();
@@ -497,7 +498,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			reqDTO.setUserId(user.getUserId());
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 
 			List<PmOrgProfile> userDivisionList = resDTO.getOrgProfileList();
@@ -546,7 +547,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	
 	
 	private	void	initialInformation(){
-		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
 		userReqDto.setRoleCode(RoleCode.APPROVER.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
@@ -614,7 +615,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		ScRequestNote requestNote = new ScRequestNote();
 
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance().getServiceObject("pm",
+				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		// TODO hard coding PmOrgProfile to Request Note

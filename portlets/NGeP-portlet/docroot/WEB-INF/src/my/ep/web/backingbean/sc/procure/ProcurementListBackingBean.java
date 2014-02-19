@@ -12,6 +12,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
@@ -26,10 +27,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.sc.procure.ProcureCodeManageBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -50,7 +49,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 
 	public String initiateBPMTask(PpPlan ppPlan) {
 		if (ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equalsIgnoreCase(ppPlan.getProcurementModeParam().getParameterCode())) {
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			// direct purchase, create empty request note and initial BPM task
 			RequestNoteReqDTO	requestDTO	=	new RequestNoteReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
@@ -80,14 +79,14 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			scQt.setPmOrgProfile(ppPlan.getPtjOrgProfile());
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(1l);
-			IStatusSO iStatusSO=EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.PM_MODULE, IStatusSO.class);
+			IStatusSO iStatusSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusResDTO pmStatus = iStatusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
 			scQt.setPmStatus(status);
 			QTDetailBackingBean backingBean= new QTDetailBackingBean();
 			backingBean.getManagedBean().setQt(scQt);
 			QuationTenderReqDTO tenderReqDTO = backingBean.prepareQTInfo();
-			IQTDetailSO detailSO= EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTDetailSO.class);
+			IQTDetailSO detailSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
 			
 			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO.createQTforPPlan(tenderReqDTO);
 			
@@ -125,7 +124,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 
 	public void retriveProcuremntPlanDtls() {
 		IProcurementPlanSO procurementSO = getProcurementSO();
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		
 		ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
 		//planReqDTO.setPlanId(Long.valueOf(getManagedBean().getPlanSearchBean().getPlanNo()));

@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -157,7 +158,7 @@ public class NoticeBoardBackingBean extends
 		try {
 
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
 			log.info("result list for noticeboard "
 					+ qtResDTO.getQtResultBean().getResultList().size());
@@ -225,7 +226,7 @@ public class NoticeBoardBackingBean extends
 		try {
 
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
 
 		} catch (Exception ex) {
@@ -261,7 +262,7 @@ public class NoticeBoardBackingBean extends
 		try {
 
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTDetailSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
 
 		} catch (Exception ex) {
@@ -285,7 +286,7 @@ public class NoticeBoardBackingBean extends
 
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTNoticeBoardSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 
 			reqDTO.setQtId(146l);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
@@ -365,7 +366,7 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
 			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -392,7 +393,7 @@ public class NoticeBoardBackingBean extends
 		if (this.getManagedBean().getLocationRootNode() == null) {
 			try {
 				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-						.getServiceObject("pm", IStateSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 				StateReqDTO reqDTO = new StateReqDTO();
 				reqDTO.setCountryId(1l);
 				StateResDTO resDTO = stateSO
@@ -428,7 +429,7 @@ public class NoticeBoardBackingBean extends
 	public void retriveCategoriesCode1() {
 		if (this.getManagedBean().getLocationRootNode() == null) {
 			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICategoryCodeSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 
 			CategoryCodeResDTO catResDTO = categoryCodeSO
 					.retrieveCategoryL1List();
@@ -619,7 +620,7 @@ public class NoticeBoardBackingBean extends
 					reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 					IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-							.getInstance().getServiceObject("pm",
+							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IOrgProfileSO.class);
 					OrgProfileResDTO resDTO = orgProfileSO
 							.retrieveOrgProfileListByOrgType(reqDTO);
@@ -639,7 +640,7 @@ public class NoticeBoardBackingBean extends
 					reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 					IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-							.getInstance().getServiceObject("pm",
+							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IOrgProfileSO.class);
 					OrgProfileResDTO resDTO = orgProfileSO
 							.retrieveOrgProfileListByOrgType(reqDTO);
@@ -670,7 +671,7 @@ public class NoticeBoardBackingBean extends
 			if (obj instanceof PmCategoryL1) {
 				this.getManagedBean().setCategorySearchBean(null);
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", ICategoryCodeSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setCategoryL1Id(((PmCategoryL1) obj).getCategoryL1Id());
 				CategoryCodeResDTO categorysResDTO = categoryCodeSO
@@ -687,7 +688,7 @@ public class NoticeBoardBackingBean extends
 			} else if (obj instanceof PmCategoryL2) {
 				this.getManagedBean().setCategorySearchBean(null);
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", ICategoryCodeSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
 				reqDTO.setCategoryL2Id(((PmCategoryL2) obj).getCategoryL2Id());
@@ -708,7 +709,7 @@ public class NoticeBoardBackingBean extends
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(((PmState) obj).getStateId());
 				IDistrictSO districtSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject("pm", IDistrictSO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 				DistrictResDTO resDTO = districtSO
 						.retriveDistrictListByStateID(reqDTO);
 
@@ -723,7 +724,7 @@ public class NoticeBoardBackingBean extends
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(((PmDistrict) obj).getDistrictId());
 				ICitySO citySO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject("pm", ICitySO.class);
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 				CityResDTO resDTO = citySO.retriveCityListByDistrictId(reqDTO);
 				List<PmCity> cityList = resDTO.getCityList();
 				org.primefaces.model.TreeNode root = event.getTreeNode();
