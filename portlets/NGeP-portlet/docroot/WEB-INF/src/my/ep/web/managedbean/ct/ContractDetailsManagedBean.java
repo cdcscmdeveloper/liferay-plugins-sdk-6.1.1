@@ -44,6 +44,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private CtContractVer contractVer;
 	private CtContractItem selectedItem;
+	private CtContractItem selectedCCItem;
 	private CtDeduction selectedDeduction;
 	
 	private List<CtDeductionClause> ctDeductionClauseList;
@@ -609,5 +610,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setScheduleType(boolean scheduleType) {
 		this.scheduleType = scheduleType;
 	}
+
+	public CtContractItem getSelectedCCItem() {
+		return selectedCCItem;
+	}
+
+	public void setSelectedCCItem(CtContractItem selectedCCItem) {
+		this.selectedCCItem = selectedCCItem;
+	}
+	
+	
 
 }
