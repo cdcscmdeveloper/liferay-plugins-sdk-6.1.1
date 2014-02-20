@@ -155,8 +155,8 @@ public class SpecificationBackingBean extends
 			return "specificationCreation.xhtml?faces-redirect=true";
 		}
 		if (this.getManagedBean().isPanel() == true) {
-			// return "specificationCreation.xhtml?faces-redirect=true";
-			return "searchCircularPanelContract.xhtml?faces-redirect=true";
+			 return "specificationCreation.xhtml?faces-redirect=true";
+			//return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
 		return null;
 	}
@@ -500,7 +500,7 @@ public class SpecificationBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQtById(tenderReqDTO);
 				getManagedBean().getScQtSpec().setScQt(
 						tenderResDTO.getQtDetail());
-				getManagedBean().getScQtSpec().getScQt().setQtType("O");
+				//getManagedBean().getScQtSpec().getScQt().setQtType("O");
 
 				getManagedBean().setScQtRemarks(new ScQtRemark());
 				// getManagedBean().setScQtChecklist(new ScQtCheckList());
