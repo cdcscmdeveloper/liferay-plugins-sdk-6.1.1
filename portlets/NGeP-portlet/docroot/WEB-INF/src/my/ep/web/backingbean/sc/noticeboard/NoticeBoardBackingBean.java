@@ -96,10 +96,15 @@ public class NoticeBoardBackingBean extends
 		QuationTenderResDTO qtResDTO = null;
 		ISearchBean<ScQt> searchBean = new SearchBean<ScQt>();
 		log.info("@@@@@@@@@@@@@@@@@@@@" + this.getManagedBean().getTitle());
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("qtTitle", SearchOperator.OPERATOR_EQUALS
-						.value(), this.getManagedBean().getTitle()));
+		//TODO Need to write one helper method to check whether string is empty or null...
+		if (null != this.getManagedBean().getTitle()
+				&& " ".equals(this.getManagedBean().getTitle())) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("qtTitle",
+							SearchOperator.OPERATOR_EQUALS.value(), this
+									.getManagedBean().getTitle()));
 
+		}
 		/*
 		 * if
 		 * (getManagedBean().getScQt().getMinistryOrgProfile().getOrgProfileId()
@@ -157,7 +162,7 @@ public class NoticeBoardBackingBean extends
 		try {
 
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
 			log.info("result list for noticeboard "
 					+ qtResDTO.getQtResultBean().getResultList().size());
@@ -282,11 +287,12 @@ public class NoticeBoardBackingBean extends
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-
+this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 
+			//TODO Need to remove the qtid...
 			reqDTO.setQtId(146l);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
@@ -350,7 +356,7 @@ public class NoticeBoardBackingBean extends
 		}
 
 		this.getManagedBean().setTabIndex(0);
-		return "/xhtml/sc/notice/tenderNoticeDetailScreen.xhtml?faces-redirect=true";
+		return "/xhtml/sc/noticeboard/tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -490,7 +496,8 @@ public class NoticeBoardBackingBean extends
 					new PmOrgProfile());
 
 		}
-		return "/xhtml/ss/noticeboard/noticeboardlandingpage.xhtml?faces-redirect=true";
+		
+		return "/xhtml/sc/noticeboard/"+this.getManagedBean().getPreviousPage()+".xhtml?faces-redirect=true";
 
 	}
 
@@ -576,7 +583,7 @@ public class NoticeBoardBackingBean extends
 
 			this.getManagedBean().setTempMinstryRootNode(
 					this.getManagedBean().getMinstryRootNode());
-			this.getManagedBean().getTempMinstryRootNode().setSelected(false);
+			// this.getManagedBean().getTempMinstryRootNode().setSelected(false);
 			this.getManagedBean().setMinstryRootNode(root);
 			this.getManagedBean().setMistrySearchBean(
 					new SearchBean<PmOrgProfile>());
@@ -586,19 +593,23 @@ public class NoticeBoardBackingBean extends
 				|| selectedObject instanceof PmCategoryL3) {
 
 			root = consturctTreeNode(node);
+
 			this.getManagedBean().setTempCategoryRootNode(
 					this.getManagedBean().getCategoryRootNode());
-			this.getManagedBean().getTempCategoryRootNode()
-					.setSelectable(false);
+			/*
+			 * this.getManagedBean().getTempCategoryRootNode()
+			 * .setSelectable(false);
+			 */
 			this.getManagedBean().setCategoryRootNode(root);
 			this.getManagedBean().setCategorySearchBean(new SearchBean<>());
 		} else if (selectedObject instanceof PmState
 				|| selectedObject instanceof PmDistrict
 				|| selectedObject instanceof PmCity) {
 			root = consturctTreeNode(node);
+
 			this.getManagedBean().setTempLocationRootNode(
 					this.getManagedBean().getLocationRootNode());
-			this.getManagedBean().getTempLocationRootNode().setSelected(false);
+			// this.getManagedBean().getTempLocationRootNode().setSelected(false);
 			this.getManagedBean().setLocationRootNode(root);
 			this.getManagedBean().setLocationSearchBean(new SearchBean<>());
 		}
@@ -757,47 +768,94 @@ public class NoticeBoardBackingBean extends
 	private TreeNode consturctTreeNode(TreeNode selectedNode) {
 		TreeNode root = new EpDefaultTreeNode("Root", null);
 		TreeNode immediateParent = selectedNode.getParent();
+		selectedNode.setExpanded(true);
 		if (immediateParent.equals(root)) {
 			new EpDefaultTreeNode(selectedNode.getType(),
-					selectedNode.getData(), root);
+					selectedNode.getData(), root).setExpanded(true);
 		} else {
 			TreeNode parent = immediateParent.getParent();
 			if (parent.getParent() == null) {
+				TreeNode nextParent = new EpDefaultTreeNode(
+						immediateParent.getType(), immediateParent.getData(),
+						root);
+				nextParent.setExpanded(true);
 				new EpDefaultTreeNode(selectedNode.getType(),
-						selectedNode.getData(), new EpDefaultTreeNode(
-								immediateParent.getType(),
-								immediateParent.getData(), root));
+						selectedNode.getData(), nextParent).setExpanded(true);
 
 			} else {
+
+				TreeNode nextParent = new EpDefaultTreeNode(parent.getType(),
+						parent.getData(), root);
+				nextParent.setExpanded(true);
+				TreeNode subParent = new EpDefaultTreeNode(
+						immediateParent.getType(), immediateParent.getData(),
+						nextParent);
+				subParent.setExpanded(true);
 				new DefaultTreeNode(selectedNode.getType(),
-						selectedNode.getData(), new EpDefaultTreeNode(
-								immediateParent.getType(),
-								immediateParent.getData(),
-								new EpDefaultTreeNode(parent.getType(), parent
-										.getData(), root)));
+						selectedNode.getData(), subParent).setExpanded(true);
 
 			}
 		}
-		root.setSelected(true);
 
 		return root;
 	}
 
 	public void clearTreeNode(String selectedNode) {
 		if (selectedNode.equalsIgnoreCase("ministry")) {
-			this.getManagedBean().setMinstryRootNode(
-					this.getManagedBean().getTempMinstryRootNode());
+			this.getManagedBean().setMinistrySelectedNode(null);
+
+			TreeNode rootNode = this.getManagedBean().getTempMinstryRootNode();
+			List<TreeNode> childNodes = rootNode.getChildren();
+
+			for (TreeNode node : childNodes) {
+				if (node.isExpanded()) {
+					node.setExpanded(false);
+				}
+			}
+			this.getManagedBean().setMinstryRootNode(rootNode);
+			this.getManagedBean().setTempMinstryRootNode(null);
 			this.getManagedBean().setMistrySearchBean(null);
+
 		} else if (selectedNode.equalsIgnoreCase("category")) {
-			this.getManagedBean().setCategoryRootNode(
-					this.getManagedBean().getTempCategoryRootNode());
+			this.getManagedBean().setCategorySelectedNode(null);
+			TreeNode rootNode = this.getManagedBean().getTempCategoryRootNode();
+			List<TreeNode> childNodes = rootNode.getChildren();
+
+			for (TreeNode node : childNodes) {
+				if (node.isExpanded()) {
+					node.setExpanded(false);
+				}
+			}
+			this.getManagedBean().setCategoryRootNode(rootNode);
+			this.getManagedBean().setTempLocationRootNode(null);
 			this.getManagedBean().setCategorySearchBean(null);
 		} else if (selectedNode.equalsIgnoreCase("location")) {
+			this.getManagedBean().setLocationSelectedNode(null);
+			TreeNode rootNode = this.getManagedBean().getTempLocationRootNode();
+			List<TreeNode> childNodes = rootNode.getChildren();
+
+			for (TreeNode node : childNodes) {
+				if (node.isExpanded()) {
+					node.setExpanded(false);
+				}
+			}
+
 			this.getManagedBean().setLocationRootNode(
 					this.getManagedBean().getTempLocationRootNode());
+			this.getManagedBean().setTempLocationRootNode(null);
 			this.getManagedBean().setLocationSearchBean(null);
 		}
 
+	}
+	
+	public String gotoSupplierQualificationCriteria(){
+		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml?faces-redirect=true";
+	}
+	
+	public String gotoSupplierRegistration(){
+		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
 
 }
