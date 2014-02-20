@@ -31,9 +31,9 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -246,11 +246,11 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
 		
 		if (panelSupplierList != null && panelSupplierList.size() > 0) {
-			Map<CtPanelZone, List<CtPanelSupplier>> zoneMap = new LinkedHashMap<CtPanelZone, List<CtPanelSupplier>>();
+			Map<CtCircularZone, List<CtPanelSupplier>> zoneMap = new LinkedHashMap<CtCircularZone, List<CtPanelSupplier>>();
 			
 			// Group Supplier by zone
 			for (CtPanelSupplier panelSupplier : panelSupplierList) {
-				CtPanelZone panelZone = panelSupplier.getCtPanelZone();
+				CtCircularZone panelZone = panelSupplier.getCtCircularZone();
 				List<CtPanelSupplier> zonePanelSuppliers = zoneMap.get(panelZone);
 				
 				if (zonePanelSuppliers == null) {
@@ -333,11 +333,11 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			
 			for (TreeNode searchZoneNode : searchPanelSuppliersNode.getChildren()) {
 				@SuppressWarnings("unchecked")
-				TreeNodeBean<CtPanelZone> zoneBean = (TreeNodeBean<CtPanelZone>)searchZoneNode.getData();
+				TreeNodeBean<CtCircularZone> zoneBean = (TreeNodeBean<CtCircularZone>)searchZoneNode.getData();
 				
 				// Add selected zone into supplier list.
 				if (zoneBean.isSelected()) {	
-					CtPanelZone zone = zoneBean.getObject();
+					CtCircularZone zone = zoneBean.getObject();
 					
 					// create new zone criteria.
 					scQtZoneCriteria = new ScQtZoneCriteria();
@@ -346,7 +346,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 					scQtZoneCriteria.setScQtLocCriterias(new ArrayList<ScQtLocCriteria>());
 					scQtZoneCriterias.add(scQtZoneCriteria);
 					
-					for (CtPanelState state : zone.getCtPanelStates()) {
+					for (CtCircularZoneDtl state : zone.getCtCircularZoneDtl()) {
 						// create new location criteria.
 						scQtLocCriteria = new ScQtLocCriteria();
 						scQtLocCriteria.setScQtCriteria(scQtCriteria);
@@ -485,15 +485,15 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		return ctPanelSuppliers;
 	}
 	
-	private int populateSupplierTreeNode(Map<CtPanelZone, List<CtPanelSupplier>> zoneMap, TreeNode suppliersNode) {
+	private int populateSupplierTreeNode(Map<CtCircularZone, List<CtPanelSupplier>> zoneMap, TreeNode suppliersNode) {
 		int totalSupplier = 0;
 		
-		for (Entry<CtPanelZone, List<CtPanelSupplier>> zoneEntry : zoneMap.entrySet()) {
-			CtPanelZone zone = zoneEntry.getKey();
+		for (Entry<CtCircularZone, List<CtPanelSupplier>> zoneEntry : zoneMap.entrySet()) {
+			CtCircularZone zone = zoneEntry.getKey();
 			List<CtPanelSupplier> zonePanelSuppliers = zoneEntry.getValue();
 			
 			TreeNode supplierNode = new DefaultTreeNode(
-					new TreeNodeBean<CtPanelZone>("zone", zone), suppliersNode);
+					new TreeNodeBean<CtCircularZone>("zone", zone), suppliersNode);
 			for (CtPanelSupplier supplier : zonePanelSuppliers) {
 				new DefaultTreeNode(
 						new TreeNodeBean<CtPanelSupplier>("supplier", supplier), 
