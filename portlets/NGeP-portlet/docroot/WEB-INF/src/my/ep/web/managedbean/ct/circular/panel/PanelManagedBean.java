@@ -18,10 +18,10 @@ import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -48,8 +48,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCircularVer circularVer;
 	private CtPanelSupplier selectedPanelSupplier;
 	private CtCancelCircular selectedCancelCircular;
-	private CtPanelZone selectedPanelZone;
-	private CtPanelState selectedPanelState;
+	private CtCircularZone selectedCircularZone;
+	private CtCircularZoneDtl selectedCircularZoneDtl;
 	private CtPanelItem selectedPanelItem;
 	private CtCancelCircularReq cancelCircularReq;
 	
@@ -114,22 +114,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSelectedCancelledCircularList(
 			List<CtCancelCircular> selectedCancelledCircularList) {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
-	}
-
-	public CtPanelZone getSelectedPanelZone() {
-		return selectedPanelZone;
-	}
-
-	public void setSelectedPanelZone(CtPanelZone selectedPanelZone) {
-		this.selectedPanelZone = selectedPanelZone;
-	}
-
-	public CtPanelState getSelectedPanelState() {
-		return selectedPanelState;
-	}
-
-	public void setSelectedPanelState(CtPanelState selectedPanelState) {
-		this.selectedPanelState = selectedPanelState;
 	}
 
 	public CtPanelItem getSelectedPanelItem() {
@@ -320,6 +304,22 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
+	}
+
+	public CtCircularZone getSelectedCircularZone() {
+		return selectedCircularZone;
+	}
+
+	public void setSelectedCircularZone(CtCircularZone selectedCircularZone) {
+		this.selectedCircularZone = selectedCircularZone;
+	}
+
+	public CtCircularZoneDtl getSelectedCircularZoneDtl() {
+		return selectedCircularZoneDtl;
+	}
+
+	public void setSelectedCircularZoneDtl(CtCircularZoneDtl selectedCircularZoneDtl) {
+		this.selectedCircularZoneDtl = selectedCircularZoneDtl;
 	}
 
 }
