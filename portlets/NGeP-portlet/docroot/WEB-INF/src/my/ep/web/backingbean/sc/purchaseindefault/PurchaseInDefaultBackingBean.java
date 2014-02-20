@@ -153,6 +153,12 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// remarks
 				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
+				
+				//Hoa: add token authenticate to support BPM
+				FacesScopes facesScopes = new FacesScopes();
+				String token = facesScopes.getBPMAuthenticationCtxToken();
+				reqDTO.setToken(token);
+				
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", ""));
 			} catch (Exception ex) {
