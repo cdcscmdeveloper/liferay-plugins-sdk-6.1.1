@@ -136,6 +136,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 private List<String> tabs;
 	 
 	 private String resetData;
+	 
+	 private String previousPage;
 
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -936,6 +938,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setResetData(String resetData) {
 		this.resetData = resetData;
+	}
+
+	public String getPreviousPage() {
+		return previousPage;
+	}
+
+	public void setPreviousPage(String previousPage) {
+		this.previousPage = previousPage;
 	}
 
 	
