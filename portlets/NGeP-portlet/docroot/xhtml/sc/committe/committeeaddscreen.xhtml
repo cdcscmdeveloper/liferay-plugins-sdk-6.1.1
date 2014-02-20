@@ -3,106 +3,175 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog id="Add" header="ADD" widgetVar="screen1" modal="true">
-		<p:panel header="New Committee" toggleable="true">
+	<p:dialog id="newspecificationcommitteeid" header=""
+		widgetVar="newspecificationcommittee" modal="true">
+		<p:panel header="Specification Committee" toggleable="true"
+			styleClass="scAddMember">
 
-			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-				
+			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
+				<p:selectOneRadio
+					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
+					<f:selectItems
+						value="#{committeBackingBean.managedBean.selections}" />
+					<p:ajax event="click"
+						listener="#{committeBackingBean.userSelcetionAction}"
+						update="newCommitteeProfile"></p:ajax>
+				</p:selectOneRadio>
+			</h:panelGrid>
 
-				<h:outputLabel value="* Selection  " />
-				  <p:selectOneRadio  value="#{CommitteBackingBean.managedBean.supplierItemList}">  
-                     <f:selectItem itemLabel="Profile" itemValue="1" />  
-                     <f:selectItem itemLabel="Existing List" itemValue="2" />  
-                     <f:selectItem itemLabel="New" itemValue="3" />  
-                  </p:selectOneRadio>  
-                  
-				<h:outputLabel value="* Type of User  " />
-				  <p:selectOneRadio value="#{CommitteBackingBean.managedBean.supplierItemList}">  
-                     <f:selectItem itemLabel="Government User" itemValue="1" />  
-                     <f:selectItem itemLabel="Non Government User" itemValue="2" />  
-                  </p:selectOneRadio>  
-                                   
-</p:panelGrid>
+			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
+				<c:if
+					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
+							<td colspan="3"><p:inputText
+									value="#{committeBackingBean.managedBean.name}" size="64" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
+							<td><p:selectOneMenu id="appaction"
+									value="#{committeBackingBean.managedBean.identificationType}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+								</p:selectOneMenu></td>
+							<td style="width: 105px;"><p:outputLabel
+									value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
+							<td><p:inputText id="Idno"
+									value="#{committeBackingBean.managedBean.identificationNo}"
+									size="30" /></td>
+						</tr>
+					</table>
+					<p:commandButton value="Search" style="float:right;"
+						icon="ui-icon-search"
+						action="#{committeBackingBean.existingCommitteeSearchAction}"
+						update="@(.existingCommitteeResults)" partialSubmit="true"
+						process="@parent" />
+					<br />
+					<br />
+					<p:panel header="Search Result" toggleable="true">
+						<p:dataTable id="existingsearch"
+							value="#{committeBackingBean.managedBean.externalUsers}"
+							selection="#{committeBackingBean.managedBean.selectedPmUser}"
+							rowKey="#{existcommitteeuser}" var="existcommitteeuser"
+							styleClass="existingCommitteeResults" style="width : 900px;">
 
- <p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
- 
-  		    	<h:outputLabel value="* Name " />
-				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberName}" > 
-	            	<f:selectItem itemLabel="" itemValue="1" />   
-	           		<f:selectItem itemLabel="" itemValue="2" />
-	                <f:selectItem itemLabel="" itemValue="3" />
-	             </p:selectOneMenu>
- 
- 		    	<h:outputLabel for="identification" value="* Identification Type " />
-				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.icPassportType}" > 
-	            	<f:selectItem itemLabel="" itemValue="1" />   
-	           		<f:selectItem itemLabel="" itemValue="2" />
-	                <f:selectItem itemLabel="" itemValue="3" />
-	             </p:selectOneMenu>
- 
-		    	<h:outputLabel value="Ministry: * " />
-				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.ministry}" > 
-	                <f:selectItem itemLabel="" itemValue="1" />   
-	            <f:selectItem itemLabel="" itemValue="2" />
-	             <f:selectItem itemLabel="" itemValue="3" />
-	             </p:selectOneMenu>
-	             
-                <h:outputLabel value="* Identification No.  " />
-			  <p:inputText value="#{CommitteBackingBean.managedBean.icPassport}" />
-			  
-			<h:outputLabel value="* Department " />
-				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.isGovtUser}" > 
-	           		<f:selectItem itemLabel="" itemValue="1" />   
-	            	<f:selectItem itemLabel="" itemValue="2" />
-	             	<f:selectItem itemLabel="" itemValue="3" />
-	             </p:selectOneMenu>			  	             
-                  
-                   <h:outputLabel value="* Designation " />
-					<p:inputText value="#{CommitteBackingBean.managedBean.designation}" readonly="true"/>
-            
-				
-					<h:outputLabel value="* Division " />
-					 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.isEvaluateMember}" > 
-	           		   <f:selectItem itemLabel="" itemValue="1" />   
-	           		   <f:selectItem itemLabel="Div 1" itemValue="2" />
-	           		   <f:selectItem itemLabel="Div 2" itemValue="3" />
-	            	 </p:selectOneMenu>
-	            	 
-	                <h:outputLabel value="* Grade " />
-					  <p:inputText value="#{CommitteBackingBean.managedBean.grade}" readonly="true" />
-				
-					<h:outputLabel value="* Role " />
-				 	  <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberRole}" > 
-	           			<f:selectItem itemLabel="" itemValue="1" />   
-	           			<f:selectItem itemLabel="role 1" itemValue="2" />
-	            	    <f:selectItem itemLabel="role 2" itemValue="3" />
-	            	  </p:selectOneMenu>
-	            	  
-					<h:outputLabel value="* Member Type" />
-				 	  <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberType}" > 
-	           			<f:selectItem itemLabel="" itemValue="1" />   
-	           			<f:selectItem itemLabel="" itemValue="2" />
-	             		<f:selectItem itemLabel="" itemValue="3" />
-	             	  </p:selectOneMenu>  	            	  				
-				    				    
-					<h:outputLabel value="* Access " />
-					 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.accessRight}" > 
-	           			<f:selectItem itemLabel="" itemValue="1" />   
-	            		<f:selectItem itemLabel="" itemValue="2" />
-	             		<f:selectItem itemLabel="" itemValue="3" />
-	           		 </p:selectOneMenu>      
-                
-	</p:panelGrid>
+							<ac:paginator for="existingsearch" />
 
-				<p:commandButton value="CANCEL"  style="float:right;" onclick="screen1.hide();"></p:commandButton>
-				<p:commandButton value="OK"  style="float:right;" onclick="screen1.hide();"></p:commandButton>      
-		
-		
+							<p:column selectionMode="multiple" style="width:2%" />
+
+							<p:column headerText="Name">
+								<h:outputText value="#{existcommitteeuser.userName}" />
+							</p:column>
+
+							<p:column headerText="Identification No">
+								<h:outputText value="#{existcommitteeuser.identificationNo}" />
+							</p:column>
+
+							<p:column headerText="Designation">
+								<h:outputText value="#{existcommitteeuser.designation}" />
+							</p:column>
+
+							<p:column headerText="Grade">
+								<h:outputText value="#{existcommitteeuser.grade}" />
+							</p:column>
+
+							<p:column headerText="P&amp;P">
+								<h:outputText value="#{existcommitteeuser.PMP}" />
+							</p:column>
+
+							<p:column headerText="Email">
+								<h:outputText value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
+							</p:column>
+
+							<p:column headerText="Role">
+								<h:outputText value="#{existcommitteeuser.userName}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</c:if>
+				<c:if
+					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'N'}">
+					<table>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.name']}" /></td>
+							<td colspan="3"><p:inputText
+									value="#{committeBackingBean.managedBean.committeMember.memberName}"
+									size="30" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /></td>
+							<td><p:selectOneMenu id="appaction"
+									value="#{committeBackingBean.managedBean.committeMember.idType}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+								</p:selectOneMenu></td>
+							<td style="width: 105px;"><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.idno']}" /></td>
+							<td><p:inputText id="idNos"
+									value="#{committeBackingBean.managedBean.committeMember.icPassport}"
+									size="30" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.grade']}" /></td>
+							<td><p:inputText
+									value="#{committeBackingBean.managedBean.committeMember.grade}"
+									size="30" /></td>
+							<td><p:outputLabel value="P&amp;P" /></td>
+							<td><p:selectOneRadio
+									value="#{committeBackingBean.managedBean.committeMember.pnp}">
+									<f:selectItem itemLabel="Yes" itemValue="true" />
+									<f:selectItem itemLabel="No" itemValue="false" />
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.designation']}" /></td>
+							<td><p:inputText
+									value="#{committeBackingBean.managedBean.committeMember.designation}"
+									size="30" /></td>
+							<td><p:outputLabel value="Email" /></td>
+							<td><p:inputText
+									value="#{committeBackingBean.managedBean.committeMember.icPassport}"
+									size="30" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committe.addscreen.role']}" /></td>
+							<td><p:selectOneMenu
+									value="#{committeBackingBean.managedBean.committeMember.memberRole}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.committeeRole)}" />
+								</p:selectOneMenu></td>
+							<td />
+							<td />
+						</tr>
+					</table>
+				</c:if>
+			</p:panel>
+
+			<p:commandButton value="Cancel" style="float:right;"
+				action="#{committeBackingBean.cancelCommitteAction}"
+				oncomplete="newspecificationcommittee.hide();"
+				update="specificationcommitteeid" icon="ui-icon-cancel" />
+			<p:commandButton value="Ok" style="float:right;"
+				onclick="newspecificationcommittee.hide();"
+				update="specificationcommitteeid"
+				process="@this, newCommitteeProfile" icon="ui-icon-check"
+				actionListener="#{committeBackingBean.okAction}" />
 
 		</p:panel>
-		
+
 	</p:dialog>
 </ui:composition>

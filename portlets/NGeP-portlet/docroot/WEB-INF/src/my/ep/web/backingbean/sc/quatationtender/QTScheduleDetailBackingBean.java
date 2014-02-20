@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.TreeNode;
 
 /**
  * @author SudheerKumar
@@ -67,6 +68,15 @@ public class QTScheduleDetailBackingBean extends
 		siteBriefing.setScQtZoneCriteria(new ScQtZoneCriteria());
 		this.getManagedBean().setQtSiteBriefing(siteBriefing);
 
+		
+		List<TreeNode> list = getManagedBean().getZoneTrees();
+		for (TreeNode treeNode : list) {
+			System.out.println("Tree Node : " + treeNode.getData());
+			if(treeNode.getChildCount() != 0){
+				treeNode.getChildren().clear();
+			}
+		}
+		this.getManagedBean().setTreeNodesList(list);
 	}
 
 	public void addBriefingDetails() {
@@ -140,4 +150,32 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	public void addToSiteVisitDtl() {
+		List<ScQtBriefing> list = getManagedBean().getSiteBriefings();
+		if (list == null) {
+			list = new ArrayList<ScQtBriefing>();
+		}
+		for (ScQtBriefing scQtBriefing : getManagedBean()
+				.getSelectedBriefingDetails()) {
+			list.add(scQtBriefing);
+		}
+		getManagedBean().setSiteBriefings(list);
+		System.out.println("Breifieng Dtl : "
+				+ getManagedBean().getSiteBriefings().size());
+	}
+
+	public void deleteContactPerson() {
+		List<ScQtContactPerson> contactPersonsList = getManagedBean()
+				.getScQtContactPersons();
+		List<ScQtContactPerson> selectcontactPersonsList = getManagedBean()
+				.getSelectedContactPersons();
+		if (contactPersonsList.size() == selectcontactPersonsList.size()) {
+			contactPersonsList.clear();
+		} else {
+			for (ScQtContactPerson scQtContactPerson : selectcontactPersonsList) {
+				contactPersonsList.remove(scQtContactPerson);
+			}
+		}
+	}
+	
 }

@@ -77,6 +77,10 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	
 	public QTSupplierQulCriteriaBackingBean(){
 		debugLogger("QTSupplierQulCriteriaBackingBean");
+
+		if (this.getManagedBean().getQtCriteria() == null) {
+			this.getManagedBean().setQtCriteria(new ScQtCriteria());
+		}
 	}
 			
 	private void debugLogger(Object message) {
@@ -589,11 +593,15 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			  return selecetedTreeNode;
 		  }
 		  
-	  
-	  
-	 
-	  
 		public void multiLocationChange(AjaxBehaviorEvent event) {
+			
+			Boolean multipleLoc = (Boolean) event.getComponent().getAttributes().get("value");
+			System.out.println("MultipleLoc Value : " + multipleLoc);
+			/*if(multipleLoc == false) {
+				List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+				getManagedBean().setZoneTrees(zoneTrees);
+			}*/
+			
 			//System.out.println("ADSFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 			/*System.out.println("PPPPPPPPPPPPPPPPPP" +event.getNewValue());
 			Boolean multipleLoc = (Boolean) event.getNewValue();

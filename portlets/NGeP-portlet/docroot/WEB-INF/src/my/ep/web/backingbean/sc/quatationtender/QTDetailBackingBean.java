@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +22,9 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -34,8 +37,12 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.specification.SpecificationReqDTO;
+import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -43,8 +50,10 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -56,6 +65,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -63,6 +73,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
+import my.ep.web.backingbean.sc.committee.CommitteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -72,6 +83,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.BPMOutComeTypes;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -93,6 +105,11 @@ public class QTDetailBackingBean extends
 
 	public QTDetailBackingBean() {
 		log.info("inside constructor");
+
+		if (this.getManagedBean().getScQtSpec() == null) {
+			this.getManagedBean().setScQtSpec(new ScQtSpec());
+			this.getManagedBean().getScQtSpec().setEvaluationType("1");
+		}
 	}
 
 	private void debugLogger(Object message) {
@@ -476,6 +493,23 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setGoList(dto.getGoList());
 
 		this.getManagedBean().setQt(scQt);
+		
+		System.out.println("Evaluation Type : " + getManagedBean().getScQtSpec().getEvaluationType());
+		
+		getManagedBean().getQt().setQtAmount(new BigDecimal(500000));
+		System.out.println("Estimated Price : " + getManagedBean().getQt().getQtAmount());
+		
+		if(getManagedBean().getQt().getQtAmount() != null) {
+			if(getManagedBean().getQt().getQtAmount().intValue()>50000 && getManagedBean().getQt().getQtAmount().intValue()<=500000) {
+				getManagedBean().setPublishingPeriod(7);
+				getManagedBean().getQt().setQtValidityPeriod(60);
+				
+			} else if (getManagedBean().getQt().getQtAmount().intValue() > 500000) {
+				getManagedBean().setPublishingPeriod(21);
+				getManagedBean().getQt().setQtValidityPeriod(90);
+			} 
+		}
+		
 		onChangeAction();
 		return QTConstants.MAINTANANCE_PAGE + "?faces-redirect=true";
 	}
@@ -746,6 +780,7 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO dto = new QuationTenderReqDTO();
 
 		dto.setQtdetail(getManagedBean().getQt());
+
 		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(dto);
 		List<ScQtApproval> requiredApproval = resDTO.getApproval();
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
@@ -769,7 +804,11 @@ public class QTDetailBackingBean extends
 		if (this.getManagedBean().getBbkApprovers() == null) {
 			this.getManagedBean().setBbkApprovers(null);
 		}
-
+		/*
+		 * System.out.println("qTDetailBB.managedBean.qt.qtType : " +
+		 * getManagedBean().getQt().getQtType()); System.out.println("Panel : "
+		 * + getManagedBean().getPanelItem());
+		 */
 	}
 
 	public void onTabChangeAction(TabChangeEvent event) {
@@ -788,8 +827,166 @@ public class QTDetailBackingBean extends
 			retrieveDocumentTabDtl();
 		} else if (QTConstants.QT_REMARKS_TAB.equalsIgnoreCase(tabTitle)) {
 			retrieveRemarkTabDtl();
+		} else if (QTConstants.QT_BUSINESS_OWNER.equalsIgnoreCase(tabTitle)) {
+			retrieveBusinessOwnerTabDtl();
+		} else if (QTConstants.QT_COMMITTEE_APPOINTMENT
+				.equalsIgnoreCase(tabTitle)) {
+			retrieveCommitteeAppointmentTabDtl();
+		} else if (QTConstants.QT_BRIEFING_SITEVISIT.equalsIgnoreCase(tabTitle)) {
+			retrieveBriefingSitevisitTabDtl();
 		}
 
+	}
+
+	/**
+	 * 
+	 */
+	private void retrieveBriefingSitevisitTabDtl() {
+		if (getManagedBean().getCountries() == null) {
+
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTScheduleDetails(reqDTO);
+
+				// Briefing
+				List<ScQtBriefing> briefingList = resDTO
+						.getBriefingResultBean().getResultList();
+				System.out.println("Briefing List : " + briefingList.size());
+				getManagedBean().setBriefings(briefingList);
+
+				// Site Visit
+				List<ScQtBriefing> siteVisitList = resDTO
+						.getSiteVisitResultBean().getResultList();
+				System.out.println("Site Visit list: " + siteVisitList.size());
+				getManagedBean().setSiteBriefings(siteVisitList);
+
+				// Contact Person
+				List<ScQtContactPerson> contactPersonList = resDTO
+						.getContactPersonResultBean().getResultList();
+				System.out.println("Contact Person list: "
+						+ contactPersonList.size());
+				getManagedBean().setScQtContactPersons(contactPersonList);
+
+				getManagedBean().setCountries(resDTO.getCountries());
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										ex.toString(),
+										"Sorry We are unable to process."));
+			} finally {
+				detailSO = null;
+			}
+
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	private void retrieveCommitteeAppointmentTabDtl() {
+		CommitteBackingBean backingBean = new CommitteBackingBean();
+
+		if (getManagedBean().getQt().getQtId() != null) {
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			CommitteResDTO resDTO = null;
+			ICommitteSO committeSO;
+			IQTSpecSO specSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO
+						.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+				List<ScCommitteeMember> committeeMembersList = resDTO
+						.getCommMemberResultBean().getResultList();
+				System.out.println("Committee Members List : "
+						+ committeeMembersList.size());
+				backingBean.getManagedBean().setSpecificationCommitteList(
+						committeeMembersList);
+				System.out.println("List : "
+						+ backingBean.getManagedBean()
+								.getSpecificationCommitteList().size());
+
+				backingBean.getManagedBean().setOpeningCommitteList(
+						committeeMembersList);
+				backingBean.getManagedBean().setEvaluationCommitteList(
+						committeeMembersList);
+				backingBean.getManagedBean().setTechEvaluationCommitteList(
+						committeeMembersList);
+				backingBean.getManagedBean().setFinEvaluationCommitteList(
+						committeeMembersList);
+
+				specSO = BusinessDelegate.getInstance().getServiceObject("ss",
+						IQTSpecSO.class);
+				SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+				SpecificationResDTO specResDTO = null;
+				specReqDTO.setQtId(getManagedBean().getQt().getQtId());
+				specResDTO = specSO.retrieveSpecDetails(specReqDTO);
+				if (specResDTO.getScQtSpec() != null) {
+					getManagedBean().setScQtSpec(specResDTO.getScQtSpec());
+					System.out.println("Evaluation Type : "
+							+ getManagedBean().getScQtSpec()
+									.getEvaluationType());
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										ex.toString(),
+										"Sorry We are unable to process."));
+			} finally {
+				committeSO = null;
+			}
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	private void retrieveBusinessOwnerTabDtl() {
+		if (getManagedBean().getQt().getQtId() != null) {
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			CommitteResDTO resDTO = null;
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO
+						.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+				List<ScCommitteeMember> committeeMembersList = resDTO
+						.getCommMemberResultBean().getResultList();
+				System.out.println("Committee Members List : "
+						+ committeeMembersList.size());
+				getManagedBean().setScCommitteeMemberList(committeeMembersList);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										ex.toString(),
+										"Sorry We are unable to process."));
+			} finally {
+				committeSO = null;
+			}
+		}
 	}
 
 	/**
@@ -827,7 +1024,6 @@ public class QTDetailBackingBean extends
 				detailSO = null;
 			}
 		}
-
 	}
 
 	public void preRenderView() {
@@ -1118,30 +1314,36 @@ public class QTDetailBackingBean extends
 
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);
-				
+
 				// Briefing
-				List<ScQtBriefing> briefingList = resDTO.getBriefingResultBean().getResultList();
+				List<ScQtBriefing> briefingList = resDTO
+						.getBriefingResultBean().getResultList();
 				System.out.println("Briefing List : " + briefingList.size());
 				getManagedBean().setBriefings(briefingList);
-				
+
 				// Site Visit
-				List<ScQtBriefing> siteVisitList = resDTO.getSiteVisitResultBean().getResultList();
+				List<ScQtBriefing> siteVisitList = resDTO
+						.getSiteVisitResultBean().getResultList();
 				System.out.println("Site Visit list: " + siteVisitList.size());
 				getManagedBean().setSiteBriefings(siteVisitList);
-				
+
 				// Contact Person
-				List<ScQtContactPerson> contactPersonList = resDTO.getContactPersonResultBean().getResultList();
-				System.out.println("Contact Person list: " + contactPersonList.size());
+				List<ScQtContactPerson> contactPersonList = resDTO
+						.getContactPersonResultBean().getResultList();
+				System.out.println("Contact Person list: "
+						+ contactPersonList.size());
 				getManagedBean().setScQtContactPersons(contactPersonList);
-				
+
 				getManagedBean().setCountries(resDTO.getCountries());
-				
+
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				FacesContext.getCurrentInstance()
 						.addMessage(
-								null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(), "Sorry We are unable to process."));
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										ex.toString(),
+										"Sorry We are unable to process."));
 			} finally {
 				detailSO = null;
 			}
@@ -1233,6 +1435,7 @@ public class QTDetailBackingBean extends
 			ScQtRemark remark = new ScQtRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			// remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(facesScopes.getUserSessionBean()
@@ -1306,5 +1509,11 @@ public class QTDetailBackingBean extends
 			return null;
 		}
 	}
+	
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+
 
 }

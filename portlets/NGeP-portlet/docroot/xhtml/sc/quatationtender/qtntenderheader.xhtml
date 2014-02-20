@@ -9,14 +9,17 @@
 		<div align="left">
 			<table>
 				<tr>
-					<td style="width: 100px"><h:outputLabel value="Qtn/Tender No." /></td>
+					<td style="width: 245px"><h:outputLabel value="Quotation/Tender No" /></td>
 					<td><p:inputText value="#{qTDetailBB.managedBean.qt.qtNo}"
-							disabled="true" size="30" /></td>
+							disabled="true" size="25" /></td>
+					<td style="width: 210px"><h:outputLabel value="Plan No" /></td>
+					<td><p:inputText value="#{qTDetailBB.managedBean.qt.ppPlan.planNo}"
+							disabled="true" size="25" /></td>
 					<td style="width: 210px"><h:outputLabel value="PTJ Name" /></td>
 					<td><c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 							<p:selectOneMenu
 								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
-								style="width: 220px;">
+								style="width: 170px;">
 								<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 								<f:selectItems
 									value="#{qTDetailBB.managedBean.userDivisionList}"
@@ -27,7 +30,7 @@
 						</c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 							<p:inputText
 								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}"
-								disabled="true" size="35" />
+								disabled="true" size="25" />
 						</c:if></td>
 					<td style="width: 198px"><h:outputLabel value="Status" /></td>
 					<td><p:inputText

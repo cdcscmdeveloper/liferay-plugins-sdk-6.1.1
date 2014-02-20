@@ -5,40 +5,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog id="dlgId" widgetVar="dlg1"
-			modal="true" dynamic="true" hideEffect="explode" resizable="false"
-			width="600px" height="450" styleClass="pop_up_top"
-			header="Briefing Details">
+	<p:dialog id="dlgId" widgetVar="dlg1" modal="true" dynamic="true"
+		hideEffect="explode" resizable="false" width="600px" height="300"
+		styleClass="pop_up_top" header="Briefing Details">
 		<p:panel toggleable="true" styleClass="qtBriefDetails">
 			<table style="width: 100%" border="1">
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.so.briefdesc']}" /></td>
-					<td><p:inputTextarea id="briefingdesc"
+					<td colspan="3"><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.briefingDesc}"
-							coulumns="30" style="margin-bottom:5px;"
+							style="margin-top:5px;" size="82"
 							disabled="#{!qTDetailBB.managedBean.editable}" /></td>
-					<td />
-					<td />
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.briefdate']}" /></td>
-					<td><p:calendar
+					<td colspan="3"><p:calendar
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.briefingDate}"
 							id="briefingDate"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
-					<td />
-					<td />
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /></td>
-					<td><p:inputText
+					<td colspan="3"><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.location}"
-							style="margin-top:5px;" /></td>
-					<td />
-					<td />
+							style="margin-top:5px;" size="30" /></td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.country']}" /></td>
 					<td><p:selectOneMenu
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmCountry.countryName}"
@@ -48,31 +41,36 @@
 						</p:selectOneMenu></td>
 					<td />
 					<td />
-				</tr>
+				</tr> -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address1}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address1}"
+							size="30" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmCity.cityName}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmCity.cityName}"
+							size="30" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address2}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address2}"
+							size="30" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmDistrict.districtName}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmDistrict.districtName}"
+							size="30" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address3}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address3}"
+							size="30" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.state']}" /></td>
 					<td><p:selectOneMenu
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmState.stateName}"
-							style="margin-bottom:5px;">
+							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="Selangor" itemValue="1" />
 							<f:selectItem itemLabel="Kaula lumpur" itemValue="2" />
 						</p:selectOneMenu></td>
@@ -80,25 +78,28 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address4}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.address4}"
+							size="30" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.postcode}" /></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.postcode}"
+							size="30" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" /></td>
-					<td><p:selectOneMenu
+					<td colspan="3"><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
+							size="30" /></td>
+					<!-- <td><p:selectOneMenu
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
 							style="margin-bottom:5px;">
 							<f:selectItem itemLabel="Coordinate Officer" itemValue="" />
 							<f:selectItem itemLabel="Officer 1" itemValue="Officer 1" />
 							<f:selectItem itemLabel="Officer 2" itemValue="Officer 2" />
 							<f:selectItem itemLabel="Officer 3" itemValue="Officer 3" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
+						</p:selectOneMenu></td> -->
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.attendance']}" /></td>
 					<td><p:selectOneRadio
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.attendanceType}">
@@ -120,7 +121,7 @@
 						</p:selectOneMenu></td>
 					<td />
 					<td />
-				</tr>
+				</tr> -->
 
 			</table>
 
@@ -129,7 +130,7 @@
 				oncomplete="dlg1.hide()">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-				styleClass="apply_button" update="briefdetaillist"
+				styleClass="apply_button" update="briefdetaillistid"
 				process="@(.qtBriefDetails)" style="float:right;"
 				oncomplete="dlg1.hide()"
 				action="#{qTScheduleDetailBackingBean.addToBrefieyingList}">

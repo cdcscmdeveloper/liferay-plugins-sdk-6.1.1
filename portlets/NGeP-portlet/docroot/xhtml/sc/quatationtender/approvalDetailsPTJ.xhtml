@@ -10,54 +10,99 @@
 		<h:panelGrid columns="4"
 			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
 
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}" />
 
 			<h:panelGroup id="sample2">
-				<p:selectOneMenu
-					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}" style="width: 100px;">
-					<f:selectItems value="#{qTDetailBB.managedBean.approvers}" var="approver"   itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
+				<p:selectOneMenu value="#{approvalCategory.scQtApproval.approverId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}"
+					style="width: 100px;">
+					<f:selectItems value="#{qTDetailBB.managedBean.approvers}"
+						var="approver" itemLabel="#{approver.userName}"
+						itemValue="#{approver.userId}" />
 				</p:selectOneMenu>
 
-				<p:inputText
-					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}"></p:inputText>
+				<p:inputText value="#{approvalCategory.scQtApproval.approverId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}" />
 			</h:panelGroup>
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}" />
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.approverActionDate}" disabled="#{!qTDetailBB.managedBean.editable}" 
-				showOn="button"></p:calendar>
+				value="#{approvalCategory.scQtApproval.approverActionDate}"
+				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
 
-
-
-
-
-
-
-
-
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}" />
 
 			<p:selectOneMenu
-				value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
-					<f:selectItem itemLabel="Select One" itemValue="" />
+				value="#{approvalCategory.scQtApproval.approverAction}"
+				style="width: 100px;">
+				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="APPROVER" itemValue="a" />
 				<f:selectItem itemLabel="REJECT" itemValue="r" />
 
 			</p:selectOneMenu>
 
-			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}" />
 
 			<p:inputTextarea rows="3" cols="50"
 				value="#{approvalCategory.scQtApproval.approverRemark}"
-				autoResize="false"></p:inputTextarea>
-
+				autoResize="false" />
 
 		</h:panelGrid>
+	</p:panel>
+
+	<p:panel header="Remark" style="width: 100%" toggleable="true">
+
+		<table style="width: 50%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" width="24%"><p:outputLabel
+						value="Remark" /></td>
+				<td class="TableFieldRight"><p:dataGrid id="remarklist"
+						value="#{qTDetailBB.managedBean.scQtRemarks}" var="remarkVar"
+						rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{qTRemarksBB.userImagePath(remarkVar.createdUsername)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Supporting Document" /></td>
+				<td><h:panelGroup>
+						<p:commandButton value="#{lbl['lbl.sc.qt.upload']}"
+							oncomplete="approvalUpload.show();return false;"
+							partialSubmit="true" process="@this" icon="ui-icon-upload"
+							rendered="#{qTDetailBB.managedBean.editable}">
+							<!-- <p:graphicImage library="ep/images/design" name="upload.png"
+								value="/resources/ep/images/design/upload.png" /> -->
+							<f:setPropertyActionListener
+								value="#{approvalCategory.scQtApproval}"
+								target="#{approvalBackingBean.managedBean.scQtApproval}" />
+							<f:setPropertyActionListener value="@(.testClass)"
+								target="#{approvalBackingBean.managedBean.uploadUpdateId}" />
+						</p:commandButton>
+
+						<p:outputPanel autoUpdate="true">
+							<h:outputText styleClass="testClass"
+								value="#{scQtApproval.scQtApprovalAttachment.fileName}"></h:outputText>
+						</p:outputPanel>
+
+					</h:panelGroup></td>
+			</tr>
+		</table>
 
 	</p:panel>
 

@@ -5,14 +5,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Workflow" toggleable="true" id="approvalWorkFlow" >
+	<p:panel header="Approval Workflow" toggleable="true"
+		id="approvalWorkFlow">
 		<table style="width: 100%">
 			<tr>
-				<td width="20%" valign="top"><h:outputLabel
+				<td width="20%" valign="top"><p:outputLabel
 						value="Approval Category" /></td>
 				<td width="80%"><h:panelGrid border="0" cellpadding="0"
-						cellspacing="0" columns="2" styleClass="noBorders tr,noBorders td"
-						columnClasses="columnWidth50">
+						cellspacing="0" columns="3" styleClass="noBorders tr,noBorders td"
+						columnClasses="columnWidth70">
 						<c:forEach var="approvalCategory"
 							items="#{approvalBackingBean.approvalCategories}">
 							<p:selectManyCheckbox value="#{approvalBackingBean.appCatList}"
@@ -24,7 +25,7 @@
 			</tr>
 		</table>
 
-		<p:spacer height="10"/>
+		<p:spacer height="10" />
 		<ui:include src="/xhtml/sc/quatationtender/approvalUpload.xhtml" />
 		<p:tabView var="approvalCategory" orientation="top"
 			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
@@ -32,20 +33,56 @@
 
 			<p:tab title="#{approvalCategory.titleName}">
 				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
+					<ui:include
+						src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
+
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Committee Approval'}">
+
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Publication Approval'}">
+
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
+				</ui:fragment>
+				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'PTJ Approval'}">
 
-					<ui:include src="/xhtml/sc/quatationtender/requestDetails.xhtml" />
+					<!-- <ui:include src="/xhtml/sc/quatationtender/requestDetails.xhtml" /> -->
 					<ui:include
 						src="/xhtml/sc/quatationtender/approvalDetailsPTJ.xhtml" />
 				</ui:fragment>
 				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Procurement Board Approval'}">
+
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Others Approval'}">
+
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsOthers.xhtml" />
+				</ui:fragment>
+				<!-- <ui:fragment
 					rendered="#{approvalCategory.titleName ne 'PTJ Approval'}">
 					<ui:include src="/xhtml/sc/quatationtender/requestDetails.xhtml" />
 					<ui:include
 						src="/xhtml/sc/quatationtender/verificationDetails.xhtml" />
 					<ui:include
 						src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
-				</ui:fragment>
+				</ui:fragment> -->
 
 			</p:tab>
 		</p:tabView>

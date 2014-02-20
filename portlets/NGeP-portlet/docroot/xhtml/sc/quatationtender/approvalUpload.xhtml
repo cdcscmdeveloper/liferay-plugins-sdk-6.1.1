@@ -8,8 +8,13 @@
 
 	<p:dialog widgetVar="approvalUpload" modal="true" hideEffect="explode"
 		resizable="false" width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+		header="#{approvalCategory.titleName}">
 		<p:ajax event="close" />
+		
+		<ui:fragment rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
+			<h:outputLabel value="Budget Approval"/>
+		</ui:fragment>
+		
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
 			mode="advanced"
