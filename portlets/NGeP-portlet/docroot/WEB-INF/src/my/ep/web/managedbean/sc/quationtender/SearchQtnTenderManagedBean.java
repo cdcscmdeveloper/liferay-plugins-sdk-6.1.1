@@ -11,7 +11,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.web.bean.sc.quatationtender.CategoryCode;
@@ -105,8 +104,9 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private String approverstatus;
 	private String verifierName;
 	private String verifierStatus;
-	//private ScAttachment scAttachment = new ScAttachment();
-	private List<ScQtApproval>	sampleList=new ArrayList<ScQtApproval>();
+	// private ScAttachment scAttachment = new ScAttachment();
+	private List<ScQtApproval> sampleList = new ArrayList<ScQtApproval>();
+
 	/*
 	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
 	 * 
@@ -309,45 +309,48 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		// TODO Tabview start
 
 		ScQtApproval scQtApproval = new ScQtApproval();
-		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL.value());
+		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL
+				.value());
 		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("Budget Approval", scQtApproval));
-		
+
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BPK_APPROVAL.value());
 		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("BPK Approval", scQtApproval));
-		
+
 		scQtApproval = new ScQtApproval();
-		scQtApproval.setApprovalCategory(ApprovalCategory.MITI_APPROVAL.value());
+		scQtApproval.setApprovalCategory(ApprovalCategory.PTJ_APPROVAL.value());
 		scQtApproval.setVerifyOption("1");
-		//tabList.add(new TabBean("MITI Approval", scQtApproval));
-		
+		// tabList.add(new TabBean("MITI Approval", scQtApproval));
+
 		scQtApproval = new ScQtApproval();
-		scQtApproval.setApprovalCategory(ApprovalCategory.ICT_APPROVAL.value());
+		scQtApproval.setApprovalCategory(ApprovalCategory.PUBLICATION_APPROVAL
+				.value());
 		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("ICT Approval", scQtApproval));
-		
+
 		scQtApproval = new ScQtApproval();
-		scQtApproval.setApprovalCategory(ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value());
+		scQtApproval
+				.setApprovalCategory(ApprovalCategory.PROCUREMENT_BOARD_APPROVAL
+						.value());
 		scQtApproval.setVerifyOption("1");
-		//tabList.add(new TabBean("Procurement Board Approval", scQtApproval));
-		
+		// tabList.add(new TabBean("Procurement Board Approval", scQtApproval));
+
 		scQtApproval = new ScQtApproval();
-		scQtApproval.setApprovalCategory(ApprovalCategory.DIVISION_APPROVAL.value());
+		scQtApproval.setApprovalCategory(ApprovalCategory.COMMITTEE_APPROVAL
+				.value());
 		scQtApproval.setVerifyOption("1");
-		tabList.add(new TabBean("Division Approval", scQtApproval));
+		tabList.add(new TabBean(" Committee Approval", scQtApproval));
 		// Tabview end
-		
+
 	}
 
 	private List<String> populateSucCate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	private List<String> populateSubCodes() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1095,21 +1098,19 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		this.verifierStatus = verifierStatus;
 	}
 
-/*	*//**
+	/*	*//**
 	 * @return the scAttachment
-	 *//*
-	public ScAttachment getScAttachment() {
-		return scAttachment;
-	}
-
-	*//**
+	 */
+	/*
+	 * public ScAttachment getScAttachment() { return scAttachment; }
+	 *//**
 	 * @param scAttachment
 	 *            the scAttachment to set
-	 *//*
-	public void setScAttachment(ScAttachment scAttachment) {
-		this.scAttachment = scAttachment;
-	}
-*/
+	 */
+	/*
+	 * public void setScAttachment(ScAttachment scAttachment) {
+	 * this.scAttachment = scAttachment; }
+	 */
 	/**
 	 * @return the tabList
 	 */
@@ -1133,7 +1134,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleList the sampleList to set
+	 * @param sampleList
+	 *            the sampleList to set
 	 */
 	public void setSampleList(List<ScQtApproval> sampleList) {
 		this.sampleList = sampleList;

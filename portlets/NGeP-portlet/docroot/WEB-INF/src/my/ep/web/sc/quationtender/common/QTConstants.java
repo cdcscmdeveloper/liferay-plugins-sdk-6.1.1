@@ -22,11 +22,14 @@ public interface QTConstants {
 	
 	public static final String QT_DETAILS_TAB="Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB="Supplier Qualification Criteria";
-	public static final String QT_APPROVAL_TAB="Approval Workflow";
+	public static final String QT_APPROVAL_TAB="Approval";
 	public static final String QT_SCHDULE_TAB="Schedule";
 	public static final String QT_DEDUCTION_TAB="Deduction Payment";
 	public static final String QT_DOCUMENTS_TAB="Documents";
 	public static final String QT_REMARKS_TAB="Remarks";
+	public static final String QT_BUSINESS_OWNER="Business Owner";
+	public static final String QT_COMMITTEE_APPOINTMENT="Committee Appointment";
+	public static final String QT_BRIEFING_SITEVISIT="Briefing/Site Visit & Contact Information";
 	
 	// Bsv Attendance Constants
 	public static final String BSV_MOCULE_CODE = "SC";

@@ -10,7 +10,7 @@ import my.ep.type.IEnumType;
  *
  */
 public enum SelectionType implements IEnumType {
-	PROFILE("P"),
+	//PROFILE("P"),
 	EXISITING("E"),
 	New("N");
 

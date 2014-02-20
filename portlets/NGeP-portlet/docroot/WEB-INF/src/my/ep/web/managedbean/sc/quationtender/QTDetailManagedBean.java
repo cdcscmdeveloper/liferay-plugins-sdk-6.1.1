@@ -1,10 +1,12 @@
 package my.ep.web.managedbean.sc.quationtender;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -23,11 +25,13 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -35,6 +39,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -123,7 +128,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<ScQt> selectedCloneTenderList;
     private List<CloneAll> selectedCloneAllList;
     private List<ScQtDeduction> selectedScQtDeductions;
-    private ScQtDeduction selectedScQtDeduction;
+    private List<ScQtDeduction> selectedScQtDeduction;
     private List<ScQtDeductionClause> selectedDeductionClauses;
     
 	private String qtNumber;
@@ -212,6 +217,40 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean percentageField = true;
 	private boolean amountField = true;
 	
+	//Business Owner
+	private List<ScCommitteeMember> scCommitteeMemberList;
+	private List<ScCommitteeMember> selectScCommitteMember;
+	private ScCommitteeMember committeMember;
+	private List<SelectItem> selections;
+	private List<PmUser> externalUsers;
+	private List<PmUser> selectedPmUser;
+	private List<ScQtCommittee> cloneSearchCommittes;
+	private ScQtCommittee selectedCloneCommittee;
+	private List<ScCommitteeMember> cloneCommitteMemebers;
+	private List<ScCommitteeMember> selectedCommitteMemebers;
+	private ScQtCommittee selectedScQtCommittee;
+	
+	//Search properties
+	private String title = null;
+	private String qtNo = null;
+	private String procurementMode;
+	private Date createdDtFrom;
+	private Date createdDtTo;
+	private String status;
+	
+	private String name = null;
+	private String identificationNo = null;
+	private String identificationType;
+	
+	private String panelItem = "Yes";
+	private int publishingPeriod;
+	
+	private ScQtSpec scQtSpec;
+	
+	private List<SelectItem> comitteeUsers;
+	
+	private List<TreeNode> treeNodesList;
+	
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -231,9 +270,408 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		for(CloneAll cloneValue:enumValues){
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(), node0);
 		}
-
-
 	}
+
+	/**
+	 * @return the treeNodesList
+	 */
+	public List<TreeNode> getTreeNodesList() {
+		return treeNodesList;
+	}
+
+
+	/**
+	 * @param treeNodesList the treeNodesList to set
+	 */
+	public void setTreeNodesList(List<TreeNode> treeNodesList) {
+		this.treeNodesList = treeNodesList;
+	}
+
+
+	/**
+	 * @return the comitteeUsers
+	 */
+	public List<SelectItem> getComitteeUsers() {
+		return comitteeUsers;
+	}
+
+
+	/**
+	 * @param comitteeUsers the comitteeUsers to set
+	 */
+	public void setComitteeUsers(List<SelectItem> comitteeUsers) {
+		this.comitteeUsers = comitteeUsers;
+	}
+
+
+	/**
+	 * @return the publishingPeriod
+	 */
+	public int getPublishingPeriod() {
+		return publishingPeriod;
+	}
+
+
+	/**
+	 * @param publishingPeriod the publishingPeriod to set
+	 */
+	public void setPublishingPeriod(int publishingPeriod) {
+		this.publishingPeriod = publishingPeriod;
+	}
+
+
+	/**
+	 * @return the scQtSpec
+	 */
+	public ScQtSpec getScQtSpec() {
+		return scQtSpec;
+	}
+
+
+	/**
+	 * @param scQtSpec the scQtSpec to set
+	 */
+	public void setScQtSpec(ScQtSpec scQtSpec) {
+		this.scQtSpec = scQtSpec;
+	}
+
+
+	/**
+	 * @return the selectedPmUser
+	 */
+	public List<PmUser> getSelectedPmUser() {
+		return selectedPmUser;
+	}
+
+
+	/**
+	 * @param selectedPmUser the selectedPmUser to set
+	 */
+	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
+		this.selectedPmUser = selectedPmUser;
+	}
+
+
+	/**
+	 * @return the panelItem
+	 */
+	public String getPanelItem() {
+		return panelItem;
+	}
+
+	/**
+	 * @param panelItem the panelItem to set
+	 */
+	public void setPanelItem(String panelItem) {
+		this.panelItem = panelItem;
+	}
+
+	/**
+	 * @return the selectedCloneCommittee
+	 */
+	public ScQtCommittee getSelectedCloneCommittee() {
+		return selectedCloneCommittee;
+	}
+
+
+	/**
+	 * @param selectedCloneCommittee the selectedCloneCommittee to set
+	 */
+	public void setSelectedCloneCommittee(ScQtCommittee selectedCloneCommittee) {
+		this.selectedCloneCommittee = selectedCloneCommittee;
+	}
+
+	/**
+	 * @return the selectScCommitteMember
+	 */
+	public List<ScCommitteeMember> getSelectScCommitteMember() {
+		return selectScCommitteMember;
+	}
+
+
+	/**
+	 * @param selectScCommitteMember the selectScCommitteMember to set
+	 */
+	public void setSelectScCommitteMember(
+			List<ScCommitteeMember> selectScCommitteMember) {
+		this.selectScCommitteMember = selectScCommitteMember;
+	}
+
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	/**
+	 * @return the identificationNo
+	 */
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+
+
+	/**
+	 * @param identificationNo the identificationNo to set
+	 */
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
+	}
+
+
+	/**
+	 * @return the identificationType
+	 */
+	public String getIdentificationType() {
+		return identificationType;
+	}
+
+
+	/**
+	 * @param identificationType the identificationType to set
+	 */
+	public void setIdentificationType(String identificationType) {
+		this.identificationType = identificationType;
+	}
+
+
+	/**
+	 * @return the cloneCommitteMemebers
+	 */
+	public List<ScCommitteeMember> getCloneCommitteMemebers() {
+		return cloneCommitteMemebers;
+	}
+
+
+	/**
+	 * @param cloneCommitteMemebers the cloneCommitteMemebers to set
+	 */
+	public void setCloneCommitteMemebers(
+			List<ScCommitteeMember> cloneCommitteMemebers) {
+		this.cloneCommitteMemebers = cloneCommitteMemebers;
+	}
+
+
+	/**
+	 * @return the selectedCommitteMemebers
+	 */
+	public List<ScCommitteeMember> getSelectedCommitteMemebers() {
+		return selectedCommitteMemebers;
+	}
+
+
+	/**
+	 * @param selectedCommitteMemebers the selectedCommitteMemebers to set
+	 */
+	public void setSelectedCommitteMemebers(
+			List<ScCommitteeMember> selectedCommitteMemebers) {
+		this.selectedCommitteMemebers = selectedCommitteMemebers;
+	}
+
+
+	/**
+	 * @return the selectedScQtCommittee
+	 */
+	public ScQtCommittee getSelectedScQtCommittee() {
+		return selectedScQtCommittee;
+	}
+
+
+	/**
+	 * @param selectedScQtCommittee the selectedScQtCommittee to set
+	 */
+	public void setSelectedScQtCommittee(ScQtCommittee selectedScQtCommittee) {
+		this.selectedScQtCommittee = selectedScQtCommittee;
+	}
+
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+	/**
+	 * @return the qtNo
+	 */
+	public String getQtNo() {
+		return qtNo;
+	}
+
+
+	/**
+	 * @param qtNo the qtNo to set
+	 */
+	public void setQtNo(String qtNo) {
+		this.qtNo = qtNo;
+	}
+
+
+	/**
+	 * @return the procurementMode
+	 */
+	public String getProcurementMode() {
+		return procurementMode;
+	}
+
+
+	/**
+	 * @param procurementMode the procurementMode to set
+	 */
+	public void setProcurementMode(String procurementMode) {
+		this.procurementMode = procurementMode;
+	}
+
+
+	/**
+	 * @return the createdDtFrom
+	 */
+	public Date getCreatedDtFrom() {
+		return createdDtFrom;
+	}
+
+
+	/**
+	 * @param createdDtFrom the createdDtFrom to set
+	 */
+	public void setCreatedDtFrom(Date createdDtFrom) {
+		this.createdDtFrom = createdDtFrom;
+	}
+
+
+	/**
+	 * @return the createdDtTo
+	 */
+	public Date getCreatedDtTo() {
+		return createdDtTo;
+	}
+
+
+	/**
+	 * @param createdDtTo the createdDtTo to set
+	 */
+	public void setCreatedDtTo(Date createdDtTo) {
+		this.createdDtTo = createdDtTo;
+	}
+
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	/**
+	 * @return the cloneSearchCommittes
+	 */
+	public List<ScQtCommittee> getCloneSearchCommittes() {
+		return cloneSearchCommittes;
+	}
+
+
+	/**
+	 * @param cloneSearchCommittes the cloneSearchCommittes to set
+	 */
+	public void setCloneSearchCommittes(List<ScQtCommittee> cloneSearchCommittes) {
+		this.cloneSearchCommittes = cloneSearchCommittes;
+	}
+
+
+	/**
+	 * @return the externalUsers
+	 */
+	public List<PmUser> getExternalUsers() {
+		return externalUsers;
+	}
+
+
+	/**
+	 * @param externalUsers the externalUsers to set
+	 */
+	public void setExternalUsers(List<PmUser> externalUsers) {
+		this.externalUsers = externalUsers;
+	}
+
+
+	/**
+	 * @return the selections
+	 */
+	public List<SelectItem> getSelections() {
+		return selections;
+	}
+
+
+	/**
+	 * @param selections the selections to set
+	 */
+	public void setSelections(List<SelectItem> selections) {
+		this.selections = selections;
+	}
+
+
+	/**
+	 * @return the committeMember
+	 */
+	public ScCommitteeMember getCommitteMember() {
+		return committeMember;
+	}
+
+
+	/**
+	 * @param committeMember the committeMember to set
+	 */
+	public void setCommitteMember(ScCommitteeMember committeMember) {
+		this.committeMember = committeMember;
+	}
+
+
+	/**
+	 * @return the scCommitteeMemberList
+	 */
+	public List<ScCommitteeMember> getScCommitteeMemberList() {
+		return scCommitteeMemberList;
+	}
+
+
+	/**
+	 * @param scCommitteeMemberList the scCommitteeMemberList to set
+	 */
+	public void setScCommitteeMemberList(
+			List<ScCommitteeMember> scCommitteeMemberList) {
+		this.scCommitteeMemberList = scCommitteeMemberList;
+	}
+
 
 	/**
 	 * @return the zoneTreeAddrList
@@ -1541,13 +1979,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtCategoryList = qtCategoryList;
 	}
 
-
-	public ScQtDeduction getSelectedScQtDeduction() {
+	/**
+	 * @return the selectedScQtDeduction
+	 */
+	public List<ScQtDeduction> getSelectedScQtDeduction() {
 		return selectedScQtDeduction;
 	}
 
 
-	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
+	/**
+	 * @param selectedScQtDeduction the selectedScQtDeduction to set
+	 */
+	public void setSelectedScQtDeduction(List<ScQtDeduction> selectedScQtDeduction) {
 		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
 
