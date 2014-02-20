@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="Location Selection">
+		<p:tree value="#{noticeBoardBackingBean.managedBean.minstryRootNode}"
+			var="orgProfile" selectionMode="single"
+			selection="#{noticeBoardBackingBean.managedBean.ministrySelectedNode}"
+			style="border:0;" dynamic="true">
+
+
+			<p:treeNode>
+				<h:outputText value="#{orgProfile.orgCode} - #{orgProfile.orgName}" />
+
+			</p:treeNode>
+
+
+
+		</p:tree>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}">
+
+		<p:dataTable 
+				var="scqt" styleClass="test" rows="20">
+				
+
+
+			<p:column headerText="#{lbl['lbl.qt.nb.name']}">
+				<h:outputText value="Test" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.telNo']}" style="width:100px;">
+				<h:outputText value="011-525-45689" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.qt.nb.faxNo']}" style="width:120px;">
+				<h:outputText value="123-234-4567" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.email']}" style="width:120px;">
+				<h:outputText value="Test@123.com" />
+			</p:column>
+
+
+		</p:dataTable>
+
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
+
+		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
+		<p:dataTable 
+				var="scqt"  resizableColumns="true" rowIndexVar="index">
+
+
+			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+				<h:outputText value="52220" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+				style="width:100px;">
+				<h:outputText value="test" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.qt.nb.location']}"
+				style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+				style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+
+		</p:dataTable>
+
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
+		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
+		<p:dataTable 
+				var="scqt"  resizableColumns="true" rowIndexVar="index">
+
+
+			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+				<h:outputText value="52220" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+				style="width:100px;">
+				<h:outputText value="test" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.qt.nb.location']}"
+				style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+				style="width:120px;">
+				<h:outputText value="yes" />
+			</p:column>
+
+		</p:dataTable>
+
+	</p:panel>
+
+
+
+</ui:composition>

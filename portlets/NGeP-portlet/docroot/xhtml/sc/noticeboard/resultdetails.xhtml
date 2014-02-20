@@ -5,40 +5,60 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<p:panel >
+	<p:panel>
 		<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-				width="100%" >
-			<p:dataTable id="noticeboardresults" value="#{noticeBoardBackingBean.managedBean.scQtSearchlist}" var="scqt" styleClass="test" rows="20">
-	<ac:paginator for="noticeboardresults" ></ac:paginator>
+			width="100%">
+			<p:dataTable id="noticeboardresults"
+				value="#{noticeBoardBackingBean.managedBean.scQtSearchlist}"
+				var="scqt" styleClass="test" rows="20">
+				<ac:paginator for="noticeboardresults"></ac:paginator>
 				<p:column headerText="Title" style="width:100px;">
-					<p:commandLink 
-						style="margin-right:20px;" action="#{noticeBoardBackingBean.qtnTenderDetails(scqt)}">
+					<p:commandLink style="margin-right:20px;"
+						action="#{noticeBoardBackingBean.qtnTenderDetails(scqt)}">
 						<h:outputText value="#{scqt.qtTitle}" />
 					</p:commandLink>
 
 
 				</p:column>
-
-				<p:column headerText="Publish Date">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}">
+					<h:outputText value="" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}">
 					<h:outputText value="#{scqt.publishDate}" />
 				</p:column>
-				<p:column headerText="Closing Date" style="width:100px;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
+					style="width:100px;">
 					<h:outputText value="#{scqt.closingDate}" />
 				</p:column>
 
-				<p:column headerText="Remaining" style="width:120px;">
-					<h:outputText value="test" />
+				<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
+					>
+					<h:outputText value="10" />
 				</p:column>
 
-				<p:column headerText="Briefing/Sitevisit" style="width:120px;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
+					>
 					<h:outputText value="#{scqt.bsvRequired}" />
+
+					<p:commandLink
+						action="#{noticeBoardBackingBean.gotoSupplierRegistration}">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							value="/resources/ep/images/design/register.png" />
+					</p:commandLink>
+
 				</p:column>
 
-				<p:column headerText="Action" style="width:120px;" >
-					<h:outputText value="test" />
+				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+					>
+					<h:outputText value="supplier Qualification" />
+					<p:commandLink
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria}">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							value="/resources/ep/images/design/register.png" />
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
-			</h:panelGrid>
+		</h:panelGrid>
 	</p:panel>
-	</ui:composition>		
+</ui:composition>

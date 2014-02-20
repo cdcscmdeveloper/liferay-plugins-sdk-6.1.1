@@ -7,258 +7,167 @@
 
 
 
-	<p:panel header="SEARCH CRITERIA" style="width:350px;">
-<div style="height:700px; overflow:scroll;">
-		<p:panel header="Title" toggleable="true">
+	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}"
+		style="width:350px;">
+		
+				
+		<div style="height: 600px; overflow: auto;">
 
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-				width="100%">
-				<p:inputText value="#{noticeBoardBackingBean.managedBean.title}"
-					size="46"></p:inputText>
-			</h:panelGrid>
-		</p:panel>
-		<p:panel header="Publish Date" id="publishdtl" toggleable="true">
+			<p:panel header="#{lbl['lbl.qt.nb.title']}" toggleable="true">
 
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-				width="100%" columnClasses="columnHeight20">
-				<p:column>
-					<p:commandLink update="publishdtl"
-						actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday}">
-						<h:outputText value="Today"
-							style="padding-right:15px;padding-bottom:10px;" />
-					</p:commandLink>
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%">
+					<p:inputText value="#{noticeBoardBackingBean.managedBean.title}"
+						size="46"></p:inputText>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.notice.board.pdate']}" id="publishdtl"
+				toggleable="true">
 
-					<p:commandLink update="publishdtl"
-						actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday and noticeBoardBackingBean.managedBean.pubToday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="columnHeight20">
+					<p:column>
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;padding-bottom:10px;" />
+						</p:commandLink>
 
-				<p:column>
-					<p:commandLink update="publishdtl"
-						actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
-						<h:outputText value="Yesterday"
-							style="padding-right:15px;padding-bottom:10px;" />
-					</p:commandLink>
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday and noticeBoardBackingBean.managedBean.pubToday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
 
-					<p:commandLink update="publishdtl"
-						actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.pubToday and noticeBoardBackingBean.managedBean.pubYesterday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
-			</h:panelGrid>
-			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
-				width="100%"
-				rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
+					<p:column>
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;" />
+						</p:commandLink>
 
-				<h:outputText value="Pass" style="padding-right:5px;">
-				</h:outputText>
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.pubToday and noticeBoardBackingBean.managedBean.pubYesterday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
+				</h:panelGrid>
 
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+					width="100%"
+					rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
 
-				<p:column>
-					<p:inputText size="5"></p:inputText>
-					<h:outputText value="days" style="padding-left:5px;"></h:outputText>
-
-				</p:column>
-
-				<h:outputText value="From/To Date"></h:outputText>
-				<p:column>
-					<p:calendar showOn="button"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
-
-					<p:calendar showOn="button"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
-				</p:column>
-			</h:panelGrid>
+					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
+						style="padding-right:5px;">
+					</h:outputText>
 
 
-		</p:panel>
+					<p:column>
+						<p:inputText size="5"></p:inputText>
+						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+							style="padding-left:5px;"></h:outputText>
 
-		<p:panel header="Briefing Date" id="briefingdtls" toggleable="true">
+					</p:column>
 
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-				width="100%" columnClasses="columnHeight20">
-				<p:column>
-					<p:commandLink update="briefingdtls"
-						actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
-						<h:outputText value="Today"
-							style="padding-right:15px;padding-bottom:10px;" />
-					</p:commandLink>
+					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}"></h:outputText>
+					<p:column>
+						<p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
 
-					<p:commandLink update="briefingdtls"
-						actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday and noticeBoardBackingBean.managedBean.breifToday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
-
-				<p:column>
-					<p:commandLink update="briefingdtls"
-						actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.breifToday}">
-						<h:outputText value="Yesterday"
-							style="padding-right:15px;padding-bottom:10px;" />
-					</p:commandLink>
-
-					<p:commandLink update="briefingdtls"
-						actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.breifToday and noticeBoardBackingBean.managedBean.breifYesterday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
-			</h:panelGrid>
-
-			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
-				width="100%"
-				rendered="#{!noticeBoardBackingBean.managedBean.breifShow}">
-				<h:outputText value="Pass" style="padding-right:5px;">
-				</h:outputText>
-				<p:column>
-					<p:inputText size="5"></p:inputText>
-					<h:outputText value="days" style="padding-left:5px;"></h:outputText>
-				</p:column>
-			</h:panelGrid>
-
-
-		</p:panel>
-
-		<p:panel header="SiteVisit Date" id="sitevisitdtls" toggleable="true">
-
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-				width="100%" columnClasses="columnHeight20">
-				<p:column>
-					<p:commandLink update="sitevisitdtls"
-						actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.svYesterday}">
-						<h:outputText value="Today"
-							style="padding-right:15px;margin-bottom:20px;" />
-					</p:commandLink>
-
-					<p:commandLink update="sitevisitdtls"
-						actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.svYesterday and noticeBoardBackingBean.managedBean.svToday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
-
-				<p:column>
-					<p:commandLink update="sitevisitdtls"
-						actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.svToday}">
-						<h:outputText value="Yesterday"
-							style="padding-right:15px;padding-bottom:10px;" />
-					</p:commandLink>
-
-					<p:commandLink update="sitevisitdtls"
-						actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','null')}"
-						rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}">
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
-				</p:column>
-			</h:panelGrid>
-
-			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
-				width="100%"
-				rendered="#{!noticeBoardBackingBean.managedBean.svShow}">
-				<h:outputText value="Pass" style="padding-right:5px;">
-				</h:outputText>
-				<p:column>
-					<p:inputText size="5"></p:inputText>
-					<h:outputText value="days" style="padding-left:5px;"></h:outputText>
-				</p:column>
-			</h:panelGrid>
-
-
-
-		</p:panel>
-
-		<p:panel header="Closing Date" toggleable="true">
-
-			<h:panelGrid columns="2" width="100%">
-				<h:outputText value="From/To Date"></h:outputText>
-				<p:column>
-					<p:calendar showOn="button"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
-					<p:calendar showOn="button"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
-				</p:column>
-			</h:panelGrid>
-
-
-		</p:panel>
-		<p:panel header="Ministry / Jabatan / PTJ" toggleable="true"
-			collapsed="true">
-
-			<p:ajax event="toggle"
-				listener="#{noticeBoardBackingBean.retriveOrgProfilesForMinistryLevel}"
-				update="ministry"></p:ajax>
-			<h:panelGrid  columns="1" border="0" cellpadding="0" cellspacing="0">
-			<h:panelGroup id="ministryrst" styleClass="ministryRstbtn">
-				<p:commandButton  value="Reset" style="float:right;width:25px" rendered="#{noticeBoardBackingBean.managedBean.mistrySearchBean ne null}"
-					icon="ui-icon-reset"  actionListener="#{noticeBoardBackingBean.clearTreeNode('ministry')}" update="ministry,@(.ministryRstbtn)">
-					</p:commandButton>
+						<p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+					</p:column>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.bsv.attendance.location']}"
+				toggleable="true" collapsed="true">
+				<p:ajax event="toggle"
+					listener="#{noticeBoardBackingBean.retriveLocationByStates}"
+					update="locations"></p:ajax>
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
+					<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
+						<p:commandButton value="#{lbl['lbl.reset']}"
+							style="float:right;width:25px"
+							rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+							icon="ui-icon-reset" update="locations,@(.resetBtnCLS)"
+							actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
+						</p:commandButton>
 					</h:panelGroup>
-					<p:tree id="ministry"
-						value="#{noticeBoardBackingBean.managedBean.minstryRootNode}"
-						var="orgProfile" selectionMode="single"
-						selection="#{noticeBoardBackingBean.managedBean.ministrySelectedNode}"
-						style="size:100%;border:0;" dynamic="true" cache="true">
+					<p:tree id="locations"
+						value="#{noticeBoardBackingBean.managedBean.locationRootNode}"
+						var="location" style="border:0;" selectionMode="single"
+						dynamic="true"
+						selection="#{noticeBoardBackingBean.managedBean.locationSelectedNode}">
 
-
-						<p:ajax event="expand" update="ministry"
-							listener="#{noticeBoardBackingBean.onOrgProfileNodeExpand}" />
-						<p:ajax event="collapse" update="ministry"
+						<p:ajax event="expand" update="locations"
+							listener="#{noticeBoardBackingBean.onNodeExpand}" />
+						<p:ajax event="collapse" update="locations"
 							listener="#{noticeBoardBackingBean.onNodeCollapse}" />
-						<p:ajax event="select" update="ministry,@(.ministryRstbtn)"
-							listener="#{noticeBoardBackingBean.onNodeSelect}"></p:ajax>
-						<p:ajax event="unselect" update="ministry"
+						<p:ajax event="select" update="locations,@(.resetBtnCLS)"
+							listener="#{noticeBoardBackingBean.onNodeSelect}" />
+						<p:ajax event="unselect" update="locations"
 							listener="#{noticeBoardBackingBean.onNodeUnselect}" />
-
-						<p:treeNode id="ministry">
+						<p:treeNode type="state">
 							<h:outputText
-								value="#{orgProfile.orgCode} - #{orgProfile.orgName}" />
-							<!-- <p:commandLink
-						rendered="#{noticeBoardBackingBean.managedBean.mistrySearchBean ne null}"
+								value="#{location.stateCode} - #{location.stateName}" />
+							<!--  <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+						style="padding-left:15px;" >
+						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="test" />
+						<p:graphicImage library="ep/images/design" name="reset.png"
+							value="/resources/ep/images/design/reset.png" />
+					</p:commandLink>  -->
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.districtName}" />
+							<!--  <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 						style="padding-left:15px;">
+						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
 						<p:graphicImage library="ep/images/design" name="reset.png"
 							value="/resources/ep/images/design/reset.png" />
 					</p:commandLink> -->
 						</p:treeNode>
-
-
-
+						<p:treeNode type="city">
+							<h:outputText value="#{location.cityCode} - #{location.cityName}" />
+							<!-- 	 <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+						style="padding-left:15px;">
+						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
+						<p:graphicImage library="ep/images/design" name="reset.png"
+							value="/resources/ep/images/design/reset.png" />
+					</p:commandLink>  -->
+						</p:treeNode>
 					</p:tree>
-			</h:panelGrid>
+				</h:panelGrid>
+			</p:panel>
 
-
-		</p:panel>
-
-		<p:panel header="Category Code" toggleable="true" collapsed="true">
-			<p:ajax event="toggle"
-				listener="#{noticeBoardBackingBean.retriveCategoriesCode1}"
-				update="categoryCode"></p:ajax>
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
-			<h:panelGroup id="categoryRst" styleClass="categoryRstBtn">
-				<p:commandButton value="Reset" style="float:right;width:25px" rendered="#{noticeBoardBackingBean.managedBean.categorySearchBean ne null}"
-					icon="ui-icon-reset"  actionListener="#{noticeBoardBackingBean.clearTreeNode('category')}" update="categoryCode,@(.categoryRstBtn)">
-					</p:commandButton>
+			<p:panel header="#{lbl['lbl.qt.nb.categoryCode']}" toggleable="true"
+				collapsed="true">
+				<p:ajax event="toggle"
+					listener="#{noticeBoardBackingBean.retriveCategoriesCode1}"
+					update="categoryCode"></p:ajax>
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
+					<h:panelGroup id="categoryRst" styleClass="categoryRstBtn">
+						<p:commandButton value="#{lbl['lbl.reset']}"
+							style="float:right;width:25px"
+							rendered="#{noticeBoardBackingBean.managedBean.categorySearchBean ne null}"
+							icon="ui-icon-reset"
+							actionListener="#{noticeBoardBackingBean.clearTreeNode('category')}"
+							update="categoryCode,@(.categoryRstBtn)">
+						</p:commandButton>
 					</h:panelGroup>
 					<p:tree
 						value="#{noticeBoardBackingBean.managedBean.categoryRootNode}"
 						var="categoryCode" selectionMode="single" id="categoryCode"
 						selection="#{noticeBoardBackingBean.managedBean.categorySelectedNode}"
-						style="size:100%;border:0;" dynamic="true" cache="true">
+						style="border:0;" dynamic="true">
 						<p:ajax event="expand" update="categoryCode"
 							listener="#{noticeBoardBackingBean.onNodeExpand}" />
 						<p:ajax event="collapse" update="categoryCode"
@@ -296,77 +205,193 @@
 					</p:commandLink> -->
 						</p:treeNode>
 					</p:tree>
-			</h:panelGrid>
+				</h:panelGrid>
 
-		</p:panel>
+			</p:panel>
 
-		<p:panel header="Location" toggleable="true" collapsed="true">
-			<p:ajax event="toggle"
-				listener="#{noticeBoardBackingBean.retriveLocationByStates}"
-				update="locations"></p:ajax>
-			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
-				<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
-				<p:commandButton value="Reset" style="float:right;width:25px" rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
-					icon="ui-icon-reset" update="locations,@(.resetBtnCLS)" actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
-				</p:commandButton>
-				</h:panelGroup>
-				<p:tree id="locations"
-					value="#{noticeBoardBackingBean.managedBean.locationRootNode}"
-					var="location" style="size:100%;border:0;" selectionMode="single"
-					dynamic="true"
-					selection="#{noticeBoardBackingBean.managedBean.locationSelectedNode}">
+			<p:panel header="#{lbl['lbl.qt.nb.minstryjabatanptj']}"
+				toggleable="true" collapsed="true">
 
-					<p:ajax event="expand" update="locations"
-						listener="#{noticeBoardBackingBean.onNodeExpand}" />
-					<p:ajax event="collapse" update="locations"
-						listener="#{noticeBoardBackingBean.onNodeCollapse}" />
-					<p:ajax event="select" update="locations,@(.resetBtnCLS)"
-						listener="#{noticeBoardBackingBean.onNodeSelect}" />
-					<p:ajax event="unselect" update="locations"
-						listener="#{noticeBoardBackingBean.onNodeUnselect}" />
-					<p:treeNode type="state">
-						<h:outputText
-							value="#{location.stateCode} - #{location.stateName}" />
-						<!--  <p:commandLink
-						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
-						style="padding-left:15px;" >
-						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="test" />
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>  -->
-					</p:treeNode>
-					<p:treeNode type="district">
-						<h:outputText value="#{location.districtName}" />
-						<!--  <p:commandLink
-						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+				<p:ajax event="toggle"
+					listener="#{noticeBoardBackingBean.retriveOrgProfilesForMinistryLevel}"
+					update="ministry"></p:ajax>
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
+					<h:panelGroup id="ministryrst" styleClass="ministryRstbtn">
+						<p:commandButton value="#{lbl['lbl.reset']}"
+							style="float:right;width:25px"
+							rendered="#{noticeBoardBackingBean.managedBean.mistrySearchBean ne null}"
+							icon="ui-icon-reset"
+							actionListener="#{noticeBoardBackingBean.clearTreeNode('ministry')}"
+							update="ministry,@(.ministryRstbtn)">
+						</p:commandButton>
+					</h:panelGroup>
+					<p:tree id="ministry"
+						value="#{noticeBoardBackingBean.managedBean.minstryRootNode}"
+						var="orgProfile" selectionMode="single"
+						selection="#{noticeBoardBackingBean.managedBean.ministrySelectedNode}"
+						style="border:0;" dynamic="true">
+						<p:ajax event="expand" update="ministry"
+							listener="#{noticeBoardBackingBean.onOrgProfileNodeExpand}" />
+						<p:ajax event="collapse" update="ministry"
+							listener="#{noticeBoardBackingBean.onNodeCollapse}" />
+						<p:ajax event="select" update="ministry,@(.ministryRstbtn)"
+							listener="#{noticeBoardBackingBean.onNodeSelect}"></p:ajax>
+						<p:ajax event="unselect" update="ministry"
+							listener="#{noticeBoardBackingBean.onNodeUnselect}" />
+
+						<p:treeNode id="ministry">
+							<h:outputText
+								value="#{orgProfile.orgCode} - #{orgProfile.orgName}" />
+							<!-- <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.mistrySearchBean ne null}"
 						style="padding-left:15px;">
-						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
 						<p:graphicImage library="ep/images/design" name="reset.png"
 							value="/resources/ep/images/design/reset.png" />
 					</p:commandLink> -->
-					</p:treeNode>
-					<p:treeNode type="city">
-						<h:outputText value="#{location.cityCode} - #{location.cityName}" />
-					<!-- 	 <p:commandLink
-						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
-						style="padding-left:15px;">
-						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>  -->
-					</p:treeNode>
-				</p:tree>
-			</h:panelGrid>
-		</p:panel>
-</div>
-		<p:commandButton value="Search" style="float:right;"
+						</p:treeNode>
+
+
+
+					</p:tree>
+				</h:panelGrid>
+
+
+			</p:panel>
+
+
+			<p:panel header="#{lbl['lbl.qt.nb.briefingDate']}" id="briefingdtls"
+				toggleable="true">
+
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="columnHeight20">
+					<p:column>
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;padding-bottom:10px;" />
+						</p:commandLink>
+
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday and noticeBoardBackingBean.managedBean.breifToday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column>
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.breifToday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;" />
+						</p:commandLink>
+
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.breifToday and noticeBoardBackingBean.managedBean.breifYesterday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+					width="100%"
+					rendered="#{!noticeBoardBackingBean.managedBean.breifShow}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
+						style="padding-right:5px;">
+					</h:outputText>
+					<p:column>
+						<p:inputText size="5"></p:inputText>
+						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+							style="padding-left:5px;"></h:outputText>
+					</p:column>
+				</h:panelGrid>
+
+
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.qt.nb.sitevisitdate']}"
+				id="sitevisitdtls" toggleable="true">
+
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="columnHeight20">
+					<p:column>
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.svYesterday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;margin-bottom:20px;" />
+						</p:commandLink>
+
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.svYesterday and noticeBoardBackingBean.managedBean.svToday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column>
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.svToday}">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;" />
+						</p:commandLink>
+
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}">
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
+					</p:column>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+					width="100%"
+					rendered="#{!noticeBoardBackingBean.managedBean.svShow}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
+						style="padding-right:5px;">
+					</h:outputText>
+					<p:column>
+						<p:inputText size="5"></p:inputText>
+						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+							style="padding-left:5px;"></h:outputText>
+					</p:column>
+				</h:panelGrid>
+
+
+
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.so.clsdt']}" toggleable="true">
+
+				<h:panelGrid columns="2" width="100%">
+					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}"></h:outputText>
+					<p:column>
+						<p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+						<p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+					</p:column>
+				</h:panelGrid>
+
+
+			</p:panel>
+		</div>
+		
+		<p:commandButton value="#{lbl['lbl.search']}" style="float:right;"
 			icon="ui-icon-search"
 			action="#{noticeBoardBackingBean.searchNoticeBoard}"
 			update="@(.test)">
 
 
 		</p:commandButton>
-		<p:commandButton value="Reset" style="float:right;"
+		<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
 			icon="ui-icon-reset">
 		</p:commandButton>
 		

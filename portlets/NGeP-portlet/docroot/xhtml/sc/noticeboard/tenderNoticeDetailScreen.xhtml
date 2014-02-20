@@ -15,35 +15,97 @@
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
-					<p:column width="100%" style="text-align:right">
+					<p:column width="100%" style="text-align:left">
 						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
-							action="#{noticeBoardBackingBean.backBtn}"
-							onclick="history.go(-1)" icon="ui-icon-back" style="float:right;" />
-
+							action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 					</p:column>
 				</p:row>
 			</p:panelGrid>
-
-			<p:tabView id="NoticeBoardDet" dynamic="true" cache="false"
-				activeIndex="#{noticeBoardBackingBean.managedBean.tabIndex}">
-
-				<p:ajax event="tabChange"
-					listener="#{noticeBoardBackingBean.onTabChangeAction}" />
-				<p:tab id="tab1" title="Qtn / Tender Details">
-					<ui:include src="noticeboardQtnTenderTab.xhtml" />
-				</p:tab>
-				<p:tab id="tab2" title="Schedule">
-					<ui:include src="noticeboardScheduleTab.xhtml" />
-				</p:tab>
-				<p:tab id="tab3" title="Documents">
-					<ui:include src="noticeboardDocumentTab.xhtml" />
-				</p:tab>
-
-			</p:tabView>
-
-			<ui:include src="/xhtml/sc/notice/noticeboardZonePopUp.xhtml" />
-			<ui:include src="/xhtml/sc/notice/noticeboardLocationPopUp.xhtml" />
-
 		</p:panel>
+		<p:panel header="Quation/Tender Notice" toggleable="true">
+			<p:panel header="Quation/Tender Details">
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="columnWidth20,columnWidth30">
+					<h:outputLabel value="#{lbl['lbl.qt.nb.title']}">
+					</h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.qtNo']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.ministry']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.jabatan']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.ptj']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.publishDate']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.publishPeriod']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.closingDate']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidity']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidityUntil']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.downloadDoc']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+				</h:panelGrid>
+			</p:panel>
+
+
+			<p:panel header="Supplier Qualification Criteria">
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="columnWidth20,columnWidth30,">
+
+					<h:outputLabel value="#{lbl['lbl.qt.nb.supplierStatus']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.allStates']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+					<h:outputLabel value="#{lbl['lbl.qt.nb.minPaidUpCaptial']}"></h:outputLabel>
+					<h:outputText value="">
+					</h:outputText>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.qt.nb.categoryCodeList']}">
+
+				<p:dataTable resizableColumns="true" rowIndexVar="index">
+
+
+					<p:column headerText="#{lbl['lbl.qt.nb.categoryCode']}">
+						<h:outputText value="52220" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+						style="width:100px;">
+						<h:outputText value="test" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.qt.nb.manditory']}"
+						style="width:120px;">
+						<h:outputText value="yes" />
+					</p:column>
+
+
+				</p:dataTable>
+
+			</p:panel>
+			<ui:include src="/xhtml/sc/noticeboard/qtlocationbriefingdtls.xhtml"></ui:include>
+			<ui:include src="/xhtml/sc/noticeboard/nbZones.xhtml" />
+		</p:panel>
+
 	</ui:define>
 </ui:composition>

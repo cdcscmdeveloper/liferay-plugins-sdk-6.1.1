@@ -9,10 +9,7 @@
 		value="#{noticeBoardBackingBean.retrieveParameterDescByType('NBT')}">
 
 		<p:tab title="#{noticeboardresulttype.codeName}">
-			<ui:fragment
-				rendered="#{noticeboardresulttype.codeName eq 'Price Schedule'}">
-				<ui:include src="/xhtml/sc/notice/noticeboardPriceSchedule.xhtml"></ui:include>
-			</ui:fragment>
+			
 			<ui:fragment
 				rendered="#{noticeboardresulttype.codeName ne 'Price Schedule'}">
 				<ui:include src="/xhtml/sc/noticeboard/resultdetails.xhtml"></ui:include>
