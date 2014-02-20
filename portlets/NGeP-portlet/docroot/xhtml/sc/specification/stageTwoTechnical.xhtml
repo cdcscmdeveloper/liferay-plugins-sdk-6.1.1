@@ -7,29 +7,33 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Compilance" widgetVar="stageTwoTech" modal="true"
-		width="800" height="400">
-		<p:panel header="#{lbl['lbl.sc.spec.stage.compilence']}" toggleable="true">
+	<p:dialog widgetVar="stageTwoTech" modal="true" width="800"
+		height="400">
+		<p:panel header="#{lbl['lbl.sc.spec.btn.standard.tech.check.list']} "
+			toggleable="true" collapsed="true">
 
 			<p:dataTable id="compilencestageTwo" var="compilance"
 				value="#{specificationBackingBean.managedBean.stageTwoTechComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoTechComplianceSelect}"
 				rowKey="#{compilance.checkListCategoryId}" rowIndexVar="index">
-               <ac:paginator for="compilencestageTwo"></ac:paginator>
-				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
+				<ac:paginator for="compilencestageTwo"></ac:paginator>
+				<p:column selectionMode="multiple"
+					style="width:2%;text-align:center;" />
+				<p:column headerText="#{lbl['lbl.sc.spec.check.list']}">
 					<h:outputText value="#{compilance.pmCheckList.checkListName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
 		</p:panel>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
-			onclick="stageTwoTech.hide();" icon="ui-icon-cancel"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}" style="float:right;" process="@all"
-			partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			style="float:right;" onclick="stageTwoTech.hide();"
+			icon="ui-icon-cancel"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+			style="float:right;" process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.stageTwoTechProposal}"
-			oncomplete="stageTwoTech.hide();" update="stageTwotechProposal" icon="ui-icon-accept" ></p:commandButton>
+			oncomplete="stageTwoTech.hide();" update="stageTwotechProposal"
+			icon="ui-icon-accept"></p:commandButton>
 
 
 	</p:dialog>

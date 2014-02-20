@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,12 +13,17 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.checkList.ICheckListSO;
 import my.ep.biz.service.pm.common.currency.ICurrencySO;
@@ -27,7 +34,10 @@ import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.checkList.CheckListReqDTO;
@@ -42,29 +52,50 @@ import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.specificationdata.SCSpecificationDataType;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCheckListCategory;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCurrency;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCategory;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -73,14 +104,19 @@ import com.liferay.portal.util.PortalUtil;
  * 
  */
 @ManagedBean(name = "specificationBackingBean")
-@RequestScoped
+@ViewScoped
 public class SpecificationBackingBean extends
 		SourcingBaseBackingBean<SpecificationManagedBean> {
-	private int count;
+	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
 
 	private List<SpecificationCompilanceBean> selectedCompilenceList;
+	private int count;
 
 	private String selctValue;
+
+	public SpecificationBackingBean() {
+
+	}
 
 	public int getCount() {
 		return count;
@@ -90,16 +126,11 @@ public class SpecificationBackingBean extends
 		this.count = count;
 	}
 
-	public SpecificationBackingBean() {
-
-		// retriveSpecdetails();
-	}
-
 	public void saveSpecificationDtls() {
 		IQTSpecSO specSO;
 		try {
 			SpecificationReqDTO reqDTO = prepareSpecReq();
-			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+			specSO = BusinessDelegate.getInstance().getServiceObject("ss",
 					IQTSpecSO.class);
 			SpecificationResDTO resDTO = specSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -115,6 +146,176 @@ public class SpecificationBackingBean extends
 		} finally {
 			specSO = null;
 		}
+	}
+
+	public String newProceedAction() {
+		if (this.getManagedBean().isPanel() == false) {
+			return "specificationCreation.xhtml?faces-redirect=true";
+		}
+		if (this.getManagedBean().isPanel() == true) {
+			// return "specificationCreation.xhtml?faces-redirect=true";
+			return "searchCircularPanelContract.xhtml?faces-redirect=true";
+		}
+		return null;
+	}
+
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+
+	private List<LocationDTO> getLocations(TreeNode zoneLocation) {
+		List<LocationDTO> results = new ArrayList<LocationDTO>();
+		if (zoneLocation.isLeaf()) {
+			LocationDTO locationDTO = (LocationDTO) zoneLocation.getData();
+			results.add(locationDTO);
+		} else {
+			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
+				results.addAll(getLocations(childrendLocationNode));
+			}
+		}
+		return results;
+	}
+
+	private ScQuoteZone getZone(TreeNode zoneLocation) {
+		ScQuoteZone result = null;
+		if (zoneLocation.getData() instanceof LocationDTO) {
+			LocationDTO locationDTO = (LocationDTO) zoneLocation.getData();
+			if (locationDTO.getZone() != null) {
+				result = locationDTO.getZone();
+			} else {
+				if (zoneLocation.getChildren() != null
+						&& zoneLocation.getChildren().size() > 0) {
+					for (TreeNode childLocationNode : zoneLocation
+							.getChildren()) {
+						result = getZone(childLocationNode);
+					}
+				}
+			}
+		} else {
+			if (zoneLocation.getChildren() != null
+					&& zoneLocation.getChildren().size() > 0) {
+				for (TreeNode childLocationNode : zoneLocation.getChildren()) {
+					result = getZone(childLocationNode);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public void editZoneLocation(TreeNode rootZoneLocation) {
+		List<LocationDTO> locationDTOs = getLocations(rootZoneLocation);
+		ScQuoteZone zone = getZone(rootZoneLocation);
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTOs(locationDTOs);
+		getManagedBean().setRootLocationTree(
+				LocationSingleton.getInstance().buildLocationTree(1L, states,
+						districts, divisions, cities));
+		if (zone != null) {
+			getManagedBean().setZoneName(zone.getZoneName());
+		}
+	}
+
+	public void showZoneLocationPopup() {
+		getManagedBean().setRootLocationTree(
+				LocationSingleton.getInstance().buildLocationTree(1L, null,
+						null, null, null));
+	}
+
+	public void showZoneLocationListPopup() {
+		getManagedBean().setRootLocationTreeList(
+				LocationSingleton.getInstance().buildLocationTree(1L, null,
+						null, null, null));
+	}
+
+	public void showZoneDeliveryAddressListPopup() {
+		getManagedBean().setRootAddressLocationTreeList(
+				LocationSingleton.getInstance().buildAddressLocationTree(1L,
+						null));
+	}
+
+	public void updateZoneLocation() {
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		// TreeNode[] listSelectedTreeNode =
+		// getManagedBean().getSelectedNodes().clone();
+		if (getManagedBean().getSelectedNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					LocationDTO locationDTO = (LocationDTO) treeNode.getData();
+					locationDTOs.add(locationDTO);
+				}
+			}
+		}
+		ScQuoteZone zone = new ScQuoteZone();
+		System.out.println("zone name : " + getManagedBean().getZoneName());
+		zone.setZoneName(getManagedBean().getZoneName());
+		getManagedBean().setZoneName(null);
+		System.out.println("Zone Name : " + zone.getZoneName());
+
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTOs(locationDTOs);
+
+		getManagedBean().getZoneTrees().add(
+				LocationSingleton.getInstance().buildZoneTree(zone, states,
+						districts, divisions, cities));
+		getManagedBean().setRootLocationTree(
+				LocationSingleton.getInstance().buildLocationTree(1L, null,
+						null, null, null));
+
+		// System.out.println("Zone Tree : " +
+		// getManagedBean().getZoneTrees().get(0).getData());
+		// System.out.println("Zone Name : " + getManagedBean().getZoneName());
+	}
+
+	public void updateZoneLocationList() {
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		// TreeNode[] listSelectedTreeNode =
+		// getManagedBean().getSelectedNodes().clone();
+		if (getManagedBean().getSelectedLocNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedLocNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					LocationDTO locationDTO = (LocationDTO) treeNode.getData();
+					locationDTOs.add(locationDTO);
+				}
+			}
+		}
+		ScQuoteZone zone = new ScQuoteZone();
+		System.out.println("zone name : " + getManagedBean().getZoneName1());
+		zone.setZoneName(getManagedBean().getZoneName1());
+		getManagedBean().setZoneName(null);
+		System.out.println("Zone Name : " + zone.getZoneName());
+
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTOs(locationDTOs);
+
+		getManagedBean().getZoneTreeList().add(
+				LocationSingleton.getInstance().buildZoneTree(zone, states,
+						districts, divisions, cities));
+		getManagedBean().setRootLocationTree(
+				LocationSingleton.getInstance().buildLocationTree(1L, null,
+						null, null, null));
+		System.out.println("Zone Tree : "
+				+ getManagedBean().getZoneTrees().size());
+		// System.out.println("Zone Name : " + getManagedBean().getZoneName());
 	}
 
 	public SpecificationReqDTO prepareSpecReq() {
@@ -248,7 +449,7 @@ public class SpecificationBackingBean extends
 				 * PmCurrency());
 				 * getManagedBean().getScQtSpec().setPmProcurementCategory( new
 				 * PmProcurementCategory()); IQTDetailSO QtDetailsSO =
-				 * BusinessDelegate.getInstance() .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				 * BusinessDelegate.getInstance() .getServiceObject("ss",
 				 * IQTDetailSO.class); QuationTenderReqDTO tenderReqDTO = new
 				 * QuationTenderReqDTO(); tenderReqDTO.setQtId(146L); //
 				 * tenderReqDTO.setQtTndrNo("xxx"); QuationTenderResDTO
@@ -276,7 +477,7 @@ public class SpecificationBackingBean extends
 	public void retriveSpecdetails(Long qtId) {
 		try {
 			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+					"ss", IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			SpecificationResDTO resDTO = null;
 			reqDTO.setQtId(qtId);
@@ -289,7 +490,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().getScQtSpec().setPmProcurementCategory(
 						new PmParameter());
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						.getServiceObject("ss", IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setQtId(qtId);
 				// tenderReqDTO.setQtTndrNo("xxx");
@@ -297,9 +498,14 @@ public class SpecificationBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQtById(tenderReqDTO);
 				getManagedBean().getScQtSpec().setScQt(
 						tenderResDTO.getQtDetail());
+				getManagedBean().getScQtSpec().getScQt().setQtType("O");
+
 				getManagedBean().setScQtRemarks(new ScQtRemark());
 				// getManagedBean().setScQtChecklist(new ScQtCheckList());
 				getManagedBean().getScQtSpec().setPmStatus(new PmStatus());
+				if (getManagedBean().getQtCriteria() == null) {
+					getManagedBean().setQtCriteria(new ScQtCriteria());
+				}
 
 			} else {
 				getManagedBean().setScQtSpec(resDTO.getScQtSpec());
@@ -336,6 +542,112 @@ public class SpecificationBackingBean extends
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setEvaluationType(type);
+	}
+
+	public void onChangeQtType(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("========type value===" + type);
+		this.getManagedBean().getScQtSpec().getScQt().setQtType(type);
+	}
+
+	public void typeChange(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+				.setChecklistType(type);
+	}
+
+	public void fulfilmentChange(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQtSpec().setFulfilmentType(type);
+	}
+
+	public void fromChange(AjaxBehaviorEvent event) {
+		String formvalue = (String) event.getComponent().getAttributes()
+				.get("value");
+
+		this.getManagedBean().setFromMonth(formvalue);
+	}
+
+	public void toChange(AjaxBehaviorEvent event) {
+		String toValue = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().setToMonth(toValue);
+		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
+		int j = Integer.parseInt(toValue);
+		List<BankingBean> monthList = new ArrayList<BankingBean>();
+		String monthvalue = "";
+		String amount = "";
+		for (int i = n; i <= j; i++) {
+			if (i == 0) {
+
+				monthvalue = "January";
+				amount = "1000";
+			} else if (i == 1) {
+
+				monthvalue = "February";
+				amount = "2000";
+			} else if (i == 2) {
+
+				monthvalue = "March";
+				amount = "3000";
+			} else if (i == 3) {
+
+				monthvalue = "April";
+				amount = "4000";
+			} else if (i == 4) {
+
+				monthvalue = "May";
+				amount = "5000";
+			} else if (i == 5) {
+
+				monthvalue = "June";
+				amount = "6000";
+			} else if (i == 6) {
+
+				monthvalue = "July";
+				amount = "7000";
+			} else if (i == 7) {
+
+				monthvalue = "August";
+				amount = "8000";
+			} else if (i == 8) {
+
+				monthvalue = "September";
+				amount = "9000";
+			} else if (i == 9) {
+
+				monthvalue = "October";
+				amount = "10000";
+			} else if (i == 10) {
+
+				monthvalue = "November";
+				amount = "11000";
+			} else if (i == 11) {
+
+				monthvalue = "December";
+				amount = "12000";
+			}
+			monthList.add(new BankingBean(monthvalue, amount));
+		}
+		int totalamount = 0;
+		this.getManagedBean().setBankList(monthList);
+		for (int i = 0; i < this.getManagedBean().getBankList().size(); i++) {
+			BankingBean bean = (BankingBean) this.getManagedBean()
+					.getBankList().get(i);
+			totalamount = totalamount + Integer.parseInt(bean.getAmount());
+			BigDecimal b1 = new BigDecimal(totalamount);
+			BigDecimal techWeightage = new BigDecimal(this.getManagedBean()
+					.getBankList().size());
+			MathContext mc = new MathContext(4);
+			BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+			this.getManagedBean().setTotalAmountAvg(techWeightage1);
+		}
+		this.getManagedBean().setTotalAmount(totalamount);
+		System.out.println("====totalAmount==");
+
 	}
 
 	public ScQtCheckList createSpecList(String stage) {
@@ -546,10 +858,15 @@ public class SpecificationBackingBean extends
 				ScQtCheckList scqtlist = createSpecList("2");
 				System.out.println("=========checklist name======"
 						+ bean.getPmCheckList().getCheckListName());
+				System.out.println("====type==="
+						+ bean.getPmCheckList().getChecklistType());
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
+
 				compilance.add(scqtlist);
 				scqtlist.setDocType("1");
-				scqtlist.setChecklistType("UP");
+				scqtlist.setEnable(true);
+				scqtlist.setChecklistType(bean.getPmCheckList()
+						.getChecklistType());
 				scqtlist.setEvaluationStage("2");
 			}
 			this.getManagedBean().setScoringList(null);
@@ -574,7 +891,7 @@ public class SpecificationBackingBean extends
 			ScQtCheckList st2technicalproposalList1 = createSpecList("2");
 
 			st2technicalproposalList1.setDocType("1");
-			st2technicalproposalList1.setChecklistType("UP");
+			// st2technicalproposalList1.setChecklistType("UP");
 			st2technicalproposalList1.setEvaluationStage("2");
 			// st2technicalproposalList1.setScQtCheckListScores();
 			this.getManagedBean().setScoringList(null);
@@ -620,7 +937,9 @@ public class SpecificationBackingBean extends
 				ScQtCheckList scqtlist = createSpecList("2");
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
 				scqtlist.setDocType("3");
-				scqtlist.setChecklistType("UP");
+				scqtlist.setEnable(true);
+				scqtlist.setChecklistType(bean.getPmCheckList()
+						.getChecklistType());
 				scqtlist.setEvaluationStage("2");
 				compilance.add(scqtlist);
 			}
@@ -653,8 +972,7 @@ public class SpecificationBackingBean extends
 			weightage.setSpecType("T");
 			weightageTechnical.add(weightage);
 			this.getManagedBean().setWeightageTechnical(weightageTechnical);
-			System.out.println("=====technical wishlist end size===="
-					+ this.getManagedBean().getWeightageTechnical().size());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			// throw new IllegalArgumentException();
@@ -713,7 +1031,7 @@ public class SpecificationBackingBean extends
 			 * System.out.println("=====procuremt id=====" +
 			 * this.getManagedBean().getProcurementId());
 			 */
-			checkListSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			checkListSO = BusinessDelegate.getInstance().getServiceObject("pm",
 					ICheckListSO.class);
 			CheckListReqDTO reqDTO = new CheckListReqDTO();
 			reqDTO.setProcurementMode("134");
@@ -740,14 +1058,19 @@ public class SpecificationBackingBean extends
 			 * System.out.println("=====procuremt id=====" +
 			 * this.getManagedBean().getProcurementId());
 			 */
-			checkListSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+
+			checkListSO = BusinessDelegate.getInstance().getServiceObject("pm",
 					ICheckListSO.class);
 			CheckListReqDTO reqDTO = new CheckListReqDTO();
 			reqDTO.setProcurementMode("131");
 			reqDTO.setDocType("1");
-			reqDTO.setEvalStage("2");
+			// reqDTO.setEvalStage("2");
 			resDTO = checkListSO
 					.retrieveCheckListByEvalStageAndProcurementMode(reqDTO);
+
+			this.getManagedBean().setStageTwoTechComplianceSelect(
+					new ArrayList<PmCheckListCategory>());
+
 			this.getManagedBean().setStageTwoTechComplianceList(
 					resDTO.getCheckListResultBean().getResultList());
 		} catch (Exception e) {
@@ -767,14 +1090,18 @@ public class SpecificationBackingBean extends
 			 * System.out.println("=====procuremt id=====" +
 			 * this.getManagedBean().getProcurementId());
 			 */
-			checkListSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			checkListSO = BusinessDelegate.getInstance().getServiceObject("pm",
 					ICheckListSO.class);
 			CheckListReqDTO reqDTO = new CheckListReqDTO();
 			reqDTO.setProcurementMode("131");
 			reqDTO.setDocType("3");
-			reqDTO.setEvalStage("2");
+			// reqDTO.setEvalStage("2");
 			resDTO = checkListSO
 					.retrieveCheckListByEvalStageAndProcurementMode(reqDTO);
+
+			this.getManagedBean().setStageTwoFinComplianceSelect(
+					new ArrayList<PmCheckListCategory>());
+
 			this.getManagedBean().setStageTwoFinComplianceList(
 					resDTO.getCheckListResultBean().getResultList());
 		} catch (Exception e) {
@@ -798,7 +1125,7 @@ public class SpecificationBackingBean extends
 		try {
 
 			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
-					.getScoringList();
+					.getCheckListScore();
 			if (null == checkListScore) {
 				checkListScore = new ArrayList<ScQtCheckListScore>();
 
@@ -806,8 +1133,203 @@ public class SpecificationBackingBean extends
 			ScQtCheckListScore score = createCheckList();
 
 			checkListScore.add(score);
-			this.getManagedBean().setScoringList(checkListScore);
+			this.getManagedBean().setCheckListScore(checkListScore);
 
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addScoringyears() {
+
+		try {
+
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getScoringForYears();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setScoringForYears(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addContratAmount() {
+
+		try {
+
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getContractAmount();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setContractAmount(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addBankStatement() {
+
+		try {
+
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getBankStamentScore();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setBankStamentScore(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void creditFacilityScore() {
+
+		try {
+
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getCreditFacility();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setCreditFacility(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void scoringCash() {
+
+		try {
+			/* System.out.println("=enter addscore method==="); */
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getScoringCash();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setScoringCash(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addAssetScore() {
+
+		try {
+
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getAssetScore();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			ScQtCheckListScore score = createCheckList();
+
+			checkListScore.add(score);
+			this.getManagedBean().setAssetScore(checkListScore);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addScheduleDetails() {
+
+		try {
+			/* System.out.println("=enter addscore method==="); */
+			List<ScQtFreqSchedule> freqSchedule = this.getManagedBean()
+					.getScheduleList();
+			if (null == freqSchedule) {
+				freqSchedule = new ArrayList<ScQtFreqSchedule>();
+
+			}
+
+			int total = freqSchedule.size()
+					+ this.getManagedBean().getTotalFrequency();
+			/*
+			 * if(freqSchedule.size()>this.getManagedBean().getTotalFrequency()){
+			 * ScQtFreqSchedule schedule = new ScQtFreqSchedule();
+			 * System.out.println("=====greater===");
+			 * freqSchedule.add(schedule); }
+			 */
+			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
+				int listsize = freqSchedule.size();
+				int textsize = this.getManagedBean().getTotalFrequency();
+				int lesstotal = listsize - textsize;
+
+				freqSchedule = new ArrayList<ScQtFreqSchedule>();
+				for (int j = 0; j < textsize; j++) {
+					ScQtFreqSchedule schedule = new ScQtFreqSchedule();
+
+					freqSchedule.add(schedule);
+				}
+			}
+			for (int i = freqSchedule.size(); i < this.getManagedBean()
+					.getTotalFrequency(); i++) {
+				ScQtFreqSchedule schedule = new ScQtFreqSchedule();
+
+				freqSchedule.add(schedule);
+			}
+			this.getManagedBean().setScheduleList(freqSchedule);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			// throw new IllegalArgumentException();
+		}
+	}
+
+	public void addProgressiveDetails() {
+
+		try {
+			/* System.out.println("=enter addscore method==="); */
+			List<ScQtProgessivePayment> progressive = this.getManagedBean()
+					.getProgressivePaymentList();
+			if (null == progressive) {
+				progressive = new ArrayList<ScQtProgessivePayment>();
+
+			}
+			ScQtProgessivePayment payment = new ScQtProgessivePayment();
+
+			progressive.add(payment);
+			this.getManagedBean().setProgressivePaymentList(progressive);
+			/*
+			 * System.out.println("===exit add score=="+ this.getManagedBean()
+			 * .getCheckListScore().size());
+			 */
 		} catch (Exception e) {
 			// e.printStackTrace();
 			throw new IllegalArgumentException();
@@ -838,7 +1360,7 @@ public class SpecificationBackingBean extends
 		try {
 			ScQtZoneCriteria scQtZone;
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					"pm", IUserSO.class);
 			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
 			if (getManagedBean().getComitteeUsers() == null) {
 				UserReqDTO reqDTO = new UserReqDTO();
@@ -866,7 +1388,7 @@ public class SpecificationBackingBean extends
 		try {
 
 			IProcurementSO procurementSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProcurementSO.class);
+					.getServiceObject("pm", IProcurementSO.class);
 			System.out.println(procurementSO);
 			resDto = procurementSO.retriveProcurementList();
 			selectItems.add(new SelectItem(null, "--Select One--"));
@@ -890,7 +1412,7 @@ public class SpecificationBackingBean extends
 		try {
 
 			ICurrencySO CurrencySO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICurrencySO.class);
+					.getServiceObject("pm", ICurrencySO.class);
 			resDto = CurrencySO.retriveCurrencyList();
 			selectItems.add(new SelectItem(null, "--Select One--"));
 			for (int i = 0; i < resDto.getCurrencyList().size(); i++) {
@@ -950,8 +1472,8 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setSpecificationDataType(specificationDataType);
 
-		IQTDetailSO detailSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
 				.longValue());
@@ -985,7 +1507,7 @@ public class SpecificationBackingBean extends
 				.getSpecificationDataType());
 		specReqDTO.setOutcome(outCome);
 		IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				QTConstants.SS_MODULE, IQTSpecSO.class);
 		try {
 			SpecificationResDTO resDTO = iqtSpecSO.updateBPMAction(specReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -1083,8 +1605,8 @@ public class SpecificationBackingBean extends
 	}
 
 	private IQTSpecSO getSpecSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				QTConstants.SS_MODULE, IQTSpecSO.class);
 	}
 
 	public void handleS2TechChanged(ScQtCheckList checklist) {
@@ -1366,6 +1888,192 @@ public class SpecificationBackingBean extends
 			evaluationSO = null;
 		}
 
+	}
+
+	public void circularListSelect(SelectEvent selectEvent) {
+		ICircularDetailSO circularDetailSO;
+		try {
+			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+			CtCircularVer circular = (CtCircularVer) selectEvent.getObject();
+
+			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
+					.getInstance().getServiceObject("ct",
+							ICircularDetailSO.class);
+
+			reqDTO.setCircularVerId(circular.getCircularVerId());
+			CircularDetailResDTO resDTO = circularDetailSO
+					.getPanelItemsByCircularVerId(reqDTO);
+			for (CtPanelItem panelItem : resDTO.getPanelItemList()) {
+				System.out.println(panelItem.getItemName());
+			}
+			this.getManagedBean().setCirCularNo(circular.getCircularNo());
+			this.getManagedBean().setCircularName(circular.getName());
+			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+		}
+
+	}
+
+	public void panelPopulate() {
+		try {
+			this.getManagedBean().getPanelItemList();
+			List<CtPanelItem> detailsList = this.getManagedBean()
+					.getPanelItemDetailsList();
+			if (detailsList == null) {
+				detailsList = new ArrayList<CtPanelItem>();
+			}
+			for (CtPanelItem panelItem : this.getManagedBean()
+					.getPanelItemList()) {
+				detailsList.add(panelItem);
+			}
+			this.getManagedBean().setPanelItemDetailsList(detailsList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * public void deleteItemDetails() { List<CtPanelItem> itemDetailsList=
+	 * this.getManagedBean().getPanelItemDetailsList();
+	 * 
+	 * List<CtPanelItem> selectItem =this. getManagedBean()
+	 * .getSelectItemDetailsList();
+	 * 
+	 * if (itemDetailsList.size() == selectItem.size()) {
+	 * itemDetailsList.clear(); } else { for (CtPanelItem item : selectItem)
+	 * itemDetailsList.remove(item); }
+	 * 
+	 * }
+	 */
+
+	public void techWeightageSum() {
+		try {
+			int total = 0;
+			List<ScQtWeightage> weightageList = this.getManagedBean()
+					.getWeightageTechnical();
+			if (weightageList == null) {
+				weightageList = new ArrayList<ScQtWeightage>();
+			}
+			for (int i = 0; i < weightageList.size(); i++) {
+				ScQtWeightage weight = (ScQtWeightage) weightageList.get(i);
+				total = total + weight.getWeightagePercentage().intValue();
+				BigDecimal b1 = new BigDecimal(total);
+				BigDecimal techWeightage = new BigDecimal(100);
+				MathContext mc = new MathContext(4);
+				BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+				this.getManagedBean()
+						.setTechnicalWeightageScore(techWeightage1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void finWeightageSum() {
+		try {
+			int total = 0;
+			List<ScQtWeightage> weightageList = this.getManagedBean()
+					.getWeightageFinancial();
+			if (weightageList == null) {
+				weightageList = new ArrayList<ScQtWeightage>();
+			}
+			for (int i = 0; i < weightageList.size(); i++) {
+				ScQtWeightage weight = (ScQtWeightage) weightageList.get(i);
+				total = total + weight.getWeightagePercentage().intValue();
+				BigDecimal b1 = new BigDecimal(total);
+				BigDecimal techWeightage = new BigDecimal(100);
+				MathContext mc = new MathContext(4);
+				BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+				this.getManagedBean()
+						.setFinancialWeightageScore(techWeightage1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @return the searchCircular
+	 */
+	public IPagingDataModel<CtCircularVer> getSearchCircular() {
+		return searchCircular;
+	}
+
+	/**
+	 * @param searchCircular
+	 *            the searchCircular to set
+	 */
+	public void setSearchCircular(IPagingDataModel<CtCircularVer> searchCircular) {
+		this.searchCircular = searchCircular;
+	}
+
+	public void searchCircularList() {
+		searchCircular.reloadData();
+	}
+
+	private class SearchCircularPagingDataModel extends
+			PagingDataModel<CtCircularVer> {
+		private static final long serialVersionUID = 1L;
+
+		public SearchCircularPagingDataModel() {
+
+			super("circularList");
+
+		}
+
+		public ISearchResultBean<CtCircularVer> pageChangeListener(
+				ISearchBean<CtCircularVer> searchBean) {
+			ICircularSO circularSO;
+			CircularResDTO resDto;
+
+			try {
+				CircularReqDTO circularReqDTO = new CircularReqDTO();
+
+				if (getManagedBean().getCirCularNo() != null
+						&& !"".equalsIgnoreCase(getManagedBean()
+								.getCirCularNo())) {
+					SearchFilterBean circularBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					circularBean.setSearchField("circularNo");
+					circularBean.setSearchValue(getManagedBean()
+							.getCirCularNo());
+					searchBean.getDataFilterBeans().add(circularBean);
+
+				}
+
+				if (getManagedBean().getCircularName() != null
+						&& !"".equalsIgnoreCase(getManagedBean()
+								.getCircularName())) {
+					SearchFilterBean circularBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					circularBean.setSearchField("name");
+					circularBean.setSearchValue(getManagedBean()
+							.getCircularName());
+					searchBean.getDataFilterBeans().add(circularBean);
+				}
+
+				circularReqDTO.setCircularVerSearchBean(searchBean);
+
+				circularSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject("ct", ICircularSO.class);
+				resDto = circularSO.searchCircularVer(circularReqDTO);
+				if (resDto.isSuccessful()) {
+					return resDto.getCircularVerResultBean();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				circularSO = null;
+			}
+			return null;
+
+		}
 	}
 
 }

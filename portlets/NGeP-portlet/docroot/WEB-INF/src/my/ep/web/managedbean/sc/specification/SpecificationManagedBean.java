@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.specification;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,20 +12,28 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.common.PmCheckListCategory;
+import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.backingbean.sc.specification.SpecificationCompilanceBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.TreeNode;
 
 /**
  * @author ACER
@@ -101,6 +110,58 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> selectscoring;
 	private List<ScQtCheckListScore> collectionScoring;
 	private String scheduleType;
+	private String fromMonth;
+	private String toMonth;
+	//B,S
+	private String businessOwner="B";
+	private List<BankingBean> bankList;
+	private List<ScQtCheckListScore> checkListScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringForYears=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> contractAmount=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankStamentScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditFacility=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringCash=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtFreqSchedule> scheduleList;
+	private List<ScQtProgessivePayment> progressivePaymentList;
+	
+	private int totalFrequency;
+	private String technicalWeightage="2";
+	private String financialWeightage="2";
+	private String cirCularNo;
+	private String circularName;
+	private String itemName;
+	private BigDecimal technicalWeightageScore;
+	private BigDecimal financialWeightageScore;
+	private int totalAmount;
+	private BigDecimal totalAmountAvg;
+	
+	private List<CtPanelItem> panelItemList;
+	private List<CtPanelItem> selectpanelItem;
+	private List<CtPanelItem> panelItemDetailsList;
+	private List<CtPanelItem> selectItemDetailsList;
+	private boolean isPanel;
+	
+	//supplier Qualification Criteria List and variables
+	private List<ScQtCategory> suppCriteriarestrictedList;
+	private List<ScQtCategory> suppCriteriaopenList;
+	private ScQtCriteria qtCriteria;
+	private	TreeNode rootLocationTree;
+	private	String	zoneName;
+
+	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+	private List<TreeNode>	zoneTreeList = new ArrayList<TreeNode>();
+	private List<TreeNode>	zoneTreeAddrList = new ArrayList<TreeNode>();
+	private	String	zoneName1;
+	private	String	zoneAddrName;
+	private List<PmReportSection> pmReportSectionList;
+	private List<PmReportSection> selectedPmReportSectionList;
+	private	TreeNode rootLocationTreeList;
+	private TreeNode rootAddressLocationTreeList;
+	private TreeNode[] selectedNodes;
+	private TreeNode[] selectedLocNodes;
+	
+	
 	public SpecificationManagedBean(){
 		
 	}
@@ -814,6 +875,641 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setScheduleType(String scheduleType) {
 		this.scheduleType = scheduleType;
 	}
+
+	/**
+	 * @return the businessOwner
+	 */
+	public String getBusinessOwner() {
+		return businessOwner;
+	}
+
+	/**
+	 * @param businessOwner the businessOwner to set
+	 */
+	public void setBusinessOwner(String businessOwner) {
+		this.businessOwner = businessOwner;
+	}
+
+	/**
+	 * @return the fromMonth
+	 */
+	public String getFromMonth() {
+		return fromMonth;
+	}
+
+	/**
+	 * @param fromMonth the fromMonth to set
+	 */
+	public void setFromMonth(String fromMonth) {
+		this.fromMonth = fromMonth;
+	}
+
+	/**
+	 * @return the toMonth
+	 */
+	public String getToMonth() {
+		return toMonth;
+	}
+
+	/**
+	 * @param toMonth the toMonth to set
+	 */
+	public void setToMonth(String toMonth) {
+		this.toMonth = toMonth;
+	}
+
+	/**
+	 * @return the bankList
+	 */
+	public List<BankingBean> getBankList() {
+		return bankList;
+	}
+
+	/**
+	 * @param bankList the bankList to set
+	 */
+	public void setBankList(List<BankingBean> bankList) {
+		this.bankList = bankList;
+	}
+
+	/**
+	 * @return the checkListScore
+	 */
+	public List<ScQtCheckListScore> getCheckListScore() {
+		return checkListScore;
+	}
+
+	/**
+	 * @param checkListScore the checkListScore to set
+	 */
+	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
+		this.checkListScore = checkListScore;
+	}
+
+	/**
+	 * @return the scoringForYears
+	 */
+	public List<ScQtCheckListScore> getScoringForYears() {
+		return scoringForYears;
+	}
+
+	/**
+	 * @param scoringForYears the scoringForYears to set
+	 */
+	public void setScoringForYears(List<ScQtCheckListScore> scoringForYears) {
+		this.scoringForYears = scoringForYears;
+	}
+
+	/**
+	 * @return the contractAmount
+	 */
+	public List<ScQtCheckListScore> getContractAmount() {
+		return contractAmount;
+	}
+
+	/**
+	 * @param contractAmount the contractAmount to set
+	 */
+	public void setContractAmount(List<ScQtCheckListScore> contractAmount) {
+		this.contractAmount = contractAmount;
+	}
+
+	/**
+	 * @return the bankStamentScore
+	 */
+	public List<ScQtCheckListScore> getBankStamentScore() {
+		return bankStamentScore;
+	}
+
+	/**
+	 * @param bankStamentScore the bankStamentScore to set
+	 */
+	public void setBankStamentScore(List<ScQtCheckListScore> bankStamentScore) {
+		this.bankStamentScore = bankStamentScore;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * @return the log
+	 */
+	public static Logger getLog() {
+		return log;
+	}
+
+	/**
+	 * @return the creditFacility
+	 */
+	public List<ScQtCheckListScore> getCreditFacility() {
+		return creditFacility;
+	}
+
+	/**
+	 * @param creditFacility the creditFacility to set
+	 */
+	public void setCreditFacility(List<ScQtCheckListScore> creditFacility) {
+		this.creditFacility = creditFacility;
+	}
+
+	/**
+	 * @return the scoringCash
+	 */
+	public List<ScQtCheckListScore> getScoringCash() {
+		return scoringCash;
+	}
+
+	/**
+	 * @param scoringCash the scoringCash to set
+	 */
+	public void setScoringCash(List<ScQtCheckListScore> scoringCash) {
+		this.scoringCash = scoringCash;
+	}
+
+	/**
+	 * @return the assetScore
+	 */
+	public List<ScQtCheckListScore> getAssetScore() {
+		return assetScore;
+	}
+
+	/**
+	 * @param assetScore the assetScore to set
+	 */
+	public void setAssetScore(List<ScQtCheckListScore> assetScore) {
+		this.assetScore = assetScore;
+	}
+
+	/**
+	 * @return the scheduleList
+	 */
+	public List<ScQtFreqSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+	/**
+	 * @param scheduleList the scheduleList to set
+	 */
+	public void setScheduleList(List<ScQtFreqSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtProgessivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(
+			List<ScQtProgessivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+	/**
+	 * @return the totalFrequency
+	 */
+	public int getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	/**
+	 * @param totalFrequency the totalFrequency to set
+	 */
+	public void setTotalFrequency(int totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	/**
+	 * @return the financialWeightage
+	 */
+	public String getFinancialWeightage() {
+		return financialWeightage;
+	}
+
+	/**
+	 * @param financialWeightage the financialWeightage to set
+	 */
+	public void setFinancialWeightage(String financialWeightage) {
+		this.financialWeightage = financialWeightage;
+	}
+
+	/**
+	 * @return the technicalWeightage
+	 */
+	public String getTechnicalWeightage() {
+		return technicalWeightage;
+	}
+
+	/**
+	 * @param technicalWeightage the technicalWeightage to set
+	 */
+	public void setTechnicalWeightage(String technicalWeightage) {
+		this.technicalWeightage = technicalWeightage;
+	}
+
+	/**
+	 * @return the cirCularNo
+	 */
+	public String getCirCularNo() {
+		return cirCularNo;
+	}
+
+	/**
+	 * @param cirCularNo the cirCularNo to set
+	 */
+	public void setCirCularNo(String cirCularNo) {
+		this.cirCularNo = cirCularNo;
+	}
+
+	/**
+	 * @return the circularName
+	 */
+	public String getCircularName() {
+		return circularName;
+	}
+
+	/**
+	 * @param circularName the circularName to set
+	 */
+	public void setCircularName(String circularName) {
+		this.circularName = circularName;
+	}
+
+	/**
+	 * @return the panelItemList
+	 */
+	public List<CtPanelItem> getPanelItemList() {
+		return panelItemList;
+	}
+
+	/**
+	 * @param panelItemList the panelItemList to set
+	 */
+	public void setPanelItemList(List<CtPanelItem> panelItemList) {
+		this.panelItemList = panelItemList;
+	}
+
+	/**
+	 * @return the selectpanelItem
+	 */
+	public List<CtPanelItem> getSelectpanelItem() {
+		return selectpanelItem;
+	}
+
+	/**
+	 * @param selectpanelItem the selectpanelItem to set
+	 */
+	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
+		this.selectpanelItem = selectpanelItem;
+	}
+
+	/**
+	 * @return the panelItemDetailsList
+	 */
+	public List<CtPanelItem> getPanelItemDetailsList() {
+		return panelItemDetailsList;
+	}
+
+	/**
+	 * @param panelItemDetailsList the panelItemDetailsList to set
+	 */
+	public void setPanelItemDetailsList(List<CtPanelItem> panelItemDetailsList) {
+		this.panelItemDetailsList = panelItemDetailsList;
+	}
+
+	/**
+	 * @return the selectItemDetailsList
+	 */
+	public List<CtPanelItem> getSelectItemDetailsList() {
+		return selectItemDetailsList;
+	}
+
+	/**
+	 * @param selectItemDetailsList the selectItemDetailsList to set
+	 */
+	public void setSelectItemDetailsList(List<CtPanelItem> selectItemDetailsList) {
+		this.selectItemDetailsList = selectItemDetailsList;
+	}
+
+	/**
+	 * @return the technicalWeightageScore
+	 */
+	public BigDecimal getTechnicalWeightageScore() {
+		return technicalWeightageScore;
+	}
+
+	/**
+	 * @param technicalWeightageScore the technicalWeightageScore to set
+	 */
+	public void setTechnicalWeightageScore(BigDecimal technicalWeightageScore) {
+		this.technicalWeightageScore = technicalWeightageScore;
+	}
+
+	/**
+	 * @return the totalAmount
+	 */
+	public int getTotalAmount() {
+		return totalAmount;
+	}
+
+	/**
+	 * @param totalAmount the totalAmount to set
+	 */
+	public void setTotalAmount(int totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	/**
+	 * @return the totalAmountAvg
+	 */
+	public BigDecimal getTotalAmountAvg() {
+		return totalAmountAvg;
+	}
+
+	/**
+	 * @param totalAmountAvg the totalAmountAvg to set
+	 */
+	public void setTotalAmountAvg(BigDecimal totalAmountAvg) {
+		this.totalAmountAvg = totalAmountAvg;
+	}
+
+	/**
+	 * @return the financialWeightageScore
+	 */
+	public BigDecimal getFinancialWeightageScore() {
+		return financialWeightageScore;
+	}
+
+	/**
+	 * @param financialWeightageScore the financialWeightageScore to set
+	 */
+	public void setFinancialWeightageScore(BigDecimal financialWeightageScore) {
+		this.financialWeightageScore = financialWeightageScore;
+	}
+
+	/**
+	 * @return the isPanel
+	 */
+	public boolean isPanel() {
+		return isPanel;
+	}
+
+	/**
+	 * @param isPanel the isPanel to set
+	 */
+	public void setPanel(boolean isPanel) {
+		this.isPanel = isPanel;
+	}
+
+	/**
+	 * @return the itemName
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+	/**
+	 * @param itemName the itemName to set
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	/**
+	 * @return the suppCriteriarestrictedList
+	 */
+	public List<ScQtCategory> getSuppCriteriarestrictedList() {
+		return suppCriteriarestrictedList;
+	}
+
+	/**
+	 * @param suppCriteriarestrictedList the suppCriteriarestrictedList to set
+	 */
+	public void setSuppCriteriarestrictedList(
+			List<ScQtCategory> suppCriteriarestrictedList) {
+		this.suppCriteriarestrictedList = suppCriteriarestrictedList;
+	}
+
+	/**
+	 * @return the suppCriteriaopenList
+	 */
+	public List<ScQtCategory> getSuppCriteriaopenList() {
+		return suppCriteriaopenList;
+	}
+
+	/**
+	 * @param suppCriteriaopenList the suppCriteriaopenList to set
+	 */
+	public void setSuppCriteriaopenList(List<ScQtCategory> suppCriteriaopenList) {
+		this.suppCriteriaopenList = suppCriteriaopenList;
+	}
+
+	/**
+	 * @return the qtCriteria
+	 */
+	public ScQtCriteria getQtCriteria() {
+		return qtCriteria;
+	}
+
+	/**
+	 * @param qtCriteria the qtCriteria to set
+	 */
+	public void setQtCriteria(ScQtCriteria qtCriteria) {
+		this.qtCriteria = qtCriteria;
+	}
+
+	/**
+	 * @return the rootLocationTree
+	 */
+	public TreeNode getRootLocationTree() {
+		return rootLocationTree;
+	}
+
+	/**
+	 * @param rootLocationTree the rootLocationTree to set
+	 */
+	public void setRootLocationTree(TreeNode rootLocationTree) {
+		this.rootLocationTree = rootLocationTree;
+	}
+
+	/**
+	 * @return the zoneName
+	 */
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	/**
+	 * @param zoneName the zoneName to set
+	 */
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	/**
+	 * @return the zoneTrees
+	 */
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+	/**
+	 * @param zoneTrees the zoneTrees to set
+	 */
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
+	/**
+	 * @return the zoneTreeList
+	 */
+	public List<TreeNode> getZoneTreeList() {
+		return zoneTreeList;
+	}
+
+	/**
+	 * @param zoneTreeList the zoneTreeList to set
+	 */
+	public void setZoneTreeList(List<TreeNode> zoneTreeList) {
+		this.zoneTreeList = zoneTreeList;
+	}
+
+	/**
+	 * @return the zoneTreeAddrList
+	 */
+	public List<TreeNode> getZoneTreeAddrList() {
+		return zoneTreeAddrList;
+	}
+
+	/**
+	 * @param zoneTreeAddrList the zoneTreeAddrList to set
+	 */
+	public void setZoneTreeAddrList(List<TreeNode> zoneTreeAddrList) {
+		this.zoneTreeAddrList = zoneTreeAddrList;
+	}
+
+	/**
+	 * @return the zoneName1
+	 */
+	public String getZoneName1() {
+		return zoneName1;
+	}
+
+	/**
+	 * @param zoneName1 the zoneName1 to set
+	 */
+	public void setZoneName1(String zoneName1) {
+		this.zoneName1 = zoneName1;
+	}
+
+	/**
+	 * @return the zoneAddrName
+	 */
+	public String getZoneAddrName() {
+		return zoneAddrName;
+	}
+
+	/**
+	 * @param zoneAddrName the zoneAddrName to set
+	 */
+	public void setZoneAddrName(String zoneAddrName) {
+		this.zoneAddrName = zoneAddrName;
+	}
+
+	/**
+	 * @return the pmReportSectionList
+	 */
+	public List<PmReportSection> getPmReportSectionList() {
+		return pmReportSectionList;
+	}
+
+	/**
+	 * @param pmReportSectionList the pmReportSectionList to set
+	 */
+	public void setPmReportSectionList(List<PmReportSection> pmReportSectionList) {
+		this.pmReportSectionList = pmReportSectionList;
+	}
+
+	/**
+	 * @return the selectedPmReportSectionList
+	 */
+	public List<PmReportSection> getSelectedPmReportSectionList() {
+		return selectedPmReportSectionList;
+	}
+
+	/**
+	 * @param selectedPmReportSectionList the selectedPmReportSectionList to set
+	 */
+	public void setSelectedPmReportSectionList(
+			List<PmReportSection> selectedPmReportSectionList) {
+		this.selectedPmReportSectionList = selectedPmReportSectionList;
+	}
+
+	/**
+	 * @return the rootLocationTreeList
+	 */
+	public TreeNode getRootLocationTreeList() {
+		return rootLocationTreeList;
+	}
+
+	/**
+	 * @param rootLocationTreeList the rootLocationTreeList to set
+	 */
+	public void setRootLocationTreeList(TreeNode rootLocationTreeList) {
+		this.rootLocationTreeList = rootLocationTreeList;
+	}
+
+	/**
+	 * @return the rootAddressLocationTreeList
+	 */
+	public TreeNode getRootAddressLocationTreeList() {
+		return rootAddressLocationTreeList;
+	}
+
+	/**
+	 * @param rootAddressLocationTreeList the rootAddressLocationTreeList to set
+	 */
+	public void setRootAddressLocationTreeList(TreeNode rootAddressLocationTreeList) {
+		this.rootAddressLocationTreeList = rootAddressLocationTreeList;
+	}
+
+	/**
+	 * @return the selectedNodes
+	 */
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+	/**
+	 * @param selectedNodes the selectedNodes to set
+	 */
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+
+	/**
+	 * @return the selectedLocNodes
+	 */
+	public TreeNode[] getSelectedLocNodes() {
+		return selectedLocNodes;
+	}
+
+	/**
+	 * @param selectedLocNodes the selectedLocNodes to set
+	 */
+	public void setSelectedLocNodes(TreeNode[] selectedLocNodes) {
+		this.selectedLocNodes = selectedLocNodes;
+	}
+
+
 
 	
 

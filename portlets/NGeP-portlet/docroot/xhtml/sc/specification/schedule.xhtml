@@ -8,95 +8,134 @@
 
 
 
+	<h:panelGroup id="frequency">
+		<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
+			toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType eq '117'}">
+			<!-- <h:outputText value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}"></h:outputText> -->
 
-	<p:panel header="Sechedule Details" toggleable="true" >
-		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-			<h:outputLabel value="Schedule Type"></h:outputLabel>
-			<p:selectOneRadio style="padding-right: 30px;" value="#{specificationBackingBean.managedBean.scheduleType}">
-				<f:selectItem itemLabel="Frequency Schedule" itemValue="F" />
-				<f:selectItem itemLabel="Progressive Payment" itemValue="P" />
-               <p:ajax event="change" process="@this" partialSubmit="true" update="schedule"></p:ajax>
-			</p:selectOneRadio>
-			<h:outputLabel value="Total Schedule"></h:outputLabel>
-		<p:inputText></p:inputText>
-		</h:panelGrid>
-	</p:panel>	
-		<h:panelGrid id="schedule"  style="width:100%">
-		<h:panelGroup rendered="#{specificationBackingBean.managedBean.scheduleType eq 'F'}">
-		<p:commandLink value="Frequency Schedule"></p:commandLink>
-		
-		
-		<p:dataTable id="frequencySchedule" var="frequency"  style="width:100%"
-			rowKey="#{frequency}" rowIndexVar="index" rendered="#{specificationBackingBean.managedBean.scheduleType eq 'F'}">
-			<ac:paginator for="frequencySchedule" />
+			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+				<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.totalFrequency}">
+					<p:ajax event="blur" update="frequencySchedule"
+						partialSubmit="false"
+						listener="#{specificationBackingBean.addScheduleDetails}" />
+				</p:inputText>
 
-			<p:column headerText="Schedule No"
-				style="width:40%">
-				
-			</p:column>
-			<p:column headerText="Start Date"
-				style="width:30%">
-				
-			</p:column>
-			
-				<p:column headerText="End Date"
-				style="width:30%">
-				
-			</p:column>
+			</h:panelGrid>
 
-		</p:dataTable> 
-			
-		<p:spacer height="20"></p:spacer>
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,frequencySchedule" partialSubmit="true"
-				  icon="ui-icon-add"  update="frequencySchedule" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"  update="frequencySchedule"/>
+			<p:commandLink value="#{lbl['lbl.sc.spec.freq.schedule']}"></p:commandLink>
 
-		</div>
-		</h:panelGroup>
-		<h:panelGroup rendered="#{specificationBackingBean.managedBean.scheduleType eq 'P'}">
-		
-		<p:commandLink value="Progressive Payment" ></p:commandLink>
-         <p:dataTable id="progressivePayment" var="payment" style="width:100%"
-			rowKey="#{payment}" rowIndexVar="index" rendered="#{specificationBackingBean.managedBean.scheduleType eq 'P'}">
-			<ac:paginator for="progressivePayment" />
 
-			<p:column headerText="Phase"
-				style="width:20%">
-				
-			</p:column>
-			<p:column headerText="Description"
-				style="width:30%">
-				
-			</p:column>
-			
-				<p:column headerText="From"
-				style="width:15%">
-				
-			</p:column>
-			<p:column headerText="To"
-				style="width:15%">
-				
-			</p:column>
-			<p:column headerText="Percentage"
-				style="width:20%">
-				
-			</p:column>
+			<p:dataTable id="frequencySchedule" var="frequency"
+				style="width:100%" rowKey="#{frequency}" rowIndexVar="index"
+				value="#{specificationBackingBean.managedBean.scheduleList}">
+				<ac:paginator for="frequencySchedule" />
 
-		</p:dataTable> 
-			
-		<p:spacer height="20"></p:spacer>
+				<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}"
+					style="width:40%">
+					<p:inputText value="#{frequency.scheduleNo}"></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
+					style="width:25%">
+					<p:calendar value="#{frequency.fromDate}" showOn="button"
+						pattern="MM/yyyy"></p:calendar>
+				</p:column>
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,progressivePayment" partialSubmit="true"
-				  icon="ui-icon-add"  update="progressivePayment" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"  update="progressivePayment"/>
+				<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
+					style="width:25%">
+					<p:calendar value="#{frequency.toDate}" showOn="button"
+						pattern="MM/yyyy"></p:calendar>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+					style="width:10%">
+					<p:commandLink>
 
-		</div>
-		</h:panelGroup>
-		</h:panelGrid>
-	
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+
+			<p:spacer height="20"></p:spacer>
+
+			<div align="right">
+
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					icon="ui-icon-delete" update="frequencySchedule" />
+
+			</div>
+
+		</p:panel>
+	</h:panelGroup>
+	<h:panelGroup id="progressive">
+		<c:if
+			test="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType ne '116' and specificationBackingBean.managedBean.scQtSpec.fulfilmentType !=null}">
+			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
+				toggleable="true">
+
+				<p:commandLink value="#{lbl['lbl.sc.spec.progressive.payment']}"></p:commandLink>
+				<p:dataTable id="progressivePayment" var="payment"
+					style="width:100%" rowKey="#{payment}" rowIndexVar="index"
+					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
+					<ac:paginator for="progressivePayment" />
+
+					<p:column headerText="#{lbl['lbl.sc.spec.phase']}"
+						style="width:20%">
+						<p:inputText value="#{payment.phase}"></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.description']}"
+						style="width:30%">
+						<p:inputText value="#{payment.phase}"></p:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+						style="width:15%">
+						<p:calendar value="#{payment.fromDate}" showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+						style="width:15%">
+						<p:calendar value="#{payment.toDate}" showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
+						style="width:10%">
+						<p:inputText value="#{payment.percentage}"></p:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+						style="width:10%">
+						<p:commandLink>
+
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								value="/resources/ep/images/design/edit.png" />
+
+						</p:commandLink>
+
+					</p:column>
+
+				</p:dataTable>
+
+				<p:spacer height="20"></p:spacer>
+
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+						process="@this,progressivePayment" partialSubmit="true"
+						icon="ui-icon-add" update="progressivePayment"
+						actionListener="#{specificationBackingBean.addProgressiveDetails}" />
+					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						icon="ui-icon-delete" update="progressivePayment" />
+
+				</div>
+
+			</p:panel>
+		</c:if>
+	</h:panelGroup>
 
 
 </ui:composition>

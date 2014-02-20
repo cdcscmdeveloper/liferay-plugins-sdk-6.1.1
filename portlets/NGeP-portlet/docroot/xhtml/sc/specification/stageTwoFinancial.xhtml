@@ -7,29 +7,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Compilance" widgetVar="stageTwoFinance" modal="true"
-		width="800" height="400">
-		<p:panel header="#{lbl['lbl.sc.spec.stage.compilence']}" toggleable="true">
+	<p:dialog widgetVar="stageTwoFinance" modal="true" width="800"
+		height="400">
+		<p:panel
+			header="#{lbl['lbl.sc.spec.btn.standard.financial.check.list']}"
+			toggleable="true" collapsed="true">
 
 			<p:dataTable id="stageTwoFinPopup" var="compilance"
 				value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoFinComplianceSelect}"
 				rowKey="#{compilance.checkListCategoryId}" rowIndexVar="index">
-                <ac:paginator for="stageTwoFinPopup"></ac:paginator>
-				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
+				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
+				<p:column selectionMode="multiple"
+					style="width:2%;text-align:center;" />
+				<p:column headerText="#{lbl['lbl.sc.spec.check.list']}">
 					<h:outputText value="#{compilance.pmCheckList.checkListName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
 		</p:panel>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
-			onclick="stageTwoFinance.hide();" icon="ui-icon-cancel"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}" style="float:right;" process="@all"
-			partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			style="float:right;" onclick="stageTwoFinance.hide();"
+			icon="ui-icon-cancel"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+			style="float:right;" process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.stageTwoFinanceCheckList}"
-			oncomplete="stageTwoFinance.hide();" update="financeProposaltwo" icon="ui-icon-accept" ></p:commandButton>
+			oncomplete="stageTwoFinance.hide();" update="financeProposaltwo"
+			icon="ui-icon-accept"></p:commandButton>
 
 
 	</p:dialog>

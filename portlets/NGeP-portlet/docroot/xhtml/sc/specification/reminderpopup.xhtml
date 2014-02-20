@@ -7,20 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Committee" widgetVar="reminder" modal="true"
+	<p:dialog  widgetVar="reminder" modal="true"
 		width="600" height="250">
-		<p:panel header="#{lbl['lbl.sc.spec.committee']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.reminder']}" toggleable="true">
 			<p:dataTable id="specificationReminder" var="reminderpopup"
 				editable="true">
 				<ac:paginator for="specificationReminder" />
-				<p:column headerText="#{lbl['lbl.sc.spec.committee.name']}" style="width:100%">
+				<p:column headerText="#{lbl['lbl.sc.spec.reminder.name']}" style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
-		</p:panel>
-
-		<p:panel header="#{lbl['lbl.sc.spec.committee.details']}" toggleable="true">
+	
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
 
@@ -34,6 +32,22 @@
 
 			</h:panelGrid>
 		</p:panel>
+		
+			<p:panel header="#{lbl['lbl.sc.spec.reminder.sign.off']}" toggleable="true">
+		
+	
+			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+
+
+				<h:outputLabel value="#{lbl['lbl.sc.spec.pin.no']}" />
+
+				<p:inputText size="50"></p:inputText>
+
+			
+
+			</h:panelGrid>
+		</p:panel>
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
 				onclick="reminder.hide();" icon="ui-icon-cancel"></p:commandButton>

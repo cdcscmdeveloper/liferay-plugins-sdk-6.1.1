@@ -6,20 +6,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<p:dialog header="#{lbl['lbl.sc.spec.stage2.score.head']}"
-		widgetVar="specScoring" modal="true" width="800" height="400">
-		<p:panel header="#{lbl['lbl.sc.spec.stage2.score.head']}"
+		<p:panel header="#{scoringPnlName}"
 			toggleable="true">
 
-			<p:dataTable id="scoringSpec" rowIndexVar="index"
-			value="#{specificationBackingBean.managedBean.scoringList}"
-			selection="#{specificationBackingBean.managedBean.selectscoring}"
+			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
+			value="#{scoringList}"
 			var="checkListScoring" rowKey="#{checkListScoring}" >
-				<ac:paginator for="scoringSpec"></ac:paginator>
-					<p:ajax event="rowSelectCheckbox"></p:ajax>
-				
-				<p:column selectionMode="multiple" style="width:2%;"></p:column>
+			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
+			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
 				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}">
 				<p:inputText value="#{checkListScoring.rangeFrom}"></p:inputText>
 				</p:column>
@@ -36,24 +30,7 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="10"></p:spacer>
-
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this,scoringSpec" partialSubmit="true" actionListener="#{specificationBackingBean.addScoring}" update="scoringSpec" icon="ui-icon-add" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" action="#{specificationBackingBean.deleteScoring}" update="scoringSpec"/>
-
-			</div>
 		</p:panel>
-		<p:spacer height="10"></p:spacer>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" oncomplete="specScoring.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
-			style="float:right;" process="@all" actionListener="#{specificationBackingBean.acceptScoring}" partialSubmit="true"
-			oncomplete="specScoring.hide();" icon="ui-icon-accept"></p:commandButton>
-
-
-	</p:dialog>
+		
+	
 </ui:composition>

@@ -1,0 +1,430 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog  widgetVar="supplierInfo"
+		modal="true" width="800" height="400">
+		<p:panel header="#{lbl['lbl.sc.spec.supplier.info']}" toggleable="true" collapsed="true">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.supplier.name']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.bumi.status']}" /></td>
+					<td><p:inputText value="Yes/No" disabled="true"
+							readonly="true"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.eff.date']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.exp.date']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
+					<td><p:inputText value="Distributor/Manufacturer"
+							disabled="true" readonly="true"></p:inputText></td>
+
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
+					<td><p:inputTextarea disabled="true" readonly="true" rows="5"
+							cols="30" autoResize="flase" style="margin-bottom:5px;"></p:inputTextarea></td>
+
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.fax.no']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.web.site']}" /></td>
+					<td colspan="3"><p:inputText disabled="true" readonly="true"
+							size="100"></p:inputText></td>
+
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.spec.office.facility.type']}" toggleable="true" collapsed="true">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 118px;"><p:outputLabel value="#{lbl['lbl.sc.spec.office.type']}" /></td>
+					<td colspan="3"><p:inputText value="Business/Home"
+							disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+				<tr>
+					<td style="width: 118px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.ownership.type']}" /></td>
+					<td colspan="3"><p:inputText value="Owned/Rented"
+							disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true" collapsed="true">
+			<p:dataTable id="factory" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="factory"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+			</p:dataTable>
+
+		</p:panel>
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.capital.share.holders']}" toggleable="true" collapsed="true">
+			<p:commandLink value="#{lbl['lbl.sc.spec.shareholder.personal']}"></p:commandLink>
+			<p:dataTable id="sharePersonal" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="sharePersonal"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+			</p:dataTable>
+
+
+			<p:commandLink value="#{lbl['lbl.sc.spec.shareholder.company']}"></p:commandLink>
+			<p:dataTable id="shareCompany" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="shareCompany"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.spec.capital.status']}" toggleable="true" collapsed="true">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.auth.capital']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.paid.capital']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.accumulate.capital']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.accumulate.share']}" /></td>
+					<td><p:inputText disabled="true" readonly="true"></p:inputText></td>
+				</tr>
+			</table>
+
+			<p:panelGrid style="margin-top:20px;width:100%;">
+				<f:facet name="header">
+
+					<p:row>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.composition.capital.distribution']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.no.of.members']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.amount']}</p:column>
+						<p:column>(%)</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.bumiputra']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.bumiputra']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.equity.govt']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.govt.equity']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.local.company']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.foreign.company']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+			</p:panelGrid>
+
+		</p:panel>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.staff.info']}" toggleable="true" collapsed="true">
+
+			<p:panelGrid style="margin-top:20px;width:100%;">
+				<f:facet name="header">
+
+					<p:row>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.status']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.board.director']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.higher.management']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.management']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.total']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.entered']}</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.bumi']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.bumi']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.malaysian']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+			</p:panelGrid>
+
+		</p:panel>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true" collapsed="true">
+			<p:dataTable id="SupplierCategoryCodes" rowIndexVar="index"
+				var="factory" rowKey="#{factory}">
+				<ac:paginator for="SupplierCategoryCodes"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+			</p:dataTable>
+
+		</p:panel>
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.company.branches']}" toggleable="true" collapsed="true">
+			<p:dataTable id="companyBranch" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="companyBranch"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.branch.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.contact.person']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.phn.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.fax.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.spec.supplier.bank.info']}" toggleable="true" collapsed="true">
+			<p:commandLink value="#{lbl['lbl.sc.spec.bank.act.details']}"></p:commandLink>
+			<p:dataTable id="bankdetails" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="bankdetails"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.act.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+
+
+			</p:dataTable>
+
+
+			<p:commandLink value="#{lbl['lbl.sc.spec.cheque.sign.composition']}"></p:commandLink>
+			<p:dataTable id="cheque" rowIndexVar="index" var="factory"
+				rowKey="#{factory}">
+				<ac:paginator for="cheque"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+				<p:column headerText="#{lbl['lbl.sc.spec.bumi.status']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+
+			</p:dataTable>
+
+		</p:panel>
+	</p:dialog>
+</ui:composition>
