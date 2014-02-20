@@ -28,12 +28,14 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.checkList.ICheckListSO;
 import my.ep.biz.service.pm.common.currency.ICurrencySO;
 import my.ep.biz.service.pm.common.procurementcategory.IProcurementSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -864,7 +866,7 @@ public class SpecificationBackingBean extends
 
 				compilance.add(scqtlist);
 				scqtlist.setDocType("1");
-				scqtlist.setEnable(true);
+				//scqtlist.setEnable(true);
 				scqtlist.setChecklistType(bean.getPmCheckList()
 						.getChecklistType());
 				scqtlist.setEvaluationStage("2");
@@ -937,7 +939,7 @@ public class SpecificationBackingBean extends
 				ScQtCheckList scqtlist = createSpecList("2");
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
 				scqtlist.setDocType("3");
-				scqtlist.setEnable(true);
+				//scqtlist.setEnable(true);
 				scqtlist.setChecklistType(bean.getPmCheckList()
 						.getChecklistType());
 				scqtlist.setEvaluationStage("2");
@@ -1472,8 +1474,9 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setSpecificationDataType(specificationDataType);
 
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
 				.longValue());
@@ -1506,8 +1509,9 @@ public class SpecificationBackingBean extends
 		specReqDTO.setScSpecificationDataType(this.getManagedBean()
 				.getSpecificationDataType());
 		specReqDTO.setOutcome(outCome);
-		IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTSpecSO.class);
+		IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
 		try {
 			SpecificationResDTO resDTO = iqtSpecSO.updateBPMAction(specReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -1605,8 +1609,9 @@ public class SpecificationBackingBean extends
 	}
 
 	private IQTSpecSO getSpecSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTSpecSO.class);
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
 	}
 
 	public void handleS2TechChanged(ScQtCheckList checklist) {
