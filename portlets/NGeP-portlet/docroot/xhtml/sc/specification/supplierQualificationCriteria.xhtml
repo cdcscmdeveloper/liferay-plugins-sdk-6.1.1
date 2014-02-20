@@ -10,7 +10,7 @@
 	<p:panel>
 		<h:panelGroup id="suppQualSpec">
 			<c:if
-				test="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtType == PmCodeConst.quotationTenderTypeOpen }">
+				test="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtType == PmCodeConst.quotationTenderTypeOpen and  specificationBackingBean.managedBean.panel == 'No'}">
 				<ui:include src="/xhtml/sc/specification/supplierCriteriaOpen.xhtml" />
 			</c:if>
 			
@@ -18,6 +18,11 @@
 				test="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
 				<ui:include src="/xhtml/sc/specification/supplierRestrictedtender.xhtml" />
 			</c:if>
+            <c:if
+				test="#{ specificationBackingBean.managedBean.panel ne'No'}">
+				<ui:include src="/xhtml/sc/specification/supplierCriteriaPanel.xhtml" />
+			</c:if>
+
 
 		</h:panelGroup>
 	</p:panel>
