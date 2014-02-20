@@ -3,8 +3,13 @@
  */
 package my.ep.web.backingbean.ct.association;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,6 +24,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
@@ -84,11 +90,11 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
 				getManagedBean().getCtSupplierName()));	
 			}
-			if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
+			if(this.getManagedBean().getCtDateStart()!=null) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
 				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtDateStart()));	
 			}			
-			if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
+			if(getManagedBean().getCtDateEnd()!=null ) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
 				SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCtDateEnd()));	
 			}	
@@ -120,7 +126,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		ContractAssociationReqDTO reqDTO = null;
 		
 		try {
-            
 			 reqDTO = new ContractAssociationReqDTO();
 			 contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
 				
@@ -144,9 +149,19 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  		for (int i = 0; i < selectedContractList.length; i++) {
  			CtContract ad = selectedContractList[i];
  			this.getManagedBean().getAssociateSearchList().add(ad);
- 		}
- 		selectedContractList = null;
- 	}
+ 		}selectedContractList = null;
+ 			Set set = new HashSet<CtContract>();
+			List newList = new ArrayList<CtContract>();
+			 java.util.Iterator<CtContract> iter = this.getManagedBean().getAssociateSearchList().iterator();
+			  while(iter.hasNext()){
+				  Object element = iter.next();
+				  if(set.add(element))
+					  newList.add(element);
+			      }
+		  
+			  this.getManagedBean().getAssociateSearchList().clear();
+			  this.getManagedBean().getAssociateSearchList().addAll(newList);
+		}
      
 
  	public void deleteAdvanceContract() {
@@ -223,8 +238,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		}
 	}
 	
-	
-
 	public CtAssociation[] getCtSelectAssociation() {
 		return ctSelectAssociation;
 	}
@@ -285,5 +298,13 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 			CtContract[] deleteSelectedContractList) {
 		this.deleteSelectedContractList = deleteSelectedContractList;
 	}
+	
+	public String convertTime(Date time){ 
+        String str ="";
+    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+        if(time == null)
+        	return str;
+        return format.format(time); 
+    } 
 	
 }

@@ -67,18 +67,18 @@
     <p:outputPanel id="ChangeBankAcc">
 	    <table style="width: 100%">
             <tr>
-                <td style="width:200px;">  
+                <td style="width:15%;">  
                 <h:outputLabel for="contractId" value="Contract No." /></td>
 			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" 
 			          style="width:180px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
-			           <f:selectItem itemLabel="-Select One-" itemValue="" />
+			           <f:selectItem itemLabel="-Select One-" itemValue="null" />
 				       <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
-			         </p:selectOneMenu>
+				         <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
+				      </p:selectOneMenu>
 			         <p:inputText value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}" style="width:170px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
 			         </td>
-		         <td style="width:200px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
+		         <td style="width:20%;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
 			               value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"/>	</td>
 		   </tr>
@@ -112,7 +112,7 @@
 		  <p:panel id="bankId" header="Bank Details"  toggleable="true"  toggleSpeed="500">
                 <table style="width: 100%">
                   <tr>
-		              <td style="width:200px;"> <p:outputLabel  value="Bank A/C" />  </td>
+		              <td style="width:15%;"> <p:outputLabel  value="Bank A/C" />  </td>
                       <td> <p:selectOneMenu id="accountId" value="#{supplierBackingBean.managedBean.contractNo}" 
 			                  style="width:180px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
 				             <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
@@ -126,7 +126,7 @@
                      <tr>
                         <td> <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  </td>
                         <td> <p:inputText value="CIMB BERHAD"  disabled="true" style="width:170px;" />  </td>
-                        <td style="width:200px;"> <p:outputLabel   value="#{lbl['lbl.ct.bank.branch']}" />  </td>
+                        <td style="width:20%;"> <p:outputLabel   value="#{lbl['lbl.ct.bank.branch']}" />  </td>
                         <td> <p:inputText value="Cyber Jaya"  disabled="true" style="width:170px;" /></td>
                     </tr>
                     <tr>
@@ -151,7 +151,7 @@
 		  <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
            <table style="width: 100%">
                   <tr>
-                      <td style="width:200px;">   <p:outputLabel value="EP No." />  </td>
+                      <td style="width:15%;">   <p:outputLabel value="EP No." />  </td>
                       <td> <h:panelGrid columns="4">
                                 <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.epNo}" 
                                     disabled="true" size="11"/>
@@ -161,7 +161,7 @@
                                    disabled="true" size="11"/>
                              </h:panelGrid> 
                        </td>
-                       <td style="width:120px;">  <p:outputLabel  value="Contact Person"/>  </td>
+                       <td style="width:10%;">  <p:outputLabel  value="Contact Person"/>  </td>
                        <td>  <p:inputText   disabled="true"   style="width:170px;" /></td>
                 </tr> 
                 <tr>       
@@ -189,7 +189,7 @@
 			                   <h:panelGrid>
 				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="31"   />
 			                   </h:panelGrid></td>
-			                 <td style="width:120px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
+			                 <td style="width:10%;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
                              <td valign="top">  <p:inputText value="1234"  disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>

@@ -10,10 +10,10 @@
      <h:panelGrid style="width:100%;">
      <p:dataTable id="zoneTable" var="ctZones" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractZones}" widgetVar="dataTableObj" 
         rowKey="#{ctZones}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedCtZone}"
-        lazy="true" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+        lazy="true" dynamic="true">
           <ac:paginator for="zoneTable"/>
           <p:ajax event="rowSelect" update=":form:tabview:updateZoneDetails" 
-				listener="#{contractDetailsBackingBean.selectedZoneValue()}" />
+			 listener="#{contractDetailsBackingBean.selectedZoneValue()}" />
             <p:columnGroup type="header"> 
 			        <p:row> 
 		               <p:column style="width:400px;" headerText="#{lbl['lbl.ct.zone.tree.name']}" /> 	
@@ -23,12 +23,11 @@
 		           <p:column> <p:outputLabel value="#{ctZones.zoneName}" style="float:left;"/></p:column>
 		           <p:column><h:inputText value="#{ctZones.deliveryTerm}" size="5" /> </p:column>
        </p:dataTable>
-    
        <p:outputLabel id="updateZoneDetails" style="width:100%;float:left;">
          <p:spacer height="20"/>
         <h:panelGrid style="width:100%;" rendered="#{contractDetailsBackingBean.managedBean.showZoneDetails}">
         <p:dataTable id="zoneDetails" var="zoneVar" value="#{contractDetailsBackingBean.managedBean.ctContractZoneDtls}" 
-            lazy="true" dynamic="true"  paginator="false"  emptyMessage="No Records!">
+            lazy="true" dynamic="true">
               <p:columnGroup type="header"> 
 			        <p:row> 
 		               <p:column style="width:210px;" headerText="City" /> 	
@@ -46,8 +45,7 @@
     </p:outputLabel>
    </h:panelGrid>
    </p:panel>
-   
-	<p:panel header="Remarks" toggleable="true">
+   <p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -86,8 +84,7 @@
 				</td>
 			</tr>
 		</table>
-	</p:panel>		   
-   
+	</p:panel>		    
 </ui:composition>
 
 

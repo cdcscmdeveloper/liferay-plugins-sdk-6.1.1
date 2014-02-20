@@ -11,65 +11,63 @@
     <style>
       .column-align-center { text-align: center !important;}
     </style>
-          <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
-              <h:panelGrid columns="4" style="width:100%;">
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
-               <p:inputText value="#{associationBackingBean.managedBean.projectName}"  style="width:170px;"/>
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
-               <p:inputText  value="#{associationBackingBean.managedBean.ctName}" style="width:170px;" />
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
-                <p:inputText value="#{associationBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
-               <h:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
-               <p:inputText value="#{associationBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-               <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" id="calefdate" showOn="button" />
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-               <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateEnd}" id="calepdate" showOn="button" />
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-               <p:inputText  value="#{associationBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
-               <f:verbatim></f:verbatim>
-                </h:panelGrid>
-              <div class="ppRightBtn"> 
-                 <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
-                    action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
-              </div>
-		 </p:panel>
-		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
-            <div style="overflow-x:auto">
-			    <h:panelGrid  style="width:100%;">          
-			        <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" 
-			             widgetVar="dataTableObj" lazy="false" dynamic="true"  selection="#{associationBackingBean.ctSelectAssociation}" 
-			             rowKey="#{data}" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
-			            <ac:paginator for="associateSearch"/>
-		                <p:column selectionMode="multiple" style="width:18px;"/>  
-		                 <p:column style="width:200px;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
-		                        <p:outputLabel value="#{data.projectName}" style="float:left;"  /> </p:column> 
-		                 <p:column style="width:440px;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
-		                        <p:outputLabel value="#{data.description}" style="float:left;"/> </p:column> 
-		                  <p:column style="width:60px;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
-		                 	 <p:outputLabel value="1" /> 
-								</p:column> 
-		                  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
-		                       <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" styleClass="column-align-center">
-			                      <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
-			                      <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-		                       </p:commandLink> </p:column> 
-		             </p:dataTable>
-		            </h:panelGrid>
-		            <p:spacer height="4"/>
-		             <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		                 header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
-                         <h:panelGrid columns="2">
-		                   <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
-		                    process="@form" update="associateSearch"  onclick="confirmation.hide();"/>
-			               <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
-		                 </h:panelGrid>
-		              </p:confirmDialog>
-		             <div class="ppRightBtn">
-				         <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete"/>
-                         <p:commandButton value="Create"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
-			          </div>
-		   	   </div>
-		   </p:panel>
-	 </ui:define>
+    <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
+      <h:panelGrid columns="4" style="width:100%;">
+        <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
+        <p:inputText value="#{associationBackingBean.managedBean.projectName}"  style="width:170px;"/>
+        <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
+        <p:inputText  value="#{associationBackingBean.managedBean.ctName}" style="width:170px;" />
+        <p:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
+        <p:inputText value="#{associationBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+        <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
+        <p:inputText value="#{associationBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
+        <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
+        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" 
+        id="calefdate" showOn="button"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+        <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
+        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateEnd}" id="calepdate" 
+        pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+        <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
+        <p:inputText  value="#{associationBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
+        <f:verbatim></f:verbatim>
+      </h:panelGrid>
+      <div class="ppRightBtn"> 
+        <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
+          action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
+      </div>
+	</p:panel>
+	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
+      <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" 
+		 selection="#{associationBackingBean.ctSelectAssociation}" rowKey="#{data}">
+	     <ac:paginator for="associateSearch"/>
+		 <p:column selectionMode="multiple" style="width:18px;" />
+		 <p:column style="width:200px;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
+		   <p:outputLabel value="#{data.projectName}" style="float:left;"  /> </p:column> 
+		 <p:column style="width:400px;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
+		   <p:outputLabel value="#{data.description}" style="float:left;"/> </p:column> 
+		 <p:column style="width:60px;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
+		   <p:outputLabel value="1" />
+		 </p:column> 
+		 <p:column style="width:100px;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
+		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" styleClass="column-align-center">
+			  <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
+			  <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+		   </p:commandLink> 
+		  </p:column> 
+		</p:dataTable>
+		<p:spacer height="4"/>
+		<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
+		   header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
+           <h:panelGrid columns="2">
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
+		       process="@form" update="associateSearch"  onclick="confirmation.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
+		   </h:panelGrid>
+		 </p:confirmDialog>
+		 <div class="ppRightBtn">
+		   <p:commandButton value="Create"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
+	       <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete"/>
+	     </div>
+	  </p:panel>
+   </ui:define>
 </ui:composition>

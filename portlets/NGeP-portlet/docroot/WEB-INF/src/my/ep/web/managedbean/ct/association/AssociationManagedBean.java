@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct.association;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,8 +30,8 @@ public class AssociationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private String ctName;
 	private String ctNumber;
-	private String ctDateEnd;
-	private String ctDateStart;
+	private Date ctDateEnd;
+	private Date ctDateStart;
 	private String projectName;
 	private String ctProductCode;
 	private String ctSupplierName;
@@ -53,16 +54,17 @@ public class AssociationManagedBean extends BaseManagedBean{
 	public void setCtName(String ctName) {
 		this.ctName = ctName;
 	}
-	public String getCtDateEnd() {
+	
+	public Date getCtDateEnd() {
 		return ctDateEnd;
 	}
-	public void setCtDateEnd(String ctDateEnd) {
+	public void setCtDateEnd(Date ctDateEnd) {
 		this.ctDateEnd = ctDateEnd;
 	}
-	public String getCtDateStart() {
+	public Date getCtDateStart() {
 		return ctDateStart;
 	}
-	public void setCtDateStart(String ctDateStart) {
+	public void setCtDateStart(Date ctDateStart) {
 		this.ctDateStart = ctDateStart;
 	}
 	public String getProjectName() {
@@ -113,25 +115,13 @@ public class AssociationManagedBean extends BaseManagedBean{
 	}
 
 	public void setAssociationList(List<CtAssociation> associationList) {
+		
 		this.associationList = associationList;
 	}
 
 	public List<CtContract> getAssociateSearchList() {
 		if(associateSearchList == null)
-			  associateSearchList = new ArrayList<CtContract>();
-		else{
-			Set set = new HashSet<CtContract>();
-			List newList = new ArrayList<CtContract>();
-			 java.util.Iterator<CtContract> iter = associateSearchList.iterator();
-			  while(iter.hasNext()){
-				  Object element = iter.next();
-				  if(set.add(element))
-					  newList.add(element);
-			      }
-		  
-		       associateSearchList.clear();
-		       associateSearchList.addAll(newList);
-		}
+			associateSearchList = new ArrayList<CtContract>();
 		return associateSearchList;
 	}
 

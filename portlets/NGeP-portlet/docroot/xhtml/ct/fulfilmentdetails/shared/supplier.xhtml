@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
    <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
-    <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
+    <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15,columnWidth30,columnWidth30,columnWidth30">  
        <p:outputLabel value="EP No." />  
           <h:panelGrid columns="4">
              <p:inputText disabled="true" size="12" 
@@ -20,9 +20,9 @@
           <p:inputText disabled="true" style="width:225px;" 
              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}" /> 
           <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
-          <p:inputText value="0111-2345-8795" disabled="true" style="width:170px;"/>
-          <p:outputLabel value="Contact Person" />  
-          <p:inputText disabled="true" style="width:170px;" value="Mr Kamal" /> 
+          <p:inputText value="0111-2345-8795" disabled="true" style="width:130px;"/>
+          <p:outputLabel value="Branch Name" />  
+          <p:inputText disabled="true" style="width:170px;" /> 
           <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
           <p:inputText value="CYBERJAYA"  disabled="true" style="width:170px;" />
           <h:panelGroup>
@@ -44,20 +44,24 @@
                  <p:inputTextarea id="bankAddress"  value="Prima 5-A, Jalan Teknokrat 5,63000 Cyberjaya, Selangor Malaysia" 
                     disabled="true" rows="4" cols="31"  autoResize="false" />
 	          </h:panelGrid>
+	          <h:outputLabel value="Contact Person" />  
+              <p:inputText disabled="true" style="width:170px;" value="Mr Kamal" /> 
+              <h:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
+              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
 	          <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
               <p:inputText disabled="true" style="width:120px;"
                  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.phoneNo}"   /> 
-               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
+              
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
               <p:inputText  disabled="true" style="width:120px;"  
                  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.faxNo}"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
               <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
+               <f:verbatim> </f:verbatim>  <f:verbatim> </f:verbatim>
               <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
               <p:inputText disabled="true" style="width:170px;" 
                   value="test@company.com"/>
-               <f:verbatim> </f:verbatim>  <f:verbatim> </f:verbatim>
+              
               </h:panelGrid>
      </p:panel>
 </ui:composition>

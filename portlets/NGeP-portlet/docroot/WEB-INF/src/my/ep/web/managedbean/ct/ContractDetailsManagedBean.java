@@ -74,6 +74,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String scheduleOption="1";
 	private CtSchedule ctSchedulesDel;
+	private boolean scheduleType;
 	private CtProgressivePayment ctProgressivePaymentDel;
 	
 	private DualListModel<String> approverModel;
@@ -599,6 +600,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
+	}
+
+	public boolean isScheduleType() {
+		return scheduleType;
+	}
+
+	public void setScheduleType(boolean scheduleType) {
+		this.scheduleType = scheduleType;
 	}
 
 }

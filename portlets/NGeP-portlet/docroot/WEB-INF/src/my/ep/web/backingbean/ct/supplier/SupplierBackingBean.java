@@ -227,7 +227,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				populateContractList = new ArrayList<SelectItem>();
 				dbContractList = resDTO.getContractList();
 				for (CtContract obj : dbContractList) {
-					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(),obj.getLatestContractVer().getDocNo()));
+					populateContractList.add(new SelectItem(obj.getContractId(),obj.getContractNo()));
 			    }      
 		  }
 		} finally {
@@ -273,11 +273,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 			 reqDTO = new ContractReqDTO();
 			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			 reqDTO.setContractVerId(this.getManagedBean().getContractNo());
-			 ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+			 reqDTO.setContractId(this.getManagedBean().getContractNo());
+			 ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
 			 if(resDTO.isSuccessful()){
-			     this.getManagedBean().setContractVer(resDTO.getCtContractVer()); 
-			     this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+				 this.getManagedBean().setCtContract(resDTO.getContract());
+			     this.getManagedBean().setContractVer(resDTO.getContract().getLatestContractVer()); 
+			    
 			     changeAccountActionListener();
 			 }
 		} catch (Exception ex) {

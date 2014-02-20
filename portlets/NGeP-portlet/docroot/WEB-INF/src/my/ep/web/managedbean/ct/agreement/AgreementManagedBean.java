@@ -60,8 +60,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	
 	private Long parameterId;
 	private String userLoginId;
-	private Long ministryProfileId = 211L;
-	private Long departmentProfileId = 1003L;
+	private Long ministryProfileId;
+	private Long departmentProfileId;
 
 	private Map<Long, PmUserGroup> userGroupMap;
 	private DualListModel<String> approverModel;
@@ -69,6 +69,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmParameter pmParameter;
 	
 	private String uploadFinalAgreement;
+	private List<PmOrgProfile> orgList;
+	private List<PmOrgProfile> orgListDep;
 	
 	
 	public AgreementManagedBean(){
@@ -315,5 +317,23 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setCtAmendment(CtAmendment ctAmendment) {
 		this.ctAmendment = ctAmendment;
+	}
+
+	public List<PmOrgProfile> getOrgList() {
+		return orgList;
+	}
+
+	public void setOrgList(List<PmOrgProfile> orgList) {
+		this.orgList = orgList;
+	}
+
+	public List<PmOrgProfile> getOrgListDep() {
+		return orgListDep;
+	}
+
+	public void setOrgListDep(List<PmOrgProfile> orgListDep) {
+		this.orgListDep = orgListDep;
 	}	
+	
+	
 }
