@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.so.business.owner']}" toggleable="true">
+		<p:dataTable id="businessownerId"
+			value="#{qTBusinessOwnerBackingBean.managedBean.scCommitteeMemberList}"
+			var="businessowner" rowIndexVar="index" editable="true"
+			rowKey="#{businessowner}"
+			selection="#{qTBusinessOwnerBackingBean.managedBean.selectScCommitteMember}">
+
+			<ac:paginator for="businessownerId" />
+
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.name']}" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.designation']}" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.grade']}" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.pp']}" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.consolidate']}" />
+
+					<p:column style="width:6%" headerText="Action" />
+				</p:row>
+			</p:columnGroup>
+
+			<p:column selectionMode="multiple" style="width:5%" />
+
+			<p:column>
+				<h:outputText value="#{businessowner.memberName}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{businessowner.icPassport}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{businessowner.designation}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{businessowner.grade}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{businessowner.pnp}" />
+			</p:column>
+			<p:column selectionMode="single" />
+			<p:column />
+
+		</p:dataTable>
+		<p:spacer height="5px" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
+
+			<p:commandButton id="businessowneradd"
+				value="#{lbl['lbl.so.addbtn']}" process="@this"
+				action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
+				oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
+				icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete"
+				action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
+				update="businessownerId" />
+		</div>
+		<br />
+	</p:panel>
+	<p:spacer height="5px" />
+	<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
+		columnClasses="columnWidth20" style="margin-left: 26px;">
+		<p:selectBooleanCheckbox
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.allState}">
+		</p:selectBooleanCheckbox>
+		<h:outputLabel value="Required Approval for Specification" />
+	</h:panelGrid>
+	<p:spacer height="5px" />
+	<p:panel header="Ministry Specification Secretary" toggleable="true">
+		<!-- <p:dataTable id="ministryspecificationId" style="width:50%">
+			<p:column headerText="Secretary Name" />
+		</p:dataTable>
+		<h:column>
+			<h:outputLabel value="Secretary Name" />
+		</h:column> -->
+		<h:column>
+			<p:selectOneMenu id="app"
+				value="#{lOADetailBackingBean.managedBean.scQtSpec.approverAction}">
+				<f:selectItems value="#{qTBusinessOwnerBackingBean.ministrySpecificationSecretaryList}" />
+			</p:selectOneMenu>
+		</h:column>
+	</p:panel>
+</ui:composition>

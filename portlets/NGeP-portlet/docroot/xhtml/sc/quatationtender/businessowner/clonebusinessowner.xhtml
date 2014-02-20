@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="Clone" header="" widgetVar="screen2" modal="true">
+		<p:panel header="#{lbl['lbl.so.business.owner.search']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Title" /></td>
+					<td colspan="3"><p:inputText
+							value="#{qTBusinessOwnerBackingBean.managedBean.title}" size="92" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+					<td><p:inputText
+							value="#{qTBusinessOwnerBackingBean.managedBean.qtNo}" size="28" /></td>
+					<td><p:outputLabel value="Procurement Mode" /></td>
+					<td><p:selectOneMenu
+							value="#{qTBusinessOwnerBackingBean.managedBean.procurementMode}"
+							style="width: 192px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+					<td><p:calendar
+							value="#{qTBusinessOwnerBackingBean.managedBean.createdDtFrom}"
+							size="28" showOn="button" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+					<td><p:calendar
+							value="#{qTBusinessOwnerBackingBean.managedBean.createdDtTo}"
+							size="28" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+					<td><p:selectOneMenu style="width:192px"
+							value="#{qTBusinessOwnerBackingBean.managedBean.status}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Active" itemValue="1" />
+							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+					style="float:right;" icon="ui-icon-search"
+					action="#{qTBusinessOwnerBackingBean.cloneSearchCommitteAction}"
+					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
+			</div>
+			<br />
+			<br />
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+			<p:dataTable id="clonesearchCommitte"
+				value="#{qTBusinessOwnerBackingBean.managedBean.cloneSearchCommittes}"
+				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneCommittee}"
+				rowKey="#{committe}" selectionMode="single" var="committe"
+				styleClass="cloneResults">
+
+				<ac:paginator for="clonesearchCommitte" />
+
+				<p:ajax event="rowSelect" update=":form:qtsubId:businessownerlistid"
+					listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
+
+				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+					<h:outputText value="#{committe.scQt.qtNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.title']}">
+					<h:outputText value="#{committe.scQt.qtTitle}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<h:outputText
+						value="#{qTBusinessOwnerBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, committe.scQt.procurementMode)}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<h:outputText value="#{committe.scCommittee.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.status']}">
+					<h:outputText value="#{committe.scQt.pmStatus.pmStatusDescs[0].statusName}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<p:panel id="cloneCommitteMembers" header="#{lbl['lbl.so.bo.list']}"
+			toggleable="true">
+			<p:dataTable id="businessownerlistid"
+				value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
+				var="member" rowKey="#{member.committeeMemberId}"
+				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
+				styleClass="cloneResults,cloneCommitteMembers">
+
+				<p:column selectionMode="multiple"></p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<h:outputLabel value="#{member.memberName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+					<h:outputLabel value="#{member.icPassport}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+					<h:outputLabel value="#{member.designation}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+					<h:outputLabel value="#{member.grade}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+					<h:outputLabel value="#{member.pnp}" />
+				</p:column>
+
+				<p:column headerText="Email">
+					<h:outputLabel value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
+					<h:outputLabel value="#{member.consolidate}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				style="float:right;" icon="ui-icon-cancel" onclick="screen2.hide();" />
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+				style="float:right;"
+				action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
+				oncomplete="screen2.hide();" update="businessownerId"
+				icon="ui-icon-clone" />
+		</p:panel>
+
+	</p:dialog>
+</ui:composition>
