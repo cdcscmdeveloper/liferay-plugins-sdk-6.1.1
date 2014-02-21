@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.cm.codification;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -214,9 +217,9 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 				reqDTO.setItemSearchBean(searchBean);
 
 				CodificationResDTO resDTO = unspscSO.searchItem(reqDTO);
-				
-				
-				
+
+
+
 				return resDTO.getItemResultBean();
 
 			} finally {
@@ -237,6 +240,11 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 
+
+	
+
+
+
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
 		private static final long serialVersionUID = 1L;
@@ -249,6 +257,15 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		@Override
 		protected ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
+			
+		
+			
+		
+		
+			if (getManagedBean().getAutoCompleteUnspscCode().getUnspscCode()!=null && getManagedBean().getAutoCompleteUnspscCode().getUnspscCode().trim().length()>0) {
+				codeFilterBean.setSearchValue(getManagedBean().getAutoCompleteUnspscCode().getUnspscCode());
+			}
+
 			if(StringUtils.isBlank((String)codeFilterBean.getSearchValue()) 
 					&& StringUtils.isBlank((String)titleFilterBean.getSearchValue())) {
 				return new SearchResultBean();
@@ -259,10 +276,11 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 				unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
-
-				if (StringUtils.isNotBlank((String)codeFilterBean.getSearchValue())) {
+				
+				if (getManagedBean().getAutoCompleteUnspscCode().getUnspscCode()!=null && getManagedBean().getAutoCompleteUnspscCode().getUnspscCode().trim().length()>0) {
 					System.out.println("*********codeFilterBean***********");
 					codeFilterBean.setSearchField("unspscCode");
+					codeFilterBean.setSearchValue(getManagedBean().getAutoCompleteUnspscCode().getUnspscCode());
 					searchBean.getDataFilterBeans().add(codeFilterBean);
 				}
 
@@ -289,6 +307,8 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 				unspscSO = null;
 			}
 		}
+
+		
 
 	}
 
@@ -504,15 +524,15 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	public String editExtension(int index){
 
-		
-		
+
+
 		this.getManagedBean().setEditItem(this.getSearchItemDataModel().getList().get(index));
 
 		return NAV_TO_EDIT_EXTENSION;
 	}
 
 	public String deleteExtension(int index){
-		
+
 		this.getManagedBean().setDeleteItem(this.getSearchItemDataModel().getList().get(index));
 
 		return NAV_TO_DELETE_EXTENSION;
@@ -1071,5 +1091,25 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 
+	public List<String> autoCompleteUnspsc(String query) {
 
+		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		reqDTO.setUnspscCode(query);
+
+		CodificationResDTO resDTO = codificationSO.searchUnspscCodeByAuto(reqDTO);
+
+		List<String> unspscCodes = new ArrayList<String>();
+		
+		for(CmUnspsc unspsc : resDTO.getUnspscList()) {
+			unspscCodes.add(unspsc.getUnspscCode());
+		}
+		
+		return unspscCodes;
+	}
+	
+	
 }

@@ -12,9 +12,9 @@
 
 
 	<p:outputPanel id="priceTierPageID">
-		<p:dataTable id="pricingTierID"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTierPricings}" width="100%"
-			var="price">
+		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTierPricings}"
+			width="100%" var="price">
 
 			<ac:paginator for="pricingTierID"></ac:paginator>
 			<p:column>
@@ -40,25 +40,39 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{price.startDate}" showOn="button"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{price.endDate}" showOn="button"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.action']}
+				</f:facet>
+				<p:commandLink style="margin-left: 10px;" title="Delete"
+					action="#{catalogueBackingBean.deleteTierPrice(rowIndex)}"
+					update=":form:pricingTabID:subPricingTabId:pricingTierID">
+					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
 
 			</p:column>
 
 		</p:dataTable>
-		
+
 		<div class="clear"></div>
-		
+
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
-				action="#{catalogueBackingBean.addNewTierPricing()}" update="priceTierPageID"
-				process="@this"></p:commandButton>
+				action="#{catalogueBackingBean.addNewTierPricing()}"
+				update="priceTierPageID" process="@this"></p:commandButton>
 		</div>
 
 	</p:outputPanel>

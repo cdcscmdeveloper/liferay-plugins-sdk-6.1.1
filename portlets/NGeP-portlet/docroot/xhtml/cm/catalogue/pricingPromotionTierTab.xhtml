@@ -12,7 +12,7 @@
 
 
 	<p:outputPanel id="pricePromotionTierPageID">
-		<p:dataTable id="pricingPromotionTierID"
+		<p:dataTable id="pricingPromotionTierID" rowIndexVar="rowIndex"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionTierPricings}"
 			width="100%" var="price">
 			<ac:paginator for="pricingPromotionTierID"></ac:paginator>
@@ -51,6 +51,19 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.action']}
+				</f:facet>
+				<p:commandLink style="margin-left: 10px;" title="Delete"
+					action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
+					update=":form:pricingTabID:subPricingTabId:pricingPromotionTierID">
+					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+
+			</p:column>
+			
 
 		</p:dataTable>
 

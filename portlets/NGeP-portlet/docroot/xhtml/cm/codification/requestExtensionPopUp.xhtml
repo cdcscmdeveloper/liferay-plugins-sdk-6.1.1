@@ -7,27 +7,28 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 	<h:panelGroup id="requestExtPopUpId">
-		<table style="width:100%;">
+		<table style="width: 100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.tempCode}" disabled="true" size="40"></p:inputText></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.tempCode}"
+						disabled="true" size="40"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.tempTitle}" disabled="true" size="40"></p:inputText></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.tempTitle}"
+						disabled="true" size="40"></p:inputText></td>
 			</tr>
-		
+
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
-				<td><p:selectOneMenu style="width: 128px;"
-						value="#{unspscCodeBackingBean.managedBean.typeId}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{unspscCodeBackingBean.managedBean.typeList}" var="type"
-							itemLabel="#{type.typeName}" itemValue="#{type.typeId}"></f:selectItems>
-					</p:selectOneMenu></td>
+				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedType}"
+						id="typePojo"
+						completeMethod="#{unspscCodeBackingBean.autoCompleteType}" var="type"
+						itemLabel="#{type.typeName}" itemValue="#{type}" converter="cmType"
+						forceSelection="true" />
+						</td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestType}"></p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
@@ -36,14 +37,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
-				<td><p:selectOneMenu style="width: 128px;"
-						value="#{unspscCodeBackingBean.managedBean.brandId}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{unspscCodeBackingBean.managedBean.brandList}"
-							var="brand" itemLabel="#{brand.brandName}"
-							itemValue="#{brand.brandId}"></f:selectItems>
-					</p:selectOneMenu></td>
+				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedBrand}"
+						id="brandPojo"
+						completeMethod="#{unspscCodeBackingBean.autoCompleteBrand}" var="brand"
+						itemLabel="#{brand.brandName}" itemValue="#{brand}" converter="cmBrand"
+						forceSelection="true" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestBrand}"></p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
@@ -52,14 +50,13 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
-				<td><p:selectOneMenu style="width: 128px;"
-						value="#{unspscCodeBackingBean.managedBean.measurementId}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{unspscCodeBackingBean.managedBean.measurementList}"
-							var="measurement" itemLabel="#{measurement.measurementName}"
-							itemValue="#{measurement.measurementId}"></f:selectItems>
-					</p:selectOneMenu></td>
+				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedMeasurement}"
+						id="measurementPojo"
+						completeMethod="#{unspscCodeBackingBean.autoCompleteMeasurement}" var="measurement"
+						itemLabel="#{measurement.measurementName}" itemValue="#{measurement}" converter="cmMeasurement"
+						forceSelection="true" />
+				
+				</td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestMeasurement}"></p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
@@ -68,14 +65,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
-				<td><p:selectOneMenu style="width: 128px;"
-						value="#{unspscCodeBackingBean.managedBean.colorId}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{unspscCodeBackingBean.managedBean.colorList}"
-							var="color" itemLabel="#{color.colorName}"
-							itemValue="#{color.colorId}"></f:selectItems>
-					</p:selectOneMenu></td>
+				<td>
+				<p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedColor}"
+						id="colorPojo"
+						completeMethod="#{unspscCodeBackingBean.autoCompleteColor}" var="color"
+						itemLabel="#{color.colorName}" itemValue="#{color}" converter="cmColor"
+						forceSelection="true" />
+				
+				</td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestColor}"></p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
@@ -97,6 +94,10 @@
 				icon="ui-icon-cancel" immediate="true"
 				onclick="extensionPopUp.hide()"></p:commandButton>
 		</div>
+
+		<div class="clear"></div>
+
+		<h:outputText value="Tick the check box to request new."></h:outputText>
 
 	</h:panelGroup>
 

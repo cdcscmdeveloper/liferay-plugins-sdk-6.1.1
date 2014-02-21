@@ -1984,6 +1984,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		return false;
 	}
 
+	
+	public void deleteTierPrice(int index){
+		
+
+		this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().remove(index);
+	}
+	
+	
+	public void deletePromotionTierPrice(int index){
+		this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().remove(index);
+	}
+	public void deleteZonalStandardPrice(int index){
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().remove(index);
+	}
+	public void deleteZonalPromotionPrice(int index){
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().remove(index);
+	}
+	public void deleteZonalTierPrice(int index){
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().remove(index);
+	}
+	public void deleteZonalPromotionTierPrice(int index){
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().remove(index);
+	}
+	
+	
+	
+	
+	
+	
 
 
 

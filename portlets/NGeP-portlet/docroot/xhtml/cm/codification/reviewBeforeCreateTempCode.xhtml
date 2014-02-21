@@ -141,10 +141,10 @@
 								<h:outputLabel value="" />
 							</p:column>
 							<p:column>
-							 Code
+							 Code *
 						</p:column>
 							<p:column>
-							Title
+							Title *
 						</p:column>
 							
 							<p:column>
@@ -161,7 +161,7 @@
 						<p:column>
 
 							<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
-								headerText="Segment Lov" update=":form:tablePanelId"
+								headerText="Segment" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^0">
@@ -193,7 +193,7 @@
 						</p:column>
 						<p:column>
 							<ac:lov id="familyUploadId" lovId="CM_UNSPSC"
-								headerText="Family Lov" update=":form:tablePanelId"
+								headerText="Family" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
@@ -223,7 +223,7 @@
 						</p:column>
 						<p:column>
 							<ac:lov id="classUploadId" lovId="CM_UNSPSC"
-								headerText="Class Lov" update=":form:tablePanelId"
+								headerText="Class" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
@@ -254,7 +254,7 @@
 						</p:column>
 						<p:column>
 							<ac:lov id="commodityUploadId" lovId="CM_UNSPSC"
-								headerText="Commodity Lov" update=":form:tablePanelId"
+								headerText="Commodity" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">

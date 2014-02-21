@@ -14,7 +14,6 @@ import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.vo.RemarksVO;
 
 @ManagedBean(name = "unspscCodeMB")
 @SessionScoped
@@ -96,12 +95,47 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private String docStatus;
 	
+	private CmType selectedType;
+	private CmBrand selectedBrand;
+	private CmMeasurement selectedMeasurement;
+	private CmColor selectedColor;
 	
 	
 	
 	
 	
-	
+	public CmBrand getSelectedBrand() {
+		return selectedBrand;
+	}
+
+	public void setSelectedBrand(CmBrand selectedBrand) {
+		this.selectedBrand = selectedBrand;
+	}
+
+	public CmMeasurement getSelectedMeasurement() {
+		return selectedMeasurement;
+	}
+
+	public void setSelectedMeasurement(CmMeasurement selectedMeasurement) {
+		this.selectedMeasurement = selectedMeasurement;
+	}
+
+	public CmColor getSelectedColor() {
+		return selectedColor;
+	}
+
+	public void setSelectedColor(CmColor selectedColor) {
+		this.selectedColor = selectedColor;
+	}
+
+	public CmType getSelectedType() {
+		return selectedType;
+	}
+
+	public void setSelectedType(CmType selectedType) {
+		this.selectedType = selectedType;
+	}
+
 	public String getDocStatus() {
 		return docStatus;
 	}

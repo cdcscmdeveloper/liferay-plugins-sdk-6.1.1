@@ -85,9 +85,17 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private List<CmUnspsc> recommendUnspscList;
 	
+	private CmUnspsc autoCompleteUnspscCode;
+	
+	public CmUnspsc getAutoCompleteUnspscCode() {
+		if(autoCompleteUnspscCode==null)
+			autoCompleteUnspscCode = new CmUnspsc();
+		return autoCompleteUnspscCode;
+	}
 
-	
-	
+	public void setAutoCompleteUnspscCode(CmUnspsc autoCompleteUnspscCode) {
+		this.autoCompleteUnspscCode = autoCompleteUnspscCode;
+	}
 	
 
 	public List<CmUnspsc> getRecommendUnspscList() {

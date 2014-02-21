@@ -1,8 +1,10 @@
 package my.ep.web.backingbean.cm.codification;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -1006,66 +1008,35 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
 
-			System.out.println("this.getManagedBean().getTypeId()"+this.getManagedBean().getTypeId());
-			ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
-			typeFilterBean.setSearchField("typeId");
-			typeFilterBean.setSearchValue(this.getManagedBean().getTypeId());
-			searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+			
+			System.out.println("getSelectedType().getTypeId()"+this.getManagedBean().getSelectedType().getTypeId());
 
-			reqDTO.setTypeSearchBean(searchBeanColor);
-
-			resDTO = unspscSO.searchTypeObj(reqDTO);
-
-			this.getManagedBean().getRequestExtCode().setTypeName(resDTO.getTypeList().get(0).getTypeName());
-			this.getManagedBean().getRequestExtCode().setTypeId(this.getManagedBean().getTypeId());
+			this.getManagedBean().getRequestExtCode().setTypeName(this.getManagedBean().getSelectedType().getTypeName());
+			this.getManagedBean().getRequestExtCode().setTypeId(this.getManagedBean().getSelectedType().getTypeId());
 
 		}
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestBrand()){
 
-			ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
-			brandFilterBean.setSearchField("brandId");
-			brandFilterBean.setSearchValue(this.getManagedBean().getBrandId());
-			searchBeanColor.getDataFilterBeans().add(brandFilterBean);
-
-			reqDTO.setBrandSearchBean(searchBeanColor);
-
-			resDTO = unspscSO.searchBrandObj(reqDTO);
-
-			this.getManagedBean().getRequestExtCode().setBrandName(resDTO.getBrandList().get(0).getBrandName());
-			this.getManagedBean().getRequestExtCode().setBrandId(this.getManagedBean().getBrandId());
+			this.getManagedBean().getRequestExtCode().setBrandName(this.getManagedBean().getSelectedBrand().getBrandName());
+			this.getManagedBean().getRequestExtCode().setBrandId(this.getManagedBean().getSelectedBrand().getBrandId());
 
 		}
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
 
-			ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
-			colorFilterBean.setSearchField("colorId");
-			colorFilterBean.setSearchValue(this.getManagedBean().getColorId());
-			searchBeanColor.getDataFilterBeans().add(colorFilterBean);
-
-			reqDTO.setColorSearchBean(searchBeanColor);
-
-			resDTO = unspscSO.searchColorObj(reqDTO);
-
-			this.getManagedBean().getRequestExtCode().setColorName(resDTO.getColorList().get(0).getColorName());
-			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getColorId());
+			
+			this.getManagedBean().getRequestExtCode().setColorName(this.getManagedBean().getSelectedColor().getColorName());
+			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getSelectedColor().getColorId());
 
 		}
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
 
-			ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
-			measurementFilterBean.setSearchField("measurementId");
-			measurementFilterBean.setSearchValue(this.getManagedBean().getMeasurementId());
-			searchBeanColor.getDataFilterBeans().add(measurementFilterBean);
+			
 
-			reqDTO.setMeasurementSearchBean(searchBeanColor);
-
-			resDTO = unspscSO.searchMeasurementObj(reqDTO);
-
-			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getMeasurementId());
-			this.getManagedBean().getRequestExtCode().setMeasurementName(resDTO.getMeasurementList().get(0).getMeasurementName());
+			this.getManagedBean().getRequestExtCode().setMeasurementId(this.getManagedBean().getSelectedMeasurement().getMeasurementId());
+			this.getManagedBean().getRequestExtCode().setMeasurementName(this.getManagedBean().getSelectedMeasurement().getMeasurementName());
 		}
 
 		this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
@@ -1116,13 +1087,11 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			///////////////////////////////////////
 
-			System.out.println("***********kkkkkkk********************"+this.getManagedBean().getReviewExtCodeList().size());
-
 			if(this.getManagedBean().getReviewExtCodeList()!=null && this.getManagedBean().getReviewExtCodeList().size()>0){
 
 				for(CmRequestCode code:this.getManagedBean().getReviewExtCodeList()){
 
-					System.out.println("***********4444********************");
+					
 					if(code.getColorNameDD()!=null){
 						ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 						colorFilterBean.setSearchField("colorId");
@@ -1138,7 +1107,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 					}
-					System.out.println("***********33333********************");
+					
 					if(code.getBrandNameDD()!=null){
 
 						ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
@@ -1155,7 +1124,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setRequestBrand(false);
 
 					}
-					System.out.println("***********bbbb********************");
+					
 					if(code.getTypeNameDD()!=null){
 
 						ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
@@ -1189,11 +1158,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setRequestMeasurement(false);
 					}
 
-					System.out.println("***********4444********************");
-					/////// checking remark reSystem.out.println(""+);
-					System.out.println("isAddedRemark:"+code.isAddedRemark());
-
-
+				
 					//////////////////////problem////////////////////////////
 					if(!this.isCatalogueAdmin()){
 						if(!code.isAddedRemark()){
@@ -1757,4 +1722,64 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		return "unspscRequestForm";
 	}
+	
+	
+	public List<CmType> autoCompleteType(String query) {
+
+		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		List<CmType> suggestions = new ArrayList<CmType>();  
+		
+		for(CmType type: this.getManagedBean().getTypeList()){
+			if(type.getTypeName().startsWith(query)){
+				suggestions.add(type);
+			}
+		}
+		
+		return suggestions;
+	}
+	
+	public List<CmBrand> autoCompleteBrand(String query) {
+
+		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		List<CmBrand> suggestions = new ArrayList<CmBrand>();  
+		
+		for(CmBrand brand: this.getManagedBean().getBrandList()){
+			if(brand.getBrandName().startsWith(query)){
+				suggestions.add(brand);
+			}
+		}
+		
+		return suggestions;
+	}
+	
+	public List<CmMeasurement> autoCompleteMeasurement(String query) {
+
+		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();  
+		
+		for(CmMeasurement brand: this.getManagedBean().getMeasurementList()){
+			if(brand.getMeasurementName().startsWith(query)){
+				suggestions.add(brand);
+			}
+		}
+		
+		return suggestions;
+	}
+	
+	public List<CmColor> autoCompleteColor(String query) {
+
+		System.out.println("query:::::::::::::::::::::::::::::: " + query);
+		List<CmColor> suggestions = new ArrayList<CmColor>();  
+		
+		for(CmColor color: this.getManagedBean().getColorList()){
+			if(color.getColorName().startsWith(query)){
+				suggestions.add(color);
+			}
+		}
+		
+		return suggestions;
+	}
+	
+	
+	
 }
