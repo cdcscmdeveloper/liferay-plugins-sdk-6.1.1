@@ -13,7 +13,12 @@
 <p:messages id="templateMaintenancemessages" showDetail="true" autoUpdate="true"
 				closable="true" />
 	<ui:define name="contentSection">
+<div align="left">
+			<p:commandButton value="Back"
+				style="margin-right:30px;" action="specificationCreation.xhtml?faces-redirect=true" icon="ui-icon-save"/>
+			
 
+		</div>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="margin-right:30px;" action="#{TemplateMBB.save}" icon="ui-icon-save"/>
