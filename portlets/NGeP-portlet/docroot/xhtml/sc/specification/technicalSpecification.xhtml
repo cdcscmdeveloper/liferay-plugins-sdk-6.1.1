@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:panel header="Technical Specification" toggleable="true">
+
+		<p:dataTable id="templateTechSpecification" var="technicalSpec"
+			style="width:100%" rowIndexVar="index" rowKey="#{technicalSpec}">
+			<ac:paginator for="templateTechSpecification" />
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+				style="width:30%">
+			</p:column>
+
+			<p:column headerText="Status" style="width:10%">
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+				style="width:10%">
+				<p:commandLink>
+				<p:graphicImage library="ep/images/design" name="edit.png"
+					value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="20"></p:spacer>
+
+		<div align="right">
+			<p:commandButton value="Create Specification" process="@this"
+				partialSubmit="true" oncomplete="create.show();"
+				 />
+
+
+		</div>
+
+
+	</p:panel>
+	<ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include>
+</ui:composition>

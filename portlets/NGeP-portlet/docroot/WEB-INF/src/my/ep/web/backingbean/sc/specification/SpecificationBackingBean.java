@@ -32,10 +32,12 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -48,6 +50,8 @@ import my.ep.dto.pm.common.currency.CurrencyReqDTO;
 import my.ep.dto.pm.common.currency.CurrencyResDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementReqDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementResDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
@@ -56,6 +60,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sc.specificationdata.SCSpecificationDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCheckListCategory;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -68,16 +73,19 @@ import my.ep.persistence.entity.pm.common.PmProcurementCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -85,8 +93,11 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.templatemaintenance.TemplateMaintenanceBackingBean;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -478,8 +489,9 @@ public class SpecificationBackingBean extends
 
 	public void retriveSpecdetails(Long qtId) {
 		try {
-			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-					"ss", IQTSpecSO.class);
+			IQTSpecSO specSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			SpecificationResDTO resDTO = null;
 			reqDTO.setQtId(qtId);
@@ -492,7 +504,8 @@ public class SpecificationBackingBean extends
 				getManagedBean().getScQtSpec().setPmProcurementCategory(
 						new PmParameter());
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-						.getServiceObject("ss", IQTDetailSO.class);
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setQtId(qtId);
 				// tenderReqDTO.setQtTndrNo("xxx");
@@ -565,6 +578,13 @@ public class SpecificationBackingBean extends
 				.get("value");
 		this.getManagedBean().getScQtSpec().setFulfilmentType(type);
 	}
+	
+	public void stateChange(AjaxBehaviorEvent event) {
+		boolean state = (boolean) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("=======state===="+state);
+		this.getManagedBean().getQtCriteria().setAllState(state);
+	}
 
 	public void fromChange(AjaxBehaviorEvent event) {
 		String formvalue = (String) event.getComponent().getAttributes()
@@ -572,6 +592,159 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setFromMonth(formvalue);
 	}
+	
+	
+	
+	public String cloneAction(ScQtDoc scqtDoc) {
+		IQTTemplateSO qtTemplateSO;
+		try {
+			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			TemplateMaintenanceBackingBean maintenancebean=new TemplateMaintenanceBackingBean();
+
+			QTTemplateDocResDTO resDto = null;
+
+			if (maintenancebean.getManagedBean().getScqtDoc() == null) {
+				maintenancebean.getManagedBean().setScqtDoc(new ScQtDoc());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getScQt() == null) {
+				maintenancebean.getManagedBean().getScqtDoc().setScQt(new ScQt());
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().setTplSpecMaster(
+						new TplSpecMaster());
+
+			}
+
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+					.getProcurementCategory() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setProcurementCategory(new PmParameter());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+					.getItemTypeCode() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setItemTypeCode(new PmParameter());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+					.getSpecTypeCode() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setSpecTypeCode(new PmParameter());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+					.getOrgProfile() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setOrgProfile(new PmOrgProfile());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+					.getTemplateTypeCode() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setTemplateTypeCode(new PmParameter());
+
+			}
+
+			if (maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster().getStatus() == null) {
+
+				maintenancebean.getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setStatus(new PmStatus());
+
+			}
+			if (maintenancebean.getManagedBean().getScqtDoc().getScQtZoneCriteria() == null) {
+				maintenancebean.getManagedBean().getScqtDoc().setScQtZoneCriteria(
+						new ScQtZoneCriteria());
+			}
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean =specBB. getManagedBean().getTemplateSpecBean();
+			TplSpecMaster specMaster1 = new TplSpecMaster();
+			specMaster1.setSpecMasterId(new Long(scqtDoc.getTplSpecMaster()
+					.getSpecMasterId()));
+			// specMaster.setSpecMasterId(1L);
+			templateSpecBean.setContentType(
+					TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			templateSpecBean.setSpecMaster(specMaster1);
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+			// scqtDoc.getTplSpecMaster().getProcurementCategory()
+			// .getParameterId()
+			if (maintenancebean.getManagedBean().getScqtDoc().getScQtCheckList() == null) {
+				maintenancebean.getManagedBean().getScqtDoc()
+						.setScQtCheckList(new ScQtCheckList());
+			}
+			maintenancebean.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getProcurementCategory()
+					.setParameterId(
+							scqtDoc.getTplSpecMaster().getProcurementCategory()
+									.getParameterId());
+			/*
+			 * scqtDoc.getTplSpecMaster().getItemTypeCode() .getParameterId()
+			 */
+			maintenancebean.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getItemTypeCode()
+					.setParameterId(
+							scqtDoc.getTplSpecMaster().getItemTypeCode()
+									.getParameterId());
+			/*
+			 * scqtDoc.getTplSpecMaster().getSpecTypeCode() .getParameterId(
+			 */
+			maintenancebean.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getSpecTypeCode()
+					.setParameterId(
+							scqtDoc.getTplSpecMaster().getSpecTypeCode()
+									.getParameterId());
+			maintenancebean.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getStatus()
+					.setStatusId(
+							scqtDoc.getTplSpecMaster().getStatus()
+									.getStatusId());
+			maintenancebean.getManagedBean().getScqtDoc().getScQt()
+					.setQtNo(scqtDoc.getScQt().getQtNo());
+
+			qtTemplateReqDTO.setQtId(146L);
+			qtTemplateReqDTO.setDocType("1");
+			qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
+			qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
+					.getSpecMasterId());
+
+			try {
+				qtTemplateSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTTemplateSO.class);
+
+				resDto = qtTemplateSO
+						.retriveTemplateDocDetails(qtTemplateReqDTO);
+
+				
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qtTemplateSO = null;
+		}
+
+		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
+	}
+	
 
 	public void toChange(AjaxBehaviorEvent event) {
 		String toValue = (String) event.getComponent().getAttributes()

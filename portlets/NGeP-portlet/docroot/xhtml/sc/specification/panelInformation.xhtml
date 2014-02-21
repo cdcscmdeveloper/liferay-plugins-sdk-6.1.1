@@ -18,6 +18,7 @@
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.circularNo}"
 					disabled="true" />
 				<p:spacer width="5" />
+				<p:commandButton value="Search"></p:commandButton>
 				<p:commandLink style="margin-right:20px;">
 					<h:outputText value="#{lbl['lbl.so.cirattach']}" />
 				</p:commandLink>
@@ -39,6 +40,16 @@
 			<h:column>
 				<p:inputText
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.endDate}"
+					disabled="true" />
+			</h:column>
+			
+				<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.circularname']}" />
+			</h:column>
+
+			<h:column>
+				<p:inputText
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.name}"
 					disabled="true" />
 			</h:column>
 		</h:panelGrid>

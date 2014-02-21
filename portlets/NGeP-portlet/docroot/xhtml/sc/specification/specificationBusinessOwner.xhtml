@@ -21,7 +21,6 @@
 						<tr>
 							<td><h:outputLabel value="Quotation/Tender Type" /></td>
 							<td><p:selectOneMenu value="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtType}" disabled="#{specificationBackingBean.managedBean.panel ne 'Yes'}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
 									<f:selectItems
 										value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
 										var="parameter" itemLabel="#{parameter.codeName}" itemValue="#{parameter.pmParameter.parameterCode}" />

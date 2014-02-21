@@ -43,8 +43,9 @@
 							style="margin-left: 26px;">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 46px" />
-							<p:selectBooleanCheckbox>
-								<p:ajax />
+							<p:selectBooleanCheckbox  value="#{specificationBackingBean.managedBean.qtCriteria.allState}">
+							<f:selectItem itemValue="true"></f:selectItem>
+								<p:ajax  update="allStae" listener="#{specificationBackingBean.stateChange}"/>
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
 					</h:panelGroup></td>
@@ -52,13 +53,16 @@
 			</tr>
 
 			<tr>
+		
+			
 				<td style="width: 100px"><p:outputLabel
 						value="#{lbl['lbl.so.mullocal']}" /></td>
-				<td><p:selectOneRadio style="margin-bottom:5px;">
-						<f:selectItem itemLabel="yes" itemValue="true" />
+				<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.qtCriteria.multiLocality}" style="margin-bottom:5px;">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
-						<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
+						<p:ajax event="change" partialSubmit="true" update="allStae" process="@this"></p:ajax>
 					</p:selectOneRadio></td>
+					
 			</tr>
 
 		</table>
@@ -68,7 +72,8 @@
 
 
 	<p:panel>
-		<p:panel header="Location List">
+		<h:panelGroup id="allStae">
+		<p:panel header="Location List" rendered="#{specificationBackingBean.managedBean.qtCriteria.allState=='true' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No'}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -80,6 +85,8 @@
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
+			</p:panel>
+			<p:panel rendered="#{((specificationBackingBean.managedBean.qtCriteria.allState=='true' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No') or (specificationBackingBean.managedBean.qtCriteria.allState=='true'  and specificationBackingBean.managedBean.qtCriteria.multiLocality =='No'))}">
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="zoneLocationDataTable"
 					value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -109,7 +116,11 @@
 					actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 					icon="ui-icon-add" />
 			</div>
-		</p:panel>
+			</p:panel>
+		</h:panelGroup>
+		
+		
+		
 		<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="800"
 			height="500">
 			<p:panel id="zonePopupPanel" header="ADD LOCATION">
