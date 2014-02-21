@@ -62,8 +62,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private boolean isEditable = true;	
 	
 	private List<PmUser> users;
-	
-	private List<PmAddress> userAddress;
 
 	private List<PmUserGroup> usersGroup;
 	
@@ -71,8 +69,14 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	private List<SelectItem> countryName;
 	
-	private List<PreferenceList> preferencelists;		
-		
+	// PM datatable array list
+	private List<PreferenceList> preferencelists;
+	
+	private List<RoleList> rolelists;
+	
+	private List<AddressList> addresslistss;	
+	
+
 	public UserprofilesManagedBean(){
 		log.info("inside ");		
 	}	
@@ -84,14 +88,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUsers(List<PmUser> users) {
 		this.users = users;
 	}
-	
-	public List<PmAddress> getUserAddress() {
-		return userAddress;
-	}
-
-	public void setUserAddress(List<PmAddress> userAddress) {
-		this.userAddress = userAddress;
-	}	
 	
 	public List<PmUserGroup> getUsersGroup() {
 		return usersGroup;
@@ -282,7 +278,88 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	public void setPreferencelists(List<PreferenceList> preferencelists) {
 		this.preferencelists = preferencelists;
+	}
+	
+	public List<RoleList> getRolelists() {
+		
+		if(rolelists==null){
+			rolelists = new ArrayList<RoleList>();
+		
+		RoleList aaa = new RoleList();
+		RoleList bbb = new RoleList();
+		RoleList ccc = new RoleList();
+		RoleList ddd = new RoleList();		
+		
+		aaa.setRoleName("Approver");
+		aaa.setRoleTypes("Fulfilment");
+		aaa.setApprLimit("300,000.00");
+		aaa.setRoleStatus("Active");
+	
+		bbb.setRoleName("Contract Signer");
+		bbb.setRoleTypes("");
+		bbb.setApprLimit("");
+		bbb.setRoleStatus("Active");
+
+		ccc.setRoleName("Plan Officer");
+		ccc.setRoleTypes("Expenditure Plan");
+		ccc.setApprLimit("");
+		ccc.setRoleStatus("Active");
+		
+		ddd.setRoleName("Supplier Admin");
+		ddd.setRoleTypes("Basic Account");
+		ddd.setApprLimit("500,000.00");
+		ddd.setRoleStatus("Active");		
+		
+		rolelists.add(aaa);
+		rolelists.add(bbb);
+		rolelists.add(ccc);
+		rolelists.add(ddd);		
+
+		
+		}
+		return rolelists;
 	}	
+	
+	public void setRoleLists(List<RoleList> rolelists) {
+		this.rolelists = rolelists;
+	}	
+	
+	public List<AddressList> getAddressListss() {
+		
+		if(addresslistss==null){
+			addresslistss = new ArrayList<AddressList>();
+		
+			AddressList aaaa = new AddressList();
+			AddressList bbbb = new AddressList();
+			AddressList cccc = new AddressList();
+			AddressList dddd = new AddressList();		
+		
+		aaaa.setAddressName("Address 1");
+		aaaa.setAddressStatus("Active");
+	
+		bbbb.setAddressName("Address 2");
+		bbbb.setAddressStatus("Active");
+
+		cccc.setAddressName("Address 3");
+		cccc.setAddressStatus("Active");
+		
+		dddd.setAddressName("Address 4");
+		dddd.setAddressStatus("Active");
+
+		addresslistss.add(aaaa);
+		addresslistss.add(bbbb);
+		addresslistss.add(cccc);
+		addresslistss.add(dddd);		
+
+		
+		}
+		return addresslistss;
+	}	
+	
+	public void setAddressListss(List<AddressList> addresslistss) {
+		this.addresslistss = addresslistss;
+	}	
+	
 	
 }	
 	
