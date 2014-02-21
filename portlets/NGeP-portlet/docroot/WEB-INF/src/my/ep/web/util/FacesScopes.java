@@ -12,10 +12,15 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.util.pm.helper.UserHelper;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -169,14 +174,27 @@ public class FacesScopes {
 		if (user == null) {
 			try {
 				String loginId = getUserScreenName();
-				
-				user = UserHelper.getInstance().getUserByLoginId(loginId);
-				
-				if (user == null) {
-					user = new PmUser();
+
+				if (loginId != null) {
+					IUserSO userSO;
+					try {
+						userSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+						UserReqDTO reqDTO = new UserReqDTO();
+						reqDTO.setLoginId(loginId);
+
+						UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+
+						user = resDTO.getPmUser();
+					} catch (Exception e) {
+						e.printStackTrace();
+						throw new EpException(e.getMessage());
+					} finally {
+						userSO = null;
+					}
 				}
 				
-				System.out.println("id "+ user.getUserId());
 				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				log.error(e.getMessage());
@@ -186,9 +204,11 @@ public class FacesScopes {
 								FacesMessage.SEVERITY_ERROR, 
 								e.toString(), 
 								e.getMessage()));
-
-				user = new PmUser();
 			}
+		}
+		
+		if (user == null) {
+			user = new PmUser();
 		}
 
 		return user;
