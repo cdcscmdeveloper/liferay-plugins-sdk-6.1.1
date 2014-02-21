@@ -18,20 +18,22 @@
        </p:selectOneMenu>
      </h:panelGrid>
 	 <br/>
-	    <p:dataTable id="roleAssignTable" value="" var="roleassign"  >
+	    <p:dataTable id="roleAssignTable" value="#{userprofilesManagedBean.rolelists}" var="RoleList"  >
 		<ac:paginator />
-		<p:column />
+		<p:column>
+	    <p:selectBooleanCheckbox/> 
+	    </p:column>
 	    <p:column headerText="Role" > 
-          <h:outputText value="Approver"/>
+          <h:outputText value="#{RoleList.roleName}" />
         </p:column>
         <p:column headerText="Approval/PLan/Supplier Type" > 
-          <h:outputText value="Fulfilment"/>   
+          <h:outputText value="#{RoleList.roleTypes}" />   
         </p:column>
         <p:column headerText="Appr.Limit(RM)" > 
-          <h:outputText value="300,333.00"/>  
+          <h:outputText value="#{RoleList.apprLimit}" />  
         </p:column>
         <p:column headerText="Status" > 
-          <h:outputText value="Active"/>  
+          <h:outputText value="#{RoleList.roleStatus}" />  
         </p:column>
 
 		</p:dataTable>
@@ -46,14 +48,15 @@
 		<br/>
 	<p:tabView>	
 	  <p:tab title="RECEIVING ADDRESS">	
-	    <p:dataTable id="recAddTable" value="" var="receiveaddress"  >
+	    <p:dataTable id="recAddTable" value="#{userprofilesManagedBean.addressListss}" var="AddressList"  >
 		<ac:paginator />
-		<p:column />
+		<p:column>
+	    </p:column> 
 	    <p:column headerText="Address Name" > 
-          <h:outputText value="Address 1"/>
+          <h:outputText value="#{AddressList.addressName}" />
         </p:column>
         <p:column headerText="Status" > 
-          <h:outputText value="Active"/>   
+          <h:outputText value="#{AddressList.addressStatus}" />   
         </p:column>
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>
