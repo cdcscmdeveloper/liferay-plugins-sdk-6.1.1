@@ -11,7 +11,7 @@
         	<p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
               	selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true" >
                	<ac:paginator for="itemTable"/>
-               	<p:ajax event="rowSelect" update=":form:tabview:changeField" />
+               	<p:ajax event="rowSelect" update=":form:tabview:changeField"  />
 		     	   <p:column headerText="Item Name">
 		     	      <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
 		     	   <p:column headerText="UOM">
@@ -29,7 +29,7 @@
        <p:outputPanel id="changeField">
 		  <p:spacer height="20"/>
 		  <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
-			rendered="#{contractDetailsBackingBean.managedBean.productItem and contractDetailsBackingBean.managedBean.selectedItem!=null}">
+			rendered="#{contractDetailsBackingBean.managedBean.selectedItem!=null}">
 		    <h:outputLabel for="show" value="Show" style="width:50px;"/>  
 		      <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
 		         <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
@@ -61,7 +61,8 @@
 			</p:dataTable>
 		  </p:outputPanel>  
 		  <h:panelGrid columns="1" style="width:100%"
-			 rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty) and contractDetailsBackingBean.managedBean.productItem}">
+			 rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
+			  and contractDetailsBackingBean.managedBean.selectedItem!=null}">
 			 <p:dataTable id="ceilingTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}"
 				rowKey="#{data}" lazy="true" >
 				<ac:paginator for="ceilingTable"/>
@@ -90,9 +91,9 @@
   	 <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
-           selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true" >
+           selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
            <ac:paginator for="serviceTable"/>
-              <p:ajax event="rowSelect" update=":form:tabview:showServicePrice" />
+              <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
 		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
 		      <p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
@@ -102,7 +103,7 @@
     		</p:dataTable> 
         </h:panelGrid>
         <p:outputPanel id="showServicePrice" columns="1" style="width:100%"
-		   rendered="#{contractDetailsBackingBean.managedBean.serviceItem and contractDetailsBackingBean.managedBean.selectedItem!=null}">
+		   rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem!=null}">
 		   <p:spacer height="20"/>
 		   <p:dataTable id="servicePriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			 rowKey="#{data}" lazy="true" >

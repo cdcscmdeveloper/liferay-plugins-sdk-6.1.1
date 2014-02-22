@@ -31,9 +31,9 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" /> 
-			<p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation.show()"/>
-			<p:commandButton value="Delivery Address" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();" />
+       		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/> 
+			<p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation.show()" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
+			<p:commandButton value="Delivery Address" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}" />
 	  	</div>
 	   <p:confirmDialog message="Do you want to delete the record?" 
 		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
@@ -134,5 +134,4 @@
 			</tr>
 		</table>
 	</p:panel>		
-	
 </ui:composition>                                      

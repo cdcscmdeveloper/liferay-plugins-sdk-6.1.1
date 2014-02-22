@@ -8,10 +8,11 @@
 	<p:panel id="qtnTenderPnl" header="Procurement Details" toggleable="true"  toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15,columnWidth30,columnWidth30,columnWidth30">
 			<p:outputLabel value="Procurement Mode" />
-		    <p:inputText  style="width:170px;" disabled="true" 
+		    <p:inputText  style="width:170px;" disabled="true"
 		      value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.contractVer.ctContract.procurementMode)}" />
-			<p:outputLabel value="Published Date" />
-			<p:inputText style="width:170px;" disabled="true"
+		    
+			<p:outputLabel value="Published Date" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
+			<p:inputText style="width:170px;" disabled="true" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.publishDate}">
 				<f:convertDateTime pattern="MM/dd/yyyy" />
 			</p:inputText>			

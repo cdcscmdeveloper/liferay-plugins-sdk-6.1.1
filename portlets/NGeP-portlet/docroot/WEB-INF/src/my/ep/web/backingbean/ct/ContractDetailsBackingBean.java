@@ -254,6 +254,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			 
 		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
+		    	this.getManagedBean().setDirectPurchase(true);
+		    }
+		    
+		    
 	        CombineSupAddress(resDTO.getCtContractVer());
 	          
 	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
@@ -267,6 +272,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
          } catch(Exception e){
 			e.printStackTrace();
+	 	 }finally{
+	 		
 	 	 }
 	}
     
@@ -443,6 +450,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	
 		this.getManagedBean().setItemPricing(false);
 		this.getManagedBean().setItemCeilingQuantity(false);
+		this.getManagedBean().setProductItem(false);
 		this.getManagedBean().setChkSchedule(false);
 		this.getManagedBean().setChkProgressive(false);
 	}
@@ -598,9 +606,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-          
-			this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
-            this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
+            if(this.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+            	this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);	
+            }else{
+            	this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
+            }
+			this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
            
             reqDTO.setToken(token);
             reqDTO.setOutcome(action);
@@ -985,6 +996,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  } 
 		 
 	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);
 	      if(this.getManagedBean().getContractVer().getCtPerformanceBonds() == null || this.getManagedBean().getContractVer().getCtPerformanceBonds().size() == 0)
 	    	  this.getManagedBean().getContractVer().setCtPerformanceBonds(new ArrayList<CtPerformanceBond>());
 	      
@@ -993,6 +1005,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	      
 	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
           CombineSupAddress(resDTO.getCtContractVer());
+          
+          this.getManagedBean().setUpdateContract(true);
           
           this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());

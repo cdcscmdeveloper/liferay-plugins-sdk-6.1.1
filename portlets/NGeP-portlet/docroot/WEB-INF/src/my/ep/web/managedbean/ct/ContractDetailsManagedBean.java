@@ -46,6 +46,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContractItem selectedItem;
 	private CtContractItem selectedCCItem;
 	private CtDeduction selectedDeduction;
+	private boolean directPurchase;
 	
 	private List<CtDeductionClause> ctDeductionClauseList;
 	private List<CtDeductionClause> selectedDeductionClauses;
@@ -62,7 +63,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
 	private String showItem;
-	private CtContractItem SelectedServiceItem;
+	private CtContractItem selectedServiceItem;
 	private List<CtContractItem> ctContractItem;
 	
 	private CtDeduction ctDeductionDel;
@@ -117,6 +118,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean disableProgessiveRadio;
 	private boolean viewContract = false;
 	private List<CtAgency> listOfAgency;
+	private boolean updateContract;
 	
 	
 	public String[] getAction() {
@@ -434,11 +436,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	}
 
 	public CtContractItem getSelectedServiceItem() {
-		return SelectedServiceItem;
+		return selectedServiceItem;
 	}
 
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
-		SelectedServiceItem = selectedServiceItem;
+		this.selectedServiceItem = selectedServiceItem;
 	}
 
 	public String getSupplierAddress() {
@@ -618,7 +620,23 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setSelectedCCItem(CtContractItem selectedCCItem) {
 		this.selectedCCItem = selectedCCItem;
 	}
-	
-	
 
+	public boolean isDirectPurchase() {
+		return directPurchase;
+	}
+
+	public void setDirectPurchase(boolean directPurchase) {
+		this.directPurchase = directPurchase;
+	}
+
+	public boolean isUpdateContract() {
+		return updateContract;
+	}
+
+	public void setUpdateContract(boolean updateContract) {
+		this.updateContract = updateContract;
+	}
+	
+	
+	
 }
