@@ -33,7 +33,6 @@
 		    <p:dataTable id="itemPriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedCCItem.ctItemPrices}"
 			   rowKey="#{data}" lazy="true" >
 			   <ac:paginator for="itemPriceTable"/>
-			   <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
 			   <p:column headerText="From Qty." style="text-align: right;">
 				  <p:outputLabel value="#{data.tierFrom}"/>
 			   </p:column>       
