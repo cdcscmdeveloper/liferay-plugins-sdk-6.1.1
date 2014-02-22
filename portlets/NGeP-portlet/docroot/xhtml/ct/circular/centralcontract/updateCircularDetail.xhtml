@@ -22,28 +22,22 @@
 			<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 				action="#{centralContractBackingBean.downloadFile(1)}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
-			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
-			<p:outputLabel value="#{lbl['lbl.ct.pc.update.type']}" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.updateType.parameterId}"
-				disabled="#{centralContractBackingBean.managedBean.updateTypeDisable}" >
-				<f:selectItems value="#{centralContractBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
-			</p:selectOneMenu>
-			<h:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateNo}" />
-			<h:outputLabel value="#{lbl['lbl.ct.pc.update.name']}" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateName}" />		
+			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />	
+			<h:outputLabel value="Zonal Level" />
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>			
+			<h:outputLabel value="Item Zonal Level" />
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>						
+			<p:outputLabel value="Update Effective Date" />
+			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.updateEffDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal7" showOn="button" />			
 			<h:outputLabel value="Update Description" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" />								
-			<h:outputLabel value="* Update Letter" />
-			<h:panelGroup id="uploadUpdCcrPg">
-				<p:commandButton oncomplete="uploadUpdCcrDlg.show();return false;" icon="iconAttachment" 
-					update="uploadUpdCcrPg" value="Choose file" 
-					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
-				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.updateFileName}" styleClass="blue_font" 
-					action="#{centralContractBackingBean.downloadFile(2)}" />					
-			</h:panelGroup>
-			<h:outputLabel value="Update File Ref. No." />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateFileRefNo}" />
+			<p:inputTextarea value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" />				
 			<h:outputLabel value="Extension Period" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extPeriod}" />
 			<f:verbatim />
@@ -55,37 +49,6 @@
 			<p:calendar style="width:150px;" value="#{centralContractBackingBean.managedBean.circularVer.extEndDate}" 
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" />				
 		</h:panelGrid>
-		<h:panelGrid columns="1" style="width:120px;">
-			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.peninsular}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.sabah}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.sarawak}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" />
-			</h:panelGrid>
-		</h:panelGrid>
 	</h:panelGrid>
-
-	<p:dialog id="uploadUpdCcrDlg" widgetVar="uploadUpdCcrDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-			fileUploadListener="#{centralContractBackingBean.fileUpload}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploadUpdCcrPg" >
-		</p:fileUpload> 
-	</p:dialog>
 	
 </ui:composition>

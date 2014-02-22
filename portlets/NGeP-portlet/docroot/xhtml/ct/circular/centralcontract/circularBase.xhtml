@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
     <ui:define name="contentSection">
     	<f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />	
@@ -37,20 +38,18 @@
 								disabled="true" />
 						</h6>
 					</td>
-					<c:if test="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.updateNo != null)}">
 					<td>
 						<h6 style="color: blue;">
-							<p:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
+							<p:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
 						</h6>
 					</td>
 					<td>
 						<h6>
 							<p:inputText size="20"
-								value="#{centralContractBackingBean.managedBean.circularVer.updateNo == null ? '-- User input --':centralContractBackingBean.managedBean.circularVer.updateNo}"
+								value="#{centralContractBackingBean.managedBean.circularVer.name == null ? '-- User input --':centralContractBackingBean.managedBean.circularVer.name}"
 								disabled="true" />
 						</h6>
 					</td>					
-					</c:if>
 					<td>
 						<h6 style="color: blue;">
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
@@ -67,14 +66,22 @@
 			</table>	    	
 		</p:panel>
 		<p:tabView id="tabview" orientation="left" >
+			<p:ajax event="tabChange" process="@form" update=":form:tabview:contractListPnl"/>
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/createCircular.xhtml"/>
 	       		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
 	       	</p:tab> 
+	       	<p:tab id="tabAgency" title="Zone" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null or centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode!=null}" >
+	       		<ui:include src="zone.xhtml"/>
+	       	</p:tab>
+	       	<p:tab id="tabContract" title="Contract">
+	       		<ui:include src="contract.xhtml"/>
+	       	</p:tab>
 		 	<p:tab id="tabSetting" title="Setting" rendered="#{centralContractBackingBean.isCentralContractAdmin()}" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/approverSetting.xhtml" />  
 	       	</p:tab>   
 		</p:tabView>
+		<ac:lovPopup />
 	</ui:define>
 		    
 </ui:composition>				

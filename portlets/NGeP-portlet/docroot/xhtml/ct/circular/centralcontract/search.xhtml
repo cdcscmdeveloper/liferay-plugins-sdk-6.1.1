@@ -16,18 +16,14 @@
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularNo}" style="width:200px;" />
 				<h:outputLabel value="Circular Name" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:200px;" />
-				<h:outputLabel value="File Reference No." />
-				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" />
-				<p:outputLabel value="Update Type" />
-				<p:selectOneMenu value="#{centralContractBackingBean.managedBean.searchUpdateType}">
-					<f:selectItems value="#{centralContractBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
-				</p:selectOneMenu>					
 				<h:outputLabel value="Circular Start Date" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  
 					value="#{centralContractBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
 				<h:outputLabel value="Circular End Date" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					value="#{centralContractBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
+				<h:outputLabel value="File Reference No." />
+				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" />					
 				<p:outputLabel for="status" value="Status" />
 				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:200px;">
 					<f:selectItems value="#{centralContractBackingBean.getStatusDropdown()}" />
@@ -44,45 +40,29 @@
 			<p:dataTable id="circularVerDt" value="#{centralContractBackingBean.circularVerPagingDataModel}"
 				var="data" lazy="true" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column colspan="1" headerText="Circular Number" />
-						<p:column colspan="1" headerText="Circular Name" />
-						<p:column colspan="1" headerText="Update Type" />
-						<p:column colspan="1" headerText="Update No" />
-						<p:column colspan="1" headerText="Status" />
-						<p:column colspan="1" headerText="Circular Start Date" />
-						<p:column colspan="1" headerText="Circular End Date" />
-						<p:column colspan="1" headerText="Action" />
-					</p:row>
-				</p:columnGroup>
-				<p:column>
+				<p:column headerText="Circular Number" >
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>
-				<p:column>
+				<p:column headerText="Circular Name" >
 					<h:outputText value="#{data.name}" />
 				</p:column>
-				<p:column>
-					<h:outputText rendered="#{data.updateType != null}" 
-						value="#{centralContractBackingBean.getParameterDesc(data.updateType)}" />
+				<p:column headerText="Update Effective Date" >
+					<h:outputText value="#{data.updateEffDate}" />
 				</p:column>
-				<p:column>
-					<h:outputText value="#{data.updateNo}" />
-				</p:column>
-				<p:column>
-					<h:outputText value="#{data.status.pmStatusDescs[0].statusName}" />
-				</p:column>
-				<p:column>
+				<p:column headerText="Circular Start Date" >
 					<h:outputText value="#{data.startDate}" >
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column headerText="Circular End Date" >
 					<h:outputText value="#{data.endDate}" >
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				<p:column styleClass="column-align-center">
+				<p:column headerText="Status" >
+					<h:outputText value="#{centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
+				</p:column>				
+				<p:column headerText="Action" styleClass="column-align-center">
 					<p:commandLink rendered="#{data.status.statusId==CtStatusConst.approved}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />

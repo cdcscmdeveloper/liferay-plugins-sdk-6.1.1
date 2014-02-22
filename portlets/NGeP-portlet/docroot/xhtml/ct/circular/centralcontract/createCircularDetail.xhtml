@@ -11,7 +11,7 @@
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+			<p:inputTextarea value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
 			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" />
@@ -28,27 +28,16 @@
 			</h:panelGroup>
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
-		</h:panelGrid>
-		<h:panelGrid columns="1" style="width:120px;">
-			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.circularVer.peninsular}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.circularVer.sabah}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.circularVer.sarawak}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" />
-			</h:panelGrid>
+			<h:outputLabel value="Zonal Level" />
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>			
+			<h:outputLabel value="Item Zonal Level" />
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>					
 		</h:panelGrid>
 	</h:panelGrid>
 

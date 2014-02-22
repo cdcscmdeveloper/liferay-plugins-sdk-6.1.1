@@ -3,13 +3,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" >
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="zonePnl" header="#{lbl['lbl.ct.pc.panel.zone']}" toggleable="true" toggleSpeed="500" >
-		<p:dataTable id="panelZoneDt" var="data" rowKey="#{data}" lazy="true"
-			value="#{panelBackingBean.managedBean.circularVer.ctPanelZones}" selectionMode="single" 
-			selection="#{panelBackingBean.managedBean.selectedPanelZone}" >
-			<p:ajax event="rowSelect" update=":form:tabview:panelStatePnl,:form:tabview:deleteZoneBtn" 
+		<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}" lazy="true"
+			value="#{panelBackingBean.managedBean.circularVer.ctCircularZones}" selectionMode="single" 
+			selection="#{panelBackingBean.managedBean.selectedCircularZone}" >
+			<ac:paginator for="circularZoneDt" />
+			<p:ajax event="rowSelect" update=":form:tabview:circularZoneDtlPnl,:form:tabview:deleteZoneBtn" 
 				listener="#{panelBackingBean.selectZoneEvent()}" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -23,51 +25,58 @@
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" partialSubmit="false" icon="ui-icon-add"
-				action="#{panelBackingBean.addPanelZone()}" update="panelZoneDt" />
+				action="#{panelBackingBean.addCircularZone()}" update="circularZoneDt" />
 			<p:commandButton id="deleteZoneBtn" value="Delete" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
-				disabled="#{panelBackingBean.managedBean.selectedPanelZone == null}" />				
+				disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}" />				
 		</div>		
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
 			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:panelStatePnl,panelZoneDt" partialSubmit="true" process="@this"
-					 action="#{panelBackingBean.deletePanelZone()}" oncomplete="delZoneDlg.hide();"   /> 
+				<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:circularZoneDtlPnl,circularZoneDt" partialSubmit="true" process="@this"
+					 action="#{panelBackingBean.deleteCircularZone()}" oncomplete="delZoneDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>	
 		
 		<p:spacer height="20" />
 		
-		<h:panelGroup id="panelStatePnl">
-			<p:dataTable id="panelStateDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
-				value="#{panelBackingBean.managedBean.selectedPanelZone.ctPanelStates}" selectionMode="single" 
-				selection="#{panelBackingBean.managedBean.selectedPanelState}" >
-				<p:ajax event="rowSelect" update=":form:tabview:deleteStateBtn" />
+		<h:panelGroup id="circularZoneDtlPnl">
+			<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
+				value="#{panelBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls}" selectionMode="single" 
+				selection="#{panelBackingBean.managedBean.selectedCircularZoneDtl}" >
+				<ac:paginator for="circularZoneDtlDt" />
+				<p:ajax event="rowSelect" update=":form:tabview:deleteZoneDtlBtn" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column style="width:600px" headerText="State" />
+						<p:column style="width:600px" headerText="Location" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<p:selectOneMenu value="#{data.state.stateId}">
+					<p:selectOneMenu value="#{data.state.stateId}" rendered="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelState}">
 						<p:ajax event="change" process="@this" />
 						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
 					</p:selectOneMenu>			
+					<ac:lov id="district" lovId="PM_DISTRICT" rendered="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelDistrict}"
+						headerText="District Lov" 
+						saveObject="panelBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls[#{index}].district"
+						value="#{data.district.districtName}"
+						conditionField="recordStatus^1" /> 					
 				</p:column>
 			</p:dataTable>
+			
 			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
 				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-					disabled="#{panelBackingBean.managedBean.selectedPanelZone == null}"
-					action="#{panelBackingBean.addPanelState()}" update="panelStateDt" />	
-				<p:commandButton id="deleteStateBtn" value="Delete" icon="ui-icon-delete" onsuccess="delStateDlg.show()" 
-					disabled="#{panelBackingBean.managedBean.selectedPanelState == null}" />			
+					disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}"
+					action="#{panelBackingBean.addCircularZoneDtl()}" update="circularZoneDtlDt" />	
+				<p:commandButton id="deleteZoneDtlBtn" value="Delete" icon="ui-icon-delete" onsuccess="delStateDlg.show()" 
+					disabled="#{panelBackingBean.managedBean.selectedCircularZoneDtl == null}" />			
 			</div>							
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delStateDlg"
 				closable="true" appendToBody="true" header="Delete Confirmation" >
 				<h:panelGrid columns="2">
-					<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteStateBtn,panelStateDt" partialSubmit="true" process="@this"
-						 action="#{panelBackingBean.deletePanelState()}" oncomplete="delStateDlg.hide();"   /> 
+					<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneDtlBtn,circularZoneDtlDt" partialSubmit="true" process="@this"
+						 action="#{panelBackingBean.deleteCircularZoneDtl()}" oncomplete="delStateDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delStateDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	

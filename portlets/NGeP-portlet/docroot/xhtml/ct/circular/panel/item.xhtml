@@ -11,117 +11,89 @@
 			selection="#{panelBackingBean.managedBean.selectedPanelItem}" >
 			<ac:paginator for="panelItemDt" />
 			<p:ajax event="rowSelect" 
-				update=":form:tabview:supplierItemPnl,:form:tabview:itemSpecDlg,:form:tabview:viewSpecBtn,:form:tabview:deleteItemBtn" 
+				update=":form:tabview:itemZoneDt,:form:tabview:supplierItemPnl,:form:tabview:deleteItemBtn" 
 				listener="#{panelBackingBean.selectPanelItemEvent()}" />
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column headerText="#{lbl['lbl.ct.pc.item.name']}" />
-					<p:column headerText="Description" />
-					<p:column headerText="Min. Order Qty" />
-					<p:column headerText="Max. Procure Amount" />
-				</p:row>
-			</p:columnGroup>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.ct.pc.item.name']}">
 				<p:inputText value="#{data.itemName}" style="width:150px;" />
 			</p:column>
-			<p:column>
-				<p:inputText value="#{data.itemDescription}" style="width:200px;" />
+			<p:column headerText="Specification" rendered="#{panelBackingBean.managedBean.circularVer.itemCategory.parameterCode == ParameterConst.itemCategoryTypeSpecific}" >
+				<p:inputText value="#{data.specification}" style="width:200px;" />
 			</p:column>
-			<p:column>
+			<p:column headerText="Min. Order Qty" >
 				<p:inputText value="#{data.minimumOrderQty}" style="width:80px;text-align:right;" />
 			</p:column>
-			<p:column>
+			<p:column headerText="Had Pembelian Luar Kontrak">
 				<p:inputText value="#{data.maxProcureAmount}" style="width:80px;text-align:right;" />
+			</p:column>
+			<p:column headerText="Direct Nego">
+				<p:selectBooleanCheckbox value="#{data.directNego}" />
 			</p:column>			
+			<p:column headerText="Direct Purchase">
+				<p:selectBooleanCheckbox value="#{data.directPurchase}" />
+			</p:column>	
+			<p:column headerText="Quotation/Tender">
+				<p:selectBooleanCheckbox value="#{data.qt}" />
+			</p:column>											
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
-			<p:commandButton id="viewSpecBtn" value="View Specification" icon="ui-icon-action" onsuccess="itemSpecDlg.show()"
-				disabled="#{panelBackingBean.managedBean.selectedPanelItem == null}" /> 
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				update=":form:tabview:deleteItemBtn,:form:tabview:viewSpecBtn,panelItemDt"
+				update=":form:tabview:deleteItemBtn,panelItemDt"
 				action="#{panelBackingBean.addPanelItem()}" />
 			<p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete" onsuccess="delItemDlg.show()" 
 				disabled="#{panelBackingBean.managedBean.selectedPanelItem == null}" />
 		</div>		
-		<p:dialog id="itemSpecDlg" header="Item Specification" widgetVar="itemSpecDlg" modal="true" width="550" height="350">
-			<p:panel id="itemSpec">
-				<p:dataTable id="itemSpecDt" var="data" lazy="false" 
-					value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelItemSpecs}" rowIndexVar="index" >
-					<ac:paginator for="itemSpecDt" />
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}" >
-						<h:outputLabel value="No." style="width:0px;float:left;" rendered="#{index == 0}" />
-						<h:outputText value="#{index}" rendered="#{index != 0}" />
-					</p:column>					
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
-						<p:inputText value="#{data.column1}" style="width:60px;" />
-					</p:column>
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
-						<p:inputText value="#{data.column2}" style="width:60px;"  />
-					</p:column>
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
-						<p:inputText value="#{data.column3}" style="width:60px;"  />
-					</p:column>		
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
-						<p:inputText value="#{data.column4}" style="width:60px;"  />
-					</p:column>	
-					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
-						<p:inputText value="#{data.column5}" style="width:60px;"  />
-					</p:column>																									
-				</p:dataTable>
-				<p:spacer height="2" />
-				<div class="ppRightBtn"> 
-					<p:commandButton value="Add" process="itemSpecDlg" partialSubmit="true" icon="ui-icon-add"
-						action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" />	
-					<p:commandButton value="Delete" process="itemSpecDlg" partialSubmit="true" icon="ui-icon-delete"
-						action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" />												
-				</div>				
-			</p:panel>
-			<f:facet name="footer">
-				<p:commandButton value="OK" process="itemSpecDlg" 
-					action="#{panelBackingBean.addCancelledCircular()}"
-					onclick="itemSpecDlg.hide();" icon="ui-icon-accept" />
-				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="itemSpecDlg.hide();" />			
-			</f:facet>
-		</p:dialog>		
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delItemDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
 			<h:panelGrid columns="2">
 				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this"
-				 update="panelItemDt,:form:tabview:deleteItemBtn,:form:tabview:viewSpecBtn,:form:tabview:supplierItemPnl" 
+				 update="panelItemDt,:form:tabview:deleteItemBtn,:form:tabview:supplierItemPnl" 
 				 action="#{panelBackingBean.deletePanelItem()}" onsuccess="delItemDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>	
 		<p:spacer height="20" />
 		
+		<p:dataTable id="itemZoneDt" var="data" rowKey="#{data}" lazy="true" rendered="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null}"
+			value="#{panelBackingBean.managedBean.circularVer.ctCircularZones}" selectionMode="single" 
+			selection="#{panelBackingBean.managedBean.selectedCircularZone}" >
+			<ac:paginator for="itemZoneDt" />
+			<p:ajax event="rowSelect" update=":form:tabview:supplierItemPnl" 
+				listener="#{panelBackingBean.selectItemZoneEvent()}" />
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column style="width:600px" headerText="#{lbl['lbl.ct.pc.zone.name']}" />
+				</p:row>
+			</p:columnGroup>
+			<p:column>
+				<h:outputText value="#{data.name}" style="width:200px;" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="20" />
+		
 		<h:panelGroup id="supplierItemPnl">
 			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowKey="#{data}" rowIndexVar="index"
-				value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers}" selectionMode="single"
+				value="#{panelBackingBean.panelSupplierList}" selectionMode="single"
 				selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" >	
 				<ac:paginator for="supplierItemDt" />  	
 				<p:ajax event="rowSelect" update=":form:tabview:deleteSupplierBtn" />
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column style="width:300px" headerText="#{lbl['lbl.ct.pc.item.sname']}" />
-						<p:column style="width:300px" headerText="#{lbl['lbl.ct.pc.item.zone']}" />
-					</p:row>
-				</p:columnGroup>		
-				<p:column>
+				<p:column headerText="#{lbl['lbl.ct.pc.item.sname']}" >
 					<ac:lov id="supplier" lovId="SM_SUPPLIER"
 						headerText="Supplier Lov" 
 						saveObject="panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers[#{index}].supplier"
 						value="#{data.supplier.companyName}"
 						conditionField="recordStatus^1" /> 						
 				</p:column>
-				<p:column>
-					<p:selectOneMenu value="#{data.ctPanelZone.objectId}">
-						<p:ajax event="change" process="@this" />
-						<f:selectItems value="#{panelBackingBean.getPanelZoneDropdown()}" />
-					</p:selectOneMenu>					
+				<p:column headerText="Ep No." >
+					<h:outputText value="#{data.supplier.epNo}" />			
 				</p:column>
+				<p:column headerText="Address" >
+					<h:outputText value="#{data.supplier.epNo}" />			
+				</p:column>	
+				<p:column headerText="Account No." >
+					<h:outputText value="#{data.supplier.epNo}" />			
+				</p:column>								
 			</p:dataTable>		
-			<ac:lovPopup />
 			<p:spacer height="2" />
 			<div class="ppRightBtn">
 				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"

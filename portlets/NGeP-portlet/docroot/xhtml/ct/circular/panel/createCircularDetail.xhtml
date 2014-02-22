@@ -7,11 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<h:panelGrid columns="2" columnClasses="colAlignTop,colAlignTop" >
-		<h:panelGrid columns="4" style="width:600px;">
+		<h:panelGrid columns="4">
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.circularNo}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-			<p:inputText value="#{panelBackingBean.managedBean.circularVer.name}" />
+			<p:inputTextarea value="#{panelBackingBean.managedBean.circularVer.name}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
 			<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
@@ -26,12 +26,16 @@
 			</h:panelGroup>
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />		
-			<h:outputLabel value="Panel Type" />
-			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.panelType.parameterId}">
-				<f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelType)}" />
+			<h:outputLabel value="Item Category" />
+			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.itemCategory.parameterCode}">
+				<f:selectItems value="#{panelBackingBean.getDropdownCodeValues(ParameterTypeConst.itemCategoryType)}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
 			</p:selectOneMenu>			
-			<p:spacer />
-			<p:spacer />				
+			<h:outputLabel value="Zonal Level" />
+			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode}">
+				<f:selectItems value="#{panelBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>						
 			<h:outputLabel value="Complaint Deadline" />
 			<h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" style="text-align:right; width:50px;" />
@@ -62,27 +66,6 @@
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" style="text-align:right; width:50px;" />
 				<h:outputText value=" months" />
 			</h:panelGroup>													
-		</h:panelGrid>
-		<h:panelGrid columns="1" style="width:120px;">
-			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.peninsular}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.sabah}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" />
-			</h:panelGrid>
-			<h:panelGrid columns="4">
-				<p:spacer width="20" />
-				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.sarawak}" />
-				<p:spacer width="5" />
-				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" />
-			</h:panelGrid>
 		</h:panelGrid>
 	</h:panelGrid>
 
