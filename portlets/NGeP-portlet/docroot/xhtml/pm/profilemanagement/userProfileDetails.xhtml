@@ -8,113 +8,113 @@
 	<p:panel header="User Profile" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20">
 			
-				<h:outputLabel value="User ID" />  
+				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.userid']}" />  
 			    <p:inputText  value="#{userprofilesBackingBean.managedBean.pmUser.userId}" disabled="true" size="30" />
 		
-                <h:outputLabel value="Login ID" />
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
                 <p:inputText value="#{userprofilesBackingBean.managedBean.pmUser.loginId}" disabled="true" size="30" />
                 
 	    </h:panelGrid>	
 	    
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">	    	        
-		        <h:outputLabel value="* Org.Type"></h:outputLabel>
+		        <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.orgtype']}"></h:outputLabel>
 		          <p:selectOneMenu style="width:178px">  
             		<f:selectItem itemLabel="Select One" itemValue="null" />  
             		<f:selectItem itemLabel="Kumpulan PTJ" itemValue="1" /> 
             		<f:selectItem itemLabel="Kumpulan .." itemValue="2" />  
                   </p:selectOneMenu>
 
-		   		<h:outputLabel value="* Salutation"></h:outputLabel>
+		   		<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}"></h:outputLabel>
 		           <p:selectOneMenu style="width:178px">  
             		<f:selectItem itemLabel="Select One" itemValue="null" />  
             		<f:selectItem itemLabel="Mr" itemValue="1" /> 
             		<f:selectItem itemLabel="Mrs" itemValue="2" />  
                    </p:selectOneMenu> 
                   
-  				<h:outputLabel value="* User Name" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.username']}" />  
 			    <p:inputText size="50" />                                 
                    
-                <h:outputLabel value="* Identification Type "/>
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" />
 		           <p:selectOneMenu style="width:178px">  
             		<f:selectItem itemLabel="Passport No" itemValue="null" />  
             		<f:selectItem itemLabel="IC No" itemValue="1" /> 
             		<f:selectItem itemLabel="License No" itemValue="2" />  
                    </p:selectOneMenu>   
                 
-  				<h:outputLabel value="* Identification No." />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idno']}" />  
 			    <p:inputText size="30" />
 			                     
          </h:panelGrid>  
          
 		 <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20" >                          	                   
-                <h:outputLabel value="* Nationality "/>
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" />
 		           <p:selectOneMenu style="width:178px">  
             		<f:selectItem itemLabel="Malaysian" itemValue="null" />  
             		<f:selectItem itemLabel="Singaporean" itemValue="1" /> 
             		<f:selectItem itemLabel="Vietnamese" itemValue="2" />  
                    </p:selectOneMenu> 
                    
-                <h:outputLabel value="Professional Mgt" />  
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.promanagement']}" />  
           		  <p:selectOneRadio>  
            			 <f:selectItem itemLabel="Yes" itemValue="1" />  
             		 <f:selectItem itemLabel="No" itemValue="2" />  
        			  </p:selectOneRadio>                               
                     				
-  				<h:outputLabel value="Designation" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />  
 			    <p:inputText size="30" />  
 			    
-  				<h:outputLabel value="Grade" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.country']}" />  
 			    <p:inputText size="30" /> 			    
 			    
-                <h:outputLabel value="* Country"/>
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
 				<p:selectOneMenu size="178px"
 					value="#{userProfilesBackingBean.managedBean.selectedCountry}">
 					<f:selectItems
 						value="#{userProfilesBackingBean.managedBean.countryName}"></f:selectItems>
 				</p:selectOneMenu>
                    
-               <h:outputLabel value="* City/Town"/> 
+               <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.offaddress']}" /> 
                <p:columnGroup>    
 			    <p:inputText size="30" /> 
     			<p:commandButton value="..." size="5" oncomplete="citytownsearch.show();">
     			</p:commandButton>			    
                </p:columnGroup>
                     
-  				<h:outputLabel value="* Address(Office)" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.district']}" />  
 			    <p:inputText size="30" /> 
 			    
-  				<h:outputLabel value="District" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />  
 			    <p:inputText size="30" disabled="true" />
 			    
   				<h:outputLabel />  
 			    <p:inputText size="30" /> 			     
 			    
-  				<h:outputLabel value=" Division" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.state']}" />  
 			    <p:inputText size="30" disabled="true" />
 			    
   				<h:outputLabel />  
 			    <p:inputText size="30" />			     
 			    
-  				<h:outputLabel value="State" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" />  
 			    <p:inputText size="30" disabled="true" />
 			    
   				<h:outputLabel />  
 			    <p:inputText size="30" />			     
 			    
-  				<h:outputLabel value="* Postal Code" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" />  
 			    <p:inputText size="30" /> 
         </h:panelGrid>			    
 		 <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"  columnClasses="columnWidth20"> 			    
-  				<h:outputLabel value="Tel.No" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" />  
 			    <p:inputText size="30" /> 	
 			    
-  				<h:outputLabel value="Mobile.No" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" />  
 			    <p:inputText size="30" /> 
 			    
-  				<h:outputLabel value="Fax.No" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" />  
 			    <p:inputText size="30" /> 
 			    
-  				<h:outputLabel value="Email" />  
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.search.result.status']}" />  
 			    <p:inputText size="50" /> 		    			    			    			    			    		    			    			                                          			                     		                                                 
           
         </h:panelGrid>

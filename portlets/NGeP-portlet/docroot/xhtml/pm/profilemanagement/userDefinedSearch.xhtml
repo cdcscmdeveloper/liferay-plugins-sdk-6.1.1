@@ -10,16 +10,16 @@
 
 		<h:panelGrid columns="2" >
 
-			<h:outputLabel value="User Name"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}"></h:outputLabel>
 			<p:inputText value="#{userprofilesBackingBean.managedBean.userNames}" size="30" />
 	
-	        <h:outputLabel value="Role"></h:outputLabel>
+	        <h:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}"></h:outputLabel>
             <p:inputText value="#{userprofilesBackingBean.managedBean.userRole}" size="30" />
 			
-			<h:outputLabel value="Organitation Name"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"></h:outputLabel>
 			<p:inputText value="#{userprofilesBackingBean.managedBean.userorganizationNames}" size="30" />
 		
-		    <h:outputLabel value="Status"></h:outputLabel>
+		    <h:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}"></h:outputLabel>
 		       <p:selectOneMenu style="width:203px">  
             	<f:selectItem itemLabel="Select One" itemValue="" />  
             	<f:selectItem itemLabel="Active" itemValue="1" /> 

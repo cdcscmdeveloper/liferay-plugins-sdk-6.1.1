@@ -10,7 +10,7 @@
 	<p:panel header="ATTACHMENTS" toggleable="true">
     <h:panelGrid columns="2" >	
     
-    <h:outputLabel value="Attachment"></h:outputLabel>
+    <h:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.attachment']}"></h:outputLabel>
     <p:fileUpload fileUploadListener="#{userprofilesBackingBean.handleFileUpload}" mode="advanced" dragDropSupport="false" 
             update="messages" auto="true" sizeLimit="500000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
   

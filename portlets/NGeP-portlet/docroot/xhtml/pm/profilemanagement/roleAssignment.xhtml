@@ -10,7 +10,7 @@
 	<p:panel header="ROLE ASSIGNMENT" toggleable="true">
     <br/>	
     <h:panelGrid  columns="2" columnClasses="columnWidth50" >	
-	 <h:outputLabel value="Org.Unit"></h:outputLabel>
+	 <h:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.orgunit']}"></h:outputLabel>
 	   <p:selectOneMenu style="width:300px">  
          <f:selectItem itemLabel="Select One" itemValue="" />  
          <f:selectItem itemLabel="Kementerian Kewangan" itemValue="1" /> 
@@ -23,16 +23,16 @@
 		<p:column>
 	    <p:selectBooleanCheckbox/> 
 	    </p:column>
-	    <p:column headerText="Role" > 
+	    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" > 
           <h:outputText value="#{RoleList.roleName}" />
         </p:column>
-        <p:column headerText="Approval/PLan/Supplier Type" > 
+        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprplan']}" > 
           <h:outputText value="#{RoleList.roleTypes}" />   
         </p:column>
-        <p:column headerText="Appr.Limit(RM)" > 
+        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
           <h:outputText value="#{RoleList.apprLimit}" />  
         </p:column>
-        <p:column headerText="Status" > 
+        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}" > 
           <h:outputText value="#{RoleList.roleStatus}" />  
         </p:column>
 
@@ -52,11 +52,11 @@
 		<ac:paginator />
 		<p:column>
 	    </p:column> 
-	    <p:column headerText="Address Name" > 
+	    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
           <h:outputText value="#{AddressList.addressName}" />
         </p:column>
         <p:column headerText="Status" > 
-          <h:outputText value="#{AddressList.addressStatus}" />   
+          <h:outputText value="#{lbl['lbl.pm.profiles.authorisation.Status']}" />   
         </p:column>
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>

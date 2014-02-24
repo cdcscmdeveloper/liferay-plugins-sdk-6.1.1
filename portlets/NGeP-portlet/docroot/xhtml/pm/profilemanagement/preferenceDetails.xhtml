@@ -11,13 +11,13 @@
 	 <br/>
 		<h:panelGrid columns="2">
 
-		        <h:outputLabel value="Preferred Language"></h:outputLabel>
+		        <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"></h:outputLabel>
 		          <p:selectOneMenu style="width:178px">  
             		<f:selectItem itemLabel="English" itemValue="1" />  
             		<f:selectItem itemLabel="Bahasa Malaysia" itemValue="2" />  
                   </p:selectOneMenu>
                   
-		        <h:outputLabel value="Date"></h:outputLabel>
+		        <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.date']}"></h:outputLabel>
 		          <p:selectOneMenu style="width:120px">  
             		<f:selectItem itemLabel="dd/MM/yyyy" itemValue="1" />  
             		<f:selectItem itemLabel="dd/MM/yy" itemValue="2" /> 
@@ -26,7 +26,7 @@
             		<f:selectItem itemLabel="dd-MMMM-yyyy" itemValue="5" />             		         		            		 
                   </p:selectOneMenu>
                   
-		        <h:outputLabel value="Time"></h:outputLabel>
+		        <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.time']}"></h:outputLabel>
                <p:columnGroup> 		        
 		          <p:selectOneMenu style="width:120px">  
             		<f:selectItem itemLabel="12H" itemValue="1" />  
@@ -36,7 +36,7 @@
                    value="/resources/ep/images/design/tooltips.png" />              
                </p:columnGroup>
                  
-                <h:outputLabel value="Notification Removal" />
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}" />
                 <p:columnGroup>                
                  <p:inputText value="0" size="5" />&#160; 
                  <h:commandButton value="Days" style="width:62px" /> 

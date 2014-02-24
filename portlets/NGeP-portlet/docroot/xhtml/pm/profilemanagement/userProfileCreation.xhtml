@@ -11,16 +11,18 @@
 	<ui:define name="contentSection">
 	<table style="border: 0px;width:100%">
 	<tr>
-	<td width="100%">
+	  <td width="100%">
 	<p:messages id="specmessages" showDetail="true" autoUpdate="true"
     closable="true" />
-	<ui:include src="/xhtml/pm/profilemanagement/userNavigationButton.xhtml"></ui:include></td>
-				
-			</tr>
-			<tr>
-	<td width="100%" valign="top"><ui:include src="/xhtml/pm/profilemanagement/userMaintenanceSubMenu.xhtml"></ui:include></td>
-				
-			</tr>
+	<ui:include src="/xhtml/pm/profilemanagement/userNavigationButton.xhtml"></ui:include>
+	  </td>
+   </tr >
+   <tr>
+     <td width="100%"><ui:include src="/xhtml/pm/profilemanagement/userNavigationDetails.xhtml"></ui:include></td>
+   </tr>   
+	<tr>
+	  <td width="100%" valign="top"><ui:include src="/xhtml/pm/profilemanagement/userMaintenanceSubMenu.xhtml"></ui:include></td>
+	</tr>
 		</table>
 								
 	</ui:define>

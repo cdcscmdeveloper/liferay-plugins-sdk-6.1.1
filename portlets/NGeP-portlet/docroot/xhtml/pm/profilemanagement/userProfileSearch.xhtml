@@ -45,26 +45,26 @@
     <p:ajax event="rowEditCancel"/> 
 				
  
-       <p:column headerText="Login ID" > 
+       <p:column headerText="#{lbl['lbl.pm.profiles.search.result.loginid']}"> 
         <h:outputText value="#{userprofile.loginId}" />
        </p:column>
        
-       <p:column headerText="User Name" >
+       <p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}">
         <h:outputText value="#{userprofile.userName}" />  
        </p:column>
        
-       <p:column headerText="City Name" >
+       <p:column headerText="#{lbl['lbl.pm.profiles.search.result.cityname']}">
         <h:outputText /> 
        </p:column>
        
-       <p:column headerText="State Name" >
+       <p:column headerText="#{lbl['lbl.pm.profiles.search.result.statename']}">
         <h:outputText />    
        </p:column>
     
-       <p:column headerText="Status"> 
+       <p:column headerText="#{lbl['lbl.pm.profiles.search.result.status']}"> 
         <h:outputText />
        </p:column>
-    <p:column headerText="Action">
+    <p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}">
     <p:commandLink action="#{userprofilesBackingBean.goToMaintainceAction(profile)}">
      <p:graphicImage library="ep/images/design" name="edit.png"
       value="/resources/ep/images/design/edit.png" />
