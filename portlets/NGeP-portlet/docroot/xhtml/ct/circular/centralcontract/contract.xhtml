@@ -38,7 +38,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Zone" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null}" >
-				<p:selectOneMenu value="#{data.ctCircularZone.objectId}">
+				<p:selectOneMenu value="#{data.ctCircularZone.objectId}" style="width:130px;">
 					<p:ajax event="change" process="@this" />
 					<f:selectItems value="#{centralContractBackingBean.getCircularZoneDropdown('C')}" />
 				</p:selectOneMenu>
@@ -59,13 +59,13 @@
 			<ac:paginator for="circularItemDt" />
 			<p:ajax event="rowSelect" update=":form:tabview:circularItemPriceDt" 
 				listener="#{centralContractBackingBean.selectCircularItemEvent()}" />
-			<p:column headerText="Item Name" >
-				<h:outputText value="#{data.itemName}" style="width:200px;" />
+			<p:column headerText="Item Name" style="width:450px;">
+				<h:outputText value="#{data.itemName}" style="width:450px;" />
 			</p:column>
-			<p:column headerText="Minimum Order Qty." >
+			<p:column headerText="Minimum Order Qty." style="width:150px;" >
 				<p:inputText value="#{data.minimumOrderQty}" />
 			</p:column>	
-			<p:column headerText="Had Pembelian Luar Kontrak" >
+			<p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;">
 				<p:inputText value="#{data.maxProcureAmount}" />
 			</p:column>						
 		</p:dataTable>
@@ -75,19 +75,19 @@
 			selection="#{centralContractBackingBean.managedBean.selectedCircularItemPrice}" >
 			<ac:paginator for="circularItemPriceDt" />
 			<p:ajax event="rowSelect" update=":form:tabview:deleteCircularItemPriceBtn" />
-			<p:column headerText="Zone" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode!=null}" >
-				<p:selectOneMenu value="#{data.ctCircularZone.objectId}">
+			<p:column headerText="Zone" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode!=null}" style="width:260px;">
+				<p:selectOneMenu value="#{data.ctCircularZone.objectId}" style="width:150px;">
 					<p:ajax event="change" process="@this" />
 					<f:selectItems value="#{centralContractBackingBean.getCircularZoneDropdown('I')}" />
 				</p:selectOneMenu>				
 			</p:column>
-			<p:column headerText="Tier From" >
+			<p:column headerText="Tier From" style="width:150px;">
 				<p:inputText value="#{data.tierFrom}" />
 			</p:column>	
-			<p:column headerText="Tier To" >
+			<p:column headerText="Tier To" style="width:150px;">
 				<p:inputText value="#{data.tierTo}" />
 			</p:column>
-			<p:column headerText="Unit Price" >
+			<p:column headerText="Unit Price" style="width:150px;">
 				<p:inputText value="#{data.unitPrice}" />
 			</p:column>										
 		</p:dataTable>

@@ -5,50 +5,73 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-
-	<h:panelGrid columns="2" columnClasses="colAlignTop,colAlignTop">
-		<h:panelGrid columns="4" style="width:600px;">
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
-			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
-			<p:calendar disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.startDate}"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal3" showOn="button" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
-			<p:calendar disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal4" showOn="button" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
-			<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
-				action="#{centralContractBackingBean.downloadFile(1)}" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
-			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />	
-			<h:outputLabel value="Zonal Level" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}">
-				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				<p:ajax event="change" update=":form:tabview" process="@form" />
-			</p:selectOneMenu>			
-			<h:outputLabel value="Item Zonal Level" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}">
-				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				<p:ajax event="change" update=":form:tabview" process="@form" />
-			</p:selectOneMenu>						
-			<p:outputLabel value="Update Effective Date" />
-			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.updateEffDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal7" showOn="button" />			
-			<h:outputLabel value="Update Description" />
-			<p:inputTextarea value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" />				
-			<h:outputLabel value="Extension Period" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extPeriod}" />
-			<f:verbatim />
-			<f:verbatim />			
-			<h:outputLabel value="Extension Start Date" />
-			<p:calendar style="width:150px;" value="#{centralContractBackingBean.managedBean.circularVer.extStartDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button" />
-			<h:outputLabel value="Extension End Date" />
-			<p:calendar style="width:150px;" value="#{centralContractBackingBean.managedBean.circularVer.extEndDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" />				
-		</h:panelGrid>
-	</h:panelGrid>
 	
+	<table style="width: 100%" >
+			<tr>
+				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
+				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
+				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
+				<td rowspan="2"><p:inputTextarea cols="26" rows="3"
+						style=" margin-bottom:0px;"
+						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+				</td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
+				<td><p:inputText  style="width:170px;"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}"
+						disabled="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
+		        <td><p:calendar disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.startDate}"
+			       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal3" showOn="button" /></td>
+		        <td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
+		        <td><p:calendar disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
+			       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="24" id="popupButtonCal4" showOn="button" /></td>
+			</tr>
+			<tr>
+			  <td><h:outputLabel value="Zonal Level" /></td>
+		      <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}" style="width:135px;">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			   </p:selectOneMenu></td>
+			 <td><h:outputLabel value="Item Zonal Level" /></td>
+		     <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}" style="width:155px;">
+				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				<p:ajax event="change" update=":form:tabview" process="@form" />
+			</p:selectOneMenu>	</td>
+           </tr>
+           
+           <tr>
+				<td style="width: 15%;" ><p:outputLabel value="Update Effective Date" /></td>
+				<td> <p:calendar value="#{centralContractBackingBean.managedBean.circularVer.updateEffDate}" 
+			         pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal7" showOn="button" /></td>
+				<td rowspan="2" valign="top" style="width: 15%;"><h:outputLabel value="Update Description" /></td>
+				<td rowspan="2"><p:inputTextarea value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" rows="3" cols="26" />		
+				</td>
+			</tr>
+		    <tr>
+		    <td><p:outputLabel value="#{lbl['lbl.ct.cc.upload']}" /></td>
+		    <td><h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
+				action="#{centralContractBackingBean.downloadFile(1)}" /></td>
+		   </tr>
+           
+           <tr>
+		    <td><h:outputLabel value="Extension Period" /></td>
+		    <td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extPeriod}" /></td>
+		    <td>	</td>
+		    <td></td>
+		  </tr>
+		  
+		  <tr>
+		    <td> <h:outputLabel value="Extension Start Date" /></td>
+		    <td><p:calendar style="width:150px;" value="#{centralContractBackingBean.managedBean.circularVer.extStartDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button" /></td>
+		    <td><h:outputLabel value="Extension End Date" /></td>
+		    <td><p:calendar style="width:150px;" value="#{centralContractBackingBean.managedBean.circularVer.extEndDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" /></td>
+		  </tr>  
+	</table>
 </ui:composition>

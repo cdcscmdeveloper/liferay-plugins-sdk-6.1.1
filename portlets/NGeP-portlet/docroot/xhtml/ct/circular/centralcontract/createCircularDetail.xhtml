@@ -5,42 +5,55 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-
-	<h:panelGrid columns="2" style="vertical-align=top;">
-		<h:panelGrid columns="4" style="width:600px;">
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-			<p:inputTextarea value="#{centralContractBackingBean.managedBean.circularVer.name}" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
-			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
-			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal1" disabled="true" />
-			<h:outputLabel value="* #{lbl['lbl.ct.cc.upload']}" />
-			<h:panelGroup id="uploadCircularPg">
+	<table style="width: 100%" >
+			<tr>
+				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
+				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
+				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
+				<td rowspan="2"><p:inputTextarea cols="23" rows="3"
+						style=" margin-bottom:0px;"
+						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+				</td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
+				<td><p:inputText  style="width:170px;"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
+				<td><p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
+			    <td><p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="25" id="popupButtonCal1" disabled="true" /></td>
+			</tr>
+			<tr>
+			    <td><h:outputLabel value="Zonal Level" /></td>
+			    <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}" style="width:135px;">
+				    <f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				    <p:ajax event="change" update=":form:tabview" process="@form" />
+			        </p:selectOneMenu>	</td>
+			   <td> <h:outputLabel value="Item Zonal Level" /></td>
+			   <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}" style="width:163px;">
+				   <f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
+				   <p:ajax event="change" update=":form:tabview" process="@form" />
+			       </p:selectOneMenu>	</td>
+			</tr>
+			<tr>
+			<td><h:outputLabel value="* #{lbl['lbl.ct.cc.upload']}" /></td>
+			<td><h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg" value="Choose file" 
 					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
 				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />					
-			</h:panelGroup>
-			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
-			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
-			<h:outputLabel value="Zonal Level" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}">
-				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				<p:ajax event="change" update=":form:tabview" process="@form" />
-			</p:selectOneMenu>			
-			<h:outputLabel value="Item Zonal Level" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}">
-				<f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				<p:ajax event="change" update=":form:tabview" process="@form" />
-			</p:selectOneMenu>					
-		</h:panelGrid>
-	</h:panelGrid>
-
+			</h:panelGroup></td>
+			<td></td>
+			<td></td>
+		  </tr>
+	</table>
 	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" 
@@ -50,5 +63,4 @@
 			update="uploadCircularPg" >
 		</p:fileUpload> 
 	</p:dialog>
-	
 </ui:composition>

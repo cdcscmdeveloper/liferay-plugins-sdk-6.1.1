@@ -8,7 +8,7 @@
 
 	<p:panel id="zonePnl" header="Zone - Contract Coverage" toggleable="true" toggleSpeed="500" 
 		rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null}" >
-		<table>
+		<table style="width=100%;">
 			<tr>
 				<td valign="top">
 					<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}" lazy="true"
@@ -17,10 +17,10 @@
 						<ac:paginator for="circularZoneDt" />
 						<p:ajax event="rowSelect" update=":form:tabview:circularZoneDtlPnl,:form:tabview:deleteZoneBtn" 
 							listener="#{centralContractBackingBean.selectZoneEvent()}" />
-						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:200px" >
-							<p:inputText value="#{data.name}" style="width:200px;" />
+						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:250px;" >
+							<p:inputText value="#{data.name}" style="width:250px;" />
 						</p:column>
-						<p:column headerText="Delivery Term (days)" style="width:150px" >
+						<p:column headerText="Delivery Term (days)" style="width:150px;" >
 							<p:inputText value="#{data.deliveryTerm}" />
 						</p:column>						
 					</p:dataTable>
@@ -40,7 +40,7 @@
 						</h:panelGrid>
 					</p:confirmDialog>					
 				</td>
-				<td><p:spacer width="20px" /></td>
+				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="circularZoneDtlPnl">
 						<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
@@ -48,7 +48,7 @@
 							selection="#{centralContractBackingBean.managedBean.selectedCircularZoneDtl}" >
 							<ac:paginator for="circularZoneDtlDt" />
 							<p:ajax event="rowSelect" update=":form:tabview:deleteZoneDtlBtn" />
-							<p:column headerText="Location" style="width:200px">
+							<p:column headerText="Location" style="width:450px;">
 								<p:selectOneMenu value="#{data.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelState}">
 									<p:ajax event="change" process="@this" />
 									<f:selectItems value="#{centralContractBackingBean.getStateDropdownValues()}" />
@@ -85,7 +85,7 @@
 	
 	<p:panel id="itemZonePnl" header="Zone - Item Price" toggleable="true" toggleSpeed="500" 
 		rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode!=null}" >
-		<table>
+		<table style="width:100%;">
 			<tr>
 				<td valign="top">
 					<p:dataTable id="itemZoneDt" var="data" rowKey="#{data}" lazy="true"
@@ -94,8 +94,8 @@
 						<ac:paginator for="itemZoneDt" />
 						<p:ajax event="rowSelect" update=":form:tabview:itemZoneDtlPnl,:form:tabview:deleteItemZoneBtn" 
 							listener="#{centralContractBackingBean.selectItemZoneEvent()}" />
-						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:200px" >
-							<p:inputText value="#{data.name}" style="width:200px;" />
+						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:370px;" >
+							<p:inputText value="#{data.name}" style="width:400px;" />
 						</p:column>			
 					</p:dataTable>
 					<p:spacer height="2" />
@@ -114,7 +114,7 @@
 						</h:panelGrid>
 					</p:confirmDialog>					
 				</td>
-				<td><p:spacer width="20px" /></td>
+				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="itemZoneDtlPnl">
 						<p:dataTable id="itemZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
@@ -122,7 +122,7 @@
 							selection="#{centralContractBackingBean.managedBean.selectedItemZoneDtl}" >
 							<ac:paginator for="itemZoneDtlDt" />
 							<p:ajax event="rowSelect" update=":form:tabview:deleteItemZoneDtlBtn" />
-							<p:column headerText="Location" style="width:200px">
+							<p:column headerText="Location" style="width:400px;">
 								<p:selectOneMenu value="#{data.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode == ParameterConst.locationLevelState}">
 									<p:ajax event="change" process="@this" />
 									<f:selectItems value="#{centralContractBackingBean.getStateDropdownValues()}" />

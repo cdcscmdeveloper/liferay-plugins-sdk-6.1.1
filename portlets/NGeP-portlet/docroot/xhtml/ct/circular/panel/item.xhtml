@@ -14,16 +14,16 @@
 				update=":form:tabview:itemZoneDt,:form:tabview:supplierItemPnl,:form:tabview:deleteItemBtn" 
 				listener="#{panelBackingBean.selectPanelItemEvent()}" />
 			<p:column headerText="#{lbl['lbl.ct.pc.item.name']}">
-				<p:inputText value="#{data.itemName}" style="width:150px;" />
+				<p:inputText value="#{data.itemName}" style="width:135px;" />
 			</p:column>
 			<p:column headerText="Specification" rendered="#{panelBackingBean.managedBean.circularVer.itemCategory.parameterCode == ParameterConst.itemCategoryTypeSpecific}" >
-				<p:inputText value="#{data.specification}" style="width:200px;" />
+				<p:inputText value="#{data.specification}" style="width:170px;" />
 			</p:column>
 			<p:column headerText="Min. Order Qty" >
-				<p:inputText value="#{data.minimumOrderQty}" style="width:80px;text-align:right;" />
+				<p:inputText value="#{data.minimumOrderQty}" style="width:70px;text-align:right;" />
 			</p:column>
 			<p:column headerText="Had Pembelian Luar Kontrak">
-				<p:inputText value="#{data.maxProcureAmount}" style="width:80px;text-align:right;" />
+				<p:inputText value="#{data.maxProcureAmount}" style="width:70px;text-align:right;" />
 			</p:column>
 			<p:column headerText="Direct Nego">
 				<p:selectBooleanCheckbox value="#{data.directNego}" />

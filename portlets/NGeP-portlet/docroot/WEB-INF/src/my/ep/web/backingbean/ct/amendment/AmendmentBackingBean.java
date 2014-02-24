@@ -294,12 +294,27 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			System.out.println(e);
 		}
     }
+    
+
+    public void changeField() {
+
+		try {
+			flushItem();
+			if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
+				this.getManagedBean().setItemPricing(true);
+
+			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
+				this.getManagedBean().setItemCeilingQuantity(true);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 	 
 	public void flushItem() {
-		this.getManagedBean().setServiceItem(false);
+		this.getManagedBean().setItemPricing(false);
+		this.getManagedBean().setItemCeilingQuantity(false);
 		this.getManagedBean().setProductItem(false);
-		this.getManagedBean().setSelectedItem(null);
-		this.getManagedBean().setShowItem(null);
 	}
 	    
 	    public SelectItem[] getMinistryDropdown() {
