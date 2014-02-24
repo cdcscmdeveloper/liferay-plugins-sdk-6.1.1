@@ -4494,6 +4494,14 @@ label > span.ui-button-text {
 .ui-selectmanycheckbox label, .ui-selectoneradio label {
 	margin-top: 0px !important;
 }
+
+.header-info {
+	background-color: #EBEDEC !important;
+}
+
+.header-info label {
+	font-weight: bold;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
