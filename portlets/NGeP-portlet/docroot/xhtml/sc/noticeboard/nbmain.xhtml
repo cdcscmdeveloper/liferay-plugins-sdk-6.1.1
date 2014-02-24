@@ -9,8 +9,8 @@
 
 	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}"
 		style="width:350px;">
-		
-				
+
+
 		<div style="height: 600px; overflow: auto;">
 
 			<p:panel header="#{lbl['lbl.qt.nb.title']}" toggleable="true">
@@ -69,20 +69,47 @@
 
 
 					<p:column>
-						<p:inputText size="5"></p:inputText>
+
+						<p:inputText size="5"
+							value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}">
+							<p:ajax event="blur"
+								listener="#{noticeBoardBackingBean.hideAndShowPubDates}"
+								update="pbdate" process="@this" />
+						</p:inputText>
+
 						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
 							style="padding-left:5px;"></h:outputText>
-
 					</p:column>
 
 					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}"></h:outputText>
 					<p:column>
-						<p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+						<h:panelGroup id="pbdate">
+							<c:if test="#{! noticeBoardBackingBean.managedBean.showPubDate}">
+								<p:calendar showOn="button"
+									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10">
 
-						<p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+								</p:calendar>
+
+								<p:calendar showOn="button"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
+									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}">
+
+								</p:calendar>
+							</c:if>
+							<c:if test="#{noticeBoardBackingBean.managedBean.showPubDate}">
+								<p:calendar showOn="button"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
+									disabled="true"></p:calendar>
+
+								<p:calendar showOn="button"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
+									disabled="true"></p:calendar>
+							</c:if>
+
+						</h:panelGroup>
 					</p:column>
+
 				</h:panelGrid>
 			</p:panel>
 			<p:panel header="#{lbl['lbl.sc.bsv.attendance.location']}"
@@ -383,7 +410,7 @@
 
 			</p:panel>
 		</div>
-		
+
 		<p:commandButton value="#{lbl['lbl.search']}" style="float:right;"
 			icon="ui-icon-search"
 			action="#{noticeBoardBackingBean.searchNoticeBoard}"
@@ -394,7 +421,7 @@
 		<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
 			icon="ui-icon-reset">
 		</p:commandButton>
-		
+
 	</p:panel>
 
 </ui:composition>
