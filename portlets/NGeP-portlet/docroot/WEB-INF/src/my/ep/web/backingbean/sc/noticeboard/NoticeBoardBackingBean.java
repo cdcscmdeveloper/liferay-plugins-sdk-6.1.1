@@ -53,6 +53,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
+import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -62,6 +63,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.Tab;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -216,13 +218,13 @@ public class NoticeBoardBackingBean extends
 							statusFilter));
 		}
 
-		for (SearchFilterBean searchFilter : this.getManagedBean()
+		/*for (SearchFilterBean searchFilter : this.getManagedBean()
 				.getSearchBean().getDataFilterBeans()) {
 			searchTabBean.getDataFilterBeans().add(
 					new SearchFilterBean(searchFilter.getSearchField(),
 							searchFilter.getSearchOperator(), searchFilter
 									.getSearchValue()));
-		}
+		}*/
 
 		qtReqDTO.setQtSearchBean(searchTabBean);
 		this.getManagedBean().setSearchBean(searchTabBean);
@@ -581,8 +583,10 @@ this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 			root = consturctTreeNode(node);
 
+			if(this.getManagedBean().getTempMinstryRootNode() == null){
 			this.getManagedBean().setTempMinstryRootNode(
 					this.getManagedBean().getMinstryRootNode());
+			}
 			// this.getManagedBean().getTempMinstryRootNode().setSelected(false);
 			this.getManagedBean().setMinstryRootNode(root);
 			this.getManagedBean().setMistrySearchBean(
@@ -593,9 +597,10 @@ this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 				|| selectedObject instanceof PmCategoryL3) {
 
 			root = consturctTreeNode(node);
-
+if(this.getManagedBean().getTempCategoryRootNode() == null){
 			this.getManagedBean().setTempCategoryRootNode(
 					this.getManagedBean().getCategoryRootNode());
+}
 			/*
 			 * this.getManagedBean().getTempCategoryRootNode()
 			 * .setSelectable(false);
@@ -607,8 +612,10 @@ this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 				|| selectedObject instanceof PmCity) {
 			root = consturctTreeNode(node);
 
+			if(this.getManagedBean().getTempLocationRootNode() == null){
 			this.getManagedBean().setTempLocationRootNode(
 					this.getManagedBean().getLocationRootNode());
+			}
 			// this.getManagedBean().getTempLocationRootNode().setSelected(false);
 			this.getManagedBean().setLocationRootNode(root);
 			this.getManagedBean().setLocationSearchBean(new SearchBean<>());
@@ -857,5 +864,45 @@ this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
+	
+	public void hideAndShowDates(String dateType){
+		if(dateType.equalsIgnoreCase("PbDate")){
+		if(this.getManagedBean().getPublishSearchDataBean().getPassDays() !=null && this.getManagedBean().getPublishSearchDataBean().getPassDays() !=""){
+		this.getManagedBean().setShowPubDate(true);
+		}
+		else{
+			this.getManagedBean().setShowPubDate(false);
+		}
+		}
+		else if(dateType.equalsIgnoreCase("SiteVisit")){
+		if(this.getManagedBean().getSiteVisitDataBean().getPassDays() !=null && this.getManagedBean().getSiteVisitDataBean().getPassDays() !=""){
+			this.getManagedBean().setShowSiteDate(true);
+			}
+			else{
+				this.getManagedBean().setShowSiteDate(false);
+			}
+		}else if(dateType.equalsIgnoreCase("Brief")){
+		if(this.getManagedBean().getBriefSearchDataBean().getPassDays() !=null && this.getManagedBean().getBriefSearchDataBean().getPassDays() !=""){
+			this.getManagedBean().setShowBriDate(true);
+			}
+			else{
+				this.getManagedBean().setShowBriDate(false);
+			}
+		}
+	}
+	
+	public void reset() {  
+       // RequestContext.getCurrentInstance().reset("form:nbpanel");  
+		
+		this.getManagedBean().setTitle(null);
+		this.getManagedBean().setPublishSearchDataBean(new NoticeBoardSearchDataBean());
+		this.getManagedBean().setBriefSearchDataBean(new NoticeBoardSearchDataBean());
+		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
+		this.getManagedBean().setSiteVisitDataBean(new NoticeBoardSearchDataBean());
+		this.getManagedBean().setShowPubDate(false);
+		this.getManagedBean().setShowSiteDate(false);
+		this.getManagedBean().setShowBriDate(false);
+   
+    }  
 
 }
