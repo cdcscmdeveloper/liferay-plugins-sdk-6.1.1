@@ -21,7 +21,7 @@
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
-				<p:tab title="First Review">
+				<p:tab title="First PTPK Decision">
 					<ui:include src="complaintFirstReviewInfo.xhtml" />
 					<ui:include src="updateComplaintFirstReview.xhtml" />
 				</p:tab>
@@ -38,7 +38,7 @@
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 3 }">
 
-				<p:tab title="Second Review">
+				<p:tab title="Second PTPK Decision">
 					<ui:include src="complaintSecondReviewInfo.xhtml" />
 					<ui:include src="updateComplaintSecondReview.xhtml" />
 				</p:tab>

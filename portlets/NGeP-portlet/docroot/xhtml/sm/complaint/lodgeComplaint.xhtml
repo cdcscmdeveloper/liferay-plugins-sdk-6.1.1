@@ -12,10 +12,39 @@
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
 		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complainantContact.xhtml" />
+		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
-
 		<ac:lovPopup />
 
+		<table class="customTbl">
+			<tr>
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent"></td>
+
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent">&#160;</td>
+			</tr>
+		</table>
+		<div align="left">
+			<p:selectBooleanCheckbox></p:selectBooleanCheckbox>
+			<h:outputText value="I have agreed the "></h:outputText>
+			<p:commandLink style="color:blue;" value="Terms &#38; Condition" onclick="dlg2.show();" />
+		</div>
+		<p:dialog id="modalDialog" header="Terms &#38; Conditions"
+			widgetVar="dlg2" modal="true" height="500" width="800">
+			<ac:smPanel id="tt">
+				<p>Lorem ipsum dolor sit amet, enim evertitur percipitur id qui,
+					altera torquatos voluptaria ex duo. Mei utinam praesent dignissim
+					at. Et graeci definiebas vel. Eros iudicabit te sea.</p>
+				<br />
+				<p>Per salutandi eloquentiam ex, nisl causae adipiscing pri cu.
+					Ex vel eius virtute, eu nulla partem pro, agam fabulas usu ex. Ius
+					ludus comprehensam vituperatoribus ne, no soleat corpora mea.
+					Homero atomorum inimicus et sit. An unum graece has, tota
+					conclusionemque ea qui, at his legere dicunt efficiantur.</p>
+			</ac:smPanel>
+		</p:dialog>
 		<div align="right">
 			<p:commandButton value="Submit"
 				action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>

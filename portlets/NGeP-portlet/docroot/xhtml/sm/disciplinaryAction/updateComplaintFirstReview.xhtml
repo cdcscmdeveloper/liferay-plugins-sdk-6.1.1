@@ -5,35 +5,29 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="First Review Response"
-		toggleable="true">
+	<p:panel header="First PTPK Decision" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
-				<td id="tdContent"><p:calendar showOn="button"
-						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
+						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+				<td class="tdTitle"><p:outputLabel
 						value="* Meeting Minutes Ref No." /></td>
-				<td id="tdContent"><p:inputText
-						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}"  /></td>
+				<td class="tdContent"><p:inputText
+						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}" /></td>
 			</tr>
 
-			<tr>
-				<td id="tdTitle"><p:outputLabel
-						value="* Report Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-				<td id="tdTitle"><p:outputLabel value="* Decesion" /></td>
-				<td id="tdContent"><p:selectOneMenu
-						value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Valid" itemValue="1" />
-						<f:selectItem itemLabel="Invalid" itemValue="0" />
-					</p:selectOneMenu></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<td id="tdTitle"><p:outputLabel value="* Report Received" /></td> -->
+<!-- 				<td id="tdContent"><p:calendar showOn="button" -->
+<!-- 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td> -->
+
+<!-- 			</tr> -->
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Remarks" /></td>
-				<td id="tdContent" colspan="3"><p:inputTextarea
+				<td class="tdTitle"><p:outputLabel value="* Remarks" /></td>
+				<td class="tdContent" colspan="3"><p:inputTextarea
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionRemark}"
 						rows="8" cols="100" /></td>
 			</tr>
@@ -49,11 +43,18 @@
 				</tr>
 				-->
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* Upload Decision Report"></p:outputLabel></td>
-				<td id="tdContent"><p:fileUpload mode="simple" /></td>
-				<td colspan="2"><p:commandLink value="Click Here" /> <h:outputText
-						value="To download Show Cause Letter Template" /></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="* Decision" /></td>
+				<td class="tdContent"><p:selectOneMenu
+						value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Valid" itemValue="1" />
+						<f:selectItem itemLabel="Invalid" itemValue="0" />
+					</p:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>

@@ -243,9 +243,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setStateLs(resDTO.getStateList());
 	}
 
-	public List<PmDistrict> retrievePmDistrictList(long stateId) {
+	public List<PmDistrict> retrievePmDistrictList() {
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(stateId);
+		reqDTO.setStateId(this.getManagedBean().getSmComplainant().getPmCountry().getCountryId());
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDistrictSO.class);
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);

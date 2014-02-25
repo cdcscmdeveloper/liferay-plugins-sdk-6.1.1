@@ -7,9 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div align="right">
-		<p:commandButton value="Update" />
+		<p:commandButton value="Save" />
 		<p:commandButton value="Submit"
-			action="#{complaintBackingBean.issueShowCauseLetter}" />
+			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
 
 	<ac:smPanel id="p1">
@@ -17,41 +17,41 @@
 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
 	</ac:smPanel>
 
-	<p:panel header="First Review Info" toggleable="true">
+<!-- 	<p:panel header="First Review Info" toggleable="true"> -->
 		<!-- 		<div align="right"> -->
 		<!-- 			<p:commandLink value="Click Here" /> -->
 		<!-- 			<p:outputLabel value="To download investigation report template" /> -->
 		<!-- 		</div> -->
 		<!-- 		<br /> -->
 
-		<table class="customTbl">
-			<tr>
-				<td class="tdTitle"><p:outputLabel
-						value="Report Sent to PTPK *" /></td>
-				<td class="tdContent"><p:calendar showOn="button"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-			<tr>
-				<td class="tdTitle"><p:outputLabel
-						value="Expected Conven Date *" /></td>
-				<td class="tdContent"><p:calendar showOn="button"
-						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-			<tr>
-				<td class="tdTitle"><p:outputLabel
-						value="Initial Invesitgation Report*"></p:outputLabel></td>
-				<td class="tdContent"><p:fileUpload mode="simple" /></td>
-			</tr>
+<!-- 		<table class="customTbl"> -->
+<!-- 			<tr> -->
+<!-- 				<td class="tdTitle"><p:outputLabel -->
+<!-- 						value="Report Sent to PTPK *" /></td> -->
+<!-- 				<td class="tdContent"><p:calendar showOn="button" -->
+<!-- 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td class="tdTitle"><p:outputLabel -->
+<!-- 						value="Expected Conven Date *" /></td> -->
+<!-- 				<td class="tdContent"><p:calendar showOn="button" -->
+<!-- 						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" -->
+<!-- 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td class="tdTitle"><p:outputLabel -->
+<!-- 						value="Initial Invesitgation Report*"></p:outputLabel></td> -->
+<!-- 				<td class="tdContent"><p:fileUpload mode="simple" /></td> -->
+<!-- 			</tr> -->
 
-			<!-- 
-				<tr>
-					<td id="tdTitle"><p:outputLabel value="Supplier MOF NO. *"></p:outputLabel></td>
-					<td id="tdContent"><p:inputText /></td>
-				</tr> -->
+<!--  -->
+<!-- 				<tr> -->
+<!-- 					<td id="tdTitle"><p:outputLabel value="Supplier MOF NO. *"></p:outputLabel></td> -->
+<!-- 					<td id="tdContent"><p:inputText /></td> -->
+<!-- 				</tr> -->
 
-		</table>
-		<br />
-	</p:panel>
+<!-- 		</table> -->
+<!-- 		<br /> -->
+<!-- 	</p:panel> -->
 
 </ui:composition>

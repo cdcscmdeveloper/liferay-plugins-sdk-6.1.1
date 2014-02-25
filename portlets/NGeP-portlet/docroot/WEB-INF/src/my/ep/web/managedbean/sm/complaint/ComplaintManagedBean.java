@@ -38,6 +38,8 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private List<PmCity> cityLs;
 	private List<PmDistrict> districtLs;
 	
+	private boolean sameAddress;
+	
 	/*********Dummy Complaint type**********/
 	private Map<String, String> complType;
 
@@ -170,6 +172,14 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setDistrictLs(List<PmDistrict> districtLs) {
 		this.districtLs = districtLs;
+	}
+
+	public boolean isSameAddress() {
+		return sameAddress;
+	}
+
+	public void setSameAddress(boolean sameAddress) {
+		this.sameAddress = sameAddress;
 	}
 	
 }

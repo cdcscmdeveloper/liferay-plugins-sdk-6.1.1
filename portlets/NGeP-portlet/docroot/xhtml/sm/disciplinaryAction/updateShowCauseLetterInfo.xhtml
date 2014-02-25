@@ -8,42 +8,55 @@
 
 
 	<div align="right">
-		<p:commandButton value="Show Cause Letter" onclick="dlg2.show();"></p:commandButton>
-		<p:commandButton value="Update" />
+		<p:commandButton value="Download Show Cause Letter"
+			onclick="dlg2.show();"></p:commandButton>
+		<p:commandButton value="Save" />
 		<p:commandButton value="Submit"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
-	
+
 	<ac:smPanel id="p2">
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complainantContact.xhtml" />
 	</ac:smPanel>
-	
-	<p:dialog id="modalDialog" header="Site Visit Report Review"
-		widgetVar="dlg2" modal="true" height="500" width="1000">
+
+	<p:dialog id="modalDialog" header="Show Cause Letter" widgetVar="dlg2"
+		modal="true" height="500" width="1000">
 		<p:media value="/xhtml/sm/disciplinaryAction/sampleShowCause.pdf"
 			width="100%" height="450px">
 		</p:media>
-		
-		<div align="right"><p:commandButton value="Download" /></div>
+
+		<div align="right">
+			<p:commandButton value="Download" />
+		</div>
 	</p:dialog>
 
 	<p:panel header="Show Cause Letter" toggleable="true">
 		<table class="customTbl">
 			<tr>
+				<td class="tdTitle"><h:outputText
+						value="* Upload Show Cause Letter" /></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
+			</tr>
+			<tr>
 				<td class="tdTitle"><p:outputLabel value="* Date of Issuance" /></td>
-				<td class="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/></td>
+				<td class="tdContent"><p:calendar showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Courier Tracking No" /></td>
+				<td class="tdTitle"><p:outputLabel
+						value="* Courier Tracking No" /></td>
 				<td class="tdContent"><p:inputText /></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* Received By Supplier" /></td>
-				<td class="tdContent"><p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 		</table>
 	</p:panel>
