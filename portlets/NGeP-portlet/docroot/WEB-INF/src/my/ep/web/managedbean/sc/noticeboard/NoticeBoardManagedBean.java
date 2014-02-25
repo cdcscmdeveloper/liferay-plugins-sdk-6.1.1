@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.noticeboard;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -18,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.component.tabview.Tab;
@@ -87,8 +89,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	private String title;
 
-
-
 	private List<ScQt> scQtSearchlist;
 
 	// Fields for hide and show in noticeboard screen
@@ -108,36 +108,50 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean isSvYesterday = false;
 
 	private boolean isSvShow = false;
-	
+
 	private TreeNode minstryRootNode;
-	
+
 	private TreeNode categoryRootNode;
-	
+
 	private TreeNode locationRootNode;
-	
-	 private TreeNode ministrySelectedNode; 
-	 
-	 private TreeNode categorySelectedNode;
-	 
-	 private TreeNode locationSelectedNode;
-	 
-	 private ISearchBean<PmOrgProfile> mistrySearchBean;
-	 
-	 private ISearchBean<Object> categorySearchBean;
-	 
-	 private ISearchBean<Object> locationSearchBean;
-	 
-	   private TreeNode tempMinstryRootNode;
-		
-		private TreeNode tempCategoryRootNode;
-		
-		private TreeNode tempLocationRootNode;
-	 
-	 private List<String> tabs;
-	 
-	 private String resetData;
-	 
-	 private String previousPage;
+
+	private TreeNode ministrySelectedNode;
+
+	private TreeNode categorySelectedNode;
+
+	private TreeNode locationSelectedNode;
+
+	private ISearchBean<PmOrgProfile> mistrySearchBean;
+
+	private ISearchBean<Object> categorySearchBean;
+
+	private ISearchBean<Object> locationSearchBean;
+
+	private TreeNode tempMinstryRootNode;
+
+	private TreeNode tempCategoryRootNode;
+
+	private TreeNode tempLocationRootNode;
+
+	private List<String> tabs;
+
+	private String resetData;
+
+	private String previousPage;
+
+	private boolean isShowPubDate;
+
+	private boolean isShowBriDate;
+
+	private boolean isShowSiteDate;
+
+	private NoticeBoardSearchDataBean publishSearchDataBean = new NoticeBoardSearchDataBean();
+
+	private NoticeBoardSearchDataBean briefSearchDataBean = new NoticeBoardSearchDataBean();;
+
+	private NoticeBoardSearchDataBean siteVisitDataBean = new NoticeBoardSearchDataBean();;
+
+	private NoticeBoardSearchDataBean clsDataBean = new NoticeBoardSearchDataBean();;
 
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -754,8 +768,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.title = title;
 	}
 
-
-
 	public boolean isPubToday() {
 		return isPubToday;
 	}
@@ -948,6 +960,62 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.previousPage = previousPage;
 	}
 
-	
+	public boolean isShowPubDate() {
+		return isShowPubDate;
+	}
+
+	public void setShowPubDate(boolean isShowPubDate) {
+		this.isShowPubDate = isShowPubDate;
+	}
+
+	public NoticeBoardSearchDataBean getPublishSearchDataBean() {
+		return publishSearchDataBean;
+	}
+
+	public void setPublishSearchDataBean(
+			NoticeBoardSearchDataBean publishSearchDataBean) {
+		this.publishSearchDataBean = publishSearchDataBean;
+	}
+
+	public NoticeBoardSearchDataBean getBriefSearchDataBean() {
+		return briefSearchDataBean;
+	}
+
+	public void setBriefSearchDataBean(
+			NoticeBoardSearchDataBean briefSearchDataBean) {
+		this.briefSearchDataBean = briefSearchDataBean;
+	}
+
+	public NoticeBoardSearchDataBean getSiteVisitDataBean() {
+		return siteVisitDataBean;
+	}
+
+	public void setSiteVisitDataBean(NoticeBoardSearchDataBean siteVisitDataBean) {
+		this.siteVisitDataBean = siteVisitDataBean;
+	}
+
+	public NoticeBoardSearchDataBean getClsDataBean() {
+		return clsDataBean;
+	}
+
+	public void setClsDataBean(NoticeBoardSearchDataBean clsDataBean) {
+		this.clsDataBean = clsDataBean;
+	}
+
+	public boolean isShowBriDate() {
+		return isShowBriDate;
+	}
+
+	public void setShowBriDate(boolean isShowBriDate) {
+		this.isShowBriDate = isShowBriDate;
+	}
+
+	public boolean isShowSiteDate() {
+		return isShowSiteDate;
+	}
+
+	public void setShowSiteDate(boolean isShowSiteDate) {
+		this.isShowSiteDate = isShowSiteDate;
+	}
 
 }
