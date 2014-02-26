@@ -4497,6 +4497,7 @@ label > span.ui-button-text {
 
 .header-info {
 	background-color: #EBEDEC !important;
+	padding: 5px;
 }
 
 .header-info label {
