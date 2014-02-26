@@ -431,7 +431,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		CmZonalStandardPricing price = new CmZonalStandardPricing();
 
 
-		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().add(price);
+		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().add(price);
 
 	}
 
@@ -1026,7 +1026,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
+			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 				if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -1193,7 +1193,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
+			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 				if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -1324,7 +1324,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			catalog.getCmStandardPricing().setCmSupplierItem(catalog);
 
 
-			for(CmZonalStandardPricing promotion: catalog.getCmZonalStandardPricings()){
+			for(CmZonalStandardPricing promotion: catalog.getzStdPrices()){
 
 				promotion.setCmSupplierItem(catalog);
 				if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -1565,7 +1565,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CmSupplierItem catalog = this.getManagedBean().getSelectedApprovedItems()[i];
 
 
-			for(CmZonalStandardPricing promotion: catalog.getCmZonalStandardPricings()){
+			for(CmZonalStandardPricing promotion: catalog.getzStdPrices()){
 
 				promotion.setCmSupplierItem(catalog);
 				if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -1780,21 +1780,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		System.out.println("**********retrieveDistrict******************");
 
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		System.out.println("pricing.getPmState().getStateId()"+this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).getPmState().getStateId());
+		System.out.println("pricing.getPmState().getStateId()"+this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).getPmState().getStateId());
 
 
-		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).getPmState().getStateId());
+		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).getPmState().getStateId());
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 
 		DistrictResDTO resDTO = districtSO
 				.retriveDistrictListByStateID(reqDTO);
 		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setPmDistricts(resDTO.getDistrictList());
+		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).setPmDistricts(resDTO.getDistrictList());
 
 		if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
-			this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setDistrictDisabled(false);
+			this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).setDistrictDisabled(false);
 		}else{
-			this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setDistrictDisabled(true);
+			this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).setDistrictDisabled(true);
 		}
 
 
@@ -1996,7 +1996,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().remove(index);
 	}
 	public void deleteZonalStandardPrice(int index){
-		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().remove(index);
+		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().remove(index);
 	}
 	public void deleteZonalPromotionPrice(int index){
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().remove(index);
@@ -2008,6 +2008,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().remove(index);
 	}
 	
+	
+	public void duplicateZonalStandardPrice(int index){
+		
+		CmZonalStandardPricing price = new CmZonalStandardPricing();
+
+
+		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().add(index+1 , price);
+		
+	}
 	
 	
 	

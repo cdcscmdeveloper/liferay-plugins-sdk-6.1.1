@@ -10,7 +10,9 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -1008,7 +1010,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
 
-			
+
 			System.out.println("getSelectedType().getTypeId()"+this.getManagedBean().getSelectedType().getTypeId());
 
 			this.getManagedBean().getRequestExtCode().setTypeName(this.getManagedBean().getSelectedType().getTypeName());
@@ -1025,7 +1027,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
 
-			
+
 			this.getManagedBean().getRequestExtCode().setColorName(this.getManagedBean().getSelectedColor().getColorName());
 			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getSelectedColor().getColorId());
 
@@ -1033,7 +1035,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
 
-			
+
 
 			this.getManagedBean().getRequestExtCode().setMeasurementId(this.getManagedBean().getSelectedMeasurement().getMeasurementId());
 			this.getManagedBean().getRequestExtCode().setMeasurementName(this.getManagedBean().getSelectedMeasurement().getMeasurementName());
@@ -1091,7 +1093,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 				for(CmRequestCode code:this.getManagedBean().getReviewExtCodeList()){
 
-					
+
 					if(code.getColorNameDD()!=null){
 						ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 						colorFilterBean.setSearchField("colorId");
@@ -1107,7 +1109,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 					}
-					
+
 					if(code.getBrandNameDD()!=null){
 
 						ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
@@ -1124,7 +1126,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setRequestBrand(false);
 
 					}
-					
+
 					if(code.getTypeNameDD()!=null){
 
 						ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
@@ -1158,43 +1160,40 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setRequestMeasurement(false);
 					}
 
-				
-					//////////////////////problem////////////////////////////
-					if(!this.isCatalogueAdmin()){
-						if(!code.isAddedRemark()){
-							if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
-
-								if(!code.getReviewedColorName().equalsIgnoreCase(code.getColorName())||
-										!code.getReviewedMeasurementName().equalsIgnoreCase(code.getMeasurementName())||
-										!code.getReviewedTypeName().equalsIgnoreCase(code.getTypeName())||
-										!code.getReviewedBrandName().equalsIgnoreCase(code.getBrandName())){
 
 
-									code.setRemarkRequired(true);
+					/*if(!this.isCatalogueAdmin()){
 
-								}else{
+						if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
 
-									code.setRemarkRequired(false);
-								}
+							if(!code.getReviewedColorName().equalsIgnoreCase(code.getColorName())||
+									!code.getReviewedMeasurementName().equalsIgnoreCase(code.getMeasurementName())||
+									!code.getReviewedTypeName().equalsIgnoreCase(code.getTypeName())||
+									!code.getReviewedBrandName().equalsIgnoreCase(code.getBrandName())){
+
+
+								code.setRemarkRequired(true);
+
+							}else{
+
+								code.setRemarkRequired(false);
 							}
-
 						}
-					}
 
-					//////////////////////problem////////////////////////////
+					}*/
 
 					try{
 
 						/////// checking remark required 2 and consensus checking
 
-						if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
+						/*if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
 
 							if(!code.getReviewedBrandNameII().equalsIgnoreCase(code.getReviewedBrandName()) ||
 									!code.getReviewedTypeNameII().equalsIgnoreCase(code.getReviewedTypeName()) ||
 									!code.getReviewedMeasurementNameII().equalsIgnoreCase(code.getReviewedMeasurementName()) ||
 									!code.getReviewedColorNameII().equalsIgnoreCase(code.getReviewedColorName())){
-								System.out.println("********setConsensus false**********");
-								reqDTO.setConsensus(false);
+								//System.out.println("********setConsensus false**********");
+								//reqDTO.setConsensus(false);
 
 								if(!code.isAddedRemark()){
 									code.setRemarkRequiredII(true);
@@ -1204,38 +1203,26 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 							}else{
 								code.setRemarkRequiredII(false);
 							}
-						}
-
-
-						System.out.println("***********0000000********************");
+						}*/
 
 
 						reqDTO.getRequestExtList().add(code);
-						System.out.println("***********hhhhh********************");
+
 					}catch(Exception ex){
 						System.out.println("getMessage"+ex.getMessage());
 					}
 				}
 			}
-			System.out.println("***********nnnnnnnnnnnnn********************");
-			for(CmRequestRemark remark: this.getManagedBean().getReviewExtCodeList().get(0).getCmRequestRemarks()){
+
+			/*			for(CmRequestRemark remark: this.getManagedBean().getReviewExtCodeList().get(0).getCmRequestRemarks()){
 				remark.setCmRequestCode(this.getManagedBean().getReviewExtCodeList().get(0));
-			}
+			}*/
 
 
-			System.out.println("***********aaaaaaaaaaaaa********************");
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
 			reqDTO.setToken(token);
-
-
-
-
-
-
-
-
 
 			System.out.println("getCodeCommittees"+reqDTO.getCodeCommittees());
 			System.out.println("consensus"+reqDTO.isConsensus());
@@ -1266,6 +1253,17 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					System.out.println("code.isRemarkRequiredII"+code.isRemarkRequiredII());
 					System.out.println("******getReviewedBrandNameII********"+code.getReviewedBrandNameII());
 					if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
+
+						if((code.getTypeRemarkII()!=null && code.getTypeRemarkII().trim().length()>0) ||
+								(code.getBrandRemarkII()!=null && code.getBrandRemarkII().trim().length()>0) ||
+								(code.getMeasurementRemarkII()!=null && code.getMeasurementRemarkII().trim().length()>0) ||
+								(code.getColorRemarkII()!=null && code.getColorRemarkII().trim().length()>0)){
+							System.out.println("remark added!!");
+							code.setRemarkRequiredII(false);
+
+						}
+
+
 						if(code.isRemarkRequiredII()){
 
 							FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1274,6 +1272,18 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						}
 					}else{
 						System.out.println("******else********");
+
+
+						if((code.getTypeRemark()!=null && code.getTypeRemark().trim().length()>0) ||
+								(code.getBrandRemark()!=null && code.getBrandRemark().trim().length()>0) ||
+								(code.getMeasurementRemark()!=null && code.getMeasurementRemark().trim().length()>0) ||
+								(code.getColorRemark()!=null && code.getColorRemark().trim().length()>0)){
+							System.out.println("remark added!!");
+							code.setRemarkRequired(false);
+
+						}
+
+
 						if(code.isRemarkRequired()){
 
 							FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1288,26 +1298,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 				}
-				System.out.println("********************in*******************");
-				if(!reqDTO.isConsensus()){
-					reqDTO.setCodeCommittees("user003,user051");
-					reqDTO.setRequestExtList(null);
-					for(CmRequestCode code:this.getManagedBean().getReviewExtCodeList()){
-						code.setReviewedBrandName("");
-						code.setReviewedBrandNameII("");
-						code.setReviewedColorName("");
-						code.setReviewedColorNameII("");
-						code.setReviewedMeasurementName("");
-						code.setReviewedMeasurementNameII("");
-						code.setReviewedTypeName("");
-						code.setReviewedTypeNameII("");
 
-						reqDTO.getRequestExtList().add(code);
-					}
-				}
-				System.out.println("********************pass*******************");
-
-				resDTO = unspscSO.updateExtensionRequest(reqDTO);
+				
+					resDTO = unspscSO.updateExtensionRequest(reqDTO);
+				
 			}
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1320,6 +1314,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//return "taskListView";
 		return "BPMtesting";
 	}
+
+
+
+
 
 
 	public void preRenderExtensionMaintenanceView(){
@@ -1411,25 +1409,41 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		for(CmRequestCode code : this.getManagedBean().getReviewExtCodeList()){
 
-			if(!code.isRequestColor()){
+			//if(!code.isRequestColor()){
+			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
 				code.setReviewedColorName(code.getColorName());
-				code.setReviewedColorNameII(code.getColorName());
 			}
+			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+				code.setReviewedColorNameII(code.getReviewedColorName());
+			}
+			//}
 
-			if(!code.isRequestBrand()){
+			//if(!code.isRequestBrand()){
+			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
 				code.setReviewedBrandName(code.getBrandName());
-				code.setReviewedBrandNameII(code.getBrandName());
 			}
+			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+				code.setReviewedBrandNameII(code.getReviewedBrandName());
+			}
+			//	}
 
-			if(!code.isRequestType()){
+			//	if(!code.isRequestType()){
+			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
 				code.setReviewedTypeName(code.getTypeName());
-				code.setReviewedTypeNameII(code.getTypeName());
 			}
+			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+				code.setReviewedTypeNameII(code.getReviewedTypeName());
+			}
+			//	}
 
-			if(!code.isRequestMeasurement()){
+			//	if(!code.isRequestMeasurement()){
+			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
 				code.setReviewedMeasurementName(code.getMeasurementName());
-				code.setReviewedMeasurementNameII(code.getMeasurementName());
 			}
+			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+				code.setReviewedMeasurementNameII(code.getReviewedMeasurementName());
+			}
+			//	}
 
 			code.setRemarkRequired(false);
 			code.setRemarkRequiredII(false);
@@ -1722,64 +1736,104 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		return "unspscRequestForm";
 	}
-	
-	
+
+
 	public List<CmType> autoCompleteType(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();  
-		
+
 		for(CmType type: this.getManagedBean().getTypeList()){
 			if(type.getTypeName().startsWith(query)){
 				suggestions.add(type);
 			}
 		}
-		
+
 		return suggestions;
 	}
-	
+
 	public List<CmBrand> autoCompleteBrand(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
 		List<CmBrand> suggestions = new ArrayList<CmBrand>();  
-		
+
 		for(CmBrand brand: this.getManagedBean().getBrandList()){
 			if(brand.getBrandName().startsWith(query)){
 				suggestions.add(brand);
 			}
 		}
-		
+
 		return suggestions;
 	}
-	
+
 	public List<CmMeasurement> autoCompleteMeasurement(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
 		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();  
-		
+
 		for(CmMeasurement brand: this.getManagedBean().getMeasurementList()){
 			if(brand.getMeasurementName().startsWith(query)){
 				suggestions.add(brand);
 			}
 		}
-		
+
 		return suggestions;
 	}
-	
+
 	public List<CmColor> autoCompleteColor(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
 		List<CmColor> suggestions = new ArrayList<CmColor>();  
-		
+
 		for(CmColor color: this.getManagedBean().getColorList()){
 			if(color.getColorName().startsWith(query)){
 				suggestions.add(color);
 			}
 		}
-		
+
 		return suggestions;
 	}
+
+
+	public String requestExtensionWithUNSPSC(){
+
+		FacesScopes face = new FacesScopes();
+		String token =face.getBPMAuthenticationCtxToken();
+		System.out.println("token:"+token);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+		CodificationBackingBean bb = new CodificationBackingBean();
+
+		System.out.println("getUnspscCode:"+bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+
+
+		this.getManagedBean().getRequestCode().setTempCode(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+		this.getManagedBean().getRequestCode().setTempTitle(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle());
+
+		System.out.println("getBrandName:"+this.getManagedBean().getRequestCode().getBrandName());
+		this.getManagedBean().getRequestCode().setRequestType(true);
+		this.getManagedBean().getRequestCode().setRequestBrand(true);
+		this.getManagedBean().getRequestCode().setRequestColor(true);
+		this.getManagedBean().getRequestCode().setRequestMeasurement(true);
+		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+		reqDTO.setToken(token);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setOutCome("");
+
+
+		return "BPMtesting";
+	}
+
+
 	
-	
-	
+	public boolean checkRemark(String param1, String param2) {
+		
+		if(!param1.equalsIgnoreCase(param2)) {
+			return true;
+		}
+		return false;
+	}
+
+
 }

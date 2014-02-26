@@ -96,7 +96,6 @@
 									value="More.."
 									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
 									oncomplete="morePrice.show()"
-									rendered="#{unspscCodeBackingBean.requisitioner}"
 									update=":form:catalogueViewPricingId"></p:commandLink>&#160;
 							</td>
 						</tr>
@@ -147,7 +146,7 @@
 						<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
 					</p:tab>
 					<p:tab title="Zonal Standard"
-						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalStandardPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.zStdPrices) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
 
 					</p:tab>

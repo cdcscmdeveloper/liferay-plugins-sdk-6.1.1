@@ -17,12 +17,12 @@
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
+				<p:commandButton value="#{lbl['lbl.cm.submit']}" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P'}"
 					icon="ui-icon-submit"
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
 					update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
-					icon="ui-icon-save"
+					icon="ui-icon-save" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P'}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 					icon="ui-icon-cancel"
@@ -78,7 +78,8 @@
 								<p:graphicImage id="imageId" height="150" width="200"
 									value="/images/#{imageObj.imageName}" />
 							</p:galleria>
-						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}" readonly="#{unspscCodeBackingBean.catalogueAdmin}"
+						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}"
 							icon="ui-icon-upload" onclick="imageDialog.show()" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:inputText readonly="true" size="35"
@@ -103,7 +104,8 @@
 						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
@@ -111,21 +113,24 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" ></p:inputText></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" />
-						<p:inputText style="margin-left: 2px;" size="3" value="days"
-							disabled="true" /></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}" /> <p:inputText
+							style="margin-left: 2px;" size="3" value="days" disabled="true" /></td>
 				</tr>
 
 
@@ -133,7 +138,8 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
 					<td colspan="3"><p:inputTextarea style="width:660px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" readonly="#{unspscCodeBackingBean.catalogueAdmin}" /></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin}" /></td>
 
 				</tr>
 
@@ -165,30 +171,45 @@
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
 
+				<table width="725px;">
+					<tr>
+						<td style="width:108px;text-align:center;padding-right:2px;font-weight: bold;"><h:outputText value="Normal"></h:outputText></td>
+						<td style="width:108px;text-align:center;border-left:1px solid #ccc;padding-right:2px;font-weight: bold;"><h:outputText value="Tier"></h:outputText></td>
+						<td style="width:108px;text-align:center;border-left:1px solid #ccc;padding-right:2px;font-weight: bold;"><h:outputText value="Zonal"></h:outputText></td>
+						<td style="width:108px;text-align:center;border-left:1px solid #ccc;font-weight: bold;"><h:outputText value="Zonal Tier"></h:outputText></td>
+					</tr>
+				</table>
+
+
 				<p:tabView id="subPricingTabId">
-					<p:tab title="Normal">
+
+
+					<p:tab title="Standard">
 						<ui:include src="pricingTab.xhtml" />
 					</p:tab>
-					<p:tab title="#{lbl['lbl.cm.tier']}">
+					<p:tab title="Promotion">
+						<ui:include src="promotionTab.xhtml" />
+					</p:tab>
+					<p:tab title="Standard">
 						<ui:include src="pricingTierTab.xhtml" />
 					</p:tab>
-					<p:tab title="#{lbl['lbl.cm.promotion.tier']}">
+					<p:tab title="Promotion">
 						<ui:include src="pricingPromotionTierTab.xhtml" />
 					</p:tab>
-					<p:tab title="Zonal Standard">
+					<p:tab title="Standard">
 						<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
 
 					</p:tab>
-					<p:tab title="Zonal Promotion">
+					<p:tab title="Promotion">
 						<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 
-					<p:tab title="Zonal Tier">
+					<p:tab title="Standard">
 						<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
 					</p:tab>
-					<p:tab title="Zonal Promotion Tier">
+					<p:tab title="Promotion">
 						<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
 
 					</p:tab>

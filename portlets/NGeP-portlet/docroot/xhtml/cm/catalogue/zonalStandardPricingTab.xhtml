@@ -13,8 +13,9 @@
 
 	<p:outputPanel id="zStanPriceId">
 		<p:dataTable id="zStanPriceTableId"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricings}"
-			var="standard" rowKey="#{standard}" rowIndexVar="rowIndex" width="100%">
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.zStdPrices}"
+			var="standard" rowKey="#{standard}" rowIndexVar="rowIndex"
+			width="100%">
 
 
 			<ac:paginator for="zStanPriceTableId"></ac:paginator>
@@ -29,7 +30,8 @@
 						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
 						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
 					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrieveStandardDistrict(rowIndex)}" update=":form:pricingTabID:subPricingTabId:zStanPriceTableId:zStandardDistrictDDId"/>
+						listener="#{catalogueBackingBean.retrieveStandardDistrict(rowIndex)}"
+						update=":form:pricingTabID:subPricingTabId:zStanPriceTableId:zStandardDistrictDDId" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -77,11 +79,16 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
-			
-				<p:column>
+
+			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
+				<p:commandLink style="margin-left: 10px;" title="Clone"
+					action="#{catalogueBackingBean.duplicateZonalStandardPrice(rowIndex)}"
+					update=":form:pricingTabID:subPricingTabId:zStanPriceTableId">
+					<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+				</p:commandLink>
 				<p:commandLink style="margin-left: 10px;" title="Delete"
 					action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
 					update=":form:pricingTabID:subPricingTabId:zStanPriceTableId">

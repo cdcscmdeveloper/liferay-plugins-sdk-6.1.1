@@ -287,6 +287,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 				if (StringUtils.isNotBlank((String)titleFilterBean.getSearchValue())) {
 					System.out.println("*********titleFilterBean***********");
 					titleFilterBean.setSearchField("unspscTitle");
+					titleFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(titleFilterBean);
 				}
 
@@ -467,29 +468,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	}
 
 
-	public String goToRecommend(CmUnspsc unspscObj){
-
-		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-
-		CmRecommendCode recommend = new CmRecommendCode();
-		recommend.setUnspscCode(unspscObj.getUnspscCode());
-		recommend.setUnspscTitle(unspscObj.getUnspscTitle());
-		bb.getManagedBean().getRequestCode().getCmRecommendCodes().add(recommend);
-
-		FacesScopes fs = new FacesScopes();
-		System.out.println("CM_ADMIN:"+fs.hasRoleUser("CM_ADMIN"));
-		System.out.println("CD_OFFICER:"+fs.hasRoleUser("CD_OFFICER"));
-
-		if(fs.hasRoleUser("CM_ADMIN")){
-			return "reviewUnspscCode?faces-redirect=true";
-		}else if(fs.hasRoleUser("CD_OFFICER")){
-			return "reviewBeforeCreateTempCode?faces-redirect=true";
-		}
-
-		return "";
-
-
-	}
 
 
 
@@ -530,6 +508,37 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		return NAV_TO_EDIT_EXTENSION;
 	}
+	
+	public String recommendItemCode(int index){
+
+
+		
+		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+
+		CmRecommendCode recommend = new CmRecommendCode();
+		recommend.setUnspscCode(this.getSearchItemDataModel().getList().get(index).getExtensionCode());
+		recommend.setUnspscTitle(this.getSearchItemDataModel().getList().get(index).getItemName());
+		bb.getManagedBean().getRequestCode().getCmRecommendCodes().add(recommend);
+
+		FacesScopes fs = new FacesScopes();
+		System.out.println("CM_ADMIN:"+fs.hasRoleUser("CM_ADMIN"));
+		System.out.println("CD_OFFICER:"+fs.hasRoleUser("CD_OFFICER"));
+
+		if(fs.hasRoleUser("CM_ADMIN")){
+			return "reviewUnspscCode?faces-redirect=true";
+		}else if(fs.hasRoleUser("CD_OFFICER")){
+			return "reviewBeforeCreateTempCode?faces-redirect=true";
+		}
+
+		return "";
+
+		
+	}
+	
+	
+
+	
+	
 
 	public String deleteExtension(int index){
 
@@ -812,6 +821,12 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 		return "codificationView";
+	}
+	
+	public String backToVerifyUnspsc(){
+
+
+		return "verifyUnspscSearch?faces-redirect=true";
 	}
 
 
@@ -1111,5 +1126,76 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		return unspscCodes;
 	}
 	
+	
+	public String verifyExtensionSearch(CmUnspsc unspscObj){
+		System.out.println("**********goToExtensionSearch************");
+		this.getManagedBean().setMeasurementCriteria(null);
+		this.getManagedBean().setColorCriteria(null);
+		this.getManagedBean().setBrandCriteria(null);
+		this.getManagedBean().setTypeCriteria(null);
+
+
+		ICodificationSO unspscSO =  (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+
+
+
+		String classCode = getParentCode(new Long(unspscObj.getUnspscCode()));
+
+		reqDTO.setUnspscCode(classCode);
+		CodificationResDTO classDTO =unspscSO.searchUnspscObj(reqDTO);
+
+		this.getManagedBean().setClassCode(classDTO.getUnspscObj().getUnspscCode());
+		this.getManagedBean().setClassTitle(classDTO.getUnspscObj().getUnspscTitle());
+
+		String familyCode = getParentCode(new Long(classDTO.getUnspscObj().getUnspscCode()));
+
+		reqDTO.setUnspscCode(familyCode);
+		CodificationResDTO familyDTO =unspscSO.searchUnspscObj(reqDTO);
+
+		this.getManagedBean().setFamilyCode(familyDTO.getUnspscObj().getUnspscCode());
+		this.getManagedBean().setFamilyTitle(familyDTO.getUnspscObj().getUnspscTitle());
+
+		String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj().getUnspscCode()));
+
+		reqDTO.setUnspscCode(segmentCode);
+		CodificationResDTO segmentDTO =unspscSO.searchUnspscObj(reqDTO);
+
+		this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
+		this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
+
+
+		this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(unspscObj.getUnspscCode());
+		this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(unspscObj.getUnspscTitle());
+
+
+
+		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
+
+		for(CmColor color:resDTO.getColorList()){
+			//log.info("color:"+color);
+			//log.info("color:"+color.getColorId());
+			this.getManagedBean().getColorCriteria().add(new SelectItem(color.getColorCode(), color.getColorName()));
+		}
+
+		for(CmBrand brand:unspscObj.getCmBrand()){
+			this.getManagedBean().getBrandCriteria().add(new SelectItem(brand.getBrandCode(), brand.getBrandName()));
+		}
+
+		for(CmType type:unspscObj.getCmType()){
+			this.getManagedBean().getTypeCriteria().add(new SelectItem(type.getTypeCode(), type.getTypeName()));
+		}
+
+		for(CmMeasurement measurement:unspscObj.getCmMeasurement()){
+			this.getManagedBean().getMeasurementCriteria().add(new SelectItem(measurement.getMeasurementCode(), measurement.getMeasurementName()));
+		}
+
+
+
+
+
+		return "verifyExtensionSearch?faces-redirect=true";
+	}
 	
 }

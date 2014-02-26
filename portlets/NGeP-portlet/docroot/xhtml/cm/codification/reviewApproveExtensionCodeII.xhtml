@@ -44,11 +44,11 @@
 					</tr>
 				</table>
 
-				<p:dataTable style="width:100%;"
+				<p:dataTable style="width:100%;" id="dt"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
 
-					<p:column>
+					<p:column width="10%">
 						<f:facet name="header">
 						Extension
 					</f:facet>
@@ -74,7 +74,7 @@
 
 
 
-					<p:column>
+					<p:column width="10%">
 						<f:facet name="header">
 							Supplier
 						</f:facet>
@@ -122,9 +122,9 @@
 						</table>
 
 					</p:column>
-					<p:column>
+					<p:column width="10%">
 						<f:facet name="header">
-						Committe Review I
+						Review By
 					</f:facet>
 
 						<table>
@@ -161,9 +161,49 @@
 
 					</p:column>
 
-					<p:column>
+					<p:column width="10%">
 						<f:facet name="header">
-						Committe Review II
+						Remark
+					</f:facet>
+
+						<table>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.typeRemark}" disabled="true"
+											size="30"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.brandRemark}" disabled="true"
+											size="30"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.measurementRemark}"
+											disabled="true" size="30"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.colorRemark}" disabled="true"
+											size="30"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+						</table>
+
+					</p:column>
+
+
+
+					<p:column width="10%">
+						<f:facet name="header">
+						Endorse By
 					</f:facet>
 
 						<table>
@@ -171,28 +211,93 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.reviewedTypeNameII}"
-											disabled="#{!review.requestType}"></p:inputText>
+											disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}">
+											<p:ajax event="blur"
+												update=":form:dt:typeremark2 :form:dt:typeremarkmsg"></p:ajax>
+
+										</p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.reviewedBrandNameII}"
-											disabled="#{!review.requestBrand}"></p:inputText>
+											disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}">
+											<p:ajax event="blur"
+												update=":form:dt:brandRemark2 :form:dt:brandremarkmsg"></p:ajax>
+										</p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.reviewedMeasurementNameII}"
-											disabled="#{!review.requestMeasurement}"></p:inputText>
+											disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}">
+											<p:ajax event="blur"
+												update=":form:dt:measurementRemark2 :form:dt:measurementremarkmsg"></p:ajax>
+										</p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.reviewedColorNameII}"
-											disabled="#{!review.requestColor}"></p:inputText>
+											disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}">
+											<p:ajax event="blur"
+												update=":form:dt:colorRemark2 :form:dt:colorremarkmsg"></p:ajax>
+										</p:inputText>
+									</h:panelGrid></td>
+							</tr>
+						</table>
+
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+						Remark
+					</f:facet>
+
+						<table>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.typeRemarkII}" size="30"
+											requiredMessage="Remark is required!"
+											disabled="#{unspscCodeBackingBean.codeAdmin}"
+											required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
+											id="typeremark2"></p:inputText>
+
+										<p:message id="typeremarkmsg" for="typeremark2"></p:message>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.brandRemarkII}" size="30"
+											id="brandRemark2" requiredMessage="Remark is required!"
+											required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
+											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+										<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.measurementRemarkII}" size="30"
+											id="measurementRemark2" requiredMessage="Remark is required!"
+											required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
+											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+										<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.colorRemarkII}" size="30"
+											id="colorRemark2" requiredMessage="Remark is required!"
+											required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
+											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+										<p:message id="colorremarkmsg" for="colorRemark2"></p:message>
 									</h:panelGrid></td>
 							</tr>
 						</table>
@@ -202,43 +307,7 @@
 				</p:dataTable>
 			</p:panel>
 
-			<p:panel header="Remarks" toggleable="true">
 
-				<p:dataTable id="bpmRemarkId"
-					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].cmRequestRemarks}"
-					var="bpmRemark">
-
-					<p:column headerText="User" width="20%">
-						<table>
-							<tr>
-								<td>#{bpmRemark.createdUser}</td>
-							</tr>
-							<tr>
-								<td><h:outputText value="#{bpmRemark.createdDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-						</table>
-					</p:column>
-
-					<p:column headerText="Remark">
-						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;"
-							disabled="#{!bpmRemark.brandNew}"></p:inputTextarea>
-
-					</p:column>
-
-
-				</p:dataTable>
-
-				<div style="text-align: right;">
-					<p:commandButton value="Add"
-						action="#{unspscCodeBackingBean.addNewBpmRemark}"
-						update="bpmRemarkId"
-						rendered="#{unspscCodeBackingBean.cdCommittee}" />
-
-				</div>
-
-			</p:panel>
 
 
 		</h:panelGroup>

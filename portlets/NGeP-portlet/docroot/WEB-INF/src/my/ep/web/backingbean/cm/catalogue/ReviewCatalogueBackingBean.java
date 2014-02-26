@@ -84,7 +84,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 		
-		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
+		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
 			if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -144,7 +144,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 		System.out.println("bb.getManagedBean().getRejectReasonIds(): " + bb.getManagedBean().getRejectReasonIds());
 		
-		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
+		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
 			if(promotion.getPmDistrict().getDistrictId() == null) {

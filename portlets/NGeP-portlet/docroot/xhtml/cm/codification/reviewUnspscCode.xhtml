@@ -16,7 +16,7 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
+					<p:commandButton value="#{action}" rendered="#{action != 'EXTENSION'}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
 				</ui:repeat>
@@ -31,7 +31,7 @@
 				<table style="width: 66%; margin-bottom: 4px;">
 					<tr>
 						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
-						<td><p:selectOneMenu
+						<td><p:selectOneMenu disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;">
 								<f:selectItem itemValue="P" itemLabel="Product " />
@@ -97,7 +97,7 @@
 
 					<p:column>
 						<f:facet name="header">
-					Recommended #{lbl['lbl.cm.unspsc.code']}
+					Recommended Item Code
 				</f:facet>
 
 				
@@ -108,7 +108,7 @@
 				</p:column>
 					<p:column>
 						<f:facet name="header">
-					Recommended #{lbl['lbl.cm.unspsc.title']}
+					Recommended Item Name
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>

@@ -95,7 +95,7 @@
 
 					<p:column>
 						<f:facet name="header">
-					Recommended #{lbl['lbl.cm.unspsc.code']}
+					Recommended Item Code
 				</f:facet>
 
 				
@@ -106,7 +106,7 @@
 				</p:column>
 					<p:column>
 						<f:facet name="header">
-					Recommended #{lbl['lbl.cm.unspsc.title']}
+					Recommended Item Name
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
@@ -167,7 +167,7 @@
 								conditionField="recordStatus^1|unspscLevel^0">
 							</ac:lov>
 
-							<p:graphicImage style="padding-right: 5px;"
+							<p:graphicImage style="padding-right: 5px;" title="Create New"
 								value="/resources/ep/images/design/add.png" />
 							<p:selectBooleanCheckbox
 								value="#{unspscCodeBackingBean.managedBean.newSegment}"></p:selectBooleanCheckbox>
@@ -198,7 +198,7 @@
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
 							</ac:lov>
-							<p:graphicImage style="padding-right: 5px;"
+							<p:graphicImage style="padding-right: 5px;" title="Create New"
 								value="/resources/ep/images/design/add.png" />
 							<p:selectBooleanCheckbox
 								value="#{unspscCodeBackingBean.managedBean.newFamily}"></p:selectBooleanCheckbox>
@@ -228,7 +228,7 @@
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
 							</ac:lov>
-							<p:graphicImage style="padding-right: 5px;"
+							<p:graphicImage style="padding-right: 5px;" title="Create New"
 								value="/resources/ep/images/design/add.png" />
 							<p:selectBooleanCheckbox
 								value="#{unspscCodeBackingBean.managedBean.newClass}"></p:selectBooleanCheckbox>
@@ -260,7 +260,7 @@
 								conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
 							</ac:lov>
 
-							<p:graphicImage style="padding-right: 5px;"
+							<p:graphicImage style="padding-right: 5px;" title="Create New"
 								value="/resources/ep/images/design/add.png" />
 							<p:selectBooleanCheckbox
 								value="#{unspscCodeBackingBean.managedBean.newCommodity}"></p:selectBooleanCheckbox>
