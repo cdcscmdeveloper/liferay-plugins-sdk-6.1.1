@@ -146,6 +146,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		requestNote = removeEmptyRemarkBeforeSave(requestNote);
 		requestNoteReqDTO.setRequestNote(requestNote);
+		//Hoa: when submit need to set submit in the reqDTO to true
+		requestNoteReqDTO.setSubmit(Boolean.TRUE);
 		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 		
 		// submit BPM task
