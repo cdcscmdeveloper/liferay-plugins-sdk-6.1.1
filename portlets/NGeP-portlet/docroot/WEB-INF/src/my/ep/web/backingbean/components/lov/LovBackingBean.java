@@ -104,11 +104,19 @@ public class LovBackingBean implements Serializable {
 			try {				
 				LovReqDTO reqDTO = new LovReqDTO();
 				
-				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
-					constructSearchBean(getLovBean().getConditionField());
-				}
+//				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
+//					constructSearchBean(getLovBean().getConditionField());
+//				}
 				searchBean.getDataFilterBeans().clear();
 				searchBean.getDataFilterBeans().addAll(getLovSearchBean().getDataFilterBeans());
+				
+				// check if operator = LIKE, then set to case insensitive
+				for(int i = 0; i < searchBean.getDataFilterBeans().size(); i++) {
+					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
+					if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+						filterBean.setCaseInsensitive(true);
+					}
+				}
 				
 				debugLogger("searchBean.getDataFilterBeans(): " + searchBean.getDataFilterBeans());
 				debugLogger("searchBean.getDataFilterBeans().size(): " + searchBean.getDataFilterBeans().size());
