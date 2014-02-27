@@ -4496,7 +4496,7 @@ label > span.ui-button-text {
 }
 
 .header-info {
-	background-color: #EBEDEC !important;
+	background-color: #EBEDEC;
 	padding: 5px;
 }
 
@@ -4616,6 +4616,10 @@ table.rptTbl {
 
 .rptTbl td {
 	width:25%
+}
+
+.float-left label {
+	float: left;
 }
 
 /*---------------------------------------------------------------------------*/
