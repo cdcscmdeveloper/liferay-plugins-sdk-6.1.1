@@ -90,17 +90,16 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 			ScQt scQt = new ScQt();
 			scQt.setPlanned(true);
 			scQt.setPpPlan(ppPlan);
-			scQt.setBrandNew(false);
-			
+			scQt.setBrandNew(false);			
 			scQt.setFileNo("qt123q");
-			scQt.setFinancialYear(2014);
+			//scQt.setFinancialYear(2014);
 			scQt.setQtNo("planned"+ppPlan.getPlanId());
 			scQt.setQtTitle("sourcing");
 			scQt.setProcurementMode(ppPlan.getProcurementModeParam().getParameterCode());
 			scQt.setQtType(ppPlan.getQtTypeParam().getParameterCode());
 			scQt.setQtType("o");
 			scQt.setQtAmount(new BigDecimal(10000));
-			scQt.setResponseRule("A");
+			//scQt.setResponseRule("A");
 			scQt.setBsvRequired(false);
 			scQt.setSameBsv(false);
 			
