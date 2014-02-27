@@ -49,7 +49,8 @@
 			   <p:column headerText="To Qty." style="text-align: right;">
 				  <p:outputLabel value="#{data.tierTo}"/>
 			   </p:column>              
-			   <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+			   <p:column headerText="Price (MYR)" style="text-align: right;"><p:inputText style="width:70px;" value="#{data.unitPrice}"> </p:inputText>
+			   </p:column>            
 			   <p:column headerText="Effective Date">
 				  <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
 				  disabled="true" />
@@ -96,7 +97,7 @@
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
 		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		      <p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
+		      <p:column headerText="Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
 		      <p:column headerText="UOM Per Month"  style="text-align: right;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  

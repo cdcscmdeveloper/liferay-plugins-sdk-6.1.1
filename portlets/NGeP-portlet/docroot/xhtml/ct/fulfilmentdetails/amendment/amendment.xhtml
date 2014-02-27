@@ -21,7 +21,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.priceChange}" >
-					 <p:ajax event="change" update=":form:tabview:itemId" process="@this"/> 
+					 <p:ajax event="change" update=":form" process="@this" listener="#{amendmentBackingBean.chkContractValue}"/> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change item price" />
@@ -39,7 +39,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
+					<p:ajax event="change" update=":form:tabview:amend" process="@this" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change contract value" />
