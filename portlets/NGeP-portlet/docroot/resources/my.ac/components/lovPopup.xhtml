@@ -76,9 +76,9 @@
 				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
 				
 					<f:facet name="header">  
-		                <p:outputLabel value="#{column.columnTitle}" />  
+		                #{column.columnTitle}  
 		            </f:facet>
-						<p:outputLabel value="#{column.columnNameve.getValue(facesContext.ELContext)}" />
+						#{column.columnNameve.getValue(facesContext.ELContext)}
 				</p:columns>
 				
 			</p:dataTable>
