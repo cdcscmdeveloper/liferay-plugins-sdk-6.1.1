@@ -51,7 +51,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmOrgProfile pmOrgProfile;
 	
 	private Long contractId;
-	private String agreementType ="";
+	private String agreementType ="supplemental";
 	
 	List<AgreementDetails> agreementList;
 	private CtAgreementAppendix ctAgreementAppendix;

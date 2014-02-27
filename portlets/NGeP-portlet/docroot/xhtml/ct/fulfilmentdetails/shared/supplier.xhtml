@@ -8,11 +8,11 @@
     <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15,columnWidth30,columnWidth30,columnWidth30">  
        <p:outputLabel value="EP No." />  
           <h:panelGrid columns="4">
-             <p:inputText disabled="true" size="12" 
+             <p:inputText disabled="true" size="11" 
                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.epNo}" />
              <p:spacer width="5"/>
              <p:outputLabel value="MOF No." />  
-             <p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.epNo}" disabled="true" size="12"/>
+             <p:inputText disabled="true" size="11"/>
           </h:panelGrid>
           <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
           <p:inputText  value="CIMB BANK" disabled="true" style="width:170px;" /> 
@@ -20,7 +20,7 @@
           <p:inputText disabled="true" style="width:225px;" 
              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}" /> 
           <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
-          <p:inputText value="0111-2345-8795" disabled="true" style="width:130px;"/>
+          <p:inputText value="0111-2345-8795" disabled="true" style="width:170px;"/>
           <p:outputLabel value="Branch Name" />  
           <p:inputText disabled="true" style="width:170px;" /> 
           <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
@@ -47,16 +47,16 @@
 	          <h:outputLabel value="Contact Person" />  
               <p:inputText disabled="true" style="width:170px;" value="Mr Kamal" /> 
               <h:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
+              <p:inputText  value="309-98-93039"  disabled="true" style="width:170px;" />
 	          <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText disabled="true" style="width:120px;"
+              <p:inputText disabled="true" style="width:170px;"
                  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.phoneNo}"   /> 
               
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  disabled="true" style="width:120px;"  
+              <p:inputText  disabled="true" style="width:170px;"  
                  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.faxNo}"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
+              <p:inputText  value="309-98-93039" disabled="true" style="width:170px;"/>  
                <f:verbatim> </f:verbatim>  <f:verbatim> </f:verbatim>
               <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
               <p:inputText disabled="true" style="width:170px;" 

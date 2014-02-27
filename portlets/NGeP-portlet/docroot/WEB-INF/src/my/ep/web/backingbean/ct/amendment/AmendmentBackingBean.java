@@ -37,7 +37,9 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -281,6 +283,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		 this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
+	 
+	 public void chkContractValue(){
+		 
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange())
+			this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+		 else
+		    this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+	}
 	 
     public void changeItemTypes(){
     	try{

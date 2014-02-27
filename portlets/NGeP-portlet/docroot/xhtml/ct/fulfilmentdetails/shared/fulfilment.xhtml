@@ -20,10 +20,10 @@
 				<p:outputLabel value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry?'Concession':'Agreement'}" />
 			</h:panelGrid>
 			<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
-			<p:inputText for="effectiveDate" style="width:130px;" disabled="true"
+			<p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			<p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
-			<p:inputText for="edate" style="width:130px;" disabled="true"
+			<p:inputText for="edate" style="width:170px;" disabled="true"
 				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="true" disabled="true" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
@@ -33,7 +33,7 @@
 			
 				<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;">
+				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#,###.00" />
 			</p:inputText>		
 			<p:outputLabel id="signBy" value="Signed By" />
@@ -48,7 +48,7 @@
 			</h:panelGrid>	
 			 <h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="3">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
+				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
 					disabled="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />

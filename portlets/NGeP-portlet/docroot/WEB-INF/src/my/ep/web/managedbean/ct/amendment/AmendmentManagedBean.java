@@ -55,6 +55,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private double secondValue =0.0;
 	private String userLoginId;
+	private CtContractItem selectedServiceItem;
 	
 	private List<CtContractVer> amendHistoryList;
 	
@@ -240,7 +241,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setSelectedItem(CtContractItem selectedItem) {
 		this.selectedItem = selectedItem;
 	}
-	
-	
+
+	public CtContractItem getSelectedServiceItem() {
+		return selectedServiceItem;
+	}
+
+	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
+		this.selectedServiceItem = selectedServiceItem;
+	}
 
 }

@@ -88,6 +88,7 @@
 		  	</h:panelGrid>  
 		</p:outputPanel> 
   	 </p:panel>
+  	 <p:spacer height="100"/>
   	 <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
@@ -96,7 +97,7 @@
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
 		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		      <p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
+		      <p:column headerText="Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
 		      <p:column headerText="UOM Per Month"  style="text-align: right;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  

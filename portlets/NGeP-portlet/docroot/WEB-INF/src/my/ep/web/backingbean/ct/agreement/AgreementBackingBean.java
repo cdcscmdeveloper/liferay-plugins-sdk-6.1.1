@@ -56,6 +56,7 @@ import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -118,6 +119,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	   if(getManagedBean().getUserGroupMap()==null) {
 			initializeApproverGroup();
 		}
+	   
+	   if(this.getManagedBean().getCtAgreement().getCtAmendment() == null){
+		   this.getManagedBean().getCtAgreement().setCtAmendment(new CtAmendment());
+	   }
 	}
 	
 	private FacesScopes getFacesScopes(){

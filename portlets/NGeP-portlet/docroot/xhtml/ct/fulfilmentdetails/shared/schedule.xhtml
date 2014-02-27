@@ -6,34 +6,41 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500">
-	  <h:panelGrid columns="4" rendered="#{!contractDetailsBackingBean.managedBean.scheduleType}">
-        <p:selectOneRadio id="options" value="#{contractDetailsBackingBean.managedBean.scheduleOption}" required="true" 
-           disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio}">  
-           <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="1"/>  
-           <f:selectItem itemLabel="#{lbl['lbl.ct.sched.progre']}" itemValue="2" /> 
-           <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" 
-              process="@this" update=":form:tabview:paymentSchedule"/> 
-        </p:selectOneRadio> 
-       </h:panelGrid>  
-       <p:outputPanel id="paymentSchedule">   
-         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule and !contractDetailsBackingBean.managedBean.scheduleType}" style="width:100%;" >    
-	       <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
+    <p:panel id="scheduleId" header="Frequency Schedule"  toggleable="true"  toggleSpeed="500">
+	  <h:panelGrid style="width:100%;">
+        <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	          widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	          <ac:paginator for="tableSchedule" />
 	          <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
 		        <p:column selectionMode="multiple" style="width:18px;"/>
 		      </c:if>  
-		      <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
+		      <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
 		        <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		      </p:column> 
-		      <p:column style="width:250px;" headerText="Start Period" >
-		         <p:calendar value="#{schedVar.fromDate}" id="popupButtonSch" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" showOn="button" />
-		      </p:column> 	
-		      <p:column style="width:250px;" headerText="End Period">
-		         <p:calendar value="#{schedVar.toDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonSch1" navigator="true" showOn="button"/>
+		      <p:column style="width:260px;" headerText="Start Period" >
+		         <p:selectOneMenu id="fromMonth"  style="width:90px;" >
+		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		<f:selectItem itemLabel="January" itemValue="January"/>
+                 </p:selectOneMenu>
+                   <p:spacer width="1"/>
+                 <p:selectOneMenu id="fromYear" style="width:90px;" >
+            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                 </p:selectOneMenu>
+		       </p:column> 	
+		      <p:column style="width:260px;" headerText="End Period">
+		         <p:selectOneMenu id="toMonth"  style="width:90px;" >
+		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		<f:selectItem itemLabel="January" itemValue="January"/>
+                 </p:selectOneMenu>
+                 <p:spacer width="1"/>
+                 <p:selectOneMenu id="toYear" style="width:90px;" >
+            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                 </p:selectOneMenu>
 		      </p:column>       
 		    </p:dataTable>  
+		    </h:panelGrid>
 	        <p:spacer height="2" />
 		    <div class="ppRightBtn"> 
 		      <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
@@ -50,29 +57,48 @@
 				 <p:commandButton value="No" 	onclick="schedule.hide()" type="button" />
 			   </h:panelGrid>
 			</p:confirmDialog>
-	     </h:panelGroup>
-		 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressive or contractDetailsBackingBean.managedBean.scheduleType}" style="width:100%">
+	  </p:panel>
+	  <p:spacer height="100"/>
+	  <p:panel id="frequencyId" header="Progressive Payment"  toggleable="true"  toggleSpeed="500">
+	   <h:panelGrid style="width:100%;">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		       <ac:paginator for="tableProgress" />
 		       <p:column selectionMode="multiple" style="width:18px;"/> 
-               <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
+               <p:column style="width:70px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
                  <p:inputText value="#{ProgVar.phase}" style="width:40px;" />
                </p:column>
-		       <p:column style="width:350px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
-		          <p:inputText style="width:350px;"/>
+		       <p:column style="width:300px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
+		          <p:inputText style="width:300px;"/>
 		       </p:column>
-               <p:column style="width:100px;" headerText="Start Period">
-                  <p:calendar size="12" value="#{ProgVar.fromDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" id="popupButtonCal" showOn="button" />
-               </p:column> 
-               <p:column style="width:100px;" headerText="End Period">
-                  <p:calendar size="12" value="#{ProgVar.toDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" navigator="true" id="popupButtonCal1" showOn="button" />
-               </p:column> 	
+                <p:column style="width:150px;" headerText="Start Period" >
+		         <p:selectOneMenu id="fromMonth"  style="width:90px;" >
+		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		<f:selectItem itemLabel="January" itemValue="January"/>
+                 </p:selectOneMenu>
+                   <p:spacer width="1"/>
+                 <p:selectOneMenu id="fromYear" style="width:90px;" >
+            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                 </p:selectOneMenu>
+		       </p:column> 	
+		      <p:column style="width:150px;" headerText="End Period">
+		         <p:selectOneMenu id="toMonth"  style="width:90px;" >
+		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		<f:selectItem itemLabel="January" itemValue="January"/>
+                 </p:selectOneMenu>
+                 <p:spacer width="1"/>
+                 <p:selectOneMenu id="toYear" style="width:90px;" >
+            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
+            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                 </p:selectOneMenu>
+		      </p:column>       
                <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
                   <p:inputText value="#{ProgVar.percentage}" style="width:100px;" styleClass="ppRightBtn">
                      <f:convertNumber pattern="#,###.00" /></p:inputText>
                </p:column> 
-		     </p:dataTable>   
+		     </p:dataTable>  
+		     </h:panelGrid>
 			 <p:spacer height="2" />
 		        <div class="ppRightBtn"> 
 		           <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add" 
@@ -88,8 +114,6 @@
 				     <p:commandButton value="No" 	onclick="progressive.hide()" type="button" />
 				   </h:panelGrid>
 			    </p:confirmDialog> 
-		   </h:panelGroup> 	 
-	   </p:outputPanel>
      </p:panel>
      <p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">
