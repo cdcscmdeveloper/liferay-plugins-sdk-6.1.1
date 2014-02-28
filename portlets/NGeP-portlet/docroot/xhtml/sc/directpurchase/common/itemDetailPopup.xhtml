@@ -9,28 +9,28 @@
 		<p:spacer height="5px"/>
 		<table style="width: 500px">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.product.code']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" /></td>
 			</tr>
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.ss.desc']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea disabled="true" rows="2" cols="70"
 						style="margin-bottom: 5px;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.itemDesc}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.uom']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td valign="bottom"><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.price.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.priceTypeCode)}" />
 			   </td>

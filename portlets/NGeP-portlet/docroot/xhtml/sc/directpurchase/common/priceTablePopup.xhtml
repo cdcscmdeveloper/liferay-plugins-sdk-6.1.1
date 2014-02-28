@@ -9,29 +9,29 @@
 		<p:spacer height="5px"/>
 		<table style="width: 500px">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.supp.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true" size="68"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.desc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea readonly="true" disabled="true" rows="2"
 						cols="69" style="margin-bottom: 5px;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.itemDesc}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.uom']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 		
 		    <tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.price.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.priceTypeCode)}" /></td>
 			 </tr>
@@ -43,35 +43,35 @@
 				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmPricings}"
 				rowKey="#{pricing}" rowIndexVar="index">
 
-	            <p:column headerText="#{lbl['lbl.ss.supp.name']}" style="width:30%">
+	            <p:column headerText="#{lbl['lbl.sc.supp.name']}" style="width:30%">
 					<h:outputText value="#{pricing.cmSupplierItem.smSupplier.companyName}" />
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.ss.delivery.term']}" style="width:15%">
+			    <p:column headerText="#{lbl['lbl.sc.delivery.term']}" style="width:15%">
 					<h:outputText value="#{pricing.cmSupplierItem.minOrder}" />
 				</p:column>
 					
-               <p:column headerText="#{lbl['lbl.ss.min.qty']}" style="width:10%">
+               <p:column headerText="#{lbl['lbl.sc.min.qty']}" style="width:10%">
 					<h:outputText value="#{pricing.cmSupplierItem.minOrder}" />
 				</p:column>
 				
-               <p:column headerText="#{lbl['lbl.ss.additional.item.desc']}" style="width:25%">
+               <p:column headerText="#{lbl['lbl.sc.additional.item.desc']}" style="width:25%">
 					<h:outputText value="#{pricing.cmSupplierItem.itemDesc}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.ss.zone']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:10%">
 					<h:outputText value="-" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.ss.from.qty']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:10%">
 					<h:outputText value="#{pricing.fromQty}" style="float:right"/>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.ss.to.qty']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.to.qty']}" style="width:10%">
 					<h:outputText value="#{pricing.toQty}" style="float:right"/>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.ss.price']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.price']}" style="width:10%">
 					<h:outputText value="#{pricing.price}" style="float:right"/>
 				</p:column>
 

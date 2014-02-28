@@ -11,43 +11,43 @@
 		<p:panel id="addToCartId">
 		<table style="width: 500px">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.supp.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="64"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.product.code']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.desc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea readonly="true" disabled="true" rows="3"
 						cols="65" style="margin-bottom: 5px;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.itemDesc}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.uom']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.min.qty']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.min.qty']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.minOrder}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.order.qty']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.price.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
 				<td><p:selectOneMenu  id="priceType" style="margin-bottom: 5px;" 
 						value="#{requestNoteBackingBean.managedBean.priceTypeCode}">
 						<f:selectItems
@@ -55,7 +55,7 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.procurement.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom: 5px;" id="procType"  
 						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType}">
 						<f:selectItems
@@ -67,7 +67,7 @@
 			<tr>
 				<td>
 				   <h:panelGroup id="justLabelId">
-				        <p:outputLabel value="#{lbl['lbl.ss.justification']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"/>
+				        <p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"/>
 				   </h:panelGroup>
 				</td>
 				<td>
@@ -91,10 +91,10 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.ss.ok']}"
+					<p:commandButton value="#{lbl['lbl.sc.ok']}"
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.sourceMethod)}"
 						oncomplete="addToCartPopup.hide();" icon="ui-icon-submit" />
-					<p:commandButton value="#{lbl['lbl.ss.cancel']}"
+					<p:commandButton value="#{lbl['lbl.sc.cancel']}"
 						onclick="addToCartPopup.hide()" icon="ui-icon-cancel" />
 				</p:column>
 			</p:row>

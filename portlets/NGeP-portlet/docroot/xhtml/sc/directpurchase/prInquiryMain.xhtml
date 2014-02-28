@@ -12,17 +12,18 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 		     <p:column width="100%" style="text-align:right">
-			      <p:commandButton  immediate="true" value="#{lbl['lbl.ss.price.inquiry.back.btn']}" icon="ui-icon-back"
+			    <p:commandButton  immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 					 
-				<p:commandButton value="#{lbl['lbl.ss.price.inquiry.proceed.btn']}" rendered="#{purchaseInquiryBackingBean.managedBean.buttonFlag}"
+				<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" 
+				    rendered="#{purchaseInquiryBackingBean.managedBean.buttonFlag}"
 					icon="ui-icon-submit" action="#{requestNoteBackingBean.addToRequestNote(purchaseInquiryBackingBean.managedBean.method)}"/>
 
 				<p:commandButton rendered="#{purchaseInquiryBackingBean.managedBean.buttonFlag}"
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+					value="#{lbl['lbl.sc.common.cancel']}"
 					icon="ui-icon-cancel" />
 					 
-				 <p:commandButton value="#{lbl['lbl.ss.submit']}"
+				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 				  rendered="#{!purchaseInquiryBackingBean.managedBean.buttonFlag}"
 					action="#{purchaseInquiryBackingBean.submitPrEnquiryDtl}"
 				    style="float:right;"

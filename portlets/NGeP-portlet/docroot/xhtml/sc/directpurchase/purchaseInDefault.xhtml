@@ -7,16 +7,16 @@
 	 <p:spacer height="10px" />
 	<h:panelGrid border="0" cellpadding="" cellspacing="4" width="100%"
 		columns="8" style="background-color: #F2F2F2;">
-		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.pid.no']}" />
+		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
 		<p:inputText value="" disabled="true"/>
 
-		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.pkp.no']}" />
+		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
 		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.contract.contractId}" disabled="true" />
 
-		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.cat.type']}" />
+		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
 		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.contract.contractType)}" disabled="true" />
 
-		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.status']}" />
+		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
 		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.currentStatus}"/>
 
 	</h:panelGrid>
@@ -25,37 +25,37 @@
 	<p:spacer height="4px" />
 	 <table style="width: 90%">
 			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.supp.name']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
 				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.smSupplier.companyName}" size="46" /></td>
 			</tr>
           	 <tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.prod.code']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true"  
 				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}"/></td>
 				      
-				<td style="width:100px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.item.name']}" /></td>
+				<td style="width:100px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
 				<td><p:inputText disabled="true"  
 				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" size="46" /></td>      
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.min.qty']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true"  
 				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.minOrder}" /></td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.price.per.uom']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.price.per.uom']}" /></td>
 				<td><p:inputText disabled="true" 
 				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.val.period']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
 				<td><p:inputText disabled="true" />
 				    <p:spacer width="2px"/>
 				    <p:inputText disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.max.proc.amt']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" 
 				       value="#{purchaseInDefaultBackingBean.managedBean.ctContractItem.maxProcureAmount}"/></td>
 			</tr>
@@ -67,7 +67,7 @@
 			<table style="width: 90%">
 			<tr>
 			   <td style="width: 250px;"><p:outputLabel
-								value="#{lbl['lbl.ss.purchase.in.default.just']}" /></td>
+								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
 				<td><p:selectOneMenu disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"
 					value="#{purchaseInDefaultBackingBean.managedBean.justificationType}" style="margin-bottom: 5px;">
 					<f:selectItems
@@ -90,7 +90,7 @@
 		 <table style="width: 90%">
 			 <tr>
 			  <td style="width: 250px;"><p:outputLabel
-				  value="#{lbl['lbl.ss.purchase.in.default.order.qty']}" /></td>
+				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /></td>
 			 <td><p:inputText id="ordqty" disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"/></td>
 			</tr>
 		</table>
@@ -130,7 +130,7 @@
 	 <h:panelGroup id="attachmentId" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleRemarkAttach}">
 	   <table style="width: 91%">
 		<tr>
-			<td class="TableFieldLeft" width="24%"><p:outputLabel value="#{lbl['lbl.ss.purchase.in.default.attachment']}"/></td>
+			<td class="TableFieldLeft" width="24%"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
 				 disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}" value="Attach file(s)" />
@@ -166,8 +166,8 @@
 	</h:panelGroup>
    </p:panel>
 
-	<p:panel label="#{lbl['lbl.ss.panel.title.approve.list']}"
-			header="#{lbl['lbl.ss.panel.title.approve.list']}" toggleable="true"
+	<p:panel label="#{lbl['lbl.sc.approve.list']}"
+			header="#{lbl['lbl.sc.approve.list']}" toggleable="true"
 			toggleSpeed="500">
 		  <div style="width: 100%">
 			<p:pickList  id="approver"
@@ -184,7 +184,7 @@
 	 <p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
 		dynamic="true" hideEffect="explode" resizable="false" width="700px"
 		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.ss.purchase.in.default.choose.file']}">
+		header="#{lbl['lbl.sc.purchase.in.default.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{purchaseInDefaultBackingBean.handleFileUpload}" mode="advanced"

@@ -13,10 +13,10 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			styleClass="noBorders tr,noBorders td" >
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-				 <p:commandButton  immediate="true" value="#{lbl['lbl.ss.purchase.in.default.back.btn']}" icon="ui-icon-back"
+				 <p:commandButton  immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
-				   <p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+				   <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 				    icon="ui-icon-submit" update="mailPanel"/>
 				</p:column>
 			</p:row>

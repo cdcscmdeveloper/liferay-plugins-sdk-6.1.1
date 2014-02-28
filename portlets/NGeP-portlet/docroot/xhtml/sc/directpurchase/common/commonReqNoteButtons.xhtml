@@ -7,18 +7,18 @@
 	<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td">
 		<p:row>
 			<p:column width="100%" style="text-align:right">
-				<p:commandButton value="#{lbl['lbl.sc.action.back']}"
-					icon="ui-icon-back" style="float:left;"
+				<p:commandButton value="#{lbl['lbl.sc.common.back']}"
+					icon="ui-icon-back" style="float:left;" immediate="true"
 					action="#{requestNoteBackingBean.backToPervious}" />
 
-				<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
+				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
 				   	action="#{requestNoteBackingBean.saveAction}" />
 
-				<p:commandButton value="#{lbl['lbl.ss.submit']}"
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction}"/>
 
 				<p:commandButton
-					value="#{lbl['lbl.sc.action.cancel']}"
+					value="#{lbl['lbl.sc.common.cancel']}"
 					icon="ui-icon-cancel" style="float:right;" />
 
 			</p:column>

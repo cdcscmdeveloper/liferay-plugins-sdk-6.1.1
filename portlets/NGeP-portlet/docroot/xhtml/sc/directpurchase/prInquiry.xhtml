@@ -10,14 +10,14 @@
 		<p:row>
 			<p:column>
 				<p:outputLabel
-					value="#{lbl['lbl.ss.price.inquiry.purchase.inquiry.no']}" />
+					value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
 			</p:column>
 			<p:column width="25%">
 				<p:inputText disabled="true"  value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}"/>
 			</p:column>
 
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.ptj.name']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
 			</p:column>
 
 			<p:column width="25%" style="align : center;">
@@ -34,7 +34,7 @@
 			</p:column>
 
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.status']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
 			</p:column>
 			<p:column width="25%">
 				<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.currentStatus}"  />
@@ -47,51 +47,51 @@
 		<table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.supp.name']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.smSupplier.companyName}"
 						size="46" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.product.code']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.product.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
 
 				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.item.name']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}"
 						size="46" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.desc']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
 				<td colspan="3"><p:inputTextarea disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.itemDesc}"
-						rows="3" cols="120" style="margin-bottom: 5px;" /></td>
+						rows="3" cols="122" style="margin-bottom: 5px;" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.uom']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.uom']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.min.qty']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.min.qty']}" /></td>
 				<td><p:inputText disabled="true" 
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.minOrder}" style="text-align:right;"/></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.order.qty']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /></td>
 				<td ><p:inputText  disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.requestNoteItem.quantity}" style="text-align:right;"/></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.price.type']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
 				<td>
 				   <p:selectOneMenu required="true" id="priceType" style="margin-bottom: 5px;"
 				        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
@@ -110,13 +110,13 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.delivery.term']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.delivery.term']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.pricing.cmSupplierItem.maxOrder}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.inquiry.date']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.inquiry.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate}">
 						<f:convertDateTime
@@ -125,7 +125,7 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.ss.price.inquiry.day.to.resp']}" /></td>
+						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /></td>
 						
 				<td><p:inputText id="dayToResponse" size="2" maxlength="2" disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
@@ -141,7 +141,7 @@
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ss.procurement.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom: 5px;"  id="procType" 
 				        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}" 
 						value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType}">
@@ -154,7 +154,7 @@
 			<tr>
 				<td>
 				   <h:panelGroup id="justLabelId">
-				        <p:outputLabel value="#{lbl['lbl.ss.justification']}" rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}"/>
+				        <p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}"/>
 				   </h:panelGroup>
 				</td>
 				<td>
@@ -167,7 +167,7 @@
 							listener="#{purchaseInquiryBackingBean.justificationTypeEvent}" process="@this" />
 					</p:selectOneMenu> 
 					    <p:spacer width="5px" />
-					<p:inputText size="40" id="otherId" rendered="#{purchaseInquiryBackingBean.managedBean.justTypeOption}"/>
+					<p:inputText size="25" id="otherId" rendered="#{purchaseInquiryBackingBean.managedBean.justTypeOption}"/>
 				  </h:panelGroup>	
 			   </td>
 			</tr>
@@ -178,7 +178,7 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:60%">
 			<p:row>
 				<p:column width="25%">
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.stock.avail']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 				</p:column>
 				<p:column width="25%">
 					<p:selectOneRadio  id="stockAvailable" disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
@@ -197,29 +197,29 @@
 			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.scRequestSupplierItems}"
 			rowKey="#{pricing.pricingId}" rowIndexVar="index">
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.state']}" style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.state']}" style="width:25%">
 				<h:outputText value="#{reqSupplerItem.pricing.pmState.stateName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.district']}" style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.district']}" style="width:25%">
 				<c:if test="#{reqSupplerItem.pricing.pmDistrict ne null }">
 					<h:outputText value="#{reqSupplerItem.pricing.pmDistrict.districtName}" />
 				</c:if>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.from.qty']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}" style="width:10%">
 				<h:outputText value="#{reqSupplerItem.pricing.fromQty}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.to.qty']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.to.qty']}" style="width:10%">
 				<h:outputText value="#{reqSupplerItem.pricing.toQty}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.price.published']}" style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.published']}" style="width:15%">
 				<h:outputText value="#{reqSupplerItem.pricing.price}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.price.offered']}" style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
 				<p:inputText value="100" style="text-align:right;"  disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"/>
 			</p:column>
 
