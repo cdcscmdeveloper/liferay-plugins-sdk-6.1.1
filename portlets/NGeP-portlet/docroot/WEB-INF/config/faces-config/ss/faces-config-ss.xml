@@ -71,7 +71,13 @@
 		</navigation-case>
 	</navigation-rule>
 	
-	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>simpleQuote</from-outcome>
+			<to-view-id>/xhtml/sc/directpurchase/simpleQuote.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	<converter>
 		<converter-id>approverConverter</converter-id>
 		<converter-class>my.ep.web.ss.converter.ApproverPickListConverter</converter-class>
