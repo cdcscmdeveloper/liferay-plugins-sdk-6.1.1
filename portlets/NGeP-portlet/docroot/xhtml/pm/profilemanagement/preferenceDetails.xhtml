@@ -31,17 +31,23 @@
 		          <p:selectOneMenu style="width:120px">  
             		<f:selectItem itemLabel="12H" itemValue="1" />  
             		<f:selectItem itemLabel="24H" itemValue="2" />  
-                  </p:selectOneMenu> 
+                  </p:selectOneMenu>
+                 <h:outputLink id="fades" value="#">  
                  <p:graphicImage library="ep/images/design" name="tooltips.png"
-                   value="/resources/ep/images/design/tooltips.png" />              
+                   value="/resources/ep/images/design/tooltips.png" />
+                 </h:outputLink>
+				<p:tooltip for="fades" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />                                                   
                </p:columnGroup>
                  
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}" />
                 <p:columnGroup>                
                  <p:inputText value="0" size="5" />&#160; 
-                 <h:commandButton value="Days" style="width:62px" /> 
+                 <h:commandButton value="Days" style="width:62px" />
+                 <h:outputLink id="fade" value="#">  
                  <p:graphicImage library="ep/images/design" name="tooltips.png"
-                   value="/resources/ep/images/design/tooltips.png" />                                                                 
+                   value="/resources/ep/images/design/tooltips.png" /> 
+                 </h:outputLink> 
+				<p:tooltip for="fade" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />                                                                                 
 			    </p:columnGroup>    	        
 	     </h:panelGrid>  		
 	</p:panel>
