@@ -1161,6 +1161,26 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>pm-AuthorisationRoleSearch-portlet</css-class-wrapper>
 	</portlet>		
+	<portlet>
+		<portlet-name>Simple Quote</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>simple quote-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>Supplier View</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>supplier view-portlet</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

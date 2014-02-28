@@ -76,15 +76,15 @@
 			<portlet id="scSupplierProposal"/>
 			<portlet id="scSupplierNotification"/>
             <portlet id="scTemplateDocument" />
-           <portlet id="scBriefingSiteVisitAttendance" />
+            <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scCommitteMaintance" />
-             <portlet id="scPresentation Demo" />
-          
+            <portlet id="scPresentation Demo" />
             <portlet id="Supplier Finalization"/>
-           <portlet id="Pre-Supplier Finalization"/>
+            <portlet id="Pre-Supplier Finalization"/>
             <portlet id="Bidding List" />
             <portlet id="PurchaseInquiry"/>
-          
+            <portlet id="Simple Quote"></portlet>
+            <portlet id="Supplier View"></portlet>
            
 		</category>
 
@@ -129,6 +129,7 @@
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
 		<portlet id="Welcome"></portlet>
+		
 	</category>
 
 	<category name="Template">
