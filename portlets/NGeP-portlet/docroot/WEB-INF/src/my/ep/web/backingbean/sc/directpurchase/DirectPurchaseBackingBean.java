@@ -59,7 +59,6 @@ import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.RequestListHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -409,12 +408,12 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		if (catalogueBackingBean == null) {
 			catalogueBackingBean = new CatalogueBackingBean();
 		}
-		List<ScRequestItem> requestListItems = RequestListHelper.getUniqueItemList(catalogueBackingBean.getManagedBean().getCartList());
+		//List<ScRequestItem> requestListItems = RequestListHelper.getUniqueItemList(catalogueBackingBean.getManagedBean().getCartList());
 		// reset cartList
 		catalogueBackingBean.getManagedBean().getCartList().clear();
 		// TODO maybe have to merge RequestListItem with the existing
 		// requestListItem in RequestList
-		getManagedBean().getRequestNote().getRequestNoteItems().addAll(requestListItems);
+		//getManagedBean().getRequestNote().getRequestNoteItems().addAll(requestListItems);
 		// for grouping
 		//getManagedBean().getItems().getSource().addAll(requestListItems);
 		return "directPurchase";

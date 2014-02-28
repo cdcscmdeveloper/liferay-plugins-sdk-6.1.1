@@ -14,7 +14,7 @@ import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 public class SourcingLocationHelper {
 	public	static	List<PmState>	getStates(ScQuoteZone zone){
 		List<PmState>	results	=	new ArrayList<>();
-		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
 			if(location.getPmState() != null){
 				results.add(location.getPmState());
 			}
@@ -32,7 +32,7 @@ public class SourcingLocationHelper {
 	}
 	public	static	List<PmDistrict>	getDistricts(ScQuoteZone zone){
 		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
-		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
 			if(location.getPmDistrict() != null){
 				results.add(location.getPmDistrict());
 			}
@@ -50,7 +50,7 @@ public class SourcingLocationHelper {
 	}
 	public	static	List<PmDivision>	getDivisions(ScQuoteZone zone){
 		List<PmDivision>	results	=	new ArrayList<PmDivision>();
-		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
 			if(location.getDivision() != null){
 				results.add(location.getDivision());
 			}
@@ -75,15 +75,6 @@ public class SourcingLocationHelper {
 			}
 		}
 		return result;
-	}
-	public	static	List<PmCity>	getCities(ScQuoteZone zone){
-		List<PmCity>	results	=	new ArrayList<PmCity>();
-		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
-			if(location.getCity() != null){
-				results.add(location.getCity());
-			}
-		}
-		return results;
 	}
 	public	static	List<PmCity>	getCityFromLocationDTOs(List<LocationDTO> locationDTOs){
 		List<PmCity>	results	=	new ArrayList<PmCity>();

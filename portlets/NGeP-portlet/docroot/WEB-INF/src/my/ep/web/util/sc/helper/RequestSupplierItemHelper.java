@@ -10,7 +10,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 public class RequestSupplierItemHelper {
 	public static	ScRequestSupplierItem	createRequestSupplierItem(CmSupplierItem supplierItem){
 		ScRequestSupplierItem	result	=	new ScRequestSupplierItem();
-		result.setCmSupplierItem(supplierItem);
 		if(supplierItem.getMinOrder() != null){
 			result.setMinOrderQty(supplierItem.getMinOrder().intValue());
 		}
@@ -29,7 +28,7 @@ public class RequestSupplierItemHelper {
 		List<ScRequestSupplierItem>	results = new ArrayList<>();
 		for(CmSupplierItem supplierItem: supplierItems){
 			ScRequestSupplierItem	requestSupplierItem	=	createRequestSupplierItem(supplierItem);
-			requestSupplierItem.setScRequestListItem(requestListItem);
+			requestSupplierItem.setRequestNoteItem(requestListItem);
 			results.add(requestSupplierItem);
 		}
 		return results;

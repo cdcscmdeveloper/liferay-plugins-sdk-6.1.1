@@ -22,8 +22,8 @@ public class SourcingItemPickListConverter implements Converter {
 				ScRequestItem	item	=	(ScRequestItem) o;
 				String id = "";
 				//item must be catalogue item or bid/quote item 
-				if(item.getRequestListItemId() != null){
-					id = id + item.getRequestListItemId();
+				if(item.getRequestNoteItemId() != null){
+					id = id + item.getRequestNoteItemId();
 				}else{
 					id = id + item.getCmItem().getItemId();
 				}
@@ -38,8 +38,8 @@ public class SourcingItemPickListConverter implements Converter {
 					ScRequestItem	item	=	(ScRequestItem) o;
 					String id = "";
 					//item must be catalogue item or bid/quote item 
-					if(item.getRequestListItemId() != null){
-						id = id + item.getRequestListItemId();
+					if(item.getRequestNoteItemId() != null){
+						id = id + item.getRequestNoteItemId();
 					}else{
 						id = id + item.getCmItem().getItemId();
 					}
@@ -57,8 +57,8 @@ public class SourcingItemPickListConverter implements Converter {
 		String str = "";
 		if (arg2 instanceof ScRequestItem) {
 			ScRequestItem	item	=	(ScRequestItem) arg2;
-			if(item.getRequestListItemId() != null){
-				str = str + item.getRequestListItemId();
+			if(item.getRequestNoteItemId() != null){
+				str = str + item.getRequestNoteItemId();
 			}else{
 				str = str + item.getCmItem().getItemId();
 			}

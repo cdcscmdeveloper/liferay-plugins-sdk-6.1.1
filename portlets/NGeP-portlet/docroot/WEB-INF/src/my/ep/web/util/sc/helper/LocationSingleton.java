@@ -23,6 +23,9 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 public class LocationSingleton {
+	public	static	final	String	STATE_LEVEL = "S";
+	public	static	final	String	DIVISION_LEVEL = "V";
+	public	static	final	String	DISTRICT_LEVEL	=	"D";
 	private static LocationSingleton instance = null;
 	private Map<Long, List<PmState>> mapStates = new HashMap<Long, List<PmState>>();
 
@@ -209,6 +212,87 @@ public class LocationSingleton {
 					}
 					if (divisionIds.contains(division.getDivisionId())) {
 						divisionNode.setSelected(Boolean.TRUE);
+					}
+				}
+			}
+			if (stateIds.contains(state.getStateId())) {
+				stateNode.setSelected(Boolean.TRUE);
+			}
+		}
+		return rootLocationTree;
+	}
+	/**
+	 * this method build the try for the whole country 
+	 * @param countryId country id of the tree
+	 * @param locationLevel min level of the tree
+	 * @param listStates	list selected states of the tree
+	 * @param listDistricts	list selected districts of the tree
+	 * @param listDivisions	list selected divisions of the tree
+	 * @return
+	 */
+	public TreeNode buildLocationTreeWithLevel(Long countryId, String locationLevel, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions) {
+		List<PmState> allStates = mapStates.get(countryId);
+		Set<Long> stateIds = new HashSet<Long>();
+		Set<Long> districtIds = new HashSet<Long>();
+		Set<Long> divisionIds = new HashSet<Long>();
+		// get list Id for all state, district, division, city
+		if (listStates != null && listStates.size() > 0) {
+			for (PmState state : listStates) {
+				stateIds.add(state.getStateId());
+			}
+		}
+		if (listDistricts != null && listDistricts.size() > 0) {
+			for (PmDistrict district : listDistricts) {
+				districtIds.add(district.getDistrictId());
+			}
+		}
+		if (listDivisions != null && listDivisions.size() > 0) {
+			for (PmDivision division : listDivisions) {
+				divisionIds.add(division.getDivisionId());
+			}
+		}
+
+		if (allStates == null) {
+			allStates = initialStatesForCountry(countryId);
+		}
+
+		// build tree
+		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
+		for (PmState state : allStates) {
+			LocationDTO stateLocation = new LocationDTO(state);
+			TreeNode stateNode = new DefaultTreeNode(stateLocation, rootLocationTree);
+			// build state tree
+			if(DISTRICT_LEVEL.equalsIgnoreCase(locationLevel)){
+				//build district level
+				for (PmDistrict district : state.getPmDistricts()) {
+					if(district.getPmDivision() == null){
+						LocationDTO districtLocation = new LocationDTO(district);
+						TreeNode districtNode = new DefaultTreeNode(districtLocation, stateNode);
+						if (districtIds.contains(district.getDistrictId())) {
+							districtNode.setSelected(Boolean.TRUE);
+						}
+					}
+				}
+			}
+			if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
+				if(DISTRICT_LEVEL.equalsIgnoreCase(locationLevel) || DIVISION_LEVEL.equalsIgnoreCase(locationLevel)){
+					for (PmDivision division : state.getPmDivisions()) {
+						LocationDTO divisionLocation = new LocationDTO(division);
+						TreeNode divisionNode = new DefaultTreeNode(divisionLocation, stateNode);
+						// build division tree
+						if(DISTRICT_LEVEL.equalsIgnoreCase(locationLevel)){
+							// build district level
+							for (PmDistrict district : division.getPmDistricts()) {
+								LocationDTO districtLocation = new LocationDTO(district);
+								TreeNode districtNode = new DefaultTreeNode(districtLocation, divisionNode);
+								if (districtIds.contains(district.getDistrictId())) {
+									districtNode.setSelected(Boolean.TRUE);
+								}
+							}
+						}
+						if (divisionIds.contains(division.getDivisionId())) {
+							divisionNode.setSelected(Boolean.TRUE);
+						}
 					}
 				}
 			}
