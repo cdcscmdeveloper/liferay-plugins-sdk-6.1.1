@@ -164,7 +164,7 @@ public class UserprofilesBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = facesScopes.getUserSessionBean();
 		if (user != null && null != user.getUserId()) {
-			this.getManagedBean().setPmUser(user);
+			this.getManagedBean().setUser(user);
 			List<PmAddressType> addressType = user.getPmAddressTypes();
 			
 			if (addressType != null) {
@@ -215,7 +215,7 @@ public class UserprofilesBackingBean extends
 	}
 
 	public String goToMaintainceAction(PmUser user) {
-		this.getManagedBean().setPmUser(user);
+		this.getManagedBean().setUser(user);
 		return "/xhtml/pm/profilemanagement/userProfileCreation.xhtml";
 	}
 	

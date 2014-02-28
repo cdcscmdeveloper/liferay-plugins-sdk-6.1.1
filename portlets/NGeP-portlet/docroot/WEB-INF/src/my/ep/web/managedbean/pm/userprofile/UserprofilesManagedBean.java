@@ -34,7 +34,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private static final Logger log= EpLogger.getLogger(UserprofilesManagedBean.class);	
 	
 	private PmUser user;
-	
+
 	private PmAddress pmAddress;
 	
 	private PmCountry pmCountry;
@@ -62,6 +62,8 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private boolean isEditable = true;	
 	
 	private List<PmUser> users;
+	
+	private List<PmAddress> useraddress;	
 
 	private List<PmUserGroup> usersGroup;
 	
@@ -85,9 +87,17 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		return users;
 	}
 
+	public void setUseraddress(List<PmAddress> useraddress) {
+		this.useraddress = useraddress;
+	}
+	
+	public List<PmAddress> getUseraddress() {
+		return useraddress;
+	}
+
 	public void setUsers(List<PmUser> users) {
 		this.users = users;
-	}
+	}	
 	
 	public List<PmUserGroup> getUsersGroup() {
 		return usersGroup;
@@ -155,15 +165,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	}
 
 
-	public PmUser getPmUser() {
-		return user;
-	}
-
-
-
-	public void setPmUser(PmUser user) {
-		this.user = user;
-	}
+	
 
 
 
@@ -242,6 +244,15 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setCountryName(List<SelectItem> countryName) {
 		this.countryName = countryName;
 	}
+	
+	public PmUser getUser() {
+		return user;
+	}
+
+	public void setUser(PmUser user) {
+		this.user = user;
+	}
+
 	
 	public List<PreferenceList> getPreferencelists() {
 		
