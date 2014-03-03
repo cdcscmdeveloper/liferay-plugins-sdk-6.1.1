@@ -63,7 +63,7 @@
 				     <f:selectItem itemLabel="-Please Select--" itemValue="" />
 				     <f:selectItem itemLabel="LOA-123" itemValue="1" />
 				     </p:selectOneMenu>
-			          <p:inputText value="LOA-123" style="width:170px;" disabled="true"
+			          <p:inputText  style="width:170px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
 		       <p:outputLabel value="LOA Date" />
 		       <p:inputText style="width:170px;"  disabled="true"/> 
@@ -74,9 +74,9 @@
 		       <p:inputText style="width:170px;"  disabled="true"/> 
 	           
 	           <p:outputLabel value="Contract Effective Date" />
-	           <p:inputText style="width:130px;"  disabled="true"/> 
+	           <p:inputText style="width:170px;"  disabled="true"/> 
 	           <p:outputLabel value="Contract Expiry Date" />
-	           <p:inputText style="width:130px;"  disabled="true"/> 
+	           <p:inputText style="width:170px;"  disabled="true"/> 
 	  </h:panelGrid>
    </p:panel>
     <p:panel id="factoringId" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
@@ -90,14 +90,14 @@
 		 <p:outputLabel  value="Authorization Ref No."/> 
          <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" disabled="false"/>
          <p:outputLabel value="Start Date"/>
-         <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+         <p:calendar size="25" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				          value="#{supplierBackingBean.managedBean.factoring.effDate}"
 				id="effdateCal" showOn="button" />
           <p:outputLabel value="End Date"/>
-          <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+          <p:calendar size="25" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				          value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" />
            <p:outputLabel value="Account No." /> 
-           <p:inputText style="width:120px;"  disabled="true"/> 
+           <p:inputText style="width:170px;"  disabled="true"/> 
                 <f:verbatim></f:verbatim>
                 <f:verbatim></f:verbatim>  
            <h:panelGroup>
@@ -106,7 +106,7 @@
 			        </div>
 		            </h:panelGroup>
 		    <h:panelGrid>
-		           <p:inputTextarea id="fcaddress" value="125, Jalan P RamLee, KL" rows="3" cols="31"  autoResize="false" />
+		           <p:inputTextarea id="fcaddress"  rows="3" cols="31"  autoResize="false" />
 	        </h:panelGrid>
 	 </h:panelGrid>
      <p:spacer height="8"/>

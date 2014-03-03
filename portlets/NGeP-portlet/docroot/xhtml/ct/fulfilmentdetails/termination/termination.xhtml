@@ -9,7 +9,7 @@
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500">
 		<h:panelGrid columns="5" style="width:100%;" columnClasses="columnWidth15">
 			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.docNo}" style="width:170px;" disabled="true" />
+			<p:inputText value="#{terminationBackingBean.managedBean.ctContract.contractNo}" style="width:170px;" disabled="true" />
 			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
 			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 			<h:panelGrid columns="3">
@@ -19,10 +19,10 @@
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<p:inputText style="width:130px;" disabled="true"
+			<p:inputText style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			<p:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<p:inputText style="width:130px;" disabled="true"
+			<p:inputText style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="true" disabled="true" />
@@ -31,11 +31,11 @@
 			</h:panelGrid>
 				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;"  styleClass="ppRightBtn">
+				 disabled="true" style="width:170px;"  styleClass="ppRightBtn">
 				  <f:convertNumber pattern="#,###.00" />
 				 </p:inputText>	
 				 <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-		    	<p:inputText style="width:130px;" disabled="true" 
+		    	<p:inputText style="width:170px;" disabled="true" 
 				    value="#{terminationBackingBean.managedBean.ctContract.loaNo}" />	
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
@@ -48,7 +48,7 @@
                  disabled="true" style="width:170px;"/> 	
 			 <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="3">
-				<p:inputText size="8" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"/>
+				<p:inputText size="23" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"/>
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	

@@ -9,7 +9,7 @@
    <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />
+			<p:inputText value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" style="width:170px;" disabled="true" />
 			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
 			<p:inputText value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true"/>				
 			<h:panelGrid columns="3">
@@ -19,10 +19,10 @@
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<p:inputText style="width:130px;" disabled="true"
+			<p:inputText style="width:170px;" disabled="true"
 				value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<p:inputText style="width:130px;" disabled="true"
+			<p:inputText style="width:170px;" disabled="true"
 				value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			
 			<h:panelGrid columns="3">
@@ -33,11 +33,11 @@
 			
 		    <p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;" styleClass="ppRightBtn">
+				 disabled="true" style="width:170px;" styleClass="ppRightBtn">
 				  <f:convertNumber pattern="#,###.00" />
 				 </p:inputText>		
 				<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-		    	<p:inputText style="width:130px;" disabled="true" 
+		    	<p:inputText style="width:170px;" disabled="true" 
 				    value="#{suspensionBackingBean.managedBean.contractVer.ctContract.loaNo}" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
@@ -47,7 +47,7 @@
 			</h:panelGrid>	
 			 <h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="3">
-				<p:inputText size="8" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
+				<p:inputText size="23" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
@@ -67,7 +67,7 @@
 			 <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{suspensionBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="3" cols="35" disabled="true"
+				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim /><f:verbatim /> <f:verbatim /><f:verbatim /><f:verbatim />

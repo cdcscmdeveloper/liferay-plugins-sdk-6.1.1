@@ -67,7 +67,7 @@
 				       <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
 				         <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
 				      </p:selectOneMenu>
-			         <p:inputText value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}" style="width:170px;" disabled="true"
+			         <p:inputText value="#{supplierBackingBean.managedBean.ctContract.contractNo}" style="width:170px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
 			         </td>
 		         <td style="width:20%;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
@@ -76,10 +76,10 @@
 		   </tr>
 		   <tr>		
 			     <td><p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" /></td>
-			     <td> <p:inputText disabled="true" style="width:110px;" 
+			     <td> <p:inputText disabled="true" style="width:170px;" 
 			          value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.effDate)}"/> </td>
 			     <td><h:outputLabel value="#{lbl['lbl.ct.edate']}" /></td>
-			     <td><p:inputText disabled="true" style="width:110px;" 
+			     <td><p:inputText disabled="true" style="width:170px;" 
 			          value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.expDate)}"/>	</td>
 		   </tr>
 		   <tr>
@@ -110,16 +110,16 @@
 				             <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
 				            <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeAccountActionListener}"/>
 			                </p:selectOneMenu>
-			                 <p:inputText value="12367546543" style="width:170px;" disabled="true"
+			                 <p:inputText  style="width:170px;" disabled="true"
 			                     rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText> </td>
                             <td><p:spacer height="15"/></td>
                             <td><p:spacer height="15"/></td>
                      </tr>
                      <tr>
                         <td> <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  </td>
-                        <td> <p:inputText value="CIMB BERHAD"  disabled="true" style="width:170px;" />  </td>
+                        <td> <p:inputText  disabled="true" style="width:170px;" />  </td>
                         <td style="width:20%;"> <p:outputLabel   value="#{lbl['lbl.ct.bank.branch']}" />  </td>
-                        <td> <p:inputText value="Cyber Jaya"  disabled="true" style="width:170px;" /></td>
+                        <td> <p:inputText   disabled="true" style="width:170px;" /></td>
                     </tr>
                     <tr>
                         <td>
@@ -131,11 +131,11 @@
 			             </td>
 			             <td>
 			                
-				                <p:inputTextarea id="bankAddress" value="CIMB Berhad, CyberView, CyberJaya, Selangor Malaysia" rows="3" cols="31" disabled="true" maxlength="250" />
+				                <p:inputTextarea id="bankAddress" rows="3" cols="31" disabled="true" maxlength="250" />
 			               
                          </td>
                           <td valign="top">  <p:outputLabel  value="Tel No" />  </td>
-                        <td valign="top">  <p:inputText value="60172487465" disabled="true"  style="width:110px;" /></td>
+                        <td valign="top">  <p:inputText disabled="true"  style="width:170px;" /></td>
                       
                         </tr>
                       </table>  
@@ -146,11 +146,10 @@
                       <td style="width:15%;">   <p:outputLabel value="EP No." />  </td>
                       <td> <h:panelGrid columns="4">
                                 <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.epNo}" 
-                                    disabled="true" size="11"/>
-                                <p:spacer width="2"/>
+                                    disabled="true" size="10"/>
+                                <p:spacer width="1"/>
                                 <p:outputLabel value="MOF No." />  
-                                <p:inputText value="123"
-                                   disabled="true" size="11"/>
+                                <p:inputText disabled="true" size="10"/>
                              </h:panelGrid> 
                        </td>
                        <td style="width:10%;">  <p:outputLabel  value="Contact Person"/>  </td>
@@ -159,16 +158,16 @@
                 <tr>       
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.companyName}"
-                               disabled="true" style="width:210px;"/> </td>
+                               disabled="true" style="width:218px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
-                     <td> <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.smAppl.smCompanyBasic.phoneNo}" disabled="true"  style="width:110px;" /></td>
+                     <td> <p:inputText value="#{supplierBackingBean.managedBean.ctContract.smSupplier.smAppl.smCompanyBasic.phoneNo}" disabled="true"  style="width:170px;" /></td>
                     
                 </tr>  
                  <tr>  
                       <td>  <p:outputLabel   value="#{lbl['lbl.ct.su.tel.hp']}"/> </td>
-                      <td>  <p:inputText value="60172487465" disabled="true" style="width:110px;" /></td>       
+                      <td>  <p:inputText  disabled="true" style="width:170px;" /></td>       
                       <td> <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/></td>       
-                      <td> <p:inputText value="123"  disabled="true" style="width:110px;" /> </td>   
+                      <td> <p:inputText   disabled="true" style="width:170px;" /> </td>   
                  </tr>
                       <tr>
                          <td>       
@@ -179,10 +178,10 @@
 			                 </h:panelGroup></td>
 			              <td>
 			                   <h:panelGrid>
-				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="31"   />
+				                  <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" cols="31"   />
 			                   </h:panelGrid></td>
 			                 <td style="width:10%;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
-                             <td valign="top">  <p:inputText value="1234"  disabled="true"   style="width:170px;" /></td>
+                             <td valign="top">  <p:inputText   disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>
 			   </p:panel>
