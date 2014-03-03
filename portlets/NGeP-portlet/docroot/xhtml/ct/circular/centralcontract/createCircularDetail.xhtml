@@ -10,7 +10,7 @@
 				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
 				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
-				<td rowspan="2"><p:inputTextarea cols="23" rows="3"
+				<td rowspan="2"><p:inputTextarea cols="26" rows="3"
 						style=" margin-bottom:0px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 				</td>
@@ -27,7 +27,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" /></td>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
 			    <td><p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="25" id="popupButtonCal1" disabled="true" /></td>
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="24" id="popupButtonCal1" disabled="true" /></td>
 			</tr>
 			<tr>
 			    <td><h:outputLabel value="Zonal Level" /></td>
@@ -36,7 +36,7 @@
 				    <p:ajax event="change" update=":form:tabview" process="@form" />
 			        </p:selectOneMenu>	</td>
 			   <td> <h:outputLabel value="Item Zonal Level" /></td>
-			   <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}" style="width:163px;">
+			   <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}" style="width:156px;">
 				   <f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
 				   <p:ajax event="change" update=":form:tabview" process="@form" />
 			       </p:selectOneMenu>	</td>

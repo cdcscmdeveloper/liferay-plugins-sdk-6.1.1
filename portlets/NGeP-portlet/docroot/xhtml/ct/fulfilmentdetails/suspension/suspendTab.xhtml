@@ -25,47 +25,37 @@
 	    			</td>
 	    		</tr>
 	  </table>
-	  <table style="width: 99%; margin-left: 25px;">
+	  <table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
-				<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Doc Type" />
-						</h6>
+					<td>
+							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="25"
-								value="Fulfilment Suspension (FS)"
-								disabled="true" />
-						</h6>
-					</td>		
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Contract No" />
-						</h6>
+							<p:inputText size="20" disabled="true"
+								value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" />
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="20"
-								value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"
-								disabled="true" />
-						</h6>
-					</td>
-								
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Status" />
-						</h6>
+							<p:outputLabel value="Request No." />
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="20"
-								value="#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}"
-								disabled="true" />
-						</h6>
+							<p:inputText size="25" disabled="true"
+								value="#{suspensionBackingBean.managedBean.contractVer.docNo == null ? '-- System Generated --':suspensionBackingBean.managedBean.contractVer.docNo}" />
+					</td>
+					 <td>
+		    			   <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+					</td>
+					<td>
+						   <p:inputText size="30" disabled="true" value="#{suspensionBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
+					</td>											
+					<td>
+		  				   <p:outputLabel value="Status" />
+					</td>
+					<td>
+						<p:inputText size="20" disabled="true"
+								value="#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}" />
 					</td>
 				</tr>
-			</table>	  
+			</table>	 
 	</p:panel>
 	 <p:tabView id="tabview" orientation="left" dynamic="true">
      <p:tab title="#{lbl['lbl.ct.menu.fd']}" >

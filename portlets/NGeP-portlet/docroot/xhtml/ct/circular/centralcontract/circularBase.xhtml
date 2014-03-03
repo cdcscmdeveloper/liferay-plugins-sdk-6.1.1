@@ -24,43 +24,48 @@
 	    			</td>
 	    		</tr>
 	    	</table>
-			<table style="width: 99%; margin-left: 25px;">
+	    	<table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
-						</h6>
+				<td>
+						
+							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+						
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="20"
-								value="#{centralContractBackingBean.managedBean.circularVer.circularNo == null ? '-- User Input --':centralContractBackingBean.managedBean.circularVer.circularNo}"
-								disabled="true" />
-						</h6>
+						
+							<p:inputText size="20" disabled="true" />
+						
+					</td>		
+					<td>
+					
+							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+					
 					</td>
 					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-						</h6>
+						
+							<p:inputText size="20" disabled="true"/>
+					
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="20"
-								value="#{centralContractBackingBean.managedBean.circularVer.name == null ? '-- User input --':centralContractBackingBean.managedBean.circularVer.name}"
-								disabled="true" />
-						</h6>
+		
+							<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+					
+					</td>
+					<td>
+						
+							<p:inputText size="30" disabled="true" />
+						
 					</td>					
 					<td>
-						<h6 style="color: blue;">
+						
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-						</h6>
+						
 					</td>
 					<td>
-						<h6>
+						
 							<p:inputText size="20"
-								value="#{centralContractBackingBean.getStatusDescById(centralContractBackingBean.managedBean.circularVer.status.statusId)}"
 								disabled="true" />
-						</h6>
+						
 					</td>
 				</tr>
 			</table>	    	

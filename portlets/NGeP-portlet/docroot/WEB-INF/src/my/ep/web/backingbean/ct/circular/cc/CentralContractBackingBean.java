@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
@@ -214,7 +217,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		SelectItem[] items = new SelectItem[3];
 		items[0] = new SelectItem(null, "- Select One -");
 		int i = 1;
-		for(SelectItem item : getDropdownCodeValues(ParameterTypeConst.LOCATION_LEVEL)) {
+		 for(SelectItem item : getDropdownCodeValues(ParameterTypeConst.LOCATION_LEVEL)) {
 			if(item.getValue()==null) {
 				continue;
 			}
@@ -1093,5 +1096,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			remarks.add(0, remark);
 		}
 	}
+	
+	public String convertTime(Date time){ 
+        String str ="";
+    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+        if(time == null)
+        	return str;
+        return format.format(time); 
+    } 
+
 	
 }

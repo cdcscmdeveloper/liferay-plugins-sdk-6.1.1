@@ -887,6 +887,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			suspBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -913,6 +914,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			amendBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			if(amendBB.getManagedBean().getContractVer().getCtAmendment() ==null) {
 				amendBB.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 			} else {

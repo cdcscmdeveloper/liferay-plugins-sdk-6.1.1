@@ -26,47 +26,54 @@
 	    			</td>
 	    		</tr>
 	  </table>
-	  <table style="width: 99%; margin-left: 25px;">
+	  <table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
 				<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Doc Type" />
-						</h6>
+						
+							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+						
 					</td>
 					<td>
-						<h6>
-							<p:inputText size="25"
-								value="Agreement Creation (AC)"
-								disabled="true" />
-						</h6>
+						
+							<p:inputText size="20" disabled="true"
+								value="#{agreementBackingBean.managedBean.ctContract.loaNo}"  />
+						
 					</td>		
 					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Contract No" />
-						</h6>
+					
+							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+					
 					</td>
 					<td>
-						<h6>
+						
+							<p:inputText size="20" disabled="true"
+								value="#{agreementBackingBean.managedBean.ctContract.contractNo}" />
+					
+					</td>
+					<td>
+		
+							<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+					
+					</td>
+					<td>
+						
+							<p:inputText size="30" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>
+						
+					</td>					
+					<td>
+						
+							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+						
+					</td>
+					<td>
+						
 							<p:inputText size="20"
-								value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
+								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.contractVer.status.statusId)}"
 								disabled="true" />
-						</h6>
-					</td>
-								
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="Status" />
-						</h6>
-					</td>
-					<td>
-						<h6>
-							<p:inputText size="20"
-								value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentContractVer.status.statusId)}"
-								disabled="true" />
-						</h6>
+						
 					</td>
 				</tr>
-			</table>	  
+			</table>	    			
 	</p:panel>
 	<p:tabView id="agreementTab" orientation="left">
 	    <p:tab id="agDetail" title="Create Agreement" >
@@ -86,5 +93,4 @@
         </p:tab> 
 	</p:tabView>
 </ui:define>
-   
 </ui:composition>

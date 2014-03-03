@@ -25,41 +25,51 @@
 	    			</td>
 	    		</tr>
 	    	</table>
-			<table style="width: 99%; margin-left: 25px;">
+			<table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-						</h6>
-					</td>
-					<td>
-						<h6>
-							<p:inputText size="20" disabled="true"
-								value="#{contractDetailsBackingBean.managedBean.contractVer.docNo}" />
-						</h6>
-					</td>
-					<td>
-						<h6 style="color: blue;">
+				<td>
+						
 							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-						</h6>
+						
 					</td>
 					<td>
-						<h6>
+						
 							<p:inputText size="20" disabled="true"
-								value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}"  />
-						</h6>
+								value="#{contractDetailsBackingBean.managedBean.ctContract.loaNo}"  />
+						
+					</td>		
+					<td>
+					
+							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+					
+					</td>
+					<td>
+						
+							<p:inputText size="20" disabled="true"
+								value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
+					
+					</td>
+					<td>
+		
+							<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+					
+					</td>
+					<td>
+						
+							<p:inputText size="30" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>
+						
 					</td>					
 					<td>
-						<h6 style="color: blue;">
+						
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-						</h6>
+						
 					</td>
 					<td>
-						<h6>
+						
 							<p:inputText size="20"
 								value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}"
 								disabled="true" />
-						</h6>
+						
 					</td>
 				</tr>
 			</table>	    			
