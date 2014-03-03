@@ -4618,7 +4618,7 @@ table.rptTbl {
 	width:25%
 }
 
-.float-left label {
+.float-left > tbody > tr > td > label {
 	float: left;
 }
 
