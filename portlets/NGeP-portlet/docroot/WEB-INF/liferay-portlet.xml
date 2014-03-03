@@ -401,12 +401,21 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>scSpecification</portlet-name>
+		<portlet-name>scSpecification BusinessOwner</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>specification-portlet</css-class-wrapper>
+		<css-class-wrapper>specificationBussinessOwner-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>scSpecification Committee</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>specificationCommittee-portlet</css-class-wrapper>
 	</portlet>
 
 	<portlet>

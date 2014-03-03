@@ -60,7 +60,8 @@
 			<portlet id="scSupplierReview" />
 			<portlet id="scQuotationTender" />
 			<portlet id="scCommittee" />
-			<portlet id="scSpecification" />
+			<portlet id="scSpecification BusinessOwner" />
+			<portlet id="scSpecification Committee" />
 			<portlet id="scNoticeBoard" />
 			<portlet id="scProposal" />
 			<portlet id="scLoiLoa" />

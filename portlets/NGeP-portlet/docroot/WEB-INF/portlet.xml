@@ -1543,8 +1543,8 @@
 
 
 	<portlet>
-		<portlet-name>scSpecification</portlet-name>
-		<display-name>Specification</display-name>
+		<portlet-name>scSpecification BusinessOwner</portlet-name>
+		<display-name>Specification BusinessOwner</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1556,8 +1556,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Specification</title>
-			<short-title>Specification</short-title>
+			<title>Specification BusinessOwner</title>
+			<short-title>Specification BusinessOwner</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
@@ -1574,6 +1574,41 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	
+	<portlet>
+		<portlet-name>scSpecification Committee</portlet-name>
+		<display-name>Specification Committee</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/specification/specificationCommitteeView.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Specification Committee</title>
+			<short-title>Specification Committee</short-title>
+
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	
 
 	<portlet>
 		<portlet-name>scTemplateMaint</portlet-name>
