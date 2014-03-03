@@ -18,14 +18,14 @@
 	    
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">	    	        
 		        <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.orgtype']}"></h:outputLabel>
-		          <p:selectOneMenu style="width:178px">  
+		          <p:selectOneMenu style="width:178px;margin-bottom:5px;">  
             		<f:selectItem itemLabel="Select One" itemValue="null" />  
             		<f:selectItem itemLabel="Kumpulan PTJ" itemValue="1" /> 
             		<f:selectItem itemLabel="Kumpulan .." itemValue="2" />  
                   </p:selectOneMenu>
 
 		   		<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}"></h:outputLabel>
-		           <p:selectOneMenu style="width:178px">  
+		           <p:selectOneMenu style="width:178px;margin-bottom:5px;">  
             		<f:selectItem itemLabel="Select One" itemValue="null" />  
             		<f:selectItem itemLabel="Mr" itemValue="1" /> 
             		<f:selectItem itemLabel="Mrs" itemValue="2" />  
@@ -35,7 +35,7 @@
 			    <p:inputText size="50" />                                 
                    
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" />
-		           <p:selectOneMenu style="width:178px">  
+		           <p:selectOneMenu style="width:178px;margin-bottom:5px;">  
             		<f:selectItem itemLabel="Passport No" itemValue="null" />  
             		<f:selectItem itemLabel="IC No" itemValue="1" /> 
             		<f:selectItem itemLabel="License No" itemValue="2" />  
@@ -48,7 +48,7 @@
          
 		 <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20" >                          	                   
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" />
-		           <p:selectOneMenu style="width:178px">  
+		           <p:selectOneMenu style="width:178px;margin-bottom:5px;">  
             		<f:selectItem itemLabel="Malaysian" itemValue="null" />  
             		<f:selectItem itemLabel="Singaporean" itemValue="1" /> 
             		<f:selectItem itemLabel="Vietnamese" itemValue="2" />  
@@ -67,10 +67,10 @@
 			    <p:inputText size="30" /> 			    
 			    
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
-				<p:selectOneMenu size="178px"
-					value="#{userProfilesBackingBean.managedBean.selectedCountry}">
-					<f:selectItems
-						value="#{userProfilesBackingBean.managedBean.countryName}"></f:selectItems>
+				<p:selectOneMenu size="178px">
+            		<f:selectItem itemLabel="Select One" itemValue="null" />  
+            		<f:selectItem itemLabel="Kuala Lumpur" itemValue="1" /> 
+            		<f:selectItem itemLabel="Selangor" itemValue="2" />  
 				</p:selectOneMenu>
                    
                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.offaddress']}" /> 
