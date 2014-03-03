@@ -222,7 +222,7 @@ public class LocationSingleton {
 		return rootLocationTree;
 	}
 	/**
-	 * this method build the try for the whole country 
+	 * this method build the tree for the whole country 
 	 * @param countryId country id of the tree
 	 * @param locationLevel min level of the tree
 	 * @param listStates	list selected states of the tree
@@ -259,6 +259,9 @@ public class LocationSingleton {
 		// build tree
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 		for (PmState state : allStates) {
+			if(DIVISION_LEVEL.equalsIgnoreCase(locationLevel) && !isDivisionState(state)){
+				continue;
+			}
 			LocationDTO stateLocation = new LocationDTO(state);
 			TreeNode stateNode = new DefaultTreeNode(stateLocation, rootLocationTree);
 			// build state tree
@@ -521,6 +524,12 @@ public class LocationSingleton {
 
 	private Boolean isDivisionDistrict(PmDistrict district) {
 		if (district.getPmDivision() != null) {
+			return true;
+		}
+		return false;
+	}
+	private	Boolean	isDivisionState(PmState state){
+		if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 			return true;
 		}
 		return false;
