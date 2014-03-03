@@ -67,8 +67,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	private List<PmUserGroup> usersGroup;
 	
-	private String selectedCountry;
-
 	private List<SelectItem> countryName;
 	
 	// PM datatable array list
@@ -229,13 +227,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.pmCountry = pmCountry;
 	}
 	
-	public String getSelectedCountry() {
-		return selectedCountry;
-	}
-
-	public void setSelectedCountry(String selectedCountry) {
-		this.selectedCountry = selectedCountry;
-	}
 
 	public List<SelectItem> getCountryName() {
 		return countryName;

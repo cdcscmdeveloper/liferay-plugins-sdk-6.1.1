@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+
 /**
  * @author DK
  * 
@@ -222,7 +223,6 @@ public class UserprofilesBackingBean extends
     public void handleFileUpload(FileUploadEvent event) {  
         FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
-    }  	
+    } 	
 	
-
 }
