@@ -19,47 +19,28 @@
 
 
 			<ac:paginator for="zStanPriceTableId"></ac:paginator>
+
+			
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.state.name']}
+					Zone Name
 				</f:facet>
-				<p:selectOneMenu style="width: 128px;"
-					value="#{standard.pmState.stateId}">
+				<p:selectOneMenu style="width: 128px;" rendered="#{standard.showFlag}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
-						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
-					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrieveStandardDistrict(rowIndex)}"
-						update=":form:pricingTabID:subPricingTabId:zStanPriceTableId:zStandardDistrictDDId" />
+					<f:selectItem itemLabel="Zone A" itemValue="" />
+					<f:selectItem itemLabel="Zone B" itemValue="" />
+					
 				</p:selectOneMenu>
 
 			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district.name']}
-				</f:facet>
-				<p:selectOneMenu id="zStandardDistrictDDId" style="width: 128px;"
-					value="#{standard.pmDistrict.districtId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{standard.pmDistricts}" var="district"
-						itemLabel="#{district.districtName}"
-						itemValue="#{district.districtId}"></f:selectItems>
-
-				</p:selectOneMenu>
-
-			</p:column>
-
-
-
 
 
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{standard.price}" size="10"></h:inputText>
+				<h:inputText value="#{standard.price}" size="10"
+					rendered="#{standard.showFlag}"></h:inputText>
 			</p:column>
 
 
@@ -68,6 +49,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{standard.startDate}" showOn="button" size="10"
+					rendered="#{standard.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -76,24 +58,36 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{standard.endDate}" showOn="button" size="10"
+					rendered="#{standard.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 
-			<p:column>
+			<p:column width="5%">
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Clone"
-					action="#{catalogueBackingBean.duplicateZonalStandardPrice(rowIndex)}"
-					update=":form:pricingTabID:subPricingTabId:zStanPriceTableId">
-					<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
-				</p:commandLink>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
-					update=":form:pricingTabID:subPricingTabId:zStanPriceTableId">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+
+				<table>
+					<tr>
+						<td><p:commandLink style="margin-left: 10px;" title="Clone"
+								rendered="#{standard.showFlag}"
+								action="#{catalogueBackingBean.duplicateZonalStandardPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
+								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
+						<td style="float: right;"><p:commandLink
+								style="margin-left: 10px;" title="Delete"
+								action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
+
+
+
+
 
 			</p:column>
 

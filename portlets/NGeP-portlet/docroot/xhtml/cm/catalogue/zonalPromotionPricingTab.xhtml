@@ -20,39 +20,16 @@
 
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.state.name']}
+					Zone Name
 				</f:facet>
-				<p:selectOneMenu style="width: 128px;"
-					value="#{zPromotion.pmState.stateId}">
+				<p:selectOneMenu style="width: 128px;" rendered="#{standard.showFlag}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
-						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
-					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrievePromotionDistrict(rowIndex)}"
-						update=":form:pricingTabID:subPricingTabId:cmZonalPromotionPricingsId:zonalDistrictDDId" />
+					<f:selectItem itemLabel="Zone A" itemValue="" />
+					<f:selectItem itemLabel="Zone B" itemValue="" />
+					
 				</p:selectOneMenu>
 
 			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district.name']}
-				</f:facet>
-				<p:selectOneMenu id="zonalDistrictDDId" style="width: 128px;"
-					value="#{zPromotion.pmDistrict.districtId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{zPromotion.pmDistricts}" var="district"
-						itemLabel="#{district.districtName}"
-						itemValue="#{district.districtId}"></f:selectItems>
-
-				</p:selectOneMenu>
-
-			</p:column>
-
-
-
-
 
 			<p:column>
 				<f:facet name="header">
@@ -84,7 +61,7 @@
 				</f:facet>
 				<p:commandLink style="margin-left: 10px;" title="Delete"
 					action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
-					update=":form:pricingTabID:subPricingTabId:cmZonalPromotionPricingsId">
+					update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
 					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 

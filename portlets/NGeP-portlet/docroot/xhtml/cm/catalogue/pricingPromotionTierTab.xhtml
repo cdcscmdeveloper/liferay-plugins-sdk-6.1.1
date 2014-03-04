@@ -58,7 +58,7 @@
 				</f:facet>
 				<p:commandLink style="margin-left: 10px;" title="Delete"
 					action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
-					update=":form:pricingTabID:subPricingTabId:pricingPromotionTierID">
+					update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
 					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 
@@ -71,7 +71,7 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
 				action="#{catalogueBackingBean.addNewPromotionTierPricing()}"
-				update="pricePromotionTierPageID" process="@this"></p:commandButton>
+				update="pricePromotionTierPageID" process="@this :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"></p:commandButton>
 		</div>
 
 	</p:outputPanel>

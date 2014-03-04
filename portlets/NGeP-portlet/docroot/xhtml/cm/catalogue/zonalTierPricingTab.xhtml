@@ -18,39 +18,21 @@
 
 
 			<ac:paginator for="cmZonalTierPricingsId"></ac:paginator>
+
+
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.state.name']}
+					Zone Name
 				</f:facet>
 				<p:selectOneMenu style="width: 128px;"
-					value="#{tier.pmState.stateId}">
+					rendered="#{standard.showFlag}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
-						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
-					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrieveTierDistrict(rowIndex)}"
-						update=":form:pricingTabID:subPricingTabId:cmZonalTierPricingsId:zonalTierDistrictDDId" />
-				</p:selectOneMenu>
-
-			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district.name']}
-				</f:facet>
-				<p:selectOneMenu id="zonalTierDistrictDDId" style="width: 128px;"
-					value="#{tier.pmDistrict.districtId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{tier.pmDistricts}" var="district"
-						itemLabel="#{district.districtName}"
-						itemValue="#{district.districtId}"></f:selectItems>
+					<f:selectItem itemLabel="Zone A" itemValue="" />
+					<f:selectItem itemLabel="Zone B" itemValue="" />
 
 				</p:selectOneMenu>
 
 			</p:column>
-
-
 
 
 
@@ -91,14 +73,14 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
-			
-				<p:column>
+
+			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
 				<p:commandLink style="margin-left: 10px;" title="Delete"
 					action="#{catalogueBackingBean.deleteZonalTierPrice(rowIndex)}"
-					update=":form:pricingTabID:subPricingTabId:cmZonalTierPricingsId">
+					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
 					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 
