@@ -9,9 +9,12 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
@@ -23,6 +26,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name="reviewCatBackingBean")
@@ -51,22 +55,38 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 	public String navigateToCatalogDet(){
 
 		System.out.println("************navigateToCatalogDet*************");
-		
-		
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
 
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		statusReqDTO.setDocType("CMR");
 		statusReqDTO.setModuleCode("CM");
-		statusReqDTO.setLanguageCode("en");
+		statusReqDTO.setLanguageCode(languageCode);
 
 		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
 
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 		bb.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
-		
+
+
+
+
+
 		bb.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSelectedReviewCat());
+
+		for(CmItemRejectReason remark: bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
+
+
+			userReqDTO.setUserId(remark.getChangedBy());
+			System.out.println("remark.getChangedBy()"+remark.getChangedBy());
+			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			System.out.println("userResDTO.getPmUser().getUserName():"+userResDTO.getPmUser().getUserName());
+			remark.setCreatedUser(userResDTO.getPmUser().getUserName());
+		}
 		bb.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
 		return "addCatalogItem";
 
@@ -81,10 +101,10 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("A");
-		
+
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
-		
-		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
+
+		/*for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
 			if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -116,8 +136,8 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 				promotion.setPmDistrict(null);
 			}
 		}
-		
-		
+*/
+
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
 		try {
@@ -126,7 +146,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "catalogueTaskList?faces-redirect=true";
 
 	}
@@ -140,11 +160,11 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
 		this.getManagedBean().setRejectReason(false);
-		
+
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 		System.out.println("bb.getManagedBean().getRejectReasonIds(): " + bb.getManagedBean().getRejectReasonIds());
-		
-		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
+
+		/*for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
 			if(promotion.getPmDistrict().getDistrictId() == null) {
@@ -175,57 +195,57 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			if(promotion.getPmDistrict().getDistrictId() == null) {
 				promotion.setPmDistrict(null);
 			}
-		}
-		
+		}*/
 
-		
-	
+
+
+
 		for(int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
 			Long id = Long.valueOf(String.valueOf(bb.getManagedBean().getRejectReasonIds().get(i)));
-			
-//			Long id = new Long(bb.getManagedBean().getRejectReasonIds().get(i));
+
+			//			Long id = new Long(bb.getManagedBean().getRejectReasonIds().get(i));
 			CmItemRejectReason reason = new CmItemRejectReason();
 			PmStatus reasonStatus = new PmStatus();
 			reasonStatus.setStatusId(id);
 			reasonStatus.setBrandNew(false);
-			
+
 			reason.setRemark(bb.getManagedBean().getRejectReason());
 			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
 			reason.setPmStatus(reasonStatus);
 			bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);			
 		}
-		
 
-		
+
+
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
 
 		if(bb.getManagedBean().getRejectReasonIds().isEmpty()){
-			
+
 			this.getManagedBean().setCatDetTabActiveIndex(2);
-			
+
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Item Reject Reason Required!", ""));
-			
+
 			return "addCatalogView";
 		}
-		
-		
+
+
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "catalogueTaskList?faces-redirect=true";
 
 	}
-	
-	
+
+
 	public String cancelToPendingApprovalItem(){
-		
-		
+
+
 		return "catalogueTaskList";
 	}
 
