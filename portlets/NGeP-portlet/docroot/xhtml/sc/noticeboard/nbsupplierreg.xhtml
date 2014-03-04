@@ -17,20 +17,15 @@
 					</p:column>
 				</p:row>
 			</p:panelGrid>
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
-			<p:tabView  orientation="left">
-
-		<p:tab title="South">
-		
-			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
+			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+			</c:if>
 			
-		</p:tab>
-		
-		<p:tab title="North">
-			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
-			
-		</p:tab>
-	</p:tabView>
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
+			<ui:include src="/xhtml/sc/noticeboard/nbsupplierregbyzone.xhtml"></ui:include>
+			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+			</c:if>
 		</p:panel>
 		</ui:define>
 		</ui:composition>

@@ -6,83 +6,176 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel>
-		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
+		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.sameBsv}">
+			<p:panel header="Briefing And Site Visit Details">
 
-			<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
-			<p:dataTable var="scqt" resizableColumns="true" rowIndexVar="index">
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<p:dataTable var="brfsitdtl"
+					value="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					selection="#{noticeBoardBackingBean.managedBean.selectedBriefingDtls}"
+					rowKey="#{brfsitdtl.qtBriefingId}">
 
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{brfsitdtl.briefingDate}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="52220" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:100px;">
-					<h:outputText value="test" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							actionListener="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+				</p:dataTable>
 
-				<p:column headerText="#{lbl['lbl.qt.nb.location']}"
-					style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
+			</p:panel>
+		</c:if>
+		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.sameBsv}">
 
-				<p:column headerText="Attendance" style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
+			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
 
-			</p:dataTable>
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<p:dataTable var="brfsitdtl"
+					value="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
+					rowKey="#{brfsitdtl.qtBriefingId}">
 
-		</p:panel>
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{brfsitdtl.briefingDate}" />
+					</p:column>
 
-		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
-			<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
-			<p:dataTable var="scqt" resizableColumns="true" rowIndexVar="index">
+					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							action="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()" update="@(.qtCount)">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+				</p:dataTable>
 
+			</p:panel>
 
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="52220" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:100px;">
-					<h:outputText value="test" />
-				</p:column>
+			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
 
-				<p:column headerText="#{lbl['lbl.qt.nb.location']}"
-					style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-				<p:column headerText="Attendance" style="width:120px;">
-					<h:outputText value="yes" />
-				</p:column>
-			</p:dataTable>
+				<p:dataTable var="sitevisitDtls"
+					value="#{noticeBoardBackingBean.managedBean.siteVisitDtls}"
+					selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
+					rowKey="#{sitevisitDtls.qtBriefingId}">
 
-		</p:panel>
+					<p:column selectionMode="multiple" style="width:2%" />
 
-		<p:panel header="Supplier Registration">
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{sitevisitDtls.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{sitevisitDtls.briefingDate}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							action="#{noticeBoardBackingBean.showLocationDtls(sitevisitDtls)}"
+							oncomplete="popupLoc.show()" update="@(.qtCount)">
+							<h:outputText value="#{sitevisitDtls.location}" />
+						</p:commandLink>
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputText value="#{sitevisitDtls.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
+						style="width:120px;">
+						<h:outputText value="#{sitevisitDtls.maxAttendance}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+		</c:if>
+
+		<p:panel header="#{lbl['lbl.qt.nb.supplierregistration']}">
 
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
 				width="100%" columnClasses="columnWidth20,columnWidth30">
-				<h:outputText value="MOF No"></h:outputText>
+				<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.mof.regno']}"/>
 				<p:inputText value="" readonly="true"></p:inputText>
-				<h:outputText value="Supplier Name"></h:outputText>
+				<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.supp.name']}"/>
 				<p:inputText value="" readonly="true"></p:inputText>
 			</h:panelGrid>
 
-			<p:commandButton value="Register" style="float:right;" />
+			<p:dataTable var="sitevisitDtls"
+				value="#{noticeBoardBackingBean.managedBean.siteVisitDtls}"
+				selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
+				rowKey="#{sitevisitDtls.qtBriefingId}" selectionMode="multiple">
 
+
+				<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<h:outputText value="" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+					<h:outputText value="" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.del.ord.contact.no']}">
+					<h:outputText value="" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.cm.email']}">
+					<h:outputText value="" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.toattened']}">
+				
+
+				</p:column>
+
+
+
+			</p:dataTable>
+			<p:commandButton value="#{lbl['lbl.qt.nb.register']}"
+				style="float:right;" />
+<br></br>
 		</p:panel>
 	</p:panel>
 </ui:composition>

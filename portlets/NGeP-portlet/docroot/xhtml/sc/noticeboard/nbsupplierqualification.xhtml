@@ -9,23 +9,27 @@
 	<p:panel header="Check Supplier Qualification">
 		<h:panelGrid columns="2">
 		<h:outputLabel value="MOF No"></h:outputLabel>
-		<p:inputText ></p:inputText>
-		
+		<ac:lov id="mofNumber" lovId="SM_MOFNO"
+						headerText="Mof Number"
+						saveObject="noticeBoardBackingBean.managedBean.smSupplier"					
+						value="#{noticeBoardBackingBean.managedBean.mofAccount.mofNo}"
+						>
+					</ac:lov> <ac:lovPopup />
 		</h:panelGrid>
 		<h:panelGrid columnClasses="2">
-		<p:commandButton value="Check" style="float:right;"
+		<p:commandButton value="Check" style="float:left;"
 			icon="ui-icon-search"
 			action="#{noticeBoardBackingBean.searchNoticeBoard}"
-			update="@(.test)">
+			update="supplierQulification">
 
 
 		</p:commandButton>
 		</h:panelGrid>
 	</p:panel>
 
-	<p:panel header="Qualification Status">
+	<p:panel  header="Qualification Status">
 
-		<p:dataTable 
+		<p:dataTable id="supplierQulification"
 				var="scqt" styleClass="test" rows="20">
 				
 			<p:column headerText="Criteria">
