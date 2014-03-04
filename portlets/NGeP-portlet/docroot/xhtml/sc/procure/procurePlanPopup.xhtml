@@ -6,84 +6,67 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="planInforDialog" widgetVar="procurePlanPopup"
+		styleClass="planDailog" modal="true" width="500" height="350" header="#{lbl['lbl.pp.updatenotificcationdays']}">
+
+		
+			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+				<p:outputLabel value="#{lbl['lbl.pp.plan.number']}" />
+				<p:inputText readonly="true"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.planNo}" />
+
+				<p:outputLabel value="#{lbl['lbl.pp.plan.description']}" />
+				<p:inputTextarea cols="20" rows="3"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.planDesc}"
+					readonly="true" style="margin-bottom:5px" />
+
+
+				<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
+
+				<p:inputText readonly="true"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.procurementModeParam.parameterCode}" />
+
+
+
+				<p:outputLabel value="#{lbl['lbl.so.planamount']}" />
+
+				<p:inputText readonly="true"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.actualAmt}" />
+
+				<p:outputLabel value="#{lbl['lbl.pp.status']}" />
+				<p:inputText readonly="true"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.pmStatus.pmStatusDescs.statusName}" />
+
+				<p:outputLabel value="#{lbl['lbl.qt.pp.purchasereqstdate']}" />
+
+				<p:inputText readonly="true"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+				</p:inputText>
+				<p:outputLabel value="Notification Date" />
+				<p:calendar id="notificationDaysSelection" showOn="button" maxdate="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}"
+					value="#{procurementPlanBackingBean.managedBean.notificationDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" style="margin-bottom:3px">
+					<p:ajax event="dateSelect" listener="#{procurementPlanBackingBean.handleDateSelect}" update="notificationDays" process="@this"/>  
+					</p:calendar>
+
+				<p:outputLabel value="#{lbl['lbl.qt.pp.notificationdays']}" />
+				<p:inputText id="notificationDays"
+					value="#{procurementPlanBackingBean.managedBean.currentPlan.notificationDays}" >
+					<p:ajax event="blur" update="notificationDaysSelection" listener="#{procurementPlanBackingBean.handleNotificationDate}"/> 
+					</p:inputText>
+				<div align="right">
+					<p:columnGroup>
+						<p:commandButton process="@this" value="Ok"
+							action="#{procurementPlanBackingBean.updatePlannedInfo}"
+							oncomplete="procurePlanPopup.hide();" partialSubmit="true"
+							icon="ui-icon-ok" update="dtPlanResult"/>
+						<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"
+							icon="ui-icon-close" />
+					</p:columnGroup>
+				</div>
+			</h:panelGrid>
 	
-	<p:dialog id="planInforDialog" widgetVar="procurePlanPopup" modal="true" width="750" height="400">
 		
-	<p:panel header="PLANNED INFO" toggleable="true" id="mainPanel">
-		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:100%">
-			<p:row>
-				<p:column><p:outputLabel value="Plan Number"/></p:column>
-				<p:column>
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.planNo}"/>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column><p:outputLabel value="VOT Type"/></p:column>
-				<p:column ><p:inputText  value="#{procurementListBackingBean.managedBean.currentPlan.planNo}" disabled="true" /></p:column>
-			</p:row>
-			<p:row>
-				<p:column><p:outputLabel value="Tot. Est. Amount (RM)"/></p:column>
-				<p:column >
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.estimatedAmt}"/>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column><p:outputLabel value="Product Family"/></p:column>
-				<p:column>
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.unspscCode}"/>
-				</p:column>
-				
-				<p:column>
-					<p:outputLabel value="Product Commodity"/>
-				</p:column>
-				<p:column>
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.actualEndDate}"/>
-				</p:column>
-			</p:row>
-			
-			<p:row>
-				<p:column><p:outputLabel value="Activity Start Date"/></p:column>
-				<p:column>
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.actualStartDate}"/>
-				</p:column>
-				<p:column>
-					<p:outputLabel value="Activity End Date"/>
-				</p:column>
-				<p:column>
-					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.actualEndDate}"/>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Plan Desc."/>
-				</p:column>
-			 <p:column colspan="3">
-					<p:inputTextarea style="width:90%;" readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.planDesc}" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Notification Date"/>
-				</p:column>
-				<p:column>
-					<p:inputText id="popupNotificationDate" value="#{procurementListBackingBean.managedBean.currentPlan.notificationDays}" />
-				</p:column>
-			</p:row>
-	   </p:panelGrid>
-		<p:spacer width="20px"/>
-		 <p:panelGrid style="width:100%;"
-			 styleClass="noBorders tr,noBorders td">
-			  <p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton process="@this, popupNotificationDate" value="Ok" action="#{procurementListBackingBean.updatePlannedInfo}"
-						oncomplete="procurePlanPopup.hide();" partialSubmit="true"  update="procurementPlanList"
-						icon="ui-icon-ok" />
-					<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()" icon="ui-icon-close" />
-				</p:column>
-			  </p:row>
-		 </p:panelGrid>
-		
-			
-    </p:panel>
 	</p:dialog>
 </ui:composition>

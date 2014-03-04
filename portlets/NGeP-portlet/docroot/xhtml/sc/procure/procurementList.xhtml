@@ -16,7 +16,7 @@
 		<p:dataTable lazy="false" dynamic="true" width="100%" cellpadding="1"
 			value="#{ssProcurementListBackingBean.managedBean.procurementPlanList}"
 			var="procurementObj" id="procureList">
-			<ac:paginator for="procureList"/>
+			
 			<p:column headerText="Planned No." style="width:15%">
 				<p:outputLabel value="#{procurementObj.planNo}"></p:outputLabel>
 			</p:column>
