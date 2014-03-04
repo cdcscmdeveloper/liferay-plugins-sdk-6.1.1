@@ -190,7 +190,7 @@
 	<property name="pk" value="categoryL3Id" />
 
 	<property name="daoClass" value="my.ep.persistence.dao.pm.common.categorycode.CategoryL3DAO" />
-	<!-- <property name="searchMethod" value="findColor" /> -->
+	 <property name="searchMethod" value="retrieveCategoryL3List" />  
 	<property name="columns">
 		<list>
 			<bean class="my.ep.web.bean.LovColumnBean">
@@ -204,6 +204,36 @@
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.sub.category.div" />
       			<!-- <property name="columnWidth" 	value="150" /> -->
+			</bean>
+			
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="pmCategoryL2.categoryL2Code" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.sub.category.code" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+      			<property name="viewable" 	value="false" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="pmCategoryL2.categoryName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.sub.category" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+      			<property name="viewable" 	value="false" />
+			</bean>
+			
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.main.category.code" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+      			<property name="viewable" 	value="false" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="pmCategoryL2.pmCategoryL1.categoryName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.main.category" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+      			<property name="viewable" 	value="false" />
 			</bean>
 		</list>
 	</property>
