@@ -26,49 +26,50 @@
 	    	</table>
 	    	<table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
-				<td>
-						
-							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-						
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+						</h6>
 					</td>
 					<td>
-						
+						<h6>
 							<p:inputText size="20" disabled="true" />
-						
-					</td>		
+						</h6>
+					</td>
+					<c:if test="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.updateNo != null)}">
 					<td>
-					
-							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-					
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
+						</h6>
 					</td>
 					<td>
-						
-							<p:inputText size="20" disabled="true"/>
-					
-					</td>
-					<td>
-		
-							<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-					
-					</td>
-					<td>
-						
-							<p:inputText size="30" disabled="true" />
-						
+						<h6>
+							<p:inputText size="20"	disabled="true" />
+						</h6>
 					</td>					
+					</c:if>
 					<td>
-						
-							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-						
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
+						</h6>
 					</td>
 					<td>
-						
-							<p:inputText size="20"
-								disabled="true" />
-						
+						<h6>
+							<p:inputText size="40" disabled="true" />
+						</h6>
+					</td>	
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20" disabled="true" />
+						</h6>
 					</td>
 				</tr>
-			</table>	    	
+			</table>	    
 		</p:panel>
 		<p:tabView id="tabview" orientation="left" >
 			<p:ajax event="tabChange" process="@form" update=":form:tabview:contractListPnl"/>
