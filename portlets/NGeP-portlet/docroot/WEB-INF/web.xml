@@ -16,8 +16,8 @@
   		/WEB-INF/config/faces-config/tpl/faces-config-tpl.xml,
   		/WEB-INF/config/faces-config/fl/faces-config-fl.xml,
   		/WEB-INF/config/faces-config/ct/faces-config-ct.xml,
-  		/WEB-INF/config/faces-config/ss/faces-config-ss.xml,
-  		/WEB-INF/config/faces-config/ss/dptable.xml,
+  		/WEB-INF/config/faces-config/sc/faces-config-sc.xml,
+  		/WEB-INF/config/faces-config/sc/dptable.xml,
   		/WEB-INF/config/faces-config/wp/faces-config-wp.xml
 		</param-value>
 	</context-param>
