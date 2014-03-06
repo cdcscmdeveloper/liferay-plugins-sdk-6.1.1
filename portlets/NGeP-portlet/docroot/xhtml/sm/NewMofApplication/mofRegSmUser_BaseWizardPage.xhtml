@@ -79,16 +79,16 @@
 								<c:choose>
 									<c:when
 										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
-										<li><h:outputText value="Facilities"
+										<li><h:outputText value="#{lbl['lbl.sm.factoryStepLbl']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-											<p:commandLink value="Facilities"
+											<p:commandLink value="#{lbl['lbl.sm.factoryStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 												action="#{backingBean.updateSmAppl}" update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
-										<li><h:outputText value="Equipment"
+										<li><h:outputText value="#{lbl['lbl.sm.equipmentStepLbl']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
-											<p:commandLink value="Equipment"
+											<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 												action="#{backingBean.updateSmAppl}" update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"

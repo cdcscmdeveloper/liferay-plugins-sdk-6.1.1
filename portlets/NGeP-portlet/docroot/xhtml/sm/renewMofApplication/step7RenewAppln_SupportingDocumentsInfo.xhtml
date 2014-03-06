@@ -17,6 +17,8 @@
 		</tr>
 	</table>
 	<p:outputPanel id="supDocPan">
+		<h:inputHidden
+			value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
 			<ui:include

@@ -39,30 +39,31 @@
 			<p:tab title="#{lbl['lbl.sm.bankStepLbl']}">
 				<ui:include src="step5UpdateMof_BankInfo.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.sm.supDocStepLbl']}"
-				rendered="#{backingBean.managedBean.supplierUser}">
-				<ui:include src="step6UpdateMof_SupportingDocumentsInfo.xhtml" />
-			</p:tab>
-			<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}"
-				rendered="#{backingBean.managedBean.poUser}">
-				<ui:include
-					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
-			</p:tab>
-			<p:tab title="#{lbl['lbl.sm.poDecisionLbl']}"
-				rendered="#{backingBean.managedBean.poUser}">
-				<ui:include
-					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
-			</p:tab>
-			<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}"
-				rendered="#{backingBean.managedBean.approverUser}">
-				<ui:include
-					src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
-			</p:tab>
-			<p:tab title="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-				rendered="#{backingBean.managedBean.approverUser}">
-				<ui:include
-					src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-			</p:tab>
+			<c:if test="#{backingBean.managedBean.supplierUser}">
+				<p:tab title="#{lbl['lbl.sm.supDocStepLbl']}">
+					<ui:include src="step6UpdateMof_SupportingDocumentsInfo.xhtml" />
+				</p:tab>
+			</c:if>
+			<c:if test="#{backingBean.managedBean.poUser}">
+				<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}">
+					<ui:include
+						src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
+				</p:tab>
+				<p:tab title="#{lbl['lbl.sm.poDecisionLbl']}">
+					<ui:include
+						src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+				</p:tab>
+			</c:if>
+			<c:if test="#{backingBean.managedBean.approverUser}">
+				<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}">
+					<ui:include
+						src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+				</p:tab>
+				<p:tab title="#{lbl['lbl.sm.aprvrDecisionLbl']}">
+					<ui:include
+						src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+				</p:tab>
+			</c:if>
 		</p:tabView>
 	</ui:define>
 </ui:composition>

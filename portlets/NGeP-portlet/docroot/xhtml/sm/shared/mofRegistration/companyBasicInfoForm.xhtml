@@ -16,7 +16,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.basicVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -30,7 +30,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.basicVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -47,16 +47,17 @@
 			<table style="width: 100%">
 				<tr>
 
-					<td><p:outputLabel value="Company Name" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:inputText disabled="true" readonly="true"
 							value="#{backingBean.managedBean.smSupplier.smAppl.smCompanyBasic.companyName}"
 							size="35" /></td>
-					<td><p:outputLabel value="Application NO." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 					<td><p:inputText disabled="true" readonly="true"
 							value="#{backingBean.managedBean.smAppl.applNo}" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Registration Type" /></td>
+					<td><p:outputLabel
+							value="* #{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:inputText disabled="true" readonly="true"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							size="35" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
@@ -66,17 +67,18 @@
 						value="ROS - PERKONGSIAN"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 3}" /> -->
 					</td>
-					<td><p:outputLabel value="* ROC/ROB/ROS NO." /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.rocNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.regNo}"
 							disabled="true" readonly="true" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Tax Ref NO." /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.incomeTaxNo}"
 							disabled="true" readonly="true" size="35" /></td>
-					<td><p:outputLabel value="* Established Date" /></td>
+					<td><p:outputLabel
+							value="* #{lbl['lbl.sm.estdate']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
 							readonly="true" size="35">
@@ -96,14 +98,14 @@
 					<td><p:inputText size="35" colspan="3" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Country" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 							<!-- <f:selectItem itemLabel="Select " itemValue="" /> -->
 							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
-				</tr>				
+				</tr>
 				<tr>
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
@@ -137,18 +139,18 @@
 					<td><p:inputText size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
 					<td><p:inputText size="35" /></td>
 					<td><p:outputLabel value="Fax No." /></td>
 					<td><p:inputText size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Website" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.website']}" /></td>
 					<td colspan="3">http://<p:inputText size="30"
-							value="www.StarMarketing.com" /><!-- #{backingBean.managedBean.smSupplier.webSite} --></td>
+							value="www.StarMarketing.com" /> <!-- #{backingBean.managedBean.smSupplier.webSite} --></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Annual Revenue" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.annualRev']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItem itemLabel="Kuarang Daripada RM 100,000"
@@ -174,10 +176,10 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 					</tr>

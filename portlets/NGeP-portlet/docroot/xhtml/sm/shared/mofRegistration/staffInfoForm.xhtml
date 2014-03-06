@@ -17,7 +17,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.staffVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -32,7 +32,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.staffVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -48,23 +48,26 @@
 				<table style="width: 800px;">
 					<tr>
 						<td width="160px"><p:outputLabel
-								value="Total No. Of Staff : "
+								value="#{lbl['lbl.sm.staff.totalStaff']} "
 								rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
-								value="Total Professional Staff : "
+								value="#{lbl['lbl.sm.staff.profStaff']}"
 								rendered="#{staff.staffCategory eq 'P'}" /> <p:outputLabel
-								value="Total Semi Professional Staff : "
+								value="#{lbl['lbl.sm.staff.semiProfStaff']}"
 								rendered="#{staff.staffCategory eq 'S'}" /> <p:outputLabel
-								value="Total Clerical Staff : "
+								value="#{lbl['lbl.sm.staff.clericalStaff']}"
 								rendered="#{staff.staffCategory eq 'L'}" /></td>
-						<td width="50px"><p:outputLabel value="* Bumi" /></td>
+						<td width="50px"><p:outputLabel
+								value="* #{lbl['lbl.sm.staff.bumi']}" /></td>
 						<td width="60px"><p:inputText size="4"
 								value="#{staff.totalBumi}" maxlength="4"
 								style="min-width: 0px !important;" /></td>
-						<td width="80px"><p:outputLabel value="* Non-Bumi " /></td>
+						<td width="80px"><p:outputLabel
+								value="* #{lbl['lbl.sm.staff.nonBumi']}" /></td>
 						<td width="60px"><p:inputText size="4"
 								style="min-width: 0px !important;" value="#{staff.totalNonBumi}"
 								maxlength="4" /></td>
-						<td width="80px"><p:outputLabel value="* Foreigner " /></td>
+						<td width="80px"><p:outputLabel
+								value="* #{lbl['lbl.sm.staff.frgnr']}" /></td>
 						<td width="60px" style="padding-right: 20px;"><p:inputText
 								size="4" value="#{staff.totalForeigner}" maxlength="4"
 								style="min-width: 0px !important;" /></td>
@@ -86,11 +89,11 @@
 				<table style="width: 100%">
 					<tr>
 						<td style="padding-left: 38px;"><p:outputLabel
-								value="PO Remarks" /></td>
+								value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41" /></td>
 						<td style="padding-left: 22px;"><p:outputLabel
-								value="Approver Remarks" /></td>
+								value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 					</tr>

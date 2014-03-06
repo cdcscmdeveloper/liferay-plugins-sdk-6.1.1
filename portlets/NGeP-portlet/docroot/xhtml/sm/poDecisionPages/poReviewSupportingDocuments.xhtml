@@ -17,7 +17,8 @@
 			documents via post
 		</p>
 	</p:panel>
-
+	<h:inputHidden
+		value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 	<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
 		<ui:include
 			src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />

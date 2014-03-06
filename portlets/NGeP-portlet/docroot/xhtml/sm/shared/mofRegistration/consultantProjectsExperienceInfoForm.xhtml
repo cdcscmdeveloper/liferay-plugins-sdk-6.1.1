@@ -111,9 +111,9 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:panel header="Project Details - For Consultant"
-		widgetVar="consDialog" id="consDialog" visible="false"
-		style="border:1px solid">
+	<p:dialog header="Project Details - For Consultant"
+		widgetVar="consDialog" id="consDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true" width="500px">
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -239,5 +239,5 @@
 			<p:commandButton value="Cancel" onclick="consDialog.hide();" />
 		</div>
 
-	</p:panel>
+	</p:dialog>
 </ui:composition>

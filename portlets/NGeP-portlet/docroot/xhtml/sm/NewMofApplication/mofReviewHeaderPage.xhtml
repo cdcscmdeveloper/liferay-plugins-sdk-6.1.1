@@ -5,72 +5,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 99%; margin-left: 25px;">
+	<table style="width: 99%;" class="header-info">
 		<tr>
-			<td><h6 style="color: blue;">
-					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
-				</h6></td>
-			<td>
-				<h6>
-					<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
-
-				</h6>
-			</td>
-			<td>
-				<h6 style="color: blue;">
-					<h:outputText value="Application NO." />
-				</h6>
-			</td>
-			<td>
-				<h6>
-					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
-				</h6>
-
-			</td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+			<td><p:inputText readonly="true"
+					value="#{lbl['lbl.sm.newMofAppln']}" /></td>
+			<td><p:outputLabel value="Application NO." /></td>
+			<td><p:inputText readonly="true"
+					value=" - #{backingBean.managedBean.smAppl.applNo}" /></td>
+			<td><p:outputLabel value="Current Status" /></td>
+			<td><p:inputText readonly="true" value="-- Status Value --" /></td>
 		</tr>
 		<tr>
-
-			<td>
-				<h6 style="color: blue;">
-					<h:outputText value="Current Status" />
-				</h6>
-			</td>
-			<td>
-				<h6>
-					<h:outputText value="-- Status Value --" />
-				</h6>
-
-			</td>
-			<td>
-				<h6 style="color: blue;">
-					<h:outputText value="Date Submitted" />
-				</h6>
-			</td>
-			<td>
-				<h6>
-					<h:outputText value="-- Date Value -- " />
-				</h6>
-
-			</td>
+			<td><p:outputLabel value="Date Submitted" /></td>
+			<td><p:inputText readonly="true" value="-- Date Value -- " /></td>
+			<c:if test="#{backingBean.managedBean.approverUser}">
+				<td><p:outputLabel value="PO Recommendation" /></td>
+				<td><p:inputText readonly="true"
+						value="#{backingBean.managedBean.poSecReview.recommendation}" />
+				</td>
+			</c:if>
 		</tr>
-		<c:if test="#{backingBean.managedBean.approverUser}">
-			<tr>
-
-				<td>
-					<h6 style="color: blue;">
-						<h:outputText value="PO Recommendation" />
-					</h6>
-				</td>
-				<td>
-					<h6>
-						<h:outputText
-							value="#{backingBean.managedBean.poSecReview.recommendation}" />
-					</h6>
-
-				</td>
-
-			</tr>
-		</c:if>
 	</table>
 	<br />
 	<table style="width: 250px;">

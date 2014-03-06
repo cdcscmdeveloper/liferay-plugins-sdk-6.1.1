@@ -19,7 +19,8 @@
 	</p:panel>
 
 
-
+	<h:inputHidden
+		value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 
 	<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
 		<ui:include
