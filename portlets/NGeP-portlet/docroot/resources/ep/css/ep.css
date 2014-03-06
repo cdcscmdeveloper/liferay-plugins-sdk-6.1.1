@@ -4318,6 +4318,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .tablePanel > tbody > tr {
 	border: none;
+	border-bottom: 1px solid #CCCCCC;
 }
 
 .tablePanel > tbody > tr > td {
