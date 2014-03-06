@@ -161,14 +161,15 @@ public class SmApplicationBackingBean extends
 			if (applicationType.equalsIgnoreCase("N")) {
 				getManagedBean().getSmAppl().getSmSupplier()
 						.setBusinessType("1");
-			}
-			if (applicationType.equalsIgnoreCase("A")) {
+			} else if (applicationType.equalsIgnoreCase("A")) {
 				getManagedBean().getSmAppl().getSmSupplier()
 						.setBusinessType("2");
-			}
-			if (applicationType.equalsIgnoreCase("R")) {
+			} else if (applicationType.equalsIgnoreCase("R")) {
 				getManagedBean().getSmAppl().getSmSupplier()
 						.setBusinessType("3");
+			} else {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("1");
 			}
 			System.out.println(" ---- Business  Type After hard code ----"
 					+ getManagedBean().getSmAppl().getSmSupplier()
@@ -344,6 +345,8 @@ public class SmApplicationBackingBean extends
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
+			System.out.println("**** Before Value ****"
+					+ getManagedBean().getSmAppl().getApplCategoryType());
 			// TODO Un comment during iteration2
 			// boolean isNewAppln = true;
 			// for (int i = 0; i < getManagedBean().getSmSupplier().getSmAppls()
@@ -371,6 +374,8 @@ public class SmApplicationBackingBean extends
 			} else {
 				System.out.println(" ****** REMAIN PREV VALUE ********");
 			}
+			System.out.println("*** After Value ****"
+					+ getManagedBean().getSmAppl().getApplCategoryType());
 			getManagedBean().setTabActiveIndex(outputTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
@@ -436,6 +441,7 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
+
 		// getManagedBean().setTabActiveIndex(outputTab);
 	}
 
