@@ -6,12 +6,56 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Request Details" toggleable="true">
-		<p:dataTable>
-			<p:column headerText="Type of Approval Request">
-			</p:column>
+		<p:dataTable style="width:50%">
+			<p:column headerText="Type of Approval Request" />
 		</p:dataTable>
 	</p:panel>
-	<ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
+
+	<p:panel header="Approval Details Section" toggleable="true">
+		<p:spacer height="3" />
+		<div style="width: 100%">
+			<p:pickList id="committeeapproverid"
+				value="#{approvalBackingBean.managedBean.committeeApprovalUsers}"
+				var="approverUser" showTargetControls="true"
+				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
+				converter="approverConverter">
+				<f:facet name="sourceCaption">Available </f:facet>
+				<f:facet name="targetCaption">Selected</f:facet>
+			</p:pickList>
+		</div>
+	</p:panel>
+
+	<p:panel header="Remark" toggleable="true">
+		<table style="width: 100%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+						value="Remark" /></td>
+				<td class="TableFieldRight"><p:dataGrid
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUsername}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea cols="40"
+										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<!-- <ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" /> -->
 	<p:panel header="History" toggleable="true">
 		<p:dataTable>
 			<p:column headerText="Type of Approval Request">

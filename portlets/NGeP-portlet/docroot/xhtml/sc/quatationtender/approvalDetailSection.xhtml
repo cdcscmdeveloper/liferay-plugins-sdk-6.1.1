@@ -5,45 +5,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Details Section" toggleable="true">
-		<table>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.appname']}" /></td>
-				<td><p:selectOneMenu
-						value="#{approvalCategory.scQtApproval.approverId}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItem itemLabel="ROSLAN" itemValue="1" />
-						<f:selectItem itemLabel="KHAIR" itemValue="2" />
-					</p:selectOneMenu></td>
-				<td style="width: 206px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.appdate']}" /></td>
-				<td><p:calendar
-						value="#{approvalCategory.scQtApproval.approverActionDate}"
-						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Status" /></td>
-				<td colspan="3"><p:selectOneMenu
-						value="#{approvalCategory.scQtApproval.approverAction}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItem itemLabel="Approve" itemValue="a" />
-						<f:selectItem itemLabel="Reject" itemValue="r" />
-						<f:selectItem itemLabel="Revice" itemValue="re" />
-					</p:selectOneMenu></td>
-			</tr>
-		</table>
+	<p:panel header="  Budget Approver Setting" toggleable="true">
+		<p:spacer height="3" />
+		<div style="width: 100%">
+			<p:pickList id="budgetapprover"
+				value="#{approvalBackingBean.managedBean.budgetApprovalUsers}"
+				var="approverUser" showTargetControls="true"
+				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
+				converter="approverConverter">
+				<f:facet name="sourceCaption">Available </f:facet>
+				<f:facet name="targetCaption">Selected</f:facet>
+			</p:pickList>
+		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true">
-		<table style="width: 50%" id="remarkslist">
+	<p:panel header="Remark" toggleable="true" id="uploadids">
+		<table style="width: 100%" id="remarkslist">
 			<tr>
-				<td class="TableFieldLeft" width="24%"><p:outputLabel
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="Remark" /></td>
 				<td class="TableFieldRight"><p:dataGrid
-						value="#{approvalBackingBean.managedBean.scQtRemarks}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage
@@ -58,48 +41,80 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40"
-										value="#{approvalCategory.scQtApproval.approverRemark}" /></td>
+										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
 
-				<td class="TableFieldLeft" width="24%"><p:outputLabel
+				<td class="TableFieldLeft"><p:outputLabel
 						value="Supporting Document" /></td>
 
 				<td class="TableFieldRight">
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="approvalUpload.show();return false;"
-									icon="iconAttachment" value="Attach Files">
-									<f:setPropertyActionListener
-										value="#{approvalCategory.scQtApproval}"
-										target="#{approvalBackingBean.managedBean.scQtApproval}" />
+									oncomplete="attachDlg.show();return false;"
+									icon="iconAttachment" update="uploadids" value="Attach Files">
 								</p:commandButton></td>
 						</tr>
 						<tr>
-							<td rowspan="2" style="vertical-align: top;" align="left"><h:graphicImage
-									library="ep/images/design" height="30" width="30" /></td>
-							<td><h:outputText
-									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment.user.userName}" />,
-								<h:outputText
-									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment.changedDate}">
-									<f:convertDateTime
-										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-								</h:outputText></td>
+							<td />
+							<td><p:dataGrid id="attachId"
+									value="#{approvalBackingBean.managedBean.attachments}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText value="#{attachFile.user.userName}" />,
+												<h:outputText value="#{attachFile.changedDate}">
+													<f:convertDateTime
+														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" /> <p:commandLink
+													action="#{approvalBackingBean.deleteUploadFile}"
+													immediate="true" update="attachId">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
 						</tr>
 
-						<tr>
-							<td><h:outputText
-									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment.fileName}" />
-								<p:spacer width="1px" /> <p:commandButton process="@all"
-									icon="ui-icon-delete" /></td>
-						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
 	</p:panel>
 
+	<p:panel header="History" toggleable="true">
+		<p:dataTable id="historylistid">
+			<p:column headerText="Approved By" />
+			<p:column headerText="Status" />
+			<p:column headerText="Date" />
+		</p:dataTable>
+	</p:panel>
+
+	<p:dialog id="attachDlgid" widgetVar="attachDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			mode="advanced" id="uploadid"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="uploadids" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 
 </ui:composition>

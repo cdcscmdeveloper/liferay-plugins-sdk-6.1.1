@@ -7,80 +7,224 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="62%"
-			columns="2" columnClasses="columnWidth30,columnWidth70">
-
-			<h:outputLabel value="#{lbl['lbl.so.briefsitereq']}" />
-			<p:selectOneRadio
-				value="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired}"
-				disabled="#{!qTDetailBB.managedBean.editable}">
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-				<p:ajax update="bsvrequireid"
-					listener="#{qTSupplierQulCriteriaBackingBean.processChecked}" />
-			</p:selectOneRadio>
-
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.so.briefsitereq']}" /></td>
+				<td><p:selectOneRadio
+						value="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired}"
+						disabled="#{!qTDetailBB.managedBean.editable}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax update="bsvrequireid"
+							listener="#{qTSupplierQulCriteriaBackingBean.processChecked}" />
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
 	</p:panel>
+	<p:spacer height="5px" />
 
+	<h:panelGroup id="bsvrequireid">
+		<h:panelGroup
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true' and qTScheduleDetailBackingBean.managedBean.qtCriteria.multiLocality eq 'true'}">
 
+			<p:accordionPanel id="accordpnllist"
+				value="#{qTScheduleDetailBackingBean.managedBean.briefingZoneBean}"
+				var="zonePnlList">
+				<p:tab title="#{zonePnlList.zoneName}">
+					<p:panel header="Briefing Details" toggleable="true">
 
-	<h:panelGroup id="bsvrequireid"
-		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true' and qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality eq true}">
+						<p:spacer height="3px" />
 
-		<p:dataTable id="zoneLocationDataTables"
-			value="#{qTScheduleDetailBackingBean.managedBean.treeNodesList}"
-			var="zoneTree" style="width:65%">
-			<p:column headerText="Location">
-				<p:tree value="#{zoneTree}" var="location">
-					<p:treeNode>
-						<h:outputText value="#{location.locationName}" />
-					</p:treeNode>
-				</p:tree>
-			</p:column>
-		</p:dataTable>
+						<p:dataTable value="#{zonePnlList.briefingList}"
+							id="briefdetaillistid" var="briefdetails"
+							rowKey="#{briefdetails}" rowIndexVar="index" editable="true"
+							selection="#{qTScheduleDetailBackingBean.managedBean.selectedBriefingDetails}">
 
+							<p:column selectionMode="multiple" style="width:2%" />
 
-		<p:panel header="Briefing Details" toggleable="true">
-			<p:dataTable
-				value="#{qTScheduleDetailBackingBean.managedBean.briefings}"
-				scrollable="true" scrollWidth="796" id="briefdetaillistid"
-				var="briefdetails"
-				selection="#{qTScheduleDetailBackingBean.managedBean.selectedBriefingDetails}"
-				rowKey="#{briefdetails}" rowIndexVar="rowIndex" rows="10">
+							<ac:paginator for="briefdetaillistid" />
 
-				<p:column selectionMode="multiple" style="width:5%" />
+							<p:column headerText="#{lbl['lbl.so.desc']}">
+								<p:commandLink>
+									<h:outputText value="#{briefdetails.briefingDesc}" />
+								</p:commandLink>
+							</p:column>
 
-				<ac:paginator for="briefdetaillistid" />
+							<p:column headerText="#{lbl['lbl.so.date']}">
+								<h:outputText value="#{briefdetails.briefingDate}" />
+							</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.desc']}">
-					<p:commandLink>
-						<h:outputText value="#{briefdetails.briefingDesc}" />
-					</p:commandLink>
-				</p:column>
+							<p:column headerText="#{lbl['lbl.so.location']}">
+								<p:commandLink>
+									<h:outputText value="#{briefdetails.location}" />
+								</p:commandLink>
+							</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.date']}">
-					<h:outputText value="#{briefdetails.briefingDate}" />
-				</p:column>
+							<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
+								<h:outputText value="#{briefdetails.coordinatingOfficer}" />
+							</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.location']}">
-					<p:commandLink>
-						<h:outputText value="#{briefdetails.location}" />
-					</p:commandLink>
-				</p:column>
+							<p:column headerText="#{lbl['lbl.so.briefstatus']}">
+								<h:outputText
+									value="#{qTScheduleDetailBackingBean.getStatusDescById(briefdetails.pmStatus.statusId)}" />
+							</p:column>
+						</p:dataTable>
 
-				<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
-					<h:outputText value="#{briefdetails.coordinatingOfficer}" />
-				</p:column>
+						<p:panelGrid columns="2" style="width:100%;"
+							styleClass="noBorders tr,noBorders td">
+							<f:facet name="footer">
+								<div align="right">
+									<p:commandButton id="briefaddid"
+										value="#{lbl['lbl.so.addbtn']}" process="@this"
+										action="#{qTScheduleDetailBackingBean.addBriefingDetails}"
+										oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
+										rendered="#{qTDetailBB.managedBean.editable}"
+										icon="ui-icon-add" />
+									<p:commandButton value="#{lbl['lbl.so.delete']}"
+										icon="ui-icon-delete"
+										action="#{qTScheduleDetailBackingBean.deleteZoneBriefingDetails}"
+										update="briefdetaillistid" />
+								</div>
+							</f:facet>
+						</p:panelGrid>
 
-				<p:column headerText="#{lbl['lbl.so.briefstatus']}">
-					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getStatusDescById(briefdetails.pmStatus.statusId)}" />
-				</p:column>
-			</p:dataTable>
+					</p:panel>
 
-		</p:panel>
+				</p:tab>
+			</p:accordionPanel>
+		</h:panelGroup>
+
+		<h:panelGroup
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true' and qTScheduleDetailBackingBean.managedBean.qtCriteria.multiLocality eq 'false'}">
+			<p:panel header="Briefing Details" toggleable="true">
+				<p:dataTable id="briefingdtlid" var="briefingdtls"
+					value="#{qTScheduleDetailBackingBean.managedBean.briefings}"
+					rowKey="#{briefingdtls}" rowIndexVar="index" editable="true"
+					selection="#{qTScheduleDetailBackingBean.managedBean.selectedBriefingDetails}">
+
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<ac:paginator for="briefingdtlid" />
+
+					<p:column headerText="#{lbl['lbl.so.desc']}">
+						<p:commandLink>
+							<h:outputText value="#{briefingdtls.briefingDesc}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.date']}">
+						<h:outputText value="#{briefingdtls.briefingDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}">
+						<p:commandLink>
+							<h:outputText value="#{briefingdtls.location}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
+						<h:outputText value="#{briefingdtls.coordinatingOfficer}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.maxattendance']}">
+						<h:outputText value="#{briefingdtls.maxNoAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
+						<h:outputText
+							value="#{qTScheduleDetailBackingBean.getStatusDescById(briefingdtls.pmStatus.statusId)}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:panelGrid columns="2" style="width:100%;"
+					styleClass="noBorders tr,noBorders td">
+					<f:facet name="footer">
+						<div align="right">
+							<p:commandButton id="addtositevisitid" update="sitevisitdtlid"
+								value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
+								actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitDtl}" />
+
+							<p:commandButton id="briefingaddid"
+								value="#{lbl['lbl.so.addbtn']}" process="@this"
+								action="#{qTScheduleDetailBackingBean.addBriefingDetails}"
+								oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
+								rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-add" />
+
+							<p:commandButton value="#{lbl['lbl.so.delete']}"
+								icon="ui-icon-delete"
+								action="#{qTScheduleDetailBackingBean.deleteBriefingDetails}"
+								update="briefingdtlid" />
+						</div>
+					</f:facet>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel header="Site/Visit Details" toggleable="true">
+				<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
+					value="#{qTScheduleDetailBackingBean.managedBean.siteBriefings}"
+					selection="#{qTScheduleDetailBackingBean.managedBean.selectedSiteVisitDetails}"
+					rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
+
+					<ac:paginator for="sitevisitdtlid" />
+
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<p:column headerText="#{lbl['lbl.so.desc']}">
+						<p:commandLink>
+							<h:outputText value="#{sitevisitdtls.briefingDesc}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.date']}">
+						<h:outputText value="#{sitevisitdtls.briefingDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}">
+						<p:commandLink>
+							<h:outputText value="#{sitevisitdtls.location}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
+						<h:outputText value="#{sitevisitdtls.coordinatingOfficer}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.maxattendance']}">
+						<h:outputText value="#{sitevisitdtls.maxNoAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
+						<h:outputText
+							value="#{qTScheduleDetailBackingBean.getStatusDescById(sitevisitdtls.pmStatus.statusId)}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:panelGrid columns="2" style="width:100%;"
+					styleClass="noBorders tr,noBorders td">
+					<f:facet name="footer">
+						<div align="right">
+
+							<p:commandButton id="addsitevisitid"
+								value="#{lbl['lbl.so.addbtn']}" process="@this"
+								action="#{qTScheduleDetailBackingBean.addSiteDetails}"
+								rendered="#{qTDetailBB.managedBean.editable}"
+								oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"
+								icon="ui-icon-add" />
+							<p:commandButton value="#{lbl['lbl.so.delete']}"
+								rendered="#{qTDetailBB.managedBean.editable}"
+								icon="ui-icon-delete" />
+						</div>
+					</f:facet>
+				</p:panelGrid>
+			</p:panel>
+		</h:panelGroup>
 
 	</h:panelGroup>
-
 </ui:composition>

@@ -9,15 +9,8 @@
 		<div align="right">
 
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-					<p:commandButton action="#{qTDetailBB.clonePopupAction}"
-						value="Clone" oncomplete="clonedlg.show();" icon="ui-icon-clone" update="cloneQTPopup" />
-					<ui:include
-						src="/xhtml/sc/quatationtender/cloneqtntenderscreen.xhtml" />
-				</c:if>
-				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:button value="Cancel" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
-				</c:if>
+				
+				<p:button value="Cancel" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
 				<p:commandButton value="Submit" 
 					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" />
 				<p:commandButton value="Save" 

@@ -8,10 +8,15 @@
 	<p:panel header="Others Approval" toggleable="true">
 		<p:dataTable>
 			<p:column headerText="Approval Category">
+				<h:outputText value="MITI Approval" />
 			</p:column>
 			<p:column headerText="Status">
+				<h:outputText value="Reject" />
 			</p:column>
 			<p:column headerText="Document">
+			</p:column>
+			<p:column headerText="Remarks">
+				<h:inputTextarea />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -19,15 +24,15 @@
 	<p:panel header="Remark" toggleable="true">
 		<table style="width: 50%" id="remarkslist">
 			<tr>
-				<td class="TableFieldLeft" width="24%"><h:outputLabel
+				<td class="TableFieldLeft" style="width: 96px;"><h:outputLabel
 						value="Remark" /></td>
 				<td class="TableFieldRight"><p:dataGrid
-						value="#{qTDetailBB.managedBean.scQtRemarks}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{qTRemarksBB.userImagePath(remarkVar.createdUsername)}"
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
 										height="30" width="30" /></td>
 								<td width="5"></td>
 								<td><h:outputText value="#{remarkVar.createdUsername}" />,
@@ -37,7 +42,8 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}" />
+								<td><p:inputTextarea cols="40"
+										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" />
 								</td>
 							</tr>
 						</table>

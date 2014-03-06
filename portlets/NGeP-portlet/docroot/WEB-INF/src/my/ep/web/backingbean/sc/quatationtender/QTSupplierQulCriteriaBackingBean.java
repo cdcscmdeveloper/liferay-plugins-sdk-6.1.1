@@ -31,8 +31,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -99,7 +99,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	public void addNewCategoryAction() {
 		debugLogger("addNewCategoryAction");
 		
-		ScQt scQt = getManagedBean().getQt();
+		//ScQt scQt = getManagedBean().getQt();
 		List<ScQtCategory> qtCategoryList = this.getManagedBean().getQtCategoryList();
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<ScQtCategory>();
@@ -107,7 +107,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		} 
 		
 		ScQtCategory category = new ScQtCategory();
-		category.setScQt(scQt);
+		//category.setScQt(scQt);
 		category.setPmCategoryL1(new PmCategoryL1());
 		category.setPmCategoryL2(new PmCategoryL2());
 		category.setPmCategoryL3(new PmCategoryL3());
@@ -346,7 +346,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 					scQtZoneCriteria.setScQtLocCriterias(new ArrayList<ScQtLocCriteria>());
 					scQtZoneCriterias.add(scQtZoneCriteria);
 					
-					for (CtCircularZoneDtl state : zone.getCtCircularZoneDtl()) {
+					for (CtCircularZoneDtl state : zone.getCtCircularZoneDtls()) {
 						// create new location criteria.
 						scQtLocCriteria = new ScQtLocCriteria();
 						scQtLocCriteria.setScQtCriteria(scQtCriteria);
@@ -780,4 +780,20 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		System.out.println("Zone Tree : " + getManagedBean().getZoneTrees().size());
 		//System.out.println("Zone Name : " + getManagedBean().getZoneName());
 	}
+	
+	public void deleteRestrictedSupplierList() {
+		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
+		List<ScQtSupplier> selectedList = getManagedBean()
+				.getSelectedQtSupplierList();
+		if (list.size() == selectedList.size()) {
+			list.clear();
+			getManagedBean().setTotalSupplier(list.size());
+		} else {
+			for (ScQtSupplier scQtSupplier : selectedList) {
+				list.remove(scQtSupplier);
+				getManagedBean().setTotalSupplier(list.size());
+			}
+		}
+	}
+	
 }

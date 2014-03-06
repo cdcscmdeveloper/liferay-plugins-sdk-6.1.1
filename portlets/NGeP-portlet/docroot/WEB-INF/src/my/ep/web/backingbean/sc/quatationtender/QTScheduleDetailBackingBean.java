@@ -12,9 +12,11 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 
 import org.apache.log4j.Logger;
@@ -68,19 +70,39 @@ public class QTScheduleDetailBackingBean extends
 		siteBriefing.setScQtZoneCriteria(new ScQtZoneCriteria());
 		this.getManagedBean().setQtSiteBriefing(siteBriefing);
 
-		
 		List<TreeNode> list = getManagedBean().getZoneTrees();
 		for (TreeNode treeNode : list) {
 			System.out.println("Tree Node : " + treeNode.getData());
-			if(treeNode.getChildCount() != 0){
+			if (treeNode.getChildCount() != 0) {
 				treeNode.getChildren().clear();
 			}
 		}
 		this.getManagedBean().setTreeNodesList(list);
+
+		getManagedBean().getQtCriteria().setMultiLocality(false);
+
+		// Briefing Zone Bean
+		List<BriefingZoneBean> briefingZoneBeans = getManagedBean()
+				.getBriefingZoneBean();
+
+		if (null == briefingZoneBeans) {
+			briefingZoneBeans = new ArrayList<BriefingZoneBean>();
+		}
+
+		/*
+		 * List<ScQtBriefing> test1 = getManagedBean().getTest(); if(null ==
+		 * test1) { test1 = new ArrayList<ScQtBriefing>(); } test1.add(new
+		 * ScQtBriefing()); System.out.println("Size : " + test1.size());
+		 * getManagedBean().setTest(test1);
+		 */
+
+		if (this.getManagedBean().getQt() == null) {
+			this.getManagedBean().setQt(new ScQt());
+		}
 	}
 
 	public void addBriefingDetails() {
-		System.out.println("add brief");
+		debugLogger("addBriefingDetails");
 		List<ScQtBriefing> briefingdetails = this.getManagedBean()
 				.getBriefings();
 		if (briefingdetails == null) {
@@ -115,6 +137,11 @@ public class QTScheduleDetailBackingBean extends
 		if (null != selectedBrefing) {
 			brefings.add(selectedBrefing);
 		}
+
+		// this.getManagedBean().getBriefings().add(selectedBrefing);
+
+		this.getManagedBean().getBriefingZoneBean().get(0)
+				.setBriefingList(brefings);
 
 	}
 
@@ -155,6 +182,8 @@ public class QTScheduleDetailBackingBean extends
 		if (list == null) {
 			list = new ArrayList<ScQtBriefing>();
 		}
+		System.out.println("size : "
+				+ getManagedBean().getSelectedBriefingDetails());
 		for (ScQtBriefing scQtBriefing : getManagedBean()
 				.getSelectedBriefingDetails()) {
 			list.add(scQtBriefing);
@@ -177,5 +206,34 @@ public class QTScheduleDetailBackingBean extends
 			}
 		}
 	}
-	
+
+	public void deleteZoneBriefingDetails() {
+		debugLogger("deleteZoneBriefingDetails");
+		List<ScQtBriefing> beans = getManagedBean().getBriefingZoneBean()
+				.get(0).getBriefingList();
+		List<ScQtBriefing> selectList = getManagedBean()
+				.getSelectedBriefingDetails();
+		if (beans.size() == selectList.size()) {
+			beans.clear();
+		} else {
+			for (ScQtBriefing scQtBriefing : selectList) {
+				beans.remove(scQtBriefing);
+			}
+		}
+	}
+
+	public void deleteBriefingDetails() {
+		debugLogger("deleteBriefingDetails");
+		List<ScQtBriefing> beans = getManagedBean().getBriefings();
+		List<ScQtBriefing> selectList = getManagedBean()
+				.getSelectedBriefingDetails();
+		if (beans.size() == selectList.size()) {
+			beans.clear();
+		} else {
+			for (ScQtBriefing scQtBriefing : selectList) {
+				beans.remove(scQtBriefing);
+			}
+		}
+	}
+
 }

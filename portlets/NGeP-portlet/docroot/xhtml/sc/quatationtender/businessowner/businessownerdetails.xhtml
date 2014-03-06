@@ -15,45 +15,28 @@
 
 			<ac:paginator for="businessownerId" />
 
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column headerText="" />
+			<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column headerText="#{lbl['lbl.so.bo.name']}" />
-
-					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}" />
-
-					<p:column headerText="#{lbl['lbl.so.bo.designation']}" />
-
-					<p:column headerText="#{lbl['lbl.so.bo.grade']}" />
-
-					<p:column headerText="#{lbl['lbl.so.bo.pp']}" />
-
-					<p:column headerText="#{lbl['lbl.so.bo.consolidate']}" />
-
-					<p:column style="width:6%" headerText="Action" />
-				</p:row>
-			</p:columnGroup>
-
-			<p:column selectionMode="multiple" style="width:5%" />
-
-			<p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.name']}">
 				<h:outputText value="#{businessowner.memberName}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
 				<h:outputText value="#{businessowner.icPassport}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
 				<h:outputText value="#{businessowner.designation}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.grade']}">
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.pp']}">
 				<h:outputText value="#{businessowner.pnp}" />
 			</p:column>
-			<p:column selectionMode="single" />
-			<p:column />
+			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
+				<p:selectOneRadio value="#{businessowner.consolidateValue}">
+					<f:selectItem itemValue="t" itemLabel="" />
+				</p:selectOneRadio>
+			</p:column>
 
 		</p:dataTable>
 		<p:spacer height="5px" />
@@ -91,10 +74,16 @@
 			<h:outputLabel value="Secretary Name" />
 		</h:column> -->
 		<h:column>
-			<p:selectOneMenu id="app"
-				value="#{lOADetailBackingBean.managedBean.scQtSpec.approverAction}">
-				<f:selectItems value="#{qTBusinessOwnerBackingBean.ministrySpecificationSecretaryList}" />
+			<p:selectOneMenu
+				value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
+				style="width: 178px;margin-bottom: 5px;">
+				<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+				<f:selectItems
+					value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
+					var="appName" itemLabel="#{appName.userName}"
+					itemValue="#{appName.userId}" />
 			</p:selectOneMenu>
+
 		</h:column>
 	</p:panel>
 </ui:composition>

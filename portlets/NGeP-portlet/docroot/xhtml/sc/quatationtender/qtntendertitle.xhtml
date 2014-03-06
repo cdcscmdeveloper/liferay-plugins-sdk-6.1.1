@@ -68,23 +68,8 @@
 					disabled="true" readonly="true" />
 				<h:inputText value="MYR" disabled="true" size="1" />
 			</h:column>
-			<!-- <h:column>
-				<h:outputLabel value="* #{lbl['lbl.so.financialyr']}" />
-			</h:column>
-			<h:column>
-				<p:selectOneRadio id="optionradio"
-					value="#{qTDetailBB.managedBean.qt.financialYear}" disabled="#{!qTDetailBB.managedBean.editable}">
-					<f:selectItem itemLabel="Current Year" itemValue="1" />
-					<f:selectItem itemLabel="Next Year" itemValue="2" />
-				</p:selectOneRadio>
-			</h:column> -->
 		</h:panelGrid>
 	</p:panel>
-	<p:spacer height="5" />
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.so.checkbalbtn']}"
-			rendered="#{qTDetailBB.managedBean.editable}" />
-	</div>
 	<p:spacer height="5" />
 	<p:panel header="#{lbl['lbl.so.gosodo.list']}" toggleable="true"
 		rendered="#{!qTDetailBB.managedBean.qt.planned}">
@@ -164,8 +149,8 @@
 			</p:column>  -->
 		</p:dataTable>
 		<div align="left">
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-				columns="2" columnClasses="columnWidth20">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
+				columnClasses="columnWidth20">
 				<h:column>
 					<h:outputLabel value="Total Budget Request" />
 				</h:column>
@@ -183,7 +168,8 @@
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}" />
-
+			<p:commandButton value="#{lbl['lbl.so.checkbalbtn']}"
+				rendered="#{qTDetailBB.managedBean.editable}" />
 		</div>
 	</p:panel>
 </ui:composition>

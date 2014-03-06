@@ -17,5 +17,102 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
+
+	<p:panel header="Approval Details" toggleable="true">
+		<table>
+			<tr>
+				<td style="width: 140px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.appname']}" /></td>
+				<td><p:selectOneMenu
+						value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItem itemLabel="ROSLAN" itemValue="1" />
+						<f:selectItem itemLabel="KHAIR" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td style="width: 206px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.appdate']}" /></td>
+				<td><p:calendar
+						value="#{approvalBackingBean.managedBean.scQtApproval.approverActionDate}"
+						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Remark" toggleable="true" id="uploadids">
+		<table style="width: 100%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+						value="Remark" /></td>
+				<td class="TableFieldRight"><p:dataGrid
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUsername}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea cols="40"
+										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+
+				<td class="TableFieldLeft"><p:outputLabel
+						value="Supporting Document" /></td>
+
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									oncomplete="attachDlg.show();return false;"
+									icon="iconAttachment" update="uploadids" value="Attach Files">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="attachId"
+									value="#{approvalBackingBean.managedBean.attachments}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText value="#{attachFile.user.userName}" />,
+												<h:outputText value="#{attachFile.changedDate}">
+													<f:convertDateTime
+														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" /> <p:commandLink
+													action="#{approvalBackingBean.deleteUploadFile}"
+													immediate="true" update="attachId">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<!-- <ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" /> -->
 </ui:composition>

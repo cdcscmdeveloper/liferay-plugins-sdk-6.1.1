@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +10,8 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.common.report.IReportSectionSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.ReportSectionResDTO;
-import my.ep.dto.pm.common.report.ReportSectionReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.factory.EpLogger;
@@ -23,6 +21,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -72,46 +71,48 @@ public class QTDocumentsBackingBean extends
 		}
 	}
 
-	public void populatePreDefinedDetails() {
-		debugLogger("populatePreDefinedDetails");
-		IReportSectionSO reportSectionSO = null;
-		try {
-			reportSectionSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IReportSectionSO.class);
-
-			ReportSectionReqDTO reportSectionReqDTO = new ReportSectionReqDTO();
-			reportSectionReqDTO.setReportType(9);
-			ReportSectionResDTO resDto = reportSectionSO
-					.retrieveReportsByReportType(reportSectionReqDTO);
-			List<PmReportSection> sections = resDto
-					.getReportSectionResultBean().getResultList();
-			for (PmReportSection pmReportSection : sections) {
-				System.out.println(pmReportSection.getPmCheckList()
-						.getCheckListName()
-						+ "@@@@@@@@@"
-						+ pmReportSection.getPmCheckList().getChecklistType());
-			}
-			getManagedBean().setSelectedPmReportSectionList(
-					new ArrayList<PmReportSection>());
-			getManagedBean().setPmReportSectionList(sections);
-		} catch (Exception e) {
-
-		}
-	}
+	/*
+	 * public void populatePreDefinedDetails() {
+	 * debugLogger("populatePreDefinedDetails"); IReportSectionSO
+	 * reportSectionSO = null; try { reportSectionSO =
+	 * BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.PROFILE_MANAGEMENT, IReportSectionSO.class);
+	 * 
+	 * ReportSectionReqDTO reportSectionReqDTO = new ReportSectionReqDTO();
+	 * reportSectionReqDTO.setReportType(9); ReportSectionResDTO resDto =
+	 * reportSectionSO .retrieveReportsByReportType(reportSectionReqDTO);
+	 * List<PmReportSection> sections = resDto
+	 * .getReportSectionResultBean().getResultList(); for (PmReportSection
+	 * pmReportSection : sections) {
+	 * System.out.println(pmReportSection.getPmCheckList() .getCheckListName() +
+	 * "@@@@@@@@@" + pmReportSection.getPmCheckList().getChecklistType()); }
+	 * getManagedBean().setSelectedPmReportSectionList( new
+	 * ArrayList<PmReportSection>());
+	 * getManagedBean().setPmReportSectionList(sections); } catch (Exception e)
+	 * {
+	 * 
+	 * } }
+	 */
 
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
-		ScQtCheckList qtCheckList = this.getManagedBean().getQtCheckList();
-		ScQtCheckListAttachment attachment = qtCheckList
-				.getScQtCheckListAttachment();
-		if (null == attachment) {
-			attachment = new ScQtCheckListAttachment();
-			attachment.setScQtCheckList(qtCheckList);
+		FacesScopes facesScopes = new FacesScopes();
+		List<ScQtCheckListAttachment> attachments = new ArrayList<ScQtCheckListAttachment>();
+		if (event.getFile() != null) {
+			ScQtCheckList qtCheckList = this.getManagedBean().getQtCheckList();
+			ScQtCheckListAttachment attachment = getManagedBean().getQtCheckList().getScQtCheckListAttachment();
+			if (null == attachment) {
+				attachment = new ScQtCheckListAttachment();
+				attachment.setScQtCheckList(qtCheckList);
+			}
+			attachment.setUser(facesScopes.getUserSessionBean());
+			attachment
+					.setChangedDate(new Timestamp(System.currentTimeMillis()));
+			uploadAttachment(event.getFile(), attachment);
+			attachments.add(attachment);
+			getManagedBean().setChecklistAttachment(attachments);
 		}
-		uploadAttachment(event.getFile(), attachment);
-		qtCheckList.setScQtCheckListAttachment(attachment);
-		System.out.println("File Name : "
-				+ qtCheckList.getScQtCheckListAttachment().getFileName());
+		
 	}
 
 	public void cloneSearchCommitteAction() {
@@ -223,9 +224,7 @@ public class QTDocumentsBackingBean extends
 
 	public void deleteUploadFile() {
 		debugLogger("deleteUploadFile");
-		ScQtCheckList qtCheckList = this.getManagedBean().getQtCheckList();
-		qtCheckList.setScQtCheckListAttachment(null);
-		getManagedBean().setQtCheckList(qtCheckList);
+		getManagedBean().getChecklistAttachment().clear();
 	}
 
 	public void deleteDocument() {
@@ -241,5 +240,37 @@ public class QTDocumentsBackingBean extends
 			}
 		}
 
+	}
+
+	/**
+	 * determineIcon for displaying image icon in pid
+	 */
+	public String determineIcon(ScQtCheckListAttachment attachment) {
+		String imageFileName = "icon_file_default.png";
+		String ext = "";
+
+		if (attachment != null) {
+			String fileName = attachment.getFileName();
+
+			if (fileName != null) {
+				int mid = fileName.lastIndexOf(".");
+				ext = fileName.substring(mid + 1, fileName.length());
+			}
+
+			if ("doc".equals(ext) || "docx".equals(ext)) {
+				imageFileName = "icon_doc.png";
+			} else if ("pdf".equals(ext)) {
+				imageFileName = "icon_pdf.png";
+			} else if ("xls".equals(ext) || "xlsx".equals(ext)
+					|| "csv".equals(ext)) {
+				imageFileName = "icon_exel.png";
+			} else if ("jpg".equals(ext) || "bmp".equals(ext)
+					|| "png".equals(ext) || "gif".equals(ext)) {
+				imageFileName = "icon_image.png";
+			} else if ("txt".equals(ext)) {
+				imageFileName = "icon_txt.png";
+			}
+		}
+		return imageFileName;
 	}
 }

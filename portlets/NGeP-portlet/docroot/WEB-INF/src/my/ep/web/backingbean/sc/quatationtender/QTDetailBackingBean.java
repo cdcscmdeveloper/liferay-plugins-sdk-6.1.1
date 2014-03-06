@@ -60,6 +60,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -108,7 +109,7 @@ public class QTDetailBackingBean extends
 
 		if (this.getManagedBean().getScQtSpec() == null) {
 			this.getManagedBean().setScQtSpec(new ScQtSpec());
-			this.getManagedBean().getScQtSpec().setEvaluationType("1");
+			this.getManagedBean().getScQtSpec().setEvaluationType("2");
 		}
 	}
 
@@ -261,8 +262,96 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			
+			if (scQt.isBrandNew()) {
+				scQt.setQtNo("abcd1");
+			}
+			// No need to set the below fields automatically set by listener
+			PmUser users = new FacesScopes().getUserSessionBean();
+			scQt.setCreatedBy(users.getUserId());
+			scQt.setChangedBy(users.getUserId());
+			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			
+			// Setting the pm status for qt details
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(1l);
 
-			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+			IStatusSO statusSO;
+			PmStatus status = null;
+			try {
+				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+				StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+				status = pmStatus.getPmStatus();
+				scQt.getQtStatus().setPmStatus(status);
+			} catch (Exception e) {
+
+			} finally {
+				statusSO = null;
+			}
+			
+			/*ScCommittee scCommittee = new ScCommittee();
+			
+			IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);*/
+			
+			
+/*			List<ScCommitteeMember> membersList = this.getManagedBean().getScCommitteeMemberList();
+			List<ScCommitteeMember> scCommitteeMembers = new ArrayList<ScCommitteeMember>();
+			if (membersList != null) {
+				for (ScCommitteeMember member : membersList) {
+					
+					PmUser user = member.getPmUser();
+					if (user != null && user.getUserId() != null) {
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setUserId(user.getUserId());
+						UserResDTO userResDTO = iUserSO
+								.retrieveUserDetails(userReqDTO);
+						user = userResDTO.getPmUser();
+						member.setPmUser(user);
+					} else {
+						if (member.isExternalUser() && (user != null && user.getUserId() ==null)) {
+							PmUser pmUser = new PmUser();
+							pmUser.setUserName(member.getMemberName());
+							pmUser.setLoginId(member.getMemberName());
+							pmUser.setIdentificationNo(member.getIcPassport());
+							pmUser.setCreatedBy(member.getCreatedBy());
+							pmUser.setChangedBy(member.getChangedBy());
+							pmUser.setCreatedDate(member.getCreatedDate());
+							
+							UserReqDTO userReqDTO = new UserReqDTO();
+							userReqDTO.setPmUser(pmUser);
+							UserResDTO resDTO = iUserSO
+									.saveUser(userReqDTO);
+							member.setPmUser(resDTO.getPmUser());
+						}
+					}
+					scCommitteeMembers.add(member);
+				}
+			}
+			scCommittee.setScCommitteeMembers(scCommitteeMembers);
+			
+			for (ScCommitteeMember scCommitteeMember : membersList) {
+				scCommitteeMember.setScCommittee(scCommittee);
+			}
+			
+			scCommittee.setCommitteeType("BO");
+			//scCommittee.setScCommitteeMembers(membersList);
+			
+			ScQtCommittee scQtCommittee = new ScQtCommittee();
+			scQtCommittee.setScCommittee(scCommittee);
+			scQtCommittee.setScQt(scQt);*/
+			
+			List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
+			qtCommittees.add(this.getManagedBean().getScQtCommittee());
+			scQt.setScQtCommittees(qtCommittees);
+			
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			quationTenderReqDTO.setQtdetail(scQt);
+			
+			//QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 
 			QuationTenderResDTO quationTenderResDTO = (QuationTenderResDTO) detailSO
 					.saveQTDtl(quationTenderReqDTO);
@@ -494,6 +583,7 @@ public class QTDetailBackingBean extends
 
 		this.getManagedBean().setQt(scQt);
 		
+		//System.out.println("Status : " + getManagedBean().getQt().getPmStatus().getPmStatusDescs().get(0).getStatusName());
 		System.out.println("Evaluation Type : " + getManagedBean().getScQtSpec().getEvaluationType());
 		
 		getManagedBean().getQt().setQtAmount(new BigDecimal(500000));
@@ -617,7 +707,7 @@ public class QTDetailBackingBean extends
 					IStatusSO.class);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			status = pmStatus.getPmStatus();
-			scQt.setPmStatus(status);
+			scQt.getQtStatus().setPmStatus(status);
 		} catch (Exception e) {
 
 		} finally {
@@ -928,8 +1018,9 @@ public class QTDetailBackingBean extends
 				backingBean.getManagedBean().setFinEvaluationCommitteList(
 						committeeMembersList);
 
-				specSO = BusinessDelegate.getInstance().getServiceObject("ss",
-						IQTSpecSO.class);
+				specSO =BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSpecSO.class);
 				SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 				SpecificationResDTO specResDTO = null;
 				specReqDTO.setQtId(getManagedBean().getQt().getQtId());

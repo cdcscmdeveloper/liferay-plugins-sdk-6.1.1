@@ -2,10 +2,7 @@ package my.ep.web.backingbean.sc.committee;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
@@ -52,7 +49,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -67,9 +63,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -84,18 +77,11 @@ public class CommitteBackingBean extends
 
 	private static final Logger logger = EpLogger
 			.getLogger(CommitteBackingBean.class);
-
+	
 	private IPagingDataModel<ScCommittee> committeeDataModel = new CommitteePagingDataModel();
 	private IPagingDataModel<ScCommitteeMember> committeeSCDataModel = new CommitteeSCPagingDataModel();
 	private IPagingDataModel<ScCommitteeMember> committeeQCDataModel = new CommitteeQCPagingDataModel();
-	private IPagingDataModel<ScCommitteeMember> committeeFCDataModel = new CommitteeFCPagingDataModel();
-
-	private void debugLogger(Object message) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(message);
-		}
-		logger.info(message);
-	}
+	private IPagingDataModel<ScCommitteeMember> committeeFCDataModel = new CommitteeFCPagingDataModel();	
 
 	public CommitteBackingBean() {
 		retriveCommitteTypes();
@@ -103,9 +89,6 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setOutComes(
 					new String[] { BpmOutcomeConst.BPM_SAVE,
 							BpmOutcomeConst.BPM_SUBMIT });
-		}
-		if (this.getManagedBean().getCommitteMember() == null) {
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
 	}
 
@@ -138,8 +121,8 @@ public class CommitteBackingBean extends
 		committeReqDTO.setToken(ctxToken);
 		committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		committeReqDTO.setOutcome(action);
-		ICommitteSO commso = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		ICommitteSO commso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		try {
 			commso.updateBPMTask(committeReqDTO);
 			if (true) {
@@ -174,8 +157,7 @@ public class CommitteBackingBean extends
 
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		ICommitteSO committeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		try {
 			CommitteResDTO resDTO = committeSO
 					.saveOrUpdateCommitte(committeReqDTO);
@@ -213,8 +195,8 @@ public class CommitteBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		committeReqDTO.setToken(ctxToken);
-		ICommitteSO commso = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		ICommitteSO commso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		CommitteResDTO resDTO = null;
 
 		try {
@@ -291,8 +273,8 @@ public class CommitteBackingBean extends
 		committeReqDTO.setQtCommittee(scQtCommittee);
 		/*
 		 * ICommitteSO committeSO = BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * ICommitteSO.class); CommitteResDTO resDTO =
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		 * CommitteResDTO resDTO =
 		 * committeSO.saveOrUpdateCommitte(committeReqDTO);
 		 */
 
@@ -371,105 +353,17 @@ public class CommitteBackingBean extends
 			 * searchBean.getDataFilterBeans().add(statusSearchBean);
 			 */
 		}
-		if (getManagedBean().getEvaluationType() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getEvaluationType())) {
-			SearchFilterBean evaluationSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			evaluationSearchBean.setSearchField("scQt.scQtSpec.evaluationType");
-			evaluationSearchBean.setSearchValue(getManagedBean()
-					.getEvaluationType());
-
-			searchBean.getDataFilterBeans().add(evaluationSearchBean);
-		}
 		committeReqDTO.setCommitteSearchBean(searchBean);
 
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDto = committeSO.searchQTCommittees(committeReqDTO);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 		return resDto.getCommitteResultBean().getResultList();
-	}
-
-	public void onRowCloneAction(SelectEvent event) {
-		debugLogger("onRowCloneAction");
-		ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
-
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
-		CommitteResDTO resDTO = null;
-		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-			resDTO = committeSO.retrieveCommitteMembersById(reqDTO);
-			if (resDTO != null) {
-				this.getManagedBean().setCloneCommitteMemebers(
-						resDTO.getCommitteMembers());
-			}
-			System.out.println("======== list size===="
-					+ getManagedBean().getCloneCommitteMemebers().size());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		TreeNode searchcommitteeNode = null;
-
-		List<ScCommitteeMember> panelSupplierList = getManagedBean()
-				.getCloneCommitteMemebers();
-
-		if (panelSupplierList != null && panelSupplierList.size() > 0) {
-			Map<ScCommittee, List<ScCommitteeMember>> committeeMap = new LinkedHashMap<ScCommittee, List<ScCommitteeMember>>();
-
-			// Group Committee by Committee Type
-			for (ScCommitteeMember scCommitteeMember : panelSupplierList) {
-				ScCommittee committee = scCommitteeMember.getScCommittee();
-
-				List<ScCommitteeMember> membersList = committeeMap
-						.get(committee);
-
-				if (membersList == null) {
-					membersList = new ArrayList<ScCommitteeMember>();
-					committeeMap.put(committee, membersList);
-				}
-				membersList.add(scCommitteeMember);
-			}
-			searchcommitteeNode = new DefaultTreeNode();
-
-			populateCommitteeTreeNode(committeeMap, searchcommitteeNode);
-		}
-
-		this.getManagedBean().setSearchcommitteeNode(searchcommitteeNode);
-	}
-
-	/**
-	 * @param committeeMap
-	 * @param searchcommitteeNode
-	 */
-	private void populateCommitteeTreeNode(
-			Map<ScCommittee, List<ScCommitteeMember>> committeeMap,
-			TreeNode searchcommitteeNode) {
-
-		for (Entry<ScCommittee, List<ScCommitteeMember>> committeeEntry : committeeMap
-				.entrySet()) {
-			ScCommittee committee = committeeEntry.getKey();
-
-			List<ScCommitteeMember> committeeMembersList = committeeEntry
-					.getValue();
-
-			TreeNode committeeNode = new DefaultTreeNode(
-					new TreeNodeBean<ScCommittee>("committee", committee),
-					searchcommitteeNode);
-
-			for (ScCommitteeMember scCommitteeMember : committeeMembersList) {
-				new DefaultTreeNode(new TreeNodeBean<ScCommitteeMember>(
-						"scCommitteeMember", scCommitteeMember), committeeNode);
-			}
-		}
 	}
 
 	/**
@@ -479,8 +373,8 @@ public class CommitteBackingBean extends
 	 */
 	public void showQtDetailAction(Long qtId) {
 
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		IQTDetailSO detailSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtId(qtId);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQtById(reqDTO);
@@ -516,20 +410,16 @@ public class CommitteBackingBean extends
 		}
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
-		/*
-		 * committeeMember.setPmUser(new PmUser());
-		 * committeeMember.setMinistryOrgProfile(new PmOrgProfile());
-		 * committeeMember.setPmOrgProfile(new PmOrgProfile());
-		 * committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
-		 */
-		committeeMember.setUserSelection("E");
-		/*
-		 * committeeMember.setGovtUser(true); retriveGovUsers();
-		 */
-		this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
+		committeeMember.setPmUser(new PmUser());
+		committeeMember.setMinistryOrgProfile(new PmOrgProfile());
+		committeeMember.setPmOrgProfile(new PmOrgProfile());
+		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
+		committeeMember.setUserSelection("P");
+		committeeMember.setGovtUser(true);
+		retriveGovUsers();
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
-		/* getUserTypes(); */
+		getUserTypes();
 		committeMemebers.add(getManagedBean().getCommitteMember());
 		getManagedBean().setCommittemembers(committeMemebers);
 
@@ -547,8 +437,7 @@ public class CommitteBackingBean extends
 			resetCommitte();
 
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			CommitteResDTO committeResDTO = committeSO
 					.retriveQTCommitteDetails(new CommitteReqDTO());
 			ScQtCommittee qtCommittee = committeResDTO.getCommittee();
@@ -672,8 +561,8 @@ public class CommitteBackingBean extends
 	 * Method to retrive externalusers
 	 */
 	public void retriveExternalUsers() {
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pp",
-				IUserSO.class);
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				"pp", IUserSO.class);
 		if (getManagedBean().getExternalUsers() == null) {
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setOrgType(OrganizationType.EXTERNAL.value());
@@ -720,40 +609,35 @@ public class CommitteBackingBean extends
 				+ userSelection);
 		this.getManagedBean().setExternalUsers(null);
 
-		/*
-		 * this.getManagedBean().setMinstryList(null);
-		 * this.getManagedBean().setDeptList(null);
-		 * this.getManagedBean().setDivisionList(null);
-		 */
+		this.getManagedBean().setMinstryList(null);
+		this.getManagedBean().setDeptList(null);
+		this.getManagedBean().setDivisionList(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
-		/*
-		 * committeeMember.setMinistryOrgProfile(new PmOrgProfile());
-		 * committeeMember.setPmOrgProfile(new PmOrgProfile());
-		 * committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
-		 */
+		committeeMember.setMinistryOrgProfile(new PmOrgProfile());
+		committeeMember.setPmOrgProfile(new PmOrgProfile());
+		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
 		this.getManagedBean().getCommittemembers()
 				.remove(this.getManagedBean().getCommitteMember());
 		committeeMember.setUserSelection(userSelection);
 		this.getManagedBean().setCommitteMember(committeeMember);
 		this.getManagedBean().getCommittemembers().add(committeeMember);
-		/*
-		 * if (this.getManagedBean().getCommitteMember().getUserSelection()
-		 * .equalsIgnoreCase(SelectionType.PROFILE.value())) {
-		 * 
-		 * retriveGovUsers();
-		 * getManagedBean().getCommitteMember().setGovtUser(true); } else
-		 */
+		/*if (this.getManagedBean().getCommitteMember().getUserSelection()
+				.equalsIgnoreCase(SelectionType.PROFILE.value())) {
+
+			retriveGovUsers();
+			getManagedBean().getCommitteMember().setGovtUser(true);
+		} else*/ 
 		if (this.getManagedBean().getCommitteMember().getUserSelection()
 				.equalsIgnoreCase(SelectionType.EXISITING.value())) {
 
 			getManagedBean().getCommitteMember().setExternalUser(true);
-			// retriveExternalUsers();
+			retriveExternalUsers();
 		} else if (this.getManagedBean().getCommitteMember().getUserSelection()
 				.equalsIgnoreCase(SelectionType.New.value())) {
 
 			getManagedBean().getCommitteMember().setExternalUser(true);
-			// retriveAllMinstrys();
+			retriveAllMinstrys();
 		}
 
 	}
@@ -813,8 +697,7 @@ public class CommitteBackingBean extends
 			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -850,8 +733,7 @@ public class CommitteBackingBean extends
 			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
@@ -873,8 +755,7 @@ public class CommitteBackingBean extends
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(reqDTO);
 		this.getManagedBean().setMinstryList(resDTO.getOrgProfileList());
@@ -904,7 +785,7 @@ public class CommitteBackingBean extends
 	}
 
 	public void cancelCommitteAction() {
-		this.getManagedBean().getScCommitteeMemberList()
+		this.getManagedBean().getCommittemembers()
 				.remove(this.getManagedBean().getCommitteMember());
 	}
 
@@ -914,8 +795,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setCommitteId(committee.getQtCommitteeId());
 		// committeReqDTO.setQtCommittee(committee);
 		ICommitteSO committeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 		CommitteResDTO resDTO = committeSO
 				.retriveQTCommitteDetails(committeReqDTO);
 		this.getManagedBean().setQtCommittee(resDTO.getCommittee());
@@ -954,8 +834,7 @@ public class CommitteBackingBean extends
 		SCCommitteeDataType committeDataType = (SCCommitteeDataType) obj;
 
 		ICommitteSO committeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setCommitteId(new Long(committeDataType.getComId())
@@ -977,7 +856,7 @@ public class CommitteBackingBean extends
 				.handleNavigation(fc, null,
 						"committeemaintanancepage" + "?faces-redirect=true");
 	}
-
+	
 	private class CommitteePagingDataModel extends PagingDataModel<ScCommittee> {
 		private static final long serialVersionUID = 1L;
 
@@ -992,10 +871,10 @@ public class CommitteBackingBean extends
 			return null;
 		}
 
-	}
 
-	private class CommitteeSCPagingDataModel extends
-			PagingDataModel<ScCommitteeMember> {
+	}
+	
+	private class CommitteeSCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
 		private static final long serialVersionUID = 1L;
 
 		public CommitteeSCPagingDataModel() {
@@ -1009,10 +888,10 @@ public class CommitteBackingBean extends
 			return null;
 		}
 
-	}
 
-	private class CommitteeQCPagingDataModel extends
-			PagingDataModel<ScCommitteeMember> {
+	}
+	
+	private class CommitteeQCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
 		private static final long serialVersionUID = 1L;
 
 		public CommitteeQCPagingDataModel() {
@@ -1026,10 +905,10 @@ public class CommitteBackingBean extends
 			return null;
 		}
 
-	}
 
-	private class CommitteeFCPagingDataModel extends
-			PagingDataModel<ScCommitteeMember> {
+	}
+	
+	private class CommitteeFCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
 		private static final long serialVersionUID = 1L;
 
 		public CommitteeFCPagingDataModel() {
@@ -1043,228 +922,47 @@ public class CommitteBackingBean extends
 			return null;
 		}
 
-	}
 
+	}		
+	
 	public IPagingDataModel<ScCommittee> getCommitteeDataModel() {
 		return committeeDataModel;
 	}
-
 	/**
-	 * @param committeeDataModel
-	 *            set
+	 * @param committeeDataModel set
 	 */
-	public void setCommitteeDataModel(
-			IPagingDataModel<ScCommittee> committeeDataModel) {
+	public void setCommitteeDataModel(IPagingDataModel<ScCommittee> committeeDataModel) {
 		this.committeeDataModel = committeeDataModel;
 	}
-
+	
 	public IPagingDataModel<ScCommitteeMember> getCommitteeSCDataModel() {
 		return committeeSCDataModel;
 	}
-
 	/**
-	 * @param planDataModel
-	 *            the planDataModel to set
+	 * @param planDataModel the planDataModel to set
 	 */
-	public void setCommitteeSCDataModel(
-			IPagingDataModel<ScCommitteeMember> committeeSCDataModel) {
+	public void setCommitteeSCDataModel(IPagingDataModel<ScCommitteeMember> committeeSCDataModel) {
 		this.committeeSCDataModel = committeeSCDataModel;
 	}
-
+	
 	public IPagingDataModel<ScCommitteeMember> getCommitteeQCDataModel() {
 		return committeeQCDataModel;
 	}
-
 	/**
-	 * @param planDataModel
-	 *            the planDataModel to set
+	 * @param planDataModel the planDataModel to set
 	 */
-	public void setCommitteeQCDataModel(
-			IPagingDataModel<ScCommitteeMember> committeeQCDataModel) {
+	public void setCommitteeQCDataModel(IPagingDataModel<ScCommitteeMember> committeeQCDataModel) {
 		this.committeeQCDataModel = committeeQCDataModel;
 	}
-
+	
 	public IPagingDataModel<ScCommitteeMember> getCommitteeFCDataModel() {
 		return committeeFCDataModel;
 	}
-
 	/**
-	 * @param planDataModel
-	 *            the planDataModel to set
+	 * @param planDataModel the planDataModel to set
 	 */
-	public void setCommitteeFCDataModel(
-			IPagingDataModel<ScCommitteeMember> committeeFCDataModel) {
+	public void setCommitteeFCDataModel(IPagingDataModel<ScCommitteeMember> committeeFCDataModel) {
 		this.committeeFCDataModel = committeeFCDataModel;
-	}
-
-	public void deleteSpecificationCommittee() {
-		debugLogger("deleteSpecificationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getSpecificationCommitteList();
-
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectSpecificationCommitteeList();
-
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
-
-	public void deleteOpeningCommittee() {
-		debugLogger("deleteOpeningCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getOpeningCommitteList();
-
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectOpeningCommitteeList();
-
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
-
-	public void existingCommitteeSearchAction() {
-		debugLogger("existingCommitteeSearchAction");
-		UserReqDTO userReqDTO = new UserReqDTO();
-		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-		UserResDTO resDto = null;
-
-		if (getManagedBean().getName() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getName())) {
-			SearchFilterBean usernameSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			usernameSearchBean.setSearchField("userName");
-			usernameSearchBean.setSearchValue(getManagedBean().getName());
-			searchBean.getDataFilterBeans().add(usernameSearchBean);
-
-		}
-
-		if (getManagedBean().getIdentificationNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			idNoSearchBean.setSearchField("identificationNo");
-			idNoSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
-		userReqDTO.setUserSearchBean(searchBean);
-
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-			resDto = userSO.searchUserProfile(userReqDTO);
-			if (resDto != null) {
-				this.getManagedBean().setExternalUsers(
-						resDto.getUserResultBean().getResultList());
-			}
-			System.out.println("Size : "
-					+ resDto.getUserResultBean().getResultList().size());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public void okAction() {
-		debugLogger("okAction");
-
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getSpecificationCommitteList();
-
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-
-			memberList.add(member);
-			this.getManagedBean().setSpecificationCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-
-			getManagedBean().setSpecificationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getSpecificationCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
-
-	public void okEvaluationCommitteeAction() {
-		debugLogger("okEvaluationCommitteeAction");
-
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getEvaluationCommitteList();
-
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-
-			memberList.add(member);
-			this.getManagedBean().setEvaluationCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-
-			getManagedBean().setEvaluationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getEvaluationCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
-
-	public void deleteEvaluationCommittee() {
-		debugLogger("deleteEvaluationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getEvaluationCommitteList();
-
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectEvaluationCommitteeList();
-
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
-
+	}		
+	
 }

@@ -85,22 +85,27 @@ public class QTDeductionPaymentBackingBean extends
 					|| getManagedBean().getDeductionPaymentArray()
 							.equalsIgnoreCase(QTConstants.DP_ROYALTY)) {
 				this.getManagedBean().setPercentageField(true);
+				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(false);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_FIXED)) {
 				this.getManagedBean().setPercentageField(false);
+				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(true);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_NON_FIXED)) {
 				this.getManagedBean().setPercentageField(false);
+				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(false);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_OTHERS)) {
 				this.getManagedBean().setPercentageField(true);
 				this.getManagedBean().setAmountField(true);
+				this.getManagedBean().setDescriptionField(true);
 			} else {
 				this.getManagedBean().setPercentageField(true);
 				this.getManagedBean().setAmountField(true);
+				this.getManagedBean().setDescriptionField(true);
 			}
 		}
 		// getManagedBean().setDeductionPaymentArray(getManagedBean().getDeductionPaymentArray());

@@ -35,21 +35,33 @@
 							<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 							<td><p:selectOneMenu id="appaction"
 									value="#{qTBusinessOwnerBackingBean.managedBean.identificationType}"
-									style="width: 127px;margin-bottom: 5px;">
+									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
 								</p:selectOneMenu></td>
-							<td style="width: 105px;"><p:outputLabel
-									value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
+							<td />
+							<td />
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
 							<td><p:inputText id="Idno"
-									value="#{qTBusinessOwnerBackingBean.managedBean.identificationNo}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.identificationNo}"
+									size="30" /></td>
+							<td />
+							<td />
 						</tr>
 					</table>
+					<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+						action="#{qTBusinessOwnerBackingBean.reset}" update="newProfile"
+						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+						process="@this" />
+
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 						style="float:right;" icon="ui-icon-search"
 						action="#{qTBusinessOwnerBackingBean.existingBusinessOwnerAction}"
 						update="@(.existingResults)" partialSubmit="true"
 						process="@parent" />
+
 					<br />
 					<br />
 					<p:panel header="#{lbl['lbl.so.bo.search.result']}"
@@ -85,7 +97,8 @@
 							</p:column>
 
 							<p:column headerText="Email">
-								<h:outputText value="#{existuser.pmAddressTypes[0].pmAddress.email}" />
+								<h:outputText
+									value="#{existuser.pmAddressTypes[0].pmAddress.email}" />
 							</p:column>
 
 						</p:dataTable>
@@ -99,43 +112,65 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committe.addscreen.name']}" /></td>
 							<td colspan="3"><p:inputText
-									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.memberName}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.memberName}"
+									size="30" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /></td>
-							<td><p:selectOneMenu id="appaction"
+							<td><p:selectOneMenu id="apptypeaction"
 									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.idType}"
-									style="width: 127px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
-									<f:selectItem itemLabel="IC No." itemValue="1" />
-									<f:selectItem itemLabel="Passport No." itemValue="2" />
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
 								</p:selectOneMenu></td>
-							<td style="width: 105px;"><p:outputLabel
+							<td />
+							<td />
+						</tr>
+						<tr>
+							<td style="width: 130px;"><p:outputLabel
 									value="#{lbl['lbl.sc.committe.addscreen.idno']}" /></td>
 							<td><p:inputText id="idNos"
-									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}"
+									size="30" /></td>
+							<td />
+							<td />
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committe.addscreen.grade']}" /></td>
 							<td><p:inputText
-									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.grade}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.grade}"
+									size="30" /></td>
+							<td />
+							<td />
+						</tr>
+						<tr>
 							<td><p:outputLabel value="P&amp;P" /></td>
 							<td><p:selectOneRadio
 									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.pnp}">
 									<f:selectItem itemLabel="Yes" itemValue="true" />
 									<f:selectItem itemLabel="No" itemValue="false" />
 								</p:selectOneRadio></td>
+							<td />
+							<td />
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committe.addscreen.designation']}" /></td>
 							<td><p:inputText
-									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.designation}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.designation}"
+									size="30" /></td>
+							<td />
+							<td />
+						</tr>
+						<tr>
 							<td><p:outputLabel value="* Email" /></td>
 							<td><p:inputText
-									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}" /></td>
+									value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.email}"
+									size="30" /></td>
+							<td />
+							<td />
 						</tr>
 					</table>
 
@@ -149,7 +184,7 @@
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
 				onclick="newbusinessowner.hide();" update="businessownerId"
 				process="@this, newProfile" icon="ui-icon-check"
-				actionListener="#{qTBusinessOwnerBackingBean.okListnere}" />
+				actionListener="#{qTBusinessOwnerBackingBean.okListenerAction}" />
 		</p:panel>
 	</p:dialog>
 </ui:composition>

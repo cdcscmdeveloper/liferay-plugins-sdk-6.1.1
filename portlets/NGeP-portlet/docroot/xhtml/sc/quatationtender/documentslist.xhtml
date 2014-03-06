@@ -16,7 +16,8 @@
 
 			<ac:paginator for="doctbl" />
 
-			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{document.checkStatus == true}"/>
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{document.checkStatus == true}" />
 
 			<p:column headerText="#{lbl['lbl.so.title']}">
 
@@ -81,12 +82,6 @@
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
 
-			<p:commandButton value="#{lbl['lbl.so.standard.list']}"
-				process="@this"
-				action="#{qTDocumentsBackingBean.populatePreDefinedDetails}"
-				partialSubmit="true"
-				oncomplete="predefinedTerms.show();return false;" />
-
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,doctbl" partialSubmit="true"
 				action="#{qTDocumentsBackingBean.addDocumentList}" update="doctbl"
@@ -116,22 +111,46 @@
 	<p:panel header="Final Document" toggleable="true" id="attachmentId">
 		<table style="width: 50%" id="remarkslist">
 			<tr>
-				<td class="TableFieldLeft" width="24%"><h:outputLabel
+				<td class="TableFieldLeft"><h:outputLabel
 						value="Attachment" /></td>
 				<td class="TableFieldRight">
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" value="Attach Files" /></td>
+									icon="iconAttachment" update="attachmentId"
+									value="Attach Files" /></td>
 						</tr>
 						<tr>
-							<td><h:outputText id="fineUploadId"
-									value="#{qTDocumentsBackingBean.managedBean.qtCheckList.scQtCheckListAttachment.fileName}" />
-								<p:spacer width="1px" /> <p:commandButton
-									process="@this fineUploadId" icon="ui-icon-delete"
-									update="attachmentId"
-									actionListener="#{qTDocumentsBackingBean.deleteUploadFile}" /></td>
+							<td />
+							<td><p:dataGrid id="fineUploadId"
+									value="#{qTDocumentsBackingBean.managedBean.checklistAttachment}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{qTDocumentsBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText value="#{attachFile.user.userName}" />,
+												<h:outputText value="#{attachFile.changedDate}">
+													<f:convertDateTime
+														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" /> <p:commandLink
+													action="#{qTDocumentsBackingBean.deleteUploadFile}"
+													immediate="true" update="fineUploadId">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
 						</tr>
 					</table>
 				</td>

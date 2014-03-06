@@ -32,7 +32,8 @@
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="Description">
+			<p:column headerText="Description"
+				rendered="#{qTDeductionPaymentBackingBean.managedBean.descriptionField}">
 				<h:outputText value="#{deductpayment.deductionAmount}"
 					rendered="#{deductpayment.brandNew eq false}" />
 				<p:inputText value="#{deductpayment.deductionAmount}"
@@ -72,7 +73,8 @@
 						update="deductPaymentId" icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
 						icon="ui-icon-delete"
-						action="#{qTDeductionPaymentBackingBean.deleteDedcutionPayment}" update="deductPaymentId" />
+						action="#{qTDeductionPaymentBackingBean.deleteDedcutionPayment}"
+						update="deductPaymentId" />
 				</div>
 			</f:facet>
 		</p:panelGrid>

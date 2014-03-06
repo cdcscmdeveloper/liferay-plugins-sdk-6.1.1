@@ -247,7 +247,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		 * tabview.put("PBApproval", new TabBean("PBApproval"));
 		 * tabview.put("PTJApproval", new TabBean("PTJApproval"));
 		 */
-		checkBoxList = new ArrayList();
+		checkBoxList = new ArrayList<SelectItem>();
 		checkBoxList.add(new SelectItem("BudgetApproval", "BudgetApproval"));
 		checkBoxList.add(new SelectItem("BPKApproval", "BPKApproval"));
 		checkBoxList.add(new SelectItem("PMSabah", "PMSabah"));
@@ -308,13 +308,13 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 		// TODO Tabview start
 
-		ScQtApproval scQtApproval = new ScQtApproval();
+/*		ScQtApproval scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL
 				.value());
 		scQtApproval.setVerifyOption("1");
-		tabList.add(new TabBean("Budget Approval", scQtApproval));
+		tabList.add(new TabBean("Budget Approval", scQtApproval));*/
 
-		scQtApproval = new ScQtApproval();
+		ScQtApproval scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BPK_APPROVAL.value());
 		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("BPK Approval", scQtApproval));
@@ -324,11 +324,11 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		scQtApproval.setVerifyOption("1");
 		// tabList.add(new TabBean("MITI Approval", scQtApproval));
 
-		scQtApproval = new ScQtApproval();
+/*		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.PUBLICATION_APPROVAL
 				.value());
 		scQtApproval.setVerifyOption("1");
-		tabList.add(new TabBean("ICT Approval", scQtApproval));
+		tabList.add(new TabBean("ICT Approval", scQtApproval));*/
 
 		scQtApproval = new ScQtApproval();
 		scQtApproval
@@ -341,7 +341,14 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		scQtApproval.setApprovalCategory(ApprovalCategory.COMMITTEE_APPROVAL
 				.value());
 		scQtApproval.setVerifyOption("1");
-		tabList.add(new TabBean(" Committee Approval", scQtApproval));
+		tabList.add(new TabBean("Committee Approval", scQtApproval));
+		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.OTHER_APPROVAL
+				.value());
+		scQtApproval.setVerifyOption("1");
+		tabList.add(new TabBean("Others Approval", scQtApproval));
+		
 		// Tabview end
 
 	}
@@ -355,7 +362,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	private List<String> populateMainCodes() {
-		List<String> mainCodes = new ArrayList();
+		List<String> mainCodes = new ArrayList<String>();
 		mainCodes.add("11");
 		mainCodes.add("22");
 

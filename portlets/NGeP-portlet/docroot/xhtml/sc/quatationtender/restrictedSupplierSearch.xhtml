@@ -8,91 +8,100 @@
 
 	<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 		columns="2" columnClasses="columnWidth20AlignTop">
-		<h:column>
-			<h:outputLabel value="Category Code List" />
-		</h:column>
-		<h:column>
-			<p:dataTable
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-				var="scQtCategory" id="restrcatcode">
-					
-				<ac:paginator for="restrcatcode" />
-			
-				<p:column headerText="#{lbl['lbl.so.category']}">
-					<p:inputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}"
-						disabled="true" />
-					<p:inputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}"
-						disabled="true" />
-					<p:inputText value="#{scQtCategory.pmCategoryL3.categoryL3Code}"
-						disabled="true" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.so.mandatory']}"
-					style="width: 150px;">
-					<p:selectBooleanCheckbox
-						value="#{scQtCategory.mandatory}" 
-						disabled="true" />
-				</p:column>
-			</p:dataTable>
-		</h:column>
+
+		<p:dataTable
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
+			var="scQtCategory" id="restrcatcode">
+
+			<ac:paginator for="restrcatcode" />
+
+			<p:column headerText="#{lbl['lbl.so.category']}">
+				<p:inputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}"
+					disabled="true" />
+				<p:inputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}"
+					disabled="true" />
+				<p:inputText value="#{scQtCategory.pmCategoryL3.categoryL3Code}"
+					disabled="true" />
+			</p:column>
+			<p:column headerText="Main-Category" />
+			<p:column headerText="Sub-Category" />
+			<p:column headerText="Sub-Category Division" />
+			<p:column headerText="Category Type" />
+			<p:column headerText="#{lbl['lbl.so.mandatory']}"
+				style="width: 150px;">
+				<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
+					disabled="true" />
+			</p:column>
+		</p:dataTable>
 	</h:panelGrid>
-	
-	<br/>
-	<br/>
-					
+
+	<br />
+	<br />
+
 	<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-		columns="2" columnClasses="columnWidth20">
+		columns="4"
+		columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
 		<h:column>
-			<h:outputLabel  value="#{lbl['lbl.so.paidup']}" />
+			<h:outputLabel value="Supplier Name" />
 		</h:column>
 		<h:column>
-			<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" 
-				disabled="true" />
-			<h:inputText value="MYR" disabled="true" size="1" />
-		</h:column>
-      	<h:column>
-			<h:outputLabel value="#{lbl['lbl.so.companyname']}" />
-		</h:column>
-		<h:column>
-			<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierName}"/>
+			<p:inputText
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierName}" />
 		</h:column>
 		<h:column>
 			<h:outputLabel value="#{lbl['lbl.so.mofno']}" />
 		</h:column>
 		<h:column>
-			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.mofAccountNo}"/>
-		</h:column>	
+			<p:inputText
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.mofAccountNo}" />
+		</h:column>
+		<h:column>
+			<h:outputLabel value="#{lbl['lbl.so.paidup']}" />
+		</h:column>
+		<h:column>
+			<p:inputText
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"
+				disabled="true" />
+			<h:inputText value="MYR" disabled="true" size="1" />
+		</h:column>
 	</h:panelGrid>
-			
-	<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-		styleClass="apply_button" style="float:right;" id="restrictSupplier" icon="ui-icon-search" 
-		action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}" 
+
+	<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+		styleClass="apply_button" style="float:right;" id="restrictSupplier"
+		icon="ui-icon-search"
+		action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 		update="restrictedsupplierPnl" />
-		
-	<br/>
-	<br/>
-	
-	<p:panel id="restrictedsupplierPnl" header="Supplier List" toggleable="true">
-		<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierList}" var="smSupplier"  id="ressupplier"
+
+	<br />
+	<br />
+
+	<p:panel id="restrictedsupplierPnl" header="Supplier List"
+		toggleable="true">
+		<p:dataTable
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierList}"
+			var="smSupplier" id="ressupplier"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
-			rowKey="#{smSupplier.supplierId}" 
-			rows="10">
-			<p:column selectionMode="multiple" style="width:2%" />
-				
+			rowKey="#{smSupplier.supplierId}">
+
 			<ac:paginator for="ressupplier" />
-				
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
 			<p:column headerText="#{lbl['lbl.so.suppliername']}">
-				<h:outputText value="#{smSupplier.supplierName}" />
+				<h:outputText value="#{smSupplier.companyName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mofno']}">
-				<h:outputText value="#{smSupplier.smMofAccounts[0].mofNo}" rendered="false" />
+				<h:outputText value="#{smSupplier.smMofAccounts[0].mofNo}"
+					rendered="false" />
 			</p:column>
-	
+
 			<p:column headerText="#{lbl['lbl.so.mofexp']}">
-				<h:outputText value="#{smSupplier.smMofAccounts[0].expDate}" rendered="false" />
+				<h:outputText value="#{smSupplier.smMofAccounts[0].expDate}"
+					rendered="false" />
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.so.status']}">
 				<h:outputText value="Active" />
 			</p:column>

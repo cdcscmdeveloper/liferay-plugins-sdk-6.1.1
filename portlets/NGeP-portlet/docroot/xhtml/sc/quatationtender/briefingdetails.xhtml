@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:dialog id="dlgId" widgetVar="dlg1" modal="true" dynamic="true"
-		hideEffect="explode" resizable="false" width="600px" height="300"
+		hideEffect="explode" resizable="false" width="700px" height="300"
 		styleClass="pop_up_top" header="Briefing Details">
 		<p:panel toggleable="true" styleClass="qtBriefDetails">
 			<table style="width: 100%" border="1">
@@ -31,17 +31,6 @@
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.location}"
 							style="margin-top:5px;" size="30" /></td>
 				</tr>
-				<!-- <tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.country']}" /></td>
-					<td><p:selectOneMenu
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.pmAddress.pmCountry.countryName}"
-							style="margin-bottom:5px;">
-							<f:selectItem itemLabel="Malaysia" itemValue="Malaysia" />
-							<f:selectItem itemLabel="Singapore" itemValue="Singapore" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
-				</tr> -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
 					<td><p:inputText
@@ -90,51 +79,22 @@
 					<td colspan="3"><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
 							size="30" /></td>
-					<!-- <td><p:selectOneMenu
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
-							style="margin-bottom:5px;">
-							<f:selectItem itemLabel="Coordinate Officer" itemValue="" />
-							<f:selectItem itemLabel="Officer 1" itemValue="Officer 1" />
-							<f:selectItem itemLabel="Officer 2" itemValue="Officer 2" />
-							<f:selectItem itemLabel="Officer 3" itemValue="Officer 3" />
-						</p:selectOneMenu></td> -->
-				</tr>
-				<!-- <tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.attendance']}" /></td>
-					<td><p:selectOneRadio
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.attendanceType}">
-							<f:selectItem itemLabel="All Zone" itemValue="All Zone" />
-							<f:selectItem itemLabel="Certain Zone" itemValue="Certain Zone" />
-						</p:selectOneRadio></td>
-					<td />
-					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.zone']}" /></td>
-					<td><p:selectOneMenu
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtZoneCriteria.zoneName}"
-							style="margin-bottom:5px;">
-							<f:selectItem itemLabel="Zone" itemValue="" />
-							<f:selectItem itemLabel="East Zone" itemValue="East Zone" />
-							<f:selectItem itemLabel="West Zone" itemValue="West Zone" />
-							<f:selectItem itemLabel="Central Zone" itemValue="Central Zone" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
-				</tr> -->
-
+					<td><p:outputLabel value="#{lbl['lbl.so.maxattendance']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.maxNoAttendance}"
+							size="30" /></td>
+				</tr>
 			</table>
-
 			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 				styleClass="apply_button" style="float:right;"
-				oncomplete="dlg1.hide()">
-			</p:commandButton>
+				oncomplete="dlg1.hide()" icon="ui-icon-cancel" />
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-				styleClass="apply_button" update="briefdetaillistid"
+				styleClass="apply_button" update="accordpnllist, briefingdtlid"
 				process="@(.qtBriefDetails)" style="float:right;"
-				oncomplete="dlg1.hide()"
+				oncomplete="dlg1.hide()" icon="ui-icon-check"
 				action="#{qTScheduleDetailBackingBean.addToBrefieyingList}">
-
 			</p:commandButton>
 		</p:panel>
 	</p:dialog>

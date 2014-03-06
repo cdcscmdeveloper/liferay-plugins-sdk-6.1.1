@@ -10,7 +10,23 @@
 		<p:dataTable id="zoneid" rowIndexVar="rowIndex" style="width:50%">
 			<p:column headerText="Zone" />
 		</p:dataTable>
+
+		<br />
+		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<p:spacer width="5" />
+		<p:inputText
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
+			disabled="true" />
 	</p:panel>
 
-	<ui:include src="/xhtml/sc/quatationtender/supplierlist.xhtml" />
+	<ui:include src="/xhtml/sc/quatationtender/panel/supplierlist.xhtml" />
+
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			icon="ui-icon-search" partialSubmit="true" process="@this"
+			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
+			oncomplete="suppdlg.show();"
+			rendered="#{qTDetailBB.managedBean.editable}" />
+
+	</div>
 </ui:composition>

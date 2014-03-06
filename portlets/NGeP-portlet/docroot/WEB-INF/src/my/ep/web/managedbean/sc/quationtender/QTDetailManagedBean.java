@@ -8,6 +8,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -28,9 +32,11 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
@@ -44,15 +50,19 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.CloneAllDataModel;
 import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -196,6 +206,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplier> searchSupplierList;
 	private List<SmSupplier> selectedSupplierList;
 	private List<ScQtSupplier> qtSupplierList;
+	private List<ScQtSupplier> selectedQtSupplierList;
 	private List<ScQtCategory> selectedCategoryList;
 	private List<ScQtCategory> qtCategoryList;
 	
@@ -216,6 +227,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String deductionPaymentArray;
 	private boolean percentageField = true;
 	private boolean amountField = true;
+	private boolean descriptionField = true;
 	
 	//Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
@@ -248,8 +260,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtSpec scQtSpec;
 	
 	private List<SelectItem> comitteeUsers;
+	private List<SelectItem> budgetApprover;
+	private List<PmUser>  budgetApproverName; // Drop down Listing for Approver Names
+	private List<PmUser>  comitteeUserName; // Drop down Listing for Approver Names
+	private	DualListModel<PmUser> budgetApprovalUsers;
+	private	DualListModel<PmUser> committeeApprovalUsers;
 	
 	private List<TreeNode> treeNodesList;
+	private ScQtCommittee scQtCommittee;
+	
+	private List<ScQtApprovalAttachment> attachments;
+	private List<ScQtCheckListAttachment> checklistAttachment; 
+	
+	private List<ScQtBriefing> test;
+	
+	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 	
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -270,7 +295,218 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		for(CloneAll cloneValue:enumValues){
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(), node0);
 		}
+		
+		getBudgetApproverNames();
+		getCommitteeApproverNames();
+		
+		/*briefings= new ArrayList<>();
+		ScQtBriefing briefing= new ScQtBriefing();
+		briefing.setBriefingDesc("test");
+		briefings.add(briefing);*/
+		briefingZoneBean.add(new BriefingZoneBean("South", briefings));
+		briefingZoneBean.add(new BriefingZoneBean("North", briefings));
+		briefingZoneBean.add(new BriefingZoneBean("East", briefings));
+		briefingZoneBean.add(new BriefingZoneBean("West", briefings));
 	}
+
+	private void getCommitteeApproverNames() {
+		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDto = new UserReqDTO();
+		userReqDto.setRoleCode(RoleCode.APPROVER.value());
+		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		List<PmUser> availableApprover	=	userResDTO.getUserList();
+		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
+		committeeApprovalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
+	}
+
+
+	private void getBudgetApproverNames() {
+		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDto = new UserReqDTO();
+		userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
+		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		List<PmUser> availableApprover	=	userResDTO.getUserList();
+		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
+		budgetApprovalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
+	}
+
+	/**
+	 * @return the committeeApprovalUsers
+	 */
+	public DualListModel<PmUser> getCommitteeApprovalUsers() {
+		return committeeApprovalUsers;
+	}
+
+
+	/**
+	 * @param committeeApprovalUsers the committeeApprovalUsers to set
+	 */
+	public void setCommitteeApprovalUsers(
+			DualListModel<PmUser> committeeApprovalUsers) {
+		this.committeeApprovalUsers = committeeApprovalUsers;
+	}
+
+
+	/**
+	 * @return the budgetApprovalUsers
+	 */
+	public DualListModel<PmUser> getBudgetApprovalUsers() {
+		return budgetApprovalUsers;
+	}
+
+
+	/**
+	 * @param budgetApprovalUsers the budgetApprovalUsers to set
+	 */
+	public void setBudgetApprovalUsers(DualListModel<PmUser> budgetApprovalUsers) {
+		this.budgetApprovalUsers = budgetApprovalUsers;
+	}
+
+
+	/**
+	 * @return the briefingZoneBean
+	 */
+	public List<BriefingZoneBean> getBriefingZoneBean() {
+		return briefingZoneBean;
+	}
+
+
+	/**
+	 * @param briefingZoneBean the briefingZoneBean to set
+	 */
+	public void setBriefingZoneBean(List<BriefingZoneBean> briefingZoneBean) {
+		this.briefingZoneBean = briefingZoneBean;
+	}
+
+
+	/**
+	 * @return the test
+	 */
+	public List<ScQtBriefing> getTest() {
+		return test;
+	}
+
+
+	/**
+	 * @param test the test to set
+	 */
+	public void setTest(List<ScQtBriefing> test) {
+		this.test = test;
+	}
+
+
+	/**
+	 * @return the comitteeUserName
+	 */
+	public List<PmUser> getComitteeUserName() {
+		return comitteeUserName;
+	}
+
+
+	/**
+	 * @param comitteeUserName the comitteeUserName to set
+	 */
+	public void setComitteeUserName(List<PmUser> comitteeUserName) {
+		this.comitteeUserName = comitteeUserName;
+	}
+
+
+	/**
+	 * @return the budgetApproverName
+	 */
+	public List<PmUser> getBudgetApproverName() {
+		return budgetApproverName;
+	}
+
+
+	/**
+	 * @param budgetApproverName the budgetApproverName to set
+	 */
+	public void setBudgetApproverName(List<PmUser> budgetApproverName) {
+		this.budgetApproverName = budgetApproverName;
+	}
+
+
+	/**
+	 * @return the budgetApprover
+	 */
+	public List<SelectItem> getBudgetApprover() {
+		return budgetApprover;
+	}
+
+
+	/**
+	 * @param budgetApprover the budgetApprover to set
+	 */
+	public void setBudgetApprover(List<SelectItem> budgetApprover) {
+		this.budgetApprover = budgetApprover;
+	}
+
+
+	/**
+	 * @return the checklistAttachment
+	 */
+	public List<ScQtCheckListAttachment> getChecklistAttachment() {
+		return checklistAttachment;
+	}
+
+
+	/**
+	 * @param checklistAttachment the checklistAttachment to set
+	 */
+	public void setChecklistAttachment(
+			List<ScQtCheckListAttachment> checklistAttachment) {
+		this.checklistAttachment = checklistAttachment;
+	}
+
+
+	/**
+	 * @return the attachments
+	 */
+	public List<ScQtApprovalAttachment> getAttachments() {
+		return attachments;
+	}
+
+
+	/**
+	 * @param attachments the attachments to set
+	 */
+	public void setAttachments(List<ScQtApprovalAttachment> attachments) {
+		this.attachments = attachments;
+	}
+
+
+	/**
+	 * @return the selectedQtSupplierList
+	 */
+	public List<ScQtSupplier> getSelectedQtSupplierList() {
+		return selectedQtSupplierList;
+	}
+
+
+	/**
+	 * @param selectedQtSupplierList the selectedQtSupplierList to set
+	 */
+	public void setSelectedQtSupplierList(List<ScQtSupplier> selectedQtSupplierList) {
+		this.selectedQtSupplierList = selectedQtSupplierList;
+	}
+
+
+	/**
+	 * @return the scQtCommittee
+	 */
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
+	}
+
+
+	/**
+	 * @param scQtCommittee the scQtCommittee to set
+	 */
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
+	}
+
 
 	/**
 	 * @return the treeNodesList
@@ -879,6 +1115,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPercentageField(boolean percentageField) {
 		this.percentageField = percentageField;
+	}
+
+
+	/**
+	 * @return the descriptionField
+	 */
+	public boolean isDescriptionField() {
+		return descriptionField;
+	}
+
+
+	/**
+	 * @param descriptionField the descriptionField to set
+	 */
+	public void setDescriptionField(boolean descriptionField) {
+		this.descriptionField = descriptionField;
 	}
 
 

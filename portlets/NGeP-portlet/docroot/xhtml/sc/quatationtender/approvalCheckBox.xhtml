@@ -26,18 +26,12 @@
 		</table>
 
 		<p:spacer height="10" />
-		<ui:include src="/xhtml/sc/quatationtender/approvalUpload.xhtml" />
+		
 		<p:tabView var="approvalCategory" orientation="top"
 			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
 			value="#{approvalBackingBean.managedBean.tabList}">
 
 			<p:tab title="#{approvalCategory.titleName}">
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
-					<ui:include
-						src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
-				</ui:fragment>
-
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
 
@@ -50,12 +44,12 @@
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
 				</ui:fragment>
-				<ui:fragment
+				<!-- <ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Publication Approval'}">
 
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
-				</ui:fragment>
+				</ui:fragment> -->
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'PTJ Approval'}">
 
@@ -66,8 +60,8 @@
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Procurement Board Approval'}">
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
+					<!-- <ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" /> -->
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Others Approval'}">
@@ -75,17 +69,7 @@
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsOthers.xhtml" />
 				</ui:fragment>
-				<!-- <ui:fragment
-					rendered="#{approvalCategory.titleName ne 'PTJ Approval'}">
-					<ui:include src="/xhtml/sc/quatationtender/requestDetails.xhtml" />
-					<ui:include
-						src="/xhtml/sc/quatationtender/verificationDetails.xhtml" />
-					<ui:include
-						src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" />
-				</ui:fragment> -->
-
 			</p:tab>
 		</p:tabView>
-
 	</p:panel>
 </ui:composition>

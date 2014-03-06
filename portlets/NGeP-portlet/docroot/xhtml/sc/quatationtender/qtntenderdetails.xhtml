@@ -32,18 +32,18 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 65px"><p:outputLabel value="* Panel"
+								<td style="width: 215px"><p:outputLabel value="* Panel"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
-								<td style="width: 255px"><p:inputText
+								<td><p:inputText
 										value="#{qTDetailBB.managedBean.panelItem}" readonly="true"
 										size="30" disabled="true"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.panelItem ne 'Yes'}">
-									<td><p:outputLabel value="* Open For"
+									<td style="width: 70px"><p:outputLabel value="* Open For"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:selectOneRadio
-											value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}"
+											value="#{qTDetailBB.managedBean.qt.openFor}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}">
 											<f:selectItem itemLabel="Bumiputra" itemValue="true" />
 											<f:selectItem itemLabel="All" itemValue="false" />

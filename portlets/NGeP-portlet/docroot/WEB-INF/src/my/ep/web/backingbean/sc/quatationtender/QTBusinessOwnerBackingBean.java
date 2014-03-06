@@ -3,24 +3,34 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -62,50 +72,82 @@ public class QTBusinessOwnerBackingBean extends
 	/**
 	 * 
 	 */
-	public List<SelectItem> getMinistrySpecificationSecretaryList() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+	public List<PmUser> getMinistrySpecificationSecretaryList() {
+		List<PmUser> approverUserNames = this.getManagedBean()
+				.getComitteeUserName();
 
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
-			if (getManagedBean().getComitteeUsers() == null) {
+		if (approverUserNames == null) {
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setRoleCode(RoleCode.MSC_COMMITTEE.value());
+
 				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				comitteeUsersUsers = resDTO.getUserList();
+				approverUserNames = resDTO.getUserList();
+				/*
+				 * System.out.println("Approver List: " +
+				 * approverUserNames.size());
+				 */
+				this.getManagedBean().setComitteeUserName(approverUserNames);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
+								.toString(), ex.getMessage()));
+			} finally {
+				userSO = null;
 			}
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			for (int i = 0; i < comitteeUsersUsers.size(); i++) {
-				PmUser user = (PmUser) comitteeUsersUsers.get(i);
-				selectItems.add(new SelectItem(user.getUserId(), user
-						.getUserName()));
-			}
-			this.getManagedBean().setComitteeUsers(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return getManagedBean().getComitteeUsers();
+		return approverUserNames;
+		/*
+		 * List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		 * 
+		 * try { IUserSO userSO =
+		 * BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class); List<PmUser>
+		 * comitteeUsersUsers = new ArrayList<PmUser>(); if
+		 * (getManagedBean().getComitteeUsers() == null) { UserReqDTO reqDTO =
+		 * new UserReqDTO(); reqDTO.setRoleCode(RoleCode.MSC_COMMITTEE.value());
+		 * UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+		 * comitteeUsersUsers = resDTO.getUserList(); } selectItems.add(new
+		 * SelectItem(null, "--Select One--")); for (int i = 0; i <
+		 * comitteeUsersUsers.size(); i++) { PmUser user = (PmUser)
+		 * comitteeUsersUsers.get(i); selectItems.add(new
+		 * SelectItem(user.getUserId(), user .getUserName())); }
+		 * this.getManagedBean().setComitteeUsers(selectItems); } catch
+		 * (Exception e) { e.printStackTrace(); } return
+		 * getManagedBean().getComitteeUsers();
+		 */
 	}
 
 	public void addBusinessOwner() {
 		debugLogger("addBusinessOwner");
-		/*
-		 * List<ScCommitteeMember> committeMemebers = this.getManagedBean()
-		 * .getScCommitteeMemberList(); if (committeMemebers == null) {
-		 * committeMemebers = new ArrayList<ScCommitteeMember>(); }
-		 * this.getManagedBean().setScCommitteeMemberList(null);
-		 * ScCommitteeMember committeeMember = new ScCommitteeMember();
-		 * committeeMember.setUserSelection("E");
-		 * this.getManagedBean().setCommitteMember(committeeMember);
-		 * getSelectionTypes();
-		 * committeMemebers.add(getManagedBean().getCommitteMember());
-		 */
-		this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
+		List<ScCommitteeMember> committeMemebersList = this.getManagedBean()
+				.getScCommitteeMemberList();
+		if (committeMemebersList == null) {
+			committeMemebersList = new ArrayList<ScCommitteeMember>();
+		}
+		// this.getManagedBean().setScCommitteeMemberList(null);
+		ScCommitteeMember committeeMember = new ScCommitteeMember();
+		// committeeMember.setPmUser(new PmUser());
+		committeeMember.setUserSelection("E");
+		this.getManagedBean().setCommitteMember(committeeMember);
+		// this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
 
-		this.getManagedBean().getCommitteMember().setUserSelection("E");
 		getSelectionTypes();
-		// getManagedBean().setScCommitteeMemberList(committeMemebers);
+		// committeMemebersList.add(getManagedBean().getCommitteMember());
+		getManagedBean().setScCommitteeMemberList(committeMemebersList);
+
+		/*
+		 * System.out.println("Add Business Owner : " +
+		 * getManagedBean().getScCommitteeMemberList().size());
+		 */
 	}
 
 	/**
@@ -125,31 +167,28 @@ public class QTBusinessOwnerBackingBean extends
 	public void userSelcetionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("_____________________+++++++++++++++ : "
-				+ userSelection);
+		/* System.out.println("User Selection : " + userSelection); */
 
-		/*
-		 * this.getManagedBean().setExternalUsers(null); ScCommitteeMember
-		 * committeeMember = new ScCommitteeMember();
-		 * //committeeMember.setPmUser(new PmUser()); if
-		 * (getManagedBean().getScCommitteeMemberList() != null) {
-		 * getManagedBean().getScCommitteeMemberList().remove(
-		 * this.getManagedBean().getCommitteMember()); }
-		 * committeeMember.setUserSelection(userSelection);
-		 * getManagedBean().setCommitteMember(committeeMember);
-		 * getManagedBean().getScCommitteeMemberList().add(committeeMember);
-		 */
+		ScCommitteeMember committeeMember = new ScCommitteeMember();
+		committeeMember.setPmUser(new PmUser());
+		this.getManagedBean().getScCommitteeMemberList()
+				.remove(this.getManagedBean().getCommitteMember());
+		committeeMember.setUserSelection(userSelection);
+		this.getManagedBean().setCommitteMember(committeeMember);
+		// this.getManagedBean().getScCommitteeMemberList().add(committeeMember);
 
-		if (getManagedBean().getScCommitteeMemberList() != null) {
-			getManagedBean().getScCommitteeMemberList().remove(
-					this.getManagedBean().getCommitteMember());
-		}
-
-		getManagedBean().getCommitteMember().setUserSelection(userSelection);
 		if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.New.value())) {
+				.equalsIgnoreCase(SelectionType.EXISITING.value())) {
+
 			getManagedBean().getCommitteMember().setExternalUser(true);
+			// retriveExternalUsers();
+		} else if (this.getManagedBean().getCommitteMember().getUserSelection()
+				.equalsIgnoreCase(SelectionType.New.value())) {
+
+			getManagedBean().getCommitteMember().setExternalUser(true);
+			// retriveAllMinstrys();
 		}
+
 	}
 
 	public void cancelCommitteAction() {
@@ -193,6 +232,11 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	public void consolidateSelect(SelectEvent event) {
+		ScCommitteeMember member = (ScCommitteeMember) event.getObject();
+		System.out.println("*******" + member.isConsolidate());
+	}
+
 	/**
 	 * @return
 	 */
@@ -230,8 +274,10 @@ public class QTBusinessOwnerBackingBean extends
 				this.getManagedBean().setExternalUsers(
 						resDto.getUserResultBean().getResultList());
 			}
-			System.out.println("Size : "
-					+ resDto.getUserResultBean().getResultList().size());
+			/*
+			 * System.out.println("Size : " +
+			 * resDto.getUserResultBean().getResultList().size());
+			 */
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -315,7 +361,20 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
-	public void okListnere() {
+	public void okListenerAction() {
+		debugLogger("okListenerAction");
+		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IParameterSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+
+		ScCommittee scCommittee = new ScCommittee();
+		ScQt scQt = this.getManagedBean().getQt();
+
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
 
@@ -323,8 +382,74 @@ public class QTBusinessOwnerBackingBean extends
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
 
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
+		/*
+		 * if (memberList != null) { for (ScCommitteeMember member : memberList)
+		 * { PmOrgProfile pmOrgProfile = member.getPmOrgProfile();
+		 * 
+		 * OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		 * orgProfileReqDTO.setOrgProfileId(1l); OrgProfileResDTO profileResDTO
+		 * = orgProfileSO .retrieveOrgProfileByProfileId(orgProfileReqDTO);
+		 * pmOrgProfile = profileResDTO.getPmOrgProfile();
+		 * member.setPmOrgProfile(pmOrgProfile);
+		 * 
+		 * PmUser user = member.getPmUser(); if (user != null &&
+		 * user.getUserId() != null) {
+		 * 
+		 * for (PmUser pmUser : getManagedBean().getSelectedPmUser()) {
+		 * ScCommitteeMember committeeMember = new ScCommitteeMember();
+		 * committeeMember.setMemberName(pmUser.getUserName());
+		 * committeeMember.setIcPassport(pmUser.getIdentificationNo());
+		 * committeeMember.setDesignation(pmUser.getDesignation());
+		 * committeeMember.setGrade(pmUser.getGrade());
+		 * committeeMember.setPnp(pmUser.isPMP());
+		 * committeeMember.setPmUser(pmUser);
+		 * committeeMember.setPmOrgProfile(pmUser.getPmUserOrgs().get(0)
+		 * .getPmOrgProfile()); memberList.add(committeeMember); }
+		 * this.getManagedBean().setScCommitteeMemberList(memberList);
+		 * 
+		 * UserReqDTO userReqDTO = new UserReqDTO();
+		 * userReqDTO.setUserId(user.getUserId()); UserResDTO userResDTO =
+		 * iUserSO .retrieveUserDetails(userReqDTO); user =
+		 * userResDTO.getPmUser(); member.setPmUser(user); } else { if
+		 * (member.isExternalUser() && (user != null && user.getUserId()
+		 * ==null)) { ScCommitteeMember committeeMember = new
+		 * ScCommitteeMember();
+		 * committeeMember.setMemberName(getManagedBean().getCommitteMember()
+		 * .getMemberName());
+		 * committeeMember.setIcPassport(getManagedBean().getCommitteMember()
+		 * .getIcPassport());
+		 * committeeMember.setGrade(getManagedBean().getCommitteMember
+		 * ().getGrade());
+		 * committeeMember.setDesignation(getManagedBean().getCommitteMember()
+		 * .getDesignation());
+		 * committeeMember.setPnp(getManagedBean().getCommitteMember().isPnp());
+		 * committeeMember
+		 * .setEmail(getManagedBean().getCommitteMember().getEmail());
+		 * 
+		 * PmUser pmUser = new PmUser();
+		 * pmUser.setUserName(member.getMemberName());
+		 * pmUser.setLoginId(member.getMemberName());
+		 * pmUser.setIdentificationNo(member.getIcPassport());
+		 * pmUser.setCreatedBy(member.getCreatedBy());
+		 * pmUser.setChangedBy(member.getChangedBy());
+		 * pmUser.setCreatedDate(member.getCreatedDate());
+		 * 
+		 * ParameterReqDTO reqDTO = new ParameterReqDTO();
+		 * 
+		 * reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+		 * reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+		 * 
+		 * ParameterResDTO coderesDTO = parameterSO
+		 * .retrieveParameterByTypeAndCode(reqDTO);
+		 * pmUser.setIdentificationCode(coderesDTO .getPmParameter());
+		 * pmUser.setOrgTypeCode(coderesDTO.getPmParameter()); UserReqDTO
+		 * userReqDTO = new UserReqDTO(); userReqDTO.setPmUser(pmUser);
+		 * UserResDTO resDTO = iUserSO .saveUser(userReqDTO); // TODO Need to
+		 * write the code for pmuser member.setPmUser(resDTO.getPmUser()); } }
+		 * memberList.add(member); } }
+		 */
 
+		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
 			System.out.println("******** New User *********");
 			ScCommitteeMember member = new ScCommitteeMember();
 			member.setMemberName(getManagedBean().getCommitteMember()
@@ -335,9 +460,43 @@ public class QTBusinessOwnerBackingBean extends
 			member.setDesignation(getManagedBean().getCommitteMember()
 					.getDesignation());
 			member.setPnp(getManagedBean().getCommitteMember().isPnp());
+			member.setEmail(getManagedBean().getCommitteMember().getEmail());
+
+			PmUser pmUser = new PmUser();
+			pmUser.setUserName(member.getMemberName());
+			pmUser.setLoginId(member.getMemberName());
+			pmUser.setIdentificationNo(member.getIcPassport());
+			pmUser.setCreatedBy(member.getCreatedBy());
+			pmUser.setChangedBy(member.getChangedBy());
+			pmUser.setCreatedDate(member.getCreatedDate());
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+
+			ParameterResDTO coderesDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			pmUser.setIdentificationCode(coderesDTO.getPmParameter());
+			pmUser.setOrgTypeCode(coderesDTO.getPmParameter());
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setPmUser(pmUser);
+			UserResDTO resDTO = iUserSO.saveUser(userReqDTO);
+			member.setPmUser(resDTO.getPmUser());
+
+			/*
+			 * OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			 * orgProfileReqDTO.setOrgProfileId(1l); OrgProfileResDTO
+			 * profileResDTO = orgProfileSO
+			 * .retrieveOrgProfileByProfileId(orgProfileReqDTO); pmOrgProfile =
+			 * profileResDTO.getPmOrgProfile();
+			 * member.setPmOrgProfile(pmOrgProfile);
+			 */
+
 			memberList.add(member);
-			this.getManagedBean().setScCommitteeMemberList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
+
+			getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
 			System.out.println("******** Existing User *********");
 
@@ -348,12 +507,28 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setDesignation(user.getDesignation());
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPnp(user.isPMP());
+				committeeMember.setPmUser(user);
+				committeeMember.setPmOrgProfile(user.getPmUserOrgs().get(0)
+						.getPmOrgProfile());
 				memberList.add(committeeMember);
 			}
 			this.getManagedBean().setScCommitteeMemberList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getCommitteMember().getIcPassport());
+			/*
+			 * System.out.println("Passport : " +
+			 * getManagedBean().getCommitteMember().getIcPassport());
+			 */
 		}
+		scCommittee.setScCommitteeMembers(memberList);
+		for (ScCommitteeMember scCommitteeMember : memberList) {
+			scCommitteeMember.setScCommittee(scCommittee);
+		}
+
+		scCommittee.setCommitteeType("BO");
+
+		ScQtCommittee scQtCommittee = new ScQtCommittee();
+		scQtCommittee.setScCommittee(scCommittee);
+		scQtCommittee.setScQt(scQt);
+		this.getManagedBean().setScQtCommittee(scQtCommittee);
 	}
 
 	public void deleteBusinessOwner() {
@@ -370,5 +545,23 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMemberList.remove(scCommitteeMember);
 			}
 		}
+	}
+
+	public void reset() {
+		debugLogger("reset");
+		this.getManagedBean().setName(null);
+		this.getManagedBean().setIdentificationType(null);
+		this.getManagedBean().setIdentificationNo(null);
+	}
+
+	public void resetClone() {
+		debugLogger("resetClone");
+		this.getManagedBean().setTitle(null);
+		this.getManagedBean().setQtNo(null);
+		this.getManagedBean().setProcurementMode(null);
+		this.getManagedBean().setCreatedDtFrom(null);
+		this.getManagedBean().setCreatedDtTo(null);
+		this.getManagedBean().setStatus(null);
+
 	}
 }

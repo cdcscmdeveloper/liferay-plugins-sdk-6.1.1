@@ -5,105 +5,138 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Details Section" toggleable="true">
-
-		<h:panelGrid columns="4"
-			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}" />
-
-			<h:panelGroup id="sample2">
-				<p:selectOneMenu value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}"
-					style="width: 100px;">
-					<f:selectItems value="#{qTDetailBB.managedBean.approvers}"
-						var="approver" itemLabel="#{approver.userName}"
-						itemValue="#{approver.userId}" />
-				</p:selectOneMenu>
-
-				<p:inputText value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}" />
-			</h:panelGroup>
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}" />
-
-			<p:calendar
-				value="#{approvalCategory.scQtApproval.approverActionDate}"
-				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}" />
-
-			<p:selectOneMenu
-				value="#{approvalCategory.scQtApproval.approverAction}"
-				style="width: 100px;">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="APPROVER" itemValue="a" />
-				<f:selectItem itemLabel="REJECT" itemValue="r" />
-
-			</p:selectOneMenu>
-
-			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}" />
-
-			<p:inputTextarea rows="3" cols="50"
-				value="#{approvalCategory.scQtApproval.approverRemark}"
-				autoResize="false" />
-
-		</h:panelGrid>
+	<p:panel header="Request Details" toggleable="true">
+		<p:dataTable>
+			<p:column headerText="Type of Approval Request">
+			</p:column>
+			<p:column headerText="From">
+			</p:column>
+			<p:column headerText="To">
+			</p:column>
+		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Remark" style="width: 100%" toggleable="true">
-
-		<table style="width: 50%" id="remarkslist">
+	<p:panel header="Approval Details Section" toggleable="true">
+		<table>
 			<tr>
-				<td class="TableFieldLeft" width="24%"><p:outputLabel
+				<td style="width: 140px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.appname']}" /></td>
+				<td><p:selectOneMenu
+						value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItem itemLabel="ROSLAN" itemValue="1" />
+						<f:selectItem itemLabel="KHAIR" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td style="width: 206px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.appdate']}" /></td>
+				<td><p:calendar
+						value="#{approvalBackingBean.managedBean.scQtApproval.approverActionDate}"
+						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Status" /></td>
+				<td colspan="3"><p:selectOneMenu
+						value="#{approvalBackingBean.managedBean.scQtApproval.approverAction}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItem itemLabel="Approve" itemValue="a" />
+						<f:selectItem itemLabel="Reject" itemValue="r" />
+						<f:selectItem itemLabel="Revice" itemValue="re" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Remark" toggleable="true" id="uploadfileid">
+		<table style="width: 100%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="Remark" /></td>
-				<td class="TableFieldRight"><p:dataGrid id="remarklist"
-						value="#{qTDetailBB.managedBean.scQtRemarks}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
+				<td class="TableFieldRight"><p:dataGrid
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{qTRemarksBB.userImagePath(remarkVar.createdUsername)}"
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
 										height="30" width="30" /></td>
 								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+								<td><h:outputText value="#{remarkVar.createdUsername}" />,
 									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
 										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 									</h:outputText></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}" />
-								</td>
+								<td><p:inputTextarea cols="40"
+										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Supporting Document" /></td>
-				<td><h:panelGroup>
-						<p:commandButton value="#{lbl['lbl.sc.qt.upload']}"
-							oncomplete="approvalUpload.show();return false;"
-							partialSubmit="true" process="@this" icon="ui-icon-upload"
-							rendered="#{qTDetailBB.managedBean.editable}">
-							<!-- <p:graphicImage library="ep/images/design" name="upload.png"
-								value="/resources/ep/images/design/upload.png" /> -->
-							<f:setPropertyActionListener
-								value="#{approvalCategory.scQtApproval}"
-								target="#{approvalBackingBean.managedBean.scQtApproval}" />
-							<f:setPropertyActionListener value="@(.testClass)"
-								target="#{approvalBackingBean.managedBean.uploadUpdateId}" />
-						</p:commandButton>
 
-						<p:outputPanel autoUpdate="true">
-							<h:outputText styleClass="testClass"
-								value="#{scQtApproval.scQtApprovalAttachment.fileName}"></h:outputText>
-						</p:outputPanel>
+				<td class="TableFieldLeft"><p:outputLabel
+						value="Supporting Document" /></td>
 
-					</h:panelGroup></td>
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									oncomplete="attachDlg.show();return false;"
+									icon="iconAttachment" update="uploadfileid"
+									value="Attach Files">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="attachmentId"
+									value="#{approvalBackingBean.managedBean.attachments}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText value="#{attachFile.user.userName}" />,
+												<h:outputText value="#{attachFile.changedDate}">
+													<f:convertDateTime
+														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" /> <p:commandLink
+													action="#{approvalBackingBean.deleteUploadFile}"
+													immediate="true" update="attachmentId">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
+	</p:panel>
 
+	<p:panel header="History" toggleable="true">
+		<p:dataTable>
+			<p:column headerText="Type of Approval Request">
+			</p:column>
+			<p:column headerText="From">
+			</p:column>
+			<p:column headerText="To">
+			</p:column>
+			<p:column headerText="Status">
+			</p:column>
+			<p:column headerText="Date">
+			</p:column>
+		</p:dataTable>
 	</p:panel>
 
 </ui:composition>
