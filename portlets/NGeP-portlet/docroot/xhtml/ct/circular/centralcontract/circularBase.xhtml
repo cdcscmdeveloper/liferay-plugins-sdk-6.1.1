@@ -24,7 +24,8 @@
 	    			</td>
 	    		</tr>
 	    	</table>
-	    	<table style="width: 99%; margin-left: 25px;" class="header-info">
+	    	
+	    	<table style="width: 99%; margin-left: 25px;">
 				<tr style="margin-button: 10px;">
 					<td>
 						<h6 style="color: blue;">
@@ -33,29 +34,19 @@
 					</td>
 					<td>
 						<h6>
-							<p:inputText size="20" disabled="true" />
+							<p:inputText size="20"
+								value="#{centralContractBackingBean.managedBean.circularVer.circularNo == null ? '-- User Input --':centralContractBackingBean.managedBean.circularVer.circularNo}"
+								disabled="true" />
 						</h6>
 					</td>
-					<c:if test="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.updateNo != null)}">
-					<td>
-						<h6 style="color: blue;">
-							<p:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
-						</h6>
-					</td>
-					<td>
-						<h6>
-							<p:inputText size="20"	disabled="true" />
-						</h6>
-					</td>					
-					</c:if>
-					<td>
+				    <td>
 						<h6 style="color: blue;">
 							<p:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
 						</h6>
 					</td>
 					<td>
 						<h6>
-							<p:inputText size="40" disabled="true" />
+							<p:inputText size="40" value="#{centralContractBackingBean.managedBean.circularVer.name}" disabled="true" />
 						</h6>
 					</td>	
 					<td>
@@ -65,11 +56,13 @@
 					</td>
 					<td>
 						<h6>
-							<p:inputText size="20" disabled="true" />
+							<p:inputText size="20"
+								value="#{centralContractBackingBean.getStatusDescById(centralContractBackingBean.managedBean.circularVer.status.statusId)}"
+								disabled="true" />
 						</h6>
 					</td>
 				</tr>
-			</table>	    
+			</table>	 
 		</p:panel>
 		<p:tabView id="tabview" orientation="left" >
 			<p:ajax event="tabChange" process="@form" update=":form:tabview:contractListPnl"/>
