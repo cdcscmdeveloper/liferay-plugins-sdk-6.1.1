@@ -22,14 +22,17 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu style="width: 128px;" rendered="#{standard.showFlag}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="Zone A" itemValue="" />
-					<f:selectItem itemLabel="Zone B" itemValue="" />
-					
+				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}" style="width: 128px;">
+					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItems
+						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
+						var="zone" itemLabel="#{zone.suppZoneName}"
+						itemValue="#{zone.suppZoneId}"></f:selectItems>
+
 				</p:selectOneMenu>
 
 			</p:column>
+
 
 			<p:column>
 				<f:facet name="header">

@@ -19,6 +19,7 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
@@ -130,6 +131,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private Integer tabActiveIndex = 0;
 	
 	private String rejectReason;
+	
+	private List<CmSupplierZone> supplierZoneList;
 
 
 
@@ -1017,8 +1020,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setCatTypeFilterBean(SearchFilterBean catTypeFilterBean) {
 		this.catTypeFilterBean = catTypeFilterBean;
 	}
-	
 
+
+	public List<CmSupplierZone> getSupplierZoneList() {
+		if(supplierZoneList==null)
+			supplierZoneList = new ArrayList<CmSupplierZone>();
+		return supplierZoneList;
+	}
+
+
+	public void setSupplierZoneList(List<CmSupplierZone> supplierZoneList) {
+		this.supplierZoneList = supplierZoneList;
+	}
+	
+	
 	
 
 

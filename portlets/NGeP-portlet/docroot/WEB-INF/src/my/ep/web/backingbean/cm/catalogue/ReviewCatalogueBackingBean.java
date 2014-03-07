@@ -73,7 +73,17 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
 
 
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+		reqDTO.setSupplierId(new Long(1));
+
+		CatalogueResDTO catResDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+
+		System.out.println("size:"+catResDTO.getSupplierZoneLs().size());
+
+		bb.getManagedBean().setSupplierZoneList(catResDTO.getSupplierZoneLs());
 
 
 		bb.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSelectedReviewCat());
@@ -104,39 +114,6 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 
-		/*for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-		for(CmZonalPromotionPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-
-		for(CmZonalTierPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-		for(CmZonalPromotionTierPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-*/
 
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
@@ -164,38 +141,6 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 		System.out.println("bb.getManagedBean().getRejectReasonIds(): " + bb.getManagedBean().getRejectReasonIds());
 
-		/*for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-		for(CmZonalPromotionPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-
-		for(CmZonalTierPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}
-
-		for(CmZonalPromotionTierPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
-
-			promotion.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
-			if(promotion.getPmDistrict().getDistrictId() == null) {
-				promotion.setPmDistrict(null);
-			}
-		}*/
 
 
 
