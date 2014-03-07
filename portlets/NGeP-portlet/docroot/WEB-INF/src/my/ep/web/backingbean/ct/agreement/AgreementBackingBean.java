@@ -79,6 +79,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -105,8 +106,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 	   }
 	   if(this.getManagedBean().getCtAgreement() == null){
+		   
 			this.getManagedBean().setCtAgreement(new CtAgreement());
-			this.getManagedBean().getCtAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
+	     	this.getManagedBean().getCtAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
 			this.getManagedBean().getCtAgreement().setPmUserGroup(new PmUserGroup());
 			if(this.getManagedBean().getCtAgreement().getClauseDocMaster() == null){
 			   this.getManagedBean().getCtAgreement().setClauseDocMaster(new TplDocMaster());

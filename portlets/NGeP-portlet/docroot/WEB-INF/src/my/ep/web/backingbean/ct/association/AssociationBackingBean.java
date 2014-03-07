@@ -194,6 +194,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  				  log.info("Record saved successfully");
  				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Association : "+ 
  				   this.getManagedBean().getCtAssociation().getProjectName()));
+ 				 return "/xhtml/shared/acknowledge.xhtml";
  					
  			  } else {
  					throw new EpException("Failed.");

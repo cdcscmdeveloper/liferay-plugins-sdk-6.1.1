@@ -8,8 +8,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -43,6 +45,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
  
 	 private Object searchValue;
 	 private String editorValue;
+	 private CtTemplate[] selectedTemplates;
 	
 	 public String getEditorValue() {
 		return editorValue;
@@ -65,11 +68,16 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		       
 		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 		       reqDTO.setCtTemplate(ctTemplate);
-		       contractTemplateSO.createTemplate(reqDTO);
-	           if(this.getManagedBean().getSearchFilterBean().getSearchField() == null){
-	        	   this.getManagedBean().getSearchFilterBean().setSearchField("name");
-	           }
-	           searchActionListener();
+		       ContractTemplateResDTO resDTO = contractTemplateSO.createTemplate(reqDTO);
+		       if(resDTO.isSuccessful()) {
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Save ContractTemplate Name : "+ 
+							this.getManagedBean().getCtTemplate().getName()));
+					 if(this.getManagedBean().getSearchFilterBean().getSearchField() == null){
+			        	   this.getManagedBean().getSearchFilterBean().setSearchField("name");
+			           }
+			           searchActionListener();
+			  }
 	     
 		  } catch (Exception ex) {
 				log.error("Exception>>", ex);
@@ -128,15 +136,30 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		 }
 	}
 	
-	public void deleteTemplate(){
-		 IContractTemplateSO contractTemplateSO = null;
-		 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
-		 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-		 reqDTO.setTemplateId(this.getManagedBean().getCtTemplate().getTemplateId());
-		 contractTemplateSO.deleteTemplate(reqDTO);
-		 searchActionListener();
-	}
+	 public void deleteTemplate() {
 
+		    IContractTemplateSO contractTemplateSO = null;
+		    ContractTemplateReqDTO reqDTO = null;
+			
+			try {
+				 reqDTO = new ContractTemplateReqDTO();
+				 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
+					
+				 for(int i = 0; i < selectedTemplates.length; i++) {
+					 CtTemplate ctTemplate  = selectedTemplates[i];   
+					 reqDTO.setCtTemplate(ctTemplate);
+					 ContractTemplateResDTO resDTO= contractTemplateSO.deleteTemplate(reqDTO);
+					 if(resDTO.isSuccessful()){
+						 searchActionListener();
+					 }
+				 }
+		 	 } catch (Exception ex) {
+				log.error("Exception>>", ex); 
+			} finally {
+				contractTemplateSO = null;
+			} 
+		 }
+	
 	public List<SelectItem> getSearchOptions() {
       	 List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		 selectItems.add(new SelectItem("name","Name"));
@@ -171,4 +194,13 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 	public String gotoListPage() {
 		 return TEMPLATE_RETURN_PAGE;
 	}
+
+	public CtTemplate[] getSelectedTemplates() {
+		return selectedTemplates;
+	}
+
+	public void setSelectedTemplates(CtTemplate[] selectedTemplates) {
+		this.selectedTemplates = selectedTemplates;
+	}
+
 }
