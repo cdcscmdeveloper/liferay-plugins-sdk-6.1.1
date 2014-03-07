@@ -28,18 +28,14 @@
 	  </table>
 	  <table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
-				<td>
-						
-							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-						
-					</td>
-					<td>
-						
-							<p:inputText size="20" disabled="true"
-								value="#{agreementBackingBean.managedBean.ctContract.loaNo}"  />
-						
-					</td>		
-					<td>
+				  <td>
+				     <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+				  </td>
+				  <td>
+				   <p:inputText size="20" disabled="true"
+					 value="#{agreementBackingBean.managedBean.ctContract.loaNo}"  />	
+				  </td>		
+			     <td>
 					
 							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
 					
@@ -78,7 +74,8 @@
 	<p:tabView id="agreementTab" orientation="left">
 	    <p:tab id="agDetail" title="Create Agreement" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
-             <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml"/>  
+            <c:if test='#{agreementBackingBean.managedBean.agreementType eq "supplemental"}'>
+             <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml"/>  </c:if>
             <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml"/>
             <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
         </p:tab> 
