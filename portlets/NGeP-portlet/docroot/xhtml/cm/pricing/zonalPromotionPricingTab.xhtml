@@ -13,43 +13,25 @@
 	<p:outputPanel id="cmZonalPromotionPricings">
 		<p:dataTable id="cmZonalPromotionPricingsId"
 			value="#{catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionPricings}"
-			var="zPromotion" rowKey="#{zPromotion}"  rowIndexVar="rowIndex"
-			width="100%" >
-
+			var="zPromotion" rowKey="#{zPromotion}" rowIndexVar="rowIndex"
+			width="100%">
 
 
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.state.name']}
+					Zone Name
 				</f:facet>
-				<p:selectOneMenu  style="width: 128px;" disabled="true"
-						value="#{zPromotion.pmState.stateId}"> 
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{catalogueBackingBean.managedBean.stateList}"
-							var="state" itemLabel="#{state.stateName}"
-							itemValue="#{state.stateId}"></f:selectItems>
-					</p:selectOneMenu>
+				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}"
+					style="width: 128px;">
+					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItems
+						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
+						var="zone" itemLabel="#{zone.suppZoneName}"
+						itemValue="#{zone.suppZoneId}"></f:selectItems>
+
+				</p:selectOneMenu>
 
 			</p:column>
-			
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district.name']}
-				</f:facet>
-					<p:selectOneMenu id="zonalDistrictDDId" style="width: 128px;"  disabled="true"
-						value="#{zPromotion.pmDistrict.districtId}"> 
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{zPromotion.pmDistricts}"
-							var="district" itemLabel="#{district.districtName}"
-							itemValue="#{district.districtId}"></f:selectItems>
-							
-					</p:selectOneMenu>
-
-			</p:column>
-
-
 
 
 
@@ -59,19 +41,22 @@
 				</f:facet>
 				<h:inputText value="#{zPromotion.price}" size="10" disabled="true"></h:inputText>
 			</p:column>
-		
+
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.startDate}"  showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+				<p:calendar value="#{zPromotion.startDate}" showOn="button"
+					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					disabled="true"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 			</p:column>
 

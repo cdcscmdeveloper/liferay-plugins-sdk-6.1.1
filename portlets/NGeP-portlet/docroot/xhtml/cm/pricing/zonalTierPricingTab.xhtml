@@ -20,28 +20,15 @@
 			<ac:paginator for="cmZonalTierPricingsId"></ac:paginator>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.state.name']}
+					Zone Name
 				</f:facet>
-				<p:selectOneMenu style="width: 128px;" disabled="true"
-					value="#{tier.pmState.stateId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}"
+					style="width: 128px;">
+					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
-						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
-				</p:selectOneMenu>
-
-			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district.name']}
-				</f:facet>
-				<p:selectOneMenu id="zonalTierDistrictDDId" style="width: 128px;" disabled="true"
-					value="#{tier.pmDistrict.districtId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{tier.pmDistricts}" var="district"
-						itemLabel="#{district.districtName}"
-						itemValue="#{district.districtId}"></f:selectItems>
+						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
+						var="zone" itemLabel="#{zone.suppZoneName}"
+						itemValue="#{zone.suppZoneId}"></f:selectItems>
 
 				</p:selectOneMenu>
 
@@ -60,14 +47,14 @@
 
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.tier.from']}
+					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.fromQty}" size="4" disabled="true"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.tier.to']}
+					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" size="4" disabled="true"></p:inputText>
 			</p:column>
@@ -76,22 +63,22 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" showOn="button" size="10" disabled="true"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
+					disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10" disabled="true"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10"
+					disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 
 		</p:dataTable>
 
-	
+
 
 	</p:outputPanel>
 
