@@ -117,8 +117,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						ParameterTypeConst.PRICE_TYPE, priceTypes));
 			}
 		  }
-           return "prInquiryMain";		 
-		}
+		 //TODO default value to Procurement type and price type drop down listing
+		 getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
+		 getManagedBean().getRequestNoteDtl().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+         return "prInquiryMain";		 
+	 }
 	  
 	  
 	public Date calcDayToResponse(ScPrInquiry scPrInquiry) {
