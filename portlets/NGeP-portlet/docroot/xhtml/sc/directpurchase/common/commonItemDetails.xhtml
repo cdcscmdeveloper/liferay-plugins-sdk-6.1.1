@@ -178,7 +178,11 @@
 				   </p:column>
 				   
 				   <p:column width="100%" style="text-align:right">
-				     	<p:commandButton process="@all" value="#{lbl['lbl.sc.action.delete.btn']}" icon="ui-icon-delete" />
+				     	<p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
+					       process="@this,requestListDataTable" partialSubmit="true"
+						   action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
+						   update="requestListDataTable"
+						   icon="ui-icon-delete"/> 
 				   	</p:column>
 				   
 			</p:row>
