@@ -20,6 +20,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -121,6 +122,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 		       getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 		   }
+			//TODO default value to justification drop down listing
+		  	getManagedBean().setJustificationType(ParameterConst.PID_CP);
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -128,7 +131,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	 *  submitPurchaseInDefault  method to submit PID details 
      *  in Purchase In Default
 	*/	
-	 public String submitPurchaseInDefault() {
+	 public void submitPurchaseInDefault() {
 		  debugLogger("submitPurchaseInDefault");
 		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		  try {
@@ -152,6 +155,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				scPurchaseInDefault.setWorkFlowStatuses(wflowStatuses);
 				// remarks
 				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+				scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				
 				//Hoa: add token authenticate to support BPM
@@ -169,7 +173,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			} finally {
 					purchaseInDefaultSO = null;
 			}
-			  return null;
 			}
 			
 		/**
@@ -244,11 +247,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			log.info("justificationTypeEvent"); 
 			
 			// TODO  have to change justification type values 
-			if (getManagedBean().getJustificationType().equalsIgnoreCase("CP") || getManagedBean().getJustificationType().equalsIgnoreCase("SS") ) {
+			if (getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_SS)) {
 				getManagedBean().setVisibleOrderQty(false);
 				getManagedBean().setVisibleRemarkAttach(true);
 				
-			} else if (getManagedBean().getJustificationType().equalsIgnoreCase("RI") || getManagedBean().getJustificationType().equalsIgnoreCase("EQ") ) {
+			} else if (getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
 				getManagedBean().setVisibleOrderQty(true);
 				getManagedBean().setVisibleRemarkAttach(true);
 				
@@ -265,7 +268,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			debugLogger("handleFileUpload");
 			FacesScopes facesScopes = new FacesScopes();
 			List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-			if (event.getFile() != null){
+		 if (event.getFile() != null){
 			ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
 			ScPurchaseInDefaultAttachment attachment = getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment();
 			if (null == attachment) {
@@ -276,10 +279,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
 			uploadAttachment(event.getFile(), attachment);
 			attachments.add(attachment);
-			//purchaseInDefault.setScPurchaseInDefaultAttachment(attachment);
-			//getManagedBean().setPurchaseInDefault(purchaseInDefault);
 			getManagedBean().setAttachments(attachments);
-			}
+		  }
 		}
 		
 	   /**
