@@ -52,7 +52,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private ScRequestSupplierItem scRequestSupplierItem;
 	private	List<CmPricing> listPricingItems	=	new ArrayList<>();
 	private	DualListModel<PmUser>	approvalUsers;
-	private CtContract contract;
+	private CtContract contract = new CtContract();
 	private CtContractItem ctContractItem;
 	private CmSupplierItem supplierItem;
 	private SelectItem[] justifications; //justification drop down 
