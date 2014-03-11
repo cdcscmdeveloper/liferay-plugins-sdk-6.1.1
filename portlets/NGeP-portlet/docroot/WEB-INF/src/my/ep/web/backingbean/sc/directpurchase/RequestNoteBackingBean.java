@@ -437,36 +437,48 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		FacesScopes facesScopes = new FacesScopes();
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-		ScRequestNote requestNote = new ScRequestNote();
-
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		// TODO hard coding PmOrgProfile to Request Note
-		orgProfileReqDTO.setOrgProfileId(4L);
-		OrgProfileResDTO pmResDTO = orgProfileSO
-				.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		requestNote.setPmOrgProfile(pmResDTO.getPmOrgProfile());
-		requestNote.setRequestNoteNo("215");
-		if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_SC)) {
-			   requestNote.setSourceMethod("SC");
-		} else if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_PIQ)) {
-			  requestNote.setSourceMethod("PIQ");
+		
+		ScRequestNote requestNote =  null;
+		if(getManagedBean().getRequestNote() == null || getManagedBean().getRequestNote().getRequestNoteNo() == null){
+			requestNote	=	new ScRequestNote();
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			// TODO hard coding PmOrgProfile to Request Note
+			orgProfileReqDTO.setOrgProfileId(4L);
+			OrgProfileResDTO pmResDTO = orgProfileSO
+					.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+			requestNote.setPmOrgProfile(pmResDTO.getPmOrgProfile());
+			requestNote.setRequestNoteNo("215");
+			if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_SC)) {
+				   requestNote.setSourceMethod("SC");
+			} else if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_PIQ)) {
+				  requestNote.setSourceMethod("PIQ");
+			}
+			initializeRemarks(requestNote);
+		}else{
+			requestNote	=	getManagedBean().getRequestNote();
 		}
-		// WorkFlow Status
+		
+
+		
+		
+		//Hoa: TODO WorkFlow Status should be set In the save, submit method
 	    List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 	    ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus(SourcingConstants.RN_PENDING_SUBMISSION);
 	    workFlowStatus.setRequestNote(requestNote);
 	    workFlowStatus.setCurrent(true);
 	    workFlowStatuses.add(workFlowStatus);
-	    requestNote.setWorkFlowStatuses(workFlowStatuses);
+	    requestNote.getWorkFlowStatuses().addAll(workFlowStatuses);
+	    //requestNote.setWorkFlowStatuses(workFlowStatuses);
+	    
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
 		scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 		scRequestNoteDtl.setScRequestNote(requestNote);
 		getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
-		initializeRemarks(requestNote);
+		
 		populateUserDivisionList();
 		getManagedBean().setRequestNote(requestNote);
 		return "commonRequestNote";
