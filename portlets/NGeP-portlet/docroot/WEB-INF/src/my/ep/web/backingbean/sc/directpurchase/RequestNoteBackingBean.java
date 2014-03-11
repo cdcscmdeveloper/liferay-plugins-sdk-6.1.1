@@ -444,13 +444,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			// TODO hard coding PmOrgProfile to Request Note
 			orgProfileReqDTO.setOrgProfileId(4L);
 			OrgProfileResDTO pmResDTO = orgProfileSO
 					.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 			requestNote.setPmOrgProfile(pmResDTO.getPmOrgProfile());
-			requestNote.setRequestNoteNo("215");
+			//Hoa: use getRequestNoteNo() to get Request Note Number
+			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+			
 			if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_SC)) {
 				   requestNote.setSourceMethod("SC");
 			} else if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_PIQ)) {
@@ -470,7 +473,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    workFlowStatus.setRequestNote(requestNote);
 	    workFlowStatus.setCurrent(true);
 	    workFlowStatuses.add(workFlowStatus);
-	    requestNote.getWorkFlowStatuses().addAll(workFlowStatuses);
+	    if(requestNote.getWorkFlowStatuses() != null){
+	    	requestNote.getWorkFlowStatuses().addAll(workFlowStatuses);
+	    }else{
+	    	requestNote.setWorkFlowStatuses(workFlowStatuses);
+	    }
 	    //requestNote.setWorkFlowStatuses(workFlowStatuses);
 	    
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
