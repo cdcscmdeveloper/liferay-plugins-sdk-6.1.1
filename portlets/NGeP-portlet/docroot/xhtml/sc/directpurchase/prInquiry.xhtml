@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:spacer height="10px" />
-	<p:panelGrid styleClass="noBorders tr,noBorders td,headerClass"
+	<p:panel id="prInqPanel">
+	<p:panelGrid styleClass="noBorders tr,noBorders td,headerClass" id="headerId"
 		style="background-color: #F2F2F2;">
 		<p:row>
 			<p:column>
@@ -20,17 +21,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
 			</p:column>
 
-			<p:column width="25%" style="align : center;">
-				<p:selectOneMenu disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
-					 value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
-					 styleClass="divisionclass" converter="longConverter"
-					 style="width: 220px;">
-				    <f:selectItems 
-					   value="#{purchaseInquiryBackingBean.managedBean.userDivisionList}"
-					   var="pmOrgProfile"
-						itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-						itemValue="#{pmOrgProfile.orgProfileId}" />
-			    </p:selectOneMenu>
+			<p:column width="25%" style="align : center;" size="45">
+			<p:inputText disabled="true"  value="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}"/>
 			</p:column>
 
 			<p:column>
@@ -43,8 +35,31 @@
 	</p:panelGrid>
 	<p:spacer height="15px" />
 	<p:panel header=" INQUIRY DETAIL" toggleable="true" id="addToCartId">
-
 		<table>
+			<tr>
+			<td colspan="4" style="width: 250px;"><p:outputPanel id="ptjId">
+				<table style="width: 100%">
+				    <tr>
+					   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.orgProfileId == null}">
+						 <td style="width: 250px;">
+						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
+						 <td> <p:selectOneMenu 
+						     value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
+						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
+						  <f:selectItems 
+							   value="#{purchaseInquiryBackingBean.managedBean.userDivisionList}"
+							   var="pmOrgProfile"
+							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+							   itemValue="#{pmOrgProfile.orgProfileId}" />
+							 <p:ajax event="change" update="@([id$=prInqPanel]) " 
+							     process="@all"  listener="#{purchaseInquiryBackingBean.ptjNameEvent}"/>
+					</p:selectOneMenu></td>
+			    	</ui:fragment>
+				</tr>
+				</table>
+			   </p:outputPanel></td>
+			</tr>
+			
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
@@ -157,7 +172,7 @@
 				        <p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}"/>
 				   </h:panelGroup>
 				</td>
-				<td>
+				<td colspan="4" >
 				  <h:panelGroup id="justValueId">
 				     <p:selectOneMenu  rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}"
 						value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType}">
@@ -167,7 +182,7 @@
 							listener="#{purchaseInquiryBackingBean.justificationTypeEvent}" process="@this" />
 					</p:selectOneMenu> 
 					    <p:spacer width="5px" />
-					<p:inputText size="25" id="otherId" rendered="#{purchaseInquiryBackingBean.managedBean.justTypeOption}"/>
+					<p:inputText size="35" id="otherId" rendered="#{purchaseInquiryBackingBean.managedBean.justTypeOption}"/>
 				  </h:panelGroup>	
 			   </td>
 			</tr>
@@ -198,13 +213,11 @@
 			rowKey="#{pricing.pricingId}" rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.state']}" style="width:25%">
-				<h:outputText value="#{reqSupplerItem.pricing.pmState.stateName}" />
+				<h:outputText />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.district']}" style="width:25%">
-				<c:if test="#{reqSupplerItem.pricing.pmDistrict ne null }">
-					<h:outputText value="#{reqSupplerItem.pricing.pmDistrict.districtName}" />
-				</c:if>
+					<h:outputText />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}" style="width:10%">
@@ -259,6 +272,6 @@
 			</td>
 		</tr>
 	</table>
-			
+	</p:panel>
 	</p:panel>
 </ui:composition>
