@@ -15,6 +15,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -71,6 +72,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String uploadFinalAgreement;
 	private List<PmOrgProfile> orgList;
 	private List<PmOrgProfile> orgListDep;
+	private String filePath;
+	private CtTemplate ctTemplates;
 	
 	
 	public AgreementManagedBean(){
@@ -333,7 +336,22 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setOrgListDep(List<PmOrgProfile> orgListDep) {
 		this.orgListDep = orgListDep;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public CtTemplate getCtTemplates() {
+		return ctTemplates;
+	}
+
+	public void setCtTemplates(CtTemplate ctTemplates) {
+		this.ctTemplates = ctTemplates;
 	}	
-	
 	
 }

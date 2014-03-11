@@ -11,7 +11,7 @@
 		   <p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.ctSignParties}" 
 			 selection="#{agreementBackingBean.selectedCtAgreementParty}" rowKey="#{data}">
 			  <ac:paginator for="signTable"/>
-			     <p:column selectionMode="multiple" style="width:18px;"/>  
+			     <p:column selectionMode="multiple" style="width:2%"/>  
 		         <p:column style="width:150px;"  headerText="Ministry">
 		             <p:selectOneMenu id="ministry" value="#{agreementBackingBean.managedBean.ministryProfileId}" style="width:140px;">
             	        <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
@@ -61,7 +61,7 @@
             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedSignSuppliers}" rowKey="#{data}"
             paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
             <ac:paginator for="supplierSign"/>
-			   <p:column selectionMode="multiple" style="width:18px;"/> 
+			   <p:column selectionMode="multiple" style="width:2%"/> 
                    <p:column style="width:200px;" headerText="Company Name">
                      <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.smSupplier.companyName}" style="float:left;"/>
                 </p:column> 
@@ -96,7 +96,7 @@
             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedSignWitness}" rowKey="#{data}"
             paginator="false" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
             <ac:paginator for="witnessSign"/>
-              <p:column selectionMode="multiple" style="width:18px;"/> 
+              <p:column selectionMode="multiple" style="width:2%"/> 
                <p:column style="width:200px;" headerText="Witness Type">
                 <p:selectOneMenu style="width:180px;" value="#{data.agreementPartyType.parameterId}">
                        <f:selectItems value="#{agreementBackingBean.getDropdownValues('PTT')}" />

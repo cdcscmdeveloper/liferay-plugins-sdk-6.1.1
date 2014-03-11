@@ -9,9 +9,9 @@
     <p:panel id="apedixDoc" header="APPENDIXES DOCUMENT"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">  
           <p:dataTable id="appendixes" var="data" value="#{agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs}" 
-             lazy="false" dynamic="true" selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" rowIndexVar="rowIndex">
+             selection="#{agreementBackingBean.selectedAppendixs}" rowKey="#{data}" rowIndexVar="rowIndex">
              <ac:paginator for="appendixes"/>
-	 		  <p:column selectionMode="multiple" style="width:18px;"/>  
+	 		  <p:column selectionMode="multiple" style="width:2%" />  
 	 		    <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}">
 			      <h:outputText value="#{data.title}"
 					rendered="#{rowIndex lt agreementBackingBean.managedBean.ctAgreement.ctAgreementAppendixs.size()-1}" />

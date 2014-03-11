@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.Format;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -45,6 +47,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
+import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -92,6 +96,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 
+	private static final String PROCESS_DOWNLOAD_PAGE ="/xhtml/ct/agreement/downloadDocument.xhtml";
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 
 	private boolean supplementValue = true; 
@@ -594,6 +599,31 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
+	public void openNewWindow(AgreementDetails agreementDetails) throws IOException{
+		 
+	    IContractTemplateSO contractTemplateSO = null;
+	    ContractTemplateReqDTO reqDTO = null;
+	    ContractTemplateResDTO ResDTO = null;
+		try {
+			 this.getManagedBean().setFilePath(agreementDetails.getFilePath());
+			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
+			 reqDTO = new ContractTemplateReqDTO();
+			 reqDTO.setTemplateId(12L);
+		     ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
+		     this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
+	         FacesContext context = FacesContext.getCurrentInstance(); 
+	         context.getExternalContext().redirect(PROCESS_DOWNLOAD_PAGE); 
+	   }catch(Exception ex) {
+			log.error("Exception>>", ex);
+	   }finally{
+		    contractTemplateSO = null;
+	   }
+	}
+	
+	public void closedWindow(){
+		
+	}
+	
 	public void downloadUploadFile() throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -851,6 +881,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 }
 		 return null;
 	 } 
+	 
+	 public String blobToStr(byte[] content) {
+		
+		   String decoded ="";
+		   try{
+			  decoded = new String(content, "UTF-8");
+		   }catch(UnsupportedEncodingException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+	   return decoded;
+	 }
+	 
 	 public List<AgreementDetails> getDetailsList() {
 			
 		      if(this.getManagedBean().getAgreementList() == null){
@@ -861,19 +904,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    	  cover.setFileName("AGREEMENT COVER PAGE");
 		    	  cover.setFilePath("C:/projects/uploads/cover.docx");
 		    	  cover.setFileType("System Define");
-			  		agreementList.add(cover);
+			  	  agreementList.add(cover);
 			  		
-			  		AgreementDetails CLAUSE = new AgreementDetails();
-			  		CLAUSE.setFileName("AGREEMENT CLAUSE");
-			  		CLAUSE.setFilePath("C:/projects/uploads/clause.docx");
-			  		CLAUSE.setFileType("System Define");
-			  		agreementList.add(CLAUSE);
+			  	  AgreementDetails CLAUSE = new AgreementDetails();
+			  	  CLAUSE.setFileName("AGREEMENT CLAUSE");
+			  	  CLAUSE.setFilePath("C:/projects/uploads/clause.docx");
+			  	  CLAUSE.setFileType("System Define");
+			  	  agreementList.add(CLAUSE);
 			  		
-			  		AgreementDetails signing = new AgreementDetails();
-			  		signing.setFileName("AGREEMENT SIGNING PAGE");
-			  		signing.setFilePath("C:/projects/uploads/signing.docx");
-			  		signing.setFileType("System Define");
-			  		agreementList.add(signing);
+			  	  AgreementDetails signing = new AgreementDetails();
+			  	  signing.setFileName("AGREEMENT SIGNING PAGE");
+			  	  signing.setFilePath("C:/projects/uploads/signing.docx");
+			  	  signing.setFileType("System Define");
+			  	  agreementList.add(signing);
 			  		
 		    	  
 		    	AgreementDetails Agr = new AgreementDetails();

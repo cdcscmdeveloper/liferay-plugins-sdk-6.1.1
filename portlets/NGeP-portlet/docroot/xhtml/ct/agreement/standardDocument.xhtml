@@ -25,7 +25,7 @@
 					<p:outputLabel value="#{data.fileType}" style="float:left;" />
 				</p:column>
 				<p:column styleClass="column-align-center">
-				 <h:commandLink  action="#{agreementBackingBean.downloadFile(data.filePath)}">
+				 <h:commandLink  action="#{agreementBackingBean.openNewWindow(data)}" target="_blank">
 					<p:graphicImage library="ep/images/design" name="document.png"
 					  value="/resources/ep/images/design/document.png" title="View Document" rendered="#{rowIndex lt 3 }" />
 					  <p:graphicImage library="ep/images/design" name="download.png"

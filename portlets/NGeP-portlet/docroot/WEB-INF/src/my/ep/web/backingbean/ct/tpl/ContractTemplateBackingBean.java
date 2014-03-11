@@ -125,7 +125,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 			 if (StringUtils.isNotBlank((String) searchFilterBean.getSearchValue())) 
 			    reqDTO.getTemplatesSearchBean().getDataFilterBeans().add(searchFilterBean);
 				
-			 ContractTemplateResDTO ResDTO = contractTemplateSO.retrieveTemplate(reqDTO);
+			 ContractTemplateResDTO ResDTO = contractTemplateSO.searchTemplate(reqDTO);
 			 this.getManagedBean().setCtTemplatesList(ResDTO.getTemplateResultBean().getResultList());
 			 this.getManagedBean().setSelectedIndex(0);
 
