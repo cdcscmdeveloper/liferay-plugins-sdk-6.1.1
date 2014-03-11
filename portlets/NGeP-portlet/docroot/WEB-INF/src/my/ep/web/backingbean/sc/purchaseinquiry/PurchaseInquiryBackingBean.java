@@ -123,7 +123,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
          return "prInquiryMain";		 
 	 }
 	  
-	  
 	public Date calcDayToResponse(ScPrInquiry scPrInquiry) {
 		Date dayToResp = null;
 		if (scPrInquiry.getDayToResponse() != null) {
@@ -235,128 +234,147 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			return null;
 		}
 		
-	  /**
-	   * Initializing remarks  in Purchase inquiry
-      */	
-		private List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
-			List<ScPRIRemark> results = new ArrayList<ScPRIRemark>();
-			FacesScopes facesScopes = new FacesScopes();
-			if (results.size() == 0
-					|| !compareUserName(results.get(0).getUser().getLoginId())) {
-				ScPRIRemark remark = new ScPRIRemark();
-				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(remark.getCreatedBy());
-				remark.setChangedDate(remark.getCreatedDate());
-				remark.setUser(facesScopes.getUserSessionBean());
-				if (getManagedBean().getScPrInquiry().getRemarks() != null
-						&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
-					remark.setRemark(getManagedBean().getScPrInquiry().getRemarks()
-							.get(0).getRemark());
-				}
-				PmStatus status = new PmStatus();
-				status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
-				remark.setPmStatus(status);
-				remark.setPrInquiry(prInquiry);
-				results.add(0, remark);
+	/**
+	 * Initializing remarks in Purchase inquiry
+	 */
+	private List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
+		List<ScPRIRemark> results = new ArrayList<ScPRIRemark>();
+		FacesScopes facesScopes = new FacesScopes();
+		if (results.size() == 0
+				|| !compareUserName(results.get(0).getUser().getLoginId())) {
+			ScPRIRemark remark = new ScPRIRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setUser(facesScopes.getUserSessionBean());
+			if (getManagedBean().getScPrInquiry().getRemarks() != null
+					&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
+				remark.setRemark(getManagedBean().getScPrInquiry().getRemarks()
+						.get(0).getRemark());
 			}
-			return results;
+			PmStatus status = new PmStatus();
+			status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
+			remark.setPmStatus(status);
+			remark.setPrInquiry(prInquiry);
+			results.add(0, remark);
 		}
-		
-	  /**
-	   *  to get Division drop down Listing in Purchase inquiry
-	   */
-		private void populateUserDivisionList() {
-			debugLogger("populateUserMinistryList");
-			PmUser user = new FacesScopes().getUserSessionBean();
-			if (user != null) {
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setUserId(user.getUserId());
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-	
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
-	
-				List<PmOrgProfile> userDivisionList = resDTO.getOrgProfileList();
-				System.out.println("userDivisionList" + userDivisionList.size());
-				getManagedBean().setUserDivisionList(userDivisionList);
-			}
+		return results;
+	}
+
+	/**
+	 * to get Division drop down Listing in Purchase inquiry
+	 */
+	private void populateUserDivisionList() {
+		debugLogger("populateUserMinistryList");
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(user.getUserId());
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			List<PmOrgProfile> userDivisionList = resDTO.getOrgProfileList();
+			System.out.println("userDivisionList" + userDivisionList.size());
+			getManagedBean().setUserDivisionList(userDivisionList);
 		}
+	}
+
+	/**
+	 * Event for procurement type drop down in Purchase inquiry
+	 */
+	public void procurementTypeEvent() {
+		log.info("procurementTypeEvent");
+		if (getManagedBean().getRequestNoteDtl().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			getManagedBean().setProcTypeOption(false);
+			getManagedBean().setJustTypeOption(false);
+
+		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			getManagedBean().setProcTypeOption(false);
+			getManagedBean().setJustTypeOption(false);
+
+		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+			getManagedBean().setProcTypeOption(true);
+			getManagedBean()
+					.setJustDropdown(
+							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
+
+		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
+			getManagedBean().setProcTypeOption(true);
+			getManagedBean()
+					.setJustDropdown(
+							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
+		}
+	}
 		
-		/**
-		 * Event for procurement type  drop down in Purchase inquiry
-		 */
-		public void procurementTypeEvent() {
-			log.info("procurementTypeEvent"); 
-			if (getManagedBean().getRequestNoteDtl().getProcurementType()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-				getManagedBean().setProcTypeOption(false);
-				getManagedBean().setJustTypeOption(false);
-				
-			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-				getManagedBean().setProcTypeOption(false);
-				getManagedBean().setJustTypeOption(false);
+	/**
+	 * Event for justification type drop down in Purchase inquiry
+	 */
+	public void justificationTypeEvent() {
+		log.info("justificationTypeEvent");
+		if (getManagedBean().getRequestNoteDtl().getJustificationType()
+				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
+			getManagedBean().setJustTypeOption(true);
+		} else {
+			getManagedBean().setJustTypeOption(false);
+		}
+	}
+		
+	/**
+	 * Page navigation to catalogue search page in Purchase inquiry
+	 */
+	public String backToPervious() {
+		log.info("backToPervious");
+		return "catalogueSearch";
+	}
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
 			
-			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				getManagedBean().setProcTypeOption(true);
-			    getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
-				
-			} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-	            getManagedBean().setProcTypeOption(true);
-	            getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
-			}
-		}
-		
-		/**
-		 * Event for justification type drop down in Purchase inquiry
-		 */
-		public void justificationTypeEvent() {
-			log.info("justificationTypeEvent");
-			if (getManagedBean().getRequestNoteDtl().getJustificationType()
-					.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-				getManagedBean().setJustTypeOption(true);
-			} else {
-				getManagedBean().setJustTypeOption(false);
-			}
-		}
-		
-		/**
-		 * Page navigation to catalogue search page in Purchase inquiry
-		 */
-		public String backToPervious() {
-			log.info("backToPervious");
-			return "catalogueSearch";
-		}
-	
-		private void debugLogger(Object message) {
-			if (log.isDebugEnabled()) {
-				log.debug(message);
-			}
-			log.info(message);
-		}
-			
-		public String getCurrentStatus(){
-			String result = "";
-			if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
-			for(ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry().getWorkflowStatuses()){
-				if(status.isCurrent()){
-				result = getStatusDescById(status.getPmStatus().getStatusId());
-				if(result.equalsIgnoreCase("Pending Submission")){
-				  getManagedBean().setEditFlag(false);
-				  getManagedBean().setButtonFlag(false);
-				} else{
-				  getManagedBean().setEditFlag(true);
-				  getManagedBean().setButtonFlag(true);
+	public String getCurrentStatus() {
+		String result = "";
+		if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
+			for (ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry()
+					.getWorkflowStatuses()) {
+				if (status.isCurrent()) {
+					result = getStatusDescById(status.getPmStatus()
+							.getStatusId());
+					if (result.equalsIgnoreCase("Pending Submission")) {
+						getManagedBean().setEditFlag(false);
+						getManagedBean().setButtonFlag(false);
+					} else {
+						getManagedBean().setEditFlag(true);
+						getManagedBean().setButtonFlag(true);
+					}
+					break;
 				}
-				break;
 			}
-		    }
-		  }
-		  return result;
-	  }
+		}
+		return result;
+	}
+	
+	public void ptjNameEvent() {
+		if (getManagedBean().getOrgProfileId() != null) {
+			for (PmOrgProfile orgProfile : getManagedBean()
+					.getUserDivisionList()) {
+				if (orgProfile.getOrgProfileId().equals(
+						getManagedBean().getOrgProfileId())) {
+					getManagedBean().setPmOrgProfile(orgProfile);
+				}
+			}
+		}
+	}
 }
