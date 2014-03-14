@@ -12,6 +12,10 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -59,6 +63,10 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private String userGroupStatus;
 	
+	private PmState pmState;	
+	
+    private PmDistrict pmDistrict;	
+
 	private boolean isEditable = true;	
 	
 	private List<PmUser> users;
@@ -76,6 +84,31 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private List<AddressList> addresslistss;	
 	
+	private List<PmState> states;	
+	
+	private List<PmDistrict> districts;
+	
+	private List<PmCity> citys;	
+	
+	private List<PmDivision> divisions;	
+	
+	// get user profiles detail
+	private String userDetailNames = null;
+	
+	private String userIdNo = null;
+	
+	private String userIdType;
+	
+	private String userDesignation = null;	
+	
+	private String userNationality;	
+	
+	private String userOrgType;	
+	
+	private String usergrade = null;
+	
+    private String userSalutation;	
+
 
 	public UserprofilesManagedBean(){
 		log.info("inside ");		
@@ -243,8 +276,131 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUser(PmUser user) {
 		this.user = user;
 	}
+	
 
 	
+	public List<PmState> getStates() {
+		return states;
+	}
+
+	public void setStates(List<PmState> states) {
+		this.states = states;
+	}
+
+	public PmState getPmState() {
+		return pmState;
+	}
+
+	public void setPmState(PmState pmState) {
+		this.pmState = pmState;
+	}
+	
+	
+	public List<PmDistrict> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<PmDistrict> districts) {
+		this.districts = districts;
+	}
+	
+	public List<PmCity> getCitys() {
+		return citys;
+	}
+
+	public void setCitys(List<PmCity> citys) {
+		this.citys = citys;
+	}
+
+	public PmDistrict getPmDistrict() {
+		return pmDistrict;
+	}
+
+	public void setPmDistrict(PmDistrict pmDistrict) {
+		this.pmDistrict = pmDistrict;
+	}	
+		
+	public List<PmDivision> getDivisions() {
+		return divisions;
+	}
+
+	public void setDivisions(List<PmDivision> divisions) {
+		this.divisions = divisions;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserDetailNames() {
+		return userDetailNames;
+	}
+
+	public void setUserDetailNames(String userDetailNames) {
+		this.userDetailNames = userDetailNames;
+	}
+
+	public String getUserIdNo() {
+		return userIdNo;
+	}
+
+	public void setUserIdNo(String userIdNo) {
+		this.userIdNo = userIdNo;
+	}
+
+	public String getUserIdType() {
+		return userIdType;
+	}
+
+	public void setUserIdType(String userIdType) {
+		this.userIdType = userIdType;
+	}
+
+	public String getUserDesignation() {
+		return userDesignation;
+	}
+
+	public void setUserDesignation(String userDesignation) {
+		this.userDesignation = userDesignation;
+	}
+
+	public String getUserNationality() {
+		return userNationality;
+	}
+
+	public void setUserNationality(String userNationality) {
+		this.userNationality = userNationality;
+	}
+
+	public String getUserOrgType() {
+		return userOrgType;
+	}
+
+	public void setUserOrgType(String userOrgType) {
+		this.userOrgType = userOrgType;
+	}
+	
+	public String getUsergrade() {
+		return usergrade;
+	}
+
+	public void setUsergrade(String usergrade) {
+		this.usergrade = usergrade;
+	}
+		
+
+	public String getUserSalutation() {
+		return userSalutation;
+	}
+
+	public void setUserSalutation(String userSalutation) {
+		this.userSalutation = userSalutation;
+	}
+
 	public List<PreferenceList> getPreferencelists() {
 		
 		if(preferencelists==null){
