@@ -7,21 +7,15 @@
 
 	<p:panel>
 
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="8">			
-			<h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.userid']}" />  
-			<p:inputText value="#{userprofilesBackingBean.managedBean.user.userId}" disabled="true" size="20" />
+		<h:panelGrid class="header-info" border="0" cellpadding="0" cellspacing="0" width="100%" columns="6" >			
+			<h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.loginid']}" />  
+			<p:inputText value="#{userprofilesBackingBean.managedBean.user.loginId}" disabled="true" size="20" />
 		
             <h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.username']}" />
-             <p:columnGroup>
-              <p:inputText value="Mrs" disabled="true" size="20" />&#160;&#160;
-		      <p:inputText value="#{userprofilesBackingBean.managedBean.user.userName}" disabled="true" size="40" />                
-             </p:columnGroup>
-                
- 			<h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.designation']}" />  
-			<p:inputText value="#{userprofilesBackingBean.managedBean.user.designation}" disabled="true" size="30" />
-			    
-			<h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.grade']}" />  
-	        <p:inputText value="#{userprofilesBackingBean.managedBean.user.grade}" disabled="true" size="10" />			                                
+            <p:inputText value="#{userprofilesBackingBean.managedBean.user.userName}" disabled="true" size="40" />                
+                        			    
+			<h:outputLabel value="#{lbl['lbl.pm.profiles.navigation.status']}" />  
+	        <p:inputText value="Active" disabled="true" size="10" />			                                
 	    </h:panelGrid>	
 	</p:panel>
 </ui:composition>	

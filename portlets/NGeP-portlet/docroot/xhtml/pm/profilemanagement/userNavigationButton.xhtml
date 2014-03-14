@@ -7,7 +7,7 @@
 
 	<p:panel>	
 		  <p:commandButton value="Back" onclick="history.go(-1)" icon="ui-icon-back" style="float:left;"/>
-		  <p:commandButton value="Save" icon="ui-icon-save" style="float:right;" />			  			
+		  <p:commandButton value="Save" action="#{userprofilesBackingBean.saveUPDetailAction}" process="@all" icon="ui-icon-save" style="float:right;" />			  			
 		  <p:commandButton value="Delete" icon="ui-icon-delete" style="float:right;"/>			  		  
 		<br/>
 		<br/>							
