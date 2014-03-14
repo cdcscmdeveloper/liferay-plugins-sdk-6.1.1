@@ -1051,7 +1051,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}
 
-
+			System.out.println("getzStdPrices:"+this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size());
 			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -1719,14 +1719,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-
-
-
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 
 		reqDTO.setItemStatus("D");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+		
+		
+		/*for(CmSupplierItem supplierItem: resDTO.getSupplierItemList()){
+			
+			if(supplierItem.getzStdPrices()==null || supplierItem.getzStdPrices().isEmpty()){
+				CmZonalStandardPricing zone = new CmZonalStandardPricing();
+				zone.setCmSupplierItem(supplierItem);
+				
+				supplierItem.getzStdPrices().add(zone);
+			}
+		}*/
 
 		System.out.println("*****************end********************");
 		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());

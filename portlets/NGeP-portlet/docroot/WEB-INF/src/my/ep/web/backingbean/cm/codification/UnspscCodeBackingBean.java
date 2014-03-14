@@ -53,6 +53,7 @@ import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -1410,37 +1411,37 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		for(CmRequestCode code : this.getManagedBean().getReviewExtCodeList()){
 
 			//if(!code.isRequestColor()){
-			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
 				code.setReviewedColorName(code.getColorName());
 			}
-			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
 				code.setReviewedColorNameII(code.getReviewedColorName());
 			}
 			//}
 
 			//if(!code.isRequestBrand()){
-			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
 				code.setReviewedBrandName(code.getBrandName());
 			}
-			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
 				code.setReviewedBrandNameII(code.getReviewedBrandName());
 			}
 			//	}
 
 			//	if(!code.isRequestType()){
-			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
 				code.setReviewedTypeName(code.getTypeName());
 			}
-			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
 				code.setReviewedTypeNameII(code.getReviewedTypeName());
 			}
 			//	}
 
 			//	if(!code.isRequestMeasurement()){
-			if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
 				code.setReviewedMeasurementName(code.getMeasurementName());
 			}
-			if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
 				code.setReviewedMeasurementNameII(code.getReviewedMeasurementName());
 			}
 			//	}
@@ -1489,10 +1490,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 		System.out.println("********res.getTaskName()********"+res.getTaskName());
-		if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+		if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCode.xhtml");
-		}else if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+		}else if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCodeII.xhtml");
 		}else if(res.getTaskName().equalsIgnoreCase("Publish Extension Code")){
@@ -1795,36 +1796,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
-	public String requestExtensionWithUNSPSC(){
-
-		FacesScopes face = new FacesScopes();
-		String token =face.getBPMAuthenticationCtxToken();
-		System.out.println("token:"+token);
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		CodificationResDTO resDTO = null;
-
-		CodificationBackingBean bb = new CodificationBackingBean();
-
-		System.out.println("getUnspscCode:"+bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-
-
-		this.getManagedBean().getRequestCode().setTempCode(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-		this.getManagedBean().getRequestCode().setTempTitle(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle());
-
-		System.out.println("getBrandName:"+this.getManagedBean().getRequestCode().getBrandName());
-		this.getManagedBean().getRequestCode().setRequestType(true);
-		this.getManagedBean().getRequestCode().setRequestBrand(true);
-		this.getManagedBean().getRequestCode().setRequestColor(true);
-		this.getManagedBean().getRequestCode().setRequestMeasurement(true);
-		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-		reqDTO.setToken(token);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setOutCome("");
-
-
-		return "BPMtesting";
-	}
-
+	
 
 	
 	public boolean checkRemark(String param1, String param2) {

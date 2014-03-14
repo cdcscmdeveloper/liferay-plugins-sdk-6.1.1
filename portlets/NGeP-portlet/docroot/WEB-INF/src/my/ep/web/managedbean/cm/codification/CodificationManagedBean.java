@@ -13,6 +13,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.ExtensionCodeVO;
 
 @ManagedBean(name = "codificationMB")
 @SessionScoped
@@ -87,6 +88,31 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private CmUnspsc autoCompleteUnspscCode;
 	
+	private List<ExtensionCodeVO> extensionVoList;
+	private ExtensionCodeVO[] selectedExtensionVO;
+	
+	
+	
+	
+	
+	public ExtensionCodeVO[] getSelectedExtensionVO() {
+		return selectedExtensionVO;
+	}
+
+	public void setSelectedExtensionVO(ExtensionCodeVO[] selectedExtensionVO) {
+		this.selectedExtensionVO = selectedExtensionVO;
+	}
+
+	public List<ExtensionCodeVO> getExtensionVoList() {
+		if(extensionVoList==null)
+			extensionVoList = new ArrayList<ExtensionCodeVO>();
+		return extensionVoList;
+	}
+
+	public void setExtensionVoList(List<ExtensionCodeVO> extensionVoList) {
+		this.extensionVoList = extensionVoList;
+	}
+
 	public CmUnspsc getAutoCompleteUnspscCode() {
 		if(autoCompleteUnspscCode==null)
 			autoCompleteUnspscCode = new CmUnspsc();

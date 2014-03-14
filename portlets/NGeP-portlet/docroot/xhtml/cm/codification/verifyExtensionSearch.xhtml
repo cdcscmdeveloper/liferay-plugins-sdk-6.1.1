@@ -13,6 +13,11 @@
 	<ui:define name="contentSection">
 		<p:messages globalOnly="true"></p:messages>
 
+		<div style="text-align: right;">
+			<p:commandButton value="REQUEST EXTENSION"
+				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}"></p:commandButton>
+		</div>
+
 		<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 
@@ -162,7 +167,8 @@
 
 			<div style="text-align: right;">
 				<p:commandButton value="Search" icon="ui-icon-search"
-					action="#{codificationBackingBean.itemSearch}" update="itemTableID" />
+					action="#{codificationBackingBean.extensionCodeSearch}"
+					update="itemTableID" />
 				<p:commandButton value="Back" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToVerifyUnspsc}" />
 			</div>
@@ -171,9 +177,9 @@
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
 				<p:dataTable id="itemTableID" lazy="true"
-					value="#{codificationBackingBean.searchItemDataModel}"
-					rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedItems}">
+					value="#{codificationBackingBean.managedBean.extensionVoList}"
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
+					selection="#{codificationBackingBean.managedBean.selectedExtensionVO}">
 
 					<ac:paginator for="itemTableID"></ac:paginator>
 
@@ -181,28 +187,28 @@
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
-						#{item.cmType.typeName}
+						#{obj.typeName}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
-						#{item.cmBrand.brandName}
+						#{obj.brandName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
-						
-						#{item.cmMeasurement.measurementName}
+						#{obj.measurementName}
+					
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
-						#{item.cmColor.colorName}
+						#{obj.colorName}
 					</p:column>
 
 
@@ -227,11 +233,8 @@
 
 				</p:dataTable>
 
-				<div class="clear"></div>
-				<div style="text-align: right;">
-					<p:commandButton value="Request Extension"
-						action="#{unspscCodeBackingBean.requestExtensionWithUNSPSC()}"></p:commandButton>
-				</div>
+
+
 
 
 

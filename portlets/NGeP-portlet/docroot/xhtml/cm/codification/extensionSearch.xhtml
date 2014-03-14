@@ -131,7 +131,7 @@
 
 			<div style="text-align: right;">
 				<p:commandButton value="Search" icon="ui-icon-search"
-					action="#{codificationBackingBean.itemSearch}" update="itemTableID" />
+					action="#{codificationBackingBean.extensionCodeSearch}" update="itemTableID" />
 				<p:commandButton value="Back" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToPrev}" />
 			</div>
@@ -139,10 +139,10 @@
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
-				<p:dataTable id="itemTableID" lazy="true"
-					value="#{codificationBackingBean.searchItemDataModel}"
-					rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedItems}">
+				<p:dataTable id="itemTableID"
+					value="#{codificationBackingBean.managedBean.extensionVoList}"
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
+					selection="#{codificationBackingBean.managedBean.selectedExtensionVO}">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 
@@ -152,52 +152,32 @@
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
-						#{item.cmType.typeName}
+						#{obj.typeName}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
-						#{item.cmBrand.brandName}
+						#{obj.brandName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
 						
-						#{item.cmMeasurement.measurementName}
+						#{obj.measurementName}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
-						#{item.cmColor.colorName}
+						#{obj.colorName}
 					</p:column>
 
 
-					<p:column rendered="#{unspscCodeBackingBean.codeAdmin}">
-						<f:facet name="header">
-							#{lbl['lbl.cm.action']}
-						</f:facet>
-						<table>
-							<tr>
-								<td width="2px"><p:commandLink
-										action="#{codificationBackingBean.editExtension(rowIndex)}">
-										<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
-									</p:commandLink></td>
-								<td><p:commandLink
-										action="#{codificationBackingBean.deleteExtension(rowIndex)}">
-										<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-									</p:commandLink></td>
-							</tr>
-						</table>
-
-
-
-					</p:column>
-
+					
 
 				</p:dataTable>
 

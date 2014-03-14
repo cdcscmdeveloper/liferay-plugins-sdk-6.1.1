@@ -16,7 +16,7 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" rendered="#{action != 'EXTENSION'}"
+					<p:commandButton value="#{action}" rendered="#{action != 'REQUEST EXTENSION'}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
 				</ui:repeat>
