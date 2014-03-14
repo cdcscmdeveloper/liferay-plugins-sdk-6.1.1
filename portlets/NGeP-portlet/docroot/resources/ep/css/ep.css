@@ -762,7 +762,7 @@ a:visited.menuItemLink-selected {
 	height: 25px !important;
 	margin:5px;
 	border-radius: 5px !important;
-	background: #7A9BD7 !important; /* Old browsers */
+	background: #8CC63E !important; /* Old browsers */
 
 }
 
@@ -773,7 +773,7 @@ a:visited.menuItemLink-selected {
 	border-collapse: separate;
 	box-shadow: 0px 0px 8px #B4DFF8, inset 0px 1px 0px white;
 	color: #77be08;
-	background-color:#8CC63E !important;
+	background-color:#7A9Bd7 !important;
 
 }
 
@@ -1629,7 +1629,7 @@ important
 	border-radius: 0px !important;
 	-moz-border-radius: 0px !important;
 	background: none !important;
-	color:#000000;
+	color:#5BA218;
 	font-size:14px !important;
 }
 
@@ -4503,6 +4503,10 @@ label > span.ui-button-text {
 
 .header-info label {
 	font-weight: bold;
+}
+
+.compulsary-field label {
+	color: #FF0000;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
