@@ -623,7 +623,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
             reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-			
+            
+            reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
+		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+		
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
