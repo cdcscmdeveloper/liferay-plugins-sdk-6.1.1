@@ -754,9 +754,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 
 	 public void addAgencyDetails(){
 		
-		 CtAgency ctAgency = new CtAgency();
 		 for(int i=0; i<selectedPmOrgProfile.length; i++){
 			 PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
+			 CtAgency ctAgency = new CtAgency();
 			 ctAgency.setOrgProfile(pmOrgProfile);
 			 this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
 		  }selectedPmOrgProfile = null;
@@ -766,7 +766,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 for(int i = 0; i < selectedListOfAgency.length; i++) {
 			CtAgency ctAgency = selectedListOfAgency[i];
 			this.getManagedBean().getContractVer().getCtAgencies().remove(ctAgency);
-		 }selectedListOfAgency = null;	
+		 }
+		 selectedListOfAgency = null;	
 	}
 	
 	 public double validateServiceFee(double serviceFee){
