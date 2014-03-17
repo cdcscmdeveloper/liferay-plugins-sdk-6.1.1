@@ -70,8 +70,7 @@
 		<p:panel  id="clause">
 		<h:panelGrid style="width:700px;">
          <p:dataTable id="tableClause1" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClauseList}" rowIndexVar="index" 
-           widgetVar="dataTableObj" scrollable="false" lazy="false" dynamic="true" 
-           selection="#{contractDetailsBackingBean.chkDeductionClause}" rowKey="#{data.deductionClauseId}">
+           widgetVar="dataTableObj" scrollable="false" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.chkDeductionClause}" rowKey="#{data.deductionClauseId}">
               <p:column selectionMode="multiple" style="width:18px" />
 					<p:column headerText="#{lbl['lbl.ct.ded.table1.clause']}">
 						<h:outputText value="#{data.clauseName}" />

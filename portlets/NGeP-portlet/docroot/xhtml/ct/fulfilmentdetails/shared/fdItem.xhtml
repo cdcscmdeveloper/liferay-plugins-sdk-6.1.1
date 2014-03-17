@@ -36,6 +36,7 @@
 		         <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
 			  </p:selectOneMenu>         
 		  </h:panelGrid>
+		  <p:spacer height="20"/>
 		  <p:outputPanel columns="1" style="width:100%"
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
 			   and contractDetailsBackingBean.managedBean.selectedItem!=null}">
@@ -51,12 +52,14 @@
 			   </p:column>              
 			   <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
 			   <p:column headerText="Effective Date">
-				  <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
-				  disabled="true" />
+			       <h:outputText value="#{data.effDate}" style="float:left;">
+                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                     </h:outputText>
 			   </p:column>       
 			   <p:column headerText="Expiry Date">
-				  <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-				   disabled="true"  />
+			    <h:outputText value="#{data.expDate}" style="float:left;">
+                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                     </h:outputText>
 			   </p:column>       
 			</p:dataTable>
 		  </p:outputPanel>  
@@ -76,19 +79,24 @@
 				  <p:outputLabel value="#{data.ctAgency.orgProfile.orgName}" style="float:left;" />
 				</p:column>              
 				<p:column headerText="Ceiling Quantity" style="text-align: right;">
-					<p:inputText style="width:70px;" value="#{data.ceilingQuantity}" />
+					<p:inputText style="width:70px;" styleClass="ppRightBtn" value="#{data.ceilingQuantity}">
+					 <f:convertNumber pattern="#,###.00" /></p:inputText>
 				</p:column>            
 				<p:column headerText="Effective Date">
-				   <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
-				</p:column>       
+				     <h:outputText value="#{data.effDate}" style="float:left;">
+                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                     </h:outputText>
+			    </p:column>       
 				<p:column headerText="Expiry Date">
-				   <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+				     <h:outputText value="#{data.expDate}" style="float:left;">
+                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                     </h:outputText>
 				</p:column>           
 			  </p:dataTable>
 		  	</h:panelGrid>  
 		</p:outputPanel> 
   	 </p:panel>
-  	 <p:spacer height="100"/>
+  	 <p:spacer height="50"/>
   	 <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 

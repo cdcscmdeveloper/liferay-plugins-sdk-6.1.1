@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,6 +113,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
 
+	private CtProgressivePayment[] selectedProgressive;
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
@@ -127,11 +130,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private boolean showZoneDetails;
 	
 	private CtSchedule[] selectedSchedule;
+	private CtAgency[] selectedListOfAgency;
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] chkDeductionClause;
-	private CtProgressivePayment[] selectedProgressive;
-	private CtAgency[] selectedListOfAgency;
 
 	public ContractDetailsBackingBean() {
 	  if(this.getManagedBean().getAction() == null) {
@@ -1136,11 +1138,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		initiateRemark(getManagedBean().getContractVer().getDeductionRemarks());
 		initiateRemark(getManagedBean().getContractVer().getScheduleRemarks());
 		initiateRemark(getManagedBean().getContractVer().getSettingRemarks());
+		
 	}
 	
 	private void initiateRemark(List<CtRemark> remarks) {
 		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
-			CtRemark remark = new CtRemark();
+		CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
@@ -1173,4 +1176,32 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	    return items;
 	}
+	
+	private List<String> monthList;
+	private List<String> yearList;
+
+	public List<String> getMonthList() {
+		List<String> monthsList = new ArrayList<String>();
+        String[] months = new DateFormatSymbols().getMonths();
+        for (int i = 0; i < months.length; i++) {
+            monthsList.add(months[i]);
+        }return monthsList;
+	}
+
+	public void setMonthList(List<String> monthList) {
+		this.monthList = monthList;
+	}
+
+	public List<String> getYearList() {
+		List<String> yearList = new ArrayList<String>();
+		 for (int i = 2014; i<= 2070; i++) {
+			     if(String.valueOf(i) == null){
+			    	 break;
+			     }
+	              yearList.add(String.valueOf(i));
+	         }
+		  return yearList;
+	}
+
+	
 }

@@ -65,12 +65,9 @@
 	</p:panel> 
 	<p:panel header="Templates Documents" toggleable="true"  toggleSpeed="500">
       <p:growl life="5000" autoUpdate="true" />  
-         <h:panelGrid columns="2" columnClasses="columnWidth15">  
-            <h:outputLabel style="font-weight:bold;" value="Name" />  
-            <h:outputLabel value="#{agreementBackingBean.managedBean.ctTemplates.name}" title="Name" />  
-            <h:outputLabel value="Description" style="font-weight:bold;" />  
+         <h:panelGrid>  
             <h:outputLabel value="#{agreementBackingBean.blobToStr(agreementBackingBean.managedBean.ctTemplates.content)}" title="Name" />    
-           </h:panelGrid>  
+         </h:panelGrid>  
       </p:panel>
-      </ui:define>
+   </ui:define>
 </ui:composition>

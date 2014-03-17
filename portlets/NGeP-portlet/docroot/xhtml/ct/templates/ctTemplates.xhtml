@@ -43,7 +43,7 @@
 		  <p:column><h:outputText value="#{data.createdBy}" /></p:column>	
 		  <p:column><h:outputText value="#{data.createdDate}" /></p:column>	
 		  <p:column styleClass="column-align-center">
-		     <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}">
+		  <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}" ajax="false" process="@form">
 			 <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
 			 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 		  </p:commandLink>

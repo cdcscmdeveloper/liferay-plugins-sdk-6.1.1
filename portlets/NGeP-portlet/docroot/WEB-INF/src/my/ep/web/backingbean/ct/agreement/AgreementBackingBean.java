@@ -61,6 +61,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -79,7 +80,9 @@ import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
@@ -129,6 +132,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	   
 	   if(this.getManagedBean().getCtAgreement().getCtAmendment() == null){
 		   this.getManagedBean().getCtAgreement().setCtAmendment(new CtAmendment());
+	   }
+	   
+	   if(this.getManagedBean().getCtTemplates() == null){
+		   this.getManagedBean().setCtTemplates(new CtTemplate());
 	   }
 	}
 	
@@ -599,6 +606,41 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
+	public void downloadDocFile(CtTemplate ctTemplate) throws IOException{
+		
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		String fileName = null;
+		OutputStream out = null;
+		String decoded ="";
+		
+		try{
+		     out = res.getOutputStream();
+		     fileName = ctTemplate.getName();
+		     res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		     res.setHeader( "Content-Transfer-Encoding", "binary" );
+		     res.setContentType("application/octet-stream");
+		   // res.setContentType("Content-Type: application/docx");
+		     res.flushBuffer();
+		     decoded = html2text(new String(ctTemplate.getContent(), "UTF-8"));
+			 byte[] content = decoded.getBytes();
+			out.write(content);
+		
+		}catch(UnsupportedEncodingException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		}
+	     
+		out.close();
+		out.flush();
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+	
+	public static String html2text(String html) {
+	    return Jsoup.parse(html).text();
+	}
+	
 	public void openNewWindow(AgreementDetails agreementDetails) throws IOException{
 		 
 	    IContractTemplateSO contractTemplateSO = null;
@@ -608,11 +650,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			 this.getManagedBean().setFilePath(agreementDetails.getFilePath());
 			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 			 reqDTO = new ContractTemplateReqDTO();
-			 reqDTO.setTemplateId(12L);
+			 reqDTO.setTemplateId(30L);
 		     ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
 		     this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
-	         FacesContext context = FacesContext.getCurrentInstance(); 
-	         context.getExternalContext().redirect(PROCESS_DOWNLOAD_PAGE); 
 	   }catch(Exception ex) {
 			log.error("Exception>>", ex);
 	   }finally{
@@ -882,9 +922,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 return null;
 	 } 
 	 
-	 public String blobToStr(byte[] content) {
+	 public String blobToStr(byte[] content) throws IOException {
 		
 		   String decoded ="";
+		   if(content == null)
+			   content = new byte[0];
 		   try{
 			  decoded = new String(content, "UTF-8");
 		   }catch(UnsupportedEncodingException e) {

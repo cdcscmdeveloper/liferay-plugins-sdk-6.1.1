@@ -31,6 +31,7 @@ public class ContractTemplateManagedBean extends BaseManagedBean{
 	private CtTemplate ctTemplate = new CtTemplate();;
 	private List<CtTemplate> ctTemplatesList;
 	private SearchFilterBean searchFilterBean;
+	 private String editorValue;
    
 	public ContractTemplateManagedBean(){
     	searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_STARTS_WITH.value());
@@ -66,6 +67,14 @@ public class ContractTemplateManagedBean extends BaseManagedBean{
 
 	public void setCtTemplate(CtTemplate ctTemplate) {
 		this.ctTemplate = ctTemplate;
+	}
+
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
 	}
 	
 }

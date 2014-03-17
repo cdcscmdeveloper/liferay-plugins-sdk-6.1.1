@@ -1,12 +1,12 @@
 <ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="scheduleId" header="Frequency Schedule"  toggleable="true"  toggleSpeed="500">
+    <p:panel id="scheduleId" header="Frequency Schedule"   toggleable="true"  toggleSpeed="500">
 	  <h:panelGrid style="width:100%;">
         <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	          widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
@@ -18,27 +18,27 @@
 		        <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		      </p:column> 
 		      <p:column style="width:260px;" headerText="Start Period" >
-		         <p:selectOneMenu id="fromMonth"  style="width:90px;" >
-		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		<f:selectItem itemLabel="January" itemValue="January"/>
-                 </p:selectOneMenu>
-                   <p:spacer width="1"/>
-                 <p:selectOneMenu id="fromYear" style="width:90px;" >
-            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
-                 </p:selectOneMenu>
+		         <p:selectOneMenu id="fromMonth" value="#{schedVar.fromDate}"> 
+		           <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" var="mon" itemValue="#{mon}" itemLabel="#{mon}"  />  
+                 </p:selectOneMenu> 
+                 <p:spacer width="1"/>
+                 <p:selectOneMenu id="fromYear" value="#{schedVar.fromDate}"> 
+                   <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
+                 </p:selectOneMenu> 
 		       </p:column> 	
-		      <p:column style="width:260px;" headerText="End Period">
-		         <p:selectOneMenu id="toMonth"  style="width:90px;" >
+		       <p:column style="width:260px;" headerText="End Period">
+		         <p:selectOneMenu id="toMonth"  style="width:100px;" >
 		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		<f:selectItem itemLabel="January" itemValue="January"/>
+                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" var="endMon" itemValue="#{endMon}" itemLabel="#{endMon}"  />  
                  </p:selectOneMenu>
                  <p:spacer width="1"/>
-                 <p:selectOneMenu id="toYear" style="width:90px;" >
-            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                 <p:selectOneMenu id="toYear" style="width:100px;" >
+            	    <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="endYear" itemValue="#{endYear}" itemLabel="#{endYear}"  />  
                  </p:selectOneMenu>
-		      </p:column>       
+		      </p:column> 
 		    </p:dataTable>  
 		    </h:panelGrid>
 	        <p:spacer height="2" />
@@ -58,43 +58,43 @@
 			   </h:panelGrid>
 			</p:confirmDialog>
 	  </p:panel>
-	  <p:spacer height="100"/>
+	  <p:spacer height="50"/>
 	  <p:panel id="frequencyId" header="Progressive Payment"  toggleable="true"  toggleSpeed="500">
 	   <h:panelGrid style="width:100%;">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		       <ac:paginator for="tableProgress" />
-		       <p:column selectionMode="multiple" style="width:18px;"/> 
-               <p:column style="width:70px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
-                 <p:inputText value="#{ProgVar.phase}" style="width:40px;" />
+		       <p:column selectionMode="multiple" style="width:2%;"/> 
+               <p:column style="width:60px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
+                 <p:inputText value="#{ProgVar.phase}" style="width:25px;" />
                </p:column>
 		       <p:column style="width:300px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
 		          <p:inputText style="width:300px;"/>
 		       </p:column>
                 <p:column style="width:150px;" headerText="Start Period" >
-		         <p:selectOneMenu id="fromMonth"  style="width:90px;" >
+		         <p:selectOneMenu id="fromMonth"  style="width:100px;" >
 		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
             		<f:selectItem itemLabel="January" itemValue="January"/>
                  </p:selectOneMenu>
                    <p:spacer width="1"/>
-                 <p:selectOneMenu id="fromYear" style="width:90px;" >
+                 <p:selectOneMenu id="fromYear" style="width:100px;" >
             	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
             		 <f:selectItem itemLabel="2014" itemValue="2014"/>
                  </p:selectOneMenu>
 		       </p:column> 	
 		      <p:column style="width:150px;" headerText="End Period">
-		         <p:selectOneMenu id="toMonth"  style="width:90px;" >
+		         <p:selectOneMenu id="toMonth"  style="width:100px;" >
 		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
             		<f:selectItem itemLabel="January" itemValue="January"/>
                  </p:selectOneMenu>
                  <p:spacer width="1"/>
-                 <p:selectOneMenu id="toYear" style="width:90px;" >
+                 <p:selectOneMenu id="toYear" style="width:100px;" >
             	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
             		 <f:selectItem itemLabel="2014" itemValue="2014"/>
                  </p:selectOneMenu>
 		      </p:column>       
-               <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
-                  <p:inputText value="#{ProgVar.percentage}" style="width:100px;" styleClass="ppRightBtn">
+               <p:column style="width:80px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
+                  <p:inputText value="#{ProgVar.percentage}" style="width:70px;" styleClass="ppRightBtn">
                      <f:convertNumber pattern="#,###.00" /></p:inputText>
                </p:column> 
 		     </p:dataTable>  

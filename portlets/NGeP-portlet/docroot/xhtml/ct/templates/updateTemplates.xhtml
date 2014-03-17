@@ -11,18 +11,13 @@
             <h:panelGrid columns="2">
                <p:outputLabel value="#{lbl['lbl.ct.tpl.name']}"/>
                <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" style="width:250px;"/>
-               <p:outputLabel value="#{lbl['lbl.ct.tpl.category']}"/>
-               <p:selectOneMenu id="fromMonth"  style="width:180px;" >
-		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		<f:selectItem itemLabel="Cover Letter" itemValue="AG"/>
-               </p:selectOneMenu>
              <h:panelGroup>
 			     <div style="height: 220px; vertical-align: top">
                <p:outputLabel for="editorId" value="#{lbl['lbl.ct.tpl.content']}"/>  
                </div>
                </h:panelGroup>
                 <h:panelGrid>
-               <p:editor id="editorId" value="#{contractTemplateBackingBean.editorValue}" style="width:800px;"></p:editor>
+               <p:editor id="editorId" value="#{contractTemplateBackingBean.convertStrValue(contractTemplateBackingBean.managedBean.ctTemplate.content)}" style="width:800px;"></p:editor>
             </h:panelGrid>
             </h:panelGrid>
             <div class="ppRightBtn"> 

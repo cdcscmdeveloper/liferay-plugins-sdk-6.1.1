@@ -39,7 +39,6 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 
 	 private static Logger log = Logger.getLogger(ContractTemplateBackingBean.class);
 	
-	 private static final String TEMPLATE_UPDATE_PAGE = "/xhtml/ct/templates/updateTemplates.xhtml";
      private static final String TEMPLATE_ADD_PAGE = "/xhtml/ct/templates/createTemplates.xhtml";
      private static final String TEMPLATE_RETURN_PAGE = "/xhtml/ct/templates/ctTemplates.xhtml";
  
@@ -174,19 +173,28 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		this.searchValue = searchValue;
 	}
 		
-	public String gotoEditPage() {
-		try {
-			byte[] value= this.getManagedBean().getCtTemplate().getContent();
-			String decoded = new String(value, "UTF-8");
-			this.setEditorValue(decoded);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}	
-		return TEMPLATE_UPDATE_PAGE;
+	public String gotoEditPage() throws UnsupportedEncodingException {
+		byte[] content = this.getManagedBean().getCtTemplate().getContent();
+		editorValue = new String(content, "UTF-8");
+		System.out.println("================"+editorValue);
+		return TEMPLATE_ADD_PAGE;
+	}
+	
+	public String convertStrValue(byte[] content){
+		 String decoded ="";
+		   if(content == null)
+			   content = new byte[0];
+		   try{
+			  decoded = new String(content, "UTF-8");
+		   }catch(UnsupportedEncodingException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+	   return decoded;
 	}
 
 	public String gotoAddPage() {
-		 editorValue = "";
+		  this.setEditorValue("");
 		 this.getManagedBean().setCtTemplate(new CtTemplate());
 		 return TEMPLATE_ADD_PAGE;
 	}

@@ -19,22 +19,42 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<p:outputLabel value="#{data.fileName}" style="float:left;" />
+					<p:outputLabel value="#{data.fileName}"  style="float:left;" />
 				</p:column>
 				<p:column>
 					<p:outputLabel value="#{data.fileType}" style="float:left;" />
 				</p:column>
 				<p:column styleClass="column-align-center">
-				 <h:commandLink  action="#{agreementBackingBean.openNewWindow(data)}" target="_blank">
-					<p:graphicImage library="ep/images/design" name="document.png"
+				<p:commandLink actionListener="#{agreementBackingBean.openNewWindow(data)}"
+                     process="@this" update="@([id$=myDilog])" oncomplete="dlgBox.show();">
+				     	<p:graphicImage library="ep/images/design" name="document.png"
 					  value="/resources/ep/images/design/document.png" title="View Document" rendered="#{rowIndex lt 3 }" />
 					  <p:graphicImage library="ep/images/design" name="download.png"
 					  value="/resources/ep/images/design/download.png" title="File Download" rendered="#{rowIndex gt 2 }" />
-			     </h:commandLink>
+			     </p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
-    </p:panel>
-     <ui:include src="appendixDocument.xhtml" /> 
+		</p:panel>
+		<ui:include src="appendixDocument.xhtml" />   
+		 <p:dialog id="modelDialog" header="Document Description" widgetVar="dlgBox" modal="true" width="600" height="450">
+		 <h:panelGroup id="myDilog">
+		   <p:panel id="documemtPanel">
+              <table style="width:100%;">
+	          <tr>
+	    	    <td class="ppRightBtn">
+	    	       <p:commandButton value="Download" ajax="false"   action="#{agreementBackingBean.downloadDocFile(agreementBackingBean.managedBean.ctTemplates)}"  styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(download)}" />
+			   	   <p:commandButton  value="Closed" ajax="false" onclick="dlgBox.close();" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(closed)}"/>			
+	    	   </td>
+	         </tr>
+	        </table>
+	         </p:panel>
+	           <p:panel id="documemtDesc" header="Document Description">
+             <h:panelGrid style="width:800px;float:center;">  
+                <h:outputText value="#{agreementBackingBean.blobToStr(agreementBackingBean.managedBean.ctTemplates.content)}"  escape="false"/>    
+             </h:panelGrid>  
+        </p:panel>
+        </h:panelGroup>
+	 </p:dialog>
 </ui:composition>
                        

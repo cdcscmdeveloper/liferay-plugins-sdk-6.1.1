@@ -75,6 +75,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String filePath;
 	private CtTemplate ctTemplates;
 	
+	private AgreementDetails agreementDetails;
 	
 	public AgreementManagedBean(){
 		
@@ -352,6 +353,16 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setCtTemplates(CtTemplate ctTemplates) {
 		this.ctTemplates = ctTemplates;
-	}	
+	}
+
+	public AgreementDetails getAgreementDetails() {
+		return agreementDetails;
+	}
+
+	public void setAgreementDetails(AgreementDetails agreementDetails) {
+		this.agreementDetails = agreementDetails;
+	}
+	
+	
 	
 }
