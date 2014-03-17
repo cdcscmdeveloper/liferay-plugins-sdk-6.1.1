@@ -12,21 +12,24 @@
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
-			editable="true" style="width:100%" rowIndexVar="index"
+			 style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
 			rowKey="#{stageTwofunctional}">
 			<ac:paginator for="financeProposaltwo" />
-			<p:column selectionMode="multiple" style="text-align:center;"
-				disabledSelection="#{stageTwofunctional.enable ==true}" />
+			<p:column selectionMode="multiple" style="text-align:left;"
+				rendered="#{stageTwofunctional.manditory !=true}" />
+				
+				<p:column  style="text-align:left;"
+				rendered="#{stageTwofunctional.manditory ==true}" />
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:30%">
-				<!-- <ui:fragment rendered="#{stageTwofunctional.title !=null}">
+				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
 						<h:outputText value="#{stageTwofunctional.title}" size="50"  />
 					</ui:fragment>
 					<ui:fragment rendered="#{stageTwofunctional.title ==null}">
 						<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
-					</ui:fragment> -->
-				<ui:fragment
+					</ui:fragment> 
+				<!-- <ui:fragment
 					rendered="#{fn:contains(stageTwofunctional.title,'Company')}">
 					<p:commandLink oncomplete="company.show();">
 						<h:outputText value="#{stageTwofunctional.title}" size="50" />
@@ -68,33 +71,33 @@
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.title == null}">
 					<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
-				</ui:fragment>
+				</ui:fragment> -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:20%">
-				<ui:fragment rendered="#{stageTwofunctional.checklistType eq 'SP'}">
-					<h:outputText value="Specification"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.checklistType eq 'SD'}">
-					<h:outputText value="System Defined"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.checklistType eq 'UP'}">
-					<h:outputText value="Upload"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.checklistType eq 'WF'}">
-					<h:outputText value="Web Form"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.checklistType eq 'TS'}">
-					<h:outputText value="Template Spec"></h:outputText>
-				</ui:fragment>
+				
+					<h:outputText value="Specification" rendered="#{stageTwofunctional.checklistType eq 'SP'}"></h:outputText>
+				
+				
+					<h:outputText value="System Defined" rendered="#{stageTwofunctional.checklistType eq 'SD'}"></h:outputText>
+			
+			
+					<h:outputText value="Upload" rendered="#{stageTwofunctional.checklistType eq 'UP'}"></h:outputText>
+				
+				
+					<h:outputText value="Web Form" rendered="#{stageTwofunctional.checklistType eq 'WF'}"></h:outputText>
+				
+			
+					<h:outputText value="Template Spec" rendered="#{stageTwofunctional.checklistType eq 'TS'}"></h:outputText>
+			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
-				<p:selectOneMenu value="#{stageTwofunctional.manditory}">
+				<p:selectOneMenu >
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItem itemLabel="Yes" itemValue="1" />
-					<f:selectItem itemLabel="No" itemValue="0" />
+					<f:selectItem itemLabel="View" itemValue="V" />
+					<f:selectItem itemLabel="Submit" itemValue="S" />
 				</p:selectOneMenu>
 			</p:column>
 
@@ -121,10 +124,12 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink>
+				<p:commandLink action="#{specificationBackingBean.financialChecklistEditAction(stageTwofunctional)}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
+						 <f:setPropertyActionListener value="#{stageTwofunctional}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
 				</p:commandLink>
 

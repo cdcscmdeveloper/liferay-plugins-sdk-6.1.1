@@ -14,21 +14,21 @@
 			var="checkListScoring" rowKey="#{checkListScoring}" >
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}" style="width:40%">
 				<p:inputText value="#{checkListScoring.rangeFrom}"></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}" style="width:30%">
 				<p:inputText value="#{checkListScoring.rangeTo}"></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}" style="width:30%">
 				<p:inputText value="#{checkListScoring.score}"></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
+				<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-				</p:column>
+				</p:column> -->
 			</p:dataTable>
 		</p:panel>
 		

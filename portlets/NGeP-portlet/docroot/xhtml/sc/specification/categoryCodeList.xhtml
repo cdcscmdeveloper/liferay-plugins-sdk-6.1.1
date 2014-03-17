@@ -12,21 +12,26 @@
 			value="#{criteriaList}" editable="true" style="width:100%"
 			rowIndexVar="index" rowKey="#{cateGory}"
 			selection="#{criteriaselectList}">
-			<ac:paginator for="#{qtCategory}" />
+			<ac:paginator for="#{criteriaPnlId}" />
 			<p:column selectionMode="multiple"></p:column>
 			<p:column></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-
+             <ac:lov id="issuePtj" lovId="PM_CATEGORY_L3"
+						headerText="Category Lov"
+						saveObject="specificationBackingBean.managedBean.#{criteriaList[#{index}]}.pmCategoryL3}"
+						value="#{cateGory.pmCategoryL3.categoryL3Code}"
+						conditionField="categoryL3Code^#{cateGory.pmCategoryL3.categoryL3Code}" update="main">
+					</ac:lov><ac:lovPopup />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%">
-				<h:outputText value="Specification"></h:outputText>
+				<h:outputText id="main" value="Specification"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%">
-
+                <p:inputText></p:inputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
@@ -36,10 +41,13 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:20%">
-
+              <p:inputText></p:inputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
+				<p:selectBooleanCheckbox> 
+				<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+				</p:selectBooleanCheckbox>
 			</p:column>
           
 			

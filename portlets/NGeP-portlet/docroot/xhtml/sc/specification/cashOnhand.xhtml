@@ -1,4 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,7 +8,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog widgetVar="cash" modal="true" width="800" height="400">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	
+	<ui:define name="contentSection">
+	
+		<div>
+		<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				action="#{specificationBackingBean.committeeBackAction}" />
+			
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;"
+				icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptCashScore}" />
+				
+				
+
+		</div>
+		
+		<p:panel>
+	<table>
+	<tr>
+	<td><h:outputLabel value="Title"></h:outputLabel>
+	</td>
+		<td><p:inputText disabled="true"></p:inputText>
+	</td>
+	</tr>
+	</table>
+	</p:panel>
 		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
 			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
 				rowKey="#{cash}">
@@ -60,12 +88,12 @@
 			</div>
 		</h:panelGroup>
 
-		<p:commandButton value="#{lbl['lbl.sc.spec.btn.tech.close']}"
+	<!-- 	<p:commandButton value="#{lbl['lbl.sc.spec.btn.tech.close']}"
 			style="float:right;" onclick="cash.hide();" icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			oncomplete="cash.hide();" icon="ui-icon-accept"></p:commandButton>
+			oncomplete="cash.hide();" icon="ui-icon-accept"></p:commandButton> -->
 
 
-	</p:dialog>
+	</ui:define>
 </ui:composition>

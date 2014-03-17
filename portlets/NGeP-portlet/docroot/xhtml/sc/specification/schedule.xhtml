@@ -30,7 +30,7 @@
 
 
 			<p:dataTable id="frequencySchedule" var="frequency"
-				style="width:100%" rowKey="#{frequency}" rowIndexVar="index"
+				style="width:100%" rowIndexVar="index"
 				value="#{specificationBackingBean.managedBean.scheduleList}">
 				<ac:paginator for="frequencySchedule" />
 
@@ -40,35 +40,57 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 					style="width:25%">
-					<p:calendar value="#{frequency.fromDate}" showOn="button"
-						pattern="MM/yyyy"></p:calendar>
+					<p:selectOneMenu
+							value="#{frequency.fromDate}">
+							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Jan" itemValue="0" />
+							<f:selectItem itemLabel="Feb" itemValue="1" />
+							<f:selectItem itemLabel="March" itemValue="2" />
+							<f:selectItem itemLabel="April" itemValue="3" />
+							<f:selectItem itemLabel="May" itemValue="4" />
+							<f:selectItem itemLabel="June" itemValue="5" />
+							<f:selectItem itemLabel="July" itemValue="6" />
+							<f:selectItem itemLabel="Aug" itemValue="7" />
+							<f:selectItem itemLabel="Sept" itemValue="8" />
+							<f:selectItem itemLabel="Oct" itemValue="9" />
+							<f:selectItem itemLabel="Nov" itemValue="10" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+						
+						</p:selectOneMenu>
+					<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
+						pattern="MM/yyyy"></p:calendar> -->
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 					style="width:25%">
-					<p:calendar value="#{frequency.toDate}" showOn="button"
-						pattern="MM/yyyy"></p:calendar>
+					<p:selectOneMenu
+							value="#{frequency.toDate}">
+							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Jan" itemValue="0" />
+							<f:selectItem itemLabel="Feb" itemValue="1" />
+							<f:selectItem itemLabel="March" itemValue="2" />
+							<f:selectItem itemLabel="April" itemValue="3" />
+							<f:selectItem itemLabel="May" itemValue="4" />
+							<f:selectItem itemLabel="June" itemValue="5" />
+							<f:selectItem itemLabel="July" itemValue="6" />
+							<f:selectItem itemLabel="Aug" itemValue="7" />
+							<f:selectItem itemLabel="Sept" itemValue="8" />
+							<f:selectItem itemLabel="Oct" itemValue="9" />
+							<f:selectItem itemLabel="Nov" itemValue="10" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+						</p:selectOneMenu>
+					<!-- <p:calendar value="#{frequency.toDate}" showOn="button"
+						pattern="MM/yyyy"></p:calendar> -->
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+				<p:column headerText="Total"
 					style="width:10%">
-					<p:commandLink>
-
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-
-					</p:commandLink>
-
 				</p:column>
 			</p:dataTable>
 
 			<p:spacer height="20"></p:spacer>
 
-			<div align="right">
-
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" update="frequencySchedule" />
-
-			</div>
 
 		</p:panel>
 	</h:panelGroup>
@@ -78,9 +100,20 @@
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
 
+				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
+					<p:inputText
+						value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
+						<p:ajax event="blur" update="progressivePayment"
+							partialSubmit="false"
+							listener="#{specificationBackingBean.addProgressiveDetails}" />
+					</p:inputText>
+
+				</h:panelGrid>
+
 				<p:commandLink value="#{lbl['lbl.sc.spec.progressive.payment']}"></p:commandLink>
 				<p:dataTable id="progressivePayment" var="payment"
-					style="width:100%" rowKey="#{payment}" rowIndexVar="index"
+					style="width:100%" rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 
@@ -95,43 +128,62 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:15%">
-						<p:calendar value="#{payment.fromDate}" showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+						<p:selectOneMenu
+							value="#{payment.fromDate}">
+							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Jan" itemValue="0" />
+							<f:selectItem itemLabel="Feb" itemValue="1" />
+							<f:selectItem itemLabel="March" itemValue="2" />
+							<f:selectItem itemLabel="April" itemValue="3" />
+							<f:selectItem itemLabel="May" itemValue="4" />
+							<f:selectItem itemLabel="June" itemValue="5" />
+							<f:selectItem itemLabel="July" itemValue="6" />
+							<f:selectItem itemLabel="Aug" itemValue="7" />
+							<f:selectItem itemLabel="Sept" itemValue="8" />
+							<f:selectItem itemLabel="Oct" itemValue="9" />
+							<f:selectItem itemLabel="Nov" itemValue="10" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+						</p:selectOneMenu>
+						<!-- <p:calendar value="#{payment.fromDate}" showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar> -->
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:15%">
-						<p:calendar value="#{payment.toDate}" showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+						<p:selectOneMenu
+							value="#{payment.toDate}">
+							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Jan" itemValue="0" />
+							<f:selectItem itemLabel="Feb" itemValue="1" />
+							<f:selectItem itemLabel="March" itemValue="2" />
+							<f:selectItem itemLabel="April" itemValue="3" />
+							<f:selectItem itemLabel="May" itemValue="4" />
+							<f:selectItem itemLabel="June" itemValue="5" />
+							<f:selectItem itemLabel="July" itemValue="6" />
+							<f:selectItem itemLabel="Aug" itemValue="7" />
+							<f:selectItem itemLabel="Sept" itemValue="8" />
+							<f:selectItem itemLabel="Oct" itemValue="9" />
+							<f:selectItem itemLabel="Nov" itemValue="10" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+						</p:selectOneMenu>
+						<!-- <p:calendar value="#{payment.toDate}" showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar> -->
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
 						style="width:10%">
 						<p:inputText value="#{payment.percentage}"></p:inputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
-						style="width:10%">
-						<p:commandLink>
+					
 
-							<p:graphicImage library="ep/images/design" name="edit.png"
-								value="/resources/ep/images/design/edit.png" />
-
-						</p:commandLink>
-
-					</p:column>
+					
 
 				</p:dataTable>
 
 				<p:spacer height="20"></p:spacer>
 
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-						process="@this,progressivePayment" partialSubmit="true"
-						icon="ui-icon-add" update="progressivePayment"
-						actionListener="#{specificationBackingBean.addProgressiveDetails}" />
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						icon="ui-icon-delete" update="progressivePayment" />
 
-				</div>
 
 			</p:panel>
 		</c:if>

@@ -3,79 +3,42 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-
-<!-- 	<ui:fragment
-		rendered="#{specificationBackingBean.managedBean.businessOwner eq 'B'}"> -->
-		
-			<!-- <ui:include src="/xhtml/sc/specification/companyExperience.xhtml" /> -->
-		<p:tabView dynamic="true" cache="true" orientation="left" id="businessSpecId">
-			<p:ajax event="tabChange" />
-
-			 <p:tab title="#{lbl['lbl.sc.spec.general']}" rendered="#{specificationBackingBean.managedBean.businessOwner eq 'B'}">
-				<ui:include src="/xhtml/sc/specification/specificationBusinessOwner.xhtml"></ui:include>
-					 <ui:include src="/xhtml/sc/specification/panelItem.xhtml"></ui:include> 
-			</p:tab> 
-			
-			 <p:tab title="Supplier Qualification Criteria" rendered="#{specificationBackingBean.managedBean.businessOwner eq 'B'}">
-				<ui:include
-				src="/xhtml/sc/specification/supplierQualificationCriteria.xhtml"></ui:include>  
-			</p:tab>
-		<!-- </p:tabView> -->
-	<!-- </ui:fragment> -->
-
-
-	<!-- <ui:fragment
-		rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-		<ui:include src="/xhtml/sc/specification/specificationButtons.xhtml"></ui:include>
-		<ui:include
-			src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include> -->
-				
-	<!-- 	<p:tabView dynamic="true" cache="true" orientation="left" id="specId">
-
-			<p:ajax event="tabChange" /> -->
-
-			<p:tab title="#{lbl['lbl.sc.spec.general']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/specificationDetails.xhtml"></ui:include>
-			</p:tab>
-
-			<p:tab title="#{lbl['lbl.sc.spec.tech.check.list']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/technicalChecklist.xhtml"></ui:include>
-				<ui:include src="/xhtml/sc/specification/stageTwoTechnical.xhtml" />
-				<ui:include src="/xhtml/sc/specification/technicalEmployeeList.xhtml" />
-			
-				
-			</p:tab>
-
-			<p:tab title="#{lbl['lbl.sc.spec.finance.check.list']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/financialChecklist.xhtml"></ui:include>
-				<ui:include src="/xhtml/sc/specification/stageTwoFinancial.xhtml" />
-				<ui:include src="/xhtml/sc/specification/bankStatement.xhtml" />
-				<ui:include src="/xhtml/sc/specification/creditFacility.xhtml" />
-				<ui:include src="/xhtml/sc/specification/cashOnhand.xhtml" />
-				<ui:include src="/xhtml/sc/specification/assetsLiabilities.xhtml" />
-				<ui:include src="/xhtml/sc/specification/supplierinfo.xhtml" />
-				
-			</p:tab>
-
-			<p:tab title="#{lbl['lbl.sc.spec.score.setting']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/weightageGroup.xhtml" />
-			</p:tab>
-
-			<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/schedule.xhtml" />
-			</p:tab>
-
-
-			<p:tab title="#{lbl['lbl.sc.spec.committee.endorse']}" rendered="#{specificationBackingBean.managedBean.businessOwner ne 'B'}">
-				<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" />
-				<ui:include src="/xhtml/sc/specification/reminderpopup.xhtml" />
-			</p:tab>
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
 
-		</p:tabView>
-	<!-- </ui:fragment> -->
+	<ac:lovPopup />
+	<p:tabView dynamic="true" cache="true" orientation="left"
+		id="businessSpecId">
+		<p:ajax event="tabChange" />
+
+		<p:tab title="#{lbl['lbl.sc.spec.general']}">
+			<ui:include
+				src="/xhtml/sc/specification/specificationBusinessOwner.xhtml"></ui:include>
+
+		</p:tab>
+
+		<p:tab title="Supplier Qualification Criteria">
+			<ui:include
+				src="/xhtml/sc/specification/supplierQualificationCriteria.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Technical Specification">
+			<ui:include
+				src="/xhtml/sc/specification/technicalSpecification.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Financial Specification">
+			<ui:include
+				src="/xhtml/sc/specification/financialSpecification.xhtml"></ui:include>
+		</p:tab>
+
+
+
+
+
+	</p:tabView>
+
 </ui:composition>

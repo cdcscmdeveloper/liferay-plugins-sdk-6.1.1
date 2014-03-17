@@ -6,11 +6,21 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Zone" toggleable="true">
-		<p:dataTable id="zoneid" rowIndexVar="rowIndex" style="width:50%">
-			<p:column headerText="Zone" />
-		</p:dataTable>
-	</p:panel>
+	<p:panel id="ctZoneList" header="Zone" toggleable="true">
 
-	<ui:include src="/xhtml/sc/quatationtender/supplierlist.xhtml" />
+		<p:tree id="ctSupplierZones" style="border:none;"
+			value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
+			var="ctZones"  selectionMode="single" dynamic="true">
+			  <p:ajax event="select" update=":form:businessSpecId:paneltabView:totalSupplier" listener="#{specificationBackingBean.retriveZoneBySupplier}" /> 
+			<p:treeNode type="zone">
+				<h:outputText value="#{ctZones.name}" />
+			</p:treeNode>
+			<p:treeNode type="state">
+				<h:outputText value="#{ctZones.stateName}" />
+			</p:treeNode>
+		</p:tree>
+
+	</p:panel>
+	<!-- <ui:include src="/xhtml/sc/specification/supplierZoneSelect.xhtml"  -->
+	<ui:include src="supplierlist.xhtml" />
 </ui:composition>

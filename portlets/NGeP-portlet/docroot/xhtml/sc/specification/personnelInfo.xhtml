@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	
+	
+		<p:panel header="#{lbl['lbl.sc.spec.staff.info']}" toggleable="true" >
+
+			<p:panelGrid style="margin-top:20px;width:100%;">
+				<f:facet name="header">
+
+					<p:row>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.status']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.board.director']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.higher.management']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.management']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.total']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.entered']}</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.bumi']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.bumi']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.malaysian']}</p:column>
+					<p:column style="font-weight: bold;"></p:column>
+
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+					<p:column colspan="1" style="font-weight: bold;"></p:column>
+
+				</p:row>
+			</p:panelGrid>
+
+		</p:panel>
+
+	
+	
+
+</ui:composition>

@@ -14,16 +14,16 @@
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
-			rowKey="#{stageTwoTechnical}">
+			rowKey="#{stageTwoTechnical}" >
 			<ac:paginator for="stageTwotechProposal" />
 
-
-			<p:column selectionMode="multiple" style="text-align:center;"
-				disabledSelection="#{stageTwoTechnical.enable ==true}" />
-
+			
+				<p:column selectionMode="multiple" style="text-align:left;"  rendered="#{stageTwoTechnical.manditory !='true'}"/>
+				<p:column  style="text-align:left;"  rendered="#{stageTwoTechnical.manditory =='true'}"/>
+				
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:30%">
-				<ui:fragment
+			<!-- 	<ui:fragment
 					rendered="#{fn:contains(stageTwoTechnical.title,'Company')}">
 					<p:commandLink oncomplete="company.show();">
 						<h:outputText value="#{stageTwoTechnical.title}" size="50" />
@@ -38,32 +38,39 @@
 				<ui:fragment
 					rendered="#{!fn:contains(stageTwoTechnical.title,'Company') and !fn:contains(stageTwoTechnical.title,'Pematuhan')}">
 					<h:outputText value="#{stageTwoTechnical.title}" size="50"></h:outputText>
-				</ui:fragment>
+				</ui:fragment> -->
+				<p:commandLink>
+				
+						</p:commandLink>
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText value="#{stageTwoTechnical.title}" size="50"></p:inputText>
 				</ui:fragment>
 
+        <ui:fragment rendered="#{stageTwoTechnical.title != null}">
+					<h:outputText value="#{stageTwoTechnical.title}" size="50"></h:outputText>
+				</ui:fragment>
+            
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:20%">
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'SP'}">
-					<h:outputText value="Specification"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'SD'}">
-					<h:outputText value="System Defined"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'UP'}">
-					<h:outputText value="Upload"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'WF'}">
-					<h:outputText value="Web Form"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'TS'}">
-					<h:outputText value="Template Spec"></h:outputText>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'S'}">
-					<h:outputText value="Sample"></h:outputText>
-				</ui:fragment>
+				
+					<h:outputText value="Specification" rendered="#{stageTwoTechnical.checklistType eq 'SP'}"></h:outputText>
+				
+				
+					<h:outputText value="System Defined" rendered="#{stageTwoTechnical.checklistType eq 'SD'}"></h:outputText>
+				
+				
+					<h:outputText value="Upload" rendered="#{stageTwoTechnical.checklistType eq 'UP'}"></h:outputText>
+				
+			
+					<h:outputText value="Web Form" rendered="#{stageTwoTechnical.checklistType eq 'WF'}"></h:outputText>
+			
+				
+					<h:outputText value="Template Spec" rendered="#{stageTwoTechnical.checklistType eq 'TS'}"></h:outputText>
+				
+				
+					<h:outputText value="Sample"  rendered="#{stageTwoTechnical.checklistType eq 'S'}"></h:outputText>
+			
 				<ui:fragment rendered="#{stageTwoTechnical.checklistType ==null}">
 					<p:selectOneMenu value="#{stageTwoTechnical.checklistType}">
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -79,9 +86,9 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
 				<!--  <h:panelGroup id="supplier">  -->
-				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'UP'}">
-					<h:outputText value="view"></h:outputText>
-				</ui:fragment>
+			
+					<h:outputText value="view" rendered="#{stageTwoTechnical.checklistType eq 'UP'}"></h:outputText>
+				
 				<ui:fragment rendered="#{stageTwoTechnical.checklistType eq 'S'}">
 					<p:selectOneMenu value="#{stageTwoTechnical.manditory}">
 						<f:selectItem itemLabel="Manual" itemValue="M" />
@@ -120,11 +127,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<!--  <h:panelGroup id="edit"> -->
-				<p:commandLink rendered="#{stageTwoTechnical.checklistType eq 'UP'}">
+				<p:commandLink
+					action="#{specificationBackingBean.technicalChecklistEditAction(stageTwoTechnical)}" >
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-
+                      <f:setPropertyActionListener value="#{stageTwoTechnical}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
 				<!-- </h:panelGroup> -->
 			</p:column>
@@ -138,6 +147,11 @@
 				oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
 				update="compilencestageTwo" />
+			<p:commandButton value="Create Specification"
+				process="@this,stageTwotechProposal" partialSubmit="true"
+				action="#{specificationBackingBean.technicalSpecEditAction}"
+				icon="ui-icon-add" />
+
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,stageTwotechProposal" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"

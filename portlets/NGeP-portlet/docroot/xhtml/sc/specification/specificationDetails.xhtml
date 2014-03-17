@@ -9,85 +9,99 @@
 	<p:panel id="specDetails" header="#{lbl['lbl.sc.spec.details']}"
 		toggleable="true">
 
-		<h:panelGrid columns="4" style="width:100%;"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputLabel value="*#{lbl['lbl.sc.spec.peocure.category']}" />
-			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.procurementId}">
-				<f:selectItems
-					value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
+				<td><p:inputText value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText></td>
+			</tr>
 
-			</p:selectOneMenu>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" />
-			<p:inputText
-				value="#{specificationBackingBean.managedBean.scQtSpec.maxProposal}"></p:inputText>
+			<tr>
+				<td><h:outputLabel value="Quotation/Tender Type" /></td>
+				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtType}" disabled="true"></p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel
+						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}"
+						readonly="true" disabled="true"></p:inputText></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
+				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.itemType}" disabled="true"></p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
+				</td>
+				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtAmount}" disabled="true"></p:inputText></td>
 
 
-			<h:outputLabel value="* #{lbl['lbl.sc.spec.evaluation.type']}" />
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}">
-				<f:selectItem itemLabel="One Tier" itemValue="1" />
-				<f:selectItem itemLabel="Two Tier" itemValue="2" />
-			</p:selectOneRadio>
+				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+				<td><p:inputTextarea rows="3" cols="50"
+						value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}" readonly="true" disabled="true"></p:inputTextarea>
+				</td>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="*#{lbl['lbl.sc.spec.peocure.category']}" /></td>
+				<td><p:selectOneMenu
+						value="#{specificationBackingBean.managedBean.scQtSpec.pmProcurementCategory.parameterId}">
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+
+					</p:selectOneMenu></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQtSpec.maxProposal}"></p:inputText></td>
+			</tr>
 
 
-			<h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" />
-			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}"
-				style="margin-bottom:5px;">
-				<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
+
+			<tr>
+				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
+				<td><p:selectOneMenu
+						value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}"
+						style="margin-bottom:5px;">
+						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
 				<f:selectItem itemLabel="Periodic(As and When Basis)" itemValue="2" />
 				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" /> -->
-				<f:selectItems
-					value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-				<p:ajax event="change" update="progressive,frequency"
-					process="@this" partialSubmit="true"
-					listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
-			</p:selectOneMenu>
-
-			<h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" />
-			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.pmCurrency.currencyCode}">
-				<f:selectItems
-					value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
-			</p:selectOneMenu>
-
-
-			<h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" />
-			<p:inputText readonly="true"></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
-			<p:inputText readonly="true"></p:inputText>
-
-
-			<h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" />
-			<h:panelGroup>
-				<table style="width: 50%">
-					<tr>
-						<td><h:inputText size="4"
-								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
-						<td><h:outputLabel
-								value="(#{lbl['lbl.sc.spec.contrat.year']})" /></td>
-						<td><h:inputText size="2"
-								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
-						<td><h:outputLabel
-								value="(#{lbl['lbl.sc.spec.contrat.month']})" /></td>
-					</tr>
-				</table>
-
-			</h:panelGroup>
-
-			<h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" />
-			<p:inputTextarea rows="3" cols="50"
-				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"></p:inputTextarea>
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+						<p:ajax event="change" update="progressive,frequency"
+							process="@this" partialSubmit="true"
+							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
+					</p:selectOneMenu></td>
 
 
 
-		</h:panelGrid>
+
+
+
+				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" /></td>
+				<td><h:panelGroup>
+						<table style="width: 50%">
+							<tr>
+								<td><h:inputText size="4"
+										value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+								<td><h:outputLabel
+										value="(#{lbl['lbl.sc.spec.contrat.year']})" /></td>
+								<td><h:inputText size="2"
+										value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+								<td><h:outputLabel
+										value="(#{lbl['lbl.sc.spec.contrat.month']})" /></td>
+							</tr>
+						</table>
+
+					</h:panelGroup></td>
+			</tr>
+
+
+
+		</table>
 
 	</p:panel>
 
-
+	<!-- 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
 
 		<p:dataTable id="specificationCategory" var="stageTwofunctional"
@@ -126,9 +140,9 @@
 		</p:dataTable>
 	</p:panel>
 
+ -->
 
-
-	<p:panel header="#{lbl['lbl.sc.spec.ministry.spec.approve']}"
+	<!-- <p:panel header="#{lbl['lbl.sc.spec.ministry.spec.approve']}"
 		toggleable="true">
 
 		<h:panelGrid style="width:100%;" columns="4"
@@ -186,6 +200,6 @@
 
 			</tr>
 		</table>
-	</p:panel>
+	</p:panel> -->
 
 </ui:composition>

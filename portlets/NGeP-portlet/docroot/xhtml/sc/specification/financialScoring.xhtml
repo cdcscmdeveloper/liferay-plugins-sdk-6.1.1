@@ -1,0 +1,214 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.financial.scoring']}"
+		toggleable="true">
+		<h:panelGrid columns="4">
+
+			<h:outputText value="#{lbl['lbl.sc.spec.weight.pass.score']}" />
+			<p:spacer width="10"></p:spacer>
+			<p:inputText
+				value="#{specificationBackingBean.managedBean.scQtSpec.finalizationPassScore}"></p:inputText>
+			<h:outputText value="/100 " />
+			<h:outputText value="#{lbl['lbl.sc.spec.tech.weightage']}" />
+			<p:spacer width="10"></p:spacer>
+			<p:selectOneRadio
+				value="#{specificationBackingBean.managedBean.financialWeightage}">
+				<f:selectItem itemLabel="Yes" itemValue="1" />
+				<f:selectItem itemLabel="No" itemValue="2" />
+				<p:ajax event="change" update="financialweightage"></p:ajax>
+			</p:selectOneRadio>
+		</h:panelGrid>
+
+		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
+			value="#{specificationBackingBean.managedBean.financialScoring}"
+			
+			style="width:100%" rowIndexVar="index">
+			<ac:paginator for="financialweightage" />
+			<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+				style="width:50%;">
+				<h:outputText value="#{finance.title}" size="50" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+				style="width:20%;">
+				<h:outputText value="#{finance.maxScore}" />
+				<h:outputText  />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:20%;">
+				<p:inputText value="#{finance.weightage}"
+					rendered="#{specificationBackingBean.managedBean.financialWeightage eq '1'}">
+					<p:ajax event="blur" process="@this"
+						listener="#{specificationBackingBean.finWeightageSum}"
+						update=":form:businessSpecId:finaddpoints" />
+				</p:inputText>
+			</p:column>
+
+		</p:dataTable>
+
+		<p:spacer height="15"></p:spacer>
+
+
+	</p:panel>
+
+
+
+
+
+	<p:panel>
+		<h:panelGroup id="finaddpoints">
+			<h:panelGrid columns="3">
+
+
+				<h:outputText value="#{lbl['lbl.sc.spec.net.total.points']} " />
+				<p:spacer width="10"></p:spacer>
+				<p:inputText readonly="true" disabled="true" value="#{specificationBackingBean.managedBean.finPoints}"></p:inputText>
+
+				<h:outputText value="#{lbl['lbl.sc.spec.total.weightage']}" />
+				<p:spacer width="10"></p:spacer>
+				<p:inputText readonly="true" disabled="true"
+					value="#{specificationBackingBean.managedBean.financialWeightageScore}"></p:inputText>
+
+			</h:panelGrid>
+		</h:panelGroup>
+	</p:panel>
+
+	<p:panel header="Scoring For Offered Price(Package)">
+		<table>
+			<tr>
+				<td><h:outputLabel value="Estimated Price"></h:outputLabel></td>
+				<td><p:inputText value="#{specificationBackingBean.managedBean.scQt.qtAmount}" readonly="true"  disabled="true"></p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="From Julat(%)"></h:outputLabel></td>
+				<td><p:inputText value="#{specificationBackingBean.managedBean.fromJulat}">
+				<p:ajax event="blur" process="@this"
+						listener="#{specificationBackingBean.calculateFromAmount}"
+						update="fromPrice" />
+				</p:inputText></td>
+				<td><h:outputLabel value="To Julat(%)"></h:outputLabel></td>
+				<td><p:inputText value="#{specificationBackingBean.managedBean.toJulat}">
+			
+				<p:ajax event="blur" process="@this"
+						listener="#{specificationBackingBean.calculateToAmount}"
+						update="toPrice,packScoring" />
+				</p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="From Price(RM)"></h:outputLabel></td>
+				<td><p:inputText id="fromPrice" value="#{specificationBackingBean.managedBean.fromPrice}" readonly="true"  disabled="true"></p:inputText></td>
+				<td><h:outputLabel value="To Price(RM)"></h:outputLabel></td>
+				<td><p:inputText id="toPrice" value="#{specificationBackingBean.managedBean.toPrice}" readonly="true" disabled="true"></p:inputText></td>
+			</tr>
+
+		</table>
+
+       <h:panelGroup id="packScoring">
+		<p:dataTable id="offeredPackage" var="package" rowKey="#{package}"
+			value="#{specificationBackingBean.managedBean.packScoringList}" style="width:100%" rowIndexVar="index" >
+			<ac:paginator for="offeredPackage" />
+		<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
+
+			<p:column headerText="From(RM)" style="width:50%;">
+			<ui:fragment rendered="#{package.rangeFrom == null}">
+				<p:inputText size="50" value="#{package.rangeFrom}" >
+				<p:ajax event="blur" process="@this"
+						listener="#{specificationBackingBean.calculatePackageFromPercent(package)}"
+						update=":form:businessSpecId:packScoring" />
+				</p:inputText>
+				</ui:fragment>
+				<ui:fragment rendered="#{package.rangeFrom != null}">
+				<h:outputText size="50" value="#{package.rangeFrom}" />
+				</ui:fragment>
+			</p:column>
+
+			<p:column headerText="(%)" style="width:20%;">
+				<p:inputText id="fromPercent" value="#{package.percentFrom}"/>
+			</p:column>
+			<p:column headerText="TO(RM)" style="width:20%;">
+				<p:inputText value="#{package.rangeTo}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="(%)" style="width:20%;">
+				<p:inputText value="#{package.percentTo}"/>
+			</p:column>
+
+			<p:column headerText="Score" style="width:10%">
+				<p:inputText value="#{package.score}"></p:inputText>
+
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this,offeredPackage" partialSubmit="true" icon="ui-icon-add" actionListener="#{specificationBackingBean.addPackageScore}" update="offeredPackage"/>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete" />
+
+		</div>
+</h:panelGroup>
+
+	</p:panel>
+
+
+
+
+	<p:panel header="Scoring For Offered Price(Applicable to all items)">
+		<table>
+
+
+			<tr>
+				<td><h:outputLabel value="From Julat(%)"></h:outputLabel></td>
+				<td><p:inputText></p:inputText></td>
+				<td><h:outputLabel value="To Julat(%)"></h:outputLabel></td>
+				<td><p:inputText></p:inputText></td>
+			</tr>
+
+
+
+		</table>
+
+
+		<p:dataTable id="offeredItem" var="item" rowKey="#{item}"
+			style="width:100%" rowIndexVar="index">
+			<ac:paginator for="offeredItem" />
+		<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
+
+			<p:column headerText="From(%)" style="width:50%;">
+				<p:inputText size="50" />
+			</p:column>
+
+
+			<p:column headerText="TO(%)" style="width:20%;">
+				<p:inputText></p:inputText>
+			</p:column>
+
+
+
+			<p:column headerText="Score" style="width:10%">
+				<h:outputText></h:outputText>
+
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this" partialSubmit="true" icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete" />
+
+		</div>
+
+
+	</p:panel>
+
+</ui:composition>

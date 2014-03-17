@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.cirCularNo}"
+					disabled="true" />
+				<p:spacer width="5" />
+
+				<p:commandLink style="margin-right:20px;">
+					<h:outputText value="#{lbl['lbl.so.cirattach']}" />
+				</p:commandLink>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.circularname']}" />
+			</h:column>
+
+			<h:column>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.circularName}"
+					disabled="true" />
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.circularexp']}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.circularExpDate}"
+					disabled="true" />
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="Circular Type" />
+			</h:column>
+
+			<h:column>
+				<p:inputText
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.name}"
+					disabled="true" />
+			</h:column>
+		</h:panelGrid>
+	</p:panel>
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
+		toggleable="true">
+
+
+		<p:dataTable id="panelDataItemList" var="panelItem"
+			rowIndexVar="index" lazy="true"
+			value="#{specificationBackingBean.managedBean.panelItemList}"
+			rowKey="#{panelItem}">
+
+			<ac:paginator for="panelDataItemList"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
+				style="width:400px;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+
+
+		</p:dataTable>
+
+	</p:panel>
+</ui:composition>

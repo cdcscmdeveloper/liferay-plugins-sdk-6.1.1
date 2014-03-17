@@ -1,4 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,15 +8,40 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog  widgetVar="bankStatement" modal="true"
-		width="800" height="400">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	
+	<ui:define name="contentSection">
+	
+		<div>
+		<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				action="#{specificationBackingBean.committeeBackAction}" />
+				
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;"
+				icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptBankScore}" />
+				
+				
+
+		</div>
+		<p:panel>
+	<table>
+	<tr>
+	<td><h:outputLabel value="Title"></h:outputLabel>
+	</td>
+		<td><p:inputText disabled="true"></p:inputText>
+	</td>
+	</tr>
+	</table>
+	</p:panel>
 		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}" toggleable="true">
 			<table>
 				<tr>
 					<td><h:outputLabel value="* #{lbl['lbl.sc.spec.from.month']}"></h:outputLabel></td>
 					<td><p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.fromMonth}">
-							<f:selectItem itemLabel="Select One" itemValue="" />
+							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="Jan" itemValue="0" />
 							<f:selectItem itemLabel="Feb" itemValue="1" />
 							<f:selectItem itemLabel="March" itemValue="2" />
@@ -27,7 +53,8 @@
 							<f:selectItem itemLabel="Sept" itemValue="8" />
 							<f:selectItem itemLabel="Oct" itemValue="9" />
 							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" 
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
 						</p:selectOneMenu></td>
@@ -35,7 +62,7 @@
 					<td style="width:40%"><h:outputLabel value="* #{lbl['lbl.sc.spec.to.month']}"></h:outputLabel></td>
 					<td><p:selectOneMenu style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.toMonth}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<!-- <f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItem itemLabel="Jan" itemValue="0" />
 							<f:selectItem itemLabel="Feb" itemValue="1" />
 							<f:selectItem itemLabel="March" itemValue="2" />
@@ -47,7 +74,8 @@
 							<f:selectItem itemLabel="Sept" itemValue="8" />
 							<f:selectItem itemLabel="Oct" itemValue="9" />
 							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" />
+							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
 								listener="#{specificationBackingBean. toChange}" update="bankInfo,amountdetails"></p:ajax>
 
@@ -103,12 +131,12 @@
 			</div>
 		</h:panelGroup>
 		
-		<p:commandButton value="Cancel" style="float:right;"
+		<!-- <p:commandButton value="Cancel" style="float:right;"
 			onclick="bankStatement.hide();" icon="ui-icon-cancel"></p:commandButton>
         <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all"  partialSubmit="true"
 			oncomplete="bankStatement.hide();" icon="ui-icon-accept"></p:commandButton>
+ -->
 
-
-	</p:dialog>
+	</ui:define>
 </ui:composition>

@@ -6,11 +6,54 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<p:panel header="Level Of Score">
+		<p:panelGrid style="margin-top:5px;width:70%;">
+			<f:facet name="header">
+
+				<p:row>
+					<p:column colspan="1">Tehap</p:column>
+					<p:column colspan="1">*I</p:column>
+					<p:column colspan="1">*II</p:column>
+					<p:column>*III</p:column>
+					<p:column>*IV</p:column>
+					<p:column>*V</p:column>
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column style="font-weight: bold;">Score</p:column>
+				<p:column style="font-weight: bold;">
+					<p:inputText />
+				</p:column>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText />
+				</p:column>
+
+
+			</p:row>
 
 
 
 
-	<p:panel header="Technical Scoring" toggleable="true">
+
+
+
+
+		</p:panelGrid>
+
+	</p:panel>
+
+
+	<p:panel header=" Scoring Setting" toggleable="true">
 
 		<!-- 
 		<h:panelGrid columns="4" id="weightage">
@@ -44,56 +87,36 @@
 		</h:panelGrid>
 
 		<p:dataTable id="technicalWeigtage" var="tech"
-			value="#{specificationBackingBean.managedBean.weightageTechnical}"
-			rowKey="#{tech}"
-			selection="#{specificationBackingBean.managedBean.weightageTechnicalSelect}"
-			editable="true" style="width:100%" rowIndexVar="index">
+			value="#{specificationBackingBean.managedBean.technicalScoring}"
+			rowKey="#{tech}" editable="true" style="width:100%"
+			rowIndexVar="index">
 			<ac:paginator for="technicalWeigtage" />
-			<p:column selectionMode="multiple" style="text-align:center;" />
+			<!-- <p:column selectionMode="multiple" style="text-align:center;" /> -->
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:50%;">
-				<p:inputText value="#{tech.weightageTitle}" size="50" />
+				<h:outputText value="#{tech.title}" size="50" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
 				style="width:20%;">
-				<p:inputText />
+				<h:outputText value="#{tech.maxScore}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
 				style="width:20%;">
-				<p:inputText value="#{tech.weightagePercentage}"
+				<p:inputText value="#{tech.weightage}"
 					rendered="#{specificationBackingBean.managedBean.technicalWeightage eq '1'}">
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techWeightageSum}"
 						update=":form:businessSpecId:addpoints" />
 				</p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
-				style="width:10%">
-				<p:commandLink>
 
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-
-				</p:commandLink>
-
-			</p:column>
 
 		</p:dataTable>
 
 		<p:spacer height="15"></p:spacer>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this,technicalWeigtage" partialSubmit="true"
-				action="#{specificationBackingBean.weightageTechnical}"
-				icon="ui-icon-add" update="technicalWeigtage" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{specificationBackingBean.deleteTechnicalWeightage}"
-				update="technicalWeigtage" />
 
-		</div>
 
 	</p:panel>
 
@@ -105,7 +128,7 @@
 
 				<h:outputText value="#{lbl['lbl.sc.spec.net.total.points']} " />
 				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"></p:inputText>
+				<p:inputText readonly="true" disabled="true" value="#{specificationBackingBean.managedBean.techPoints}"></p:inputText>
 
 
 
@@ -121,120 +144,5 @@
 			</h:panelGrid>
 		</h:panelGroup>
 	</p:panel>
-
-
-
-
-
-
-
-
-	<p:panel header="#{lbl['lbl.sc.spec.financial.scoring']}"
-		toggleable="true">
-		<h:panelGrid columns="4">
-
-			<h:outputText value="#{lbl['lbl.sc.spec.weight.pass.score']}" />
-			<p:spacer width="10"></p:spacer>
-			<p:inputText
-				value="#{specificationBackingBean.managedBean.scQtSpec.finalizationPassScore}"></p:inputText>
-			<h:outputText value="/100 " />
-			<h:outputText value="#{lbl['lbl.sc.spec.tech.weightage']}" />
-			<p:spacer width="10"></p:spacer>
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.financialWeightage}">
-				<f:selectItem itemLabel="Yes" itemValue="1" />
-				<f:selectItem itemLabel="No" itemValue="2" />
-				<p:ajax event="change" update="financialweightage"></p:ajax>
-			</p:selectOneRadio>
-		</h:panelGrid>
-
-		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
-			value="#{specificationBackingBean.managedBean.weightageFinancial}"
-			selection="#{specificationBackingBean.managedBean.weightageFinancialSelect}"
-			style="width:100%" rowIndexVar="index">
-			<ac:paginator for="financialweightage" />
-			<p:column selectionMode="multiple" style="text-align:center;" />
-
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
-				style="width:50%;">
-				<p:inputText value="#{finance.weightageTitle}" size="50" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
-				style="width:20%;">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
-				style="width:20%;">
-				<p:inputText value="#{finance.weightagePercentage}"
-					rendered="#{specificationBackingBean.managedBean.financialWeightage eq '1'}">
-					<p:ajax event="blur" process="@this"
-						listener="#{specificationBackingBean.finWeightageSum}"
-						update=":form:businessSpecId:finaddpoints" />
-				</p:inputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
-				style="width:10%">
-				<p:commandLink>
-
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-
-				</p:commandLink>
-
-			</p:column>
-		</p:dataTable>
-
-		<p:spacer height="15"></p:spacer>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this,financialweightage" partialSubmit="true"
-				action="#{specificationBackingBean.weightageFinancial}"
-				icon="ui-icon-add" update="financialweightage" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{specificationBackingBean.deleteFinancialWeightage}"
-				update="financialweightage" />
-
-		</div>
-
-	</p:panel>
-
-
-
-
-
-	<p:panel>
-		<h:panelGroup id="finaddpoints">
-			<h:panelGrid columns="3">
-
-
-				<h:outputText value="#{lbl['lbl.sc.spec.net.total.points']} " />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"></p:inputText>
-
-
-
-
-				<h:outputText value="#{lbl['lbl.sc.spec.total.weightage']}" />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"
-					value="#{specificationBackingBean.managedBean.financialWeightageScore}"></p:inputText>
-
-
-
-
-			</h:panelGrid>
-		</h:panelGroup>
-	</p:panel>
-
-
-
-
-
-
-
-
 
 </ui:composition>

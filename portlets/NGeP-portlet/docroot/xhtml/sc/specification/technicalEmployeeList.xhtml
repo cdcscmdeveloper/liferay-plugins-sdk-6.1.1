@@ -1,4 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,10 +8,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog widgetVar="technicalEmployeeList" modal="true" width="800"
-		height="400">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				action="#{specificationBackingBean.committeeBackAction}" />
+		
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptTechnicalScore}"/>
+
+
+
+		</div>
 		<p:panel header="#{lbl['lbl.sc.spec.tech.employee.list']}"
-			toggleable="true" collapsed="true">
+			toggleable="true" >
 
 			<p:dataTable id="techEmployeeList" var="techEmployee"
 				rowIndexVar="index">
@@ -38,11 +53,30 @@
 			</p:dataTable>
 
 		</p:panel>
-		<p:commandButton value="#{lbl['lbl.sc.spec.btn.tech.close']}"
-			style="float:right;" onclick="technicalEmployeeList.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Total Staff"></h:outputLabel>
+			<p:inputText></p:inputText>
+		</h:panelGrid>
+
+		<ui:param name="scoringPnlGroupId" value="totalStaffId" />
+		<h:panelGroup id="totalStaffGroupId">
+			<ui:param name="scoringList"
+				value="#{specificationBackingBean.managedBean.technicalStaffScore}" />
+			<ui:param name="componentName" value="Staff" />
+			<ui:param name="scoringPnlId" value="staffId" />
+			<ui:param name="scoringPnlName"
+				value="Scoring For Total Technical Staff"></ui:param>
+			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+					process="@this,#{scoringPnlId}" partialSubmit="true"
+					update="#{scoringPnlId}" icon="ui-icon-add" actionListener="#{specificationBackingBean.addTechnicalStaffScoring}"/>
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					icon="ui-icon-delete" update="#{scoringPnlId}" />
+
+			</div>
+		</h:panelGroup>
 
 
-
-	</p:dialog>
+	</ui:define>
 </ui:composition>
