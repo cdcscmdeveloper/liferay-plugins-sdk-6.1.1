@@ -1,14 +1,21 @@
 package my.ep.web.bean.sc.quatationtender;
 
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 
 public class TabBean {
 	private String titleName;
 	private ScQtApproval scQtApproval;
+	private ScCommittee scCommittee;
 
 	public TabBean(String titleName, ScQtApproval scQtApproval) {
 		this.titleName = titleName;
 		this.scQtApproval = scQtApproval;
+	}
+	
+	public TabBean(String titleName, ScCommittee scCommittee) {
+		this.titleName = titleName;
+		this.scCommittee = scCommittee;
 	}
 
 	/**
@@ -37,6 +44,20 @@ public class TabBean {
 	 */
 	public void setScQtApproval(ScQtApproval scQtApproval) {
 		this.scQtApproval = scQtApproval;
+	}
+
+	/**
+	 * @return the scCommittee
+	 */
+	public ScCommittee getScCommittee() {
+		return scCommittee;
+	}
+
+	/**
+	 * @param scCommittee the scCommittee to set
+	 */
+	public void setScCommittee(ScCommittee scCommittee) {
+		this.scCommittee = scCommittee;
 	}
 
 }
