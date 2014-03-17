@@ -7,49 +7,50 @@
 
 	<p:panel>
 
-		<p:tabView id="committeeappointmenttabView" dynamic="true">
+		<ui:include src="addspecificationcommittee.xhtml" />
+		<p:tabView id="tabView" orientation="top" dynamic="true" cache="true"
+			var="committeeApproval"
+			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
+			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
-			<p:tab id="tab1" title="Specification Committee"
-				styleClass="noBorders tr,noBorders td">
-				<ui:include
-					src="/xhtml/sc/quatationtender/committeeappointment/specificationCommitteeDetails.xhtml" />
-				<ui:include src="/xhtml/sc/committe/committeeaddscreen.xhtml" />
-			</p:tab>
+			<p:ajax event="tabChange"
+				listener="#{qTCommitteBackingBean.onTabChangeAction}" update="@this" />
 
-			<c:if test="#{qTDetailBB.managedBean.scQtSpec.evaluationType eq '2'}">
-				<p:tab id="tab2" title="Opening Committee"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/sc/quatationtender/committeeappointment/openingCommitteeDetails.xhtml" />
-				</p:tab>
 
-				<p:tab id="tab3" title="Technical Evaluation Committee"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/sc/quatationtender/committeeappointment/technicalEvaluationCommitteeDetails.xhtml" />
-				</p:tab>
+			<p:tab title="#{committeeApproval.titleName}">
 
-				<p:tab id="tab4" title="Financial Evaluation Committee"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/sc/quatationtender/committeeappointment/financialEvaluationCommitteeDetails.xhtml" />
-				</p:tab>
-			</c:if>
 
-			<c:if test="#{qTDetailBB.managedBean.scQtSpec.evaluationType eq '1'}">
-				<p:tab id="tab5" title="Evaluation Committee"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/sc/quatationtender/committeeappointment/evaluationCommittee.xhtml" />
-					<ui:include
-						src="/xhtml/sc/quatationtender/committeeappointment/addevaluationcommittee.xhtml" />
-				</p:tab>
-			</c:if>
+				<ui:fragment
+					rendered="#{committeeApproval.titleName ne 'Finalization Secretary'}">
 
-			<p:tab id="tab6" title="Finalization Secretary"
-				styleClass="noBorders tr,noBorders td">
-				<ui:include
-					src="/xhtml/sc/quatationtender/committeeappointment/finalizationSecretaryDetails.xhtml" />
+					<ui:include src="specificationCommitteeDetails.xhtml">
+						<ui:param name="membersList"
+							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+
+						<ui:param name="selectedMembersList"
+							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					</ui:include>
+
+					<div align="right">
+						<p:commandButton id="specificationcommitteeadd"
+							value="#{lbl['lbl.so.addbtn']}" process="@this"
+							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scCommittee)}"
+							oncomplete="newspecificationcommittee.show();"
+							update="@(.scAddMember)" icon="ui-icon-add" />
+
+						<p:commandButton value="#{lbl['lbl.so.delete']}"
+							icon="ui-icon-delete"
+							action="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+							update="specificationcommitteeid" />
+					</div>
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{committeeApproval.titleName eq 'Finalization Secretary'}">
+
+					<ui:include src="finalizationSecretaryDetails.xhtml" />
+				</ui:fragment>
+
 			</p:tab>
 
 		</p:tabView>

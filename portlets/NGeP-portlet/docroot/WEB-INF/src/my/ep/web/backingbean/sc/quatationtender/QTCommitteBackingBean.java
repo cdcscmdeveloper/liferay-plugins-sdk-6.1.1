@@ -6,34 +6,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.sc.CommitteType;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.tree.TreeNodeBean;
-import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -44,7 +55,7 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "qTCommitteBackingBean")
 @RequestScoped
 public class QTCommitteBackingBean extends
-		SourcingBaseBackingBean<CommitteManagedBean> {
+		SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	private static final Logger logger = EpLogger
 			.getLogger(QTCommitteBackingBean.class);
@@ -57,32 +68,51 @@ public class QTCommitteBackingBean extends
 	}
 
 	public QTCommitteBackingBean() {
-		if (this.getManagedBean().getCommitteMember() == null) {
+		/*if (this.getManagedBean().getCommitteMember() == null) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-		}
+		}*/
+
+		getManagedBean().setRoleTypes(
+				getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE));
 	}
 
-	public void userSelcetionAction(AjaxBehaviorEvent event) {
-		String userSelection = (String) event.getComponent().getAttributes()
-				.get("value");
-		System.out.println("_____________________+++++++++++++++"
-				+ userSelection);
-		this.getManagedBean().setExternalUsers(null);
-		ScCommitteeMember committeeMember = new ScCommitteeMember();
-		committeeMember.setPmUser(new PmUser());
-		this.getManagedBean().getCommittemembers()
-				.remove(this.getManagedBean().getCommitteMember());
-		committeeMember.setUserSelection(userSelection);
-		this.getManagedBean().setCommitteMember(committeeMember);
-		this.getManagedBean().getCommittemembers().add(committeeMember);
-		if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.EXISITING.value())) {
+	public void onTabChangeAction(TabChangeEvent event) {
+		String tabTitle = ((TabBean) event.getData()).getTitleName();
 
-			getManagedBean().getCommitteMember().setExternalUser(true);
-		} else if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.New.value())) {
-			getManagedBean().getCommitteMember().setExternalUser(true);
+		ScCommittee committee = ((TabBean) event.getData()).getScCommittee();
+		//System.out.println("$$$$$$$$$$$$$$$$$$$"+committee.getScCommitteeMembers().size());
+		getManagedBean().setScCommittee(committee);
+		getManagedBean().setTabTitle(tabTitle);
+	}
+
+	/**
+	 * @param committeeRole
+	 * @param types
+	 * @return
+	 */
+	private SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
+
+		List<String> types = new ArrayList<String>();
+		types.add("M");
+		types.add("S");
+
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[types.size() + 1];
+			items[0] = new SelectItem(null, "- Select One -");
+			int i = 1;
+			for (String priceTypeCode : types) {
+				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
+						committeeRole, priceTypeCode));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
+		return items;
 	}
 
 	public void existingCommitteeSearchAction() {
@@ -130,19 +160,22 @@ public class QTCommitteBackingBean extends
 
 	public void onRowCloneAction(SelectEvent event) {
 		debugLogger("onRowCloneAction");
-		ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
+		ScQt scQt = (ScQt) event.getObject();
+		// ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
+		reqDTO.setQtId(scQt.getQtId());
+		// reqDTO.getsetCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
 		CommitteResDTO resDTO = null;
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
-			resDTO = committeSO.retrieveCommitteMembersById(reqDTO);
+			resDTO = committeSO
+					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			if (resDTO != null) {
 				this.getManagedBean().setCloneCommitteMemebers(
-						resDTO.getCommitteMembers());
+						resDTO.getCommMemberResultBean().getResultList());
 			}
 			System.out.println("======== list size==== :"
 					+ getManagedBean().getCloneCommitteMemebers().size());
@@ -201,160 +234,206 @@ public class QTCommitteBackingBean extends
 	}
 
 	public void cloneSearchCommitteAction() {
-		List<ScQtCommittee> qtCommittee = retriveQtCommittes();
-		getManagedBean().setCloneSearchCommittes(qtCommittee);
+		try {
+			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
+					.getCloneQtnTenderSearchBean();
+			List<ScQt> cloneSearchQt = retriveQtCommittes(qtnTenderSearchBean);
+
+			this.getManagedBean().setCloneTenderList(cloneSearchQt);
+		} catch (Exception e) {
+
+		}
+		// List<ScQt> qtCommittee = retriveQtCommittes();
+		// getManagedBean().setCloneSearchCommittes(qtCommittee);
 	}
 
 	/**
-	 * retrive qtcommittees
-	 * 
+	 * @param qtnTenderSearchBean
 	 * @return
 	 */
-	private List<ScQtCommittee> retriveQtCommittes() {
-		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		ISearchBean<ScQtCommittee> searchBean = new SearchBean<ScQtCommittee>();
-		CommitteResDTO resDto = null;
+	private List<ScQt> retriveQtCommittes(
+			QtnTenderSearchBean qtnTenderSearchBean) {
 
-		if (getManagedBean().getCommitteNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getCommitteNo())) {
-			SearchFilterBean committeSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			committeSearchBean.setSearchField("scCommittee.committeeId");
-			committeSearchBean.setSearchValue(getManagedBean().getCommitteNo());
-			searchBean.getDataFilterBeans().add(committeSearchBean);
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		if (qtnTenderSearchBean != null) {
+			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+
+			String qtTitle = qtnTenderSearchBean.getQtTitle();
+			if (!StringUtils.isBlank(qtTitle)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_TITILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtTitle);
+				searchFilterBean.add(bean);
+			}
+
+			String qtNumber = qtnTenderSearchBean.getQtNo();
+			if (!StringUtils.isBlank(qtNumber)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_NUMBER);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtNumber);
+				searchFilterBean.add(bean);
+			}
+
+			// Adding search filterbeans to searchbean.
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			reqDTO.setQtSearchBean(qtSearchBean);
 
 		}
-
-		if (getManagedBean().getSelectedCommitte() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getSelectedCommitte())) {
-			SearchFilterBean committeTypeSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			committeTypeSearchBean.setSearchField("scCommittee.committeeType");
-			committeTypeSearchBean.setSearchValue(getManagedBean()
-					.getSelectedCommitte());
-			searchBean.getDataFilterBeans().add(committeTypeSearchBean);
-		}
-
-		if (getManagedBean().getCreatedDt() != null) {
-			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			creatDtSearchBean.setSearchField("scCommittee.createdDate");
-			creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDt());
-			searchBean.getDataFilterBeans().add(creatDtSearchBean);
-		}
-
-		if (getManagedBean().getQtNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getQtNo())) {
-			SearchFilterBean qtnoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			qtnoSearchBean.setSearchField("scQt.qtNo");
-			qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
-
-			searchBean.getDataFilterBeans().add(qtnoSearchBean);
-		}
-		if (getManagedBean().getStatus() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getStatus())) {
-			/*
-			 * SearchFilterBean statusSearchBean = new SearchFilterBean(
-			 * SearchOperator.OPERATOR_EQUALS.value());
-			 * statusSearchBean.setSearchField("scQt.qtNo");
-			 * statusSearchBean.setSearchValue(getManagedBean().getQtNo());
-			 * 
-			 * searchBean.getDataFilterBeans().add(statusSearchBean);
-			 */
-		}
-		if (getManagedBean().getEvaluationType() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getEvaluationType())) {
-			SearchFilterBean evaluationSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			evaluationSearchBean.setSearchField("scQt.scQtSpec.evaluationType");
-			evaluationSearchBean.setSearchValue(getManagedBean()
-					.getEvaluationType());
-
-			searchBean.getDataFilterBeans().add(evaluationSearchBean);
-		}
-		committeReqDTO.setCommitteSearchBean(searchBean);
-
+		QuationTenderResDTO dto = null;
+		IQTDetailSO detailSO;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-			resDto = committeSO.searchQTCommittees(committeReqDTO);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			dto = detailSO.getQuationTenders(reqDTO);
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+
+		} finally {
+			detailSO = null;
 		}
 
-		return resDto.getCommitteResultBean().getResultList();
+		return null != dto.getQtResultBean().getResultList() ? dto
+				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
+
+		/*
+		 * ISearchBean<ScQt> searchBean = new SearchBean<ScQt>();
+		 * QuationTenderResDTO resDTO = null;
+		 * 
+		 * 
+		 * CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		 * ISearchBean<ScQtCommittee> searchBean = new
+		 * SearchBean<ScQtCommittee>(); CommitteResDTO resDto = null;
+		 * 
+		 * 
+		 * if (getManagedBean().getCommitteNo() != null &&
+		 * !"".equalsIgnoreCase(getManagedBean().getCommitteNo())) {
+		 * SearchFilterBean committeSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * committeSearchBean.setSearchField("scCommittee.committeeId");
+		 * committeSearchBean.setSearchValue(getManagedBean().getCommitteNo());
+		 * searchBean.getDataFilterBeans().add(committeSearchBean);
+		 * 
+		 * }
+		 * 
+		 * if (getManagedBean().getSelectedCommitte() != null &&
+		 * !"".equalsIgnoreCase(getManagedBean().getSelectedCommitte())) {
+		 * SearchFilterBean committeTypeSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * committeTypeSearchBean.setSearchField("scCommittee.committeeType");
+		 * committeTypeSearchBean.setSearchValue(getManagedBean()
+		 * .getSelectedCommitte());
+		 * searchBean.getDataFilterBeans().add(committeTypeSearchBean); }
+		 * 
+		 * if (getManagedBean().getCreatedDt() != null) { SearchFilterBean
+		 * creatDtSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
+		 * creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDt());
+		 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
+		 * 
+		 * if (getManagedBean().getQtNo() != null &&
+		 * !"".equalsIgnoreCase(getManagedBean().getQtNo())) { SearchFilterBean
+		 * qtnoSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * qtnoSearchBean.setSearchField("scQt.qtNo");
+		 * qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
+		 * 
+		 * searchBean.getDataFilterBeans().add(qtnoSearchBean); } if
+		 * (getManagedBean().getStatus() != null &&
+		 * !"".equalsIgnoreCase(getManagedBean().getStatus())) {
+		 * 
+		 * SearchFilterBean statusSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * statusSearchBean.setSearchField("scQt.qtNo");
+		 * statusSearchBean.setSearchValue(getManagedBean().getQtNo());
+		 * 
+		 * searchBean.getDataFilterBeans().add(statusSearchBean);
+		 * 
+		 * } if (getManagedBean().getEvaluationType() != null &&
+		 * !"".equalsIgnoreCase(getManagedBean().getEvaluationType())) {
+		 * SearchFilterBean evaluationSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * evaluationSearchBean.setSearchField("scQt.scQtSpec.evaluationType");
+		 * evaluationSearchBean.setSearchValue(getManagedBean()
+		 * .getEvaluationType());
+		 * 
+		 * searchBean.getDataFilterBeans().add(evaluationSearchBean); }
+		 * reqDTO.setQtSearchBean(searchBean); //
+		 * committeReqDTO.setCommitteSearchBean(searchBean);
+		 * 
+		 * try { IQTDetailSO detailSO = BusinessDelegate.getInstance()
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+		 * IQTDetailSO.class);
+		 * 
+		 * ICommitteSO committeSO = BusinessDelegate.getInstance()
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+		 * ICommitteSO.class);
+		 * 
+		 * resDTO = detailSO.getQuationTenders(reqDTO); // resDto =
+		 * committeSO.searchQTCommittees(committeReqDTO); } catch (Exception ex)
+		 * { ex.printStackTrace(); }
+		 * 
+		 * return resDTO.getQtResultBean();
+		 */
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addCloneDtlToTabs() {
 		TreeNode searchCommitteeTreeNode = getManagedBean()
 				.getSearchcommitteeNode();
 		List<ScCommitteeMember> committeeMemberList = new ArrayList<ScCommitteeMember>();
-
+		List<ScCommittee> treeBeans = new ArrayList();
 		if (searchCommitteeTreeNode != null) {
 			ScCommittee committee = null;
 			for (TreeNode searchTreeNode : searchCommitteeTreeNode
 					.getChildren()) {
+
 				// ScCommittee
-				@SuppressWarnings("unchecked")
-				TreeNodeBean<ScCommittee> treeBean = (TreeNodeBean<ScCommittee>) searchTreeNode
-						.getData();
+				ScCommittee treeBean = (ScCommittee) ((TreeNodeBean) searchTreeNode
+						.getData()).getObject();
+				treeBeans.add(treeBean);
+			}
+		}
 
-				if (treeBean.isSelected()) {
-					committee = treeBean.getObject();
-					System.out.println("Committee Type : "
-							+ committee.getCommitteeType());
-				}
-				// ScCommitteeMember
-				List<TreeNode> childs = searchTreeNode.getChildren();
-				for (TreeNode treeNode : childs) {
-					@SuppressWarnings("unchecked")
-					TreeNodeBean<ScCommitteeMember> scCommitteeMemberBean = (TreeNodeBean<ScCommitteeMember>) treeNode
-							.getData();
-					if (treeBean.isSelected()) {
-						ScCommitteeMember scCommitteeMember = scCommitteeMemberBean
-								.getObject();
-						committeeMemberList.add(scCommitteeMember);
-					}
+		List<TabBean> tabs = this.getManagedBean()
+				.getScCommitteeMemberTabList();
+		for (TabBean tabBean : tabs) {
+			for (ScCommittee scCommittee : treeBeans) {
+				if (tabBean.getTitleName().equalsIgnoreCase(
+						CommitteType.getValue(scCommittee.getCommitteeType()))) {
+					tabBean.setScCommittee(treeBeans.get(0));
+					break;
 				}
 			}
-			if (committee.getCommitteeType().equalsIgnoreCase("SC")) {
-				getManagedBean().setSpecificationCommitteList(
-						committeeMemberList);
-			} else if (committee.getCommitteeType().equalsIgnoreCase("TEC")) {
-				getManagedBean().setTechEvaluationCommitteList(
-						committeeMemberList);
-			} else if (committee.getCommitteeType().equalsIgnoreCase("EC")) {
-				getManagedBean().setEvaluationCommitteList(committeeMemberList);
-			} else if (committee.getCommitteeType().equalsIgnoreCase("FEC")) {
-				getManagedBean().setFinEvaluationCommitteList(
-						committeeMemberList);
-			} else if (committee.getCommitteeType().equalsIgnoreCase("OC")) {
-				getManagedBean().setOpeningCommitteList(committeeMemberList);
-			}
+			/*
+			 * for (ScCommittee committee2 :treeBeans) { if
+			 * (tabBean.getTitleName().equalsIgnoreCase(
+			 * committee2.getCommitteeType())) {
+			 * tabBean.setScCommittee(this.getManagedBean().getScCommittee()); }
+			 * }
+			 */
 
+			// }
 		}
 	}
 
-	public void addCommitteMember() {
+	public void addCommitteMember(ScCommittee committee) {
 		debugLogger("addCommitteMember");
-		List<ScCommitteeMember> committeMemebers = this.getManagedBean()
-				.getCommittemembers();
-		if (committeMemebers == null) {
-			committeMemebers = new ArrayList<ScCommitteeMember>();
-		}
+
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
-		committeMemebers.add(getManagedBean().getCommitteMember());
-		getManagedBean().setCommittemembers(committeMemebers);
-
-		System.out.println("inside add committemeber$$$$$$$$$$$$$$$$$$$$$"
-				+ getManagedBean().getCommittemembers().size());
 	}
 
 	/**
@@ -371,48 +450,63 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
-	public void deleteSpecificationCommittee() {
-		debugLogger("deleteSpecificationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getSpecificationCommitteList();
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectSpecificationCommitteeList();
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
+	public void userSelcetionAction(AjaxBehaviorEvent event) {
+		String userSelection = (String) event.getComponent().getAttributes()
+				.get("value");
+		userSelection = this.getManagedBean().getCommitteMember()
+				.getUserSelection();
+		System.out.println("------------- : " + userSelection);
+		this.getManagedBean().setExternalUsers(null);
+		ScCommitteeMember committeeMember = new ScCommitteeMember();
+		committeeMember.setPmUser(new PmUser());
+		committeeMember.setUserSelection(userSelection);
+		this.getManagedBean().setCommitteMember(committeeMember);
+		if (SelectionType.EXISITING.value().equalsIgnoreCase(
+				getManagedBean().getCommitteMember().getUserSelection())) {
+			getManagedBean().getCommitteMember().setExternalUser(true);
+
+		} else if (SelectionType.New.value().equalsIgnoreCase(
+				getManagedBean().getCommitteMember().getUserSelection())) {
+			getManagedBean().getCommitteMember().setExternalUser(true);
+
 		}
 	}
 
-	public void addCloneToTecDtl() {
-		List<ScCommitteeMember> list = getManagedBean()
-				.getTechEvaluationCommitteList();
-		if (null == list) {
-			list = new ArrayList<ScCommitteeMember>();
-		}
-		for (ScCommitteeMember scCommitteeMember : getManagedBean()
-				.getSelectSpecificationCommitteeList()) {
-			list.add(scCommitteeMember);
-		}
-		getManagedBean().setTechEvaluationCommitteList(list);
-		System.out.println("TEC Dtl : "
-				+ getManagedBean().getTechEvaluationCommitteList().size());
-	}
+	/*
+	 * public void deleteSpecificationCommittee() {
+	 * debugLogger("deleteSpecificationCommittee"); List<ScCommitteeMember>
+	 * committeeMembersList = getManagedBean() .getSpecificationCommitteList();
+	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
+	 * .getSelectSpecificationCommitteeList(); if (committeeMembersList.size()
+	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
+	 * else { for (ScCommitteeMember scCommitteeMember :
+	 * selectCommitteeMembersList) {
+	 * committeeMembersList.remove(scCommitteeMember); } } }
+	 */
+	/*
+	 * public void addCloneToTecDtl() { List<ScCommitteeMember> list =
+	 * getManagedBean() .getTechEvaluationCommitteList(); if (null == list) {
+	 * list = new ArrayList<ScCommitteeMember>(); } for (ScCommitteeMember
+	 * scCommitteeMember : getManagedBean()
+	 * .getSelectSpecificationCommitteeList()) { list.add(scCommitteeMember); }
+	 * getManagedBean().setTechEvaluationCommitteList(list);
+	 * System.out.println("TEC Dtl : " +
+	 * getManagedBean().getTechEvaluationCommitteList().size()); }
+	 */
+	public void okCommitteeAction() {
+		debugLogger("okCommitteeAction");
 
-	public void okAction() {
-		debugLogger("okAction");
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getSpecificationCommitteList();
+		List<ScCommitteeMember> memberList = getManagedBean().getScCommittee()
+				.getScCommitteeMembers();
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
+
+		ScCommitteeMember member = getManagedBean().getCommitteMember();
+
 		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
 			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
 			memberList.add(member);
-			this.getManagedBean().setSpecificationCommitteList(memberList);
 			System.out.println(" IC Passport : " + member.getIcPassport());
 		} else {
 			System.out.println("******** Existing User *********");
@@ -424,210 +518,171 @@ public class QTCommitteBackingBean extends
 				committeeMember.setEmail(user.getPmAddressTypes().get(0)
 						.getPmAddress().getEmail());
 				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
+				committeeMember.setPNP(user.isPMP());
 				memberList.add(committeeMember);
 			}
-			getManagedBean().setSpecificationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getSpecificationCommitteList().get(0)
-							.getIcPassport());
 		}
-	}
 
-	public void okOpeningCommitteeAction() {
-		debugLogger("okOpeningCommitteeAction");
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getOpeningCommitteList();
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-			memberList.add(member);
-			this.getManagedBean().setOpeningCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-			getManagedBean().setOpeningCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getOpeningCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
+		getManagedBean().getScCommittee().setScCommitteeMembers(memberList);
 
-	public void deleteOpeningCommittee() {
-		debugLogger("deleteOpeningCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getOpeningCommitteList();
-
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectOpeningCommitteeList();
-
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
+		List<TabBean> tabs = this.getManagedBean()
+				.getScCommitteeMemberTabList();
+		for (TabBean tabBean : tabs) {
+			if (tabBean.getTitleName().equalsIgnoreCase(
+					this.getManagedBean().getTabTitle())) {
+				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
+				break;
 			}
 		}
 	}
 
-	public void okTechnicalEvaluationCommitteeAction() {
-		debugLogger("okTechnicalEvaluationCommitteeAction");
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getTechEvaluationCommitteList();
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-			memberList.add(member);
-			this.getManagedBean().setTechEvaluationCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-			getManagedBean().setTechEvaluationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getTechEvaluationCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
-
-	public void deleteTechnicalEvaluationCommittee() {
-		debugLogger("deleteTechnicalEvaluationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getTechEvaluationCommitteList();
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectTechEvaluationCommitteeList();
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
-
-	public void okFinancailCommitteeAction() {
-		debugLogger("okFinancailCommitteeAction");
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getFinEvaluationCommitteList();
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-			memberList.add(member);
-			this.getManagedBean().setFinEvaluationCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-			getManagedBean().setFinEvaluationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getFinEvaluationCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
-
-	public void deleteFinancialEvaluationCommittee() {
-		debugLogger("deleteFinancialEvaluationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getFinEvaluationCommitteList();
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectFinEvaluationCommitteeList();
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
-
-	public void okEvaluationCommitteeAction() {
-		debugLogger("okEvaluationCommitteeAction");
-
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getEvaluationCommitteList();
-
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
-
-		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-
-			System.out.println("******** New User *********");
-			ScCommitteeMember member = getManagedBean().getCommitteMember();
-
-			memberList.add(member);
-			this.getManagedBean().setEvaluationCommitteList(memberList);
-			System.out.println(" IC Passport : " + member.getIcPassport());
-		} else {
-			System.out.println("******** Existing User *********");
-
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPnp(user.isPMP());
-				memberList.add(committeeMember);
-			}
-
-			getManagedBean().setEvaluationCommitteList(memberList);
-			System.out.println("Passport : "
-					+ getManagedBean().getEvaluationCommitteList().get(0)
-							.getIcPassport());
-		}
-	}
-
-	public void deleteEvaluationCommittee() {
-		debugLogger("deleteEvaluationCommittee");
-		List<ScCommitteeMember> committeeMembersList = getManagedBean()
-				.getEvaluationCommitteList();
-
-		List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-				.getSelectEvaluationCommitteeList();
-
-		if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-			committeeMembersList.clear();
-		} else {
-			for (ScCommitteeMember scCommitteeMember : selectCommitteeMembersList) {
-				committeeMembersList.remove(scCommitteeMember);
-			}
-		}
-	}
+	/*
+	 * public void okOpeningCommitteeAction() {
+	 * debugLogger("okOpeningCommitteeAction"); List<ScCommitteeMember>
+	 * memberList = getManagedBean() .getOpeningCommitteList(); if (null ==
+	 * memberList) { memberList = new ArrayList<ScCommitteeMember>(); } if
+	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
+	 * System.out.println("******** New User *********"); ScCommitteeMember
+	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
+	 * this.getManagedBean().setOpeningCommitteList(memberList);
+	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
+	 * System.out.println("******** Existing User *********"); for (PmUser user
+	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
+	 * committeeMember = new ScCommitteeMember();
+	 * committeeMember.setMemberName(user.getUserName());
+	 * committeeMember.setIcPassport(user.getIdentificationNo());
+	 * committeeMember.setDesignation(user.getDesignation());
+	 * committeeMember.setEmail(user.getPmAddressTypes().get(0)
+	 * .getPmAddress().getEmail()); committeeMember.setGrade(user.getGrade());
+	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
+	 * getManagedBean().setOpeningCommitteList(memberList);
+	 * System.out.println("Passport : " +
+	 * getManagedBean().getOpeningCommitteList().get(0) .getIcPassport()); } }
+	 * 
+	 * public void deleteOpeningCommittee() {
+	 * debugLogger("deleteOpeningCommittee"); List<ScCommitteeMember>
+	 * committeeMembersList = getManagedBean() .getOpeningCommitteList();
+	 * 
+	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
+	 * .getSelectOpeningCommitteeList();
+	 * 
+	 * if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
+	 * committeeMembersList.clear(); } else { for (ScCommitteeMember
+	 * scCommitteeMember : selectCommitteeMembersList) {
+	 * committeeMembersList.remove(scCommitteeMember); } } }
+	 * 
+	 * public void okTechnicalEvaluationCommitteeAction() {
+	 * debugLogger("okTechnicalEvaluationCommitteeAction");
+	 * List<ScCommitteeMember> memberList = getManagedBean()
+	 * .getTechEvaluationCommitteList(); if (null == memberList) { memberList =
+	 * new ArrayList<ScCommitteeMember>(); } if
+	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
+	 * System.out.println("******** New User *********"); ScCommitteeMember
+	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
+	 * this.getManagedBean().setTechEvaluationCommitteList(memberList);
+	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
+	 * System.out.println("******** Existing User *********"); for (PmUser user
+	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
+	 * committeeMember = new ScCommitteeMember();
+	 * committeeMember.setMemberName(user.getUserName());
+	 * committeeMember.setIcPassport(user.getIdentificationNo());
+	 * committeeMember.setDesignation(user.getDesignation());
+	 * committeeMember.setGrade(user.getGrade());
+	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
+	 * getManagedBean().setTechEvaluationCommitteList(memberList);
+	 * System.out.println("Passport : " +
+	 * getManagedBean().getTechEvaluationCommitteList().get(0)
+	 * .getIcPassport()); } }
+	 * 
+	 * public void deleteTechnicalEvaluationCommittee() {
+	 * debugLogger("deleteTechnicalEvaluationCommittee");
+	 * List<ScCommitteeMember> committeeMembersList = getManagedBean()
+	 * .getTechEvaluationCommitteList(); List<ScCommitteeMember>
+	 * selectCommitteeMembersList = getManagedBean()
+	 * .getSelectTechEvaluationCommitteeList(); if (committeeMembersList.size()
+	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
+	 * else { for (ScCommitteeMember scCommitteeMember :
+	 * selectCommitteeMembersList) {
+	 * committeeMembersList.remove(scCommitteeMember); } } }
+	 * 
+	 * public void okFinancailCommitteeAction() {
+	 * debugLogger("okFinancailCommitteeAction"); List<ScCommitteeMember>
+	 * memberList = getManagedBean() .getFinEvaluationCommitteList(); if (null
+	 * == memberList) { memberList = new ArrayList<ScCommitteeMember>(); } if
+	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
+	 * System.out.println("******** New User *********"); ScCommitteeMember
+	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
+	 * this.getManagedBean().setFinEvaluationCommitteList(memberList);
+	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
+	 * System.out.println("******** Existing User *********"); for (PmUser user
+	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
+	 * committeeMember = new ScCommitteeMember();
+	 * committeeMember.setMemberName(user.getUserName());
+	 * committeeMember.setIcPassport(user.getIdentificationNo());
+	 * committeeMember.setDesignation(user.getDesignation());
+	 * committeeMember.setGrade(user.getGrade());
+	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
+	 * getManagedBean().setFinEvaluationCommitteList(memberList);
+	 * System.out.println("Passport : " +
+	 * getManagedBean().getFinEvaluationCommitteList().get(0) .getIcPassport());
+	 * } }
+	 * 
+	 * public void deleteFinancialEvaluationCommittee() {
+	 * debugLogger("deleteFinancialEvaluationCommittee");
+	 * List<ScCommitteeMember> committeeMembersList = getManagedBean()
+	 * .getFinEvaluationCommitteList(); List<ScCommitteeMember>
+	 * selectCommitteeMembersList = getManagedBean()
+	 * .getSelectFinEvaluationCommitteeList(); if (committeeMembersList.size()
+	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
+	 * else { for (ScCommitteeMember scCommitteeMember :
+	 * selectCommitteeMembersList) {
+	 * committeeMembersList.remove(scCommitteeMember); } } }
+	 * 
+	 * public void okEvaluationCommitteeAction() {
+	 * debugLogger("okEvaluationCommitteeAction");
+	 * 
+	 * List<ScCommitteeMember> memberList = getManagedBean()
+	 * .getEvaluationCommitteList();
+	 * 
+	 * if (null == memberList) { memberList = new
+	 * ArrayList<ScCommitteeMember>(); }
+	 * 
+	 * if (getManagedBean().getCommitteMember().getUserSelection().equals("N"))
+	 * {
+	 * 
+	 * System.out.println("******** New User *********"); ScCommitteeMember
+	 * member = getManagedBean().getCommitteMember();
+	 * 
+	 * memberList.add(member);
+	 * this.getManagedBean().setEvaluationCommitteList(memberList);
+	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
+	 * System.out.println("******** Existing User *********");
+	 * 
+	 * for (PmUser user : getManagedBean().getSelectedPmUser()) {
+	 * ScCommitteeMember committeeMember = new ScCommitteeMember();
+	 * committeeMember.setMemberName(user.getUserName());
+	 * committeeMember.setIcPassport(user.getIdentificationNo());
+	 * committeeMember.setDesignation(user.getDesignation());
+	 * committeeMember.setGrade(user.getGrade());
+	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
+	 * 
+	 * getManagedBean().setEvaluationCommitteList(memberList);
+	 * System.out.println("Passport : " +
+	 * getManagedBean().getEvaluationCommitteList().get(0) .getIcPassport()); }
+	 * }
+	 * 
+	 * public void deleteEvaluationCommittee() {
+	 * debugLogger("deleteEvaluationCommittee"); List<ScCommitteeMember>
+	 * committeeMembersList = getManagedBean() .getEvaluationCommitteList();
+	 * 
+	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
+	 * .getSelectEvaluationCommitteeList();
+	 * 
+	 * if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
+	 * committeeMembersList.clear(); } else { for (ScCommitteeMember
+	 * scCommitteeMember : selectCommitteeMembersList) {
+	 * committeeMembersList.remove(scCommitteeMember); } } }
+	 */
 
 	public void reset() {
 		debugLogger("reset");

@@ -7,12 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Committee Appointment" toggleable="true">
-		<div align="right">
-			<p:commandButton value="Clone" onclick="screen2.show();"
-				process="@this" icon="ui-icon-clone" />
-
-		</div>
-		<br />
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 108px"><p:outputLabel
@@ -22,6 +16,13 @@
 						style="margin-right:5px;" disabled="true" readonly="true" /></td>
 			</tr>
 		</table>
+		<br />
+		<div align="right">
+			<p:commandButton value="Clone" onclick="screen2.show();"
+				process="@this" icon="ui-icon-clone" />
+
+		</div>
+		
 		<ui:include src="committeeappointmenttabList.xhtml" />
 	</p:panel>
 </ui:composition>

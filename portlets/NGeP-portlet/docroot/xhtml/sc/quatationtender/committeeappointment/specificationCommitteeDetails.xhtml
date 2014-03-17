@@ -6,26 +6,26 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Specification Committee" toggleable="true">
+	<p:panel styleClass="scMemberDtl">
+		<p:spacer height="2" />
 		<table style="width: 50%">
 			<tr>
 				<td><p:outputLabel value="Status" /></td>
 				<td><p:inputText
-						value="#{committeBackingBean.managedBean.title}"
+						value="#{qTCommitteBackingBean.managedBean.title}"
 						style="margin-right:5px;" disabled="true" readonly="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{committeBackingBean.managedBean.ecType}" /></td>
-				<td style="width: 101px"><p:outputLabel
+						value="#{qTCommitteBackingBean.managedBean.ecType}" /></td>
+				<td style="width: 110px"><p:outputLabel
 						value=" Send For Approval" /></td>
 			</tr>
 		</table>
-		<p:dataTable id="specificationcommitteeid"
-			value="#{committeBackingBean.managedBean.specificationCommitteList}"
+		<p:spacer height="2" />
+		<p:dataTable id="specificationcommitteeid" value="#{membersList}"
 			var="specificationcommittee" rowIndexVar="index" editable="true"
-			rowKey="#{specificationcommittee}"
-			selection="#{committeBackingBean.managedBean.selectSpecificationCommitteeList}">
+			rowKey="#{specificationcommittee}" selection="#{selectedMembersList}">
 
-			<p:column selectionMode="multiple" style="width:5%" />
+			<p:column selectionMode="multiple" style="width:2%" />
 
 			<ac:paginator for="specificationcommitteeid" />
 
@@ -41,41 +41,24 @@
 				<h:outputText value="#{specificationcommittee.designation}" />
 			</p:column>
 
+			<p:column headerText="Email">
+				<h:outputText value="#{specificationcommittee.email}" />
+			</p:column>
+
 			<p:column headerText="Grade">
 				<h:outputText value="#{specificationcommittee.grade}" />
 			</p:column>
 
 			<p:column headerText="P&amp;P">
-				<h:outputText value="#{specificationcommittee.pnp}" />
+				<h:outputText value="#{specificationcommittee.PNP}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
 				<h:outputText
-					value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, specificationcommittee.memberRole)}" />
-			</p:column>
-
-			<p:column headerText="Action">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
+					value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, specificationcommittee.memberRole)}" />
 			</p:column>
 
 		</p:dataTable>
 
-		<div align="right">
-			<p:commandButton id="specificationcommitteeadd"
-				value="#{lbl['lbl.so.addbtn']}" process="@this"
-				action="#{committeBackingBean.addCommitteMember}"
-				oncomplete="newspecificationcommittee.show();"
-				update="@(.scAddMember)" icon="ui-icon-add" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete"
-				action="#{committeBackingBean.deleteSpecificationCommittee}"
-				update="specificationcommitteeid" />
-
-			<p:commandButton value="Clone To TEC" />
-		</div>
 	</p:panel>
 </ui:composition>
