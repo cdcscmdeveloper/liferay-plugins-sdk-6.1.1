@@ -142,6 +142,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		if (themeDisplay!=null){
 			pageId = String.valueOf(themeDisplay.getPlid());
+			facesScope.setSessionScope("title", themeDisplay.getPortletDisplay().getTitle());
 		}
 		
 		if (StringUtils.isNotBlank(portletId) && StringUtils.isNotBlank(pageId)){

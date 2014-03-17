@@ -16,6 +16,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String token;
 	private String taskId;
 	private String[] outComes;
+	private String title;
 
 	public String[] getOutComes() {
 		return outComes;
@@ -39,6 +40,20 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 }
