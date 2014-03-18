@@ -12,17 +12,17 @@
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
 							action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 					</p:column>
 				</p:row>
 			</p:panelGrid>
-			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.multiLocality}">
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 			</c:if>
 			
-			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.multiLocality}">
 			<ui:include src="/xhtml/sc/noticeboard/nbsupplierregbyzone.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 			</c:if>
