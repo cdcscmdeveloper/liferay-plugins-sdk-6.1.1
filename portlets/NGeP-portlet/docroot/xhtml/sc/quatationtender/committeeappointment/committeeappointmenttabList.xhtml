@@ -8,27 +8,26 @@
 	<p:panel>
 
 		<ui:include src="addspecificationcommittee.xhtml" />
-		<p:tabView id="tabView" orientation="top" dynamic="true" cache="true"
-			var="committeeApproval"
-			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
+		<p:tabView id="tabView" orientation="top" 
+			var="committeeApproval"			
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
 			<p:ajax event="tabChange"
-				listener="#{qTCommitteBackingBean.onTabChangeAction}" update="@this" />
+				listener="#{qTCommitteBackingBean.onTabChangeAction}" />
 
 
 			<p:tab title="#{committeeApproval.titleName}">
 
-
 				<ui:fragment
 					rendered="#{committeeApproval.titleName ne 'Finalization Secretary'}">
 
-					<ui:include src="specificationCommitteeDetails.xhtml">
-						<ui:param name="membersList"
+                        <ui:param name="membersList"
 							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
 
 						<ui:param name="selectedMembersList"
 							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					<ui:include src="specificationCommitteeDetails.xhtml">
+						
 					</ui:include>
 
 					<div align="right">
