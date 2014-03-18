@@ -128,10 +128,10 @@ public class SourcingTemplateDocBackingBean extends
 			QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 			reqDTO.setQtId(146L);
 			reqDTO.setDocType(checkList);
-			QTTemplateDocResDTO resDto = qtTemplateSO.retriveCheckList(reqDTO);
+			/*QTTemplateDocResDTO resDto = qtTemplateSO.retriveCheckList(reqDTO);
 			this.getManagedBean().setCheckListItem(
 					resDto.getCheckSearchResultBean().getResultList());
-
+*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -282,7 +282,7 @@ public class SourcingTemplateDocBackingBean extends
 
 			qtTemplateSO = getTemplateSO();
 			QTTemplateDocReqDTO templateReqDTO = new QTTemplateDocReqDTO();
-			templateReqDTO.setQtDoc(qtDoc);
+			templateReqDTO.setScQtDoc(qtDoc);
 			QTTemplateDocResDTO resDto = qtTemplateSO
 					.saveOrUpdateTemplateDoc(templateReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -388,13 +388,13 @@ public class SourcingTemplateDocBackingBean extends
 					searchBean.getDataFilterBeans().add(templateSearchBean);
 				}
 
-				qtTemplateReqDTO.setDocSearchBean(searchBean);
+				qtTemplateReqDTO.setTemplateSpecSearchBean(searchBean);
 				qtTemplateSO = getTemplateSO();
 				QTTemplateDocResDTO resDto = qtTemplateSO
-						.retrieveTemplates(qtTemplateReqDTO);
+						.retrieveSpecTemplateByType(qtTemplateReqDTO);
 
 				if (resDto.isSuccessful()) {
-					return resDto.getSearchResultBean();
+					return resDto.getTemplateSpecList();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
