@@ -54,6 +54,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	
 	/** added by Vidyasagar */
 	private Object siteVisitPayLoad;
+	
+	private String previousPage;
 	 
 	/**
 	 * @return  briefingDetailsList
@@ -308,6 +310,14 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 
 	public void setSiteVisitPayLoad(Object siteVisitPayLoad) {
 		this.siteVisitPayLoad = siteVisitPayLoad;
+	}
+
+	public String getPreviousPage() {
+		return previousPage;
+	}
+
+	public void setPreviousPage(String previousPage) {
+		this.previousPage = previousPage;
 	}
 
 	

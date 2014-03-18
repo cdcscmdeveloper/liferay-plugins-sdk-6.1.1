@@ -1,0 +1,195 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel>
+		<c:if test="#{bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
+			<p:panel header="Briefing And Site Visit Details">
+
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<p:dataTable var="brfsitdtl"
+					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}"	>
+
+					
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{brfsitdtl.briefingDate}" >
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							actionListener="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputLabel value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+						style="width:120px;">
+						<p:commandButton icon="ui-icon-tick"
+							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+			</p:panel>
+		</c:if>
+		<c:if test="#{!bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
+
+			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
+
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<p:dataTable var="brfsitdtl"
+					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}"
+					>
+				
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{brfsitdtl.briefingDate}" >
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							action="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()" update="@(.qtCount)">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputLabel value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+						style="width:120px;">
+						<p:commandButton icon="ui-icon-tick"
+							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
+
+					</p:column>
+				</p:dataTable>
+
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
+				<h:outputText
+					value="All/At Least X Attandence required for Briefing"></h:outputText>
+
+				<p:dataTable var="sitevisitDtls"
+					value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}">
+
+					
+
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+						<h:outputText value="#{sitevisitDtls.briefingDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:100px;">
+						<h:outputText value="#{sitevisitDtls.briefingDate}" >
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:120px;">
+						<p:commandLink style="margin-right:20px;"
+							action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
+							oncomplete="popupLoc.show()" update="@(.qtCount)">
+							<h:outputText value="#{sitevisitDtls.location}" />
+						</p:commandLink>
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
+						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:120px;">
+						<h:outputLabel value="#{sitevisitDtls.maxAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:120px;">
+						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+						style="width:120px;">
+						<p:commandButton icon="ui-icon-tick"
+							action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
+							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+			</p:panel>
+		</c:if>
+
+		<p:panel header="Remarks">
+			<table style="width: 100%">
+				<tr>
+					<td class="TableFieldLeft" width="24%"><h:outputLabel
+							value="Remark" /></td>
+					<td class="TableFieldRight"><p:dataGrid
+							value="#{ctBackingBean.managedBean.remarkList}" var="remarkVar"
+							rowIndexVar="remarkIndex" columns="1">
+							<table>
+								<tr>
+									<td rowspan="2" valign="top"><h:graphicImage
+											value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+											height="30" width="30" /></td>
+									<td width="5"></td>
+									<td><h:outputText
+											value="#{remarkVar.createdUser.userName}"></h:outputText>, <h:outputText
+											value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+										</h:outputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+											rendered="#{remarkIndex==0}" /> <h:outputText
+											value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
+											style="display: inline-block; width:220px;word-wrap: break-word;" />
+									</td>
+								</tr>
+							</table>
+						</p:dataGrid></td>
+				</tr>
+			</table>
+		</p:panel>
+		
+		<ui:include src="additionalAttandanceApproval.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>
