@@ -141,10 +141,10 @@ public class TemplateMaintenanceBackingBean extends
 						.setStatus(new PmStatus());
 
 			}
-			if (getManagedBean().getScqtDoc().getScQtZoneCriteria() == null) {
+			/*if (getManagedBean().getScqtDoc().getScQtZoneCriteria() == null) {
 				getManagedBean().getScqtDoc().setScQtZoneCriteria(
 						new ScQtZoneCriteria());
-			}
+			}*/
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 			TplSpecMaster specMaster1 = new TplSpecMaster();
@@ -200,8 +200,8 @@ public class TemplateMaintenanceBackingBean extends
 
 			qtTemplateReqDTO.setQtId(146L);
 			qtTemplateReqDTO.setDocType("1");
-			qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
-			qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
+			//qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
+		/*	qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
 					.getSpecMasterId());
 
 			try {
@@ -215,7 +215,7 @@ public class TemplateMaintenanceBackingBean extends
 
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -446,10 +446,10 @@ public class TemplateMaintenanceBackingBean extends
 			scQtDOc.setTplDocMaster(null);
 			scQtDOc.setScQtCheckList(checkList);
 			scQtDOc.setTplSpecMaster(specMaster);
-			scQtDOc.setScQtZoneCriteria(null);
+			//scQtDOc.setScQtZoneCriteria(null);
 
 			// qtTemplateReqDTO.setSpecMaster(specMaster);
-			qtTemplateReqDTO.setQtDoc(scQtDOc);
+			qtTemplateReqDTO.setScQtDoc(scQtDOc);
 
 			try {
 				qtTemplateSO = getTemplateSO();
@@ -625,13 +625,13 @@ public class TemplateMaintenanceBackingBean extends
 					searchBean.getDataFilterBeans().add(templateSearchBean);
 				}
 
-				qtTemplateReqDTO.setDocSearchBean(searchBean);
+				qtTemplateReqDTO.setTemplateSpecSearchBean(searchBean);
 				qtTemplateSO = getTemplateSO();
 				QTTemplateDocResDTO resDto = qtTemplateSO
-						.retrieveTemplates(qtTemplateReqDTO);
+						.retrieveSpecTemplateByType(qtTemplateReqDTO);
 
 				if (resDto.isSuccessful()) {
-					return resDto.getSearchResultBean();
+					return resDto.getTemplateSpecList();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -709,14 +709,14 @@ public class TemplateMaintenanceBackingBean extends
 					searchBean.getDataFilterBeans().add(qtnoSearchBean);
 				}
 
-				qtTemplateReqDTO.setDocSearchBean(searchBean);
+				qtTemplateReqDTO.setTemplateSpecSearchBean(searchBean);
 
 				qtTemplateSO = getTemplateSO();
 				QTTemplateDocResDTO resDto = qtTemplateSO
-						.retrieveTemplates(qtTemplateReqDTO);
+						.retrieveSpecTemplateByType(qtTemplateReqDTO);
 
 				if (resDto.isSuccessful()) {
-					return resDto.getSearchResultBean();
+					return resDto.getTemplateSpecList();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

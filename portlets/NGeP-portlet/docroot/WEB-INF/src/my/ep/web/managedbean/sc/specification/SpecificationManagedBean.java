@@ -134,6 +134,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> nonFederalScore=new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> nonFederalScoreyears=new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> nonFederalContractScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> itemScore=new ArrayList<ScQtCheckListScore>();
 	
 	private List<ScQtFreqSchedule> scheduleList;
 	private List<ScQtProgessivePayment> progressivePaymentList;
@@ -224,6 +225,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int techPoints;
 	private int finPoints;
 	private List<ScQtCheckList> technicalSpecList;
+	private List<ScQtCheckList> financialSpecList;
 	
 	private List<SelectItem> yearList;
 	
@@ -2332,6 +2334,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTechnicalSpecList(List<ScQtCheckList> technicalSpecList) {
 		this.technicalSpecList = technicalSpecList;
+	}
+
+	/**
+	 * @return the itemScore
+	 */
+	public List<ScQtCheckListScore> getItemScore() {
+		return itemScore;
+	}
+
+	/**
+	 * @param itemScore the itemScore to set
+	 */
+	public void setItemScore(List<ScQtCheckListScore> itemScore) {
+		this.itemScore = itemScore;
+	}
+
+	/**
+	 * @return the financialSpecList
+	 */
+	public List<ScQtCheckList> getFinancialSpecList() {
+		return financialSpecList;
+	}
+
+	/**
+	 * @param financialSpecList the financialSpecList to set
+	 */
+	public void setFinancialSpecList(List<ScQtCheckList> financialSpecList) {
+		this.financialSpecList = financialSpecList;
 	}
 
 	
