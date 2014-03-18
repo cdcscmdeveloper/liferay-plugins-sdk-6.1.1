@@ -114,7 +114,7 @@ public class QTDetailBackingBean extends
 		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
 			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
 		}
-		
+
 		handlePTJName();
 	}
 
@@ -1030,15 +1030,18 @@ public class QTDetailBackingBean extends
 					+ getManagedBean().getScQtSpec().getEvaluationType());
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			ScCommittee committee = new ScCommittee();
-			/*tabBeans.add(new TabBean("Business Owner", getCommitteeTypeDtl(
-					"BO", 1l)));*/
+			/*
+			 * tabBeans.add(new TabBean("Business Owner", getCommitteeTypeDtl(
+			 * "BO", 1l)));
+			 */
 			tabBeans.add(new TabBean("Specification Committee",
 					getCommitteeTypeDtl("SC", 146l)));
 			if (this.getManagedBean().getScQtSpec().getEvaluationType()
 					.equals("2")) {
 				tabBeans.add(new TabBean("Opening Committee",
 						getCommitteeTypeDtl("OC", 1l)));
-				tabBeans.add(new TabBean("TEC", getCommitteeTypeDtl("TEC", 1l)));
+				tabBeans.add(new TabBean("TEC",
+						getCommitteeTypeDtl("TEC", 146l)));
 				tabBeans.add(new TabBean("FEC", getCommitteeTypeDtl("FEC", 1l)));
 			} else {
 				tabBeans.add(new TabBean("Evaluation Committee",
@@ -1054,17 +1057,18 @@ public class QTDetailBackingBean extends
 	 */
 	private ScCommittee getCommitteeTypeDtl(String type, Long id) {
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		ScCommittee committee=null;
-		//getManagedBean().setScCommittee(null);
+		ScCommittee committee = null;
+		// getManagedBean().setScCommittee(null);
 		reqDTO.setCommitteeType(type);
 		reqDTO.setQtId(id);
-		//reqDTO.getsetCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
+		// reqDTO.getsetCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
 		CommitteResDTO resDTO = null;
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
-			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			resDTO = committeSO
+					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> commMembers = resDTO
 					.getCommMemberResultBean().getResultList();
 			for (ScCommitteeMember committeeMember : commMembers) {
@@ -1072,23 +1076,24 @@ public class QTDetailBackingBean extends
 						+ committeeMember.getMemberRole() + "$$$"
 						+ committeeMember.getScCommittee().getCommitteeType());
 			}
-				
-			
-				if( !commMembers.isEmpty())
-					committee =  commMembers.get(0).getScCommittee();
-				
-				else{
-					committee =  new ScCommittee();
-					committee.setScCommitteeMembers(new ArrayList());
-				}
-			
-			/*if(getManagedBean().getScCommittee().getScCommitteeMembers() == null) {
-				getManagedBean().getScCommittee().setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
+
+			if (!commMembers.isEmpty()) {
+				committee = commMembers.get(0).getScCommittee();
+				committee.setScCommitteeMembers(commMembers);
+			} else {
+				committee = new ScCommittee();
+				committee.setScCommitteeMembers(new ArrayList());
 			}
-			getManagedBean().getScCommittee().setScCommitteeMembers(commMembers);
-			*/
-			
-			
+
+			/*
+			 * if(getManagedBean().getScCommittee().getScCommitteeMembers() ==
+			 * null) {
+			 * getManagedBean().getScCommittee().setScCommitteeMembers(new
+			 * ArrayList<ScCommitteeMember>()); }
+			 * getManagedBean().getScCommittee
+			 * ().setScCommitteeMembers(commMembers);
+			 */
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -1204,7 +1209,7 @@ public class QTDetailBackingBean extends
 		populateParentOrgProfile(tenderResDTO.getQtDetail());
 		onChangeAction();
 		tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
-		//ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 		this.getManagedBean().setActiveIndex(2);
 		List<TabBean> tabBeans = this.getManagedBean().getTabList();
 		for (int i = 0; i < tabBeans.size(); i++) {
@@ -1357,7 +1362,7 @@ public class QTDetailBackingBean extends
 		populateParentOrgProfile(tenderResDTO.getQtDetail());
 		onChangeAction();
 		tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
-		//ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
