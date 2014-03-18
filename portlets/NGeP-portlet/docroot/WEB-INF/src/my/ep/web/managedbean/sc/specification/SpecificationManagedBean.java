@@ -32,7 +32,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.web.backingbean.sc.specification.BankingBean;
-import my.ep.web.backingbean.sc.specification.SpecificationCompilanceBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -75,7 +74,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2financeAdditionalProposalList;
 	
 	private List<String> compilanceList=new ArrayList<String>();
-	 public List<SpecificationCompilanceBean> compilaenceList;
+	// public List<SpecificationCompilanceBean> compilaenceList;
 	 private ScRemark scRemark;
 	 private List<SelectItem> comitteeUsers;
 	 private List<SelectItem> currencyListDetails;
@@ -443,19 +442,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.compilanceList = compilanceList;
 	}
 
-	/**
-	 * @return the compilaenceList
-	 */
-	public List<SpecificationCompilanceBean> getCompilaenceList() {
-		return compilaenceList;
-	}
 
-	/**
-	 * @param compilaenceList the compilaenceList to set
-	 */
-	public void setCompilaenceList(List<SpecificationCompilanceBean> compilaenceList) {
-		this.compilaenceList = compilaenceList;
-	}
 
 	/**
 	 * @return the scRemark
