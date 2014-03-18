@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.procure;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.IPpSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -35,7 +33,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.sc.procure.ProcurementPlanManageBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -201,7 +198,7 @@ public class ProcurementPlanBackingBean extends
 		reqDTO.setProcurementPlans(procurementPlans);
 		RequestNoteResDTO resDTO = directPurchaseSO.checkPlanEditable(reqDTO);
 		pplans = resDTO.getPlans();
-		System.out.println("Size@@@@@@@@@@@@@@@@@@@@@" + pplans.size());
+		
 
 		// List<PpPlan> pplans = new ArrayList<>();
 		// pplans.add(planResDTO.getPlan());
