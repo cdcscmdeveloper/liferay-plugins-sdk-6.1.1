@@ -2,28 +2,36 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
-import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sc.committe.CommitteReqDTO;
-import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmReportSection;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -100,7 +108,8 @@ public class QTDocumentsBackingBean extends
 		List<ScQtCheckListAttachment> attachments = new ArrayList<ScQtCheckListAttachment>();
 		if (event.getFile() != null) {
 			ScQtCheckList qtCheckList = this.getManagedBean().getQtCheckList();
-			ScQtCheckListAttachment attachment = getManagedBean().getQtCheckList().getScQtCheckListAttachment();
+			ScQtCheckListAttachment attachment = getManagedBean()
+					.getQtCheckList().getScQtCheckListAttachment();
 			if (null == attachment) {
 				attachment = new ScQtCheckListAttachment();
 				attachment.setScQtCheckList(qtCheckList);
@@ -112,17 +121,106 @@ public class QTDocumentsBackingBean extends
 			attachments.add(attachment);
 			getManagedBean().setChecklistAttachment(attachments);
 		}
-		
+
 	}
 
 	public void cloneSearchCommitteAction() {
-		List<ScQtCommittee> qtCommittee = retriveQtCommittes();
-		getManagedBean().setCloneSearchCommittes(qtCommittee);
+		try {
+			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
+					.getCloneQtnTenderSearchBean();
+			List<ScQt> cloneSearchQt = retriveQtCommittes(qtnTenderSearchBean);
+			
+			this.getManagedBean().setCloneTenderList(cloneSearchQt);
+		} catch (Exception e) {
+
+		}
+		/*List<ScQtCommittee> qtCommittee = retriveQtCommittes();
+		getManagedBean().setCloneSearchCommittes(qtCommittee);*/
 	}
 
 	/**
+	 * @param qtnTenderSearchBean
 	 * @return
 	 */
+	private List<ScQt> retriveQtCommittes(
+			QtnTenderSearchBean qtnTenderSearchBean) {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		if (qtnTenderSearchBean != null) {
+			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+
+			String qtTitle = qtnTenderSearchBean.getQtTitle();
+			if (!StringUtils.isBlank(qtTitle)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_TITILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtTitle);
+				searchFilterBean.add(bean);
+			}
+
+			String qtNumber = qtnTenderSearchBean.getQtNo();
+			if (!StringUtils.isBlank(qtNumber)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_NUMBER);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtNumber);
+				searchFilterBean.add(bean);
+			}
+			
+			String procurementMode = qtnTenderSearchBean.getProcurementMode();
+			if (!StringUtils.isBlank(procurementMode)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
+				bean.setSearchField(QTConstants.PROCUREMENT_MODE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(procurementMode);
+				searchFilterBean.add(bean);
+			}
+
+			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
+			if (null != fromCreatedDate || toCreatedDate != null) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromCreatedDate, toCreatedDate);
+
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+
+			// Adding search filterbeans to searchbean.
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			reqDTO.setQtSearchBean(qtSearchBean);
+
+		}
+		QuationTenderResDTO dto = null;
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			dto = detailSO.getQuationTenders(reqDTO);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+
+		} finally {
+			detailSO = null;
+		}
+		
+		return null != dto.getQtResultBean().getResultList() ? dto
+				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
+	}
+
+/*	*//**
+	 * @return
+	 *//*
 	private List<ScQtCommittee> retriveQtCommittes() {
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		ISearchBean<ScQtCommittee> searchBean = new SearchBean<ScQtCommittee>();
@@ -181,7 +279,7 @@ public class QTDocumentsBackingBean extends
 		}
 
 		return resDto.getCommitteResultBean().getResultList();
-	}
+	}*/
 
 	public void onRowCloneAction(SelectEvent event) {
 		ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
@@ -272,5 +370,15 @@ public class QTDocumentsBackingBean extends
 			}
 		}
 		return imageFileName;
+	}
+
+	public void resetClone() {
+		debugLogger("resetClone");
+		this.getManagedBean().setTitle(null);
+		this.getManagedBean().setQtNo(null);
+		this.getManagedBean().setProcurementMode(null);
+		this.getManagedBean().setCreatedDtFrom(null);
+		this.getManagedBean().setCreatedDtTo(null);
+		this.getManagedBean().setStatus(null);
 	}
 }

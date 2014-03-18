@@ -3,10 +3,17 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -16,8 +23,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
@@ -79,7 +88,7 @@ public class QTScheduleDetailBackingBean extends
 		}
 		this.getManagedBean().setTreeNodesList(list);
 
-		getManagedBean().getQtCriteria().setMultiLocality(false);
+		getManagedBean().getQtCriteria().setMultiLocality(true);
 
 		// Briefing Zone Bean
 		List<BriefingZoneBean> briefingZoneBeans = getManagedBean()
@@ -89,16 +98,44 @@ public class QTScheduleDetailBackingBean extends
 			briefingZoneBeans = new ArrayList<BriefingZoneBean>();
 		}
 
-		/*
-		 * List<ScQtBriefing> test1 = getManagedBean().getTest(); if(null ==
-		 * test1) { test1 = new ArrayList<ScQtBriefing>(); } test1.add(new
-		 * ScQtBriefing()); System.out.println("Size : " + test1.size());
-		 * getManagedBean().setTest(test1);
-		 */
-
 		if (this.getManagedBean().getQt() == null) {
 			this.getManagedBean().setQt(new ScQt());
 		}
+
+		getDeskOfficerAdminAssistant();
+	}
+
+	/**
+	 * 
+	 */
+	private List<PmUser> getDeskOfficerAdminAssistant() {
+		List<PmUser> deskOfficer = this.getManagedBean().getDeskOfficerAdmin();
+		if (deskOfficer == null) {
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+				// Get Approver Users
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setRoleCode(RoleCode.DESK_ASSISTANT.value());
+
+				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+				deskOfficer = resDTO.getUserList();
+				this.getManagedBean().setDeskOfficerAdmin(deskOfficer);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
+								.toString(), ex.getMessage()));
+			} finally {
+				userSO = null;
+			}
+		}
+		return deskOfficer;
+
 	}
 
 	public void addBriefingDetails() {
