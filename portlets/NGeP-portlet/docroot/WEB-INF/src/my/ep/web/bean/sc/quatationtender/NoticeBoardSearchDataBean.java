@@ -11,23 +11,12 @@ import java.util.Date;
  */
 public class NoticeBoardSearchDataBean {
 	
-	private Date today;
-	private Date yesterday;
+	private boolean isToday;
+	private boolean isYesterday;
 	private String passDays;
 	private Date fromDate;
 	private Date toDate;
-	public Date getToday() {
-		return today;
-	}
-	public void setToday(Date today) {
-		this.today = today;
-	}
-	public Date getYesterday() {
-		return yesterday;
-	}
-	public void setYesterday(Date yesterday) {
-		this.yesterday = yesterday;
-	}
+	
 	public String getPassDays() {
 		return passDays;
 	}
@@ -45,6 +34,18 @@ public class NoticeBoardSearchDataBean {
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+	public boolean isToday() {
+		return isToday;
+	}
+	public void setToday(boolean isToday) {
+		this.isToday = isToday;
+	}
+	public boolean isYesterday() {
+		return isYesterday;
+	}
+	public void setYesterday(boolean isYesterday) {
+		this.isYesterday = isYesterday;
 	}
 
 }
