@@ -8,7 +8,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.naming.NamingException;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -22,7 +21,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -67,7 +65,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.Tab;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -88,7 +85,9 @@ public class NoticeBoardBackingBean extends
 	private static final String NAV_TO_NOTICE_BOARD_SEARCH_PAGE = "noticeboardmain.xhtml?faces-redirect=true";
 
 	public NoticeBoardBackingBean() {
+		if(this.getManagedBean().getPublishSearchDataBean() == null){
 		this.getManagedBean().setPublishSearchDataBean(new NoticeBoardSearchDataBean());
+		}
 		this.getManagedBean().setSiteVisitDataBean(new NoticeBoardSearchDataBean());
 		this.getManagedBean().setBriefSearchDataBean(new NoticeBoardSearchDataBean());
 		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
@@ -110,7 +109,7 @@ public class NoticeBoardBackingBean extends
 		// TODO Need to write one helper method to check whether string is empty
 		// or null...
 		if (null != this.getManagedBean().getTitle()
-				&& " ".equals(this.getManagedBean().getTitle())) {
+				&&!"".equals(this.getManagedBean().getTitle())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtTitle",
 							SearchOperator.OPERATOR_EQUALS.value(), this
@@ -315,6 +314,7 @@ public class NoticeBoardBackingBean extends
 					.retrieveQtNoticeDtl(reqDTO);
 			if (resDTO.getScQt() != null) {
 				ScQt scQt = resDTO.getScQt();
+				this.getManagedBean().setScQt(scQt);
 				if (scQt.getScQtContactPersons() != null) {
 					this.getManagedBean().setContactPersons(
 							scQt.getScQtContactPersons());
@@ -337,7 +337,7 @@ public class NoticeBoardBackingBean extends
 		}
 
 		this.getManagedBean().setTabIndex(0);
-		return "/xhtml/sc/noticeboard/tenderNoticeDetailScreen.xhtml?faces-redirect=true";
+		return "/xhtml/sc/noticeboard/tenderNoticeDetail.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -764,7 +764,7 @@ public class NoticeBoardBackingBean extends
 			BSVAttendanceBackingBean attendanceBackingBean = null;
 			try {
 				attendanceBackingBean = new BSVAttendanceBackingBean();
-			} catch (NamingException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1047,7 +1047,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setLocationNodes(null);
 		}
 		// this.getManagedBean().setScQtCriteria(scQtCriteria);
-		this.getManagedBean().setScQt(scQt); // Qtn/ Tender notice
+		// Qtn/ Tender notice
 												// Details
 	
 	}
