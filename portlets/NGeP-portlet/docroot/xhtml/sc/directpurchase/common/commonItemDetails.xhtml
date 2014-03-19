@@ -8,27 +8,11 @@
 		<h:panelGrid border="0"  width="100%"
 			columns="8">
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
-			<p:inputText disabled="true" />
+			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}"/>
 																		
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
-		    <ui:fragment
-			   rendered="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId == null}">
-		     <p:selectOneMenu
-					 value="#{requestNoteBackingBean.managedBean.orgProfileId}"
-					 styleClass="divisionclass" converter="longConverter"
-					 style="width: 220px;">
-				    <f:selectItems 
-					   value="#{requestNoteBackingBean.managedBean.userDivisionList}"
-					   var="pmOrgProfile"
-						itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-						itemValue="#{pmOrgProfile.orgProfileId}" />
-		      </p:selectOneMenu>
-		    </ui:fragment>
-			 <ui:fragment
-			    rendered="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId != null}">
-			     <p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}"  
+			 <p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}"  
 			          style="width: 200px;"/>
-			  </ui:fragment>
 			
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.method']}" />
 			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.sourceMethod}"/>
@@ -63,7 +47,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}">
 					<p:commandLink
-						value="#{requestNoteDtl.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}"
+						value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						oncomplete="itemDtlPopup.show();" />
 				</p:column>
