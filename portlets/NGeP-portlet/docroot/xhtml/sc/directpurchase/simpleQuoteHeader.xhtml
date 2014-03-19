@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panelGrid styleClass="noBorders tr,noBorders td,headerClass"
+		style="background-color: #F2F2F2;" id="headerId">
+	  <p:spacer height="10px" />
+		<p:row>
+			<p:column>
+				<p:outputLabel
+					value="#{lbl['lbl.sc.sq.gen.info.header.simple.quote.no']}" />
+			</p:column>
+			<p:column width="25%">
+				<p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}"/>
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.proc.type']}" />
+			</p:column>
+			<p:column width="25%">
+				<p:inputText disabled="true" />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.ptn.name']}" />
+			</p:column>
+
+			<p:column width="25%" style="align : center;">
+				
+				<p:inputText disabled="true" size="45"
+					value="#{simpleQuoteBackingBean.managedBean.pmOrgProfile.orgName}" />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.status']}" />
+			</p:column>
+			<p:column width="25%">
+				<p:inputText disabled="true"
+					value="#{simpleQuoteBackingBean.currentStatus}" />
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+	<p:spacer height="10px" />
+</ui:composition>

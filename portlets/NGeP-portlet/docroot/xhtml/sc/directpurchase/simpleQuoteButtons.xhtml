@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td">
+		<p:row>
+			<p:column width="100%" style="text-align:right">
+
+				<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+					style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}"/>
+
+				<p:commandButton value="Save" icon="ui-icon-submit" action="#{simpleQuoteBackingBean.saveSimpleQuote}"/>
+
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+					style="float:right;" icon="ui-icon-submit" />
+
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+	<p:spacer height="5px" />
+</ui:composition>
