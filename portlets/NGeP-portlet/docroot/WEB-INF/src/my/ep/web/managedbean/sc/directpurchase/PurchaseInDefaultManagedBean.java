@@ -18,7 +18,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -52,8 +51,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private ScRequestSupplierItem scRequestSupplierItem;
 	private	List<CmPricing> listPricingItems	=	new ArrayList<>();
 	private	DualListModel<PmUser>	approvalUsers;
-	private CtContract contract = new CtContract();
-	private CtContractItem ctContractItem;
 	private CmSupplierItem supplierItem;
 	private SelectItem[] justifications; //justification drop down 
 	private List<ScPurchaseInDefaultAttachment> attachments;
@@ -129,30 +126,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setApprovalUsers(DualListModel<PmUser> approvalUsers) {
 		this.approvalUsers = approvalUsers;
-	}
-	/**
-	 * @return the contract
-	 */
-	public CtContract getContract() {
-		return contract;
-	}
-	/**
-	 * @param contract the contract to set
-	 */
-	public void setContract(CtContract contract) {
-		this.contract = contract;
-	}
-	/**
-	 * @return the ctContractItem
-	 */
-	public CtContractItem getCtContractItem() {
-		return ctContractItem;
-	}
-	/**
-	 * @param ctContractItem the ctContractItem to set
-	 */
-	public void setCtContractItem(CtContractItem ctContractItem) {
-		this.ctContractItem = ctContractItem;
 	}
 	/**
 	 * @return the supplierItem
@@ -257,5 +230,5 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setAttachments(List<ScPurchaseInDefaultAttachment> attachments) {
 		this.attachments = attachments;
 	}
-	
+
 }
