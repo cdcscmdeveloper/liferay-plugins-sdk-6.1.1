@@ -8,13 +8,13 @@
 	<h:panelGrid border="0" cellpadding="" cellspacing="4" width="100%"
 		columns="8" style="background-color: #F2F2F2;">
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
-		<p:inputText value="" disabled="true"/>
+		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}" disabled="true"/>
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.contract.contractId}" disabled="true" />
+		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}" disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.contract.contractType)}" disabled="true" />
+		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}" disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
 		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.currentStatus}"/>
@@ -23,30 +23,25 @@
 	<p:spacer height="10px" />
 	<p:panel header="CONTRACT DETAIL" toggleable="true">
 	<p:spacer height="4px" />
-	 <table style="width: 90%">
+	 <table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
-				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.smSupplier.companyName}" size="46" /></td>
+				      value="" size="46" /></td>
 			</tr>
           	 <tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true"  
-				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}"/></td>
+				      value=""/></td>
 				      
-				<td style="width:100px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
-				<td><p:inputText disabled="true"  
-				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" size="46" /></td>      
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
+				<td style="width: 250px;"><p:inputText disabled="true"  
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.itemName}" size="40" /></td>      
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
-				<td><p:inputText disabled="true"  
-				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.minOrder}" /></td>
-			</tr>
-			<tr>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.price.per.uom']}" /></td>
-				<td><p:inputText disabled="true" 
-				      value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}" /></td>
+				<td><p:inputText disabled="true"  style="text-align:right;"
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
@@ -56,12 +51,38 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
-				<td><p:inputText disabled="true" 
-				       value="#{purchaseInDefaultBackingBean.managedBean.ctContractItem.maxProcureAmount}"/></td>
+				<td><p:inputText disabled="true" style="text-align:right;"
+				       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmount}"/></td>
 			</tr>
       </table>
+      </p:panel>
+      
+      <p:panel header="ITEM DETAIL" toggleable="true">
+       <p:spacer height="10px"/>
+      <p:dataTable id="respDtl" var="itemPrice"
+			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctItemPrices}"
+			rowKey="#{itemPrice}" rowIndexVar="index">
+      
+			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.zone']}" style="width:25%">
+					<h:outputText/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.from.qty']}" style="width:10%">
+				<h:outputText value="#{itemPrice.tierFrom}" style="float:right"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.to.qty']}" style="width:10%">
+				<h:outputText value="#{itemPrice.tierTo}" style="float:right"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">
+				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" size="30"/>
+			</p:column>
+
+		</p:dataTable>
+
      </p:panel>
-	<p:panel header="JUSTIFICATION" toggleable="true" >
+	<p:panel header="REQUEST DETAIL" toggleable="true" >
 	   <p:spacer height="3px"/>
 	      <h:panelGroup>
 			<table style="width: 90%">
@@ -91,7 +112,7 @@
 			 <tr>
 			  <td style="width: 250px;"><p:outputLabel
 				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /></td>
-			 <td><p:inputText id="ordqty" disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"/></td>
+			 <td><p:inputText id="ordqty" style="text-align:right;" size="42" disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"/></td>
 			</tr>
 		</table>
 	 </h:panelGroup>
