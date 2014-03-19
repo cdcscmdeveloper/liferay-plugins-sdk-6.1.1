@@ -2619,7 +2619,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean> {
 								CommonMethod.generateDocNumber(true, true, this
 										.getManagedBean().getSelectedPlan()
 										.getPlanTypeParam().getParameterCode(),
-										null).substring(0, 17));
+										null).substring(0, 16));
 			}
 			// setFinancial year
 			this.getManagedBean().getSelectedPlan().setFinancialYear(getYear());
