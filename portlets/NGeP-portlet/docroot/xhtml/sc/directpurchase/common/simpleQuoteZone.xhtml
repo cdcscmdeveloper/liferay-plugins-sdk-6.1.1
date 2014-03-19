@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="zonePanel" header="LOCATION NAME" toggleable="true">
+	 <table style="width: 100%">
+				<tr>
+					<td style="width: 160px"><p:outputLabel value="Location Level" /></td>
+					<td><p:selectOneMenu id="locLevels"
+							value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItems value="#{simpleQuoteBackingBean.managedBean.locLevelDropdown}" />
+					  </p:selectOneMenu></td>
+				</tr>
+	    </table>
+	    <h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="zoneLocationDataTable" 
+			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
+			        rowIndexVar="index">
+				 <p:column headerText="Location">
+					<p:tree value="#{zoneTree}" var="location"  id="treeid"
+					        selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
+					        selectionMode="checkbox">
+						     <p:treeNode type="zone" >
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="state">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="city">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+				   </p:tree>
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandLink 
+					     actionListener="#{simpleQuoteBackingBean.editZone(zoneTree,index)}"
+					     process="@this" update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+		<div align="right" style="width: 100%">
+		 <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this,locLevels" 
+		     update="@([id$=zonePopupPanel])" partialSubmit="true" 
+			 oncomplete="ZoneLocation.show();" 
+			 actionListener="#{simpleQuoteBackingBean.showZonePopup}" icon="ui-icon-add"/>
+			 
+          <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
+		     process="@all, zoneLocationDataTable" partialSubmit="true"
+		     action="#{simpleQuoteBackingBean.deleteTreeNodes}"
+		     update="zoneLocationDataTable" icon="ui-icon-delete"/> 			 
+			 
+		</div>
+	</p:panel>
+	 <ui:include src="/xhtml/sc/directpurchase/common/SimpleQuoteZonePopup.xhtml" />
+</ui:composition>

@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dialog header="ZoneLocation" widgetVar="ZoneLocation" modal="true"
+		width="800" height="500">
+		<p:panel id="zonePopupPanel" header="DELIVERY LOCATION">
+			<table styleClass="noBorders tr,noBorders td" >
+				<TR>
+					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
+					</TD>
+					<TD width="80%"><p:inputText id="zoneNameId"
+							value="#{simpleQuoteBackingBean.managedBean.zoneName}" ></p:inputText>
+					</TD>
+				</TR>
+				<TR>
+					<TD width="20%" valign="top"><p:outputLabel value="Zone Location"></p:outputLabel>
+					</TD>
+					<TD width="80%">
+					
+						<p:tree id="treeZoneLocationPopup"
+							value="#{simpleQuoteBackingBean.managedBean.rootZoneTree}"
+							var="location"
+							selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
+							selectionMode="checkbox" >
+							 <p:treeNode type="state">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode>
+							<p:treeNode type="city">
+								<h:outputText value="#{location.locationName}" />
+							</p:treeNode> 
+						</p:tree>
+					</TD>
+				</TR>
+			</table>
+		</p:panel>
+		<p:commandButton
+				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+				style="float:right;" onclick="ZoneLocation.hide();" process="@all ,zoneNameId"
+				update="@this, zoneLocationDataTable,zonePopupPanel" partialSubmit="true"
+				actionListener="#{simpleQuoteBackingBean.updateZone}">
+	   </p:commandButton>
+				&#160;&#160;
+		
+		
+		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
+			onclick="ZoneLocation.hide();"></p:commandButton>
+	</p:dialog>
+</ui:composition>
