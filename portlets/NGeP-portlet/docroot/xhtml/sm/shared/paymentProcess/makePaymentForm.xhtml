@@ -5,52 +5,51 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Payment Note :">
-		<p:outputPanel>
-			<p>TO Include any special note if applicable or get more details
-				on payment ways like via online bank / credit card .....</p>
-		</p:outputPanel>
-	</p:panel>
-	<p:panel header="Payment Summary :">
+
+	<p:outputPanel>
+		<p>TO Include any special note if applicable or get more details
+			on payment ways like via online bank / credit card .....</p>
+	</p:outputPanel>
+	<p:spacer height="2px;" />
+
 	<p:dataTable>
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column headerText="Include" />
-					<p:column headerText="NO." />
-					<p:column headerText="Process / Description" />
-					<p:column headerText="Quantity / No. Of Applications" />
-					<p:column headerText="Amount (RM.)" />
+		<p:columnGroup type="header">
+			<p:row>
+				<p:column headerText="Include" />
+				<p:column headerText="NO." />
+				<p:column headerText="Process / Description" />
+				<p:column headerText="Quantity / No. Of Applications" />
+				<p:column headerText="Amount (RM.)" />
 
-				</p:row>
-			</p:columnGroup>
+			</p:row>
+		</p:columnGroup>
 
-			<p:column>
-				<p:outputLabel />
-			</p:column>
+		<p:column>
+			<p:outputLabel />
+		</p:column>
 
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
+		<p:column>
+			<p:outputLabel />
+		</p:column>
+		<p:column>
+			<p:outputLabel />
+		</p:column>
+		<p:column>
+			<p:outputLabel />
+		</p:column>
+		<p:column>
+			<p:outputLabel />
+		</p:column>
 
-			<p:columnGroup type="footer">
-				<p:row>
-					<p:column colspan="4" footerText=" Total : 50"
-						style="text-align:right" />
-					<p:column footerText="" />
+		<p:columnGroup type="footer">
+			<p:row>
+				<p:column colspan="4" footerText=" Total : 50"
+					style="text-align:right" />
+				<p:column footerText="" />
 
-				</p:row>
-			</p:columnGroup>
-		</p:dataTable>
-	</p:panel>
+			</p:row>
+		</p:columnGroup>
+	</p:dataTable>
 	<br />
 
 </ui:composition>

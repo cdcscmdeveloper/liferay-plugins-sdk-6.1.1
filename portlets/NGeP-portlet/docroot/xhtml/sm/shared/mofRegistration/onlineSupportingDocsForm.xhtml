@@ -6,7 +6,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header=" Supporting Document " toggleable="true">
+	<p:panel
+		header=" Supporting Document Online Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}"
+		toggleable="true">
+		<table style="width: 30%">
+			<tr>
+				<td><h:outputText value="#{lbl['lbl.sm.submissionType']}" /></td>
+				<td><p:selectOneRadio id="onLnSuppDocs"
+						value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+						<f:selectItem itemLabel="Offline" itemValue="F" />
+						<f:selectItem itemLabel="Online" itemValue="O" />
+						<p:ajax update="supDocPan" event="change" />
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
 		<br />
 		<table style="width: 100%">
 
@@ -24,35 +37,29 @@
 
 		</table>
 
-		<p:panel
-			header="Online Documents Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
-			<p:dataTable var="table" id="onSdList"
-				value="#{mofRegistrationBackingBean.dataList}">
-				<ac:paginator for="onSdList" />
+		<p:dataTable var="table" id="onSdList"
+			value="#{mofRegistrationBackingBean.dataList}">
+			<ac:paginator for="onSdList" />
 
-				<p:column headerText="Document Name">  
+			<p:column headerText="Document Name">  
 		            #{table.documentName} 
 		        </p:column>
-				<p:column headerText="Document Description">  
+			<p:column headerText="Document Description">  
 		            #{table.documentdescription} 
 		        </p:column>
-				<p:column headerText="Upload Document ">
-					<!-- <p:fileUpload mode="simple"></p:fileUpload> -->
-					<p:commandLink>
-						<p:graphicImage library="ep/images/design" name="upload.png"
-							value="/resources/ep/images/design/upload.png"
-							style="margin-right:2px;" />
-					</p:commandLink>
+			<p:column headerText="Upload Document ">
+				<!-- <p:fileUpload mode="simple"></p:fileUpload> -->
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
 
-				</p:column>
-				<p:column headerText="Added Document Name">  
+			</p:column>
+			<p:column headerText="Added Document Name">  
                    #{table.addedDocumentName}  
       		    </p:column>
-			</p:dataTable>
-
-			<br />
-
-		</p:panel>
+		</p:dataTable>
 
 	</p:panel>
 </ui:composition>

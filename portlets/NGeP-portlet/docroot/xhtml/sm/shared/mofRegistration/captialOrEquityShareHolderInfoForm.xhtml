@@ -75,8 +75,19 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
+					<p:commandLink oncomplete="shareHolderAddrDialog.show();"
+						action="#{backingBean.assignSelShareHolder(shareBean)}"
+						update=":form:tt:shareHolderAddrDialog" id="shrAddrLnk">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							alt="Address Details"
+							value="/resources/ep/images/design/register.png" />
+					</p:commandLink>
+					<p:tooltip for="shrAddrLnk">
+						<h:outputText value="Address Details" />
+					</p:tooltip>
 				</p:column>
 			</p:dataTable>
+
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
@@ -110,17 +121,32 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="850px" height="500px" header="Share Holder Details"
+	<p:dialog width="1050px" height="500px" header="Share Holder Details"
 		widgetVar="shareHolderDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="shareHolderDialog">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
-		<div align="right">
+		<div align="right" style="padding-top: 10px;">
 			<p:commandButton value="Save" oncomplete="shareHolderDialog.hide();"
 				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
 				update=":form:tt:shrPerDt" />
 			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="1050px" height="500px"
+		header="Share Holder Address Details"
+		widgetVar="shareHolderAddrDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true" id="shareHolderAddrDialog">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
+		<div align="right">
+			<p:commandButton value="Save"
+				oncomplete="shareHolderAddrDialog.hide();"
+				update=":form:tt:shrPerDt" />
+			<p:commandButton value="Cancel"
+				onclick="shareHolderAddrDialog.hide();" />
 		</div>
 	</p:dialog>
 

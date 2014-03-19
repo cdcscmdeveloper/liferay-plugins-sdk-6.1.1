@@ -14,7 +14,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td colspan="4"><div align="center" style="width: 98%">
-						<p:panelGrid
+						<p:panelGrid styleClass="tablePanel"
 							rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
 							.businessType eq '3' }">
 							<f:facet name="header">
@@ -22,7 +22,7 @@
 								<p:row>
 									<p:column />
 									<p:column>Board Of Director</p:column>
-									<p:column>Header Management (CEO,CBO,CTO,CFO,etc)</p:column>
+									<p:column>Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
 									<p:column>Management</p:column>
 									<p:column>Actual Staff Total</p:column>
 									<p:column>Entered Staff Total</p:column>
@@ -83,7 +83,7 @@
 								</p:column>
 							</p:row>
 						</p:panelGrid>
-						<p:panelGrid
+						<p:panelGrid styleClass="tablePanel"
 							rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2' }">
 							<f:facet name="header">
 
@@ -226,7 +226,7 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add Management Personnel/Staff"
+				<p:commandButton value="Add Management / Staff"
 					action="#{backingBean.assignNewPersonnel}"
 					oncomplete="personnelDialog.show();"
 					update=":form:tt:personnelDialog" />
@@ -298,7 +298,7 @@
 		hideEffect="fade" modal="true" id="perShareHolderDialog">
 
 		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
+			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderInfoPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Save"
 				oncomplete="perShareHolderDialog.hide();"
