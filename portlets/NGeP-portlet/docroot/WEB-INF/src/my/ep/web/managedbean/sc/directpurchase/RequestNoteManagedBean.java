@@ -10,20 +10,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DualListModel;
 /**
@@ -58,22 +53,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean procTypeOption;
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down 
+    private String processName;
+    // BPM Task
+    private SCDirectPurchaseDataType directPurchaseDataType;
     
     public RequestNoteManagedBean() {
-		super();
-		initialInformation();
 	}
-    
-	public	void	initialInformation(){
-		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover	=	userResDTO.getUserList();
-		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
-		approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
-	}
-    
 	/**
 	 * @return the requestNote
 	 */
@@ -335,6 +320,35 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPriceTypeCode(String priceTypeCode) {
 		this.priceTypeCode = priceTypeCode;
+	}
+
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
+	/**
+	 * @return the directPurchaseDataType
+	 */
+	public SCDirectPurchaseDataType getDirectPurchaseDataType() {
+		return directPurchaseDataType;
+	}
+
+	/**
+	 * @param directPurchaseDataType the directPurchaseDataType to set
+	 */
+	public void setDirectPurchaseDataType(
+			SCDirectPurchaseDataType directPurchaseDataType) {
+		this.directPurchaseDataType = directPurchaseDataType;
 	}
 	
 }
