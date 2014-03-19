@@ -203,6 +203,12 @@ public class ProcurementPlanConst {
 	public static final String CONTRACT_TYPE_CENTRAL_CONTRACT = ParameterConst.EP_DOC_CENTRAL_CONTRACT;
 	public static final String CONTRACT_TYPE_MINISTRY_CONTRACT = ParameterConst.EP_DOC_MINISTRY_CONTRACT;
 
+	//Icons
+	public static final String BPM_SUBMIT_ICON = "ui-icon-submit";
+	public static final String BPM_SAVE_ICON = "ui-icon-save";
+	
+	
+	
 	
 	
 	/**

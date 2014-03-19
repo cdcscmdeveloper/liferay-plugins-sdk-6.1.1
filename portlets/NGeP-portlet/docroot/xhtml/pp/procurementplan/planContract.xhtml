@@ -65,7 +65,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{planBackingBean.managedBean.selectedPlan.ctContract.contractId}"
 						styleClass="ppDropDownWidthM"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
-							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==contractTypeLoa
+							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==PPConst.contractTypeLoa
 							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==null}">
 						<f:selectItems value="#{planBackingBean.contractOptions()}"/>
 						<p:ajax event="change" listener="#{planBackingBean.selectedContract
@@ -92,7 +92,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
 							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode!=PPConst.contractTypeLoa}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-						<p:ajax event="change" 
+						<f:selectItems value="#{planBackingBean.LOAOptions()}"  var="obj" 
+							itemLabel="#{obj.docType}" itemValue="#{obj.loaId}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedLoa(planBackingBean.managedBean.selectedPlan.scLoa.loaId)}"
 							update="itLoaTitle"/> 
 					</p:selectOneMenu>
 				</td>

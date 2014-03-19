@@ -20,6 +20,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
+import my.ep.persistence.entity.sc.quationtender.ScLoa;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -55,6 +56,8 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private List<CtCircular> ctCircularOpts;
 	
+	private List<ScLoa> scLoaOpts;
+	
 	private Long userId;
 	
 	private List<PmParameter> planTypeOpts;
@@ -66,6 +69,8 @@ public class PlanManagedBean extends BaseManagedBean{
 //	private List<PpPlanDtl> tempPlanDtls;
 	
 	private List<PpPlanDtl> oriPpPlanDtls;
+	
+	private int selectedPlanItemIndex;
 
 
 	
@@ -200,6 +205,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	 * @param selectedPlanItem the selectedPlanItem to set
 	 */
 	public void setSelectedPlanItem(PpPlanItem selectedPlanItem) {
+		System.out.println(">>>>>setSelectedPlanItem");
 		this.selectedPlanItem = selectedPlanItem;
 	}
 
@@ -244,6 +250,22 @@ public class PlanManagedBean extends BaseManagedBean{
 	 */
 	public void setCtCircularOpts(List<CtCircular> ctCircularOpts) {
 		this.ctCircularOpts = ctCircularOpts;
+	}
+	
+	/**
+	 * @return the getScLoaOpts
+	 */
+	public List<ScLoa> getScLoaOpts() {
+		if(scLoaOpts==null)
+			scLoaOpts = new ArrayList<ScLoa>();
+		return scLoaOpts;
+	}
+
+	/**
+	 * @param scLoaOpts the scLoaOpts to set
+	 */
+	public void setScLoaOpts(List<ScLoa> scLoaOpts) {
+		this.scLoaOpts = scLoaOpts;
 	}
 	
 	/**
@@ -575,6 +597,16 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setPpSearchPlan(ProcurementPlanSearchBean ppSearchPlan) {
 		this.ppSearchPlan = ppSearchPlan;
 	}
+
+	public int getSelectedPlanItemIndex() {
+		return selectedPlanItemIndex;
+	}
+
+	public void setSelectedPlanItemIndex(int selectedPlanItemIndex) {
+		this.selectedPlanItemIndex = selectedPlanItemIndex;
+	}
+	
+	
 
 
 	

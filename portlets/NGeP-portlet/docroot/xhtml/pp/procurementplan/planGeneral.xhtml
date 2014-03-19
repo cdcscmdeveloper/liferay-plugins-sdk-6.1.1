@@ -53,7 +53,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}" >
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						<f:selectItems value="#{planBackingBean.generateApprovers()}" var="user"
-							itemLabel="#{user.loginId}" itemValue="#{user.userId}"/>
+							itemLabel="#{user.loginId}" itemValue="#{user.loginId}"/>
 					</p:selectOneMenu>
 				</td>
 			</tr>

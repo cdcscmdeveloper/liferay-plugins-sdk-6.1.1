@@ -250,7 +250,7 @@ public class CommonMethod {
 	
 
 
-	public Date convertIntMonthToDate(Integer planStartMonth) {
+	public static Date convertIntMonthToDate(Integer planStartMonth) {
 		if(planStartMonth!=null && planStartMonth<12){
 			Calendar cal = Calendar.getInstance();
 			cal.set(cal.get(Calendar.YEAR), (planStartMonth), cal.get(Calendar.DATE));

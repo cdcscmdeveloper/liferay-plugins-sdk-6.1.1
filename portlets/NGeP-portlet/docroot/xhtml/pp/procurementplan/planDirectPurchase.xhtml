@@ -35,25 +35,26 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		
 		<!-- Direct Purchase Commodity List -->
 		<p:dataTable id="dtCommodities" styleClass="ppFixTdWidth"  rowIndexVar="rowIndex" 
-			selection="#{planBackingBean.managedBean.selectedPlanItem}" selectionMode="single"
+			selectionMode="single"
 			rowKey="#{ppPlanItem}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			var="ppPlanItem" value="#{planBackingBean.managedBean.selectedPlanActivity.ppPlanItems}">  
 			
         	<p:column headerText="#{lbl['lbl.pp.product.commodity.code']}">  
        			<ac:lov id="lovCommodity" lovId="CM_UNSPSC" size="26"
-					headerText="#{lbl['lbl.pp.product.commodity']}" update="dtCommodities"
+					headerText="#{lbl['lbl.pp.product.commodity']}" update=":form:tvPlanContent:dtCommodities"
 					disabled="#{!ppPlanItem.editable}"
-					saveObject="ppPlanItem.cmUnspsc"
+					saveObject="planBackingBean.managedBean.selectedPlanActivity.ppPlanItems[#{rowIndex}].cmUnspsc"
 					value="#{ppPlanItem.cmUnspsc.unspscCode}"
 					conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscCode}">
 				</ac:lov>
 	        </p:column>  
+	        
 	        <p:column headerText="#{lbl['lbl.pp.product.commodity.desc']}">  
 				<p:inputText id="itCommodityDesc" disabled="true" styleClass="ppDisplayTextL" 
 					value="#{ppPlanItem.cmUnspsc.unspscTitle}" />
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.item']}"> 
-              	<p:commandLink id="clItem" immediate="true" oncomplete="dlItemDpModal.show()" action="#{planBackingBean.showItem}">
+              	<p:commandLink id="clItem" immediate="true" update=":form:tvPlanContent:dlItemDp" oncomplete="dlItemDpModal.show()" action="#{planBackingBean.showItem(ppPlanItem,rowIndex)}">
                 	<p:graphicImage value="#{
                 		planBackingBean.managedBean.viewMode==PPConst.modeView
                 		? '/resources/ep/images/design/document.png' 
@@ -79,5 +80,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	 		<br/>
  		</div> 
 	</p:outputPanel>
+		<!-- Item Dialog -->
+	<ui:include src="planItemDp.xhtml"/>
 
 </ui:composition>

@@ -11,7 +11,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	
 	<!-- Item List for Quotation, Tender, Direct Nego, Contract -->
-	<p:dialog id="dlItemDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemModal"
+	<p:dialog id="dlItemDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDpModal"
     		 resizable="false" styleClass="ppDialogBg" dynamic="true">  
 		<p:outputPanel id="opItemDp">
 			<p:dataTable id="dtItemDp" styleClass="ppFixTdWidth" var="item" 
@@ -51,7 +51,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
 	                <p:commandLink action="#{planBackingBean.deleteItem(item)}"
-	                  	update="dtItem" disabled="#{!(item.brandNew ||planBackingBean.managedBean.viewMode==PPConst.modeRevision)}" 	 
+	                  	update="dtItemDp" disabled="#{!(item.brandNew ||planBackingBean.managedBean.viewMode==PPConst.modeRevision)}" 	 
 	                  	>
 	                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                  	</p:commandLink>
@@ -62,7 +62,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    	<!-- Button(s) -->
 	   		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" 
-					update=":form:tvPlanContent:dtItemDp" icon="ui-icon-add" action="#{planBackingBean.addItem}"
+					update=":form:tvPlanContent:dtItemDp" icon="ui-icon-add" action="#{planBackingBean.addItemDp}"
 					disabled="#{!(planBackingBean.managedBean.viewMode==PPConst.modeNew 
 						|| planBackingBean.managedBean.viewMode==PPConst.modeRevision)}"/>  
 		 		<br/>
@@ -70,7 +70,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	 		</div>
 	 		<hr/>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.pp.ok']}" update="opItemDp" oncomplete="dlItemDpModal.hide()"
+				<p:commandButton value="#{lbl['lbl.pp.ok']}" update=":form:tvPlanContent:dtCommodities, opItemDp" oncomplete="dlItemDpModal.hide()"
 					action="#{planBackingBean.confirmItem}"
 					process="dlItemDp" icon="ui-icon-accept"/>
 				<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel" update="opItemDp" 
