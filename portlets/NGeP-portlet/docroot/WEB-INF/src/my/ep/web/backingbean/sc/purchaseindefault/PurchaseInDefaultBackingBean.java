@@ -86,19 +86,21 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	  */
 		public String pidAction(VCmSupplierItem vCmSupplierItem){
 			debugLogger("pidAction");
-			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
+			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 			ContractReqDTO ConIreqDTO = new ContractReqDTO();
-			ConIreqDTO.setContractItemId(4l);
+			ConIreqDTO.setContractItemId(vCmSupplierItem.getDocId());
 			ContractResDTO ConIresDTO = contractItemSO.getContractItem(ConIreqDTO);
-		    this.getManagedBean().setCtContractItem(ConIresDTO.getCtContractItem());
+		    ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
+			scPurchaseInDefault.setContractedItem(ConIresDTO.getCtContractItem());
 		    
-			IContractSO contractSO	=	(IContractSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			/*IContractSO contractSO	=	(IContractSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(1l);
 			ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
-			this.getManagedBean().setContract(resDTO.getContract());
+			this.getManagedBean().setContract(resDTO.getContract());*/
 			
-			ICatalogueSO catalogueSO	=	(ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			/*ICatalogueSO catalogueSO	=	(ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 			catReqDTO.setDocId(vCmSupplierItem.getDocId());
 			CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
@@ -109,10 +111,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   cmPricing.setCmSupplierItem(catResDTO.getSupplierItemList().get(0));
 			   requestSupplierItem.setPricing(cmPricing);
 			   requestSupplierItem.setSmSupplier(cmPricing.getCmSupplierItem().getSmSupplier());
-			   getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+			   getManagedBean().setScRequestSupplierItem(requestSupplierItem);*/
+			   
 			   // initializing remarks
-			   ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
 			   scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+			   scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
 			   // WorkFlow Status
 			   List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
 			   ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PRI_PENDING_SUBMISSION);
@@ -121,7 +124,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   wflowStatus.add(workFlowStatus);
 			   scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 		       getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-		   }
+		   //}
 			//TODO default value to justification drop down listing
 		  	getManagedBean().setJustificationType(ParameterConst.PID_CP);
 			return "purchaseInDefaultMain";
@@ -139,7 +142,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			    PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 				List<ScPIDWorkFlowStatus> wflowStatuses =  new  ArrayList<ScPIDWorkFlowStatus>();
-		 		scPurchaseInDefault.setPurchaseInDefaultNo("123");
 		 		scPurchaseInDefault.setReasonType("R");
 		 		scPurchaseInDefault.setRecordStatus(true);
 		 		scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
@@ -147,7 +149,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				ScPIDApprovalUser approvalUser = new ScPIDApprovalUser();
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(approvalUser));
 				// Contract Item
-				scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
+				//scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
 				// WorkFlow Status 
 				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PID_PENDING_SUBMISSION);
 				workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
@@ -197,11 +199,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				remark.setPmStatus(status);
 				remark.setPurchaseInDefault(scPurchaseInDefault);
 				results.add(0, remark);
-				
-			    // initializing attachment
-				List<ScPurchaseInDefaultAttachment> attachments = null;
-				getManagedBean().setAttachments(null);
-				
 			}
 			return results;
 		}
