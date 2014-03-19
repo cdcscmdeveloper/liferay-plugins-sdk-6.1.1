@@ -330,4 +330,24 @@
 	</property>
 </bean>
 
+<bean id="PM_BUSINESS_NATURE" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="businessNatureId" />
+
+	<property name="daoClass" value="my.ep.persistance.dao.sc.directpurchase.BusinessNatureDAO" />
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="levelCode" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.code" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="levelName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.bus.nature.desc" />
+			</bean>
+		</list>
+	</property>
+</bean>
+
 </beans>
