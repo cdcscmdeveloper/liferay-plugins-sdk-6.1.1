@@ -1011,12 +1011,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.applStoreFacilities = applStoreFacilities;
 	}
 
-
-/**
- * dummy record for datatable
- */
+	/**
+	 * dummy record for datatable
+	 */
 	private List jobFunctions = new ArrayList();
 	private List selectedJobFunctions = new ArrayList();
+	private List profBodies = new ArrayList();
+	private List selectedProfBodies = new ArrayList();
+	private List relatedCompanies = new ArrayList();
+	private List selectedRelatedCompanies = new ArrayList();
 
 	public List getJobFunctions() {
 		return jobFunctions;
@@ -1025,7 +1028,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setJobFunctions(List jobFunctions) {
 		this.jobFunctions = jobFunctions;
 	}
-	
+
 	public void addJobFunction() {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Job Function");
 		jobFunctions.add(new Object());
@@ -1033,7 +1036,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private List academicQualifications = new ArrayList();
 	private List selectedAcademicQualifications = new ArrayList();
-	
+
 	public List getAcademicQualifications() {
 		return academicQualifications;
 	}
@@ -1063,5 +1066,47 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			List selectedAcademicQualifications) {
 		this.selectedAcademicQualifications = selectedAcademicQualifications;
 	}
-	
+
+	public List getProfBodies() {
+		return profBodies;
+	}
+
+	public void setProfBodies(List profBodies) {
+		this.profBodies = profBodies;
+	}
+
+	public void addProfBody() {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Professional Body");
+		profBodies.add(new Object());
+	}
+
+	public List getSelectedProfBodies() {
+		return selectedProfBodies;
+	}
+
+	public void setSelectedProfBodies(List selectedProfBodies) {
+		this.selectedProfBodies = selectedProfBodies;
+	}
+
+	public List getRelatedCompanies() {
+		return relatedCompanies;
+	}
+
+	public void setRelatedCompanies(List relatedCompanies) {
+		this.relatedCompanies = relatedCompanies;
+	}
+
+	public List getSelectedRelatedCompanies() {
+		return selectedRelatedCompanies;
+	}
+
+	public void setSelectedRelatedCompanies(List selectedRelatedCompanies) {
+		this.selectedRelatedCompanies = selectedRelatedCompanies;
+	}
+
+	public void addRelatedCompany() {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Related Company Body");
+		relatedCompanies.add(new Object());
+	}
+
 }

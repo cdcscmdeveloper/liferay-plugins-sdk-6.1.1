@@ -86,6 +86,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 			if (!fromBpm) {
+
 				resDto = cloneSmApplicationDraft((long) 27, applicationType);
 				if (resDto.isErrorCaued()) {
 					return setExceptionNavigationForAppl(applicationType);
@@ -107,6 +108,7 @@ public class SmApplicationBackingBean extends
 				System.out
 						.println("******** Latest Cloned Draft Copy is ******"
 								+ smAppl.getApplId());
+
 			} else {
 				System.out
 						.println("******* This is PO or Approver from BPM ************");
@@ -151,6 +153,7 @@ public class SmApplicationBackingBean extends
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
 			// TODO remove this hard coded data and make dynamic later
+			getManagedBean().getSmAppl().setSupportingDocMode("O");
 			System.out.println(" ---- Business  Type ----"
 					+ getManagedBean().getSmAppl().getSmSupplier()
 							.getSupplierId()
@@ -1617,12 +1620,17 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSupplierId(id);
 			reqDto.setAppType(applicationType);
+			// TODO remove the clone later (Problem at company basic clone
+			// to be fixed)
+			// MofRegistrationResDTO resDTO = mofRegistrationSO
+			// .cloneSmApplicationDraft(reqDto);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.cloneSmApplicationDraft(reqDto);
+					.retrieveSupplierProfile(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {
 			System.out.println("**** THIS IS THE EXCEPTION IN CLONE APPL ****");
+			e.printStackTrace();
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
 			return resDTO;
