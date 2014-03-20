@@ -48,7 +48,7 @@
 			<p:dataTable var="bankBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
 				selection="#{backingBean.managedBean.selectedBanks}"
-				rowKey="#{bankBean.supplierBankId}" rowIndexVar="index" id="bankDt">
+				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt">
 				<ac:paginator for="bankDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
@@ -100,7 +100,7 @@
 				<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
 				<p:dataTable id="signatory" var="auth"
 					value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
-					rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
+					rowKey="#{auth}" rowIndexVar="index">
 					<ac:paginator for="signatory" />
 
 					<p:column headerText="Name">

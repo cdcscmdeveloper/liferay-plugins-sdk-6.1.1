@@ -15,6 +15,9 @@
 
 	<ui:define name="contentSection">
 		<ac:smPanel id="tt">
+			<div class="screen-title">
+				<h:outputText value="MOF Registration Application" />
+			</div>
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
@@ -86,7 +89,8 @@
 												action="#{backingBean.updateSmAppl}" update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
-										<li><h:outputText value="#{lbl['lbl.sm.equipmentStepLbl']}"
+										<li><h:outputText
+												value="#{lbl['lbl.sm.equipmentStepLbl']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
 											<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
@@ -187,6 +191,43 @@
 						</h:outputText></td>
 				</tr>
 			</table>
+			<c:choose>
+				<c:when
+					test="#{(backingBean.managedBean.smAppl.applCategoryType eq 'S' and backingBean.managedBean.tabActiveIndex lt 9)}">
+					<table style="width: 100%">
+						<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+							<tr>
+								<td></td>
+								<td>
+									<div align="right" style="width: 99%" class="button-wrapper">
+										<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+											icon="ui-icon-save" style="margin-bottom:5px;" />
+									</div>
+								</td>
+							</tr>
+						</p:outputPanel>
+					</table>
+				</c:when>
+				<c:otherwise>
+
+					<c:if test="#{backingBean.managedBean.tabActiveIndex lt 7}">
+						<table style="width: 100%">
+							<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+								<tr>
+									<td></td>
+									<td>
+										<div align="right" style="width: 99%" class="button-wrapper">
+											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+												icon="ui-icon-save" style="margin-bottom:5px;" />
+										</div>
+									</td>
+								</tr>
+							</p:outputPanel>
+						</table>
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
 				closable="true" />
 
