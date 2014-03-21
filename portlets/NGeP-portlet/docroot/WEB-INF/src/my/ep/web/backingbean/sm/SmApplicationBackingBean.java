@@ -381,6 +381,8 @@ public class SmApplicationBackingBean extends
 			System.out.println("*** After Value ****"
 					+ getManagedBean().getSmAppl().getApplCategoryType());
 			getManagedBean().setTabActiveIndex(outputTab);
+			System.out.println("Value ----"
+					+ getManagedBean().getSmAppl().getSupportingDocMode());
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
@@ -535,9 +537,13 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setCatTypeConfirm(sb.toString());
 		System.out.println("*** Msg Is ****"
 				+ getManagedBean().getCatTypeConfirm());
+		System.out.println(" -- DOC MODE -- "
+				+ getManagedBean().getSmAppl().getSupportingDocMode());
 	}
 
 	public void assignApplnCategoryType() {
+		System.out.println("***** Before confirm +++++++"
+				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -561,6 +567,14 @@ public class SmApplicationBackingBean extends
 					.removeAll(catList);
 		}
 		getManagedBean().setDummyCatType("");
+		System.out.println("***** After confirm +++++++"
+				+ getManagedBean().getSmAppl().getSupportingDocMode());
+		// TODO fix the bug and remove this hard code
+		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
+				|| getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals("")) {
+			getManagedBean().getSmAppl().setSupportingDocMode("O");
+		}
 	}
 
 	public void resetApplnCategoryType() {
@@ -568,6 +582,12 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().getSmAppl().setApplCategoryType(null);
 		getManagedBean().setDummyCatType("");
 		getManagedBean().setCatTypeConfirm(null);
+		// TODO fix the bug and remove this hard code
+		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
+				|| getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals("")) {
+			getManagedBean().getSmAppl().setSupportingDocMode("O");
+		}
 	}
 
 	public void svcSelected(AjaxBehaviorEvent e) {
