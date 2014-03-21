@@ -11,10 +11,10 @@
 		<h:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="Location" />
-				<p:inputText readonly="true" size="29"/> 
+				<p:inputText readonly="true" size="29" value="#{bsvAttendanceBackingBean.managedBean.location}"/> 
 				
 				<h:outputLabel value="Address" />
-				<p:inputTextarea readonly="true" cols="30" rows="6" /> 
+				<p:inputTextarea readonly="true" cols="30" rows="6" value="#{bsvAttendanceBackingBean.managedBean.address}"/> 
 			</h:panelGrid>
 						
 		</p:panel>

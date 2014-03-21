@@ -9,19 +9,19 @@
 		<c:if test="#{bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
 			<p:panel header="Briefing And Site Visit Details">
 
-				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<h:outputText value="* All Attandence required for Briefing">
+				</h:outputText>
+				<br></br>
 				<p:dataTable var="brfsitdtl"
-					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}"	>
+					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
 
-					
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{brfsitdtl.briefingDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.briefingDate}" >
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<h:outputText value="#{brfsitdtl.briefingDate}">
+							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
 						</h:outputText>
 					</p:column>
 
@@ -38,15 +38,15 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputLabel value="#{brfsitdtl.maxAttendance}" />
+						<h:outputLabel value="#{brfsitdtl.maxNoAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 						style="width:120px;">
-						<p:commandButton icon="ui-icon-tick"
+						<p:commandButton icon="ui-icon-check"
 							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
 							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
 					</p:column>
@@ -57,20 +57,19 @@
 		<c:if test="#{!bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
 
 			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
-
-				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
+				<h:outputText value="* All Attandence required for Briefing">
+				</h:outputText>
+				<br></br>
 				<p:dataTable var="brfsitdtl"
-					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}"
-					>
-				
+					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
+
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{brfsitdtl.briefingDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.briefingDate}" >
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<h:outputText value="#{brfsitdtl.briefingDate}">
+							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
 						</h:outputText>
 					</p:column>
 
@@ -87,16 +86,16 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputLabel value="#{brfsitdtl.maxAttendance}" />
+						<h:outputLabel value="#{brfsitdtl.maxNoAttendance}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 						style="width:120px;">
-						<p:commandButton icon="ui-icon-tick"
+						<p:commandButton icon="ui-icon-check"
 							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
 							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
 
@@ -106,21 +105,19 @@
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
-				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
 
 				<p:dataTable var="sitevisitDtls"
 					value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}">
 
-					
+
 
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{sitevisitDtls.briefingDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{sitevisitDtls.briefingDate}" >
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<h:outputText value="#{sitevisitDtls.briefingDate}">
+							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
 						</h:outputText>
 					</p:column>
 
@@ -138,16 +135,16 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputLabel value="#{sitevisitDtls.maxAttendance}" />
+						<h:outputLabel value="#{sitevisitDtls.maxNoAttendance}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 						style="width:120px;">
-						<p:commandButton icon="ui-icon-tick"
+						<p:commandButton icon="ui-icon-check"
 							action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
 							value="#{lbl['lbl.qt.bsv.registration']}" process="@this"></p:commandButton>
 					</p:column>
@@ -189,7 +186,7 @@
 				</tr>
 			</table>
 		</p:panel>
+
 		
-		<ui:include src="additionalAttandanceApproval.xhtml"></ui:include>
 	</p:panel>
 </ui:composition>

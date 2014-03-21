@@ -8,45 +8,50 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="titleSection">
+		#{lbl['lbl.bsv.registration.title']}
+	</ui:define>
 	<ui:define name="contentSection">
-	<p:panel>
+		
 		<p:panel>
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
-							icon="ui-icon-back" action="#{bsvAttendanceBackingBean.backBtn}"
-							style="float:left;" />
-					</p:column>
-					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.ss.save']}"
-							icon="ui-icon-submit"
-							action="#{bsvAttendanceBackingBean.backBtn}" style="float:right;" />
-					</p:column>
-				</p:row>
+			<p:panel>
+				<p:panelGrid style="width:100%;"
+					styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column width="100%" style="text-align:left">
+							<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+								icon="ui-icon-back" action="#{bsvAttendanceBackingBean.backBtn}"
+								style="float:left;" />
+						</p:column>
+						<p:column width="100%" style="text-align:right">
+							<p:commandButton value="#{lbl['lbl.ss.save']}"
+								icon="ui-icon-submit"
+								action="#{bsvAttendanceBackingBean.backBtn}"
+								style="float:right;" />
+						</p:column>
+					</p:row>
 
-			</p:panelGrid>
-		</p:panel>
-		<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
-		<ac:lovPopup />
-			<p:dataTable id="complisttbl" var="scQtBriefReg"
-				value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
-				selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
-				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
-				<p:ajax event="rowSelect"
-					listener="#{bsvAttendanceBackingBean.onRowSelect}" update=":form:attendanceDetailstbl"/>
-				
+				</p:panelGrid>
+			</p:panel>
+			<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
+				<ac:lovPopup />
+				<p:dataTable id="complisttbl" var="scQtBriefReg"
+					value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
+					selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
+					rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
+					<p:ajax event="rowSelect"
+						listener="#{bsvAttendanceBackingBean.onRowSelect}"
+						update=":form:attendanceDetailstbl" />
+
 					<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-						
+
 						<c:if test="${scQtBriefReg.brandNew}">
-				<ac:lov id="test" lovId="SM_SUPPLIER"
-					headerText="MOF NO"
-					saveObject="bsvAttendanceBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
-					value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}" >					
-				</ac:lov>	
-				</c:if>
-					<h:outputText rendered="#{!scQtBriefReg.brandNew}"
+							<ac:lov id="test" lovId="SM_SUPPLIER" headerText="MOF NO"
+								saveObject="bsvAttendanceBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
+								value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}">
+							</ac:lov>
+						</c:if>
+						<h:outputText rendered="#{!scQtBriefReg.brandNew}"
 							value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}" />
 					</p:column>
 
@@ -57,62 +62,79 @@
 						<h:outputText value="#{scQtBriefReg.smSupplier.companyName}"
 							rendered="#{!scQtBriefReg.brandNew}" />
 					</p:column>
-			
-
-			</p:dataTable>
 
 
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-					process="@this" partialSubmit="true" update="complisttbl"
-					action="#{bsvAttendanceBackingBean.addSupplierDetails}" icon="ui-icon-add" />
+				</p:dataTable>
 
-				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
-					process="@this,complisttbl" partialSubmit="true"
-					update="complisttbl"
-					action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
-					icon="ui-icon-delete" />
-			</div>
 
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+						process="@this" partialSubmit="true" update="complisttbl"
+						action="#{bsvAttendanceBackingBean.addSupplierDetails}"
+						icon="ui-icon-add" />
+
+					<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
+						process="@this,complisttbl" partialSubmit="true"
+						update="complisttbl"
+						action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
+						icon="ui-icon-delete" />
+				</div>
+
+			</p:panel>
+
+
+			<p:panel header="Supplier Attendence List" toggleable="true"
+				id="attlistforCompId">
+				<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
+					value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+					rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
+					selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+
+							</p:column>
+
+
+							<p:column
+								headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
+
+							</p:column>
+
+
+							<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.qt.bsc.attendance']}"
+								style="width:6%">
+
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.name}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.icPassport}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.contactNo}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.email}" />
+					</p:column>
+					<p:column selectionMode="multiple" style="width:5%" />
+				</p:dataTable>
+
+
+
+			</p:panel>
 		</p:panel>
-
-
-		<p:panel header="Supplier Attendence List" toggleable="true"
-			id="attlistforCompId">
-			<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
-				value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}"
-				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex">
-
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
-					<h:outputText value="#{scQtBriefAttendace.name}" />
-				</p:column>
-
-
-				<p:column
-					headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
-					<h:outputText value="#{scQtBriefAttendace.icPassport}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
-					<h:outputText value="#{scQtBriefAttendace.contactNo}" />
-				</p:column>
-
-
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
-					<h:outputText value="#{scQtBriefAttendace.email}" />
-				</p:column>
-
-
-				<p:column headerText="#{lbl['lbl.qt.bsc.attendance']}">
-					 <p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" />  
-				</p:column>
-
-			</p:dataTable>
-
-
-
-		</p:panel>
-</p:panel>
 	</ui:define>
 
 </ui:composition>
