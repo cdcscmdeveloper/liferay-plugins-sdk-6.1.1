@@ -9,6 +9,11 @@
 
 
 	<ui:define name="contentSection">
+	<div align="right">
+		<p:commandButton value="Submit" id="btnSubmit"
+				action="#{registrationBackingBean.submitRegistration}" />
+	</div>
+				
 	<p:messages id="messages" showDetail="true" autoUpdate="true" />  
 		<p:panel header="User Information" toggleable="true" id="pnlUsrInfo">
 			<table class="customTbl">
@@ -25,20 +30,22 @@
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.nationality']}" /></td>
 					<td class="tdContent"><p:selectOneMenu id="nationalityId">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
-							<f:selectItem itemLabel="Malaysian" itemValue="0" />
-							<f:selectItem itemLabel="Non Malaysian" itemValue="1" />
+							<f:selectItem itemValue="" itemLabel="---Select---" />
+							<f:selectItems var="counLs"
+								value="#{registrationBackingBean.managedBean.countryLs}"
+								itemLabel="#{counLs.countryName}"
+								itemValue="#{counLs.countryId}" />
 						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.identificationtype']}" /></td>
-					<td class="tdContent"><p:selectOneMenu id="cmbUsrIdenType">
+					<td class="tdContent"><p:selectOneMenu id="cmbUsrIdenType" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItem itemLabel="New NRIC" itemValue="I" />
 							<f:selectItem itemLabel="Passport" itemValue="P" />
-							<p:ajax event="change" ></p:ajax>
+
 						</p:selectOneMenu></td>
 
 					<td class="tdTitle"><p:outputLabel
@@ -54,7 +61,7 @@
 					<td id="tdContent"><p:selectOneMenu
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
 							id="cmbPermCounrty">
-							<f:selectItem itemValue="0" itemLabel="---Select---" />
+							<f:selectItem itemValue="" itemLabel="---Select---" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
@@ -67,31 +74,31 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
-					<td class="tdContent" colspan="2"><p:inputText size="40"
+					<td class="tdContent" colspan="2"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"></td>
-					<td class="tdContent" colspan="2"><p:inputText size="40"
+					<td class="tdContent" colspan="2"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
 							id="txtPermAdd2" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"></td>
-					<td class="tdContent" colspan="2"><p:inputText size="40"
+					<td class="tdContent" colspan="2"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
 							id="txtPermAdd3" /></td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"></td>
-					<td class="tdContent" colspan="2"><p:inputText size="40"
+					<td class="tdContent" colspan="2"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}"
 							id="txtPermAdd4" /></td>
 				</tr>
 				<tr>
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.postcode']}" /></td>
-					<td class="tdContent"><p:inputText size="40"
+					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 							id="txtPermPostcode" /></td>
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.state']}" /></td>
@@ -140,14 +147,14 @@
 
 			</table>
 		</p:panel>
+		
+<!-- 		<ui:include src="/xhtml/sm/shared/onlinereg/identityUpload.xhtml" /> -->
+		
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 
-		<div align="right">
-			<p:commandButton value="Back"
+		<div align="left">
+			<p:commandButton value="Previous"
 				action="#{registrationBackingBean.returnToCompanyInfo}" />
-
-			<p:commandButton value="Submit" id="btnSubmit"
-				action="#{registrationBackingBean.submitRegistration}" />
 		</div>
 	</ui:define>
 

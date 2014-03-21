@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 
@@ -47,11 +47,15 @@
 	</c:if>
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
-		<div align="right">
-			<p:commandButton value="Back"
-				action="#{registrationBackingBean.returnToSignUp}" />
-			<p:commandButton value="Next"
-				action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
+		<div class="nav-wrapper" align="justify">
+
+				<p:commandButton value="Previous" style="float:left;"
+					action="#{registrationBackingBean.returnToSignUp}" />
+
+				<p:commandButton value="Next" style="float:right;"
+					action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
+				<!-- 			<p:commandButton value="Ajax" update="pnlCompInfo"  validateClient="true" /> -->
 		</div>
+		<div style="clear: both;"></div>
 	</c:if>
 </ui:composition>
