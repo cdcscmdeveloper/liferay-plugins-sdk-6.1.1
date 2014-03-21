@@ -193,7 +193,8 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addJobFunction}" update="perShrJfdt">
+				action="#{backingBean.managedBean.addJobFunction}"
+				update="perShrJfdt">
 			</p:commandButton>
 			<p:commandButton value="Delete">
 			</p:commandButton>
@@ -281,7 +282,8 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addProfBody}" update="perShrProfDt">
+				action="#{backingBean.managedBean.addProfBody}"
+				update="perShrProfDt">
 			</p:commandButton>
 			<p:commandButton value="Delete">
 			</p:commandButton>
@@ -292,7 +294,7 @@
 		<p:dataTable id="perShrAqdt"
 			value="#{backingBean.managedBean.academicQualifications}" var="aq"
 			selection="#{backingBean.managedBean.selectedAcademicQualifications}"
-			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{jf}">
+			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="perShrAqdt" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>

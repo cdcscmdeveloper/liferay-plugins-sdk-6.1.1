@@ -292,7 +292,7 @@
 		<p:dataTable id="shrAqdt"
 			value="#{backingBean.managedBean.academicQualifications}" var="aq"
 			selection="#{backingBean.managedBean.selectedAcademicQualifications}"
-			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{jf}">
+			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="shrAqdt" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>

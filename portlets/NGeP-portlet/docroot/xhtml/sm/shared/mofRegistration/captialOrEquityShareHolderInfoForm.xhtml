@@ -71,7 +71,7 @@
 				<p:column headerText="Action">
 					<p:commandLink oncomplete="shareHolderDialog.show();"
 						action="#{backingBean.assignSelShareHolder(shareBean)}"
-						update=":form:tt:shareHolderDialog">
+						update=":form:tt:shareHolderDialog" style="padding-right:5px;">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
@@ -79,7 +79,6 @@
 						action="#{backingBean.assignSelShareHolder(shareBean)}"
 						update=":form:tt:shareHolderAddrDialog" id="shrAddrLnk">
 						<p:graphicImage library="ep/images/design" name="register.png"
-							alt="Address Details"
 							value="/resources/ep/images/design/register.png" />
 					</p:commandLink>
 					<p:tooltip for="shrAddrLnk">
@@ -121,9 +120,10 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="1050px" height="500px" header="Share Holder Details"
-		widgetVar="shareHolderDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="shareHolderDialog">
+	<p:dialog width="1050px" height="500px"
+		header="Share Holder Information" widgetVar="shareHolderDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="shareHolderDialog">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
@@ -135,7 +135,7 @@
 		</div>
 	</p:dialog>
 	<p:dialog width="1050px" height="500px"
-		header="Share Holder Address Details"
+		header="Share Holder Address Information"
 		widgetVar="shareHolderAddrDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="shareHolderAddrDialog">
 

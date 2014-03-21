@@ -3,7 +3,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<p:panel header="Personnel Info" toggleable="true">
 
 		<table style="width: 100%">
@@ -141,232 +143,200 @@
 		</table>
 
 	</p:panel>
+	<p:panel header="Job Function" toggleable="true">
+
+		<p:dataTable id="perStfJfdt"
+			value="#{backingBean.managedBean.jobFunctions}" var="jf"
+			selection="#{backingBean.managedBean.selectedJobFunctions}"
+			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{jf}">
+			<ac:paginator for="perStfJfdt" />
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year From" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year To" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Company" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Designation" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{backingBean.managedBean.addJobFunction}"
+				update="perStfJfdt">
+			</p:commandButton>
+			<p:commandButton value="Delete">
+			</p:commandButton>
+		</div>
+	</p:panel>
+	<p:panel header="Related Companies" toggleable="true">
+
+		<p:dataTable id="perStfRelCom"
+			value="#{backingBean.managedBean.relatedCompanies}" var="relCom"
+			selection="#{backingBean.managedBean.selectedRelatedCompanies}"
+			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{relCom}">
+			<ac:paginator for="perStfRelCom" />
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Company Name" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="ROC/ROB/ROS NO." />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Designation" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Shareholding Total(RM.)" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Shareholding (%)" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="MOF Reg NO." />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{backingBean.managedBean.addRelatedCompany}"
+				update="perStfRelCom">
+			</p:commandButton>
+			<p:commandButton value="Delete">
+			</p:commandButton>
+		</div>
+	</p:panel>
+	<p:panel header="Professional Body" toggleable="true">
+		<p:dataTable var="profBean"
+			value="#{backingBean.managedBean.profBodies}"
+			selection="#{backingBean.managedBean.selectedProfBodies}"
+			rowKey="#{profBean}" rowIndexVar="index" id="perStfProfDt">
+			<ac:paginator for="perStfProfDt" />
+			<p:column selectionMode="multiple" width="5%" />
+
+
+			<p:column headerText="Professionl Body">
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
+					<f:selectItem itemLabel="prof Body1" itemValue="M" />
+					<f:selectItem itemLabel="prof Body2" itemValue="B" />
+					<f:selectItem itemLabel="prof Body3" itemValue="T" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column headerText="Registration NO.">
+				<p:inputText size="35" />
+			</p:column>
+			<p:column headerText="End Date.">
+				<p:calendar showOn="button" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{backingBean.managedBean.addProfBody}"
+				update="perStfProfDt">
+			</p:commandButton>
+			<p:commandButton value="Delete">
+			</p:commandButton>
+		</div>
+	</p:panel>
 	<p:panel header="Academic Qualification" toggleable="true">
 
-		<table style="width: 100%">
-			<tr>
-				<td width="85px;"><p:outputLabel value="* Institution" /></td>
-				<td style="padding-right: 42px;"><p:inputText size="35" /></td>
-				<td><p:outputLabel value="Year " /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select --" itemValue="1" />
-						<f:selectItem itemLabel="2013" itemValue="2013" />
-						<f:selectItem itemLabel="2012" itemValue="2012" />
-						<f:selectItem itemLabel="2011" itemValue="2011" />
-					</p:selectOneMenu></td>
-
-			</tr>
-			<tr>
-				<td><p:outputLabel value=" Field" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select --" itemValue="1" />
-						<f:selectItem itemLabel="Computers" itemValue="1" />
-						<f:selectItem itemLabel="Mechanical" itemValue="1" />
-						<f:selectItem itemLabel="Civil" itemValue="1" />
-					</p:selectOneMenu></td>
-				<td><p:outputLabel value="Qualification"
-						title="For Malaysian Only" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Others--" itemValue="1" />
-						<f:selectItem itemLabel="Graduate" itemValue="1" />
-						<f:selectItem itemLabel="Post Graduate" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-
-
-
-		</table>
-
-	</p:panel>
-	<p:panel header="Address Info" toggleable="true">
-
-		<table style="width: 100%">
-			<tr>
-				<td valign="top" width="50%">
-
-					<table style="width: 100%">
-						<tr>
-							<td><u><b> <h:outputText
-											value="Permenant Address : " /></b></u></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="* Address" /></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address1}"
-									size="35" /></td>
-						</tr>
-
-						<tr>
-							<td></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address2}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address3}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="* Country" /></td>
-							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCountry.countryCode}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.postcode}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
-							<td><p:inputText size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
-							<td><p:inputText size="35" /></td>
-						</tr>
-					</table>
-
-				</td>
-				<td valign="top">
-
-					<table style="width: 100%">
-						<tr>
-							<td><u><b><h:outputText value="Mailing Address : " /></b></u>
-							</td>
-							<td><table style="width: 100%">
-									<tr>
-										<td><p:selectBooleanCheckbox /></td>
-										<td><h:outputText value=" Same as permenant: " /></td>
-									</tr>
-								</table></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="* Address" /></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address1}"
-									size="35" /></td>
-						</tr>
-
-						<tr>
-							<td></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address2}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address3}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="* Country" /></td>
-							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCountry.countryCode}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.postcode}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
-							<td><p:inputText size="35" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
-							<td><p:inputText size="35" /></td>
-						</tr>
-					</table>
-
-				</td>
-			</tr>
-
-		</table>
+		<p:dataTable id="perStfAqdt"
+			value="#{backingBean.managedBean.academicQualifications}" var="aq"
+			selection="#{backingBean.managedBean.selectedAcademicQualifications}"
+			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{aq}">
+			<ac:paginator for="perStfAqdt" />
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year" />
+				</f:facet>
+				<p:selectOneMenu style="margin-bottom: 5px;">
+					<f:selectItem itemLabel="Select One" itemValue="1" />
+					<f:selectItem itemLabel="2013" itemValue="2013" />
+					<f:selectItem itemLabel="2012" itemValue="2012" />
+					<f:selectItem itemLabel="2011" itemValue="2011" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Institute" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Qualification Level" />
+				</f:facet>
+				<p:selectOneMenu style="margin-bottom: 5px;">
+					<f:selectItem itemLabel="-- Others--" itemValue="1" />
+					<f:selectItem itemLabel="Graduate" itemValue="1" />
+					<f:selectItem itemLabel="Post Graduate" itemValue="1" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Education Field" />
+				</f:facet>
+				<p:selectOneMenu style="margin-bottom: 5px;">
+					<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+					<f:selectItem itemLabel="Computers" itemValue="1" />
+					<f:selectItem itemLabel="Mechanical" itemValue="1" />
+					<f:selectItem itemLabel="Civil" itemValue="1" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Major In" />
+				</f:facet>
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{backingBean.managedBean.addAcademicQualification}"
+				update="perStfAqdt">
+			</p:commandButton>
+			<p:commandButton value="Delete">
+			</p:commandButton>
+		</div>
 	</p:panel>
 
 </ui:composition>

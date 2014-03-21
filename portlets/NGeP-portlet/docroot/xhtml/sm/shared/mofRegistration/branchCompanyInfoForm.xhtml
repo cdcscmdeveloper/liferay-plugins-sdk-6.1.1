@@ -106,11 +106,15 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="450px" header="Branch Details" widgetVar="banchDialog"
-		id="display" resizable="false" showEffect="fade" hideEffect="fade"
-		modal="true">
-
-		<p:panel header="Branch Details" toggleable="true">
+	<p:dialog width="450px" header="Branch Information"
+		widgetVar="banchDialog" id="display" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true">
+		<ui:fragment
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
+			<ui:include src="branchDetailsTablePage.xhtml" />
+		</ui:fragment>
+		<p:panel header="Branch Details" toggleable="true"
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}">
 			<ui:include src="branchDetailsTablePage.xhtml" />
 		</p:panel>
 		<p:panel header="Point Of Contact"
