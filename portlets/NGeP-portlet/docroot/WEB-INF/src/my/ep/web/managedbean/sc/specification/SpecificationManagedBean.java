@@ -22,16 +22,16 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
-import my.ep.persistence.entity.sc.quationtender.ScQtWeightage;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.web.backingbean.sc.specification.BankingBean;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -49,7 +49,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private static final Logger log = EpLogger
 			.getLogger(SpecificationManagedBean.class);
 
-	private ScQtSpec scQtSpec;
+	
 	
 	private ScQtRemark scQtRemarks;
 	
@@ -86,10 +86,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	public boolean isSampleReq=true;
 	public String approvalDate;
-	private List<ScQtWeightage> weightageTechnical;
-	private List<ScQtWeightage> weightageFinancial;
-	private List<ScQtWeightage> weightageTechnicalSelect;
-	private List<ScQtWeightage> weightageFinancialSelect;
+	
 	 private boolean isSpecStatus;
 	 private Long procurementId;
 	 private List<SelectItem> approvalList;
@@ -167,11 +164,12 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	//supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> suppCriteriaopenList;
-	private ScQtCriteria qtCriteria;
+
 	private	TreeNode rootLocationTree;
 	private	String	zoneName;
 
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+	private List<TreeNode>	zoneGeneralTrees = new ArrayList<TreeNode>();
 	private List<TreeNode>	zonesList = new ArrayList<TreeNode>();
 	private List<TreeNode>	zoneTreeList = new ArrayList<TreeNode>();
 	private List<TreeNode>	zoneTreeAddrList = new ArrayList<TreeNode>();
@@ -182,6 +180,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private	TreeNode rootLocationTreeList;
 	private TreeNode rootAddressLocationTreeList;
 	private TreeNode[] selectedNodes;
+	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode[] selectedLocNodes;
 	private String circularExpDate;
 	private String circularType;
@@ -233,24 +232,26 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
+	private List<BriefingZoneBean> deliveryLocBean = new ArrayList<BriefingZoneBean>();
+	public List<ScQtDeliveryLoc> deliveryLoc;
+	public List<ScQtDeliveryLoc> deliveryNonZoneList;
+	public List<ScQtDeliveryLoc> deleteDeliveryList;
+	public List<ScQtDeliveryLoc> selectDeliveryList;
+	
+	public ScQtSupplierCriteria supplierCriteria;
+	
+	public String deliveyzoneName;
+	
 	
 	public SpecificationManagedBean(){
+		deliveryLocBean.add(new BriefingZoneBean(1,"South", deliveryLoc,deleteDeliveryList));
+		deliveryLocBean.add(new BriefingZoneBean(2,"North", deliveryLoc,deleteDeliveryList));
+		deliveryLocBean.add(new BriefingZoneBean(3,"East", deliveryLoc,deleteDeliveryList));
+		deliveryLocBean.add(new BriefingZoneBean(4,"West", deliveryLoc,deleteDeliveryList));
 		
 	}
 
-	/**
-	 * @return the scQtSpec
-	 */
-	public ScQtSpec getScQtSpec() {
-		return scQtSpec;
-	}
-
-	/**
-	 * @param scQtSpec the scQtSpec to set
-	 */
-	public void setScQtSpec(ScQtSpec scQtSpec) {
-		this.scQtSpec = scQtSpec;
-	}
+	
 
 	/**
 	 * @return the scQtRemarks
@@ -550,63 +551,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.specificationDataType = specificationDataType;
 	}
 
-	/**
-	 * @return the weightageTechnical
-	 */
-	public List<ScQtWeightage> getWeightageTechnical() {
-		return weightageTechnical;
-	}
 
-	/**
-	 * @param weightageTechnical the weightageTechnical to set
-	 */
-	public void setWeightageTechnical(List<ScQtWeightage> weightageTechnical) {
-		this.weightageTechnical = weightageTechnical;
-	}
-
-	/**
-	 * @return the weightageFinancial
-	 */
-	public List<ScQtWeightage> getWeightageFinancial() {
-		return weightageFinancial;
-	}
-
-	/**
-	 * @param weightageFinancial the weightageFinancial to set
-	 */
-	public void setWeightageFinancial(List<ScQtWeightage> weightageFinancial) {
-		this.weightageFinancial = weightageFinancial;
-	}
-
-	/**
-	 * @return the weightageTechnicalSelect
-	 */
-	public List<ScQtWeightage> getWeightageTechnicalSelect() {
-		return weightageTechnicalSelect;
-	}
-
-	/**
-	 * @param weightageTechnicalSelect the weightageTechnicalSelect to set
-	 */
-	public void setWeightageTechnicalSelect(
-			List<ScQtWeightage> weightageTechnicalSelect) {
-		this.weightageTechnicalSelect = weightageTechnicalSelect;
-	}
-
-	/**
-	 * @return the weightageFinancialSelect
-	 */
-	public List<ScQtWeightage> getWeightageFinancialSelect() {
-		return weightageFinancialSelect;
-	}
-
-	/**
-	 * @param weightageFinancialSelect the weightageFinancialSelect to set
-	 */
-	public void setWeightageFinancialSelect(
-			List<ScQtWeightage> weightageFinancialSelect) {
-		this.weightageFinancialSelect = weightageFinancialSelect;
-	}
 
 	/**
 	 * @return the isSpecStatus
@@ -1360,19 +1305,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.suppCriteriaopenList = suppCriteriaopenList;
 	}
 
-	/**
-	 * @return the qtCriteria
-	 */
-	public ScQtCriteria getQtCriteria() {
-		return qtCriteria;
-	}
 
-	/**
-	 * @param qtCriteria the qtCriteria to set
-	 */
-	public void setQtCriteria(ScQtCriteria qtCriteria) {
-		this.qtCriteria = qtCriteria;
-	}
 
 	/**
 	 * @return the rootLocationTree
@@ -2350,6 +2283,142 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setFinancialSpecList(List<ScQtCheckList> financialSpecList) {
 		this.financialSpecList = financialSpecList;
 	}
+
+	/**
+	 * @return the zoneGeneralTrees
+	 */
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	/**
+	 * @param zoneGeneralTrees the zoneGeneralTrees to set
+	 */
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
+	}
+
+	/**
+	 * @return the selectedGeneralTreeNodes
+	 */
+	public TreeNode[] getSelectedGeneralTreeNodes() {
+		return selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @param selectedGeneralTreeNodes the selectedGeneralTreeNodes to set
+	 */
+	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
+		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @return the deliveryLocBean
+	 */
+	public List<BriefingZoneBean> getDeliveryLocBean() {
+		return deliveryLocBean;
+	}
+
+	/**
+	 * @param deliveryLocBean the deliveryLocBean to set
+	 */
+	public void setDeliveryLocBean(List<BriefingZoneBean> deliveryLocBean) {
+		this.deliveryLocBean = deliveryLocBean;
+	}
+
+	/**
+	 * @return the deliveryLoc
+	 */
+	public List<ScQtDeliveryLoc> getDeliveryLoc() {
+		return deliveryLoc;
+	}
+
+	/**
+	 * @param deliveryLoc the deliveryLoc to set
+	 */
+	public void setDeliveryLoc(List<ScQtDeliveryLoc> deliveryLoc) {
+		this.deliveryLoc = deliveryLoc;
+	}
+
+	/**
+	 * @return the deliveyzoneName
+	 */
+	public String getDeliveyzoneName() {
+		return deliveyzoneName;
+	}
+
+	/**
+	 * @param deliveyzoneName the deliveyzoneName to set
+	 */
+	public void setDeliveyzoneName(String deliveyzoneName) {
+		this.deliveyzoneName = deliveyzoneName;
+	}
+
+	/**
+	 * @return the deliveryNonZoneList
+	 */
+	public List<ScQtDeliveryLoc> getDeliveryNonZoneList() {
+		return deliveryNonZoneList;
+	}
+
+	/**
+	 * @param deliveryNonZoneList the deliveryNonZoneList to set
+	 */
+	public void setDeliveryNonZoneList(List<ScQtDeliveryLoc> deliveryNonZoneList) {
+		this.deliveryNonZoneList = deliveryNonZoneList;
+	}
+
+	/**
+	 * @return the deleteDeliveryList
+	 */
+	public List<ScQtDeliveryLoc> getDeleteDeliveryList() {
+		return deleteDeliveryList;
+	}
+
+	/**
+	 * @param deleteDeliveryList the deleteDeliveryList to set
+	 */
+	public void setDeleteDeliveryList(List<ScQtDeliveryLoc> deleteDeliveryList) {
+		this.deleteDeliveryList = deleteDeliveryList;
+	}
+
+	/**
+	 * @return the selectDeliveryList
+	 */
+	public List<ScQtDeliveryLoc> getSelectDeliveryList() {
+		return selectDeliveryList;
+	}
+
+	/**
+	 * @param selectDeliveryList the selectDeliveryList to set
+	 */
+	public void setSelectDeliveryList(List<ScQtDeliveryLoc> selectDeliveryList) {
+		this.selectDeliveryList = selectDeliveryList;
+	}
+
+
+
+	/**
+	 * @return the supplierCriteria
+	 */
+	public ScQtSupplierCriteria getSupplierCriteria() {
+		return supplierCriteria;
+	}
+
+
+
+	/**
+	 * @param supplierCriteria the supplierCriteria to set
+	 */
+	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
+		this.supplierCriteria = supplierCriteria;
+	}
+
+
+
+
+	
+
 
 	
 	
