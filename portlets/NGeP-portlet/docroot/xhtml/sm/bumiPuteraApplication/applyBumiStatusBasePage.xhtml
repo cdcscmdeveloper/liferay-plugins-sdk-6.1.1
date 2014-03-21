@@ -14,6 +14,22 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" />
+		<c:if test="#{backingBean.managedBean.supplierUser}">
+			<table style="width: 99%">
+				<tr>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
+							value="Last Submission Date : " /></td>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
+							value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
+							<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						</h:outputText></td>
+				</tr>
+			</table>
+		</c:if>
+
+
 		<p:outputPanel
 			rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
 			id="revPanHdr">
@@ -24,7 +40,6 @@
 		<p:tabView id="tt" orientation="left" widgetVar="tt"
 			activeIndex="#{backingBean.managedBean.tabActiveIndex}"
 			onTabShow="updateBlockUI();" dynamic="true">
-
 			<p:tab title="#{lbl['lbl.sm.companyStepLbl']}">
 				<ui:include src="step1BumiAppln_CompanyInfo.xhtml" />
 			</p:tab>

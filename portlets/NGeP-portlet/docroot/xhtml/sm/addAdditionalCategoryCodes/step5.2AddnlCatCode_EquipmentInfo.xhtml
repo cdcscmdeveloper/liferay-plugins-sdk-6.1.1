@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+		<div align="right" style="width: 99%" class="button-wrapper">
+			<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+				icon="ui-icon-save" style="margin-bottom:5px;" />
+		</div>
+	</p:outputPanel>
 	<h:inputHidden
 		value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 	<ui:include
@@ -13,23 +19,23 @@
 		src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/licenseInfoForm.xhtml" />
-
-	<table style="width: 100%">
-		<tr>
-			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{backingBean.setTabValue('6','5')}"
-						action="#{backingBean.updateSmAppl}" update=":form"
-						icon="ui-icon-prev" />
-				</div></td>
-			<td><div align="right" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{backingBean.setTabValue('6','7')}"
-						action="#{backingBean.updateSmAppl}" update=":form"
-						icon="ui-icon-next" iconPos="right" />
-				</div></td>
-		</tr>
-	</table>
-
+	<div class="nav-wrapper">
+		<table style="width: 100%">
+			<tr>
+				<td><div align="left" style="width: 99%">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{backingBean.setTabValue('6','5')}"
+							action="#{backingBean.updateSmAppl}" update=":form"
+							icon="ui-icon-prev" />
+					</div></td>
+				<td><div align="right" style="width: 99%">
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{backingBean.setTabValue('6','7')}"
+							action="#{backingBean.updateSmAppl}" update=":form"
+							icon="ui-icon-next" iconPos="right" />
+					</div></td>
+			</tr>
+		</table>
+	</div>
 
 </ui:composition>

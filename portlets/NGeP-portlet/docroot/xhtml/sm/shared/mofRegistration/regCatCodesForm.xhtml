@@ -66,6 +66,8 @@
 			</table>
 
 			<br />
+			<h:inputHidden
+				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
 			<p:dataTable var="catBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
