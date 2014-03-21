@@ -38,8 +38,6 @@ import my.ep.persistence.entity.sc.quationtender.ScNegoTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTerm;
 import my.ep.persistence.entity.sc.quationtender.ScTermDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -70,7 +68,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
 
-		getManagedBean().setScQtSpec(new ScQtSpec());
+	//	getManagedBean().setScQtSpec(new ScQtSpec());
 	}
 
 	private void debugLogger(Object message) {
@@ -378,9 +376,9 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 						+ getManagedBean().getScLoi().getPmStatus()
 								.getPmStatusDescs().get(0).getStatusName());
 
-				List<ScQtZoneCriteria> zonelist = scQt.getScQtCriterias()
-						.getScQtZoneCriterias();
-				System.out.println("zonelist: " + zonelist.size());
+				/*List<ScQtZoneCriteria> zonelist = scQt.getScQtCriterias()
+						.getScQtZoneCriterias();*/
+				
 
 				List<ScQtItem> itemList = resDTO.getItemResultBean()
 						.getResultList();
@@ -388,7 +386,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 				getManagedBean().setScQtItemList(itemList);
 
-				getManagedBean().setZonelist(zonelist);
+				//getManagedBean().setZonelist(zonelist);
 
 				List<ScNegoLocation> negoLocationList = resDTO
 						.getNegoLocResultBean().getResultList();
@@ -520,10 +518,10 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 			getManagedBean().getScLoi().setOfficerAddress(
 					addList.get(0).getPmAddress().getAddress1());
-			getManagedBean().getScLoi().setOfficerFaxNo(
+			/*getManagedBean().getScLoi().setOfficerFaxNo(
 					addList.get(0).getPmAddress().getFaxNo());
 			getManagedBean().getScLoi().setOfficerPhoneNo(
-					addList.get(0).getPmAddress().getPhoneNo());
+					addList.get(0).getPmAddress().getPhoneNo());*/
 			getManagedBean().getScLoi().setOfficerEmail(
 					addList.get(0).getPmAddress().getEmail());
 

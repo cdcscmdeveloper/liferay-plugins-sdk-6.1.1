@@ -16,8 +16,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtManualEvaluation;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalLabel;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -29,7 +27,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<EvaluationReportListBean> evaluationReportListItems;
 	private List<EvaluationReportSubBean> evaluationReportSupplierItems;
 	private List<ScQtMeeting> scQtMeetings;
-	private ScQtSpec scQtSpec;
+	
 	private List<ScQtMeeting> meetingMultiSelect;
 	private ScQtMeeting meeting;
 	private List<ScQtCommitteeActivity> committeeMemberList;
@@ -53,7 +51,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResult scQtEvaluationResult;
 	private int tabActiveIndex;
 	private List<ScQtItem> scQtItemList;
-	private List<ScQtZoneCriteria> locationList;
+	
 	private ScQtCommitteeActivity commiteeActivity;
 	private ScQt scqt;
 	// OC,EC,TEC,FEC
@@ -150,20 +148,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.scQtMeetings = scQtMeetings;
 	}
 
-	/**
-	 * @return the scQtSpec
-	 */
-	public ScQtSpec getScQtSpec() {
-		return scQtSpec;
-	}
-
-	/**
-	 * @param scQtSpec
-	 *            the scQtSpec to set
-	 */
-	public void setScQtSpec(ScQtSpec scQtSpec) {
-		this.scQtSpec = scQtSpec;
-	}
+	
 
 	/**
 	 * @return the meeting
@@ -426,21 +411,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.scQtItemList = scQtItemList;
 	}
 
-	/**
-	 * @return the locationList
-	 */
-	public List<ScQtZoneCriteria> getLocationList() {
-		return locationList;
-	}
-
-	/**
-	 * @param locationList
-	 *            the locationList to set
-	 */
-	public void setLocationList(List<ScQtZoneCriteria> locationList) {
-		this.locationList = locationList;
-	}
-
+	
 	/**
 	 * @return the commiteeActivity
 	 */

@@ -51,44 +51,49 @@ import com.liferay.portal.util.PortalUtil;
 
 public class EpPortletUtil {
 	private static Logger log = EpLogger.getLogger(EpPortletUtil.class);
-	
+
 	private static List<PortletCategoryBean> portletCategoryBeans;
-	
+
 	private static void debugLogger(Object message) {
-        if(log.isDebugEnabled()) {
-            log.debug(message);
-        }
-    }
-	
-	public static String getDisplayPortletId() {		
-		 return getThemeDisplay().getPortletDisplay().getId();
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
 	}
-	
-	public static String getDisplayLayoutName() {
+
+	public static String getDisplayPortletId() {
+		return getThemeDisplay().getPortletDisplay().getId();
+	}
+
+	public String getDisplayLayoutName() {
+
 		ThemeDisplay themeDisplay = getThemeDisplay();
-		
+
 		return themeDisplay.getLayout().getName(themeDisplay.getLocale());
 	}
-	
-	public static String getLoginUserId(FacesContext context) {		
+
+	public static String getLoginUserId(FacesContext context) {
 		return getThemeDisplay().getUser().getScreenName();
 	}
-	
+
 	public static List<PortletCategoryBean> getPortletCategories() {
 		if (portletCategoryBeans == null) {
 			portletCategoryBeans = new ArrayList<PortletCategoryBean>();
-			
+
 			try {
-				PortletContext  ctx = ((PortletContext)FacesContext.getCurrentInstance().getExternalContext().getContext());
+				PortletContext ctx = ((PortletContext) FacesContext
+						.getCurrentInstance().getExternalContext().getContext());
 				String servletContextName = ctx.getPortletContextName();
-				String xml = HttpUtil.URLtoString(ctx.getResource(
-					    "/WEB-INF/liferay-display.xml"));
-				PortletCategory portletRootCategory = PortletLocalServiceUtil.getWARDisplay(servletContextName, xml);
-				
-				for (PortletCategory portletCategory : portletRootCategory.getCategories()) {
-					portletCategoryBeans.add(toPortletCategoryBean(portletCategory));
+				String xml = HttpUtil.URLtoString(ctx
+						.getResource("/WEB-INF/liferay-display.xml"));
+				PortletCategory portletRootCategory = PortletLocalServiceUtil
+						.getWARDisplay(servletContextName, xml);
+
+				for (PortletCategory portletCategory : portletRootCategory
+						.getCategories()) {
+					portletCategoryBeans
+							.add(toPortletCategoryBean(portletCategory));
 				}
-			} catch (MalformedURLException e) {	
+			} catch (MalformedURLException e) {
 				handleException(e);
 			} catch (IOException e) {
 				handleException(e);
@@ -96,59 +101,65 @@ public class EpPortletUtil {
 				handleException(e);
 			}
 		}
-		
+
 		return portletCategoryBeans;
 	}
-	
+
 	public static PortletCategoryBean getPortletCategoryById(String categoryId) {
 		return getPortletCategoryById(categoryId, getPortletCategories());
 	}
-	
+
 	public static PortletBean getPortletById(String portletId) {
 		ThemeDisplay themeDisplay = getThemeDisplay();
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
-		String portletTitle = PortalUtil.getPortletTitle(portlet, themeDisplay.getLocale());
-		
-		return new PortletBean(portletId, portlet.getPortletName(), portletTitle);
+		String portletTitle = PortalUtil.getPortletTitle(portlet,
+				themeDisplay.getLocale());
+
+		return new PortletBean(portletId, portlet.getPortletName(),
+				portletTitle);
 	}
-	
+
 	public static List<MenuBean> getMenuBeans() {
 		List<MenuBean> menuBeans = new ArrayList<MenuBean>();
-		
+
 		try {
 			MenuBean menuBean;
 			ThemeDisplay themeDisplay = getThemeDisplay();
-			PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
+			PermissionChecker permissionChecker = themeDisplay
+					.getPermissionChecker();
 			List<Layout> layouts = themeDisplay.getUnfilteredLayouts();
 			Group group = themeDisplay.getLayout().getGroup();
 			Locale locale = themeDisplay.getLocale();
-			boolean hasViewStagingPermission =
-				(group.isStagingGroup() || group.isStagedRemotely()) &&
-				 GroupPermissionUtil.contains(
-					 permissionChecker, group.getGroupId(),
-					 ActionKeys.VIEW_STAGING);
-			
-			for (Layout layout : layouts) {				
-				if (layout.isHidden() && 
-						(isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
-					
+			boolean hasViewStagingPermission = (group.isStagingGroup() || group
+					.isStagedRemotely())
+					&& GroupPermissionUtil.contains(permissionChecker,
+							group.getGroupId(), ActionKeys.VIEW_STAGING);
+
+			for (Layout layout : layouts) {
+				if (layout.isHidden()
+						&& (isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
+
 					menuBean = toMenuBean(permissionChecker, layout, locale);
-					
+
 					if (log.isDebugEnabled()) {
-						log.debug(new StringBuilder()
-							.append("name:").append(menuBean.getName())
-							.append(", title:").append(menuBean.getTitle())
-							.append(", imageId:").append(menuBean.getImageId()));
-					
+						log.debug(new StringBuilder().append("name:")
+								.append(menuBean.getName()).append(", title:")
+								.append(menuBean.getTitle())
+								.append(", imageId:")
+								.append(menuBean.getImageId()));
+
 						for (MenuBean childMenuBean : menuBean.getChildren()) {
-							log.debug(new StringBuilder()
-								.append("childname:").append(childMenuBean.getName())
-								.append(", title:").append(childMenuBean.getTitle())
-								.append(", imageId:").append(childMenuBean.getImageId())
-								.append(", url:").append(childMenuBean.getUrl()));
+							log.debug(new StringBuilder().append("childname:")
+									.append(childMenuBean.getName())
+									.append(", title:")
+									.append(childMenuBean.getTitle())
+									.append(", imageId:")
+									.append(childMenuBean.getImageId())
+									.append(", url:")
+									.append(childMenuBean.getUrl()));
 						}
 					}
-					
+
 					menuBeans.add(menuBean);
 				}
 			}
@@ -156,33 +167,27 @@ public class EpPortletUtil {
 			handleException(e);
 		} catch (SystemException e) {
 			handleException(e);
-		}		
-		
+		}
+
 		return menuBeans;
 	}
-	
+
 	public static void addRole(RoleBean roleBean) {
 		String name = roleBean.getName();
 		String description = roleBean.getDescription();
-		
-		debugLogger(new StringBuilder().append("addRole-->name:")
-				.append(name));
-		
+
+		debugLogger(new StringBuilder().append("addRole-->name:").append(name));
+
 		try {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			long companyId = themeDisplay.getCompanyId();
 			Map<Locale, String> titleMap = null;
 			Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
-			
+
 			descriptionMap.put(themeDisplay.getLocale(), description);
-			
-			RoleLocalServiceUtil.addRole(
-					themeDisplay.getUserId(), 
-					companyId, 
-					name, 
-					titleMap, 
-					descriptionMap, 
-					RoleConstants.TYPE_REGULAR);
+
+			RoleLocalServiceUtil.addRole(themeDisplay.getUserId(), companyId,
+					name, titleMap, descriptionMap, RoleConstants.TYPE_REGULAR);
 		} catch (DuplicateRoleException e) {
 			log.warn("user role " + name + " already exists in portal.");
 		} catch (PortalException e) {
@@ -191,33 +196,33 @@ public class EpPortletUtil {
 			handleException(e);
 		}
 	}
-	
+
 	public static void updateRole(RoleBean roleBean) {
 		String name = roleBean.getName();
 		String description = roleBean.getDescription();
-		
-		debugLogger(new StringBuilder().append("updateRole-->name:")
-				.append(name));
-		
+
+		debugLogger(new StringBuilder().append("updateRole-->name:").append(
+				name));
+
 		try {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			long companyId = themeDisplay.getCompanyId();
 			Locale locale = themeDisplay.getLocale();
 			Role role = RoleLocalServiceUtil.getRole(companyId, name);
-			
+
 			if (!description.equals(role.getDescription(locale))) {
 				debugLogger("update existing user role.");
-				
+
 				role.setDescription(description);
-				
+
 				RoleLocalServiceUtil.updateRole(role);
 			}
 		} catch (NoSuchRoleException e) {
 			log.warn("user role " + name + " not exists in portal.");
-			
+
 			// add new role when not exists.
 			addRole(roleBean);
-			
+
 			// add all resource permission attached to this role.
 			for (String portletId : roleBean.getPortletIds()) {
 				addResourcePermission(name, portletId);
@@ -228,16 +233,16 @@ public class EpPortletUtil {
 			handleException(e);
 		}
 	}
-	
+
 	public static void deleteRole(String name) {
-		debugLogger(new StringBuilder().append("deleteRole-->name:")
-				.append(name));
-		
+		debugLogger(new StringBuilder().append("deleteRole-->name:").append(
+				name));
+
 		try {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			long companyId = themeDisplay.getCompanyId();
 			Role role = RoleLocalServiceUtil.getRole(companyId, name);
-			
+
 			RoleLocalServiceUtil.deleteRole(role);
 		} catch (NoSuchRoleException e) {
 			log.warn("user role " + name + " not exists in portal.");
@@ -247,67 +252,65 @@ public class EpPortletUtil {
 			handleException(e);
 		}
 	}
-	
-	public static void addResourcePermission(String userRoleCode, String screenId) {
-		debugLogger(new StringBuilder().append("addResourcePermission-->userRoleCode:")
-				.append(userRoleCode)
-				.append(", screenId:")
-				.append(screenId));
-		
+
+	public static void addResourcePermission(String userRoleCode,
+			String screenId) {
+		debugLogger(new StringBuilder()
+				.append("addResourcePermission-->userRoleCode:")
+				.append(userRoleCode).append(", screenId:").append(screenId));
+
 		try {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			long companyId = themeDisplay.getCompanyId();
 			Role role = RoleLocalServiceUtil.getRole(companyId, userRoleCode);
-			Resource resource = ResourceLocalServiceUtil.getResource(companyId, 
-					screenId, 
-					ResourceConstants.SCOPE_COMPANY, 
+			Resource resource = ResourceLocalServiceUtil.getResource(companyId,
+					screenId, ResourceConstants.SCOPE_COMPANY,
 					String.valueOf(companyId));
-			ResourceAction action = ResourceActionLocalServiceUtil.getResourceAction(screenId, ActionKeys.VIEW);
-		    
-			/*try{
-				ResourcePermission resPermission = ResourcePermissionLocalServiceUtil.getResourcePermission(companyId, 
-			    		resource.getName(), 
-			    		resource.getScope(), 
-			    		resource.getPrimKey(), 
-			    		role.getRoleId());
-				
-				// update existing resource permission.
-				debugLogger("update existing resource permission");
-		    	
-		    	resPermission.setActionIds(action.getBitwiseValue());
-		    	
-		    	ResourcePermissionLocalServiceUtil.updateResourcePermission(resPermission);
-		    	
-			} catch (NoSuchResourcePermissionException e) {
-				// create new if resource permission is not exists.
-				debugLogger("create new if resource permission is not exists");
-		    	
-				long resourcePermissionId = CounterLocalServiceUtil.increment(ResourcePermission.class.getName());
-				ResourcePermission resPermission = ResourcePermissionLocalServiceUtil
-						.createResourcePermission(resourcePermissionId);
-	            
-				resPermission.setCompanyId(companyId);
-				resPermission.setName(resource.getName());
-				resPermission.setScope(resource.getScope());
-				resPermission.setPrimKey(resource.getPrimKey());
-			    resPermission.setRoleId(role.getRoleId());
-			    resPermission.setActionIds(action.getBitwiseValue());
-			    
-			    ResourcePermissionLocalServiceUtil.addResourcePermission(resPermission);
-			    
-			    ResourcePermissionLocalServiceUtil.addResourcePermissions(
-	    		screenId, 
-	    		userRoleCode, 
-	    		ResourceConstants.SCOPE_COMPANY, 
-	    		action.getBitwiseValue());
-			}*/
-			
-			ResourcePermissionLocalServiceUtil.addResourcePermission(
-					companyId, 
-					resource.getName(), 
-					resource.getScope(),
-					resource.getPrimKey(), 
-					role.getRoleId(), 
+			ResourceAction action = ResourceActionLocalServiceUtil
+					.getResourceAction(screenId, ActionKeys.VIEW);
+
+			/*
+			 * try{ ResourcePermission resPermission =
+			 * ResourcePermissionLocalServiceUtil
+			 * .getResourcePermission(companyId, resource.getName(),
+			 * resource.getScope(), resource.getPrimKey(), role.getRoleId());
+			 * 
+			 * // update existing resource permission.
+			 * debugLogger("update existing resource permission");
+			 * 
+			 * resPermission.setActionIds(action.getBitwiseValue());
+			 * 
+			 * ResourcePermissionLocalServiceUtil.updateResourcePermission(
+			 * resPermission);
+			 * 
+			 * } catch (NoSuchResourcePermissionException e) { // create new if
+			 * resource permission is not exists.
+			 * debugLogger("create new if resource permission is not exists");
+			 * 
+			 * long resourcePermissionId =
+			 * CounterLocalServiceUtil.increment(ResourcePermission
+			 * .class.getName()); ResourcePermission resPermission =
+			 * ResourcePermissionLocalServiceUtil
+			 * .createResourcePermission(resourcePermissionId);
+			 * 
+			 * resPermission.setCompanyId(companyId);
+			 * resPermission.setName(resource.getName());
+			 * resPermission.setScope(resource.getScope());
+			 * resPermission.setPrimKey(resource.getPrimKey());
+			 * resPermission.setRoleId(role.getRoleId());
+			 * resPermission.setActionIds(action.getBitwiseValue());
+			 * 
+			 * ResourcePermissionLocalServiceUtil.addResourcePermission(
+			 * resPermission);
+			 * 
+			 * ResourcePermissionLocalServiceUtil.addResourcePermissions(
+			 * screenId, userRoleCode, ResourceConstants.SCOPE_COMPANY,
+			 * action.getBitwiseValue()); }
+			 */
+
+			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,
+					resource.getName(), resource.getScope(),
+					resource.getPrimKey(), role.getRoleId(),
 					action.getActionId());
 		} catch (NoSuchRoleException e) {
 			log.warn("user role " + userRoleCode + " not exists in portal.");
@@ -317,29 +320,27 @@ public class EpPortletUtil {
 			handleException(e);
 		}
 	}
-	
-	public static void deleteResourcePermission(String userRoleCode, String screenId) {
-		debugLogger(new StringBuilder().append("deleteResourcePermission-->userRoleCode:")
-				.append(userRoleCode)
-				.append(", screenId:")
-				.append(screenId));
-		
+
+	public static void deleteResourcePermission(String userRoleCode,
+			String screenId) {
+		debugLogger(new StringBuilder()
+				.append("deleteResourcePermission-->userRoleCode:")
+				.append(userRoleCode).append(", screenId:").append(screenId));
+
 		try {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			long companyId = themeDisplay.getCompanyId();
 			Role role = RoleLocalServiceUtil.getRole(companyId, userRoleCode);
-			Resource resource = ResourceLocalServiceUtil.getResource(companyId, 
-					screenId, 
-					ResourceConstants.SCOPE_COMPANY, 
+			Resource resource = ResourceLocalServiceUtil.getResource(companyId,
+					screenId, ResourceConstants.SCOPE_COMPANY,
 					String.valueOf(companyId));
-			ResourceAction action = ResourceActionLocalServiceUtil.getResourceAction(screenId, ActionKeys.VIEW);
-			
-		    ResourcePermissionLocalServiceUtil.removeResourcePermission(companyId, 
-		    		resource.getName(), 
-		    		resource.getScope(), 
-		    		resource.getPrimKey(), 
-		    		role.getRoleId(), 
-		    		action.getActionId());
+			ResourceAction action = ResourceActionLocalServiceUtil
+					.getResourceAction(screenId, ActionKeys.VIEW);
+
+			ResourcePermissionLocalServiceUtil.removeResourcePermission(
+					companyId, resource.getName(), resource.getScope(),
+					resource.getPrimKey(), role.getRoleId(),
+					action.getActionId());
 		} catch (NoSuchRoleException e) {
 			log.warn("user role " + userRoleCode + " not exists in portal.");
 		} catch (PortalException e) {
@@ -348,50 +349,54 @@ public class EpPortletUtil {
 			handleException(e);
 		}
 	}
-	
+
 	private static ThemeDisplay getThemeDisplay() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		return (ThemeDisplay)((PortletRequest)context.getExternalContext().getRequest())
-				.getAttribute(WebKeys.THEME_DISPLAY);
+		return (ThemeDisplay) ((PortletRequest) context.getExternalContext()
+				.getRequest()).getAttribute(WebKeys.THEME_DISPLAY);
 	}
-	
-	private static PortletCategoryBean getPortletCategoryById(String categoryId, List<PortletCategoryBean> portletCategoryBeans) {
+
+	private static PortletCategoryBean getPortletCategoryById(
+			String categoryId, List<PortletCategoryBean> portletCategoryBeans) {
 		for (PortletCategoryBean tmpPortletCategoryBean : portletCategoryBeans) {
 			if (tmpPortletCategoryBean.getName().equals(categoryId)) {
 				return tmpPortletCategoryBean;
 			} else if (tmpPortletCategoryBean.getChildren().size() > 0) {
-				PortletCategoryBean portletCategoryBean = getPortletCategoryById(categoryId, tmpPortletCategoryBean.getChildren());
+				PortletCategoryBean portletCategoryBean = getPortletCategoryById(
+						categoryId, tmpPortletCategoryBean.getChildren());
 				if (portletCategoryBean != null) {
 					return portletCategoryBean;
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
-	private static PortletCategoryBean toPortletCategoryBean(PortletCategory portletCategory) {
+
+	private static PortletCategoryBean toPortletCategoryBean(
+			PortletCategory portletCategory) {
 		PortletCategoryBean portletCategoryBean = new PortletCategoryBean(
-				portletCategory.getName(), 
-				portletCategory.getName(), 
+				portletCategory.getName(), portletCategory.getName(),
 				portletCategory.getPortletIds());
-		
+
 		List<PortletCategoryBean> subCategories = new ArrayList<PortletCategoryBean>();
-		for (PortletCategory portletSubCategory : portletCategory.getCategories()) {
+		for (PortletCategory portletSubCategory : portletCategory
+				.getCategories()) {
 			subCategories.add(toPortletCategoryBean(portletSubCategory));
 		}
 		portletCategoryBean.setChildren(subCategories);
-		
+
 		return portletCategoryBean;
 	}
-	
-	private static MenuBean toMenuBean(PermissionChecker permissionChecker, Layout layout, Locale locale) throws PortalException, SystemException {
-		MenuBean menuBean = new MenuBean(
-				layout.getName(locale), 
-				layout.getTitle(locale), 
+
+	private static MenuBean toMenuBean(PermissionChecker permissionChecker,
+			Layout layout, Locale locale) throws PortalException,
+			SystemException {
+		MenuBean menuBean = new MenuBean(layout.getName(locale),
+				layout.getTitle(locale),
 				layout.isIconImage() ? layout.getIconImageId() : null,
 				PortalUtil.getLayoutFriendlyURL(layout, getThemeDisplay()));
-		
+
 		List<MenuBean> childs = new ArrayList<MenuBean>();
 		for (Layout child : layout.getChildren()) {
 			if (isViewableLayout(permissionChecker, child)) {
@@ -399,17 +404,18 @@ public class EpPortletUtil {
 			}
 		}
 		menuBean.setChildren(childs);
-		
+
 		return menuBean;
 	}
-	
-	private static boolean isViewableLayout(PermissionChecker permissionChecker, Layout layout) 
+
+	private static boolean isViewableLayout(
+			PermissionChecker permissionChecker, Layout layout)
 			throws PortalException, SystemException {
-		
-		return LayoutPermissionUtil.contains(
-				permissionChecker, layout, false, ActionKeys.VIEW);
+
+		return LayoutPermissionUtil.contains(permissionChecker, layout, false,
+				ActionKeys.VIEW);
 	}
-	
+
 	private static void handleException(Exception e) {
 		e.printStackTrace();
 		log.error(e);

@@ -10,7 +10,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -41,15 +40,11 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -953,7 +948,7 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
-	private void constructLocationTree(List<ScQtLocCriteria> locCriterias) {
+	/*private void constructLocationTree(List<ScQtLocCriteria> locCriterias) {
 		List<PmState> states = new ArrayList<PmState>();
 		List<TreeNode> locations = new ArrayList<TreeNode>();
 		for (ScQtLocCriteria locCriteria : locCriterias) {
@@ -992,16 +987,16 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setLocationNodes(locations);
 
 	}
-
+*/
 	public void zoneTabChange(TabChangeEvent changeEvent) {
 
-		ScQtZoneCriteria qtZoneCriteria = (ScQtZoneCriteria) changeEvent
+		/*ScQtZoneCriteria qtZoneCriteria = (ScQtZoneCriteria) changeEvent
 				.getData();
 		List<ScQtBriefing> briefingDtls = qtZoneCriteria.getScQtBriefings();
 		constructBriefingDtls(briefingDtls, this.getManagedBean().getScQt()
 				.isSameBsv());
-		List<ScQtLocCriteria> locations = qtZoneCriteria.getScQtLocCriterias();
-		constructLocationTree(locations);
+		List<ScQtLocCriteria> locations = qtZoneCriteria.getScQtLocCriterias();*/
+		//constructLocationTree(null);
 	}
 
 	public void showLocationDtls(ScQtBriefing briefing) {
@@ -1013,7 +1008,7 @@ public class NoticeBoardBackingBean extends
 	private void constructBrifingSiteVisitDtls(NoticeBoardResDTO resDTO){
 		 ScQt scQt=resDTO.getScQt();
 	
-		ScQtCriteria scQtCriteria = scQt.getScQtCriterias();
+	/*	ScQtCriteria scQtCriteria = scQt.getScQtCriterias();
 		if (scQtCriteria != null) {
 			if (scQtCriteria.isMultiLocality()) {
 
@@ -1045,7 +1040,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setBriefingDtls(null);
 			this.getManagedBean().setSiteVisitDtls(null);
 			this.getManagedBean().setLocationNodes(null);
-		}
+		}*/
 		// this.getManagedBean().setScQtCriteria(scQtCriteria);
 		// Qtn/ Tender notice
 												// Details

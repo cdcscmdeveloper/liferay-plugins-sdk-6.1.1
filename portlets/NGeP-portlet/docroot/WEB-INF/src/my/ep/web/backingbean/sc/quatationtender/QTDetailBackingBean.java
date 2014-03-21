@@ -56,15 +56,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
-import my.ep.persistence.entity.sc.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -103,11 +101,6 @@ public class QTDetailBackingBean extends
 	public QTDetailBackingBean() {
 		log.info("inside constructor");
 
-		if (this.getManagedBean().getScQtSpec() == null) {
-			this.getManagedBean().setScQtSpec(new ScQtSpec());
-			this.getManagedBean().getScQtSpec().setEvaluationType("2");
-		}
-
 		if (this.getManagedBean().getQt() == null) {
 			this.getManagedBean().setQt(new ScQt());
 		}
@@ -143,19 +136,19 @@ public class QTDetailBackingBean extends
 	public void addGoSoDoAction() {
 		debugLogger("addGoSoDoAction");
 
-		List<ScQtGosodoBudget> gosodos = this.getManagedBean().getQt()
+		List<ScQtBudget> gosodos = this.getManagedBean().getQt()
 				.getScQtGosodoBudgets();
 		if (gosodos == null) {
-			gosodos = new ArrayList<ScQtGosodoBudget>();
+			gosodos = new ArrayList<ScQtBudget>();
 
 			this.getManagedBean().getQt().setScQtGosodoBudgets(gosodos);
 		}
 
-		ScQtGosodoBudget scQtGosodoBudget = new ScQtGosodoBudget();
+		ScQtBudget scQtGosodoBudget = new ScQtBudget();
 
 		scQtGosodoBudget.setPmGo(new PmGo());
 		scQtGosodoBudget.setPmSo(new PmSo());
-		scQtGosodoBudget.setPmDo(new PmDo());
+
 		scQtGosodoBudget.setScQt(this.getManagedBean().getQt());
 		gosodos.add(scQtGosodoBudget);
 	}
@@ -164,10 +157,9 @@ public class QTDetailBackingBean extends
 	 * Method to delete gosodo from table
 	 */
 	public void deleteGoSoDoItem(ValueChangeEvent changeEvent) {
-		ScQtGosodoBudget gosodoBudget = (ScQtGosodoBudget) changeEvent
-				.getNewValue();
+		ScQtBudget gosodoBudget = (ScQtBudget) changeEvent.getNewValue();
 
-		List<ScQtGosodoBudget> gosodos = this.getManagedBean().getGosodos();
+		List<ScQtBudget> gosodos = this.getManagedBean().getGosodos();
 		if (gosodos.contains(gosodoBudget)) {
 			gosodos.remove(gosodoBudget);
 		}
@@ -176,7 +168,7 @@ public class QTDetailBackingBean extends
 	/*
 	 * Onchange of gos to fetch the so's list
 	 */
-	public void handleGoChanged(ScQtGosodoBudget qtGosodoBudget) {
+	public void handleGoChanged(ScQtBudget qtGosodoBudget) {
 		debugLogger("handleGoChanged");
 
 		PmGo pmGo = qtGosodoBudget.getPmGo();
@@ -211,7 +203,7 @@ public class QTDetailBackingBean extends
 	/*
 	 * OnChange of So's get the do's list
 	 */
-	public void handleSoChanged(ScQtGosodoBudget qtGosodoBudget) {
+	public void handleSoChanged(ScQtBudget qtGosodoBudget) {
 		debugLogger("handleSoChanged");
 
 		PmSo pmSo = qtGosodoBudget.getPmSo();
@@ -239,23 +231,10 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setDoList(new ArrayList<PmDo>());
 		}
 
-		qtGosodoBudget.setPmDo(new PmDo());
 	}
 
-	public void handleDoChange(ScQtGosodoBudget qtGosodoBudget) {
-		PmDo pmDo = qtGosodoBudget.getPmDo();
+	public void handleDoChange(ScQtBudget qtGosodoBudget) {
 
-		if (pmDo != null && pmDo.getDoId() != null) {
-			List<PmDo> doList = this.getManagedBean().getDoList();
-			for (PmDo pdo : doList) {
-				if (pdo.getDoId().equals(pmDo.getDoId())) {
-					qtGosodoBudget.setPmDo(pdo);
-					break;
-				}
-
-			}
-
-		}
 	}
 
 	/**
@@ -293,8 +272,7 @@ public class QTDetailBackingBean extends
 				StatusResDTO pmStatus = statusSO
 						.retrieveStatusByStatusId(reqDTO);
 				status = pmStatus.getPmStatus();
-				scQt.getQtStatus().setScQt(scQt);
-				scQt.getQtStatus().setPmStatus(status);
+				
 			} catch (Exception e) {
 
 			} finally {
@@ -594,20 +572,15 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setQt(scQt);
 		System.out.println("QT NO : " + getManagedBean().getQt().getQtNo());
 
-		System.out.println("Evaluation Type : "
-				+ getManagedBean().getScQtSpec().getEvaluationType());
+		getManagedBean().getQt().setEstimatedAmount(new BigDecimal(500000));
 
-		getManagedBean().getQt().setQtAmount(new BigDecimal(500000));
-		System.out.println("Estimated Price : "
-				+ getManagedBean().getQt().getQtAmount());
-
-		if (getManagedBean().getQt().getQtAmount() != null) {
-			if (getManagedBean().getQt().getQtAmount().intValue() > 50000
-					&& getManagedBean().getQt().getQtAmount().intValue() <= 500000) {
+		if (getManagedBean().getQt().getEstimatedAmount() != null) {
+			if (getManagedBean().getQt().getEstimatedAmount().intValue() > 50000
+					&& getManagedBean().getQt().getEstimatedAmount().intValue() <= 500000) {
 				getManagedBean().setPublishingPeriod(7);
 				getManagedBean().getQt().setQtValidityPeriod(60);
 
-			} else if (getManagedBean().getQt().getQtAmount().intValue() > 500000) {
+			} else if (getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
 				getManagedBean().setPublishingPeriod(21);
 				getManagedBean().getQt().setQtValidityPeriod(90);
 			}
@@ -745,7 +718,7 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			status = pmStatus.getPmStatus();
-			scQt.getQtStatus().setPmStatus(status);
+			scQt.setPmStatus(status);
 		} catch (Exception e) {
 
 		} finally {
@@ -763,7 +736,6 @@ public class QTDetailBackingBean extends
 		// Setting the qtcriteria to qtdetails
 		// TODO need to get it form managed bean and set it.
 
-		scQt.setScQtCriterias(null);
 		// Setting the approvalist to Qtdetails
 		// TODO Need to get it from managed bean and set it.
 		List<TabBean> tabBeans = getManagedBean().getTabList();
@@ -1027,7 +999,7 @@ public class QTDetailBackingBean extends
 
 		if (getManagedBean().getQt().getQtId() == null) {
 			System.out.println("Evaluation Type : "
-					+ getManagedBean().getScQtSpec().getEvaluationType());
+					+ getManagedBean().getQt().getEvaluationType());
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			ScCommittee committee = new ScCommittee();
 			/*
@@ -1036,7 +1008,7 @@ public class QTDetailBackingBean extends
 			 */
 			tabBeans.add(new TabBean("Specification Committee",
 					getCommitteeTypeDtl("SC", 146l)));
-			if (this.getManagedBean().getScQtSpec().getEvaluationType()
+			if (this.getManagedBean().getQt().getEvaluationType()
 					.equals("2")) {
 				tabBeans.add(new TabBean("Opening Committee",
 						getCommitteeTypeDtl("OC", 1l)));
@@ -1414,7 +1386,7 @@ public class QTDetailBackingBean extends
 	}
 
 	private void retrieveSuppQualificationTabDtl() {
-		if (getManagedBean().getQtCriteria() == null) {
+		
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1426,11 +1398,11 @@ public class QTDetailBackingBean extends
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTSuppQulCriDetails(reqDTO);
 
-				ScQtCriteria scQtCriteria = resDTO.getCriteria();
+			/*	ScQtCriteria scQtCriteria = resDTO.getCriteria();
 				if (scQtCriteria == null) {
 					scQtCriteria = new ScQtCriteria();
 				}
-				getManagedBean().setQtCriteria(scQtCriteria);
+				getManagedBean().setQtCriteria(scQtCriteria);*/
 				getManagedBean().setStates(resDTO.getStates());
 				getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
 			} catch (Exception ex) {
@@ -1446,8 +1418,7 @@ public class QTDetailBackingBean extends
 				detailSO = null;
 			}
 		}
-	}
-
+	
 	private void retrieveScheduleTabDtl() {
 		if (getManagedBean().getCountries() == null) {
 			IQTDetailSO detailSO;

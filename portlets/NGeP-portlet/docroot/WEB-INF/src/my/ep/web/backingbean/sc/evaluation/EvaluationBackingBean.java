@@ -224,7 +224,7 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO resDTO = evaluationSO
 					.retrieveStage2SummaryDtls(reqDTO);
 
-			this.getManagedBean().setLocationList(resDTO.getZones());
+		//	this.getManagedBean().setLocationList(resDTO.getZones());
 
 			this.getManagedBean().setScQtItemList(resDTO.getItems());
 			this.getManagedBean().setQualifiedList(
@@ -517,7 +517,7 @@ public class EvaluationBackingBean extends
 					resDTO = specSO.retrieveSpecDetails(specreqDTO);
 					checklistEvaluation.setEvaluationResult(evalResult);
 					checklistEvaluation.setProposalLabel(label);
-					checklistEvaluation.setScQtSpec(resDTO.getScQtSpec());
+					
 					localmanualList.add(checklistEvaluation);
 				}
 

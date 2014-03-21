@@ -56,6 +56,9 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private Object siteVisitPayLoad;
 	
 	private String previousPage;
+	
+	private String location;
+	private String address;
 	 
 	/**
 	 * @return  briefingDetailsList
@@ -318,6 +321,22 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 
 	public void setPreviousPage(String previousPage) {
 		this.previousPage = previousPage;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	

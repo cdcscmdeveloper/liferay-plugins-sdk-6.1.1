@@ -21,7 +21,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -85,9 +84,9 @@ public class SupplierFinalizationBackingBean extends
 					signOffMemberlist);
 
 			// Zone Listing
-			List<ScQtZoneCriteria> zonelist = resDTO.getScQt()
-					.getScQtCriterias().getScQtZoneCriterias();
-			this.getManagedBean().setZonelist(zonelist);
+			/*List<ScQtZoneCriteria> zonelist = resDTO.getScQt()
+					.getScQtCriterias().getScQtZoneCriterias();*/
+			///this.getManagedBean().setZonelist(zonelist);
 
 			List<ScQtItem> itemlist = resDTO.getItemResultBean()
 					.getResultList();
@@ -98,7 +97,7 @@ public class SupplierFinalizationBackingBean extends
 			populateParentOrgProfile(scQt);
 			this.getManagedBean().setScQt(scQt);
 
-			if (!scQt.getScQtCriterias().isMultiLocality()) {
+			if (!scQt.isZonal()) {
 
 				// Recommended Supplier Listing
 				List<ScQtEvaluationResult> recommendedSuppList = resDTO
@@ -129,7 +128,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 * retrieving Shortlisted and Recommended Supplier Listing Based on Zone
 	 */
-	public void shortlistedRecommendedSuppDtl(ScQtZoneCriteria scQtZoneCriteria) {
+/*	public void shortlistedRecommendedSuppDtl(ScQtZoneCriteria scQtZoneCriteria) {
 		debugLogger("Shortlisted and Recommended Supplier");
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
@@ -176,7 +175,7 @@ public class SupplierFinalizationBackingBean extends
 			suppFinalizationSO = null;
 		}
 	}
-
+*/
 	/**
 	 * Method To call to save Shortlisted and Recommended Suppliers in Supplier
 	 * Finalization
@@ -319,11 +318,11 @@ public class SupplierFinalizationBackingBean extends
 			EvaluationReportResDTO resDTO = evaluationReportSO
 					.retrieveSummaryDtl(reqDTO);
 
-			List<ScQtZoneCriteria> zoneList = resDTO.getScQt()
-					.getScQtCriterias().getScQtZoneCriterias();
-			System.out.println("Zone list : " + zoneList.size());
-			this.getManagedBean().setZonelist(zoneList);
-			getManagedBean().setZoneItemList(zoneList);
+			/*List<ScQtZoneCriteria> zoneList = resDTO.getScQt()
+					.getScQtCriterias().getScQtZoneCriterias();*/
+		
+			/*this.getManagedBean().setZonelist(zoneList);
+			getManagedBean().setZoneItemList(zoneList);*/
 
 			List<ScQtItem> itemlist = resDTO.getItemResultBean()
 					.getResultList();
@@ -335,7 +334,7 @@ public class SupplierFinalizationBackingBean extends
 			populateParentOrgProfile(scQt);
 			this.getManagedBean().setScQt(scQt);
 
-			if (!scQt.getScQtCriterias().isMultiLocality()) {
+			if (!scQt.isZonal()) {
 				if (resDTO.getQualifiedSuppResultBean() != null) {
 					List<ScQtEvaluationResult> qualifiedSupplist = resDTO
 							.getQualifiedSuppResultBean().getResultList();
@@ -370,12 +369,12 @@ public class SupplierFinalizationBackingBean extends
 
 	public void onRowZoneSelect(SelectEvent selectEvent) {
 		debugLogger("onRowZoneSelect");
-		ScQtZoneCriteria criteria = (ScQtZoneCriteria) selectEvent.getObject();
+		/*ScQtZoneCriteria criteria = (ScQtZoneCriteria) selectEvent.getObject();
 		getManagedBean().setSelectZoneByItem(criteria);
 		System.out.println("Zone Id : "
 				+ getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId()
 				+ "Zone Name : "
-				+ getManagedBean().getSelectZoneByItem().getZoneName());
+				+ getManagedBean().getSelectZoneByItem().getZoneName());*/
 	}
 
 	public void getZoneByItemDtl(SelectEvent selectEvent) {
@@ -389,11 +388,9 @@ public class SupplierFinalizationBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			System.out.println("Zone Id : "
-					+ getManagedBean().getSelectZoneByItem()
-							.getQtZoneCriteriaId());
-			reqDTO.setQtZoneCriteriaId(getManagedBean().getSelectZoneByItem()
-					.getQtZoneCriteriaId());
+			
+			/*reqDTO.setQtZoneCriteriaId(getManagedBean().getSelectZoneByItem()
+					.getQtZoneCriteriaId());*/
 			// SuppFinalizationResDTO resDTO =
 			// suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
 		} catch (Exception ex) {
@@ -411,7 +408,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 * retrieving Qualified and Disqualified Supplier Listing By Zone in Summary
 	 */
-	public void qualifiedDisQualifiedSuppDtl(ScQtZoneCriteria scQtZoneCriteria) {
+	/*public void qualifiedDisQualifiedSuppDtl(ScQtZoneCriteria scQtZoneCriteria) {
 		debugLogger("Qualified And DisQualified Supplier");
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {
@@ -461,7 +458,7 @@ public class SupplierFinalizationBackingBean extends
 		} finally {
 			suppFinalizationSO = null;
 		}
-	}
+	}*/
 
 	/**
 	 * Event for By Item and By Package in Supplier Finalization

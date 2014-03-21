@@ -13,14 +13,11 @@ import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.sc.quationtender.ScBondDtl;
 import my.ep.persistence.entity.sc.quationtender.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -36,7 +33,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private ScQt qt;
-	private ScQtSpec scQtSpec;
+	
 	private List<SelectItem> comitteeUsers;
 	public String approvalDate;
 
@@ -51,12 +48,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	public String address;
 	private String status;
-	private ScQtCriteria scQtCriteria;
+
 
 	private ScBondDtl scBondDtl;
 	private List<ScBondDtl> scBondDtlList;
 	private List<ScBondDtl> selectScBondDtlList;
-	private List<ScQtZoneCriteria> zonelist;
+	
 	private List<ScQtItem> scQtItemList;
 	private PmCurrency pmCurrency;
 	
@@ -375,19 +372,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.scQtItemList = scQtItemList;
 	}
 
-	/**
-	 * @return the zonelist
-	 */
-	public List<ScQtZoneCriteria> getZonelist() {
-		return zonelist;
-	}
-
-	/**
-	 * @param zonelist the zonelist to set
-	 */
-	public void setZonelist(List<ScQtZoneCriteria> zonelist) {
-		this.zonelist = zonelist;
-	}
 
 	/**
 	 * @return the scBondDtlList
@@ -419,20 +403,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	/**
-	 * @return the scQtCriteria
-	 */
-	public ScQtCriteria getScQtCriteria() {
-		return scQtCriteria;
-	}
-
-	/**
-	 * @param scQtCriteria
-	 *            the scQtCriteria to set
-	 */
-	public void setScQtCriteria(ScQtCriteria scQtCriteria) {
-		this.scQtCriteria = scQtCriteria;
-	}
 
 	/**
 	 * @return the branchsList
@@ -569,20 +539,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.scLoa = scLoa;
 	}
 
-	/**
-	 * @return the scQtSpec
-	 */
-	public ScQtSpec getScQtSpec() {
-		return scQtSpec;
-	}
-
-	/**
-	 * @param scQtSpec
-	 *            the scQtSpec to set
-	 */
-	public void setScQtSpec(ScQtSpec scQtSpec) {
-		this.scQtSpec = scQtSpec;
-	}
+	
 
 	/**
 	 * @return the qt

@@ -42,8 +42,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
@@ -70,7 +68,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 	public LOADetailBackingBean() {
 		log.info("inside LOADetailBackingBean constructor");
-		getManagedBean().setScQtSpec(new ScQtSpec());
+		//getManagedBean().setScQtSpec(new ScQtSpec());
 	}
 
 	private void debugLogger(Object message) {
@@ -281,24 +279,13 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 						getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
 				System.out.println("Award Type : " +
 						getManagedBean().getQt().getAwardType());
-				System.out.println("Fulfilment Type : " +
-						getManagedBean().getQt().getScQtSpec().getFulfilmentType());
-				System.out.println("Contract Duration : " +
-						getManagedBean().getQt().getScQtSpec().getContractDuration());
-				System.out.println("Multiple Locality : " +
-						getManagedBean().getQt().getScQtCriterias().isMultiLocality());
-				System.out.println("Currency Name : " +
-						getManagedBean().getQt().getScQtSpec().getPmCurrency().getCurrencyName());
-
+				
 				PmUser user = new FacesScopes().getUserSessionBean();
 				getManagedBean().getScLoa().setCreatedBy(user.getUserId());
 				getManagedBean().getScLoa().setChangedBy(user.getUserId());
 				getManagedBean().getScLoa().setCreatedDate(
 						new Timestamp(System.currentTimeMillis()));
 
-				List<ScQtZoneCriteria> zoneList = scQt.getScQtCriterias()
-						.getScQtZoneCriterias();
-				System.out.println("zonelist: " + zoneList.size());
 
 				List<ScQtItem> itemList = resDTO.getItemResultBean()
 						.getResultList();
@@ -306,7 +293,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 				getManagedBean().setScQtItemList(itemList);
 
-				getManagedBean().setZonelist(zoneList);
+				
 
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -336,17 +323,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 							+ getManagedBean().getPercentageBond());
 				}
 
-				System.out.println("Contract Duration : "
-						+ getManagedBean().getQt().getScQtSpec()
-								.getContractDuration());
-
-				int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
+				
+			/*	int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
 						.intValue() / getManagedBean().getQt().getScQtSpec()
 						.getContractDuration().intValue()) * 12) * getManagedBean()
-						.getPercentageBond());
+						.getPercentageBond());*/
 
-				System.out.println("D :" + amt);
-				getManagedBean().setBondAmount(amt);
+				
+				//getManagedBean().setBondAmount(amt);
 				System.out.println("bond amount : "
 						+ getManagedBean().getBondAmount());
 
@@ -435,16 +419,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 							+ getManagedBean().getPercentageBond());
 				}
 
-				System.out.println("Contract Duration : "
-						+ getManagedBean().getQt().getScQtSpec()
-								.getContractDuration());
-
+				
+/*
 				int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
 						.intValue() / getManagedBean().getQt().getScQtSpec()
 						.getContractDuration().intValue()) * 12) * getManagedBean()
-						.getPercentageBond());
+						.getPercentageBond());*/
 
-				getManagedBean().setBondAmount(amt);
+			//	getManagedBean().setBondAmount(amt);
 				System.out.println("bond amount : "
 						+ getManagedBean().getBondAmount());
 			}
@@ -510,10 +492,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 			getManagedBean().getScLoa().setOfficerAddress(
 					addList.get(0).getPmAddress().getAddress1());
-			getManagedBean().getScLoa().setOfficerFaxNo(
+			/*getManagedBean().getScLoa().setOfficerFaxNo(
 					addList.get(0).getPmAddress().getFaxNo());
 			getManagedBean().getScLoa().setOfficerPhoneNo(
-					addList.get(0).getPmAddress().getPhoneNo());
+					addList.get(0).getPmAddress().getPhoneNo());*/
 			getManagedBean().getScLoa().setOfficerEmail(
 					addList.get(0).getPmAddress().getEmail());
 

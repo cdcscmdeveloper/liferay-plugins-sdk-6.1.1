@@ -80,9 +80,9 @@ public class QTCommitteBackingBean extends
 		String tabTitle = ((TabBean) event.getData()).getTitleName();
 
 		ScCommittee committee = ((TabBean) event.getData()).getScCommittee();
-		//System.out.println("$$$$$$$$$$$$$$$$$$$"+committee.getScCommitteeMembers().size());
-		getManagedBean().setScCommittee(committee);
-		getManagedBean().setTabTitle(tabTitle);
+		System.out.println("$$$$$$$$$$$$$$$$$$$"+committee.getScCommitteeMembers());
+		/*getManagedBean().setScCommittee(committee);
+		getManagedBean().setTabTitle(tabTitle);*/
 	}
 
 	/**

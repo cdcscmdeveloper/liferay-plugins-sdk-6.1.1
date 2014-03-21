@@ -38,7 +38,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
@@ -229,12 +228,12 @@ public class TemplateMaintenanceBackingBean extends
 	public void retriveZoneList(List zonesList) {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		try {
-			ScQtZoneCriteria scQtZone;
+			
 
 			for (int i = 0; i < zonesList.size(); i++) {
-				scQtZone = (ScQtZoneCriteria) zonesList.get(i);
+			/*	scQtZone = (ScQtZoneCriteria) zonesList.get(i);
 				selectItems.add(new SelectItem(scQtZone.getQtZoneCriteriaId(),
-						scQtZone.getZoneName()));
+						scQtZone.getZoneName()));*/
 			}
 			this.getManagedBean().setZoneList(selectItems);
 		} catch (Exception e) {

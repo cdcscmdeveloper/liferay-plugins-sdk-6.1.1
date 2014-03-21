@@ -11,7 +11,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
@@ -116,7 +115,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<TreeNode> locationNodes;
 	
 	private List<ScQtCategory> categoryList;
-	private List<ScQtZoneCriteria> zoneList;
+	
 	private String address;
 	private String location;
 	
@@ -534,14 +533,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<ScQtZoneCriteria> getZoneList() {
-		return zoneList;
-	}
-
-
-	public void setZoneList(List<ScQtZoneCriteria> zoneList) {
-		this.zoneList = zoneList;
-	}
+	
 
 
 	public String getAddress() {

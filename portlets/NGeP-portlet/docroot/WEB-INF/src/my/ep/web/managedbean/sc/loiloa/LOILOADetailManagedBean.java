@@ -12,7 +12,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -27,7 +26,7 @@ public class LOILOADetailManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private ScQt qt;
-	private ScQtSpec scQtSpec;
+	
 	private ScQtProposal scQtProposal;
 	private List<SmSupplier> smSupplierList;
 	private SmSupplier smSupplier;
@@ -206,20 +205,7 @@ public class LOILOADetailManagedBean extends BaseManagedBean {
 		this.scQtProposal = scQtProposal;
 	}
 
-	/**
-	 * @return the scQtSpec
-	 */
-	public ScQtSpec getScQtSpec() {
-		return scQtSpec;
-	}
-
-	/**
-	 * @param scQtSpec
-	 *            the scQtSpec to set
-	 */
-	public void setScQtSpec(ScQtSpec scQtSpec) {
-		this.scQtSpec = scQtSpec;
-	}
+	
 
 	/**
 	 * @return the qt

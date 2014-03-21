@@ -47,11 +47,8 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
@@ -82,9 +79,9 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	public QTSupplierQulCriteriaBackingBean(){
 		debugLogger("QTSupplierQulCriteriaBackingBean");
 
-		if (this.getManagedBean().getQtCriteria() == null) {
+		/*if (this.getManagedBean().getQtCriteria() == null) {
 			this.getManagedBean().setQtCriteria(new ScQtCriteria());
-		}
+		}*/
 	}
 			
 	private void debugLogger(Object message) {
@@ -278,7 +275,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	public void searchNormalSupplierAction(){
 		debugLogger("searchNormalSupplierAction");
 		
-		ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
+	/*	ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
 		
 		if (!scQtCriteria.isMultiLocality() || scQtCriteria.isMultiLocality()) {
 			// TODO Temporary get from panel supplier.
@@ -290,8 +287,8 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			}
 			
 			populateQtSupplierList(supplierList);
-			//System.out.println("Supplier Name : " + supplierList.get(0).getSmAppl().getSmCompanyBasic().getCompanyName());
-		}
+			*///System.out.println("Supplier Name : " + supplierList.get(0).getSmAppl().getSmCompanyBasic().getCompanyName());
+		
 	}
 	
 	public void searchRestrictedSupplierPopupAction() {
@@ -320,7 +317,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		getManagedBean().setSearchSupplierList(searchSupplierList);
 	}
 	
-	public void addPanelToSupplierListAction() {
+/*	public void addPanelToSupplierListAction() {
 		debugLogger("addPanelToSupplierListAction");
 		
 		TreeNode searchPanelSuppliersNode = getManagedBean().getSearchPanelSuppliersNode();
@@ -403,7 +400,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			
 			populateQtSupplierList(supplierList);
 		}
-	}
+	}*/
 	
 	public void addRestrictedToSupplierListAction() {
 		debugLogger("addRestrictedToSupplierListAction");
@@ -510,7 +507,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	}
 	
 	private void populateQtSupplierList(List<SmSupplier> suppliers) {
-		ScQtSupplier scQtSupplier;
+		/*ScQtSupplier scQtSupplier;
 		ScQtSupplierZone scQtSupplierZone;
 		List<ScQtLocCriteria> scQtLocCriterias;
 		ScQt scQt = getManagedBean().getQt();
@@ -551,14 +548,14 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		
 		// For save the criteria details when search button if clicked.
 		scQt.setScQtCriterias(scQtCriteria);
-		scQt.setScQtCategorys(qtCategoryList);
+		scQt.setScQtCategorys(qtCategoryList);*/
 	}
 	
-	private boolean isSupplierInLocation(SmSupplier smSupplier, ScQtLocCriteria scQtLocCriteria) {
+	/*private boolean isSupplierInLocation(SmSupplier smSupplier, ScQtLocCriteria scQtLocCriteria) {
 		//String locationLevel = scQtLocCriteria.getLocationLevel();
 		//SmAddress smAddress = smSupplier.getSmAppl().getSmAddress();
 		
-		/*if (LocationLevel.STATE.value().equals(locationLevel)) {
+		if (LocationLevel.STATE.value().equals(locationLevel)) {
 			return scQtLocCriteria.getPmState().getStateId().longValue() == smAddress
 					.getPmState().getStateId().longValue();
 		} else if (LocationLevel.DIVISION.value().equals(locationLevel)) {
@@ -572,10 +569,10 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 					.getPmCity().getCityId().longValue();
 		} else if (LocationLevel.DELIVERY_ADDRESS.value().equals(locationLevel)) {
 			// TODO Based on delivery address.
-		}*/
+		}
 		
 		return false;
-	}
+	}*/
 		
 	  
 	  public TreeNode getSeletedTreeNode(TreeNode treeNode,Node selectedNode){
@@ -663,14 +660,14 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
 		//getManagedBean().setSelectedBoolean(id);
-		this.getManagedBean().getQtCriteria().setAllState(id);
+		//this.getManagedBean().getQtCriteria().setAllState(id);
 	}
 	
 	public void selectLocation(AjaxBehaviorEvent event) {
 		String location = (String) event.getComponent().getAttributes()
 				.get("value");
 		System.out.println("=======location level====" + location);
-		this.getManagedBean().getQtCriteria().setSupplierLocation(location);
+		//this.getManagedBean().getQtCriteria().setSupplierLocation(location);
 	}
 	
 	private	List<LocationDTO> getLocations(TreeNode zoneLocation){
@@ -717,7 +714,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
 		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
 		List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
-		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationZoneTree(1L,states, districts, divisions, cities, "C"));
+		//getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationZoneTree(1L,states, districts, divisions, cities, "C"));
 		//getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, states, districts, divisions, cities));
 		int i = index;
 
@@ -731,13 +728,13 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	
 	public void showZoneLocationPopup(){
 		
-		String locationLevel = this.getManagedBean().getQtCriteria()
+	/*	//String locationLevel = this.getManagedBean().getQtCriteria()
 				.getSupplierLocation();
 		if (locationLevel == null) {
 			locationLevel = "C";
 		}
 		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationZoneTree(1L, null, null, null, null, locationLevel));
-	}
+*/	}
 	
 	public void showZoneLocationListPopup(){
 		getManagedBean().setRootLocationTreeList(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
@@ -764,7 +761,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		getManagedBean().setZoneName(null);
 		System.out.println("Zone Name : " + zone.getZoneName());
 		
-		if (this.getManagedBean().getQtCriteria().isMultiLocality() == true
+		/*if (this.getManagedBean().getQtCriteria().isMultiLocality() == true
 				&& this.getManagedBean().getQtCriteria().isAllState() == false) {
 			List<PmState> states = SourcingLocationHelper
 					.getStateFromLocationDTOs(locationDTOs);
@@ -820,7 +817,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 						LocationSingleton.getInstance().buildZoneTree(zone,
 								states, district, divisions, cities));
 			}
-		}
+		}*/
 		
 		if (getManagedBean().getIndex() >= 0) {
 			System.out.println("====enter greate o loop====");

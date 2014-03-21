@@ -103,7 +103,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
@@ -153,8 +152,7 @@ public class SpecificationBackingBean extends
 
 	public SpecificationBackingBean() {
 		FacesScopes scope = new FacesScopes();
-		this.getManagedBean().setTitle(
-				scope.getSessionScope("title").toString());
+
 	}
 
 	public int getCount() {
@@ -833,8 +831,10 @@ public class SpecificationBackingBean extends
 						.size()) {
 					for (ScQtCheckList checklist : resDto
 							.getCheckListResultBean().getResultList()) {
-						/*checklist.setScQtSpec(this.getManagedBean()
-								.getScQtSpec());*/
+						/*
+						 * checklist.setScQtSpec(this.getManagedBean()
+						 * .getScQtSpec());
+						 */
 						localList.add(checklist);
 					}
 					this.getManagedBean().setTechnicalSpecList(localList);
@@ -871,8 +871,10 @@ public class SpecificationBackingBean extends
 						.size()) {
 					for (ScQtCheckList checklist : resDto
 							.getCheckListResultBean().getResultList()) {
-						/*checklist.setScQtSpec(this.getManagedBean()
-								.getScQtSpec());*/
+						/*
+						 * checklist.setScQtSpec(this.getManagedBean()
+						 * .getScQtSpec());
+						 */
 						localList.add(checklist);
 					}
 					this.getManagedBean().setFinancialSpecList(localList);
@@ -918,7 +920,7 @@ public class SpecificationBackingBean extends
 						score = score + local;
 						this.getManagedBean().setTechPoints(score);
 					}
-					//checklist.remove(list);
+					// checklist.remove(list);
 					checklist.add(list);
 					// localChecklist.add(list);
 
@@ -1055,8 +1057,9 @@ public class SpecificationBackingBean extends
 
 	public void showZoneLocationPopup() {
 
-		Integer locationLevel =(Integer) this.getManagedBean().getScQt().getZoneLocationLevel();
-				
+		Integer locationLevel = (Integer) this.getManagedBean().getScQt()
+				.getZoneLocationLevel();
+
 		if (locationLevel == null) {
 			locationLevel = 3;
 		}
@@ -1372,7 +1375,7 @@ public class SpecificationBackingBean extends
 	public SpecificationReqDTO prepareSpecReq() {
 		SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
 
-		//ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
+		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
 		/*
 		 * scqtSpec.setApprovalDate(new Date()); PmParameter parameter =
@@ -1481,9 +1484,9 @@ public class SpecificationBackingBean extends
 		// scqtSpec.setScQtWeightages(weightList);
 		getQuoteZones(this.getManagedBean().getZoneGeneralTrees(),
 				new ScQuote());
-		
+
 		// scQt.setScQtSpec(scqtSpec);
-	
+
 		// specreqDTO.setScQtSpec(scqtSpec);
 		// specSO.saveSpecDetails(specreqDTO);
 
@@ -1523,15 +1526,15 @@ public class SpecificationBackingBean extends
 			resDTO = specSO.retrieveSpecDetails(reqDTO);
 			System.out.println("=========resDTO.getScQt()===="
 					+ resDTO.getScQt().getQtId());
-		
-			if (resDTO.getScQt()!= null) {
+
+			if (resDTO.getScQt() != null) {
 				getManagedBean().setScQt(resDTO.getScQt());
-				
-			if(this.getManagedBean().getSupplierCriteria()==null){
-				this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
-			}
-				
-			
+
+				if (this.getManagedBean().getSupplierCriteria() == null) {
+					this.getManagedBean().setSupplierCriteria(
+							new ScQtSupplierCriteria());
+				}
+
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
@@ -1541,13 +1544,13 @@ public class SpecificationBackingBean extends
 				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 				tenderResDTO = QtDetailsSO.retriveQtById(tenderReqDTO);
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-			
+
 			}
 
 			// }
 			else {
 				System.out.println("=========enter else method===");
-				
+
 				getManagedBean().setScQtCheckSt1techProposal(
 						resDTO.getS1TecResultBean().getResultList());
 				getManagedBean().setScQtCheckSt1techAdditionalProposalList(
@@ -1567,9 +1570,6 @@ public class SpecificationBackingBean extends
 				getManagedBean().setCommitteeMemberList(
 						resDTO.getCommMemberResultBean().getResultList());
 
-			
-
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2061,7 +2061,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public ScQtCheckList createSpecList(String stage) {
-		//ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
+		// ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
 		ScQtCheckList additionProposalst1 = new ScQtCheckList();
 
 		if (stage.equalsIgnoreCase("1")) {
@@ -2069,7 +2069,7 @@ public class SpecificationBackingBean extends
 		} else if (stage.equalsIgnoreCase("2")) {
 			// additionProposalst1.setScQtWeightage(new ScQtWeightage());
 		}
-		//additionProposalst1.setScQtSpec(scQtSpec);
+		// additionProposalst1.setScQtSpec(scQtSpec);
 		return additionProposalst1;
 	}
 
@@ -2462,71 +2462,78 @@ public class SpecificationBackingBean extends
 				.getStageTwoTechComplianceSelect();
 		System.out.println("==========deliveryAccept zone name=========="
 				+ getManagedBean().getDeliveyzoneName());
-		
+
 		for (PmCheckListCategory cat : checklist) {
 			System.out.println("===========dispaly names in values==="
 					+ cat.getPmCheckList().getCheckListName());
-		
-		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
-				.getDeliveryLocBean();
-		
-		for (BriefingZoneBean zonebean : deliveryBean) {
-			if(zonebean.getZoneName().equalsIgnoreCase(getManagedBean().getDeliveyzoneName())){
-				List<ScQtDeliveryLoc> docLoc=zonebean.getDeliveryLocList();
-				if(docLoc==null){
-					docLoc=new ArrayList<ScQtDeliveryLoc>();
+
+			List<BriefingZoneBean> deliveryBean = this.getManagedBean()
+					.getDeliveryLocBean();
+
+			for (BriefingZoneBean zonebean : deliveryBean) {
+				if (zonebean.getZoneName().equalsIgnoreCase(
+						getManagedBean().getDeliveyzoneName())) {
+					List<ScQtDeliveryLoc> docLoc = zonebean
+							.getDeliveryLocList();
+					if (docLoc == null) {
+						docLoc = new ArrayList<ScQtDeliveryLoc>();
+					}
+
+					System.out.println("====zone avilable==="
+							+ zonebean.getDeliveryLocList());
+					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
+					loc.setDeliveryAddress(cat.getPmCheckList()
+							.getCheckListName());
+					docLoc.add(loc);
+					zonebean.setDeliveryLocList(docLoc);
+					break;
 				}
-						
-				System.out.println("====zone avilable==="+zonebean.getDeliveryLocList());
-				ScQtDeliveryLoc loc=new ScQtDeliveryLoc();
+
+			}
+			if (getManagedBean().getDeliveyzoneName() == null) {
+				List<ScQtDeliveryLoc> docLoc = this.getManagedBean()
+						.getDeliveryNonZoneList();
+				if (docLoc == null) {
+					docLoc = new ArrayList<ScQtDeliveryLoc>();
+				}
+				System.out.println("========no zone avilable====");
+				ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 				loc.setDeliveryAddress(cat.getPmCheckList().getCheckListName());
 				docLoc.add(loc);
-				zonebean.setDeliveryLocList(docLoc);
-				break;
+				this.getManagedBean().setDeliveryNonZoneList(docLoc);
+
 			}
-			
-		}
-		 if(getManagedBean().getDeliveyzoneName()==null){
-			 List<ScQtDeliveryLoc> docLoc= this.getManagedBean().getDeliveryNonZoneList();
-			 if(docLoc==null){
-					docLoc=new ArrayList<ScQtDeliveryLoc>();
-				}
-			System.out.println("========no zone avilable====");
-			ScQtDeliveryLoc loc=new ScQtDeliveryLoc();
-			loc.setDeliveryAddress(cat.getPmCheckList().getCheckListName());
-			docLoc.add(loc);
-			this.getManagedBean().setDeliveryNonZoneList(docLoc);
-			
-		}
 		}
 
 	}
-	
-	
-	public void deleteDeliveryZone(String deliveryZoneName){
+
+	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
-		System.out.println("====delete zonename==="+deliveryZoneName);
+		System.out.println("====delete zonename===" + deliveryZoneName);
 		for (BriefingZoneBean zonebean : deliveryBean) {
-			if(zonebean.getZoneName().equalsIgnoreCase(deliveryZoneName)){
-				List<ScQtDeliveryLoc> deliveryList=zonebean.getDeliveryLocList();
-				System.out.println("=========delivery list size===="+deliveryList.size());
-				List<ScQtDeliveryLoc> selectdeliveryList=this.getManagedBean().getSelectDeliveryList();
-				System.out.println("=========selectdeliveryList list size===="+selectdeliveryList.size());
-				if(deliveryList.size() == selectdeliveryList.size()){
+			if (zonebean.getZoneName().equalsIgnoreCase(deliveryZoneName)) {
+				List<ScQtDeliveryLoc> deliveryList = zonebean
+						.getDeliveryLocList();
+				System.out.println("=========delivery list size===="
+						+ deliveryList.size());
+				List<ScQtDeliveryLoc> selectdeliveryList = this
+						.getManagedBean().getSelectDeliveryList();
+				System.out.println("=========selectdeliveryList list size===="
+						+ selectdeliveryList.size());
+				if (deliveryList.size() == selectdeliveryList.size()) {
 					System.out.println("======equals=====");
 					deliveryList.clear();
-					
-				}
-				else{
+
+				} else {
 					System.out.println("===delete not equals====");
-					for(ScQtDeliveryLoc delLoc: selectdeliveryList){
+					for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
 						deliveryList.remove(delLoc);
 					}
 				}
 			}
 		}
-		
+
 	}
 
 	public void stageTwoFincompilenceList() {
@@ -3334,7 +3341,7 @@ public class SpecificationBackingBean extends
 
 		UserReqDTO resDto = null;
 		try {
-			ScQtZoneCriteria scQtZone;
+
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 					"pm", IUserSO.class);
 			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
@@ -3782,13 +3789,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtZoneSupplierList(
 					resDTO.getPanelSuppliers());
 		}
-		
 
 	}
-
-	
-
-	
 
 	public void deleteS1Tech() {
 		List<ScQtCheckList> s1Technical = this.getManagedBean()

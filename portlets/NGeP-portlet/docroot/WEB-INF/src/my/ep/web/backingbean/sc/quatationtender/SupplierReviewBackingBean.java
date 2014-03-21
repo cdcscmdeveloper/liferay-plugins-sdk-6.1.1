@@ -8,7 +8,6 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 
 import org.apache.log4j.Logger;
@@ -32,7 +31,7 @@ public class SupplierReviewBackingBean  extends SourcingBaseBackingBean<QTDetail
 		if (scQt == null) {
 			scQt = new ScQt();
 			getManagedBean().setQt(scQt);
-			getManagedBean().setQtCriteria(new ScQtCriteria());
+			//getManagedBean().setQtCriteria(new ScQtCriteria());
 		}
 	}
 			

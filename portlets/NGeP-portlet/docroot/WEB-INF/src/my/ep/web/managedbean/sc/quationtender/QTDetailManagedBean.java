@@ -35,19 +35,17 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
-import my.ep.persistence.entity.sc.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
-import my.ep.persistence.entity.sc.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtSpec;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -80,7 +78,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			.getLogger(QTDetailManagedBean.class);
 
 	private ScQt qt;
-	private ScQtCriteria qtCriteria;
+
 	private ScQtBriefing qtBriefing;
 	private ScQtBriefing qtSiteBriefing;
 	private ScQtDoc qtDoc;
@@ -116,7 +114,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<PmDistrict> districts;
 
-	public List<ScQtGosodoBudget> gosodos;
+	public List<ScQtBudget> gosodos;
 	public List<ScQtBriefing> briefings;
 	public List<ScQtBriefing> siteBriefings;
 	public List<ScQtDoc> scQtDocs;
@@ -133,7 +131,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtBriefing> selectedSiteVisitDetails;
 	private List<ScQtContactPerson> selectedContactPersons;
 	private List<ScQtCheckList> selectedCheckLists;
-	private List<ScQtGosodoBudget> selectedGosodoBudgets;
+	private List<ScQtBudget> selectedGosodoBudgets;
 	private List<SmMofAccount> selectedpanelsupplier;
 	private List<ScQt> selectedCloneTenderList;
 	private List<CloneAll> selectedCloneAllList;
@@ -164,8 +162,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode[] selectedNodes;
 	private TreeNode[] selectedLocNodes;
 	private TreeNode[] selectedAddrNodes;
-	private TreeNode ctZoneSuppliers ;
-	
+	private TreeNode ctZoneSuppliers;
+
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
@@ -264,8 +262,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String panelItem = "Yes";
 	private int publishingPeriod;
 
-	private ScQtSpec scQtSpec;
-
 	private List<SelectItem> comitteeUsers;
 	private List<SelectItem> budgetApprover;
 	private List<PmUser> budgetApproverName; // Drop down Listing for Approver
@@ -291,8 +287,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String ALPHA_NUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private String number;
 
-	private int index=-1;
-	
+	private int index = -1;
+
 	// Committee Appointment
 	private String tabTitle;
 	private ScCommittee scCommittee;
@@ -383,7 +379,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
+		// userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> availableApprover = userResDTO.getUserList();
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
@@ -528,14 +524,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPublishingPeriod(int publishingPeriod) {
 		this.publishingPeriod = publishingPeriod;
-	}
-
-	public ScQtSpec getScQtSpec() {
-		return scQtSpec;
-	}
-
-	public void setScQtSpec(ScQtSpec scQtSpec) {
-		this.scQtSpec = scQtSpec;
 	}
 
 	public List<PmUser> getSelectedPmUser() {
@@ -929,11 +917,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.districts = districts;
 	}
 
-	public List<ScQtGosodoBudget> getGosodos() {
+	public List<ScQtBudget> getGosodos() {
 		return gosodos;
 	}
 
-	public void setGosodos(List<ScQtGosodoBudget> gosodos) {
+	public void setGosodos(List<ScQtBudget> gosodos) {
 		this.gosodos = gosodos;
 	}
 
@@ -1163,14 +1151,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSubTabIndex(int subTabIndex) {
 		this.subTabIndex = subTabIndex;
-	}
-
-	public ScQtCriteria getQtCriteria() {
-		return qtCriteria;
-	}
-
-	public void setQtCriteria(ScQtCriteria qtCriteria) {
-		this.qtCriteria = qtCriteria;
 	}
 
 	public ScQtBriefing getQtBriefing() {
@@ -1459,12 +1439,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedCheckLists = selectedCheckLists;
 	}
 
-	public List<ScQtGosodoBudget> getSelectedGosodoBudgets() {
+	public List<ScQtBudget> getSelectedGosodoBudgets() {
 		return selectedGosodoBudgets;
 	}
 
-	public void setSelectedGosodoBudgets(
-			List<ScQtGosodoBudget> selectedGosodoBudgets) {
+	public void setSelectedGosodoBudgets(List<ScQtBudget> selectedGosodoBudgets) {
 		this.selectedGosodoBudgets = selectedGosodoBudgets;
 	}
 
