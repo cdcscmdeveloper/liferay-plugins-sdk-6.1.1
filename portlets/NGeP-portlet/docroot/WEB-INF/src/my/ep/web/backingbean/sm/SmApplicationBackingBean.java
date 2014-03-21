@@ -151,6 +151,7 @@ public class SmApplicationBackingBean extends
 			}
 
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
+			smAppl.setSmCompanyBasic(new SmCompanyBasic());
 			getManagedBean().setSmAppl(smAppl);
 			// TODO remove this hard coded data and make dynamic later
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
