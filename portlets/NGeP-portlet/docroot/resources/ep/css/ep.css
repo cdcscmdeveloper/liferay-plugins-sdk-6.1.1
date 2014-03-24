@@ -1084,6 +1084,7 @@ px
 	{
 	border: none;
 	border-bottom: 1px solid #DDDDDD;
+	font-size: 12px;
 }
 
 .ui-datatable-data .ui-widget-content.ui-state-hover {
@@ -4132,6 +4133,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	color: #FFA500;
 	background-color: #FFFFCC;
 	padding: 10px;
+	border: 5px solid #FFFFFF;
 }
 
 .section-title {
