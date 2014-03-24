@@ -10,6 +10,7 @@ public class SupplierManagementConst {
 	// public static final String PROCEED_MOF_REG = "mofRegBasePage";
 	public static final String MOF_REG_REDIRECT = "mofRegSmUser_BaseWizardPage?faces-redirect=true";
 	public static final String PROCEED_BUMI_APPLN = "applyBumiStatusBasePage";
+	public static final String PROCEED_BUMI_APPLN_SIDEMENU = "smBumiSideMenu_BasePage";
 	// public static final String PROCEED_BUMI_APPLN =
 	// "applyBumiSmUser_BaseWizardPage";
 	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofDetailsBasePage";

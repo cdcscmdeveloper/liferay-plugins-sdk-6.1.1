@@ -66,7 +66,7 @@ public class CommonApplBackingBean extends
 
 			log.info("------Verify Supporting Documents-----------"
 					+ smMofObj.getDocumentId());
-			sdoBB.getManagedBean().setAppId((long)smMofObj.getDocumentId());
+			sdoBB.getManagedBean().setAppId((long) smMofObj.getDocumentId());
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
 			sdoBB.getManagedBean().setBpmPojo(smMofObj);
@@ -93,7 +93,8 @@ public class CommonApplBackingBean extends
 			// null, "/xhtml/sm/svositevisit/siteVisitView");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Review Application (Escalated)")
-				|| resDTO.getTaskName().equalsIgnoreCase("Review Application") || resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
+				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			String applicationType = "";
@@ -156,7 +157,7 @@ public class CommonApplBackingBean extends
 						appl, mofResDto.getSmSupplier());
 				// smApplBB.getManagedBean().getSmAppl()
 				// .setApplId(new Long(smObj.getDocumentId()));
-				//smApplBB.getManagedBean().setSmAppl(appl);
+				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
@@ -181,7 +182,7 @@ public class CommonApplBackingBean extends
 					appl, mofResDto.getSmSupplier());
 			// smApplBB.getManagedBean().getSmAppl()
 			// .setApplId(new Long(smObj.getDocumentId()));
-			//smApplBB.getManagedBean().setSmAppl(appl);
+			// smApplBB.getManagedBean().setSmAppl(appl);
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -218,7 +219,8 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
+							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Bumi Status Applicatoin - ");
 			break;

@@ -1752,7 +1752,8 @@ public class SmApplicationBackingBean extends
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
 		case "B":
-			s = SupplierManagementConst.PROCEED_BUMI_APPLN;
+			s = SupplierManagementConst.PROCEED_BUMI_APPLN_SIDEMENU;
+			// PROCEED_BUMI_APPLN;
 			break;
 		case "U":
 			s = SupplierManagementConst.PROCEED_UPDATE_MOF_APPLN;
