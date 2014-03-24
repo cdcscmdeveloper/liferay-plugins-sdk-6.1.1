@@ -5,48 +5,50 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
-
-	<p:panel>
-		<p>NOTE : The supplier has submitted the documents</p>
-		<p>
-			<b>Online</b> - You may download and review the documents
-		</p>
-		<p>
-			<b>Offline</b> - You will receive a hard copy of all the below
-			documents via post
-		</p>
-	</p:panel>
-
-
-	<h:inputHidden
-		value="#{backingBean.managedBean.smAppl.applCategoryType}" />
-
-	<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
-		<ui:include
-			src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
-	</c:if>
-	<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode == 'O'}">
-		<ui:include
-			src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
-	</c:if>
-
-
 	<table style="width: 100%">
 		<tr>
-			<td><div align="left" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-						action="#{backingBean.updateSmAppl}" update=":form"
-						icon="ui-icon-prev" />
-				</div></td>
-			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-						action="#{backingBean.updateSmAppl}" update=":form"
-						icon="ui-icon-next" iconPos="right" />
-				</div></td>
+			<td style="width: 20%; vertical-align: baseline;"><c:if
+					test="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+					<ui:include
+						src="/xhtml/sm/bumiPuteraApplication/smBumiApplnSideMenuItem.xhtml" />
+				</c:if></td>
+			<td><p:panel>
+					<p>NOTE : The supplier has submitted the documents</p>
+					<p>
+						<b>Online</b> - You may download and review the documents
+					</p>
+					<p>
+						<b>Offline</b> - You will receive a hard copy of all the below
+						documents via post
+					</p>
+				</p:panel> <h:inputHidden
+					value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <c:if
+					test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
+					<ui:include
+						src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.supportingDocMode == 'O'}">
+					<ui:include
+						src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+				</c:if>
+
+
+				<table style="width: 100%">
+					<tr>
+						<td><div align="left" style="width: 100%">
+								<p:commandButton value="#{lbl['lbl.sm.prev']}"
+									actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+									action="#{backingBean.updateSmAppl}" update=":form"
+									icon="ui-icon-prev" />
+							</div></td>
+						<td><div align="right" style="width: 100%">
+								<p:commandButton value="#{lbl['lbl.sm.next']}"
+									actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+									action="#{backingBean.updateSmAppl}" update=":form"
+									icon="ui-icon-next" iconPos="right" />
+							</div></td>
+					</tr>
+				</table></td>
 		</tr>
 	</table>
-
 </ui:composition>

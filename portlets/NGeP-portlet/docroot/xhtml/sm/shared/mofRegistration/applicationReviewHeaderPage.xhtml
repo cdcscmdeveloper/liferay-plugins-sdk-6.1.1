@@ -42,7 +42,7 @@
 	<table style="width: 250px;">
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<tr>
-				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+				<td width="10px" style="padding: 0px 2px 0px 7px;"><p:selectBooleanCheckbox
 						value="#{backingBean.managedBean.poSecReview.verifiedAll}">
 						<p:ajax update=":form" event="change"
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.poSecReview.verifiedAll)}" />
