@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:menu>
+	<p:tabMenu activeIndex="#{backingBean.managedBean.tabActiveIndex}"
+		style="display : table-caption;">
 
 		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
@@ -42,6 +43,6 @@
 				action="#{backingBean.updateSmAppl}" update=":form" />
 		</c:if>
 
-	</p:menu>
+	</p:tabMenu>
 
 </ui:composition>
