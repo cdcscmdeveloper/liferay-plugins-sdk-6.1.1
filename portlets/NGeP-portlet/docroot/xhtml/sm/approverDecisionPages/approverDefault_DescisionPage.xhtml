@@ -4,9 +4,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:inputHidden
+		value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+	<div style="width: 100%" align="right">
+		<p:commandButton value="Approve" onclick="approverAppDialog.show();" />
+		<p:commandButton value="Reject" onclick="approverRejDialog.show();" />
+
+	</div>
 	<p:panel header="Approver Decision">
-		<h:inputHidden
-			value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 		<table>
 			<!-- <tr>
 				<td colspan="3"><h4
@@ -61,11 +67,7 @@
 
 			</p:splitButton>
 		</div> -->
-		<div style="width: 100%" align="right">
-			<p:commandButton value="Approve" onclick="approverAppDialog.show();" />
-			<p:commandButton value="Reject" onclick="approverRejDialog.show();" />
 
-		</div>
 	</p:panel>
 
 

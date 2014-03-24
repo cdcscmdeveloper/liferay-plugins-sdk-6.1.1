@@ -29,7 +29,7 @@
 	<p:dataTable var="assocBean"
 		value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 		selection="#{backingBean.managedBean.selectedAssocCompanies}"
-		rowKey="#{assocBean.associateCompanyId}" rowIndexVar="index"
+		rowKey="#{assocBean}" rowIndexVar="index"
 		id="svdHeadOff">
 		<ac:paginator for="svdHeadOff" />
 		<p:column selectionMode="multiple" width="5%" />
@@ -51,7 +51,7 @@
 	<p:dataTable var="branchBean" id="svcBrDt"
 		value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 		selection="#{backingBean.managedBean.selectedBranches}"
-		rowKey="#{branchBean.supplierBranchId}" rowIndexVar="index">
+		rowKey="#{branchBean}" rowIndexVar="index">
 		<ac:paginator for="svcBrDt" />
 		<p:column selectionMode="multiple" width="5%" />
 		<p:column headerText="NO.">
@@ -71,7 +71,7 @@
 	<p:dataTable var="fac"
 		value="#{backingBean.managedBean.smAppl.smFacilities}"
 		selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-		rowKey="#{fac.facilityId}" rowIndexVar="index" id="svcFacDt">
+		rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
 		<ac:paginator for="svcFacDt" />
 		<p:column selectionMode="multiple" width="5%" />
 
@@ -92,7 +92,7 @@
 	<p:dataTable var="catBean"
 		value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 		selection="#{backingBean.managedBean.selectedCategories}"
-		rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
+		rowKey="#{catBean}" rowIndexVar="index"
 		id="svcCatDt">
 		<ac:paginator for="svcCatDt" />
 		<p:columnGroup type="header">
