@@ -4548,6 +4548,72 @@ label > span.ui-button-text {
 	width: 100%;
 	background-color: #FFFFFF;
 }
+
+.portlet-borderless-container {
+	background-color: #FFFFFF;
+}
+
+.ui-tabmenu {
+	display: table-caption;
+	border: none;
+}
+
+.ui-tabmenu > .ui-tabmenu-nav {
+	background-position: right center;
+	background-image: url(#{resource['ep/images/design:side_menu_gap.png']})!important;
+	background-repeat: repeat-y;
+	background-color: #f9f9f9!important;
+	width: 125%;
+	padding-top:7px!important;
+	padding-left:0px!important;
+	padding-bottom: 8000px;
+	margin-bottom: -8000px;
+	margin-left: 7px;
+	float:left!important;
+	border:0px solid!important;
+	height: auto;
+}
+
+.ui-tabmenu > .ui-tabmenu-nav > .ui-tabmenuitem {
+	border:none!important;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	background-position: right center;
+	background-image: url(#{resource['ep/images/design:side_menu_gap.png']});
+	background-repeat: repeat-y;
+	background-color: #f9f9f9;
+	margin:0!important;
+	float:left!important;
+	width:101%!important;
+	height:22px !important;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-state-active.ui-corner-top {
+	background-position: right center!important;
+	background-image: url(#{resource['ep/images/design:side_menu_arrow_green.png']})!important;
+	background-repeat: no-repeat;
+	background-color: #8CC63E!important;
+	border:0px!important;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-state-hover {
+	box-shadow:none!important;
+	border-radius: 0px !important;
+	background-color: #B4DF7D;
+	border:0px!important;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-state-active.ui-corner-top > a > span {
+	color: #FFFFFF;
+	font-weight: bold;
+	text-shadow: none;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-corner-top > a > span {
+	color: #333333;
+	font-weight: normal;
+	text-shadow: none;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
