@@ -227,9 +227,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     prInquiry.setDateToResponse(new Timestamp(System.currentTimeMillis()));
 			     List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 			     List<ScRequestSupplierItem> requestSupplierItems =  new  ArrayList<ScRequestSupplierItem>();
+			     ScRequestNote	requestNote	=	new ScRequestNote();
 			     for (ScRequestSupplierItem scRequestSupplierItem :  prInquiry.getScRequestSupplierItems()) {
 			    	 ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
-				     requestNoteDtl.setScRequestNote(new ScRequestNote());
+				     requestNoteDtl.setScRequestNote(requestNote);
 				     requestNoteDtls.add(requestNoteDtl);
 				     scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
 				     requestSupplierItems.add(scRequestSupplierItem);
@@ -249,6 +250,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 reqDTO.setToken(token);
 			     reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			     reqDTO.setPrInquiryDetail(prInquiry);
+			     reqDTO.setRequestNote(requestNote);
 				 PrInquiryResDTO prInquiryResDTO = prInquirySO.submitPrInquiry(reqDTO);
 				
 				 if (prInquiryResDTO.isSuccessful()) {
