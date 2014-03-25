@@ -41,7 +41,7 @@
 			<td colspan="4" style="width: 250px;"><p:outputPanel id="ptjId">
 				<table style="width: 100%">
 				    <tr>
-					   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.orgProfileId == null}">
+					   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId == null}">
 						 <td style="width: 250px;">
 						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
 						 <td> <p:selectOneMenu 
@@ -156,21 +156,22 @@
 				  </p:inputText> </td>
 			</tr>
 			
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;"  id="procType" 
-				        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}" 
-						value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType}">
-						<f:selectItems
-							value="#{purchaseInquiryBackingBean.procTypeDropdown}" />
-							<p:ajax event="change" update="justiId" 
-							listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
-					</p:selectOneRadio></td>
-			</tr>
 		    <tr>
-			  <td colspan="4">
-			        <p:outputPanel id="justiId">
+			    <td colspan="4">
+			  <!--    <ui:fragment rendered="#{!purchaseInquiryBackingBean.managedBean.editFlag}">  -->
+			     <p:outputPanel id="justiId">
 					<table style="width: 100%">
+					  <tr>
+						 <td style="width: 250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
+						<td><p:selectOneRadio style="margin-bottom: 5px;"  id="procType" 
+						        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}" 
+								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType}">
+								<f:selectItems
+									value="#{purchaseInquiryBackingBean.procTypeDropdown}" />
+									<p:ajax event="change" update="justiId" 
+									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
+							</p:selectOneRadio></td>
+					  </tr>
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 							 <td style="width: 250px">
@@ -179,23 +180,25 @@
 									value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType}">
 								   <f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
-									<p:ajax event="change" update="justiId ,otherId" 
+									<p:ajax event="change" update="justiId" 
 										listener="#{purchaseInquiryBackingBean.justificationTypeEvent}" process="@this" />
-								</p:selectOneMenu> 
-								    <p:spacer width="5px" />
-								<p:inputText size="40" id="otherId" rendered="#{purchaseInquiryBackingBean.managedBean.justTypeOption}"/></td>
+								</p:selectOneMenu> </td>
+								
 				    	 </ui:fragment>
 					   </tr>
-					 </table>
-				    </p:outputPanel>
-				   </td>
+					   <tr>
+						 <td style="vertical-align:top; text-align:left;"><p:outputLabel
+								value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /></td>
+						<td colspan="4"><p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
+								rows="4" cols="122" style="margin-bottom: 5px;" /></td>
+					   </tr>
+					   
+					  </table>
+				   </p:outputPanel>
+				  <!--   </ui:fragment> -->
+				 </td>
 			</tr>
-			<tr>
-				<td style="vertical-align:top; text-align:left;"><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /></td>
-				<td colspan="4"><p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
-						rows="4" cols="122" style="margin-bottom: 5px;" /></td>
-			</tr>
+			
 		</table>
 
 	</p:panel>
@@ -217,29 +220,28 @@
 			</p:row>
 		</p:panelGrid>
 		<p:spacer height="15px" />
-
-		<p:dataTable id="respDtl" var="reqSupplerItem"
-			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.scRequestSupplierItems}"
-			rowKey="#{pricing.pricingId}" rowIndexVar="index">
-
+		<c:set var="supplierItem" value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.scRequestSupplierItems.get(0)}"></c:set>
+		<p:dataTable id="respDtl" var="supplierItemPrice"
+			value="#{supplierItem.supplierItemPrices}"
+			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}" style="width:25%">
-					<h:outputText />
+					<h:outputText value="#{supplierItemPrice.pricing.cmSupplierZone.suppZoneName}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}" style="width:10%">
-				<h:outputText value="#{reqSupplerItem.supplierItemPrice.pricing.fromQty}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.pricing.fromQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.to.qty']}" style="width:10%">
-				<h:outputText value="#{reqSupplerItem.supplierItemPrice.pricing.toQty}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.pricing.toQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.published']}" style="width:15%">
-				<h:outputText value="#{reqSupplerItem.supplierItemPrice.pricing.price}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
-				<p:inputText value="100" style="text-align:right;" size="30" disabled="#{!purchaseInquiryBackingBean.managedBean.editFlag}" />
+				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" size="30" disabled="#{unspscCodeBackingBean.supplierUser}" />
 			</p:column>
 
 		</p:dataTable>

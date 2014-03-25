@@ -55,7 +55,7 @@
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType}">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.procTypeDropdown}" />
-							<p:ajax event="change" update="justId,,@([id$=suppCriteria ])" 
+							<p:ajax event="change" update="justId,@([id$=suppCriteria ])" 
 							listener="#{simpleQuoteBackingBean.procurementTypeEvent}" process="@this" />
 					</p:selectOneRadio></td>
 			</tr>
@@ -72,11 +72,10 @@
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
-								<p:ajax event="change" update="justId,otherId" 
+								<p:ajax event="change" update="justId" 
 									listener="#{simpleQuoteBackingBean.justificationTypeEvent}" process="@this" />
 							</p:selectOneMenu> 
-							    <p:spacer width="5px" />
-							<p:inputText size="40" id="otherId" rendered="#{simpleQuoteBackingBean.managedBean.justTypeOption}"/></td>
+							</td>
 			    	</ui:fragment>
 				</tr>
 				</table>
@@ -98,24 +97,36 @@
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.no']}"
 							itemValue="0" />
+							<p:ajax event="change" update="@([id$=mainSqId])" process="@this" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
-				<td><p:inputText id="durationId" size="6" value="5" style="text-align:right;"/> <p:spacer	width="5px" /> 
+				<td><p:inputText id="durationId" size="6" value="#{simpleQuoteBackingBean.managedBean.duration}" style="text-align:right;" /> <p:spacer	width="5px" /> 
 				   <p:selectOneMenu
 						value="#{simpleQuoteBackingBean.managedBean.duration}">
 						   <f:selectItems
 									value="#{simpleQuoteBackingBean.getDropdownCodeValues(ParameterTypeConst.duration)}" />
+					<p:ajax event="change" update="durationId" 
+									listener="#{simpleQuoteBackingBean.durationEvent}" process="@this" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /></td>
-				<td><p:calendar showOn="button" id="sDate" pattern="MM/dd/yyyy" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"/></td>
+				<td><p:calendar showOn="button" id="startDate" binding="#{StartDate}" pattern="MM/dd/yyyy" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}">
+				      <p:ajax event="dateSelect" update="@([id$=mainSqId])" />
+				       <f:validator validatorId="dateRangeValidator" />
+				   </p:calendar>
+				 </td>
 			
 				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /></td>
-				<td><p:calendar showOn="button" id="eDate" pattern="MM/dd/yyyy" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"/></td>
+				<td><p:calendar showOn="button" id="endDate" pattern="MM/dd/yyyy" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
+				      <f:attribute name="startDate" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}" />
+                      <f:validator validatorId="dateRangeValidator" />
+                       <p:ajax event="dateSelect" update="@([id$=mainSqId])" />
+				    </p:calendar>
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /></td>

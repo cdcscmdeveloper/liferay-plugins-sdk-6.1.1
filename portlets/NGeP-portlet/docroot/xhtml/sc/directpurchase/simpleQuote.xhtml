@@ -17,7 +17,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			<ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />
 		</p:tab>
 		
-		<p:tab title="Zone">
+		<p:tab title="Zone" disabled="#{simpleQuoteBackingBean.managedBean.scQuote.isZonal eq 1}">
 			<ui:include src="/xhtml/sc/directpurchase/common/simpleQuoteZone.xhtml" />
 		</p:tab>
 		

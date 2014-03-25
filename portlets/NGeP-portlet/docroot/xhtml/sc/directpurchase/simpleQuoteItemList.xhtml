@@ -8,34 +8,30 @@
 	 <p:spacer height="5px" />
 		<p:dataTable id="prodListTbl">
 
-			<p:column headerText="Item" style="width:20%">
+		  <p:column headerText="#{lbl['lbl.sc.sq.item']}">
 				<h:outputText/>
 			</p:column>
 
-			<p:column headerText="Specification" style="width:15%"> 
+		  <p:column headerText="#{lbl['lbl.sc.sq.specification']}">
 				<h:outputText/>
 			</p:column>
 
-			<p:column headerText="Fulfillment Type" style="width:10%">
+		  <p:column headerText="#{lbl['lbl.sc.sq.uom']}">
 				<h:outputText/>
 			</p:column>
 
-			<p:column headerText="UOM" style="width:10%">
+		  <p:column headerText="#{lbl['lbl.sc.sq.qty']}">
 				<h:outputText/>
 			</p:column>
 			
-			<p:column headerText="Quantity/Tier" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-			<p:column headerText="Delivery Term" style="width:10%">
+	     <p:column headerText="#{lbl['lbl.sc.sq.delivery.term']}">
 				<h:outputText/>
 			</p:column>
 			
-			<p:column headerText="Ceiling Value(RM)" style="width:10%">
+		  <p:column headerText="#{lbl['lbl.sc.sq.estimated.val']}">
 				<h:outputText/>
 			</p:column>
-
+			
 		</p:dataTable>
 	  
 	  	<p:commandButton value="Clone" style="float:right;"
@@ -44,43 +40,43 @@
 	<p:spacer height="25px" />   
     <p:panel id="servlistId" header="SERVICE LIST" toggleable="true">
 		<p:dataTable id="servListTbl">
-
-			<p:column headerText="Item" style="width:20%">
+		  <p:column headerText="#{lbl['lbl.sc.sq.item']}" style="width:10%">
+				<h:outputText/>
+			</p:column>
+		   
+		   <p:column headerText="#{lbl['lbl.sc.sq.specification']}"  style="width:10%">
 				<h:outputText/>
 			</p:column>
 
-			<p:column headerText="Specification" style="width:10%"> 
-				<h:outputText/>
-			</p:column>
-
-			<p:column headerText="Fulfillment Type" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-			<p:column headerText="UOM" style="width:10%">
+           <p:column headerText="#{lbl['lbl.sc.sq.fulfill.type']}" style="width:10%">
 				<h:outputText/>
 			</p:column>
 			
-			<p:column headerText="Frequency per UOM" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-			<p:column headerText="No.UOM per Day" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.sq.uom']}" style="width:10%">
 				<h:outputText/>
 			</p:column>
 			
-			<p:column headerText="No.UOM per Month" style="width:10%">
-			    <h:outputText/>
+		   <p:column headerText="#{lbl['lbl.sc.sq.frequency.per.uom']}" style="width:10%">
+				<h:outputText/>
 			</p:column>
 			
-			<p:column headerText="Duration(Month)" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.sq.no.uom.per.day']}" style="width:10%">
 				<h:outputText/>
-			</p:column>
-			<p:column headerText="Qty." style="width:10%">
-				<h:outputText/>
-			</p:column>
+			</p:column> 
 
-	        <p:column headerText="Ceiling Value(RM)" style="width:10%">
+            <p:column headerText="#{lbl['lbl.sc.sq.no.uom.per.month']}" style="width:10%">
+				<h:outputText/>
+			</p:column> 
+
+			<p:column headerText="#{lbl['lbl.sc.sq.duration.month']}" style="width:10%">
+				<h:outputText/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.sq.qty']}" style="width:10%">
+				<h:outputText/>
+			</p:column> 
+			
+		   <p:column headerText="#{lbl['lbl.sc.sq.estimated.val']}" style="width:10%">
 				<h:outputText/>
 			</p:column>
 

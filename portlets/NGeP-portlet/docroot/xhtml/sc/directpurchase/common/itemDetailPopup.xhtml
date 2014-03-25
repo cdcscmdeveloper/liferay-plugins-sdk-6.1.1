@@ -38,7 +38,7 @@
 			<tr>
 			  <td colspan="4">
 					<table style="width: 60.5%">
-					 <ui:fragment rendered="#{!requestNoteBackingBean.managedBean.itemCheck}">
+					 <ui:fragment rendered="#{requestNoteBackingBean.managedBean.itemCheck}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}"/></td>
 							<td><p:inputText disabled="true" size="33"  value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.frequency}"/>  
