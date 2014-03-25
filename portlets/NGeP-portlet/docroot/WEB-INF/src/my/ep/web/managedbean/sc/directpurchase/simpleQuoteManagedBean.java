@@ -67,7 +67,7 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
     private boolean procTypeOption;
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] LocLevelDropdown; // Location Level drop down
-    private String locationLevel;
+    private Integer locationLevel;
     
     private	String	zoneName;
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
@@ -426,14 +426,14 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the locationLevel
 	 */
-	public String getLocationLevel() {
+	public Integer getLocationLevel() {
 		return locationLevel;
 	}
 
 	/**
 	 * @param locationLevel the locationLevel to set
 	 */
-	public void setLocationLevel(String locationLevel) {
+	public void setLocationLevel(Integer locationLevel) {
 		this.locationLevel = locationLevel;
 	}
 
@@ -676,20 +676,7 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 			List<ScLocationDistrictCriteria> districtsCriterias) {
 		this.districtsCriterias = districtsCriterias;
 	}
-
-	/**
-	 * @return the duration
-	 */
-	public String getDuration() {
-		return duration;
-	}
-
-	/**
-	 * @param duration the duration to set
-	 */
-	public void setDuration(String duration) {
-		this.duration = duration;
-	}
+	
 
 	/**
 	 * @return the govEPNoCriterias
@@ -720,5 +707,20 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 		this.selectedGovEPNoCriterias = selectedGovEPNoCriterias;
 	}
 
+	/**
+	 * @return the duration
+	 */
+	public String getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration the duration to set
+	 */
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+	
 	
 }

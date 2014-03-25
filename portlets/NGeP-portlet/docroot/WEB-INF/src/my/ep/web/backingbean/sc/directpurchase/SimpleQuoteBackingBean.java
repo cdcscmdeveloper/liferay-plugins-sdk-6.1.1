@@ -5,6 +5,7 @@ package my.ep.web.backingbean.sc.directpurchase;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -17,17 +18,15 @@ import javax.portlet.PortletRequest;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -97,53 +96,6 @@ public class SimpleQuoteBackingBean extends
 		ScQuote scQuote = new ScQuote();
 		initializeRemarks(scQuote);
 		populateUserDivisionList();
-	}
-	
-	public void searchSuppliers() {
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		
-		if(getManagedBean().getBusinessNatureCriterias()!= null){
-			List<String> businessNatures = new ArrayList<String>();
-			for (ScBusinessNatureQuoteCriteria supplierMofNoCriteria : getManagedBean().getBusinessNatureCriterias()) {
-				 businessNatures.add(supplierMofNoCriteria.getBusinessNature().getLevelName());
-				System.out.println("Business nature Level Name :"+ supplierMofNoCriteria.getBusinessNature().getLevelName());
-			}
-			reqDTO.setBusinessNatures(businessNatures);
-		}
-		
-		if(getManagedBean().getSelectedSuppMofNoCriterias() != null){
-			for (ScSupplierMofNoCriteria supplierMofNoCriteria : getManagedBean().getSelectedSuppMofNoCriterias()) {
-				System.out.println("company Name :"+supplierMofNoCriteria.getSmSupplier().getCompanyName());
-			}
-		}
-		
-		if(getManagedBean().getLocationTrees() != null){
-			List<Long> stateIds = new ArrayList<Long>(); List<Long> districtIds = new ArrayList<Long>();
-			for (ScLocationStateCriteria stateCriteria : getLocationStateCriterias(getManagedBean().getLocationTrees())) {
-				stateIds.add(Long.valueOf(stateCriteria.getCriteriaValue()));
-			}
-			reqDTO.setStateIds(stateIds);
-			
-			for (ScLocationDivisionCriteria divisionCriteria : getLocationDivisionCriterias(getManagedBean().getLocationTrees())) {
-				districtIds.add(Long.valueOf(divisionCriteria.getCriteriaValue()));
-			}
-			//reqDTO.setStateIds(stateIds);
-			
-			for (ScLocationDistrictCriteria districtCriteria : getLocationDistrictCriterias(getManagedBean().getLocationTrees())) {
-				districtIds.add(Long.valueOf(districtCriteria.getCriteriaValue()));
-			}
-			reqDTO.setDistrictIds(districtIds);
-		}
-		
-		SupplierSearchResDTO resDTO = supplierSearchSO.retriveSupplierProfiles(reqDTO);
-		System.out.println("result: " + resDTO.getResultBean());
-		
-		getManagedBean().setSmSuppliers(resDTO.getResultBean().getResultList());
-		
-		for(SmSupplier supplier : resDTO.getResultBean().getResultList()) {
-			System.out.println("supplier: " + supplier.getCompanyName());
-		}
 	}
 	
 	/**
@@ -479,9 +431,9 @@ public class SimpleQuoteBackingBean extends
     * showZonePopup method for zone popup in simple quote
     */
 	public void showZonePopup() {
-		String locationLevel = this.getManagedBean().getLocationLevel();
+	  Integer locationLevel = this.getManagedBean().getLocationLevel();
 		if (locationLevel == null) {
-			locationLevel = "C";
+			locationLevel = 3;
 		}
 		getManagedBean().setRootZoneTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L, null,
@@ -492,10 +444,10 @@ public class SimpleQuoteBackingBean extends
 	 * showLocationPopup method for location popup in simple quote
     */
 	public void showLocationPopup() {
-		String locationLevel = this.getManagedBean().getLocationLevel();
-		if (locationLevel == null) {
-			locationLevel = "C";
-		}
+		 Integer locationLevel = this.getManagedBean().getLocationLevel();
+			if (locationLevel == null) {
+				locationLevel = 3;
+			}
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L, null,
 						null, null, null, locationLevel));
@@ -655,7 +607,7 @@ public class SimpleQuoteBackingBean extends
 				.getCityFromLocationDTOs(locationDTOs);
 		getManagedBean().setRootZoneTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L,
-						states, districts, divisions, cities, "C"));
+						states, districts, divisions, cities, 3));
 		int i = zoneIndex;
 
 		this.getManagedBean().setZoneIndex(i);
@@ -676,7 +628,7 @@ public class SimpleQuoteBackingBean extends
 	*/
 	public void editLocation(TreeNode rootZoneLocation, int LocIndex) {
 		List<LocationDTO> locationDTOs = getLocations(rootZoneLocation);
-
+        
 		ScQuoteZone zone = getZone(rootZoneLocation);
 		List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTOs(locationDTOs);
@@ -688,7 +640,7 @@ public class SimpleQuoteBackingBean extends
 				.getCityFromLocationDTOs(locationDTOs);
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L,
-						states, districts, divisions, cities, "C"));
+						states, districts, divisions, cities, 3));
 		int i = LocIndex;
 
 		this.getManagedBean().setLocIndex(i);
@@ -985,11 +937,53 @@ public class SimpleQuoteBackingBean extends
 	public SelectItem[] getLocationLevelDropdown() {
 		SelectItem[] selectItems = new SelectItem[4];
 		selectItems[0] = new SelectItem(null, "- Select One -");
-		selectItems[1] = new SelectItem("S", "State");
-		selectItems[2] = new SelectItem("V", "Division");
-		selectItems[3] = new SelectItem("D", "District");
+		selectItems[1] = new SelectItem(1, "State");
+		selectItems[2] = new SelectItem(2, "Division");
+		selectItems[3] = new SelectItem(3, "District");
 		return selectItems;
 	}
+	
+   public void durationEvent(){
+	   try {
+		   if(getManagedBean().getDuration() != null && getManagedBean().getScQuote().getStartDate() != null && 
+				  getManagedBean().getScQuote().getEndDate() != null){
+			String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getStartDate());
+			String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getEndDate());
+			
+			if(getManagedBean().getDuration().equals(ParameterConst.SQ_DURATION_DAY)){
+			     getManagedBean().setDuration(String.valueOf(daysBetween(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate))));
+				
+			} else if(getManagedBean().getDuration().equals(ParameterConst.SQ_DURATION_HOURS)){
+				getManagedBean().setDuration(String.valueOf(hoursDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate))));
+				
+			} else if(getManagedBean().getDuration().equals(ParameterConst.SQ_DURATION_MINUTES)){
+				getManagedBean().setDuration(String.valueOf(minsDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate))));
+			} else {
+				 getManagedBean().setDuration("0");
+			}
+		 } else {
+			  getManagedBean().setDuration("0");
+		 }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+     } 
+	
+	   private static int minsDifference(Date toDate, Date fromDate) {
+			final int MILLI_TO_MINS = 1000 * 60;
+			return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_MINS;
+		}
+	
+		private static int hoursDifference(Date toDate, Date fromDate) {
+			final int MILLI_TO_HOURS = 1000 * 60 * 60;
+			return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_HOURS;
+		}
+	
+		public static int daysBetween(Date toDate, Date fromDate) {
+			final int MILLI_TO_DAYS = 1000 * 60 * 60 * 24;
+			return (int) ((toDate.getTime() - fromDate.getTime()) / MILLI_TO_DAYS );
+		}
+		
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {

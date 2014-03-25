@@ -558,46 +558,6 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	}
 	
 	/**
-	 * get AddtoCart details in Add To Cart PopUp
-	 */
-	public void addToCart(VCmSupplierItem vCmSupplierItem) {
-		log.info("addToCart");
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
-		catReqDTO.setDocId(vCmSupplierItem.getDocId());
-		CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
-		
-		if (catResDTO.getSupplierItemList() != null) {
-			ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-			ScRequestItem requestItem = new ScRequestItem();
-			requestItem.setRequestNoteItemId(1l);
-			CmSupplierItem cmSupplierItem = catResDTO.getSupplierItemList().get(0);
-			requestSupplierItem.setPricing(cmSupplierItem.getCmPricings().get(0));
-			requestSupplierItem.setSmSupplier(catResDTO.getSupplierItemList().get(0).getSmSupplier());
-			requestSupplierItem.setRequestNoteItem(requestItem);
-			getManagedBean().setRequestSupplierItem(requestSupplierItem);
-			
-			if (cmSupplierItem.getCmPricings() != null
-					&& cmSupplierItem.getCmPricings().size() > 0) {
-			   List<CmPricing> cmPricings = new ArrayList<CmPricing>();
-			   for (CmPricing princing : cmSupplierItem.getCmPricings()) {
-			      if (!getManagedBean().getPriceTypes().contains(
-							princing.getPricingType())) {
-					  CmPricing ptype = new CmPricing();
-					  
-					  ptype.setPricingType(princing.getPricingType());
-					  
-					  //getParameterDesc(parameterType, parameterCode);
-					  
-					  cmPricings.add(ptype);
-					  getManagedBean().setPriceTypes(cmPricings);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Page navigation to catalogue search page in Request Note
 	 */
 	public String backToDirectPurchase() {

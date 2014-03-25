@@ -77,11 +77,10 @@
 									value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justificationType}">
 								   <f:selectItems
 										value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-									<p:ajax event="change" update="justiId ,otherId" 
+									<p:ajax event="change" update="justiId" 
 										listener="#{requestNoteBackingBean.justificationTypeEvent}" process="@this" />
 								</p:selectOneMenu> 
-								    <p:spacer width="5px" />
-								<p:inputText id="otherId" rendered="#{requestNoteBackingBean.managedBean.justTypeOption}"/></td>
+								</td>
 				    	 </ui:fragment>
 					   </tr>
 					 </table>

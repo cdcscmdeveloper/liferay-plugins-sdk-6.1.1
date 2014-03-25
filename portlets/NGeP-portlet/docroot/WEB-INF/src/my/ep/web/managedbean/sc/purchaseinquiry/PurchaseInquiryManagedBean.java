@@ -52,6 +52,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private SelectItem[] priceTypes; // price type drop down 
 	private boolean editFlag; // flat for editing fields in pr inquiry
 	private boolean buttonFlag; // flat for enabled and disabled buttons in pr inquiry
+	 private String processName;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -332,6 +333,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 
 }

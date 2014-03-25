@@ -1,23 +1,17 @@
 package my.ep.web.backingbean.ct;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.liferay.portal.kernel.search.ParseException;
+import org.apache.commons.lang.StringUtils;
 
-import my.ep.biz.service.ct.tpl.IContractTemplateSO;
-import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
-import my.ep.dto.ct.tpl.ContractTemplateResDTO;
-import my.ep.persistence.entity.ct.template.CtTemplate;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import com.liferay.portal.kernel.search.ParseException;
 
 public class TestMain {
 
 	public static void main(String[] args) throws ParseException, java.text.ParseException {
 		
-		IContractTemplateSO iContractTemplateSO = null;
+	/*	IContractTemplateSO iContractTemplateSO = null;
 		iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
 		ContractTemplateReqDTO ReqDTO = new ContractTemplateReqDTO();
 		CtTemplate ctTemplate = new CtTemplate();
@@ -35,6 +29,76 @@ public class TestMain {
 	    ctTemplate.setRecordStatus(true);
 		ReqDTO.setCtTemplate(ctTemplate);
 	
-		ContractTemplateResDTO ResDTO = iContractTemplateSO.createTemplate(ReqDTO);
+		ContractTemplateResDTO ResDTO = iContractTemplateSO.createTemplate(ReqDTO);*/
+	
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date fromDate = sdf.parse("20-01-2014");
+		Date toDate = sdf.parse("21-02-2014");
+		
+		Date today =  sdf.parse("21-03-2014");
+				
+		if(today.after(fromDate)){
+			//System.out.println("***** start date greater than today  !");
+			
+		} else if(toDate.before(fromDate)){
+			
+		   //System.out.println("  @@@@@ start date before end date !");
+		
+		}
+		
+		
+		String itemcode= "4346372947";
+		
+		CharSequence charseq = itemcode.subSequence(0, 2);
+		Integer icode= Integer.valueOf(charseq.toString());
+		
+	
+		
+		if(icode>75){
+			System.out.println("icode : " +icode);
+			System.out.println("Service");
+		} else if(icode < 75){
+			System.out.println("icode : " +icode);
+			System.out.println("Product");
+		}
+		
+		
+		
+		//Date fdate = new Date();
+		
+		//System.out.println("dddddddddd "+fdate);
+	/*	System.out.println("Days :" + daysBetween(toDate, fromDate));
+		System.out.println("Hours :" + hoursDifference(toDate, fromDate));
+		System.out.println("Mins :" + minsDifference(toDate, fromDate));*/
 	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private static int minsDifference(Date toDate, Date fromDate) {
+		final int MILLI_TO_MINS = 1000 * 60;
+		return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_MINS;
+	}
+
+	private static int hoursDifference(Date toDate, Date fromDate) {
+		final int MILLI_TO_HOUR = 1000 * 60 * 60;
+		return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_HOUR;
+	}
+
+	public static int daysBetween(Date toDate, Date fromDate) {
+		final int MILLI_TO_DAYS = 1000 * 60 * 60 * 24;
+		return (int) ((toDate.getTime() - fromDate.getTime()) / MILLI_TO_DAYS );
+	}
+	
 }

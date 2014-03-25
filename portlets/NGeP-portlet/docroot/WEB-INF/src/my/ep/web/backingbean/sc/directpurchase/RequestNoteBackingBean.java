@@ -44,6 +44,8 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -215,7 +217,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			String	dpMode	=	directPurchaseDataType.getDpMode();
 			
-			if("RN".equalsIgnoreCase(dpMode)){
+			if(ParameterConst.REQUEST_NOTE_RN.equalsIgnoreCase(dpMode)){
 				//RequestNote Details
 				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 				RequestNoteReqDTO	requestDTO	=	new RequestNoteReqDTO();
@@ -235,27 +237,60 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		       }
 		       requestNote.setRemarks(results);
 			   getManagedBean().setRequestNote(requestNote);
+			   getManagedBean().setOutComes(res.getAction());
 			   initialInformation(requestNote);
 			   FacesContext fc = FacesContext.getCurrentInstance();
 			   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 			
-			} else if("PRI".equalsIgnoreCase(dpMode)){ 
+			} else if(ParameterConst.REQUEST_NOTE_PRI.equalsIgnoreCase(dpMode)){ 
 				//Purchase Inquiry
 				IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 				PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
 				Long prInquiryID = Long.valueOf(directPurchaseDataType.getDpId());
 				prInquiryReqDTO.setPrInquiryId(prInquiryID);
+				prInquiryReqDTO.setFetchSubEntity(true);
 				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 				PurchaseInquiryBackingBean inquiryBackingBean = new PurchaseInquiryBackingBean();
-				inquiryBackingBean.getManagedBean().setScPrInquiry(prInquiryResDTO.getPrInquiryDetail());
+		        ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
+				List<ScPRIRemark> results= new ArrayList<ScPRIRemark>();
+				for (ScPRIRemark remark : prInquiry.getRemarks()) {
+					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					remark.setChangedBy(remark.getCreatedBy());
+					remark.setChangedDate(remark.getCreatedDate());
+					remark.setUser(facesScopes.getUserSessionBean());
+				    results.add(remark);
+		       }
+				 prInquiry.setRemarks(results);
+				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
+					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
+					ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
+					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+					requestSupplierItem.setSupplierItemPrice(itemPrice);
+					inquiryBackingBean.getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+					inquiryBackingBean.getManagedBean().setRequestNoteDtl(requestNoteDtl);
+					prInquiry.setRequestSupplierItem(requestSupplierItem);
+					
+					List<String> priceTypes= new ArrayList<String>();
+					priceTypes.add(itemPrice.getPricing().getPricingType());
+					inquiryBackingBean.getManagedBean().setPriceType(itemPrice.getPricing().getPricingType());
+					inquiryBackingBean.getManagedBean().setPriceTypes(inquiryBackingBean.getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
+				}
+				inquiryBackingBean.getManagedBean().setTaskId(taskId);
+				inquiryBackingBean.getManagedBean().setProcessName(res.getProcessName());
+				inquiryBackingBean.getManagedBean().setOutComes(res.getAction());
+				inquiryBackingBean.getManagedBean().setScPrInquiry(prInquiry);
+				inquiryBackingBean.initializeRemarks(prInquiry);
+				//inquiryBackingBean.isSupplierUser();
+				initialInformation(new ScRequestNote());
 			    FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
 			
-			} else if("PID".equalsIgnoreCase(dpMode)){ 
+			} else if(ParameterConst.REQUEST_NOTE_PID.equalsIgnoreCase(dpMode)){ 
 				// Purchase In Default	
 				Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
 		    }
-			getManagedBean().setOutComes(res.getAction());
+			
 	}
   }	
 	
@@ -338,7 +373,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	/**
 	  * initializing remarks in Request Note
 	 */
-	private List<ScRequestNoteRemark> initializeRemarks(ScRequestNote scRequestNote) {
+	public List<ScRequestNoteRemark> initializeRemarks(ScRequestNote scRequestNote) {
 		List<ScRequestNoteRemark> results =  scRequestNote.getRemarks();
 		FacesScopes facesScopes = new FacesScopes();
 		if (results.size() == 0
@@ -591,7 +626,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
 		if(scRequestNoteDtl != null){
-			getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
+		  ScRequestSupplierItem supplierItem = 	getManagedBean().getRequestSupplierItem();
+		  supplierItem.setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice());
+		  String ItemCode = supplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getExtensionCode();
+		  CharSequence charSeq = ItemCode.subSequence(0, 2);
+		  Integer icode = Integer.valueOf(charSeq.toString());
+		  // TODO checking first two digits in itemCode  whether service or product
+		  if (icode > 75) { // for service
+			  getManagedBean().setItemCheck(true);
+		  } else if (icode < 75) { // product
+			 getManagedBean().setItemCheck(false);
+		  }
+		 getManagedBean().setRequestSupplierItem(supplierItem);
 		}
 	}
 	
@@ -707,4 +753,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		getManagedBean().setApprovalUsers(new DualListModel<PmUser>(availableApprover, selectedApprover));
 	}
+	
+	public boolean isSupplierUser(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_USER");
+	}
+
+
+	public boolean isRequisitioner(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("REQUISITIONER");
+	}
+	
+	
+	
 }

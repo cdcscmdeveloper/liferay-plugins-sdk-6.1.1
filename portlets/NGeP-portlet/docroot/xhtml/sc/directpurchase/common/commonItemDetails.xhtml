@@ -20,19 +20,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.status']}" />
 			<p:inputText disabled="true" value="#{requestNoteBackingBean.currentStatus}" />
 		</h:panelGrid>
-		
-		<p:spacer height="10px" />
-		<p:panel id="planId" header="PLANNED INFO." toggleable="true">
-		 <p:spacer height="1px" />
-			<h:panelGrid border="0"  width="100%"
-				columns="4">
-				<h:outputLabel value="#{lbl['lbl.sc.request.note.plan.no']}" />
-				<p:inputText value="" disabled="true" />
-	
-				<h:outputLabel value="#{lbl['lbl.sc.request.note.est.amount']}" />
-				<p:inputText value="" disabled="true" />
-			</h:panelGrid>
-		</p:panel>
+		<p:spacer height="5px" />
 	
 	<p:panel id="glb_panel_request_list"
 		header="#{lbl['lbl.sc.panel.title.item.detail']}" toggleable="true"
@@ -97,8 +85,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.loa.prepare.by']}">
-					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}"
-						required="false" disabled="false">
+					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}">
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}"

@@ -51,6 +51,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String priceTypeCode;
     private boolean justTypeOption;
     private boolean procTypeOption;
+    private boolean itemCheck; // For checking item whether service or product
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down 
     private String processName;
@@ -349,6 +350,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setDirectPurchaseDataType(
 			SCDirectPurchaseDataType directPurchaseDataType) {
 		this.directPurchaseDataType = directPurchaseDataType;
+	}
+	/**
+	 * @return the itemCheck
+	 */
+	public boolean isItemCheck() {
+		return itemCheck;
+	}
+	/**
+	 * @param itemCheck the itemCheck to set
+	 */
+	public void setItemCheck(boolean itemCheck) {
+		this.itemCheck = itemCheck;
 	}
 	
 }

@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog widgetVar="itemDtlPopup" header="ITEM DETAIL"
-		resizable="false" styleClass="pop_up_top" width="520" height="270">
+		resizable="false" styleClass="pop_up_top" width="570">
 		<p:spacer height="5px"/>
-		<table style="width: 500px">
+		<table style="width: 550px">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
 				<td><p:inputText disabled="true" size="33"
@@ -30,14 +30,54 @@
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.item.dtl.price.type']}" /></td>
 				<td><p:inputText disabled="true" size="33"
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.priceTypeCode)}" />
 			   </td>
 			</tr>
+			<tr>
+			  <td colspan="4">
+					<table style="width: 60.5%">
+					 <ui:fragment rendered="#{!requestNoteBackingBean.managedBean.itemCheck}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}"/></td>
+							<td><p:inputText disabled="true" size="33"  value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.frequency}"/>  
+						   </td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.day']}" /></td>
+							<td><p:inputText disabled="true" size="33"/>
+						   </td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}" /></td>
+							<td><p:inputText disabled="true" size="33" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.frequency}"/>
+						   </td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.month']}" /></td>
+							<td><p:inputText disabled="true" size="33"/>
+						   </td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.duration.month']}" /></td>
+							<td><p:inputText disabled="true" size="33"/>
+						   </td>
+						</tr>
+						 </ui:fragment>
+					 </table>
+					
+				   </td>
+			 </tr>
             <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></td>
-				<td><p:inputText disabled="true" size="33" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.qty}"/>
+				<td><p:inputText disabled="true" size="33"
+				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.qty}"/>
+			   </td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.ceiling.price']}" rendered="#{requestNoteBackingBean.managedBean.itemCheck}"/></td>
+				<td><p:inputText disabled="true" size="33" rendered="#{requestNoteBackingBean.managedBean.itemCheck}"/>
 			   </td>
 			</tr>
 

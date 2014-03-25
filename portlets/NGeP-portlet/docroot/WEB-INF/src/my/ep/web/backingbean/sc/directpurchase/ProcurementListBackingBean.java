@@ -69,7 +69,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 		// remove the already started sourcing
 		List<PpPlan>	pplans	=	resDTO.getPlanList();
 		RequestNoteReqDTO	requestNoteReqDTO	=	new RequestNoteReqDTO();
-		requestNoteReqDTO.setPlans(pplans);
+		//requestNoteReqDTO.setPlans(pplans);
 		requestNoteReqDTO.setRemovePlanSourcingStarted(true);
 		RequestNoteResDTO requestNoteResDTO	=	directPurchaseSO.checkPlanEditable(requestNoteReqDTO);
 		pplans = requestNoteResDTO.getPlans();

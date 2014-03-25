@@ -38,6 +38,14 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestScoped
 public class BPMTaskListBackingBean extends
 		BaseBackingBean<BPMTaskListManagedBean> {
+	
+	public	static	final	String	DIRECT_PURCHASE_REVIEW_PATH	=	"review-directpurchase";
+	public	static	final	String	DIRECT_PURCHASE_BPM_PROCESS_NAME = "Start DirectPurchase Creation";
+	
+	public	static	final	String	PIQ_BPM_PROCESS_NAME = "Purchase Inquiry Creation";
+	
+	
+	
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 
@@ -61,9 +69,9 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
-		temp.put("DirectPurchase Creation", "review-directpuchase");
-
-		temp.put("Supplier Recommendation", "review-directpuchase");
+		temp.put(DIRECT_PURCHASE_BPM_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put("Purchase Review", DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put("Purchase Inquiry Creation", DIRECT_PURCHASE_REVIEW_PATH);
 
 		// QuationTender
 		temp.put("MITI Approval", "qtmaintanance");
