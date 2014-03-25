@@ -132,6 +132,7 @@ BaseBackingBean<RegistrationManagedBean> {
 
 			this.getManagedBean().setSameAddress(false);
 			this.getManagedBean().setSmPersonnel(new SmPersonnel());
+			this.getManagedBean().getSmPersonnel().setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 
 			this.retrievePmCountryList();
 			this.populateStateByAddType("permenant");
@@ -256,13 +257,10 @@ BaseBackingBean<RegistrationManagedBean> {
 			smSuppOwner.setIdentificationType("I");
 			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
-
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
-//			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
 		}
 
 		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName());
-
 		smAppl.setSmSupplier(smSupp);
 		smAppl.getSmCompanyBasic().setSmAppl(smAppl);
 		smAppl.getSmCompanyBasic().setRevNo(defaultRevNo);
@@ -270,31 +268,29 @@ BaseBackingBean<RegistrationManagedBean> {
 		
 		/* add personnel to smappl */
 		smPersonnel.setRevNo(defaultRevNo);
-		//smPersonnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		if(this.getManagedBean().isSameAddress()){
 			smResAdd = smPermAdd;
-			
-			log.info("*****smResAdd countryid******" + smResAdd.getPmCountry().getCountryId());
-			log.info("*****smResAdd Stateid******" + smResAdd.getPmState().getStateId());
-			log.info("*****smResAdd Districtid******" + smResAdd.getPmDistrict().getDistrictId());
 		}
-//		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
-//		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
-//		
-//		personnelAddRes.setSmAddress(smResAdd);
-//		personnelAddRes.setSmPersonnel(smPersonnel);
-//		personnelAddRes.setAddressType("R");
-//		//personnelAddRes.set
-//		
-//		personnelAddPerm.setSmAddress(smPermAdd);
-//		personnelAddPerm.setSmPersonnel(smPersonnel);
-//		personnelAddPerm.setAddressType("I");
-//
-//		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
-//		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
 		
-//		smPersonnel.setSmAppl(smAppl);
-//		smAppl.getSmPersonnels().add(smPersonnel);
+		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
+		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
+		
+		personnelAddRes.setAddressType("R");
+		personnelAddRes.setSmAddress(smResAdd);
+		personnelAddRes.setSmPersonnel(smPersonnel);
+		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
+		smResAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		smResAdd.getSmPersonnelAddresses().add(personnelAddRes);
+		
+		personnelAddPerm.setAddressType("P");
+		personnelAddPerm.setSmAddress(smPermAdd);
+		personnelAddPerm.setSmPersonnel(smPersonnel);
+		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
+		smPermAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		smPermAdd.getSmPersonnelAddresses().add(personnelAddPerm);
+		
+		smPersonnel.setSmAppl(smAppl);
+		smAppl.getSmPersonnels().add(smPersonnel);	
 		
 		/* add detail to smcompanyaddress */
 		SmCompanyAddress smCompAdd = new SmCompanyAddress();
@@ -590,8 +586,7 @@ BaseBackingBean<RegistrationManagedBean> {
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
 
 		this.getManagedBean().setSmSupp(resDTO.getSmSupp());
-		this.getManagedBean().setSmAppl(
-				this.getManagedBean().getSmSupp().getSmAppl());
+		this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
 		this.getManagedBean().setSmSuppOwner(
 				resDTO.getSmSupp().getSmSupplierOwners().get(0));
 		
@@ -612,11 +607,9 @@ BaseBackingBean<RegistrationManagedBean> {
 
 		this.getManagedBean().setSmBusinessAdd(new SmAddress());
 		this.getManagedBean().getSmBusinessAdd().setPmCountry(new PmCountry());
-		this.getManagedBean().getSmBusinessAdd().getPmCountry()
-		.setCountryId(1L);
+		this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(1L);
 		this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
-		this.getManagedBean().getSmBusinessAdd()
-		.setPmDistrict(new PmDistrict());
+		this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 		this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 
 		this.getManagedBean().setSmResAdd(new SmAddress());
@@ -641,10 +634,6 @@ BaseBackingBean<RegistrationManagedBean> {
 		this.populateStateByAddType("residential");
 		this.populateStateByAddType("business");
 		this.retrieveFinancialOrgList();
-
-		// this.getManagedBean().setSmSuppBank(
-		// resDTO.getSmSupp().getSmAppl().getSmSupplierBanks().get(0));
-		// return "onlineAccount/accountMaintenance";
 	}
 
 	public void retrievePmBusinessType(String pmType) {
@@ -758,5 +747,7 @@ BaseBackingBean<RegistrationManagedBean> {
 	//
 	// ntfSO.processAndPublish(reqDTO);
 	// }
+
+	
 
 }
