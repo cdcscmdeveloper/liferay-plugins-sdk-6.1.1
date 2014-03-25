@@ -26,6 +26,7 @@ import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -71,7 +72,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		try {
 
 			FlInvoice invoice = getManagedBean().getInvoice();
-			System.out.println("getItemAmtNew: "+getManagedBean().getInvItem().getItemAmtNew());
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
 			
 			reqDTO.setInvoice(invoice);
@@ -85,7 +85,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-//			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
 
 			if(resDTO.isSuccessful()) {
@@ -138,25 +138,25 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			flOrderResDTO = flOrderSO.retrieveFulfilmentOrder(flReqDTO);
-			//				resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button are exist
-			getManagedBean().getInvoice().setFlFulfilmentOrder(flOrderResDTO.getFlOrder());
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
-			//flReqDTO.setFlRequestId(flOrderResDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
-			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-//			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());//TODO remove comment after remark is fix
-			
-			getInvoiceTable(resDTO);
-			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-			
-			if(getManagedBean().getInvoice().getFlInvoiceItem() == null){
+			//resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button are exist
+			if(getManagedBean().getInvoice() == null){
+				getManagedBean().setInvoice(new FlInvoice());
+//				getManagedBean().setInvItem(new FlInvoiceItem());
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 			}
+				getManagedBean().getInvoice().setFlFulfilmentOrder(flOrderResDTO.getFlOrder());
+				flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
+				resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+				getInvoiceTable(resDTO);
+				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			
+			
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());//TODO remove comment after remark is fix
 			getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			getManagedBean().getInvoice().getFlInvoiceItem().add(getManagedBean().getInvItem());
-		
 		}
 	}
 	public void factoringChecked(AjaxBehaviorEvent e) {
@@ -169,63 +169,30 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	public void getInvoiceTable(FulfilmentResDTO resDTO){
-		System.out.println("--calculate sum invoice--");
-		BigDecimal sumOrderedQty = new BigDecimal("0");
-//		BigDecimal sumReceivedQty = new BigDecimal("0");
 		BigDecimal sumDeliveredQty = new BigDecimal("0");
-		BigDecimal sumOrderedAmt = new BigDecimal("0");
 		BigDecimal sumDeliveredAmt = new BigDecimal("0");
-		System.out.println("getInvoiceTable: getFlFulfilmentItems: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
-		for(FlFulfilmentItem flItem : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
-			getManagedBean().getInvItem().setFlFulfilmentItem(flItem);
-			getManagedBean().getInvItem().setFlInvoice(getManagedBean().getInvoice());
-			System.out.println("getInvoiceTable: getFlFulfilmentItemAddr: "+flItem.getFlFulfilmentItemAddr().size());
-			for(FlFulfilmentItemAddr itemAddr : flItem.getFlFulfilmentItemAddr()){
-				System.out.println("getOrderedQty(): "+itemAddr.getOrderedQty());
-				System.out.println("getOrderedAmt(): "+itemAddr.getOrderedAmt());
-//				System.out.println("getReceivedQty(): "+itemAddr.getReceivedQty());
-				sumOrderedQty = itemAddr.getOrderedQty();
-				sumOrderedAmt = itemAddr.getOrderedAmt();
-//				sumReceivedQty = itemAddr.getReceivedQty();
-				System.out.println("sumOrderedQty(): "+sumOrderedQty);
-				for(FlDelOrderItem delOrderItem : itemAddr.getFlDelOrderItems()){
-					System.out.println("getDeliveredQty(): "+delOrderItem.getDeliveredQty());
-					sumDeliveredQty = delOrderItem.getDeliveredQty();
-					sumDeliveredAmt = delOrderItem.getDeliveredAmt();
+		for(FlDeliveryAddress address : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : address.getFlFulfilmentItemAddr()){
+				for(FlDelOrderItem orderItem : itemAddr.getFlDelOrderItems()){
+					sumDeliveredQty = orderItem.getDeliveredQty();
+					sumDeliveredAmt = orderItem.getDeliveredAmt();
 				}
-				if(flItem.getSumDeliveredQty() != null){
-					flItem.getSumDeliveredQty().add(sumDeliveredQty);
+				if(itemAddr.getSumDeliveredQty() != null){
+					itemAddr.getSumDeliveredQty().add(sumDeliveredQty);
 				}else{
-					flItem.setSumDeliveredQty(sumDeliveredQty);
+					itemAddr.setSumDeliveredQty(sumDeliveredQty);
 				}
-				if(flItem.getSumDeliveredAmt() != null){
-					flItem.getSumDeliveredAmt().add(sumDeliveredAmt);
+				if(itemAddr.getSumDeliveredAmt() != null){
+					itemAddr.getSumDeliveredAmt().add(sumDeliveredAmt);
 				}else{
-					flItem.setSumDeliveredAmt(sumDeliveredAmt);
+					itemAddr.setSumDeliveredAmt(sumDeliveredAmt);
 				}
-				
 			}
-			if(flItem.getSumOrderedQty() != null){
-				flItem.getSumOrderedQty().add(sumOrderedQty);
-			}else{
-				flItem.setSumOrderedQty(sumOrderedQty);
-			}
-			if(flItem.getSumOrderedAmt() != null){
-				flItem.getSumOrderedAmt().add(sumOrderedAmt);
-			}else{
-				flItem.setSumOrderedAmt(sumOrderedAmt);
-			}
-//			if(flItem.getSumReceivedQty() != null){
-//				flItem.getSumReceivedQty().add(sumReceivedQty);
-//			}else{
-//				flItem.setSumReceivedQty(sumReceivedQty);
-//			}
-			
 		}
 	}
 	
-	public void updateNewInvoiceAmt(FlInvoiceItem invItem){
-		System.out.println("getItemAmtNew: "+invItem.getItemAmtNew());
-		invItem.setItemAmtOri(new BigDecimal(invItem.getItemAmtNew().doubleValue()));
+	public void updateNewInvoiceAmt(FlFulfilmentItemAddr invItem){
+//		System.out.println("getItemAmtNew: "+invItem.getItemAmtNew());
+//		invItem.setItemAmtOri(new BigDecimal(invItem.getItemAmtNew().doubleValue()));
 	}
 }
