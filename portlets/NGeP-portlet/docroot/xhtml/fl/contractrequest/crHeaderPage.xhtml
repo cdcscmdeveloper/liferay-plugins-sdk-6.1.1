@@ -8,23 +8,23 @@
 	<table style="width: 99%; margin-left: 25px;">
 		<tr style="margin-button: 10px;">
 			<td><h6>
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.request.no']}" />
+					<h:outputText value="#{lbl['lbl.fl.contract.no']} :" />
 				</h6></td>
 			<td>
 				<h6>
-					<p:inputText size="20" value="#{contractRequestBackingBean.managedBean.flRequest.docNo}" disabled="true" />
+					<p:inputText size="20" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
 				</h6>
 
 			</td>
 			<td>
 				<h6>
-					<h:outputText value="#{lbl['lbl.fl.contract.no']} :" />
+					<h:outputText value="#{lbl['lbl.fl.contract.request.no']} :" />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<p:inputText size="20" disabled="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
+					<p:inputText size="20" value="#{contractRequestBackingBean.managedBean.flRequest.docNo}" disabled="true" />
 				</h6>
 
 			</td>

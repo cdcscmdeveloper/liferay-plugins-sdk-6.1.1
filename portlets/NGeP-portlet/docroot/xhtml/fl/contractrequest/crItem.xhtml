@@ -87,38 +87,7 @@
 				<h:outputText value="#{item.flFulfilmentItem.qtItem.itemName}" />
 			</p:column>
 
-			<p:column headerText="VOT/fund">
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- "  />
-						<f:selectItem itemLabel="VOT1" itemValue="1" />
-					</p:selectOneMenu>
-				</p:column>
-				<p:column headerText="Prog./proj.">
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- "  />
-						<f:selectItem itemLabel="PROG1" itemValue="1" />
-					</p:selectOneMenu>
-				</p:column>
-				<p:column headerText="Setia">
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- "  />
-						<f:selectItem itemLabel="SETIA1" itemValue="1" />
-					</p:selectOneMenu>
-				</p:column>
-				<p:column headerText="Sub Setia">
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- "  />
-						<f:selectItem itemLabel="SUBset1" itemValue="1" />
-					</p:selectOneMenu>
-				</p:column>
-				<p:column headerText="Asset Ind.">
-					<h:outputText value="Expenses" >
-					</h:outputText>
-				</p:column>
-				<p:column headerText="Charge Code">
-					<h:outputText value="#{item.pmDo.doId}" >
-					</h:outputText>
-				</p:column>
+			
 			<p:column headerText="Unit Price (MYR)">
 				<p:inputText value="#{item.unitPrice}" disabled="true" style="text-align:right"></p:inputText>
 			</p:column>
@@ -203,11 +172,15 @@
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
 					<p:column rowspan="1" headerText="Item"></p:column>
+					<p:column rowspan="1" headerText="Item Type"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
 				<h:outputText value="#{contractedItem.itemName}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractedItem.itemType)}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -287,10 +260,9 @@
 						size="35" /></td>
 				<td><p:outputLabel value="State" /></td>
 				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmState.stateCode}"
+						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmState.stateId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="1" />
+						<f:selectItems value="#{contractRequestBackingBean.state}"></f:selectItems>
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>

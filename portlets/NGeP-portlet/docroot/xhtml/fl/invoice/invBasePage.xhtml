@@ -29,11 +29,14 @@
 			</tr>
 		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="GENERAL">
+			<p:tab title="General">
 				<ui:include src="invGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="ITEM">
-			<ui:include src="invItem.xhtml" />
+			<p:tab title="Invoice Details">
+				<ui:include src="invItem.xhtml" />
+			</p:tab>
+			<p:tab title="Invoice Summary">
+				<ui:include src="invSummary.xhtml" />
 			</p:tab>
 		</p:tabView>
 	</ui:define>

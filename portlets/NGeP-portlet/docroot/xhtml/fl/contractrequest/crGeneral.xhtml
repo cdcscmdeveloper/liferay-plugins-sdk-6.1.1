@@ -23,7 +23,7 @@
 	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
-				<td style="width:98px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width:138px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="35" id="ministry"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
@@ -54,22 +54,21 @@
 					</ac:lov></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><ac:lov id="receivedPtj" lovId="PM_ORG_PROFILE"
-						headerText="ReceivedPtj Lov"
-						saveObject="contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile"
-						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td><p:inputText id="chargedPtj" size="35" disabled="true"></p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width:98px;"><p:outputLabel
+				<td rowspan="4" valign="top" style="width:138px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="4"><p:inputTextarea cols="36" rows="8"
+				<td colspan="3" rowspan="4"><p:inputTextarea cols="100" rows="8"
 						style=" margin-bottom:5px;"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}" />
 				</td>
@@ -95,21 +94,39 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.zonal']}" /></td>
+				<td colspan="3"><p:selectOneRadio disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.mto}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+					</p:selectOneRadio></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
 				<td><p:selectOneRadio disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.mto}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio></td>	
+					
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.period']}" /></td>
+				<td colspan="3"><p:inputText size="35" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="20"
 						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.associated.req']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.start.del']}" /></td>
+				<td><p:calendar id="ordStart" showOn="button" pattern="dd/mm/yyyy" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.end.del']}" /></td>
+				<td><p:calendar id="ordEnd" showOn="button" pattern="dd/mm/yyyy" /></td>	
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
 			</tr>
 		</table>
@@ -117,7 +134,7 @@
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 98px;"><p:outputLabel value="EP No." /></td>
+				<td style="width: 138px;"><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="5"
@@ -129,6 +146,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
 			</tr>
 			<tr>
@@ -147,7 +168,50 @@
 			</tr>
 		</table>
 	</p:panel>
-	
+	<p:panel header="FACTORING DETAIL" toggleable="true">
+		<table style="width:100%;">
+			<tr>
+				<td style="width:138px"><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+				<td style="width:133px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
+				<td><p:selectOneMenu
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="MALAYSIA BANK BRANCH" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top" style="width:137px;"><p:outputLabel value="Address" /></td>
+				<td><p:inputTextarea cols="37" rows="5" style="margin-bottom:5px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
+				<td><p:inputText size="35" value="02-63248001" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fax.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
+				<td><p:inputText size="35" value="02-7324800 " disabled="true" /></td>
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" value="02-7324800 "/></td>
+			</tr>
+		</table>
+	</p:panel>
 	
 	<ac:lovPopup />
 </ui:composition>

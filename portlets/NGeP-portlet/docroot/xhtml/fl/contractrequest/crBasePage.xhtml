@@ -54,7 +54,13 @@
 			<p:tab id="tab2" title="#{lbl['lbl.tab.fl.item']}">
 					<ui:include src="crItem.xhtml" /> 
 			</p:tab>
-			<p:tab id="tab3" title="Approver Settings" rendered="#{contractRequestBackingBean.isRequisitioner()}">
+			<p:tab id="tab3" title="#{lbl['lbl.tab.fl.order.summary']}">
+					<ui:include src="ordSummary.xhtml" /> 
+			</p:tab>
+			<p:tab id="tab4" title="#{lbl['lbl.tab.fl.charge.line.summary']}">
+					<ui:include src="chargeLineSummary.xhtml" /> 
+			</p:tab>
+			<p:tab id="tab5" title="Approver Settings" rendered="#{contractRequestBackingBean.isRequisitioner()}">
 				<p:panel id="settingId" header="Approver Setting" toggleable="true"
 					toggleSpeed="500">
 

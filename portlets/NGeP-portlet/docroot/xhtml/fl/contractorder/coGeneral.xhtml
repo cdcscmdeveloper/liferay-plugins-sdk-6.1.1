@@ -24,120 +24,42 @@
 		</tr>
 	</table>
 
-	<p:panel header="#{lbl['lbl.fl.fulfilment.detail']}" toggleable="true"
-		id="flDetails">
+	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
-				<td style="width:125px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="35"
+				<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText size="35" id="ministry"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText disabled="true" size="35" value="#{flOrderBB.managedBean.flRequest.docNo}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="* #{lbl['lbl.fl.contract.request.no']}" /></td>
-				<td><p:inputText size="20"
+				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="35" id="issuedJabatan"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
-						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
-				<td><p:selectOneRadio
-						value="#{flOrderBB.managedBean.flRequest.mto}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
-					</p:selectOneRadio></td>
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.prepared.ptj']}" /></td>
+				<td><p:inputText size="35" value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
-						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
-				<td><p:inputText size="20"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
-						disabled="true" /></td>
+				<td><p:inputText size="35" value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.receivedOrgProfile.orgName}"
-						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.contractType)}"
-						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td><p:inputText id="chargedPtj" size="35" disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.receivedOrgProfile.orgName}"
-						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.fulfillmentType)}"
-						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
 			</tr>
-			<tr>
-				<td rowspan="2" valign="top"><p:outputLabel
-						value="* #{lbl['lbl.fl.title']}" style="vertical-align:top;" /></td>
-				<td rowspan="2"><p:inputTextarea  cols="36"
-						style=" margin-bottom:5px;"
-						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
-				<td><p:outputLabel value="Plan No." /></td>
-				<td><p:inputText size="20"
-						value="#{flOrderBB.managedBean.flRequest.planId}" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{flOrderBB.managedBean.flRequest.scheduleNo}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
-				<td><p:inputText
-						value="#{flOrderBB.managedBean.flRequest.pmVotFund.maksudName}"
-						disabled="true" size="20"></p:inputText></td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"
-						disabled="true"></p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText size="20"
-						value="#{flOrderBB.managedBean.flRequest.financialYear}"
-						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
-				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"
-						disabled="true"></p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
-				<td><p:selectOneRadio
-						value="#{flOrderBB.managedBean.flRequest.financingLoan}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
-					</p:selectOneRadio></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText size="20"
-						value="#{flOrderBB.managedBean.flRequest.createdDate}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				
-				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText size="35"
-						value=""
-						disabled="true" /></td>
-			</tr>
-
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.supplier.detail']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 125px;"><p:outputLabel value="EP No." /></td>
+				<td style="width: 138px;"><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="5"
@@ -167,5 +89,48 @@
 			</tr>
 		</table>
 	</p:panel>
-
+	<p:panel header="FACTORING DETAIL" toggleable="true">
+		<table style="width:100%">
+			<tr>
+				<td style="138px"><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+				<td style="width:133px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
+				<td><p:selectOneMenu
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="MALAYSIA BANK BRANCH" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top" style="width:137px;"><p:outputLabel value="Address" /></td>
+				<td><p:inputTextarea cols="37" rows="5" style="margin-bottom:5px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
+				<td><p:inputText size="35" value="02-63248001" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fax.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
+				<td><p:inputText size="35" value="02-7324800 " disabled="true" /></td>
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
+				<td><p:inputText size="35" disabled="true" value="02-7324800 "/></td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>

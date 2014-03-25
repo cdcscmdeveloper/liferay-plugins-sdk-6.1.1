@@ -14,7 +14,7 @@
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			<p:spacer height="5px"></p:spacer>
 			<p:dataTable id="invItemDt" var="item" width="100%"
-				value="#{invoiceBackingBean.managedBean.invoice.flInvoiceItem}">
+				value="#{address.flFulfilmentItemAddr}">
 				<ac:paginator for="invItemDt" />
 				<p:columnGroup type="header">
 					<p:row>
@@ -55,26 +55,26 @@
 						rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedQty}" />
+					<p:outputLabel value="#{item.orderedQty}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
+					<p:outputLabel value="#{item.sumDeliveredQty}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumRecalledQty}" />
+					<p:outputLabel value="#{item.recalledQty}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedAmt}" />
+					<p:outputLabel value="#{item.orderedAmt}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredAmt}" />
+					<p:outputLabel value="#{item.sumDeliveredAmt}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{item.flFulfilmentItem.sumRecalledAmt}" />
+					<p:outputLabel value="#{item.recalledAmt}" />
 				</p:column>
 				<p:column>
-					<p:inputText value="#{item.itemAmtNew}" style="text-align:right">
-					<f:convertNumber pattern="#,#0.00" />
+					<p:inputText value="#{item.receivedAmt}" style="text-align:right">
+					<f:convertNumber pattern="#,#00.00" />
 						<p:ajax event="blur"
 							listener="#{invoiceBackingBean.updateNewInvoiceAmt(item)}"
 							process="@this">

@@ -1,0 +1,26 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+	<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />	
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	<ui:include src="/xhtml/fl/invoice/danHeaderPage.xhtml" />
+		<p:tabView id="tt" orientation="left" widgetVar="tt">
+			<p:tab title="General">
+				<ui:include src="danGeneral.xhtml" />
+			</p:tab>
+			<p:tab title="Charge Line Summary">
+				<ui:include src="danChargeLine.xhtml" />
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>
