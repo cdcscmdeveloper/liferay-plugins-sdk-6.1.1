@@ -24,6 +24,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.sc.directpurchase.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -61,6 +62,9 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
     
     private List<SmSupplier> smSuppliers;
     private PmOrgProfile pmOrgProfile;
+    
+	private	List<TplSpecMaster>	productTpls = new ArrayList<TplSpecMaster>();
+	private	List<TplSpecMaster>	serviceTpls = new ArrayList<TplSpecMaster>();
     
     private String priceTypeCode;
     private boolean justTypeOption;
@@ -719,6 +723,34 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setDuration(String duration) {
 		this.duration = duration;
+	}
+
+	/**
+	 * @return the productTpls
+	 */
+	public List<TplSpecMaster> getProductTpls() {
+		return productTpls;
+	}
+
+	/**
+	 * @param productTpls the productTpls to set
+	 */
+	public void setProductTpls(List<TplSpecMaster> productTpls) {
+		this.productTpls = productTpls;
+	}
+
+	/**
+	 * @return the serviceTpls
+	 */
+	public List<TplSpecMaster> getServiceTpls() {
+		return serviceTpls;
+	}
+
+	/**
+	 * @param serviceTpls the serviceTpls to set
+	 */
+	public void setServiceTpls(List<TplSpecMaster> serviceTpls) {
+		this.serviceTpls = serviceTpls;
 	}
 
 	

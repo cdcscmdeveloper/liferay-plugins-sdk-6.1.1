@@ -23,7 +23,7 @@
 							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 							   itemValue="#{pmOrgProfile.orgProfileId}" />
 							 <p:ajax event="change" update="@([id$=mainSqId]) " 
-							     process="@all"  listener="#{simpleQuoteBackingBean.ptjNameEvent(pmOrgProfile.orgProfileId)}"/>
+							     process="@all"  listener="#{simpleQuoteBackingBean.ptjNameEvent}"/>
 					</p:selectOneMenu></td>
 			    	</ui:fragment>
 				</tr>

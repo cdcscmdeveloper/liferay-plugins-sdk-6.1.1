@@ -14,6 +14,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
@@ -364,4 +365,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.itemCheck = itemCheck;
 	}
 	
+	public	boolean	isPrInquiry(){
+		boolean result	= false;
+		if(requestNote != null){
+			for(ScRequestItem requestNoteItem: requestNote.getRequestNoteItems()){
+				for(ScRequestSupplierItem supplierItem: requestNoteItem.getSupplierItems()){
+					if(supplierItem.getScPrInquiy() != null){
+						result	=	true;
+						return result;
+					}
+				}
+			}
+		}
+		return result;
+	}
 }

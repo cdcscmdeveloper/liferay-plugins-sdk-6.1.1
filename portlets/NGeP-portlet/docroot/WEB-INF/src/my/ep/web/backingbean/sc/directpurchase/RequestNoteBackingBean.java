@@ -180,6 +180,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		requestNoteReqDTO.setToken(token);
+		requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 		if (requestNoteResDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -275,6 +276,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					inquiryBackingBean.getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 					inquiryBackingBean.getManagedBean().setRequestNoteDtl(requestNoteDtl);
 					prInquiry.setRequestSupplierItem(requestSupplierItem);
+					prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 					
 					List<String> priceTypes= new ArrayList<String>();
 					priceTypes.add(itemPrice.getPricing().getPricingType());
@@ -418,18 +420,21 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
 			remark.setPmStatus(status);
 			remark.setRequestNote(scRequestNote);
+			results.clear();
 			results.add(0, remark);
 		} else {
-			/*for (ScRequestNoteRemark scRequestNoteRemark : scRequestNote.getRemarks()) {
-				remark.setChangedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(scRequestNoteRemark.getCreatedBy());
-				remark.setRemark(scRequestNote.getRemarks().get(0).getRemark());
-				 PmStatus status = new PmStatus();
-					status.setStatusId(SourcingConstants.RN_PENDING_APPROVAL);
-					remark.setPmStatus(status);
-					remark.setRequestNote(scRequestNote);
-					results.add(0, remark);
-			}*/
+			if( scRequestNote.getRemarks().size() >0 && scRequestNote.getRemarks() !=null) {
+				ScRequestNoteRemark scRequestNoteRemark = scRequestNote.getRemarks().get(0);
+				scRequestNoteRemark.setChangedDate(new Timestamp(System.currentTimeMillis()));
+				scRequestNoteRemark.setChangedBy(scRequestNoteRemark.getCreatedBy());
+				scRequestNoteRemark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
+				PmStatus status = new PmStatus();
+				status.setStatusId(SourcingConstants.RN_PENDING_APPROVAL);
+				scRequestNoteRemark.setPmStatus(status);
+				scRequestNoteRemark.setRequestNote(scRequestNote);
+				results.clear();
+				results.add(0, scRequestNoteRemark);
+			}
 			
 		}
 		return results;
@@ -610,6 +615,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		scRequestNoteDtl.setJustificationType(getManagedBean().getRequestNoteDtl().getJustificationType());
 		scRequestNoteDtl.setJustification(getManagedBean().getRequestNoteDtl().getJustification());
 		scRequestNoteDtl.setScRequestNote(requestNote);
+		scRequestNoteDtl.setDeliverPeriodType(ParameterConst.SQ_DURATION_DAY);
 		getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
 		
 		populateUserDivisionList();

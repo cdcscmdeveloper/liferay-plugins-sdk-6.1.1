@@ -40,11 +40,7 @@ public class BPMTaskListBackingBean extends
 		BaseBackingBean<BPMTaskListManagedBean> {
 	
 	public	static	final	String	DIRECT_PURCHASE_REVIEW_PATH	=	"review-directpurchase";
-	public	static	final	String	DIRECT_PURCHASE_BPM_PROCESS_NAME = "Start DirectPurchase Creation";
-	
-	public	static	final	String	PIQ_BPM_PROCESS_NAME = "Purchase Inquiry Creation";
-	
-	
+	public	static	final	String	DIRECT_PURCHASE_BPM_PROCESS_NAME = "Direct Purchase Creation";
 	
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);

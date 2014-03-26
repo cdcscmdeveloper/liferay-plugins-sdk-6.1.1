@@ -23,48 +23,10 @@
 					icon="ui-icon-cancel" style="float:right;" />
 	    </c:if>
 	    
-	      <table>
-			<tr>
-				<td align="right"><c:if
-						test="#{requestNoteBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
-						<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}"
-						var="action">
-
-						<c:if test="${action == 'SUBMIT'}">
-							<ui:param name="iconVar" value="ui-icon-submit" />
-
-						</c:if>
-
-						<c:if test="${action == 'REJECT'}">
-							<ui:param name="iconVar" value="ui-icon-reject" />
-
-						</c:if>
-						<c:if test="${action == 'REVISE'}">
-							<ui:param name="iconVar" value="ui-icon-revise" />
-
-						</c:if>
-						<c:if test="${action == 'APPROVE'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						<c:if test="${action == 'ACCEPT'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						
-						<p:commandButton value="#{action}" process="@all"
-								styleClass="ui-button" icon="#{iconVar}"
-								actionListener="#{requestNoteBackingBean.submitAction}" />
-						</c:forEach>
-
-					</c:if></td>
-			</tr>
-		</table>
-	    
 	    <table>
 			<tr>
 				<td align="right"><c:if
-						test="#{requestNoteBackingBean.managedBean.processName eq 'Purchase Review'}">
+						test="#{requestNoteBackingBean.managedBean.taskId ne null}">
 						<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}"
 						var="action">
 
@@ -89,10 +51,14 @@
 							<ui:param name="iconVar" value="ui-icon-approve" />
 
 						</c:if>
-						
-						<p:commandButton value="#{action}" process="@all"
+						<!-- TODO later on should check base on the workflow status instead of check the Pr Inquiry -->
+						<p:commandButton value="#{action}" process="@all" rendered="#{!requestNoteBackingBean.managedBean.isPrInquiry() or  !unspscCodeBackingBean.isRequisitioner()}"
 								styleClass="ui-button" icon="#{iconVar}"
 								actionListener="#{requestNoteBackingBean.updateBpmTask(action)}" />
+								
+						<p:commandButton value="#{action}" process="@all" rendered="#{requestNoteBackingBean.managedBean.isPrInquiry() and unspscCodeBackingBean.isRequisitioner()}"
+								styleClass="ui-button" icon="#{iconVar}"
+								actionListener="#{requestNoteBackingBean.submitAction}" />
 						</c:forEach>
 
 					</c:if></td>

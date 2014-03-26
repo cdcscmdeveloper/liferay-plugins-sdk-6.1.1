@@ -455,10 +455,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
             	requestNoteDtl.setAssignedUser(new PmUser());
             	requestNoteDtls.add(requestNoteDtl);
 			}
-            requestNote.setRequestNoteDtls(requestNoteDtls);
 			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
+			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 			initializeRemarks(getManagedBean().getScPrInquiry());
 			requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);

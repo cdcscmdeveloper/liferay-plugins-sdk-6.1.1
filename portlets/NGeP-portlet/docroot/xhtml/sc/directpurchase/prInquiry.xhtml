@@ -158,8 +158,8 @@
 			
 		    <tr>
 			    <td colspan="4">
-			  <!--    <ui:fragment rendered="#{!purchaseInquiryBackingBean.managedBean.editFlag}">  -->
-			     <p:outputPanel id="justiId">
+			    <p:panel rendered="#{unspscCodeBackingBean.requisitioner}" id="justiId">
+			    
 					<table style="width: 100%">
 					  <tr>
 						 <td style="width: 250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
@@ -194,8 +194,7 @@
 					   </tr>
 					   
 					  </table>
-				   </p:outputPanel>
-				  <!--   </ui:fragment> -->
+				  </p:panel>
 				 </td>
 			</tr>
 			
@@ -240,8 +239,8 @@
 				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
-				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" size="30" disabled="#{unspscCodeBackingBean.requisitioner}" />
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%" rendered="#{!unspscCodeBackingBean.requisitioner}">
+				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" />
 			</p:column>
 
 		</p:dataTable>

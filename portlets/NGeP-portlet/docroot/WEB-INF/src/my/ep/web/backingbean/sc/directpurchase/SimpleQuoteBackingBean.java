@@ -170,7 +170,7 @@ public class SimpleQuoteBackingBean extends
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 			requestNote.setSourceMethod("SQ");
-			requestNote.setPmOrgProfile(ptjNameEvent(getManagedBean().getOrgProfileId()));
+			requestNote.setPmOrgProfile(ptjNameEvent());
 			List<ScRequestNote> requestNotes = new ArrayList<ScRequestNote>();
 			requestNotes.add(requestNote);
 			quote.setRequestItems(requestItems);
@@ -992,12 +992,12 @@ public class SimpleQuoteBackingBean extends
 		log.info(message);
 	}
 		
-	public PmOrgProfile ptjNameEvent(Long orgProfileId) {
-		if (orgProfileId != null) {
+	public PmOrgProfile ptjNameEvent() {
+		if (getManagedBean().getOrgProfileId() != null) {
 			for (PmOrgProfile orgProfile : getManagedBean()
 					.getUserDivisionList()) {
 				if (orgProfile.getOrgProfileId().equals(
-						orgProfileId)) {
+						getManagedBean().getOrgProfileId())) {
 					getManagedBean().setPmOrgProfile(orgProfile);
 				}
 			}
