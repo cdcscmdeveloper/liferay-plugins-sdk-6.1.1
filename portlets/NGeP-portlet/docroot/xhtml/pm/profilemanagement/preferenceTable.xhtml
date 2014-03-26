@@ -9,22 +9,15 @@
 	<p:panel>
 	 <br/>
 	    <p:dataTable value="#{userprofilesManagedBean.preferencelists}" var="PreferenceList" >
-		
-	    <p:column headerText="#{lbl['lbl.pm.profiles.preferences.notificationmode']}" > 
-          <h:outputText value="#{PreferenceList.noticeMode}" />
-        </p:column>
+
 	    <p:column headerText="#{lbl['lbl.pm.profiles.preferences.preferred']}" > 
 	      <p:selectBooleanCheckbox/> 
-        </p:column>        
-        <p:column headerText="#{lbl['lbl.pm.profiles.preferences.mobileno']}" > 
-          <h:outputText value="#{PreferenceList.mobileNo}" />   
-        </p:column>
-        <p:column headerText="#{lbl['lbl.pm.profiles.preferences.emailaddress']}" > 
-          <h:outputText value="#{PreferenceList.emailAddress}" />   
-        </p:column>        
+        </p:column> 		
+	    <p:column headerText="#{lbl['lbl.pm.profiles.preferences.notificationmode']}" > 
+          <h:outputText value="#{PreferenceList.noticeMode}" />
+        </p:column>            
 	</p:dataTable>
-     
-       		
+	       		
 	</p:panel>
 </ui:composition>	
 

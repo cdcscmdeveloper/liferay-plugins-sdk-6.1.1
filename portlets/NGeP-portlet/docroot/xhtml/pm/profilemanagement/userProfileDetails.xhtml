@@ -12,8 +12,8 @@
 			    <p:inputText  value="#{userprofilesBackingBean.managedBean.user.userId}" disabled="true" size="30" />
 		             	    	        
 		   		<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}"></h:outputLabel>
-		           <p:selectOneMenu style="width:306px;margin-bottom:5px;" value="#{userprofilesBackingBean.managedBean.userSalutation}"> 
-				     <f:selectItem itemLabel="Select" itemValue="null" />		            
+		           <p:selectOneMenu style="width:300px;margin-bottom:5px;"> 
+				    		            
 					 <f:selectItems
 						value="#{userprofilesBackingBean.retrieveParameterDescByType(ParameterTypeConst.salutations)}"
 						var="salutationlist" itemLabel="#{salutationlist.codeName}"
@@ -21,11 +21,10 @@
                    </p:selectOneMenu> 
                   
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.username']}" />  
-			    <p:inputText value="#{userprofilesBackingBean.managedBean.userDetailNames}" size="50" />                                 
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.user.userName}" size="53" />                                 
                    
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" />
-		           <p:selectOneMenu style="width:206px;margin-bottom:5px;" value="#{userprofilesBackingBean.managedBean.userIdType}">  
-				     <f:selectItem itemLabel="Select" itemValue="null" />		           
+		           <p:selectOneMenu style="width:206px;margin-bottom:5px;">  	           
 					 <f:selectItems
 						value="#{userprofilesBackingBean.retrieveParameterDescByType(ParameterTypeConst.identificationTypes)}"
 						var="idtypeslist" itemLabel="#{idtypeslist.codeName}"
@@ -33,11 +32,10 @@
                    </p:selectOneMenu> 
                 
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idno']}" />  
-			    <p:inputText value="#{userprofilesBackingBean.managedBean.userIdNo}" size="30" />			                    
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.user.identificationNo}" size="35" />			                    
                                   	                   
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" />
-		           <p:selectOneMenu style="width:206px;margin-bottom:5px;" value="#{userprofilesBackingBean.managedBean.userNationality}">
-				     <f:selectItem itemLabel="Select" itemValue="null" />		             
+		           <p:selectOneMenu style="width:300px;margin-bottom:5px;">		             
 					 <f:selectItems
 						value="#{userprofilesBackingBean. retrieveCountryList()}"
 						var="nationalitylist" itemLabel="#{nationalitylist.countryName}"
@@ -45,7 +43,7 @@
                    </p:selectOneMenu>                                                
                     				
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />  
-			    <p:inputText value="#{userprofilesBackingBean.managedBean.userDesignation}" size="30" />
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.user.designation}" size="53" />
 			    
         </h:panelGrid>
  		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20">       			     
@@ -57,94 +55,93 @@
        			  </p:selectOneRadio>  				    
 			    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />  
-			    <p:inputText value="#{userprofilesBackingBean.managedBean.usergrade}" size="30" />
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.user.grade}" size="30" />
 			    
         </h:panelGrid>	
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">
 		        	
-		        <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.orgtype']}"></h:outputLabel>
-		          <p:selectOneMenu style="width:206px;margin-bottom:5px;" value="#{userprofilesBackingBean.managedBean.userOrgType}">  
-				     <f:selectItem itemLabel="Select" itemValue="null" />		          
-					 <f:selectItems
-						value="#{userprofilesBackingBean.retrieveParameterDescByType(ParameterTypeConst.organisationTypes)}"
-						var="orgtypelist" itemLabel="#{orgtypelist.codeName}"
-						itemValue="#{orgtypelist.pmParameter.parameterCode}" />  
-                   </p:selectOneMenu>
+		        <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.status']}"></h:outputLabel>
+		          <p:selectOneMenu style="width:206px;margin-bottom:5px;">  
+            		<f:selectItem itemLabel="Select One" itemValue="" />  
+            		<f:selectItem itemLabel="Active" itemValue="1" /> 
+            		<f:selectItem itemLabel="Non-Active" itemValue="2" />  
+              	  </p:selectOneMenu> 
                     
 		</h:panelGrid> 
     </p:panel>	
     <br />	  
-	<p:panel header="OFFICE ADDRESS" toggleable="true">		                		             				    		   		     
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20">
+	<p:panel header="CONTACT DETAIL" toggleable="true">		                		             				    		   		     
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">
 					    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.country']}" />  
-		           <p:selectOneMenu style="width:206px;margin-bottom:5px;">
-					 <f:selectItem itemLabel="Select" itemValue="null" />		             
+		           <p:selectOneMenu style="width:300px;margin-bottom:5px;">
 					 <f:selectItems
-						value="#{userprofilesBackingBean. retrieveCountryList()}"
+						value="#{userprofilesBackingBean.retrieveCountryList()}"
 						var="countrylist" itemLabel="#{countrylist.countryName}"
 						itemValue="#{countrylist.countryName}" />  
                    </p:selectOneMenu> 
                    
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressone']}" />  
+			    <p:inputText size="53" />                    
+                   
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" />  
+			    <p:inputText size="53" />   
+			    
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressthree']}" />  
+			    <p:inputText size="53" /> 
+			    
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressfour']}" />  
+			    <p:inputText size="53" /> 	
+			    
+  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" />  
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.pmAddress.postcode}" size="35" />	
+			    			    		    			                     
+		</h:panelGrid>
+    
+		 <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4"  columnClasses="columnWidth20">                    
+  				
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.state']}" />  
 		           <p:selectOneMenu style="width:206px;margin-bottom:5px;">
-						<f:selectItem itemLabel="Select" itemValue="null" />
-						<f:selectItems var="statelist"
-							value="#{userprofilesBackingBean.managedBean.states}"
-							itemLabel="#{statelist.stateName}" itemValue="#{statelist.stateId}" />
-					</p:selectOneMenu>							
+					 <f:selectItems var="statelist"
+						value="#{userprofilesBackingBean.managedBean.states}"
+						itemLabel="#{statelist.stateName}" itemValue="#{statelist.stateId}" />
+				   </p:selectOneMenu>							
 				
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressone']}" />  
-			    <p:inputText size="30" /> 
-			    
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />  
+                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />  
 		           <p:selectOneMenu style="width:206px;margin-bottom:5px;"> 
-						<f:selectItem itemLabel="Select" itemValue="null" />
-						<f:selectItems var="divisionlist"
-							value="#{userprofilesBackingBean.managedBean.divisions}"
-							itemLabel="#{divisionlist.divisionName}" itemValue="#{divisionlist.stateId}" />
-					</p:selectOneMenu>
-				
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" />  
-			    <p:inputText size="30" /> 
-			    
-               <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.district']}" /> 
+					 <f:selectItems var="divisionlist"
+						value="#{userprofilesBackingBean.managedBean.divisions}"
+						itemLabel="#{divisionlist.divisionName}" itemValue="#{divisionlist.divisionId}" />
+				   </p:selectOneMenu>
+	
+	            <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.district']}" /> 
 		           <p:selectOneMenu style="width:206px;margin-bottom:5px;"> 
-            		<f:selectItem itemLabel="Select One" itemValue="null" />		           
-						<f:selectItems var="districtlist"
-							value="#{userprofilesBackingBean.managedBean.districts}"
-							itemLabel="#{districtlist.districtName}" itemValue="#{districtlist.districtId}" />						
-					</p:selectOneMenu>	
-				
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressthree']}" />  
-			    <p:inputText size="30" /> 							    						    				              			    
-			    
-                <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
+            	     <f:selectItems var="districtlist"
+						value="#{userprofilesBackingBean.managedBean.districts}"
+						itemLabel="#{districtlist.districtName}" itemValue="#{districtlist.districtId}" />						
+				   </p:selectOneMenu>	
+							    						    				              			    
+			    <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
 		           <p:selectOneMenu style="width:206px;margin-bottom:5px;"> 
-            		<f:selectItem itemLabel="Select One" itemValue="null" />		           
-						<f:selectItems var="citylist"
-							value="#{userprofilesBackingBean.managedBean.citys}"
-							itemLabel="#{citylist.cityName}" itemValue="#{citylist.cityName}" />
-					</p:selectOneMenu>
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressfour']}" />  
-			    <p:inputText size="30" /> 				
-
-  				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" />  
-			    <p:inputText size="30" />								               
- 			   			   			   		    
-        </h:panelGrid>			    
+            	     <f:selectItems var="citylist"
+						value="#{userprofilesBackingBean.managedBean.citys}"
+						itemLabel="#{citylist.cityName}" itemValue="#{citylist.cityName}" />
+				   </p:selectOneMenu>
+							               
+        </h:panelGrid>	 			   			   			   		    
+		    
 		 <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"  columnClasses="columnWidth20"> 
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" />  
-			    <p:inputText size="30" />
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.pmAddress.email}" size="53" />
 			    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" />  
-			    <p:inputText size="30" /> 			     			    		 			   
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.pmAddress.phoneNo}" size="35" /> 			     			    		 			   
 			    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" />  
-			    <p:inputText size="30" /> 
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.pmAddress.faxNo}" size="35" /> 
 			    			    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" />  
-			    <p:inputText size="30" /> 			    			    			    			    			    		    			    			                                          			                     		                                                 
+			    <p:inputText value="#{userprofilesBackingBean.managedBean.pmAddress.mobileNo}" size="35" /> 			    			    			    			    			    		    			    			                                          			                     		                                                 
           
         </h:panelGrid>
 	</p:panel>
