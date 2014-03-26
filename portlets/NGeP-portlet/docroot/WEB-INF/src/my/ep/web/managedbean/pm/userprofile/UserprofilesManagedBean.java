@@ -46,13 +46,13 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private String loginId;
 	
     // user profile	
-	private String userName;	
+	private String userNames;	
 	
 	private String userRole;	
 	
 	private String userorganizationNames;	
 	
-	private String userStatus;
+	private boolean userStatus = false;
 	
 	// user group profile
 	private String userGroupNames;	
@@ -117,6 +117,10 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public List<PmUser> getUsers() {
 		return users;
 	}
+	
+	public void setUsers(List<PmUser> users) {
+		this.users = users;
+	}		
 
 	public void setUseraddress(List<PmAddress> useraddress) {
 		this.useraddress = useraddress;
@@ -125,10 +129,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public List<PmAddress> getUseraddress() {
 		return useraddress;
 	}
-
-	public void setUsers(List<PmUser> users) {
-		this.users = users;
-	}	
 	
 	public List<PmUserGroup> getUsersGroup() {
 		return usersGroup;
@@ -139,13 +139,13 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	}	
 
 	public String getUserNames() {
-		return userName;
+		return userNames;
 	}
 
 
 
-	public void setUserNames(String userName) {
-		this.userName = userName;
+	public void setUserNames(String userNames) {
+		this.userNames = userNames;
 	}
 
 
@@ -174,13 +174,13 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 
 
-	public String getUserStatus() {
+	public boolean getUserStatus() {
 		return userStatus;
 	}
 
 
 
-	public void setUserStatus(String userStatus) {
+	public void setUserStatus(boolean userStatus) {
 		this.userStatus = userStatus;
 	}
 
@@ -328,14 +328,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.divisions = divisions;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
 	public String getUserDetailNames() {
 		return userDetailNames;
 	}
@@ -412,18 +404,12 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		
 		aa.setNoticeMode("DASHBOARD");
 		aa.setPrefered("YES");
-		aa.setMobileNo("DISABLE");
-		aa.setEmailAddress("DISABLE");
 	
 		bb.setNoticeMode("EMAIL");
 		bb.setPrefered("YES");		
-		bb.setMobileNo("DISABLE");
-		bb.setEmailAddress("DISABLE TO USER EMAIL ADDRESS");
 
 		cc.setNoticeMode("SMS");
 		cc.setPrefered("YES");		
-		cc.setMobileNo("DISABLE");
-		cc.setEmailAddress("DISABLE");
 		
 		preferencelists.add(aa);
 		preferencelists.add(bb);

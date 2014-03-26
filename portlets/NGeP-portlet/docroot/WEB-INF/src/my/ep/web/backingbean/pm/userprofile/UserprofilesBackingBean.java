@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.userprofile;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -15,6 +16,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.constant.ModuleCodeConst;
@@ -23,6 +25,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -45,7 +49,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -62,8 +65,15 @@ public class UserprofilesBackingBean extends
 
 	private IPagingDataModel<PmUser> userProfileDataModel = new UserProfilePagingDataModel();
 
+	// reset search detail
 	public void reset() {
-		RequestContext.getCurrentInstance().reset("f:searchProfile");
+	//	RequestContext.getCurrentInstance().reset("f:searchProfile");
+		this.getManagedBean().setUserNames(null);
+		this.getManagedBean().setUserRole(null);
+		this.getManagedBean().setUserRole(null);
+		this.getManagedBean().setUserStatus(false);
+
+
 	}
 
 	/**
@@ -180,8 +190,16 @@ public class UserprofilesBackingBean extends
 		retrievePmStateList();
 		retrievePmDistrictList();
 		retrievePmCityList();
+		retrievePmDivisionList();
 	}
-	
+
+	private void debugLogger(Object message) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message);
+		}
+		logger.info(message);
+	}
+
 	private void retriveUserDtls() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = facesScopes.getUserSessionBean();
@@ -236,10 +254,10 @@ public class UserprofilesBackingBean extends
 	}
 
 	public String goToMaintainceAction(PmUser user) {
-		this.getManagedBean().setUser(user);
+		this.getManagedBean().setUser(user);	
 		return "/xhtml/pm/profilemanagement/userProfileCreation.xhtml";
 	}
-
+	
 	public void handleFileUpload(FileUploadEvent event) {
 		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
 				.getFileName() + " is uploaded.");
@@ -288,15 +306,47 @@ public class UserprofilesBackingBean extends
 
 		this.getManagedBean().setCitys(resDTO.getCityList());
 	}
-	
+
 	public void retrievePmDivisionList() {
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
-		reqDTO.setStateId(1L);
+		reqDTO.setStateId(14L);
 		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDivisionSO.class);
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
 
 		this.getManagedBean().setDivisions(resDTO.getDivisionList());
 	}
+
+	/**
+	 * Method to save the user details
+	 */
+	public String saveUPDetailsAction() {
+		debugLogger("saveUPDetailsAction");
+
+		IUserSO iUserSO = null;
+
+		iUserSO = BusinessDelegate.getInstance().getServiceObject("pm",
+				IUserSO.class);
+
+		PmUser user = this.getManagedBean().getUser();
+		UserReqDTO reqDTO = new UserReqDTO();
+		user.setSalutationCode(null);
+		IParameterSO iParameterSO=BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+		ParameterReqDTO reParameterReqDTO= new ParameterReqDTO();
+		reParameterReqDTO.setParameterId(166l);
+		ParameterResDTO parameterResDTO = iParameterSO.retrieveParameterById(reParameterReqDTO);
+		user.setOrgTypeCode(parameterResDTO.getPmParameter());
+		
+		user.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		reqDTO.setPmUser(user);
+		iUserSO.saveUser(reqDTO);
+		return null;
+	}
 	
+	
+	public String createUserDetails(){
+		
+		return "userProfileCreation.xhtml?faces-redirect=true";
+		
+	}
 }

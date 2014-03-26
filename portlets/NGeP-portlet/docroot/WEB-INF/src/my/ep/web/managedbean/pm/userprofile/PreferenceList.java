@@ -6,10 +6,7 @@ public class PreferenceList {
 	private String noticeMode;
 	
 	private String prefered;	
-
-	private String mobileNo;	
-	
-	private String emailAddress;		
+		
 	
 	public String getNoticeMode() {
 		return noticeMode;
@@ -19,21 +16,6 @@ public class PreferenceList {
 		this.noticeMode = noticeMode;
 	}
 
-	public String getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}	
 	
 	public String getPrefered() {
 		return prefered;
