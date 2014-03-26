@@ -43,7 +43,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-				<td><p:inputText disabled="true"  size="33"
+				<td><p:inputText  size="33" style="text-align:right;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}" /></td>
 			</tr>
 			<tr>
@@ -65,9 +65,9 @@
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-			  <td colspan="4">
+			  <td colspan="2">
 			        <p:outputPanel id="justiId">
-					<table style="width: 72.3%">
+					<table>
 					    <tr>
 						   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
 							 <td>
@@ -83,16 +83,19 @@
 								</td>
 				    	 </ui:fragment>
 					   </tr>
+					   <tr>
+					     <ui:fragment rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
+						   <td style="vertical-align:top; text-align:left;width: 200px;"><p:outputLabel
+								value="#{lbl['lbl.sc.just.rmks']}" /></td>
+						   <td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
+								rows="4" cols="65" style="margin-bottom: 5px;" /></td>
+						</ui:fragment>
+					     </tr>
 					 </table>
 				    </p:outputPanel>
 				   </td>
 			</tr>
-            <tr>
-				<td style="vertical-align:top; text-align:left;"><p:outputLabel
-						value="#{lbl['lbl.sc.just.rmks']}" /></td>
-				<td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
-						rows="4" cols="65" style="margin-bottom: 5px;" /></td>
-			</tr>
+          
 		 </table>
 	  </p:panel>
 	  

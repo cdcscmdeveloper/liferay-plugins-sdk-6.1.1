@@ -22,6 +22,45 @@
 					value="#{lbl['lbl.sc.common.cancel']}"
 					icon="ui-icon-cancel" style="float:right;" />
 	    </c:if>
+	    
+	      <table>
+			<tr>
+				<td align="right"><c:if
+						test="#{requestNoteBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
+						<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}"
+						var="action">
+
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
+
+						</c:if>
+
+						<c:if test="${action == 'REJECT'}">
+							<ui:param name="iconVar" value="ui-icon-reject" />
+
+						</c:if>
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
+
+						</c:if>
+						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						
+						<p:commandButton value="#{action}" process="@all"
+								styleClass="ui-button" icon="#{iconVar}"
+								actionListener="#{requestNoteBackingBean.submitAction}" />
+						</c:forEach>
+
+					</c:if></td>
+			</tr>
+		</table>
+	    
 	    <table>
 			<tr>
 				<td align="right"><c:if
@@ -29,12 +68,24 @@
 						<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}"
 						var="action">
 
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
+
+						</c:if>
+
 						<c:if test="${action == 'REJECT'}">
 							<ui:param name="iconVar" value="ui-icon-reject" />
 
 						</c:if>
-						
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
+
+						</c:if>
 						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
 							<ui:param name="iconVar" value="ui-icon-approve" />
 
 						</c:if>

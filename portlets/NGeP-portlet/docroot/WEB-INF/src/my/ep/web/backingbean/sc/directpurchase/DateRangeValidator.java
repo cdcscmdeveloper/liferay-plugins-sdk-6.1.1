@@ -33,8 +33,9 @@ public class DateRangeValidator implements Validator {
 				if (currentDate.after(startDate)) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"start date must be after current date.", ""));
+					
 				}
 				
 			} else {
@@ -50,14 +51,14 @@ public class DateRangeValidator implements Validator {
 				if (currentDate.after(startDate)) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"start date must be after current date.", ""));
 				}
 			
 				if (endDate.before(startDate)) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"End date must be after start date.", ""));
 				}
 

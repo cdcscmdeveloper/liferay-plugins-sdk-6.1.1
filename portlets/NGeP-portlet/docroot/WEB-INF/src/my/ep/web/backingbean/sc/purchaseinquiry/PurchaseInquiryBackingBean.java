@@ -45,6 +45,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.logging.LogKey;
@@ -230,7 +231,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     ScRequestNote	requestNote	=	new ScRequestNote();
 			     for (ScRequestSupplierItem scRequestSupplierItem :  prInquiry.getScRequestSupplierItems()) {
 			    	 ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
-				     requestNoteDtl.setScRequestNote(requestNote);
+				     requestNoteDtl.setScRequestNote(new ScRequestNote());
 				     requestNoteDtls.add(requestNoteDtl);
 				     scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
 				     requestSupplierItems.add(scRequestSupplierItem);
@@ -449,10 +450,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
             for (ScRequestSupplierItem requestSupplierItem : getManagedBean().getScPrInquiry().getScRequestSupplierItems()) {
             	ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+                requestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
             	requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
             	requestNoteDtl.setAssignedUser(new PmUser());
             	requestNoteDtls.add(requestNoteDtl);
 			}
+            requestNote.setRequestNoteDtls(requestNoteDtls);
 			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
@@ -466,7 +469,21 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			reqBPMDTO.setTaskId(getManagedBean().getTaskId());
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
 			requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
+			
+			List<ScRequestNoteRemark> results= new ArrayList<ScRequestNoteRemark>();
+			for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
+				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setUser(facesScopes.getUserSessionBean());
+			    results.add(remark);
+	       }
+	        requestNote.setRemarks(results);
 			requestNoteBackingBean.initializeRemarks(requestNote);
+			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 			
 			//redirect to RequestNote screen
 			return "commonRequestNote";

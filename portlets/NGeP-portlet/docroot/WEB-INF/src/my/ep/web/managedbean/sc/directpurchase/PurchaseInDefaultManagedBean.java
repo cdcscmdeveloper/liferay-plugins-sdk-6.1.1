@@ -54,6 +54,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private CmSupplierItem supplierItem;
 	private SelectItem[] justifications; //justification drop down 
 	private List<ScPurchaseInDefaultAttachment> attachments;
+	private String processName;
     
 	public PurchaseInDefaultManagedBean() {
 		initialInformation();
@@ -229,6 +230,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setAttachments(List<ScPurchaseInDefaultAttachment> attachments) {
 		this.attachments = attachments;
+	}
+
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 
 }

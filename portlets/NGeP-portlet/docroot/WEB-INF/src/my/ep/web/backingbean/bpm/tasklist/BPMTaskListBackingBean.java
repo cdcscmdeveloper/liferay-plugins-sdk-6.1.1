@@ -72,6 +72,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(DIRECT_PURCHASE_BPM_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put("Purchase Review", DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put("Purchase Inquiry Creation", DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put("Purchase In Default Creation", DIRECT_PURCHASE_REVIEW_PATH);
+		
 
 		// QuationTender
 		temp.put("MITI Approval", "qtmaintanance");

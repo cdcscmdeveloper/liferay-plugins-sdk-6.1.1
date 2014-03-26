@@ -64,15 +64,15 @@
 			rowKey="#{itemPrice}" rowIndexVar="index">
       
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.zone']}" style="width:25%">
-					<h:outputText/>
+					<h:outputText value="#{itemPrice.ctContractZone.zoneName}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.from.qty']}" style="width:10%">
-				<h:outputText value="#{itemPrice.tierFrom}" style="float:right"/>
+				<h:outputText value="#{itemPrice.fromQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.to.qty']}" style="width:10%">
-				<h:outputText value="#{itemPrice.tierTo}" style="float:right"/>
+				<h:outputText value="#{itemPrice.toQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">

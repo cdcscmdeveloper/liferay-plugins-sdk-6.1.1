@@ -52,7 +52,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private SelectItem[] priceTypes; // price type drop down 
 	private boolean editFlag; // flat for editing fields in pr inquiry
 	private boolean buttonFlag; // flat for enabled and disabled buttons in pr inquiry
-	 private String processName;
+	private String processName;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
