@@ -9,13 +9,13 @@
 	<p:panel>
 		<ui:include src="bsvLocationPopUp.xhtml"></ui:include>
 		<c:if
-			test="#{!bsvAttendanceBackingBean.managedBean.scQt.multiLocality}">
+			test="#{!bsvAttendanceBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="bsvdtls.xhtml"></ui:include>
 
 		</c:if>
 
 		<c:if
-			test="#{bsvAttendanceBackingBean.managedBean.scQt.multiLocality}">
+			test="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="bsvattandancedtlsbyzone.xhtml"></ui:include>
 
 		</c:if>

@@ -12,7 +12,7 @@
 		#{lbl['lbl.bsv.registration.title']}
 	</ui:define>
 	<ui:define name="contentSection">
-		
+
 		<p:panel>
 			<p:panel>
 				<p:panelGrid style="width:100%;"
@@ -25,8 +25,7 @@
 						</p:column>
 						<p:column width="100%" style="text-align:right">
 							<p:commandButton value="#{lbl['lbl.ss.save']}"
-								icon="ui-icon-submit"
-								action="#{bsvAttendanceBackingBean.backBtn}"
+								icon="ui-icon-save" action="#{bsvAttendanceBackingBean.backBtn}"
 								style="float:right;" />
 						</p:column>
 					</p:row>
@@ -131,6 +130,18 @@
 					<p:column selectionMode="multiple" style="width:5%" />
 				</p:dataTable>
 
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+						process="@this" partialSubmit="true" update="attendanceDetailstbl"
+						action="#{bsvAttendanceBackingBean.addAttendanceForBSV}"
+						icon="ui-icon-add" />
+
+					<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
+						process="@this,attendanceDetailstbl" partialSubmit="true"
+						update="attendanceDetailstbl"
+						action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
+						icon="ui-icon-delete" />
+				</div>
 
 
 			</p:panel>

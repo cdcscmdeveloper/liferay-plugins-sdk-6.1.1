@@ -11,79 +11,101 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author sri
- * Briefing Attendance Managed Bean
+ * @author sri Briefing Attendance Managed Bean
  */
 @ManagedBean(name = "bsvAttendanceManagedBean")
 @SessionScoped
 public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private List<ScQtBriefing> briefingDetailsList; // For Briefing Details listing
-	
-	private List<ScQtBriefing> siteVisitDetailsList; // For Site Visit Details listing
-	
-	private List<ScQtBriefing> selectedBriefingDetails; // Selected Briefing Details
-	
-	private List<ScQtBriefing> selectedSiteVisitDetails; // Selected Site Visit Details
-	
-	private List<ScQtBriefingRegistration> briefingRegistrationList; // briefingRegistrationList  for Registration for Company List
-	
-	private List<ScQtBriefingAttendance> briefingAttendanceList;  // Listing for Attendance By Company
-	
-	private ScQtBriefing scQtBriefing; 
-	
-	private ScQtBriefingRegistration  selectedbriefRegistration; // Selected Briefing Registration for Attendance List 
-	
-	private ScQtBriefingRegistration scQtBriefingRegistration; 
+	private List<ScQtBriefing> briefingDetailsList; // For Briefing Details
+													// listing
+
+	private List<ScQtBriefing> siteVisitDetailsList; // For Site Visit Details
+														// listing
+
+	private List<ScQtBriefing> selectedBriefingDetails; // Selected Briefing
+														// Details
+
+	private List<ScQtBriefing> selectedSiteVisitDetails; // Selected Site Visit
+															// Details
+
+	private List<ScQtBriefingRegistration> briefingRegistrationList; // briefingRegistrationList
+																		// for
+																		// Registration
+																		// for
+																		// Company
+																		// List
+
+	private List<ScQtBriefingAttendance> briefingAttendanceList; // Listing for
+																	// Attendance
+																	// By
+																	// Company
+
+	private ScQtBriefing scQtBriefing;
+
+	private ScQtBriefingRegistration selectedbriefRegistration; // Selected
+																// Briefing
+																// Registration
+																// for
+																// Attendance
+																// List
+
+	private ScQtBriefingRegistration scQtBriefingRegistration;
 	private ScQtBriefingAttendance scQtBriefingAttendance;
 	private ScQt scQt;
 	private SmMofAccount smMofAccount;
 	private SmSupplier smSupplier;
-	
-	//Drop down listing
-	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
+
+	// Drop down listing
+	private List<PmUser> approverNames; // Drop down Listing for Approver Names
 	private List<PmStatusDesc> pmStatus;
 	private List<SmSupplier> smSuppliers;
-	private List<SmMofAccount> 	smMofAccounts;
-	
+	private List<SmMofAccount> smMofAccounts;
+
 	/** added by Vidyasagar */
 	private Object siteVisitPayLoad;
-	
+
 	private String previousPage;
-	
+
 	private String location;
 	private String address;
-	 
+	private List<TplSpecZoneDtl> zones;
+	private List<ScRemark> remarks;
+	private TplSpecZoneDtl selectedZone;
+
 	/**
-	 * @return  briefingDetailsList
+	 * @return briefingDetailsList
 	 */
 	public List<ScQtBriefing> getBriefingDetailsList() {
 		return briefingDetailsList;
 	}
-	
+
 	/**
-	 * @param briefingDetailsList the briefingDetailsList to set
+	 * @param briefingDetailsList
+	 *            the briefingDetailsList to set
 	 */
 	public void setBriefingDetailsList(List<ScQtBriefing> briefingDetailsList) {
 		this.briefingDetailsList = briefingDetailsList;
 	}
-	
+
 	/**
 	 * @return siteVisitDetailsList
 	 */
 	public List<ScQtBriefing> getSiteVisitDetailsList() {
 		return siteVisitDetailsList;
 	}
-	
-	
+
 	/**
-	 * @param siteVisitDetailsList the siteVisitDetailsList to set
+	 * @param siteVisitDetailsList
+	 *            the siteVisitDetailsList to set
 	 */
 	public void setSiteVisitDetailsList(List<ScQtBriefing> siteVisitDetailsList) {
 		this.siteVisitDetailsList = siteVisitDetailsList;
@@ -95,30 +117,32 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public List<ScQtBriefing> getSelectedSiteVisitDetails() {
 		return selectedSiteVisitDetails;
 	}
-	
+
 	/**
-	 * @param selectedSiteVisitDetails the selectedSiteVisitDetails to set
+	 * @param selectedSiteVisitDetails
+	 *            the selectedSiteVisitDetails to set
 	 */
 	public void setSelectedSiteVisitDetails(
 			List<ScQtBriefing> selectedSiteVisitDetails) {
 		this.selectedSiteVisitDetails = selectedSiteVisitDetails;
 	}
-	
+
 	/**
 	 * @return selectedBriefingDetails
 	 */
 	public List<ScQtBriefing> getSelectedBriefingDetails() {
 		return selectedBriefingDetails;
 	}
-	
+
 	/**
-	 * @param selectedBriefingDetails the selectedBriefingDetails to set
+	 * @param selectedBriefingDetails
+	 *            the selectedBriefingDetails to set
 	 */
 	public void setSelectedBriefingDetails(
 			List<ScQtBriefing> selectedBriefingDetails) {
 		this.selectedBriefingDetails = selectedBriefingDetails;
 	}
-	
+
 	/**
 	 * @return scQtBriefing
 	 */
@@ -127,66 +151,71 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtBriefing the scQtBriefing to set
+	 * @param scQtBriefing
+	 *            the scQtBriefing to set
 	 */
 	public void setScQtBriefing(ScQtBriefing scQtBriefing) {
 		this.scQtBriefing = scQtBriefing;
 	}
-	
+
 	/**
 	 * @return briefingRegistrationList
 	 */
 	public List<ScQtBriefingRegistration> getBriefingRegistrationList() {
 		return briefingRegistrationList;
 	}
-	
+
 	/**
-	 * @param briefingRegistrationList the briefingRegistrationList to set
+	 * @param briefingRegistrationList
+	 *            the briefingRegistrationList to set
 	 */
 	public void setBriefingRegistrationList(
 			List<ScQtBriefingRegistration> briefingRegistrationList) {
 		this.briefingRegistrationList = briefingRegistrationList;
 	}
-	
+
 	/**
 	 * @return briefingAttendanceList
 	 */
 	public List<ScQtBriefingAttendance> getBriefingAttendanceList() {
 		return briefingAttendanceList;
 	}
-	
+
 	/**
-	 * @param briefingAttendanceList the briefingAttendanceList to set
+	 * @param briefingAttendanceList
+	 *            the briefingAttendanceList to set
 	 */
 	public void setBriefingAttendanceList(
 			List<ScQtBriefingAttendance> briefingAttendanceList) {
 		this.briefingAttendanceList = briefingAttendanceList;
 	}
-	
+
 	/**
 	 * @return selectedbriefRegistration
 	 */
 	public ScQtBriefingRegistration getSelectedbriefRegistration() {
 		return selectedbriefRegistration;
 	}
-	
+
 	/**
-	 * @param selectedbriefRegistration the selectedbriefRegistration to set
+	 * @param selectedbriefRegistration
+	 *            the selectedbriefRegistration to set
 	 */
 	public void setSelectedbriefRegistration(
 			ScQtBriefingRegistration selectedbriefRegistration) {
 		this.selectedbriefRegistration = selectedbriefRegistration;
 	}
-	
+
 	/**
 	 * @return approverNames
 	 */
 	public List<PmUser> getApproverNames() {
 		return approverNames;
 	}
-	
+
 	/**
-	 * @param approverNames the approverNames to set
+	 * @param approverNames
+	 *            the approverNames to set
 	 */
 	public void setApproverNames(List<PmUser> approverNames) {
 		this.approverNames = approverNames;
@@ -200,7 +229,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtBriefingRegistration the scQtBriefingRegistration to set
+	 * @param scQtBriefingRegistration
+	 *            the scQtBriefingRegistration to set
 	 */
 	public void setScQtBriefingRegistration(
 			ScQtBriefingRegistration scQtBriefingRegistration) {
@@ -215,7 +245,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtBriefingAttendance the scQtBriefingAttendance to set
+	 * @param scQtBriefingAttendance
+	 *            the scQtBriefingAttendance to set
 	 */
 	public void setScQtBriefingAttendance(
 			ScQtBriefingAttendance scQtBriefingAttendance) {
@@ -230,7 +261,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -244,12 +276,12 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmStatus the pmStatus to set
+	 * @param pmStatus
+	 *            the pmStatus to set
 	 */
 	public void setPmStatus(List<PmStatusDesc> pmStatus) {
 		this.pmStatus = pmStatus;
 	}
-
 
 	/**
 	 * @return the smSuppliers
@@ -259,7 +291,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSuppliers the smSuppliers to set
+	 * @param smSuppliers
+	 *            the smSuppliers to set
 	 */
 	public void setSmSuppliers(List<SmSupplier> smSuppliers) {
 		this.smSuppliers = smSuppliers;
@@ -273,7 +306,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smMofAccounts the smMofAccounts to set
+	 * @param smMofAccounts
+	 *            the smMofAccounts to set
 	 */
 	public void setSmMofAccounts(List<SmMofAccount> smMofAccounts) {
 		this.smMofAccounts = smMofAccounts;
@@ -287,7 +321,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smMofAccount the smMofAccount to set
+	 * @param smMofAccount
+	 *            the smMofAccount to set
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
@@ -301,7 +336,8 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplier the smSupplier to set
+	 * @param smSupplier
+	 *            the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
@@ -339,8 +375,28 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 		this.address = address;
 	}
 
-	
-	
-	
-	
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	public List<ScRemark> getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(List<ScRemark> remarks) {
+		this.remarks = remarks;
+	}
+
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+
 }

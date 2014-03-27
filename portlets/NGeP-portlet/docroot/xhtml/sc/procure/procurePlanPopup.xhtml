@@ -8,65 +8,76 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="planInforDialog" widgetVar="procurePlanPopup"
-		styleClass="planDailog" modal="true" width="500" height="350" header="#{lbl['lbl.pp.updatenotificcationdays']}">
-
-		
-			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
-				<p:outputLabel value="#{lbl['lbl.pp.plan.number']}" />
-				<p:inputText readonly="true"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.planNo}" />
-
-				<p:outputLabel value="#{lbl['lbl.pp.plan.description']}" />
-				<p:inputTextarea cols="20" rows="3"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.planDesc}"
-					readonly="true" style="margin-bottom:5px" />
+		styleClass="planDailog" modal="true" style="width: 464px; height: 333px; left: 425.5px; top: 66.375px; "
+		header="#{lbl['lbl.pp.updatenotificcationdays']}">
 
 
-				<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
+		<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+			<p:outputLabel value="#{lbl['lbl.pp.planed.number']}" />
+			<p:inputText disabled="true"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.planNo}" />
 
-				<p:inputText readonly="true"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.procurementModeParam.parameterCode}" />
+			<p:outputLabel value="#{lbl['lbl.pp.plan.description']}" />
+			<p:inputTextarea cols="60" rows="3"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.planDesc}"
+				disabled="true" style="margin-bottom:5px" />
 
 
+			<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
 
-				<p:outputLabel value="#{lbl['lbl.so.planamount']}" />
+			<p:inputText disabled="true"
+				value="#{procurementPlanBackingBean.getParameterDesc(procurementPlanBackingBean.managedBean.currentPlan.procurementModeParam)}" />
 
-				<p:inputText readonly="true"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.actualAmt}" />
 
-				<p:outputLabel value="#{lbl['lbl.pp.status']}" />
-				<p:inputText readonly="true"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.pmStatus.pmStatusDescs.statusName}" />
+			<p:outputLabel value="#{lbl['lbl.so.planamount']}" />
 
-				<p:outputLabel value="#{lbl['lbl.qt.pp.purchasereqstdate']}" />
+			<p:inputText disabled="true"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.actualAmt}" />
 
-				<p:inputText readonly="true"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-				</p:inputText>
-				<p:outputLabel value="Notification Date" />
-				<p:calendar id="notificationDaysSelection" showOn="button" maxdate="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}"
-					value="#{procurementPlanBackingBean.managedBean.notificationDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" style="margin-bottom:3px">
-					<p:ajax event="dateSelect" listener="#{procurementPlanBackingBean.handleDateSelect}" update="notificationDays" process="@this"/>  
-					</p:calendar>
+			<p:outputLabel value="#{lbl['lbl.pp.status']}" />
+			<p:inputText disabled="true"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.pmStatus.pmStatusDescs.statusName}" />
 
-				<p:outputLabel value="#{lbl['lbl.qt.pp.notificationdays']}" />
-				<p:inputText id="notificationDays"
-					value="#{procurementPlanBackingBean.managedBean.currentPlan.notificationDays}" >
-					<p:ajax event="blur" update="notificationDaysSelection" listener="#{procurementPlanBackingBean.handleNotificationDate}"/> 
-					</p:inputText>
-				<div align="right">
-					<p:columnGroup>
-						<p:commandButton process="@this" value="Ok"
-							action="#{procurementPlanBackingBean.updatePlannedInfo}"
-							oncomplete="procurePlanPopup.hide();" partialSubmit="true"
-							icon="ui-icon-ok" update="dtPlanResult"/>
-						<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"
-							icon="ui-icon-close" />
-					</p:columnGroup>
+			<p:outputLabel value="#{lbl['lbl.qt.pp.purchasereqstdate']}" />
+
+			<p:inputText disabled="true"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}">
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</p:inputText>
+			<p:outputLabel value="Notification Date" />
+			<p:calendar id="notificationDaysSelection" showOn="button"
+				maxdate="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}"
+				value="#{procurementPlanBackingBean.managedBean.notificationDate}"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				style="margin-bottom:3px">
+				<p:ajax event="dateSelect"
+					listener="#{procurementPlanBackingBean.handleDateSelect}"
+					update="notificationDays" process="@this" />
+			</p:calendar>
+
+			<p:outputLabel value="#{lbl['lbl.qt.pp.notificationdays']}" />
+			<p:inputText id="notificationDays"
+				value="#{procurementPlanBackingBean.managedBean.currentPlan.notificationDays}">
+				<p:ajax event="blur" update="notificationDaysSelection"
+					listener="#{procurementPlanBackingBean.handleNotificationDate}" />
+			</p:inputText>
+
+		</h:panelGrid>
+		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+			width="100%">
+			<p:column>
+				<div style="float: right;">
+					<p:commandButton process="@this" value="Ok"
+						action="#{procurementPlanBackingBean.updatePlannedInfo}"
+						oncomplete="procurePlanPopup.hide();" partialSubmit="true"
+						icon="ui-icon-check" update="dtPlanResult" />
+					<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"
+						icon="ui-icon-cancel" />
 				</div>
-			</h:panelGrid>
-	
-		
+			</p:column>
+		</h:panelGrid>
+
+
+
 	</p:dialog>
 </ui:composition>

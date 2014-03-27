@@ -6,10 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<p:panel>
+
+
 	<p:panel header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2">
+		<h:panelGrid id="planSearchDtls" border="0" cellpadding="0"
+			cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20">
 
 			<p:outputLabel value="#{lbl['lbl.pp.plan.number']}" />
 
@@ -20,10 +22,11 @@
 			<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
 
 			<p:selectOneMenu id="somProcureMode" styleClass="ppDropDownWidthM"
-				value="#{procurementPlanBackingBean.managedBean.procurementMode}" style="margin-bottom:5px">
+				value="#{procurementPlanBackingBean.managedBean.procurementMode}"
+				style="margin-bottom:5px">
 
 				<f:selectItems
-					value="#{procurementPlanBackingBean.getDropdownCodeValues(PmCodeCatConst.procurementMode)}" />
+					value="#{procurementPlanBackingBean.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
 			</p:selectOneMenu>
 
 
@@ -31,61 +34,80 @@
 
 
 			<p:selectOneMenu styleClass="ppDropDownWidthM"
-				value="#{procurementPlanBackingBean.managedBean.planStatus}" >
+				value="#{procurementPlanBackingBean.managedBean.planStatus}">
 				<f:selectItems
 					value="#{procurementPlanBackingBean.statusDropdownValues()}" />
 			</p:selectOneMenu>
-<p:column></p:column>
-			
-			<p:commandButton value="#{lbl['lbl.pp.search']}"
-				icon="ui-icon-search" update="dtPlanResult" style="float:right"
-				action="#{procurementPlanBackingBean.retriveProcuremntPlanDtls}" />
+
 
 		</h:panelGrid>
+
+		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+			width="100%">
+			<p:column>
+				<div style="float: right;">
+					<p:commandButton value="#{lbl['lbl.search']}" icon="ui-icon-search"
+						update="dtPlanResult"
+						action="#{procurementPlanBackingBean.retriveProcuremntPlanDtls}">
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.reset']}" icon="ui-icon-reset"
+						update="dtPlanResult,planSearchDtls"
+						action="#{procurementPlanBackingBean.resetPlanDetails}">
+					</p:commandButton>
+				</div>
+			</p:column>
+
+		</h:panelGrid>
+
+
+
 
 	</p:panel>
 
 	<!-- Result List -->
 	<p:panel header="#{lbl['lbl.pp.result']}" toggleable="true">
 		<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="ppPlan"
-			value="#{procurementPlanBackingBean.managedBean.procurementPlanList}"
-			rowIndexVar="rowIndex"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}" style="width:100%">
+			value="#{procurementPlanBackingBean.planDataModel}"
+			rowIndexVar="index" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			style="width:100%" lazy="true">
 			<ac:paginator for="dtPlanResult" />
 
-			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
-               		#{ppPlan.planNo}
-            </p:column>
-			<p:column headerText="#{lbl['lbl.pp.plan.description']}">  
-               		#{ppPlan.planDesc}
-            </p:column>
-			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
-               		#{ppPlan.procurementModeParam.parameterCode}
-            </p:column>
+			<p:column headerText="#{lbl['lbl.pp.planed.number']}">
+				<h:outputText value="#{ppPlan.planNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pp.plan.description']}">
+				<h:outputText value="#{ppPlan.planDesc}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">
+				<h:outputText
+					value="#{procurementPlanBackingBean.getParameterDesc(ppPlan.procurementModeParam)}" />
+			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.planamount']}">  
-               		<h:outputLabel value="#{ppPlan.actualAmt}"></h:outputLabel>
-            </p:column>
-			<p:column headerText="#{lbl['lbl.pp.status']}">  
-                  <h:outputText value="#{ppPlan.pmStatus.pmStatusDescs.statusName}" ></h:outputText>
-            </p:column>
-			<p:column headerText="#{lbl['lbl.qt.pp.purchasereqstdate']}">  
-                  <h:outputText value="#{ppPlan.ppPlanActivities[0].planStartDate}">
-                  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                  </h:outputText>
-            </p:column>
-			<p:column headerText="#{lbl['lbl.qt.pp.notificationdays']}">  
-                  <h:outputLabel value="#{ppPlan.notificationDays}"></h:outputLabel>
-            </p:column>
-			<p:column headerText="#{lbl['lbl.so.status']}">  
-                    #{ppPlan.pmStatus.pmStatusDescs[0].statusDesc} 
-            </p:column>
+			<p:column headerText="#{lbl['lbl.so.planamount']}">
+				<h:outputLabel value="#{ppPlan.actualAmt}"></h:outputLabel>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pp.status']}">
+				<h:outputText
+					value="#{procurementPlanBackingBean.getStatusDescById(ppPlan.pmStatus.statusId)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.pp.purchasereqstdate']}">
+				<h:outputText value="#{ppPlan.ppPlanActivities[0].planStartDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.pp.notificationdays']}">
+				<h:outputLabel value="#{ppPlan.notificationDays}"></h:outputLabel>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.so.status']}">
+				<h:outputText
+					value="#{procurementPlanBackingBean.getStatusDescById(ppPlan.pmStatus.statusId)}" />
+			</p:column>
 
 
 			<p:column headerText="#{lbl['lbl.pp.action']}">
 				<p:commandLink
 					actionListener="#{procurementPlanBackingBean.editPlan(ppPlan,rowIndex)}"
-					oncomplete="procurePlanPopup.show();" update="@(.planDailog)" >
+					oncomplete="procurePlanPopup.show();" update="@(.planDailog)">
 					<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 				</p:commandLink>
 				<p:commandLink
@@ -97,8 +119,7 @@
 
 		</p:dataTable>
 
+
 	</p:panel>
 
-	<ui:include src="procurePlanPopup.xhtml"></ui:include>
-	</p:panel>
 </ui:composition>

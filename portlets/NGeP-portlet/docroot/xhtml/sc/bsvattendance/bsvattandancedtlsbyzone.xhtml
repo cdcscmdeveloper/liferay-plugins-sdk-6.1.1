@@ -6,11 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-
-
 	<p:tabView var="zones" dynamic="true" cache="true" orientation="left"
-		value="#{noticeBoardBackingBean.managedBean.zoneList}">
-		<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.zoneTabChange}" />
+		value="#{bsvAttendanceBackingBean.managedBean.zones}">
+		<p:ajax event="tabChange" listener="#{bsvAttendanceBackingBean.zoneTabChange}" />
 		<p:tab title="#{zones.zoneName}">
       <ui:include src="bsvdtls.xhtml"></ui:include>
 		</p:tab>
