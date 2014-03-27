@@ -51,6 +51,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -188,6 +189,19 @@ public class SimpleQuoteBackingBean extends
 			quote.setSupplierMofNoCriterias(geSupplierCriterias(getManagedBean().getSupplierMofNoCriterias()));
 			// by govt seller
 			quote.setGovEPNoCriterias(getGovtSeller(getManagedBean().getGovEPNoCriterias()));
+			
+			if(getManagedBean().getProductTpls() != null){
+				for (TplSpecMaster product : getManagedBean().getProductTpls()) {
+					reqDTO.setProductTpl(product);
+				}
+			}
+			
+			if(getManagedBean().getServiceTpls() != null){
+				for (TplSpecMaster service : getManagedBean().getServiceTpls()) {
+					reqDTO.setProductTpl(service);
+				}
+			}
+			
 			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
@@ -196,6 +210,7 @@ public class SimpleQuoteBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Record saved successfully.", ""));
+				return "/xhtml/shared/acknowledge.xhtml";
 			}
          
 		} catch (Exception ex) {
@@ -209,6 +224,92 @@ public class SimpleQuoteBackingBean extends
 		}
 		return null;
 	}
+	
+	/**
+	 * saveSimpleQuote method to save SQ
+	 */
+	public String submitSimpleQuote() {
+		debugLogger("submitSimpleQuote");
+		IQuoteSO quoteSO = null;
+		try {
+			quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQuoteSO.class);
+			QuoteReqDTO reqDTO = new QuoteReqDTO();
+			ScQuote quote = getManagedBean().getScQuote();
+			ScRequestItem requestItem = new ScRequestItem();
+			List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
+			requestItems.add(requestItem);
+			ScRequestNote requestNote = new ScRequestNote();
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+			requestNote.setSourceMethod("SQ");
+			requestNote.setPmOrgProfile(ptjNameEvent());
+			List<ScRequestNote> requestNotes = new ArrayList<ScRequestNote>();
+			requestNotes.add(requestNote);
+			quote.setRequestItems(requestItems);
+			quote.setRequestNotes(requestNotes);
+			quote.setCreatedDate(DateUtils.getCurrentDate());
+			//zone
+			quote.setScZones(getQuoteZones(getManagedBean().getZoneTrees(),quote));
+			//by location
+			quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees()));
+			quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees()));
+			quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees()));
+			// by business nature
+			quote.setBusinessNatureCriterias(getBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias()));
+			// by supplier 
+			quote.setSupplierMofNoCriterias(geSupplierCriterias(getManagedBean().getSupplierMofNoCriterias()));
+			// by govt seller
+			quote.setGovEPNoCriterias(getGovtSeller(getManagedBean().getGovEPNoCriterias()));
+			
+			if(getManagedBean().getProductTpls() != null){
+				for (TplSpecMaster product : getManagedBean().getProductTpls()) {
+					reqDTO.setProductTpl(product);
+				}
+			}
+			
+			if(getManagedBean().getServiceTpls() != null){
+				for (TplSpecMaster service : getManagedBean().getServiceTpls()) {
+					reqDTO.setProductTpl(service);
+				}
+			}
+			
+			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			reqDTO.setQuoteBidDtl(quote);
+			QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
+			if (quoteResDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""));
+				return "/xhtml/shared/acknowledge.xhtml";
+			}
+         
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sorry We are unable to process.", ""));
+			ex.printStackTrace();
+		} finally {
+			quoteSO = null;
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public void supplierCriteriaEvent() {
 		debugLogger("supplierCriteriaEvent");

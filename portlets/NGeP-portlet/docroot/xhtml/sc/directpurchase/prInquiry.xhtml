@@ -187,10 +187,12 @@
 				    	 </ui:fragment>
 					   </tr>
 					   <tr>
+					    <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 						 <td style="vertical-align:top; text-align:left;"><p:outputLabel
 								value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /></td>
-						<td colspan="4"><p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
+						 <td colspan="4"><p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
 								rows="4" cols="122" style="margin-bottom: 5px;" /></td>
+						</ui:fragment>
 					   </tr>
 					   
 					  </table>
@@ -208,7 +210,7 @@
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:selectOneRadio  id="stockAvailable" disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
+					<p:selectOneRadio  id="stockAvailable"  disabled="#{unspscCodeBackingBean.requisitioner}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable}"
 						rendered="true" required="true">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
@@ -239,8 +241,8 @@
 				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%" rendered="#{!unspscCodeBackingBean.requisitioner}">
-				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" />
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
+				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" disabled="#{unspscCodeBackingBean.requisitioner}"/>
 			</p:column>
 
 		</p:dataTable>

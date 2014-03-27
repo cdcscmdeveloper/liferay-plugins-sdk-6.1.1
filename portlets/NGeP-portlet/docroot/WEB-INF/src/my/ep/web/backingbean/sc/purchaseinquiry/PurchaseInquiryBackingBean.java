@@ -260,7 +260,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
 									"Record saved successfully.", ""
 							));
-					//return "/xhtml/shared/acknowledge.xhtml";
+				  return "/xhtml/shared/acknowledge.xhtml";
 				} 
 				
 			} catch (Exception ex) {
@@ -276,7 +276,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 		
 	  
-	  public void submitPrInquiryPrice(String outcome){
+	  public String submitPrInquiryPrice(String outcome){
 		   IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
@@ -294,6 +294,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Record saved successfully.", ""));
+				  return "/xhtml/shared/acknowledge.xhtml";
 			   }else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -322,6 +323,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					bpmSO = null;
 				}
 		   }
+		return null;
 	  }
 	  
 	/**
@@ -451,14 +453,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
             for (ScRequestSupplierItem requestSupplierItem : getManagedBean().getScPrInquiry().getScRequestSupplierItems()) {
             	ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
                 requestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+                requestNoteDtl.setDeliverPeriodType(ParameterConst.SQ_DURATION_DAY);
             	requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
             	requestNoteDtl.setAssignedUser(new PmUser());
             	requestNoteDtls.add(requestNoteDtl);
 			}
-			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
-			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
-			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
-			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
+			
 			initializeRemarks(getManagedBean().getScPrInquiry());
 			requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -479,8 +479,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				remark.setUser(facesScopes.getUserSessionBean());
 			    results.add(remark);
 	       }
-	        requestNote.setRemarks(results);
-			requestNoteBackingBean.initializeRemarks(requestNote);
+	        requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(requestNote));
+			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
+			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
+			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
+			requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
 			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);

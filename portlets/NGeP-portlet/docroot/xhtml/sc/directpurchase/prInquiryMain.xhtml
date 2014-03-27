@@ -19,7 +19,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					icon="ui-icon-submit" action="#{requestNoteBackingBean.addToRequestNote(purchaseInquiryBackingBean.managedBean.method)}"/>
 
 				<p:commandButton rendered="#{!purchaseInquiryBackingBean.managedBean.buttonFlag}"
-					value="#{lbl['lbl.sc.common.cancel']}"
+					value="#{lbl['lbl.sc.common.cancel']}" action="#{purchaseInquiryBackingBean.backToPervious}"
 					icon="ui-icon-cancel" />
 					 
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"

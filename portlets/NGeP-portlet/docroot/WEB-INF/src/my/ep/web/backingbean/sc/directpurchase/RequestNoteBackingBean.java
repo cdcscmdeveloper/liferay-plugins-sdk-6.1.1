@@ -123,6 +123,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(requestNote));
+		requestNote.setPmOrgProfile(ptjNameEvent());
 		requestNoteReqDTO.setRequestNote(requestNote);
 		
 		requestNote = removeEmptyRemarkBeforeSave(requestNote);
@@ -187,6 +188,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Record saved successfully.", ""));
+		   return "/xhtml/shared/acknowledge.xhtml";
 		}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -424,16 +426,21 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			results.add(0, remark);
 		} else {
 			if( scRequestNote.getRemarks().size() >0 && scRequestNote.getRemarks() !=null) {
-				ScRequestNoteRemark scRequestNoteRemark = scRequestNote.getRemarks().get(0);
-				scRequestNoteRemark.setChangedDate(new Timestamp(System.currentTimeMillis()));
-				scRequestNoteRemark.setChangedBy(scRequestNoteRemark.getCreatedBy());
-				scRequestNoteRemark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
-				PmStatus status = new PmStatus();
-				status.setStatusId(SourcingConstants.RN_PENDING_APPROVAL);
-				scRequestNoteRemark.setPmStatus(status);
-				scRequestNoteRemark.setRequestNote(scRequestNote);
-				results.clear();
-				results.add(0, scRequestNoteRemark);
+				  remark = new ScRequestNoteRemark();
+					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					remark.setChangedBy(remark.getCreatedBy());
+					remark.setChangedDate(remark.getCreatedDate());
+					remark.setUser(facesScopes.getUserSessionBean());
+					if (getManagedBean().getRequestNote().getRemarks() != null && getManagedBean().getRequestNote().getRemarks().size()>0) {
+					   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
+					} 
+					PmStatus status = new PmStatus();
+					status.setStatusId(SourcingConstants.RN_PENDING_APPROVAL);
+					remark.setPmStatus(status);
+					remark.setRequestNote(scRequestNote);
+					results.clear();
+					results.add(0, remark);
 			}
 			
 		}
@@ -558,6 +565,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						.getSmSupplier());
 				getManagedBean().setRequestSupplierItem(requestSupplierItem);
 				getManagedBean().setRequestNoteDtl(inquiryBackingBean.getManagedBean().getRequestNoteDtl());
+				getManagedBean().setOrgProfileId(inquiryBackingBean.getManagedBean().getOrgProfileId());
 			}
 		}
 		FacesScopes facesScopes = new FacesScopes();
@@ -567,19 +575,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestNote requestNote =  null;
 		if(getManagedBean().getRequestNote() == null || getManagedBean().getRequestNote().getRequestNoteNo() == null){
 			requestNote	=	new ScRequestNote();
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+	/*		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			// TODO hard coding PmOrgProfile to Request Note
 			orgProfileReqDTO.setOrgProfileId(4L);
 			OrgProfileResDTO pmResDTO = orgProfileSO
 					.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-			requestNote.setPmOrgProfile(pmResDTO.getPmOrgProfile());
+			*/
+			requestNote.setPmOrgProfile(new PmOrgProfile());
 			//Hoa: use getRequestNoteNo() to get Request Note Number
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
-			
 			if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_SC)) {
 				   requestNote.setSourceMethod("SC");
 				   getManagedBean().setSourceMethod(sourceMethod);
@@ -590,7 +598,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				  requestNote.setSourceMethod("PIQ");
 				  getManagedBean().setSourceMethod(sourceMethod);
 				  fulfilmentTypeEvent(scRequestNoteDtl);
-				  
 			}
 			initializeRemarks(requestNote);
 		}else{
@@ -823,7 +830,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("REQUISITIONER");
 	}
+
 	
-	
+	public PmOrgProfile ptjNameEvent() {
+		if (getManagedBean().getOrgProfileId() != null) {
+			for (PmOrgProfile orgProfile : getManagedBean()
+					.getUserDivisionList()) {
+				if (orgProfile.getOrgProfileId().equals(
+						getManagedBean().getOrgProfileId())) {
+					getManagedBean().getRequestNote().setPmOrgProfile(orgProfile);
+				}
+			}
+		}
+		return getManagedBean().getOrgProfile();
+	}
 	
 }

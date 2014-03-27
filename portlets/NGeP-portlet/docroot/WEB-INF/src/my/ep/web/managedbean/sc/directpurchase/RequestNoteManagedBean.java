@@ -43,6 +43,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private	String	periodType;
 	private	int	periodValue;
 	private Long orgProfileId;
+	private PmOrgProfile orgProfile = new PmOrgProfile();
 	
 	private List<PmOrgProfile> userDivisionList;
     private ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
@@ -365,6 +366,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.itemCheck = itemCheck;
 	}
 	
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+	/**
+	 * @param orgProfile the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
+	}
 	public	boolean	isPrInquiry(){
 		boolean result	= false;
 		if(requestNote != null){

@@ -128,7 +128,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	 *  submitPurchaseInDefault  method to submit PID details 
      *  in Purchase In Default
 	*/	
-	 public void submitPurchaseInDefault() {
+	 public String submitPurchaseInDefault() {
 		  debugLogger("submitPurchaseInDefault");
 		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		  try {
@@ -160,7 +160,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				reqDTO.setToken(token);
 				
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", ""));
+				if (resDTO.isSuccessful()) {
+					 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", ""));
+					 return "/xhtml/shared/acknowledge.xhtml";
+				} 
 			} catch (Exception ex) {
 			    FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -169,7 +172,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			} finally {
 					purchaseInDefaultSO = null;
 			}
-			}
+		return null;
+	 }
 			
 		/**
 		 * initializing remarks in Purchase In Default

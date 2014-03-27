@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:spacer height="10px" />
 		<h:panelGrid border="0"  width="100%"
-			columns="8">
+			columns="8" id="rnHearId">
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}"/>
 																		
@@ -21,7 +21,33 @@
 			<p:inputText disabled="true" value="#{requestNoteBackingBean.currentStatus}" />
 		</h:panelGrid>
 		<p:spacer height="5px" />
-	
+
+	<p:panel id="ptjNameId">
+		<table style="width: 70%">
+			<tr>
+			 <c:if test ="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}">
+		
+					<td style="width: 180px;"><p:outputLabel
+							value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
+					<td><p:selectOneMenu
+							value="#{requestNoteBackingBean.managedBean.orgProfileId}"
+							styleClass="divisionclass"
+							style="width: 250px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{requestNoteBackingBean.managedBean.userDivisionList}"
+								var="pmOrgProfile"
+								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+								itemValue="#{pmOrgProfile.orgProfileId}" />
+							<p:ajax event="change" update="rnHearId ,ptjNameId" process="@all"
+								listener="#{requestNoteBackingBean.ptjNameEvent}" />
+						</p:selectOneMenu></td>
+			
+			</c:if>
+			</tr>
+
+		</table>
+	 </p:panel>
+
 	<p:panel id="glb_panel_request_list"
 		header="#{lbl['lbl.sc.panel.title.item.detail']}" toggleable="true"
 		toggleSpeed="500">
@@ -110,7 +136,6 @@
 					<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"></h:outputText>
 					<p:spacer width="6px;"/>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,ParameterConst.fullfillOneOff)}" disabled="#{requestNoteDtl.scRequestNote.sourceMethod eq 'SC'}" />
-					
 					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
