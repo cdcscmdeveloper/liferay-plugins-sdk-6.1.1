@@ -187,7 +187,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				remark.setUser(facesScopes.getUserSessionBean());
 				if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
 				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
-				} 
+				} else{
+					remark.setRemark("");
+				}
 				PmStatus status = new PmStatus();
 				status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
 				remark.setPmStatus(status);
