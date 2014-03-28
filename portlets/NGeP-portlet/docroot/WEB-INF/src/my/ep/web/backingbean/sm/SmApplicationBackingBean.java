@@ -107,7 +107,11 @@ public class SmApplicationBackingBean extends
 
 				System.out
 						.println("******** Latest Cloned Draft Copy is ******"
-								+ smAppl.getApplId());
+								+ smAppl.getApplId()
+								+ "--- Basic info ---"
+								+ smAppl.getSmCompanyBasic()
+										.getCompanyBasicId() + " --- "
+								+ smAppl.getSmCompanyBasic().getCompanyName());
 
 			} else {
 				System.out
@@ -151,7 +155,6 @@ public class SmApplicationBackingBean extends
 			}
 
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
-			smAppl.setSmCompanyBasic(new SmCompanyBasic());
 			getManagedBean().setSmAppl(smAppl);
 			// TODO remove this hard coded data and make dynamic later
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
@@ -1643,10 +1646,10 @@ public class SmApplicationBackingBean extends
 			reqDto.setAppType(applicationType);
 			// TODO remove the clone later (Problem at company basic clone
 			// to be fixed)
-			// MofRegistrationResDTO resDTO = mofRegistrationSO
-			// .cloneSmApplicationDraft(reqDto);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveSupplierProfile(reqDto);
+					.cloneSmApplicationDraft(reqDto);
+			// MofRegistrationResDTO resDTO = mofRegistrationSO
+			// .retrieveSupplierProfile(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {
