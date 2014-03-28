@@ -156,6 +156,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 //TODO default value to Procurement type and price type drop down listing
 		 getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
 		 getManagedBean().getRequestNoteDtl().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+		 
          return "prInquiryMain";		 
 	 }
 	  
@@ -249,7 +250,22 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 FacesScopes facesScopes = new FacesScopes();
 				 String token = facesScopes.getBPMAuthenticationCtxToken();
 				 reqDTO.setToken(token);
-			     reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+				 
+				 
+				 //TODO hard code for PmOrgProfile
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+				// TODO hard coding PmOrgProfile to Request Note
+				orgProfileReqDTO.setOrgProfileId(4L);
+				OrgProfileResDTO pmResDTO = orgProfileSO
+						.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+			     reqDTO.setOrgProfileId(pmResDTO.getPmOrgProfile().getOrgProfileId());
+			     getManagedBean().setPmOrgProfile(pmResDTO.getPmOrgProfile());
+			     
+			     
 			     reqDTO.setPrInquiryDetail(prInquiry);
 			     reqDTO.setRequestNote(requestNote);
 				 PrInquiryResDTO prInquiryResDTO = prInquirySO.submitPrInquiry(reqDTO);

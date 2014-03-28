@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.ModuleCodeConst;
@@ -25,12 +26,15 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -53,6 +57,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.directpurchase.simpleQuoteManagedBean;
@@ -144,7 +149,39 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		
-		 getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAddressSO.class);
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		reqDTO.setUserId(2L);
+		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+		List<PmAddressType> list = resDTO.getAddressTypeList();
+		System.out.println("Delivery Address List: " + list.size());
+		for (PmAddressType addressType : list) {
+			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			List<PmDistrict> districts = new ArrayList<PmDistrict>();
+			PmState pmState = addressType.getPmAddress().getPmState();
+			states.add(pmState);
+			PmDivision division = addressType.getPmAddress().getPmDivision();
+			divisions.add(division);
+			PmDistrict pmDistrict = addressType.getPmAddress().getPmDistrict();
+			districts.add(pmDistrict);
+			
+			
+			 Integer locationLevel = this.getManagedBean().getLocationLevel();
+				if (locationLevel == null) {
+					locationLevel = 3;
+				}
+				/*getManagedBean().setRootZoneTree(
+						LocationSingleton.getInstance().buildLocationZoneTree(1L, states,
+								divisions, districts, null, locationLevel));
+		}*/
+		}
+
+		
+		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// TODO default value to Procurement type and price type drop down listing
 		getManagedBean().getScQuote().setProcurementType(
 				ParameterConst.PROC_TYPE_NORMAL);
@@ -299,18 +336,6 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void supplierCriteriaEvent() {
 		debugLogger("supplierCriteriaEvent");
 		 List<TabBean> CriteriaList = new ArrayList<TabBean>();
@@ -324,11 +349,7 @@ public class SimpleQuoteBackingBean extends
 				TabBean tabBean = new TabBean(2, criteria);
 				CriteriaList.add(tabBean);
 				getManagedBean().setActiveIndex(1);
-
-			} else if (criteria.equalsIgnoreCase("Supplier")) {
-				TabBean tabBean = new TabBean(3,criteria);
-				CriteriaList.add(tabBean);
-				getManagedBean().setActiveIndex(2);
+			
 				
 			}else if (criteria.equalsIgnoreCase("Government Seller")) {
 				TabBean tabBean = new TabBean(4,criteria);
@@ -339,7 +360,7 @@ public class SimpleQuoteBackingBean extends
 		this.getManagedBean().setCriteriaTabs(CriteriaList);
 	}
 
-	public SelectItem[] getSupplierCriteriaList() {
+	public SelectItem[] getSupplierCriteriaList1() {
 		 SelectItem[] selectItems = null;
 	  if(getManagedBean().getScQuote().getProcurementType() != null){
 		 if (getManagedBean().getScQuote().getProcurementType()
@@ -356,6 +377,17 @@ public class SimpleQuoteBackingBean extends
 	  }
 	  return selectItems;
 	}
+	
+	public SelectItem[] getSupplierCriteriaList() {
+		 SelectItem[] selectItems = null;
+	  if(getManagedBean().getScQuote().getProcurementType() != null){
+		  selectItems = new SelectItem[2];
+			selectItems[0] = new SelectItem("Locality", "By Location");
+			selectItems[1] = new SelectItem("Business Nature","By Business Nature");
+	  }
+	  return selectItems;
+	}
+	
 	
 	/**
 	 * initializing remarks in simpleQuote

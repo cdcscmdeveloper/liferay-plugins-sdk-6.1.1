@@ -6,27 +6,26 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="suppCriteria" header="SUPPLIER CRITERIA" toggleable="true">
-	 <p:spacer height="5px" />
-	  <table style="width: 100%">
-	 	<tr><td style="width: 2%;"></td>
-			<td>
-			  <p:selectManyCheckbox styleClass="float-left"
-				   value="#{simpleQuoteBackingBean.managedBean.selectedCriteriaList}"
-				   layout="pageDirection">
-				   <f:selectItems value="#{simpleQuoteBackingBean.supplierCriteriaList}"/>
-				   <p:ajax event="change" listener="#{simpleQuoteBackingBean.supplierCriteriaEvent}" update="suppCriteriasId"/>
-				</p:selectManyCheckbox> 
-			</td>
-	   </tr>
-	     </table>
-     <ac:lovPopup />
+
+		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+			<p:selectBooleanCheckbox value="true" />
+			<h:outputText value="By Location" />
+
+
+			<p:selectBooleanCheckbox value="0" />
+			<h:outputText value="By Business Nature" />
+
+		</h:panelGrid>
+
+
+		<ac:lovPopup />
     <p:spacer height="15px" />     
-    <p:tabView id="suppCriteriasId" activeIndex="#{simpleQuoteBackingBean.managedBean.activeIndex}"
-        value="#{simpleQuoteBackingBean.managedBean.criteriaTabs}" var="tab">
-    <p:tab title="#{tab.titleName}">
+    <p:tabView id="suppCriteriasId" activeIndex="#{simpleQuoteBackingBean.managedBean.activeIndex}" >
+        
+     <p:tab title="Locality">
    
 	  <!-- BY LOCATION -->
-	  <ui:fragment rendered="#{tab.titleName eq 'Locality'}">
 		  <p:spacer height="10px"></p:spacer>
 		  <p:panel id="locPanel">
 		      <table style="width: 100%">
@@ -87,10 +86,10 @@
 				</div> 
 				</p:panel>
 			    <ui:include src="/xhtml/sc/directpurchase/common/simpleQuoteLocationPopup.xhtml" />
-		  </ui:fragment> 
+		</p:tab>
 		  
 		 <!-- BY BUSINESS NATURE -->
-		 <ui:fragment rendered="#{tab.titleName eq 'Business Nature'}">
+		<p:tab title="Business Nature">
 		    <p:spacer height="10px"></p:spacer>
 		     <p:dataTable id="byBusNatureDtl" var="busNatureCriteria"
 		     	 selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
@@ -125,9 +124,9 @@
 				   icon="ui-icon-delete"/> 
 		
 		     </div> 
-		   </ui:fragment>
+		  </p:tab>
 	    <!--  BY SUPPLIER   --> 
-		  <ui:fragment rendered="#{tab.titleName eq 'Supplier'}">
+		 <p:tab title="Supplier List">
 		    <p:spacer height="10px"></p:spacer>
 		    <p:dataTable id="supplierItemDt" var="data"  rowKey="#{data}" rowIndexVar="index"
 		          selection="#{simpleQuoteBackingBean.managedBean.selectedSuppMofNoCriterias}"
@@ -163,10 +162,10 @@
 				   update="supplierItemDt"
 				   icon="ui-icon-delete"/> 
 		   </div>
-		   </ui:fragment>
+		   </p:tab>
 		   
 		  <!--  BY Government Seller   --> 
-		  <ui:fragment rendered="#{tab.titleName eq 'Government Seller'}">
+		  <p:tab title="Government Seller"> 
 		    <p:spacer height="10px"></p:spacer>
 		    <p:dataTable id="govtSellerId" var="data"  rowKey="#{data}" rowIndexVar="index"
 		          selection="#{simpleQuoteBackingBean.managedBean.selectedGovEPNoCriterias}"
@@ -189,7 +188,6 @@
 				 <p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}" style="width:30%">
 					<h:outputText value="#{data.smSupplier.companyName}" />			
 				</p:column>
-				
 											
 			</p:dataTable>		
 				
@@ -204,9 +202,10 @@
 				   update="govtSellerId"
 				   icon="ui-icon-delete"/> 
 		   </div>
-		   </ui:fragment>
-		   
-		</p:tab>  
+        </p:tab>		   
+		
 	</p:tabView>
+	
+	
   </p:panel>
 </ui:composition>

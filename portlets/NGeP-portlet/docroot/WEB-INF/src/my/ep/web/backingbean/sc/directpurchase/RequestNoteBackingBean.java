@@ -173,7 +173,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(requestNote));
 		requestNoteReqDTO.setRequestNote(requestNote);
-		
+		if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SC)) {
+			   requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+		} else if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_PRI)) {
+			  requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
+	    } else if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_PID)) {
+			  requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PID);
+		}
+	
 		requestNote = removeEmptyRemarkBeforeSave(requestNote);
 		requestNoteReqDTO.setRequestNote(requestNote);
 		//Hoa: when submit need to set submit in the reqDTO to true
@@ -260,16 +267,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 				PurchaseInquiryBackingBean inquiryBackingBean = new PurchaseInquiryBackingBean();
 		        ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
-				List<ScPRIRemark> results= new ArrayList<ScPRIRemark>();
-				for (ScPRIRemark remark : prInquiry.getRemarks()) {
-					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					remark.setChangedBy(remark.getCreatedBy());
-					remark.setChangedDate(remark.getCreatedDate());
-					remark.setUser(facesScopes.getUserSessionBean());
-				    results.add(remark);
-		       }
-				 prInquiry.setRemarks(results);
+				List<ScPRIRemark> results = new ArrayList<ScPRIRemark>();
+				ScPRIRemark remark = new ScPRIRemark();
+				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setUser(facesScopes.getUserSessionBean());				    
+				results.add(remark);
+			    prInquiry.setRemarks(results);
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
 					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 					ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
@@ -550,7 +556,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public String addToRequestNote(String sourceMethod) {
 		log.info("addToRequestNote");
 		if (sourceMethod
-				.equalsIgnoreCase(ParameterConst.METHOD_PIQ)) {
+				.equalsIgnoreCase(ParameterConst.METHOD_PRI)) {
 			PurchaseInquiryBackingBean inquiryBackingBean = new PurchaseInquiryBackingBean();
 			CmSupplierItem cmSupplierItem = inquiryBackingBean.getManagedBean()
 					.getSupplierItem();
@@ -589,13 +595,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			//Hoa: use getRequestNoteNo() to get Request Note Number
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 			if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_SC)) {
-				   requestNote.setSourceMethod("SC");
+				   requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 				   getManagedBean().setSourceMethod(sourceMethod);
 				   scRequestNoteDtl.setScRequestNote(requestNote);
 				   fulfilmentTypeEvent(scRequestNoteDtl);
 				   
-			} else if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_PIQ)) {
-				  requestNote.setSourceMethod("PIQ");
+			} else if (sourceMethod.equalsIgnoreCase(ParameterConst.METHOD_PRI)) {
+				  requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
 				  getManagedBean().setSourceMethod(sourceMethod);
 				  fulfilmentTypeEvent(scRequestNoteDtl);
 			}
@@ -624,6 +630,28 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		scRequestNoteDtl.setScRequestNote(requestNote);
 		scRequestNoteDtl.setDeliverPeriodType(ParameterConst.SQ_DURATION_DAY);
 		getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
+		
+		//TODO have to compare duplicate items in request note
+	  /* if (getManagedBean().getRequestNoteDtls().isEmpty()){
+		   getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
+		   
+		} else {
+			 List<CmPricing>  cmPricings = new ArrayList<CmPricing>();
+			 for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
+				  cmPricings.add(noteDtl.getScRequestSupplierItem().getPricing());
+			 }
+			 if(cmPricings.size() > 0){
+			  if(cmPricings.contains(getManagedBean().getRequestNoteDtl().getScRequestSupplierItem().getPricing())){
+				 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Item already selected.", ""));
+				}else{
+					List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+					requestNoteDtls.add(getManagedBean().getRequestNoteDtl());
+					getManagedBean().getRequestNoteDtls().addAll(requestNoteDtls);
+				}
+			}
+		}
+		*/
 		
 		populateUserDivisionList();
 		getManagedBean().setRequestNote(requestNote);

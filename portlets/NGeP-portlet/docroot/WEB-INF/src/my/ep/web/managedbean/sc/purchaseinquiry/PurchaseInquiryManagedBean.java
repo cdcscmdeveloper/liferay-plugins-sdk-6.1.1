@@ -30,7 +30,7 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-	private String method = ParameterConst.METHOD_PIQ;
+	private String method = ParameterConst.METHOD_PRI;
 	private String stockAvailability;
 	private Long orgProfileId;
 	private String procurementType;

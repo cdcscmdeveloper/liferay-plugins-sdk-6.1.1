@@ -335,6 +335,8 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	 * @param criteriaTabs the criteriaTabs to set
 	 */
 	public void setCriteriaTabs(List<TabBean> criteriaTabs) {
+		TabBean tabBean = new TabBean(1, "Locality");
+		criteriaTabs.add(tabBean);
 		this.criteriaTabs = criteriaTabs;
 	}
 
