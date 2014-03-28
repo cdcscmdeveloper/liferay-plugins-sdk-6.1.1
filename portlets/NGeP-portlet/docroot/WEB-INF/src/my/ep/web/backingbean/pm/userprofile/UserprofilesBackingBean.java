@@ -191,6 +191,7 @@ public class UserprofilesBackingBean extends
 		retrievePmDistrictList();
 		retrievePmCityList();
 		retrievePmDivisionList();
+		createUserProfile();
 	}
 
 	private void debugLogger(Object message) {
@@ -344,9 +345,14 @@ public class UserprofilesBackingBean extends
 	}
 	
 	
-	public String createUserDetails(){
+    //to create new user profile
+	public String createUserProfile(){
+		
+		this.getManagedBean().setUser(null);	
+		this.getManagedBean().setPmAddress(null);		
 		
 		return "userProfileCreation.xhtml?faces-redirect=true";
 		
 	}
+	
 }
