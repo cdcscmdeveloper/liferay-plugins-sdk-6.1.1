@@ -12,7 +12,7 @@
 	<ac:lovPopup />
 	<p:tabView dynamic="true" cache="true" orientation="left"
 		id="businessSpecId">
-		<p:ajax event="tabChange" />
+		<p:ajax event="tabChange" listener="#{specificationBackingBean.businessOwnerTabChange}" />
 
 		<p:tab title="#{lbl['lbl.sc.spec.general']}">
 			<ui:include

@@ -79,13 +79,13 @@
 						<h:panelGrid border="0" cellpadding="0" cellspacing="0"
 							columns="2" columnClasses="columnWidth20"
 							style="margin-left: 26px;"
-							rendered="#{specificationBackingBean.managedBean.scQt.qtAmount gt '500000'}">
+							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
-								value="#{specificationBackingBean.managedBean.qtCriteria.allState}">
+								value="#{specificationBackingBean.managedBean.supplierCriteria.allState}">
 								<f:selectItem itemValue="true"></f:selectItem>
-								<p:ajax update="allStae"
+								<p:ajax update="supplierallStae"
 									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
@@ -93,13 +93,13 @@
 				<td></td>
 			</tr>
 
-			<tr>
+			<!-- <tr>
 
 
 				<td style="width: 80px"><p:outputLabel
 						value="#{lbl['lbl.so.mullocal']}" /></td>
 				<td><p:selectOneRadio
-						value="#{specificationBackingBean.managedBean.qtCriteria.multiLocality}"
+						value="#{specificationBackingBean.managedBean.scQt.zonal}"
 						style="margin-bottom:5px;">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
@@ -107,23 +107,21 @@
 							process="@this"></p:ajax>
 					</p:selectOneRadio></td>
 
-			</tr>
+			</tr> -->
 
 		</table>
 
 	</p:panel>
 
-
-
 	<p:panel>
-		<h:panelGroup id="allStae">
+		<h:panelGroup id="supplierallStae">
 			<p:panel header="Location List"
-				rendered="#{((specificationBackingBean.managedBean.qtCriteria.allState=='false' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No') or (specificationBackingBean.managedBean.qtCriteria.allState=='false'  and specificationBackingBean.managedBean.qtCriteria.multiLocality =='No'))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='No'))}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
 						<td><p:selectOneMenu id="locLevels"
-								value="#{specificationBackingBean.managedBean.qtCriteria.supplierLocation}"
+								value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel}"
 								style="width: 178px;margin-bottom: 5px;">
 
 								<f:selectItems
@@ -134,8 +132,9 @@
 					</tr>
 				</table>
 			</p:panel>
+
 			<p:panel
-				rendered="#{((specificationBackingBean.managedBean.qtCriteria.allState=='false' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No') or (specificationBackingBean.managedBean.qtCriteria.allState=='false'  and specificationBackingBean.managedBean.qtCriteria.multiLocality =='No'))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='No'))}">
 				<h:panelGrid width="100%" style="margin-top:20px">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -188,91 +187,38 @@
 			</p:panel>
 
 
+			<p:panel header="Location List"
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='No'}">
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
+								value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel}"
+								style="width: 178px;margin-bottom: 5px;">
+
+								<f:selectItems
+									value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+								<p:ajax event="change"
+									listener="#{specificationBackingBean.selectLocation}"></p:ajax>
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+			</p:panel>
+
 
 			<p:panel
-				rendered="#{specificationBackingBean.managedBean.qtCriteria.allState=='true'  and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No'}">
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='No'}">
 				<h:panelGrid width="100%" style="margin-top:20px">
-					<p:dataTable id="zoneStateDatatable"
-						value="#{specificationBackingBean.managedBean.zonesList}"
+					<p:dataTable id="zoneyesDataTable"
+						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:65%" rowIndexVar="index">
-
 						<p:column headerText="Location">
 							<p:tree value="#{zoneTree}" var="location">
+
 								<p:treeNode type="zone">
 									<h:outputText value="#{location.locationName}" />
 								</p:treeNode>
-							</p:tree>
-						</p:column>
 
-
-
-					</p:dataTable>
-				</h:panelGrid>
-				<div align="right" style="width: 65%">
-					<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
-						process="@this" update="@([id$=zoneStatePanel])"
-						oncomplete="ZoneWithOutLocation.show();" icon="ui-icon-add" />
-				</div>
-			</p:panel>
-
-
-		</h:panelGroup>
-
-
-
-		<p:dialog header="" widgetVar="ZoneWithOutLocation" modal="true"
-			width="800" height="500">
-			<p:panel id="zoneStatePanel" header="ADD LOCATION">
-				<table styleClass="noBorders tr,noBorders td">
-
-					<TR>
-						<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
-						</TD>
-						<TD width="80%"><p:inputText
-								value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
-						</TD>
-					</TR>
-
-
-				</table>
-			</p:panel>
-			<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="ZoneWithOutLocation.hide();"
-				process="@all" update="@this, zoneStateDatatable,zoneStatePanel"
-				action="#{specificationBackingBean.updateZoneLocation}">
-			</p:commandButton>
-				&#160;&#160;
-		<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-				style="float:right;" onclick="ZoneWithOutLocation.hide();" />
-		</p:dialog>
-
-
-		<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="800"
-			height="500">
-			<p:panel id="zonePopupPanel" header="ADD LOCATION">
-				<table styleClass="noBorders tr,noBorders td">
-					<ui:fragment
-						rendered="#{((specificationBackingBean.managedBean.qtCriteria.allState=='false' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No') or (specificationBackingBean.managedBean.qtCriteria.allState=='true' and specificationBackingBean.managedBean.qtCriteria.multiLocality !='No') )}">
-						<TR>
-							<TD width="20%" valign="top"><p:outputLabel
-									value="Zone Name"></p:outputLabel></TD>
-							<TD width="80%"><p:inputText
-									value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
-							</TD>
-						</TR>
-					</ui:fragment>
-
-					<TR>
-						<TD width="20%" valign="top"><p:outputLabel
-								value="Zone Location" /></TD>
-						<TD width="80%"><p:panel></p:panel> <p:tree
-								id="treeZoneLocationPopup"
-								value="#{specificationBackingBean.managedBean.rootLocationTree}"
-								var="location"
-								selection="#{specificationBackingBean.managedBean.selectedNodes}"
-								selectionMode="checkbox">
 								<p:treeNode type="state">
 									<h:outputText value="#{location.locationName}" />
 								</p:treeNode>
@@ -285,40 +231,86 @@
 								<p:treeNode type="city">
 									<h:outputText value="#{location.locationName}" />
 								</p:treeNode>
-							</p:tree></TD>
-					</TR>
 
-				</table>
+
+
+
+							</p:tree>
+						</p:column>
+
+
+
+					</p:dataTable>
+				</h:panelGrid>
+
 			</p:panel>
-			<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="ZoneLocation.hide();" process="@all"
-				update="@this, zoneLocationDataTable,zonePopupPanel"
-				action="#{specificationBackingBean.updateZoneLocation}">
-			</p:commandButton>
+
+
+			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="800"
+				height="500">
+				<p:panel id="zonePopupPanel" header="ADD LOCATION">
+					<table styleClass="noBorders tr,noBorders td">
+						<TR>
+							<TD width="20%" valign="top"><p:outputLabel
+									value="Zone Location" /></TD>
+							<TD width="80%"><p:panel></p:panel> <p:tree
+									id="treeZoneLocationPopup"
+									value="#{specificationBackingBean.managedBean.rootLocationTree}"
+									var="location"
+									selection="#{specificationBackingBean.managedBean.selectedNodes}"
+									selectionMode="checkbox">
+									<p:treeNode type="state">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="city">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+								</p:tree></TD>
+						</TR>
+
+					</table>
+				</p:panel>
+				<p:commandButton
+					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
+					update="@this, zoneLocationDataTable,zonePopupPanel"
+					action="#{specificationBackingBean.updateZoneLocation}">
+				</p:commandButton>
 				&#160;&#160;
 		<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-				style="float:right;" onclick="ZoneLocation.hide();" />
-		</p:dialog>
+					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+					style="float:right;" onclick="ZoneLocation.hide();" />
+			</p:dialog>
+		</h:panelGroup>
 	</p:panel>
+
+
 	<table style="width: 100%">
 		<tr>
 			<td style="width: 150px"><p:outputLabel
 					value="#{lbl['lbl.so.paidup']}" /></td>
 			<td><p:inputText
-					value="#{specificationBackingBean.managedBean.scQt.paidUpCaptial}"
-					style="margin-right:5px;" disabled="true" /> <h:inputText
-					value="MYR" disabled="true" size="1" /></td>
-		</tr>
-		<tr>
-			<td style="width: 150px"><p:outputLabel value="Total Supplierrs" /></td>
-			<td><p:inputText style="margin-right:5px;" disabled="true" /> <p:commandButton
-					value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search"
-					partialSubmit="true" /></td>
+					value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+					style="margin-right:5px;" /></td>
 		</tr>
 	</table>
-
+	<p:panel header="Qualified Supplier">
+		<table>
+			<tr>
+				<td style="width: 150px"><p:outputLabel
+						value="Total Supplierrs" /></td>
+				<td><p:inputText style="margin-right:5px;" disabled="true" />
+					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						icon="ui-icon-search" partialSubmit="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
 	<!-- <p:panelGrid columns="1" style="width:50%;"
 		styleClass="noBorders tr,noBorders td">
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"

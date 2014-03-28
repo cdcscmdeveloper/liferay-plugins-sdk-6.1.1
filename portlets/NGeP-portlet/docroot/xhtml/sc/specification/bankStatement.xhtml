@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -11,114 +11,121 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	
+
 	<ui:define name="contentSection">
-	
+
 		<div>
-		<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
-				
-				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;"
-				icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptBankScore}" />
-				
-				
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save"
+				actionListener="#{specificationBackingBean.acceptBankScore}" />
+
+
 
 		</div>
 		<p:panel>
-	<table>
-	<tr>
-	<td><h:outputLabel value="Title"></h:outputLabel>
-	</td>
-		<td><p:inputText disabled="true"></p:inputText>
-	</td>
-	</tr>
-	</table>
-	</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}" toggleable="true">
+			<table>
+				<tr>
+					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><h:outputLabel value="* #{lbl['lbl.sc.spec.from.month']}"></h:outputLabel></td>
 					<td><p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.fromMonth}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
-								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" 
-								listener="#{specificationBackingBean.fromChange}"></p:ajax>
-						</p:selectOneMenu></td>
 
-					<td style="width:40%"><h:outputLabel value="* #{lbl['lbl.sc.spec.to.month']}"></h:outputLabel></td>
-					<td><p:selectOneMenu style="margin-bottom:5px;"
-							value="#{specificationBackingBean.managedBean.toMonth}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="#{null}" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
-								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
-								listener="#{specificationBackingBean. toChange}" update="bankInfo,amountdetails"></p:ajax>
+								update="toDetailsUpdate,bankInfo,amountdetails"
+								listener="#{specificationBackingBean.fromChange}"></p:ajax>
+						</p:selectOneMenu> <p:selectOneMenu>
 
+							<f:selectItem itemLabel="2014" itemValue="2014">
+							</f:selectItem>
 						</p:selectOneMenu></td>
+
+					<td style="width: 40%"><h:outputLabel
+							value="* #{lbl['lbl.sc.spec.to.month']}"></h:outputLabel></td>
+					<td><h:panelGroup id="toDetailsUpdate">
+							<p:selectOneMenu style="margin-bottom:5px;" disabled="true"
+								value="#{specificationBackingBean.managedBean.toMonth}">
+
+								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+								<p:ajax event="change"
+									listener="#{specificationBackingBean. toChange}"></p:ajax>
+
+							</p:selectOneMenu>
+							<p:selectOneMenu disabled="true">
+
+								<f:selectItem itemLabel="2014" itemValue="2014">
+								</f:selectItem>
+							</p:selectOneMenu>
+						</h:panelGroup></td>
 				</tr>
 			</table>
-			<h:panelGroup id="bankInfo" >
-			<h:panelGrid >
-				<h:outputLabel
-					value="* #{lbl['lbl.sc.spec.bank.statement.month']}"></h:outputLabel>
-			</h:panelGrid>
-			<p:dataTable id="specbank" var="banking" rendered="#{specificationBackingBean.managedBean.toMonth !=null}"
-				value="#{specificationBackingBean.managedBean.bankList}"
-				editable="true" style="width:100%" rowIndexVar="index"
-				rowKey="#{banking}">
-				
-			<p:column headerText="#{lbl['lbl.sc.spec.month']}"
-				style="width:50%">
-				<h:outputText value="#{banking.month}"></h:outputText>
-			</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.amount']}"
-				style="width:50%">
-				<h:outputText value="#{banking.amount}"></h:outputText>
-			</p:column>
-			</p:dataTable>
+			<h:panelGroup id="bankInfo">
+				<h:panelGrid>
+					<h:outputLabel value="* #{lbl['lbl.sc.spec.bank.statement.month']}"></h:outputLabel>
+				</h:panelGrid>
+				<p:dataTable id="specbank" var="banking"
+					rendered="#{specificationBackingBean.managedBean.toMonth !=null}"
+					value="#{specificationBackingBean.managedBean.bankList}"
+					editable="true" style="width:100%" rowIndexVar="index"
+					rowKey="#{banking}">
+
+					<p:column headerText="#{lbl['lbl.sc.spec.month']}"
+						style="width:50%">
+						<p:inputText value="#{banking.month}"></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.amount']}"
+						style="width:50%">
+						<h:outputText value="#{banking.amount}"></h:outputText>
+					</p:column>
+				</p:dataTable>
 			</h:panelGroup>
 		</p:panel>
-		
+
 		<h:panelGroup id="amountdetails">
-		<h:panelGrid columns="2">
-		<h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel>
-		<p:inputText value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText>
-		<h:outputLabel value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel>
-		<p:inputText value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText>
-		</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel>
+				<p:inputText
+					value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText>
+			</h:panelGrid>
 		</h:panelGroup>
 		
+		<p:panel>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
+					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+					<p:ajax event="change"
+						update="bankDetails"
+						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+				</p:selectOneMenu>
+			</h:panelGrid>
+		</p:panel>
+		<h:panelGroup id="bankDetails">
+		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
 		<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 		<h:panelGroup id="bankGroupId">
-			<ui:param name="scoringList" value="#{specificationBackingBean.managedBean.bankStamentScore}" />
-			<ui:param name="componentName" value="bankStatememt"/>
+			<ui:param name="scoringList"
+				value="#{specificationBackingBean.managedBean.bankStamentScore}" />
+			<ui:param name="componentName" value="bankStatememt" />
 			<ui:param name="scoringPnlId" value="bankStatememtId" />
-			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
+			<ui:param name="scoringPnlName"
+				value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
 			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -126,11 +133,28 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					actionListener="#{specificationBackingBean.addBankStatement}"
 					update="#{scoringPnlId}" icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" action="#{specificationBackingBean.deleteScoring}" update="#{scoringPnlId}"/>
+					icon="ui-icon-delete"
+					action="#{specificationBackingBean.deleteScoring}"
+					update="#{scoringPnlId}" />
 
 			</div>
 		</h:panelGroup>
 		
+              </p:panel>
+		<p:panel header="Scoring For Average of Bank Statement" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+		<table>
+		<tr>
+		<td>
+		<p:outputLabel value="Max.Score"></p:outputLabel>
+		</td>
+		<td>
+		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+		</td>
+		</tr>
+		</table>
+		</p:panel>
+		</h:panelGroup>
+
 		<!-- <p:commandButton value="Cancel" style="float:right;"
 			onclick="bankStatement.hide();" icon="ui-icon-cancel"></p:commandButton>
         <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"

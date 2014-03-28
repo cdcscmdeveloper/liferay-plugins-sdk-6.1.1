@@ -10,49 +10,75 @@
 		toggleable="true">
 
 		<table>
+
+			<tr>
+				<td><h:outputLabel value="Title" /></td>
+				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtTitle}" disabled="true"></p:inputText></td>
+			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
-				<td><p:inputText value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}"
+						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel value="Quotation/Tender Type" /></td>
-				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtType}" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true"
+						value="#{specificationBackingBean.managedBean.scQt.qtType}"
+						disabled="true"></p:inputText></td>
+				<td><h:outputLabel value="Open For" /></td>
+				<td><p:inputText readonly="true"
+						value="#{specificationBackingBean.managedBean.scQt.openFor}"
+						disabled="true"></p:inputText></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
+				<td><p:inputText readonly="true"
+						value="#{specificationBackingBean.managedBean.scQt.itemType}"
+						disabled="true"></p:inputText></td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel
 						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
 				<td><p:inputText
-						value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}"
+						value="#{specificationBackingBean.managedBean.scQt.evaluationType ? 'One Tier' : 'Two Tier'}"
 						readonly="true" disabled="true"></p:inputText></td>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
-				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.itemType}" disabled="true"></p:inputText></td>
+				<td><h:outputLabel value="Required Technical Evaluation" /></td>
+				<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax event="change" update=":form:businessSpecId:recommendationid"></p:ajax>
+					</p:selectOneRadio></td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
-				<td><p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtAmount}" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true"
+						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
+						disabled="true"></p:inputText></td>
 
 
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
 				<td><p:inputTextarea rows="3" cols="50"
-						value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}" readonly="true" disabled="true"></p:inputTextarea>
-				</td>
+						style="margin-bottom:5px;"
+						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
+						readonly="true" disabled="true"></p:inputTextarea></td>
 			</tr>
 			<tr>
+	
 				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.peocure.category']}" /></td>
-				<td><p:selectOneMenu
-						value="#{specificationBackingBean.managedBean.scQtSpec.pmProcurementCategory.parameterId}">
+				<td><p:selectOneMenu>
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 
 					</p:selectOneMenu></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputText
-						value="#{specificationBackingBean.managedBean.scQtSpec.maxProposal}"></p:inputText></td>
+						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"></p:inputText></td>
 			</tr>
 
 
@@ -60,7 +86,7 @@
 			<tr>
 				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
 				<td><p:selectOneMenu
-						value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}"
+						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType}"
 						style="margin-bottom:5px;">
 						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
 				<f:selectItem itemLabel="Periodic(As and When Basis)" itemValue="2" />
@@ -77,22 +103,12 @@
 
 
 
-				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" /></td>
-				<td><h:panelGroup>
-						<table style="width: 50%">
-							<tr>
-								<td><h:inputText size="4"
-										value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
-								<td><h:outputLabel
-										value="(#{lbl['lbl.sc.spec.contrat.year']})" /></td>
-								<td><h:inputText size="2"
-										value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
-								<td><h:outputLabel
-										value="(#{lbl['lbl.sc.spec.contrat.month']})" /></td>
-							</tr>
-						</table>
+				<td><h:outputLabel
+						value="*Contract Period/&lt;br /&gt;Completion Period(month)"
+						escape="false" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" /></td>
 
-					</h:panelGroup></td>
 			</tr>
 
 
@@ -152,7 +168,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.spec.secretary']}" />
 
 			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.approverName}">
+				>
 				<f:selectItems
 					value="#{specificationBackingBean.managedBean.approvalList}" />
 
@@ -161,13 +177,13 @@
 			<h:outputLabel value="#{lbl['lbl.sc.spec.approve.date']}" />
 
 			<p:inputText readonly="true" disabled="true"
-				value="#{specificationBackingBean.managedBean.approvalDate}"></p:inputText>
+			></p:inputText>
 
 
 			<h:outputLabel value="#{lbl['lbl.sc.spec.status']}" />
 
 			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.approverName}">
+				>
 				<f:selectItems
 					value="#{specificationBackingBean.managedBean.approvalList}" />
 

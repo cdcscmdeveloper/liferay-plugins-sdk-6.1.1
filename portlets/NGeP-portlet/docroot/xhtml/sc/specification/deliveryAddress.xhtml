@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel>
+	<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
+		<ui:fragment
+			rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+			<p:accordionPanel id="accordpnllist"
+				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
+				var="zonePnlList">
+				<p:tab  title="#{zonePnlList.zoneName}" >
+				<ui:param name="deliveryList" value="#{zonePnlList.deliveryLocList}"></ui:param>
+				<ui:param name="selectDeliveryList" value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
+			<!-- 	<ui:param name="pjtDelivered" value="#{zonePnlList.zoneName}"></ui:param> -->
+					<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
+					<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this" partialSubmit="true" icon="ui-icon-add" update=":form:businessSpecId:searDelivery" 	actionListener="#{specificationBackingBean.deliveryList(zonePnlList.zoneName)}" oncomplete="deliveryAddress.show();" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete" process="@this,pjtDelivered" partialSubmit="true" update="pjtDelivered" actionListener="#{specificationBackingBean.deleteDeliveryZone(zonePnlList.zoneName)}"/>
+
+		</div>
+				</p:tab>
+			</p:accordionPanel>
+		</ui:fragment>
+
+		<ui:fragment
+			rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
+            	<ui:param name="deliveryList" value="#{specificationBackingBean.managedBean.deliveryNonZoneList}"></ui:param>
+			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
+            <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this" partialSubmit="true" icon="ui-icon-add" update=":form:businessSpecId:searDelivery" 	actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}" oncomplete="deliveryAddress.show();" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete" />
+
+		</ui:fragment>
+
+	</p:panel>
+
+</ui:composition>

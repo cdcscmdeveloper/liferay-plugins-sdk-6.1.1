@@ -17,9 +17,10 @@
 		<div>
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
-		
+
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptPaidUpScore}"/>
+				style="float:right;" icon="ui-icon-save"
+				actionListener="#{specificationBackingBean.acceptPaidUpScore}" />
 
 
 
@@ -30,22 +31,53 @@
 				<p:inputText></p:inputText>
 			</h:panelGrid>
 		</p:panel>
-		<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
-		<h:panelGroup id="paidGroupId">
-			<ui:param name="scoringList"
-				value="#{specificationBackingBean.managedBean.paidUpCapitalScore}" />
-			<ui:param name="componentName" value="Paid Up Capital" />
-			<ui:param name="scoringPnlId" value="paidUpId" />
-			<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this,#{scoringPnlId}" partialSubmit="true"
-					update="#{scoringPnlId}" icon="ui-icon-add" actionListener="#{specificationBackingBean.addPaidUpCapitalScoring}"/>
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" update="#{scoringPnlId}" />
+		<p:panel>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:selectOneMenu
+					value="#{specificationBackingBean.managedBean.checklistScoreType}">
+					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+					<p:ajax event="change" update="paidUpCapital"
+						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+				</p:selectOneMenu>
+			</h:panelGrid>
+		</p:panel>
+		<h:panelGroup id="paidUpCapital">
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
-			</div>
+				<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
+				<h:panelGroup id="paidGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.paidUpCapitalScore}" />
+					<ui:param name="componentName" value="Paid Up Capital" />
+					<ui:param name="scoringPnlId" value="paidUpId" />
+					<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							update="#{scoringPnlId}" icon="ui-icon-add"
+							actionListener="#{specificationBackingBean.addPaidUpCapitalScoring}" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete" update="#{scoringPnlId}" />
+
+					</div>
+				</h:panelGroup>
+
+			</p:panel>
+			<p:panel header="Scoring For Paid Up Capital"
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="Max.Score"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
 		</h:panelGroup>
 
 

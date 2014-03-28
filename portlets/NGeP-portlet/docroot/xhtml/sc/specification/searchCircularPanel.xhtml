@@ -68,6 +68,14 @@
 						<p:column headerText="Panel Type" style="width:600px;">
 
 						</p:column>
+						
+						<p:column headerText="Effective Date" style="width:600px;">
+
+						</p:column>
+						
+						<p:column headerText="Expiry Date" style="width:600px;">
+
+						</p:column>
 
 						<p:column>
 
@@ -93,13 +101,21 @@
 				<p:column headerText="Panel Type" style="width:600px;">
                  <h:outputText value="#{circular.itemCategory.pmParameterDescs[0].codeName}"></h:outputText>
 				</p:column>
+				<p:column headerText="Effective Date" style="width:600px;">
+                 <h:outputText value="#{circular.updateEffDate}"></h:outputText>
+				</p:column>
+				<p:column headerText="Expiry Date" style="width:600px;">
+                 <h:outputText value="#{circular.endDate}">
+                  <f:convertDateTime pattern="dd/MM/yyyy" />
+                 </h:outputText>
+				</p:column>
 				<p:column headerText="Selection" selectionMode="single"></p:column>
 			</p:dataTable>
 		</h:panelGrid>
 	</p:panel>
 	<h:panelGroup id="panelItemGroupList">
 		<ui:fragment
-			rendered="#{specificationBackingBean.managedBean.circularType eq 'Specific'}">
+			rendered="#{specificationBackingBean.managedBean.circularType eq 'Specific' or specificationBackingBean.managedBean.circularType eq 'General'}">
 			<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
 				toggleable="true">
 

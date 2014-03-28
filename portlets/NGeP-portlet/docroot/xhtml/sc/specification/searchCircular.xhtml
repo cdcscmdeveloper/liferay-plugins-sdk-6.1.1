@@ -5,15 +5,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<h:outputText value="#{specificationBackingBean.managedBean.title}"></h:outputText>
 
-<ui:include
-			src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
+	<ui:include
+		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
 	<p:panel>
 		<h:panelGrid columns="2" style="width:50%;"
-		
 			styleClass="noBorders tr,noBorders td">
+			<h:outputLabel value="Title" />
+			<p:inputText readonly="true" value="#{specificationBackingBean.managedBean.scQt.qtTitle}" disabled="true"></p:inputText>
 
 			<h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" />
 			<p:selectOneRadio
@@ -27,18 +28,24 @@
 
 	</p:panel>
 	<h:panelGroup id="panelupdate">
-	<p:panel rendered="#{specificationBackingBean.managedBean.scQt.panel==true}">
-	<ui:include
-			src="/xhtml/sc/specification/searchCircularPanel.xhtml"></ui:include>
-	</p:panel>
+		<p:panel
+			rendered="#{specificationBackingBean.managedBean.scQt.panel==true}">
+			<!-- <div align="right" style="width: 40%;">
+
+				<p:commandButton value="View Circular" process="@this"
+					partialSubmit="true" icon="ui-icon-clone" />
+			</div> -->
+
+			<ui:include src="/xhtml/sc/specification/searchCircularPanel.xhtml"></ui:include>
+		</p:panel>
 	</h:panelGroup>
 
-	<div align="right" style="width:70%;">
+	<div align="right" style="width: 70%;">
 
-			<p:commandButton value="Proceed"
-				process="@this" partialSubmit="true"  action="#{specificationBackingBean.newProceedAction}" />
-		</div>
-		
-		
+		<p:commandButton value="Proceed" process="@this" partialSubmit="true"
+			action="#{specificationBackingBean.newProceedAction}" />
+	</div>
+
+
 
 </ui:composition>

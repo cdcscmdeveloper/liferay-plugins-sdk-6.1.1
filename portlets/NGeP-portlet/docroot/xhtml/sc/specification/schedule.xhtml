@@ -9,10 +9,20 @@
 
 
 	<h:panelGroup id="frequency">
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
+			rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType eq '117'}">
+			<h:outputLabel value="Schedule Type"></h:outputLabel>
+			<p:selectOneRadio
+				value="#{specificationBackingBean.managedBean.scQt.fulfilmentType eq '117'}">
+				<f:selectItem itemLabel="Frequency Schedule" itemValue="117"></f:selectItem>
+				<f:selectItem itemLabel="Progressive Payment" itemValue="118"></f:selectItem>
+			</p:selectOneRadio>
+
+		</h:panelGrid>
 		<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 			toggleable="true"
-			rendered="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType eq '117'}">
-			<!-- <h:outputText value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}"></h:outputText> -->
+			rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType eq '117'}">
+
 
 			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
@@ -40,52 +50,36 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 					style="width:25%">
-					<p:selectOneMenu
-							value="#{frequency.fromDate}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-						
-						</p:selectOneMenu>
+					<p:selectOneMenu value="#{frequency.fromDate}">
+
+						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+
+					</p:selectOneMenu>
 					<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
+				</p:column>
+				<p:column headerText="Start year" style="width:15%">
+					<p:selectOneMenu value="#{frequency.fromDate}">
+
+					</p:selectOneMenu>
+
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 					style="width:25%">
-					<p:selectOneMenu
-							value="#{frequency.toDate}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+					<p:selectOneMenu value="#{frequency.toDate}">
+
 						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-						</p:selectOneMenu>
-					<!-- <p:calendar value="#{frequency.toDate}" showOn="button"
-						pattern="MM/yyyy"></p:calendar> -->
+					</p:selectOneMenu>
+
 				</p:column>
-				<p:column headerText="Total"
-					style="width:10%">
+				<p:column headerText="End year" style="width:15%">
+					<p:selectOneMenu value="#{frequency.fromDate}">
+
+					</p:selectOneMenu>
+
+				</p:column>
+				<p:column headerText="Total" style="width:10%">
 				</p:column>
 			</p:dataTable>
 
@@ -96,7 +90,7 @@
 	</h:panelGroup>
 	<h:panelGroup id="progressive">
 		<c:if
-			test="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType ne '116' and specificationBackingBean.managedBean.scQtSpec.fulfilmentType !=null}">
+			test="#{specificationBackingBean.managedBean.scQt.fulfilmentType ne '116' and specificationBackingBean.managedBean.scQt.fulfilmentType !=null and specificationBackingBean.managedBean.scQt.fulfilmentType ne '117'}">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
 
@@ -128,56 +122,40 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:15%">
-						<p:selectOneMenu
-							value="#{payment.fromDate}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+						<p:selectOneMenu value="#{payment.fromDate}">
+
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 						</p:selectOneMenu>
-						<!-- <p:calendar value="#{payment.fromDate}" showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar> -->
+
+					</p:column>
+					<p:column headerText="Start year" style="width:15%">
+						<p:selectOneMenu value="#{payment.toDate}">
+
+						</p:selectOneMenu>
+
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:15%">
-						<p:selectOneMenu
-							value="#{payment.toDate}">
-							<!-- <f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Jan" itemValue="0" />
-							<f:selectItem itemLabel="Feb" itemValue="1" />
-							<f:selectItem itemLabel="March" itemValue="2" />
-							<f:selectItem itemLabel="April" itemValue="3" />
-							<f:selectItem itemLabel="May" itemValue="4" />
-							<f:selectItem itemLabel="June" itemValue="5" />
-							<f:selectItem itemLabel="July" itemValue="6" />
-							<f:selectItem itemLabel="Aug" itemValue="7" />
-							<f:selectItem itemLabel="Sept" itemValue="8" />
-							<f:selectItem itemLabel="Oct" itemValue="9" />
-							<f:selectItem itemLabel="Nov" itemValue="10" />
-							<f:selectItem itemLabel="Dec" itemValue="11" /> -->
+						<p:selectOneMenu value="#{payment.toDate}">
+
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 						</p:selectOneMenu>
-						<!-- <p:calendar value="#{payment.toDate}" showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar> -->
+
+					</p:column>
+					<p:column headerText="End year" style="width:15%">
+						<p:selectOneMenu value="#{payment.toDate}">
+
+						</p:selectOneMenu>
+
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
 						style="width:10%">
 						<p:inputText value="#{payment.percentage}"></p:inputText>
 					</p:column>
 
-					
 
-					
+
+
 
 				</p:dataTable>
 

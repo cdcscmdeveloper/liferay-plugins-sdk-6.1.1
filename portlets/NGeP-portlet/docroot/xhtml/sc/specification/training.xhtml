@@ -40,6 +40,21 @@
 				<p:inputText></p:inputText>
 			</h:panelGrid>
 		</p:panel>
+		
+		<p:panel>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
+					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+					<p:ajax event="change"
+						update="trainingchage"
+						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+				</p:selectOneMenu>
+			</h:panelGrid>
+		</p:panel>
+		<h:panelGroup id="trainingchage">
+		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 		<ui:param name="scoringPnlGroupId" value="employeesTrainingId" />
 		<h:panelGroup id="trainingGroupId">
 			<ui:param name="scoringList"
@@ -56,6 +71,20 @@
 					icon="ui-icon-delete" update="#{scoringPnlId}" />
 
 			</div>
+		</h:panelGroup>
+		  </p:panel>
+		<p:panel  rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+		<table>
+		<tr>
+		<td>
+		<p:outputLabel value="Max.Score"></p:outputLabel>
+		</td>
+		<td>
+		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+		</td>
+		</tr>
+		</table>
+		</p:panel>
 		</h:panelGroup>
 
 

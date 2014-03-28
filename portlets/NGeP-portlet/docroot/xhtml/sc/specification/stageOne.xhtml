@@ -281,16 +281,16 @@
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.product']}" />
 			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.sampleReq}">
+				>
 				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.date.time']}" />
 			<p:calendar
-				value="#{specificationBackingBean.managedBean.scQtSpec.sampleClosingDate}"
+				
 				showOn="button"></p:calendar>
 			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.info']}" />
-			<p:inputTextarea rows="3" cols="40" value="#{specificationBackingBean.managedBean.scQtSpec.sampleRemark}" autoResize="false"></p:inputTextarea>
+			<p:inputTextarea rows="3" cols="40"  autoResize="false"></p:inputTextarea>
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

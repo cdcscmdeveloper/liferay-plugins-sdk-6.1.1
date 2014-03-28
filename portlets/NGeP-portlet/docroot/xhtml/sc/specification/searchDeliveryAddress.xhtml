@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog header="Search Delivery/Service Address"
+		widgetVar="deliveryAddress" modal="true" width="800" height="400">
+		<p:panel id="searDelivery" header="Search " toggleable="true">
+			<table>
+				<tr>
+					<td><h:outputLabel value="State" /></td>
+					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+					<td><h:outputLabel value="District" /></td>
+					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="*Ministry" /></td>
+					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="*Jabatan" /></td>
+					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="*PTJ" /></td>
+					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+				</tr>
+			</table>
+
+			<p:dataTable id="deliveryAddress" var="deliveryLoc"
+				rowKey="#{deliveryLoc}" rowIndexVar="index"
+				value="#{specificationBackingBean.managedBean.stageTwoTechComplianceList}"
+				selection="#{specificationBackingBean.managedBean.stageTwoTechComplianceSelect}">
+				<ac:paginator for="deliveryAddress"></ac:paginator>
+				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
+				<p:column headerText="Delivery/Service Address">
+                  	<h:outputText value="#{deliveryLoc.pmCheckList.checkListName}" size="50"></h:outputText>
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			style="float:right;" onclick="deliveryAddress.hide();"
+			icon="ui-icon-cancel"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+			style="float:right;" process="@all" partialSubmit="true"
+			oncomplete="deliveryAddress.hide();" icon="ui-icon-accept" update="@(.deliveryUpdate)" actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
+
+
+	</p:dialog>
+</ui:composition>

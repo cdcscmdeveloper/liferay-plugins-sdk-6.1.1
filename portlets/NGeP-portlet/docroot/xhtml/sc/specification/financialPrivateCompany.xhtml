@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				action="#{specificationBackingBean.committeeBackAction}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save"
+				actionListener="#{specificationBackingBean.acceptFinancePrivateCompanyPrivateScoring}" />
+
+
+
+		</div>
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="Company Experience(For Federal Private)"
+			toggleable="true" collapsed="true">
+			<h:panelGrid columns="2">
+				<h:outputLabel
+					value="* For company experience on the product/service which has participated since  year "></h:outputLabel>
+				<p:inputText readonly="true"></p:inputText>
+			</h:panelGrid>
+
+			<p:dataTable id="experience" rowIndexVar="index" var="experience"
+				rowKey="#{experience}">
+				<ac:paginator for="experience"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+				<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.effective.date']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.exp.date']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.contarct.amount']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.ramarks']}">
+					<p:inputText></p:inputText>
+				</p:column>
+			</p:dataTable>
+
+
+			<h:panelGrid columns="3">
+
+
+				<h:outputText value="#{lbl['lbl.sc.spec.total.no.contracts']}" />
+				<p:spacer width="10"></p:spacer>
+				<p:inputText readonly="true" disabled="true"></p:inputText>
+
+
+				<h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
+				<p:spacer width="10"></p:spacer>
+				<p:inputText readonly="true" disabled="true"></p:inputText>
+
+				<h:outputText value="#{lbl['lbl.sc.spec.total.contract.amount']}" />
+				<p:spacer width="10"></p:spacer>
+				<p:inputText readonly="true" disabled="true"></p:inputText>
+
+
+			</h:panelGrid>
+
+		</p:panel>
+
+
+
+
+
+
+		<p:panel>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:selectOneMenu
+					value="#{specificationBackingBean.managedBean.checklistScoreType}">
+					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+					<p:ajax event="change" update="finPrivateCompany"
+						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+				</p:selectOneMenu>
+			</h:panelGrid>
+		</p:panel>
+		<h:panelGroup id="finPrivateCompany">
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
+
+				<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+				<h:panelGroup id="contractAmountGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.nonFederalContractScore}" />
+					<ui:param name="componentName" value="ContractAmount" />
+					<ui:param name="scoringPnlId" value="contractAmountId" />
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.score.total.contract.amount']}"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							actionListener="#{specificationBackingBean.addPrivateContratAmount}"
+							update="#{scoringPnlId}" icon="ui-icon-add" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
+
+					</div>
+				</h:panelGroup>
+			</p:panel>
+			<p:panel header="Scoring For Total Contract Amount"
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="Max.Score"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</h:panelGroup>
+
+	</ui:define>
+</ui:composition>
