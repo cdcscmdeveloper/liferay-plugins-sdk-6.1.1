@@ -63,10 +63,12 @@ public class EpPortletUtil {
 	public static String getDisplayPortletId() {
 		return getThemeDisplay().getPortletDisplay().getId();
 	}
+	
+	
 
 	public String getDisplayLayoutName() {
 
-		ThemeDisplay themeDisplay = getThemeDisplay();
+		ThemeDisplay themeDisplay = getThemeDisplay();		
 
 		return themeDisplay.getLayout().getName(themeDisplay.getLocale());
 	}
@@ -420,5 +422,9 @@ public class EpPortletUtil {
 		e.printStackTrace();
 		log.error(e);
 		throw new EpException(MessageConst.EP_MAJ_00001);
+	}
+	
+	public String getDisplayPortletName() {
+		return getThemeDisplay().getPortletDisplay().getPortletName();
 	}
 }
