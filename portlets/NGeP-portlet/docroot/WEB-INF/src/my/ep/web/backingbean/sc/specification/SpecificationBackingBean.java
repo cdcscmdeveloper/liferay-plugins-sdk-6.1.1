@@ -100,8 +100,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
-import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
-import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -905,29 +906,31 @@ public class SpecificationBackingBean extends
 			System.out.println("====enter not null loop===");
 			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 			int score = 0;
-			for (ScQtCheckList list : checklist) {
-				float addScore = 0;
-				if (list.getScQtCheckListScores() != null) {
-
-					for (ScQtCheckListScore checklistScore : list
-							.getScQtCheckListScores()) {
-						addScore = addScore + checklistScore.getScore();
-						System.out.println(" add score====" + addScore);
-
-						list.setMaxScore(new BigDecimal(addScore));
-						// int local;
-						int local = (int) addScore;
-						score = score + local;
-						this.getManagedBean().setTechPoints(score);
-					}
-					 int itemIndex = checklist.indexOf(list);
-					// checklist.remove(list);
-					checklist.set(itemIndex,list);
-					// localChecklist.add(list);
-
-				}
-
-			}
+			/*
+			 * for (ScQtCheckList list : checklist) { float addScore = 0; if
+			 * (list.getScQtCheckListScores() != null) {
+			 * 
+			 * for (ScQtCheckListScore checklistScore : list
+			 * .getScQtCheckListScores()) { //addScore = addScore +
+			 * checklistScore.getScore(); System.out.println(" add score====" +
+			 * addScore);
+			 * if(getManagedBean().getTechnicalChecklistScoring()<checklistScore
+			 * .getScore().intValue()){ System.out.println(
+			 * "======getManagedBean().getTechnicalChecklistScoring()==="
+			 * +getManagedBean().getTechnicalChecklistScoring());
+			 * getManagedBean(
+			 * ).setTechnicalChecklistScoring(checklistScore.getScore
+			 * ().intValue()); list.setMaxScore(new
+			 * BigDecimal(getManagedBean().getTechnicalChecklistScoring())); }
+			 * // int local; //int local = (int) addScore; //score = score +
+			 * local; //this.getManagedBean().setTechPoints(score); } int
+			 * itemIndex = checklist.indexOf(list); // checklist.remove(list);
+			 * checklist.set(itemIndex,list); // localChecklist.add(list);
+			 * 
+			 * }
+			 * 
+			 * }
+			 */
 			this.getManagedBean().setTechnicalScoring(checklist);
 		}
 		/*
@@ -953,28 +956,23 @@ public class SpecificationBackingBean extends
 		if (checklist.size() != financialScoring.size()) {
 			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 			int score = 0;
-			for (ScQtCheckList list : checklist) {
-				float addScore = 0;
-				if (list.getScQtCheckListScores() != null) {
-
-					for (ScQtCheckListScore checklistScore : list
-							.getScQtCheckListScores()) {
-						addScore = addScore + checklistScore.getScore();
-
-						list.setMaxScore(new BigDecimal(addScore));
-						int local = (int) addScore;
-						score = score + local;
-						this.getManagedBean().setFinPoints(score);
-					}
-					//checklist.remove(list);
-					 int itemIndex = checklist.indexOf(list);
-						// checklist.remove(list);
-						checklist.set(itemIndex,list);
-					//checklist.add(list);
-					// localChecklist.add(list);
-				}
-
-			}
+			/*
+			 * for (ScQtCheckList list : checklist) { float addScore = 0; if
+			 * (list.getScQtCheckListScores() != null) {
+			 * 
+			 * for (ScQtCheckListScore checklistScore : list
+			 * .getScQtCheckListScores()) { addScore = addScore +
+			 * checklistScore.getScore();
+			 * 
+			 * list.setMaxScore(new BigDecimal(addScore)); int local = (int)
+			 * addScore; score = score + local;
+			 * this.getManagedBean().setFinPoints(score); } //
+			 * checklist.remove(list); int itemIndex = checklist.indexOf(list);
+			 * // checklist.remove(list); checklist.set(itemIndex, list); //
+			 * checklist.add(list); // localChecklist.add(list); }
+			 * 
+			 * }
+			 */
 			this.getManagedBean().setFinancialScoring(checklist);
 		}
 		/*
@@ -1527,16 +1525,25 @@ public class SpecificationBackingBean extends
 			reqDTO.setQtId(qtId);
 			// getManagedBean().setScQtSpec(new ScQtSpec());
 			System.out.println("====qtid===" + reqDTO.getQtId());
-			//resDTO = specSO.retrieveSpecDetails(reqDTO);
-			/*System.out.println("=========resDTO.getScQt()===="
-					+ resDTO.getScQt().getQtId());
-*/
+			// resDTO = specSO.retrieveSpecDetails(reqDTO);
+			/*
+			 * System.out.println("=========resDTO.getScQt()====" +
+			 * resDTO.getScQt().getQtId());
+			 */
 			if (resDTO.getScQt() == null) {
 				getManagedBean().setScQt(resDTO.getScQt());
 
 				if (this.getManagedBean().getSupplierCriteria() == null) {
 					this.getManagedBean().setSupplierCriteria(
 							new ScQtSupplierCriteria());
+				}
+				if (this.getManagedBean().getPackageScoreSetting() == null) {
+					this.getManagedBean().setPackageScoreSetting(
+							new ScQtScoreOfferPrice());
+				}
+				if (this.getManagedBean().getItemScoreSetting() == null) {
+					this.getManagedBean().setItemScoreSetting(
+							new ScQtScoreOfferPrice());
 				}
 
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
@@ -1548,7 +1555,7 @@ public class SpecificationBackingBean extends
 				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 				tenderResDTO = QtDetailsSO.retriveQtById(tenderReqDTO);
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-				
+				getManagedBean().getScQt().setEvaluationType("2");
 
 			}
 
@@ -1591,15 +1598,51 @@ public class SpecificationBackingBean extends
 	public void onChangeQtType(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("========type value===" + type);
+
 		this.getManagedBean().getScQt().setQtType(type);
 	}
 
 	public void typeChange(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
+		System.out.println("=====checklist change type value===" + type);
+		try {
+			List<SelectItem> selectItems = new ArrayList<SelectItem>();
+			if (type.equalsIgnoreCase("S")) {
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				this.getManagedBean().setTechnicalChecklistAction(null);
+
+				selectItems.add(new SelectItem("M", "Manual"));
+				this.getManagedBean().setTechnicalChecklistAction(selectItems);
+			}
+			if (type.equalsIgnoreCase("UP") || type.equalsIgnoreCase(null)
+					|| type.equalsIgnoreCase(" ")) {
+
+				this.getManagedBean().setTechnicalChecklistAction(null);
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem("V", "View"));
+				selectItems.add(new SelectItem("O", "Online Submit"));
+				this.getManagedBean().setTechnicalChecklistAction(selectItems);
+			}
+			if (type.equalsIgnoreCase("PD")) {
+
+				this.getManagedBean().setTechnicalChecklistAction(null);
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem("PD", "Presentation/Demo"));
+				this.getManagedBean().setTechnicalChecklistAction(selectItems);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.getManagedBean().getScQtCheckSt2techProposal().get(0)
 				.setChecklistType(type);
+	}
+
+	public void checklistActionChange(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+				.setChecklistAction(type);
 	}
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
@@ -1630,11 +1673,119 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQt().setZoneLocationLevel(location);
 	}
 
+	public void scoreTypeChange(AjaxBehaviorEvent event) {
+		String scoreType = (String) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("=======scoreType====" + scoreType);
+		if (scoreType.equalsIgnoreCase("2")) {
+
+			this.getManagedBean().setScQtCheckListScore(
+					new ScQtCheckListScore());
+
+		}
+		this.getManagedBean().setChecklistScoreType(scoreType);
+	}
+
+	public void companyscoreTypeChange(AjaxBehaviorEvent event) {
+		String scoreType = (String) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("=======scoreType====" + scoreType);
+		if (scoreType.equalsIgnoreCase("2")) {
+
+			this.getManagedBean()
+					.setScQtContractScore(new ScQtCheckListScore());
+
+		}
+		this.getManagedBean().setCompanyScoreType(scoreType);
+	}
+
 	public void fromChange(AjaxBehaviorEvent event) {
 		String formvalue = (String) event.getComponent().getAttributes()
 				.get("value");
 
 		this.getManagedBean().setFromMonth(formvalue);
+		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
+		int j = n + 2;
+		List<BankingBean> monthList = new ArrayList<BankingBean>();
+		String monthvalue = "";
+		String amount = "";
+		for (int i = n; i <= j; i++) {
+			if (i == 0) {
+
+				monthvalue = "January 2014";
+				amount = "1000";
+			} else if (i == 1) {
+
+				monthvalue = "February 2014";
+				amount = "2000";
+
+			} else if (i == 2) {
+
+				monthvalue = "March 2014";
+				amount = "3000";
+
+			} else if (i == 3) {
+
+				monthvalue = "April 2014";
+				amount = "4000";
+
+			} else if (i == 4) {
+
+				monthvalue = "May 2014";
+				amount = "5000";
+
+			} else if (i == 5) {
+
+				monthvalue = "June 2014";
+				amount = "6000";
+
+			} else if (i == 6) {
+
+				monthvalue = "July 2014";
+				amount = "7000";
+
+			} else if (i == 7) {
+
+				monthvalue = "August 2014";
+				amount = "8000";
+
+			} else if (i == 8) {
+
+				monthvalue = "September 2014";
+				amount = "9000";
+
+			} else if (i == 9) {
+
+				monthvalue = "October 2014";
+				amount = "10000";
+
+			} else if (i == 10) {
+
+				monthvalue = "November 2014";
+				amount = "11000";
+
+			} else if (i == 11) {
+
+				monthvalue = "December 2014";
+				amount = "12000";
+
+			}
+			monthList.add(new BankingBean(monthvalue, amount));
+		}
+		int totalamount = 0;
+		this.getManagedBean().setBankList(monthList);
+		for (int i = 0; i < this.getManagedBean().getBankList().size(); i++) {
+			BankingBean bean = (BankingBean) this.getManagedBean()
+					.getBankList().get(i);
+			totalamount = totalamount + Integer.parseInt(bean.getAmount());
+			BigDecimal b1 = new BigDecimal(totalamount);
+			BigDecimal techWeightage = new BigDecimal(this.getManagedBean()
+					.getBankList().size());
+			MathContext mc = new MathContext(4);
+			BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+			this.getManagedBean().setTotalAmountAvg(techWeightage1);
+		}
+		this.getManagedBean().setToMonth(String.valueOf(j));
 	}
 
 	public String technicalChecklistEditAction(ScQtCheckList checkList) {
@@ -1650,15 +1801,15 @@ public class SpecificationBackingBean extends
 				compnayName = tokenizer.nextToken();
 				if (compnayName
 						.equalsIgnoreCase("The List of Contract based on number of contract from Federal Government")) {
-					this.getManagedBean().setCheckListScore(null);
-					this.getManagedBean().setScoringForYears(null);
-					this.getManagedBean().setContractAmount(null);
+					// this.getManagedBean().setCheckListScore(null);
+					// this.getManagedBean().setScoringForYears(null);
+					// this.getManagedBean().setContractAmount(null);
 					return "companyExperience.xhtml?faces-redirect=true";
 				} else if (compnayName
 						.equalsIgnoreCase("The List of Contract based on number of contract from Federal Private")) {
-					this.getManagedBean().setNonFederalScore(null);
-					this.getManagedBean().setNonFederalScoreyears(null);
-					this.getManagedBean().setNonFederalContractScore(null);
+					// this.getManagedBean().setNonFederalScore(null);
+					// this.getManagedBean().setNonFederalScoreyears(null);
+					// this.getManagedBean().setNonFederalContractScore(null);
 					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
 				}
 			}
@@ -1666,12 +1817,12 @@ public class SpecificationBackingBean extends
 		}
 
 		else if (checkList.getTitle().contains("Warranty")) {
-			this.getManagedBean().setWarantyScore(null);
+			// this.getManagedBean().setWarantyScore(null);
 			return "waranty.xhtml?faces-redirect=true";
 		}
 
 		else if (checkList.getTitle().contains("Training")) {
-			this.getManagedBean().setTrainingScore(null);
+			// this.getManagedBean().setTrainingScore(null);
 			return "training.xhtml?faces-redirect=true";
 		} else if (checkList.getTitle().contains("Senari")) {
 			return "technicalEmployeeList.xhtml?faces-redirect=true";
@@ -1684,6 +1835,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String financialChecklistEditAction(ScQtCheckList checkList) {
+
 		if (checkList.getTitle().contains("Company Experience")) {
 			StringTokenizer tokenizer = new StringTokenizer(
 					checkList.getTitle(), "(,)");
@@ -1692,12 +1844,14 @@ public class SpecificationBackingBean extends
 			while (tokenizer.hasMoreTokens()) {
 
 				compnayName = tokenizer.nextToken();
-				if (compnayName
-						.equalsIgnoreCase("The List of Contract based on Value (RM) of Contract from Federal Government")) {
-					return "companyExperience.xhtml?faces-redirect=true";
+
+				if (compnayName.contains("of Contract from Federal Government")) {
+
+					return "financialGovernementCompany.xhtml?faces-redirect=true";
 				} else if (compnayName
-						.equalsIgnoreCase("The List of Contract based on Value (RM) of Contract from Federal Private")) {
-					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
+						.contains("of Contract from Federal Private")) {
+
+					return "financialPrivateCompany.xhtml?faces-redirect=true";
 				}
 			}
 
@@ -1778,14 +1932,12 @@ public class SpecificationBackingBean extends
 		}
 
 		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
-		
+
 	}
-	
-	
-	public String createCommitteeSpecification(){
-		this.getManagedBean().setScqtDoc(
-				new ScQtDoc());
-		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";	
+
+	public String createCommitteeSpecification() {
+		this.getManagedBean().setScqtDoc(new ScQtDoc());
+		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
 	}
 
 	public String financialSpecEditAction(ScQtCheckList checklist) {
@@ -2074,13 +2226,12 @@ public class SpecificationBackingBean extends
 
 	public ScQtCheckList createSpecList(String stage) {
 		// ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
+		ScQtScoreWeightage weightage = this.getManagedBean()
+				.getScQtScoreWeightage();
 		ScQtCheckList additionProposalst1 = new ScQtCheckList();
+		
+		// additionProposalst1.sets
 
-		if (stage.equalsIgnoreCase("1")) {
-			// additionProposalst1.setScQtWeightage(null);
-		} else if (stage.equalsIgnoreCase("2")) {
-			// additionProposalst1.setScQtWeightage(new ScQtWeightage());
-		}
 		// additionProposalst1.setScQtSpec(scQtSpec);
 		return additionProposalst1;
 	}
@@ -2097,7 +2248,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList additionProposalst1 = createSpecList("1");
 			additionProposalst1.setDocType("2");
-			//additionProposalst1.setEvaluationStage("1");
+			// additionProposalst1.setEvaluationStage("1");
 			additionProposalst1.setChecklistType("UP");
 			st1additionalList.add(additionProposalst1);
 			// mediumCarsModel = new CarDataModel(st1additionalList);
@@ -2121,7 +2272,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList st1financeproposalList1 = createSpecList("1");
 			st1financeproposalList1.setDocType("3");
-			//st1financeproposalList1.setEvaluationStage("1");
+			// st1financeproposalList1.setEvaluationStage("1");
 			st1financeproposalList1.setChecklistType("UP");
 			st1financeproposalList.add(st1financeproposalList1);
 			this.getManagedBean().setScQtCheckSt1financeProposalList(
@@ -2144,7 +2295,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList st1financeAdditionalproposalList1 = createSpecList("1");
 			st1financeAdditionalproposalList1.setDocType("4");
-			//st1financeAdditionalproposalList1.setEvaluationStage("1");
+			// st1financeAdditionalproposalList1.setEvaluationStage("1");
 			st1financeAdditionalproposalList1.setChecklistType("UP");
 			st1financeAdditionalproposalList
 					.add(st1financeAdditionalproposalList1);
@@ -2167,7 +2318,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList additionProposalst2 = createSpecList("2");
 			additionProposalst2.setDocType("2");
-			//additionProposalst2.setEvaluationStage("2");
+			// additionProposalst2.setEvaluationStage("2");
 			additionProposalst2.setChecklistType("UP");
 			st2additionalList.add(additionProposalst2);
 			this.getManagedBean().setScQtCheckSt2techAdditionalProposalList(
@@ -2192,7 +2343,7 @@ public class SpecificationBackingBean extends
 			ScQtCheckList st2financeproposalList2 = createSpecList("2");
 			st2financeproposalList2.setDocType("3");
 			st2financeproposalList2.setChecklistType("UP");
-			//st2financeproposalList2.setEvaluationStage("2");
+			// st2financeproposalList2.setEvaluationStage("2");
 			st2financeproposalList.add(st2financeproposalList2);
 			this.getManagedBean().setScoringList(null);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
@@ -2214,7 +2365,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList st2financeAdditionalproposalList1 = createSpecList("2");
 			st2financeAdditionalproposalList1.setDocType("4");
-			//st2financeAdditionalproposalList1.setEvaluationStage("2");
+			// st2financeAdditionalproposalList1.setEvaluationStage("2");
 			st2financeAdditionalproposalList1.setChecklistType("UP");
 			st2financeAdditionalproposalList
 					.add(st2financeAdditionalproposalList1);
@@ -2247,7 +2398,7 @@ public class SpecificationBackingBean extends
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
 				// scqtlist.setQtChecklistId(new Long(i));
 				scqtlist.setDocType("1");
-				//scqtlist.setEvaluationStage("1");
+				// scqtlist.setEvaluationStage("1");
 				scqtlist.setChecklistType("UP");
 				compilance.add(scqtlist);
 			}
@@ -2289,7 +2440,7 @@ public class SpecificationBackingBean extends
 				// scqtlist.setEnable(true);
 				scqtlist.setChecklistType(bean.getPmCheckList()
 						.getChecklistType());
-				//scqtlist.setEvaluationStage("2");
+				// scqtlist.setEvaluationStage("2");
 			}
 			this.getManagedBean().setScoringList(null);
 			getManagedBean().setScQtCheckSt2techProposal(compilance);
@@ -2314,7 +2465,7 @@ public class SpecificationBackingBean extends
 
 			st2technicalproposalList1.setDocType("1");
 			// st2technicalproposalList1.setChecklistType("UP");
-			//st2technicalproposalList1.setEvaluationStage("2");
+			// st2technicalproposalList1.setEvaluationStage("2");
 			// st2technicalproposalList1.setScQtCheckListScores();
 			this.getManagedBean().setScoringList(null);
 			st2technicalproposalList.add(st2technicalproposalList1);
@@ -2362,7 +2513,7 @@ public class SpecificationBackingBean extends
 				// scqtlist.setEnable(true);
 				scqtlist.setChecklistType(bean.getPmCheckList()
 						.getChecklistType());
-				//scqtlist.setEvaluationStage("2");
+				// scqtlist.setEvaluationStage("2");
 				scqtlist.setManditory(true);
 				compilance.add(scqtlist);
 			}
@@ -2947,10 +3098,10 @@ public class SpecificationBackingBean extends
 
 		try {
 			/* System.out.println("=enter addscore method==="); */
-			List<ScQtFreqSchedule> freqSchedule = this.getManagedBean()
+			List<ScQtSchedule> freqSchedule = this.getManagedBean()
 					.getScheduleList();
 			if (null == freqSchedule) {
-				freqSchedule = new ArrayList<ScQtFreqSchedule>();
+				freqSchedule = new ArrayList<ScQtSchedule>();
 
 			}
 
@@ -2967,16 +3118,16 @@ public class SpecificationBackingBean extends
 				int textsize = this.getManagedBean().getTotalFrequency();
 				int lesstotal = listsize - textsize;
 
-				freqSchedule = new ArrayList<ScQtFreqSchedule>();
+				freqSchedule = new ArrayList<ScQtSchedule>();
 				for (int j = 0; j < textsize; j++) {
-					ScQtFreqSchedule schedule = new ScQtFreqSchedule();
+					ScQtSchedule schedule = new ScQtSchedule();
 
 					freqSchedule.add(schedule);
 				}
 			}
 			for (int i = freqSchedule.size(); i < this.getManagedBean()
 					.getTotalFrequency(); i++) {
-				ScQtFreqSchedule schedule = new ScQtFreqSchedule();
+				ScQtSchedule schedule = new ScQtSchedule();
 
 				freqSchedule.add(schedule);
 			}
@@ -2992,10 +3143,10 @@ public class SpecificationBackingBean extends
 
 		try {
 			/* System.out.println("=enter addscore method==="); */
-			List<ScQtProgessivePayment> progressive = this.getManagedBean()
+			List<ScQtSchedule> progressive = this.getManagedBean()
 					.getProgressivePaymentList();
 			if (null == progressive) {
-				progressive = new ArrayList<ScQtProgessivePayment>();
+				progressive = new ArrayList<ScQtSchedule>();
 
 			}
 			int total = progressive.size()
@@ -3008,16 +3159,16 @@ public class SpecificationBackingBean extends
 						.getTotalProgressivePayment();
 				int lesstotal = listsize - textsize;
 
-				progressive = new ArrayList<ScQtProgessivePayment>();
+				progressive = new ArrayList<ScQtSchedule>();
 				for (int j = 0; j < textsize; j++) {
-					ScQtProgessivePayment payment = new ScQtProgessivePayment();
+					ScQtSchedule payment = new ScQtSchedule();
 
 					progressive.add(payment);
 				}
 			}
 			for (int i = progressive.size(); i < this.getManagedBean()
 					.getTotalProgressivePayment(); i++) {
-				ScQtProgessivePayment payment = new ScQtProgessivePayment();
+				ScQtSchedule payment = new ScQtSchedule();
 
 				progressive.add(payment);
 			}
@@ -3036,7 +3187,18 @@ public class SpecificationBackingBean extends
 	}
 
 	public void acceptCompanyScoring() {
+		try{
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore noContract = this.getManagedBean()
+				.getScQtCheckListScore();
+		ScQtCheckListScore scoreOfYears = this.getManagedBean()
+				.getScQtContractScore();
+		if (noContract == null) {
+			noContract = new ScQtCheckListScore();
+		}
+		if (scoreOfYears == null) {
+			scoreOfYears = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 				.getCheckListScore();
@@ -3061,38 +3223,262 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (checkListScore != null) {
+		int checklistScore = 0;
+		if (checkListScore.size() > 0) {
+			System.out.println("=== company checkListScore list not null==");
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : checkListScore) {
 
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					checklistScore = getManagedBean()
+							.getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = checkListScore.indexOf(score);
+				checkListScore.set(index, score);
+			}
 			localList.addAll(checkListScore);
 		}
-		if (scoreYears != null) {
+		int scoreYear = 0;
+		if (scoreYears.size() > 0) {
 
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : scoreYears) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					scoreYear = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getCompanyScoreType()));
+				int index = scoreYears.indexOf(score);
+				scoreYears.set(index, score);
+			}
 			localList.addAll(scoreYears);
 		}
-		if (scoreContract != null) {
 
-			localList.addAll(scoreContract);
+		if (noContract.getScore() != null) {
+
+			noContract.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			checklistScore = noContract.getScore().intValue();
+			localList.add(noContract);
 		}
+
+		if (scoreOfYears.getScore() != null) {
+
+			scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
+					.getCompanyScoreType()));
+
+			scoreYear = scoreOfYears.getScore().intValue();
+			localList.add(scoreOfYears);
+		}
+		int localScore = scoreYear + checklistScore;
+
+		checkList.setMaxScore(new BigDecimal(localScore));
+		// itemIndex = checklist.indexOf(list); // checklist.remove(list);
+		// * checklist.set(itemIndex,list);
+		/*
+		 * if (scoreContract != null) {
+		 * 
+		 * localList.addAll(scoreContract); }
+		 */
 
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void acceptCompanyPrivateScoring() {
+		try {
+			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+			ScQtCheckListScore noContract = this.getManagedBean()
+					.getScQtCheckListScore();
+			ScQtCheckListScore scoreOfYears = this.getManagedBean()
+					.getScQtContractScore();
+			if (noContract == null) {
+				noContract = new ScQtCheckListScore();
+			}
+			if (scoreOfYears == null) {
+				scoreOfYears = new ScQtCheckListScore();
+			}
+
+			List<ScQtCheckListScore> nonFederalScore = this.getManagedBean()
+					.getNonFederalScore();
+			if (null == nonFederalScore) {
+				nonFederalScore = new ArrayList<ScQtCheckListScore>();
+
+			}
+			List<ScQtCheckListScore> scoreYears = this.getManagedBean()
+					.getNonFederalScoreyears();
+			if (null == scoreYears) {
+				scoreYears = new ArrayList<ScQtCheckListScore>();
+
+			}
+			List<ScQtCheckListScore> scoreContract = this.getManagedBean()
+					.getNonFederalContractScore();
+			if (null == scoreContract) {
+				scoreContract = new ArrayList<ScQtCheckListScore>();
+
+			}
+			List<ScQtCheckListScore> localList = this.getManagedBean()
+					.getCollectionScoring();
+			if (localList == null) {
+				localList = new ArrayList<ScQtCheckListScore>();
+			}
+			int checklistScore = 0;
+			if (nonFederalScore.size() > 0) {
+				getManagedBean().setTechnicalChecklistScoring(0);
+				for (ScQtCheckListScore score : nonFederalScore) {
+
+					if (getManagedBean().getTechnicalChecklistScoring() < score
+							.getScore().intValue()) {
+						;
+						getManagedBean().setTechnicalChecklistScoring(
+								score.getScore().intValue());
+						checklistScore = getManagedBean()
+								.getTechnicalChecklistScoring();
+					}
+
+					score.setScoreType(new BigDecimal(this.getManagedBean()
+							.getChecklistScoreType()));
+					int index = nonFederalScore.indexOf(score);
+					nonFederalScore.set(index, score);
+				}
+
+				localList.addAll(nonFederalScore);
+			}
+			int scoreYear = 0;
+			if (scoreYears.size() > 0) {
+				getManagedBean().setTechnicalChecklistScoring(0);
+				for (ScQtCheckListScore score : scoreYears) {
+
+					if (getManagedBean().getTechnicalChecklistScoring() < score
+							.getScore().intValue()) {
+						;
+						getManagedBean().setTechnicalChecklistScoring(
+								score.getScore().intValue());
+						scoreYear = getManagedBean()
+								.getTechnicalChecklistScoring();
+					}
+					score.setScoreType(new BigDecimal(this.getManagedBean()
+							.getChecklistScoreType()));
+					int index = scoreYears.indexOf(score);
+					scoreYears.set(index, score);
+				}
+
+				localList.addAll(scoreYears);
+			}
+			if (scoreContract != null) {
+
+				localList.addAll(scoreContract);
+			}
+              if(noContract.getScore()!=null){
+				
+				noContract.setScoreType(new BigDecimal(this.getManagedBean().getChecklistScoreType()));
+				
+				checklistScore=noContract.getScore().intValue();
+				localList.add(noContract);
+			}
+              
+              if(scoreOfYears.getScore()!=null){
+  				
+            	  scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean().getCompanyScoreType()));
+  				
+            	  scoreYear=scoreOfYears.getScore().intValue();
+  				localList.add(scoreOfYears);
+  			}
+
+			int localScore = scoreYear + checklistScore;
+			System.out.println("=====max score value save value===="
+					+ localScore);
+			checkList.setMaxScore(new BigDecimal(localScore));
+
+			checkList.setScQtCheckListScores(localList);
+			// this.getManagedBean().setCollectionScoring(localList);
+			// }ll
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void acceptFinanceGovCompanyScoring() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 
-		List<ScQtCheckListScore> nonFederalScore = this.getManagedBean()
-				.getNonFederalScore();
-		if (null == nonFederalScore) {
-			nonFederalScore = new ArrayList<ScQtCheckListScore>();
+		ScQtCheckListScore finCompanyScore = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (finCompanyScore == null) {
+			finCompanyScore = new ScQtCheckListScore();
+		}
+		List<ScQtCheckListScore> scoreContract = this.getManagedBean()
+				.getContractAmount();
+		if (null == scoreContract) {
+			scoreContract = new ArrayList<ScQtCheckListScore>();
 
 		}
-		List<ScQtCheckListScore> scoreYears = this.getManagedBean()
-				.getNonFederalScoreyears();
-		if (null == scoreYears) {
-			scoreYears = new ArrayList<ScQtCheckListScore>();
+		List<ScQtCheckListScore> localList = this.getManagedBean()
+				.getCollectionScoring();
+		if (localList == null) {
+			localList = new ArrayList<ScQtCheckListScore>();
+		}
 
+		int contractScore = 0;
+		if (scoreContract.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : scoreContract) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					contractScore = getManagedBean()
+							.getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = scoreContract.indexOf(score);
+				scoreContract.set(index, score);
+			}
+
+			localList.addAll(scoreContract);
+		}
+
+		if (finCompanyScore.getScore() != null) {
+
+			finCompanyScore.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			contractScore = finCompanyScore.getScore().intValue();
+			localList.add(finCompanyScore);
+		}
+		checkList.setMaxScore(new BigDecimal(contractScore));
+
+		checkList.setScQtCheckListScores(localList);
+
+	}
+
+	public void acceptFinancePrivateCompanyPrivateScoring() {
+		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore finPrivateScore = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (finPrivateScore == null) {
+			finPrivateScore = new ScQtCheckListScore();
 		}
 		List<ScQtCheckListScore> scoreContract = this.getManagedBean()
 				.getNonFederalContractScore();
@@ -3105,27 +3491,51 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (nonFederalScore != null) {
 
-			localList.addAll(nonFederalScore);
-		}
-		if (scoreYears != null) {
+		int contractScore = 0;
+		if (scoreContract.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : scoreContract) {
 
-			localList.addAll(scoreYears);
-		}
-		if (scoreContract != null) {
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					contractScore = getManagedBean()
+							.getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = scoreContract.indexOf(score);
+				scoreContract.set(index, score);
+			}
 
 			localList.addAll(scoreContract);
 		}
+		if (finPrivateScore.getScore() != null) {
+
+			finPrivateScore.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			contractScore = finPrivateScore.getScore().intValue();
+			localList.add(finPrivateScore);
+		}
+
+		checkList.setMaxScore(new BigDecimal(contractScore));
 
 		checkList.setScQtCheckListScores(localList);
-		// this.getManagedBean().setCollectionScoring(localList);
-		// }ll
+
 	}
 
 	public void acceptWarrantyScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-
+		ScQtCheckListScore checkListScore = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (checkListScore == null) {
+			checkListScore = new ScQtCheckListScore();
+		}
 		List<ScQtCheckListScore> warrantyScore = this.getManagedBean()
 				.getWarantyScore();
 		if (null == warrantyScore) {
@@ -3138,11 +3548,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (warrantyScore != null) {
+		int warranty = 0;
+		if (warrantyScore.size() > 0) {
+			System.out.println("====not null loop ==");
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : warrantyScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					warranty = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = warrantyScore.indexOf(score);
+				warrantyScore.set(index, score);
+
+			}
 
 			localList.addAll(warrantyScore);
 		}
-
+		if (checkListScore.getScore() != null) {
+			System.out.println("==== null loop==");
+			checkListScore.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+			warranty = checkListScore.getScore().intValue();
+			localList.add(checkListScore);
+		}
+		checkList.setMaxScore(new BigDecimal(warranty));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3150,6 +3586,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptTrainingScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore checkListScore = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (checkListScore == null) {
+			checkListScore = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> trainingScore = this.getManagedBean()
 				.getTrainingScore();
@@ -3163,11 +3604,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (trainingScore != null) {
+		int training = 0;
+		if (trainingScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : trainingScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					training = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = trainingScore.indexOf(score);
+				trainingScore.set(index, score);
+			}
 
 			localList.addAll(trainingScore);
 		}
 
+		if (checkListScore.getScore() != null) {
+
+			checkListScore.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			training = checkListScore.getScore().intValue();
+			localList.add(checkListScore);
+		}
+		checkList.setMaxScore(new BigDecimal(training));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3175,6 +3642,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptTechnicalScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore technicalEmployee = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (technicalEmployee == null) {
+			technicalEmployee = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> technicalScore = this.getManagedBean()
 				.getTechnicalStaffScore();
@@ -3188,11 +3660,36 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (technicalScore != null) {
+		int technical = 0;
+		if (technicalScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : technicalScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					technical = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = technicalScore.indexOf(score);
+				technicalScore.set(index, score);
+			}
 
 			localList.addAll(technicalScore);
 		}
+		if (technicalEmployee.getScore() != null) {
 
+			technicalEmployee.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			technical = technicalEmployee.getScore().intValue();
+			localList.add(technicalEmployee);
+		}
+		checkList.setMaxScore(new BigDecimal(technical));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3200,6 +3697,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptEmployeeScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore employeeChecklist = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (employeeChecklist == null) {
+			employeeChecklist = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> employeeScore = this.getManagedBean()
 				.getTotalEmployeeScore();
@@ -3213,11 +3715,38 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (employeeScore != null) {
+		int employee = 0;
+		if (employeeScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : employeeScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					employee = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = employeeScore.indexOf(score);
+				employeeScore.set(index, score);
+			}
 
 			localList.addAll(employeeScore);
 		}
 
+		if (employeeChecklist.getScore() != null) {
+
+			employeeChecklist.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			employee = employeeChecklist.getScore().intValue();
+			localList.add(employeeChecklist);
+		}
+
+		checkList.setMaxScore(new BigDecimal(employee));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3225,6 +3754,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptCreditScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore creditFacility = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (creditFacility == null) {
+			creditFacility = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> creditFacilityScore = this.getManagedBean()
 				.getCreditFacility();
@@ -3238,11 +3772,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (creditFacilityScore != null) {
+		int credit = 0;
+		if (creditFacilityScore.size() > 0) {
+
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : creditFacilityScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					credit = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = creditFacilityScore.indexOf(score);
+				creditFacilityScore.set(index, score);
+			}
 
 			localList.addAll(creditFacilityScore);
 		}
+		if (creditFacility.getScore() != null) {
 
+			creditFacility.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			credit = creditFacility.getScore().intValue();
+			localList.add(creditFacility);
+		}
+		checkList.setMaxScore(new BigDecimal(credit));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3250,6 +3810,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptCashScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore acceptCash = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (acceptCash == null) {
+			acceptCash = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> cashScore = this.getManagedBean()
 				.getScoringCash();
@@ -3263,11 +3828,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (cashScore != null) {
+		int cash = 0;
+		if (cashScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : cashScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					cash = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = cashScore.indexOf(score);
+				cashScore.set(index, score);
+			}
 
 			localList.addAll(cashScore);
 		}
 
+		if (acceptCash.getScore() != null) {
+
+			acceptCash.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			cash = acceptCash.getScore().intValue();
+			localList.add(acceptCash);
+		}
+		checkList.setMaxScore(new BigDecimal(cash));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3275,6 +3866,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptBankScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore bankDetails = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (bankDetails == null) {
+			bankDetails = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> bankScore = this.getManagedBean()
 				.getBankStamentScore();
@@ -3288,11 +3884,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (bankScore != null) {
+		int bank = 0;
+		if (bankScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : bankScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					bank = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = bankScore.indexOf(score);
+				bankScore.set(index, score);
+			}
 
 			localList.addAll(bankScore);
 		}
 
+		if (bankDetails.getScore() != null) {
+
+			bankDetails.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			bank = bankDetails.getScore().intValue();
+			localList.add(bankDetails);
+		}
+		checkList.setMaxScore(new BigDecimal(bank));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3300,6 +3922,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptAssetScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore assetChecklist = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (assetChecklist == null) {
+			assetChecklist = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> assetScore = this.getManagedBean()
 				.getAssetScore();
@@ -3313,11 +3940,37 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (assetScore != null) {
+		int asset = 0;
+		if (assetScore.size() > 0) {
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : assetScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					asset = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = assetScore.indexOf(score);
+				assetScore.set(index, score);
+			}
 
 			localList.addAll(assetScore);
 		}
 
+		if (assetChecklist.getScore() != null) {
+
+			assetChecklist.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			asset = assetChecklist.getScore().intValue();
+			localList.add(assetChecklist);
+		}
+		checkList.setMaxScore(new BigDecimal(asset));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3325,6 +3978,11 @@ public class SpecificationBackingBean extends
 
 	public void acceptPaidUpScore() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		ScQtCheckListScore paidUpChecklist = this.getManagedBean()
+				.getScQtCheckListScore();
+		if (paidUpChecklist == null) {
+			paidUpChecklist = new ScQtCheckListScore();
+		}
 
 		List<ScQtCheckListScore> paidUpScore = this.getManagedBean()
 				.getPaidUpCapitalScore();
@@ -3338,11 +3996,38 @@ public class SpecificationBackingBean extends
 		if (localList == null) {
 			localList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (paidUpScore != null) {
+		int paidUp = 0;
+		if (paidUpScore.size() > 0) {
+
+			getManagedBean().setTechnicalChecklistScoring(0);
+			for (ScQtCheckListScore score : paidUpScore) {
+
+				if (getManagedBean().getTechnicalChecklistScoring() < score
+						.getScore().intValue()) {
+					;
+					getManagedBean().setTechnicalChecklistScoring(
+							score.getScore().intValue());
+					paidUp = getManagedBean().getTechnicalChecklistScoring();
+
+				}
+				score.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+				int index = paidUpScore.indexOf(score);
+				paidUpScore.set(index, score);
+			}
 
 			localList.addAll(paidUpScore);
 		}
+		if (paidUpChecklist.getScore() != null) {
 
+			paidUpChecklist.setScoreType(new BigDecimal(this.getManagedBean()
+					.getChecklistScoreType()));
+
+			paidUp = paidUpChecklist.getScore().intValue();
+			localList.add(paidUpChecklist);
+		}
+
+		checkList.setMaxScore(new BigDecimal(paidUp));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3400,6 +4085,31 @@ public class SpecificationBackingBean extends
 			e.printStackTrace();
 		}
 		return getManagedBean().getYearList();
+	}
+
+	public void checkListDefChange(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("=====checklist change type value===" + type);
+		try {
+			List<SelectItem> selectItems = new ArrayList<SelectItem>();
+			if (type.equalsIgnoreCase("S")) {
+				this.getManagedBean().setTechnicalChecklistAction(null);
+				System.out.println("====sample===");
+				selectItems.add(new SelectItem("M", "Manual"));
+				this.getManagedBean().setTechnicalChecklistAction(selectItems);
+			}
+			if (type.equalsIgnoreCase("UP")) {
+				System.out.println("====upload===");
+				this.getManagedBean().setTechnicalChecklistAction(null);
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem("V", "View"));
+				selectItems.add(new SelectItem("O", "Online Submit"));
+				this.getManagedBean().setTechnicalChecklistAction(selectItems);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<SelectItem> getProcurementDetails() {
@@ -3973,9 +4683,11 @@ public class SpecificationBackingBean extends
 					(circular.getEndDate().toString()));
 			this.getManagedBean().setCirCularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-		/*	this.getManagedBean().setCircularType(
-					circular.getItemCategory().getPmParameterDescs().get(0)
-							.getCodeName());*/
+			/*
+			 * this.getManagedBean().setCircularType(
+			 * circular.getItemCategory().getPmParameterDescs().get(0)
+			 * .getCodeName());
+			 */
 			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
 			/*
 			 * this.getManagedBean().setCircularType(
@@ -4067,6 +4779,14 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
 				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				if (getManagedBean().getTechnicalChecklistScoring() < weight
+						.getWeightage().intValue()) {
+					getManagedBean().setTechnicalChecklistScoring(
+							weight.getWeightage().intValue());
+					getManagedBean().setScoreVarience(
+							new BigDecimal(getManagedBean()
+									.getTechnicalChecklistScoring()));
+				}
 				total = total + weight.getWeightage().intValue();
 				BigDecimal b1 = new BigDecimal(total);
 				BigDecimal techWeightage = new BigDecimal(100);

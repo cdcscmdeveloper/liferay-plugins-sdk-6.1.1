@@ -25,9 +25,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
-import my.ep.persistence.entity.sc.quationtender.ScQtFreqSchedule;
-import my.ep.persistence.entity.sc.quationtender.ScQtProgessivePayment;
+
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.web.backingbean.sc.specification.BankingBean;
@@ -132,8 +134,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> nonFederalContractScore=new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> itemScore=new ArrayList<ScQtCheckListScore>();
 	
-	private List<ScQtFreqSchedule> scheduleList;
-	private List<ScQtProgessivePayment> progressivePaymentList;
+	private List<ScQtSchedule> scheduleList;
+	private List<ScQtSchedule> progressivePaymentList;
 	
 	private int totalFrequency;
 	private int totalProgressivePayment;
@@ -241,6 +243,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public ScQtSupplierCriteria supplierCriteria;
 	
 	public String deliveyzoneName;
+	private int technicalChecklistScoring;
+	private String checklistScoreType="1";
+	private String companyScoreType="1";
+	private ScQtCheckListScore scQtCheckListScore;
+	private ScQtCheckListScore scQtContractScore;
+	
+	private List<SelectItem> technicalChecklistAction;
+	
+	private BigDecimal scoreVarience;
+	private ScQtScoreOfferPrice packageScoreSetting;
+	private ScQtScoreOfferPrice itemScoreSetting;
+	private ScQtScoreWeightage scQtScoreWeightage;
+	
+	
 	
 	
 	public SpecificationManagedBean(){
@@ -1037,34 +1053,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.assetScore = assetScore;
 	}
 
-	/**
-	 * @return the scheduleList
-	 */
-	public List<ScQtFreqSchedule> getScheduleList() {
-		return scheduleList;
-	}
 
-	/**
-	 * @param scheduleList the scheduleList to set
-	 */
-	public void setScheduleList(List<ScQtFreqSchedule> scheduleList) {
-		this.scheduleList = scheduleList;
-	}
-
-	/**
-	 * @return the progressivePaymentList
-	 */
-	public List<ScQtProgessivePayment> getProgressivePaymentList() {
-		return progressivePaymentList;
-	}
-
-	/**
-	 * @param progressivePaymentList the progressivePaymentList to set
-	 */
-	public void setProgressivePaymentList(
-			List<ScQtProgessivePayment> progressivePaymentList) {
-		this.progressivePaymentList = progressivePaymentList;
-	}
 
 	/**
 	 * @return the totalFrequency
@@ -2413,6 +2402,232 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
 		this.supplierCriteria = supplierCriteria;
 	}
+
+
+
+	/**
+	 * @return the technicalChecklistScoring
+	 */
+	public int getTechnicalChecklistScoring() {
+		return technicalChecklistScoring;
+	}
+
+
+
+	/**
+	 * @param technicalChecklistScoring the technicalChecklistScoring to set
+	 */
+	public void setTechnicalChecklistScoring(int technicalChecklistScoring) {
+		this.technicalChecklistScoring = technicalChecklistScoring;
+	}
+
+
+
+	/**
+	 * @return the checklistScoreType
+	 */
+	public String getChecklistScoreType() {
+		return checklistScoreType;
+	}
+
+
+
+	/**
+	 * @param checklistScoreType the checklistScoreType to set
+	 */
+	public void setChecklistScoreType(String checklistScoreType) {
+		this.checklistScoreType = checklistScoreType;
+	}
+
+
+
+	/**
+	 * @return the scQtCheckListScore
+	 */
+	public ScQtCheckListScore getScQtCheckListScore() {
+		return scQtCheckListScore;
+	}
+
+
+
+	/**
+	 * @param scQtCheckListScore the scQtCheckListScore to set
+	 */
+	public void setScQtCheckListScore(ScQtCheckListScore scQtCheckListScore) {
+		this.scQtCheckListScore = scQtCheckListScore;
+	}
+
+
+
+	/**
+	 * @return the companyScoreType
+	 */
+	public String getCompanyScoreType() {
+		return companyScoreType;
+	}
+
+
+
+	/**
+	 * @param companyScoreType the companyScoreType to set
+	 */
+	public void setCompanyScoreType(String companyScoreType) {
+		this.companyScoreType = companyScoreType;
+	}
+
+
+
+	/**
+	 * @return the technicalChecklistAction
+	 */
+	public List<SelectItem> getTechnicalChecklistAction() {
+		return technicalChecklistAction;
+	}
+
+
+
+	/**
+	 * @param technicalChecklistAction the technicalChecklistAction to set
+	 */
+	public void setTechnicalChecklistAction(
+			List<SelectItem> technicalChecklistAction) {
+		this.technicalChecklistAction = technicalChecklistAction;
+	}
+
+
+
+	/**
+	 * @return the scoreVarience
+	 */
+	public BigDecimal getScoreVarience() {
+		return scoreVarience;
+	}
+
+
+
+	/**
+	 * @param scoreVarience the scoreVarience to set
+	 */
+	public void setScoreVarience(BigDecimal scoreVarience) {
+		this.scoreVarience = scoreVarience;
+	}
+
+
+
+	/**
+	 * @return the packageScoreSetting
+	 */
+	public ScQtScoreOfferPrice getPackageScoreSetting() {
+		return packageScoreSetting;
+	}
+
+
+
+	/**
+	 * @param packageScoreSetting the packageScoreSetting to set
+	 */
+	public void setPackageScoreSetting(ScQtScoreOfferPrice packageScoreSetting) {
+		this.packageScoreSetting = packageScoreSetting;
+	}
+
+
+
+	/**
+	 * @return the itemScoreSetting
+	 */
+	public ScQtScoreOfferPrice getItemScoreSetting() {
+		return itemScoreSetting;
+	}
+
+
+
+	/**
+	 * @param itemScoreSetting the itemScoreSetting to set
+	 */
+	public void setItemScoreSetting(ScQtScoreOfferPrice itemScoreSetting) {
+		this.itemScoreSetting = itemScoreSetting;
+	}
+
+
+
+	/**
+	 * @return the scQtScoreWeightage
+	 */
+	public ScQtScoreWeightage getScQtScoreWeightage() {
+		return scQtScoreWeightage;
+	}
+
+
+
+	/**
+	 * @param scQtScoreWeightage the scQtScoreWeightage to set
+	 */
+	public void setScQtScoreWeightage(ScQtScoreWeightage scQtScoreWeightage) {
+		this.scQtScoreWeightage = scQtScoreWeightage;
+	}
+
+
+
+	/**
+	 * @return the scheduleList
+	 */
+	public List<ScQtSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+
+
+	/**
+	 * @param scheduleList the scheduleList to set
+	 */
+	public void setScheduleList(List<ScQtSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtSchedule> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(List<ScQtSchedule> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+
+
+	/**
+	 * @return the scQtContractScore
+	 */
+	public ScQtCheckListScore getScQtContractScore() {
+		return scQtContractScore;
+	}
+
+
+
+	/**
+	 * @param scQtContractScore the scQtContractScore to set
+	 */
+	public void setScQtContractScore(ScQtCheckListScore scQtContractScore) {
+		this.scQtContractScore = scQtContractScore;
+	}
+
+
+
+
+
+
+
+
+
 
 
 
