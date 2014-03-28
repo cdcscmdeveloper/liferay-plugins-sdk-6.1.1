@@ -1634,15 +1634,15 @@ public class SpecificationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.getManagedBean().getScQtCheckSt2techProposal().get(0)
-				.setChecklistType(type);
+		/*this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+				.setChecklistType(type);*/
 	}
 
 	public void checklistActionChange(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
-		this.getManagedBean().getScQtCheckSt2techProposal().get(0)
-				.setChecklistAction(type);
+		/*this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+				.setChecklistAction(type);*/
 	}
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
@@ -2461,7 +2461,7 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st2technicalproposalList1 = createSpecList("2");
+			ScQtCheckList st2technicalproposalList1 = new ScQtCheckList();
 
 			st2technicalproposalList1.setDocType("1");
 			// st2technicalproposalList1.setChecklistType("UP");
