@@ -425,6 +425,6 @@ public class EpPortletUtil {
 	}
 	
 	public String getDisplayPortletName() {
-		return getThemeDisplay().getPortletDisplay().getPortletName();
+		return getThemeDisplay().getPortletDisplay().getTitle();
 	}
 }
