@@ -75,7 +75,7 @@
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="Create" style="float:right;" action="userProfileCreation.xhtml?faces-redirect=true" ajax="false"
+      <p:commandButton value="Create" style="float:right;" action="#{userprofilesBackingBean.createUserProfile()}" ajax="false"
        	 icon="ui-icon-add" />
 	 </h:panelGrid>	
 	</p:panel>

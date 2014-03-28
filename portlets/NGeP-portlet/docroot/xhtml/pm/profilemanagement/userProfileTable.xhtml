@@ -19,7 +19,10 @@
         </p:column>	 
            	
 	    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" > 
-           <h:outputText value="PTJ001"/>
+           <p:inputText value="0" size="5" />&#160;
+             <p:columnGroup>                
+               <p:commandButton value="..." oncomplete="resorg.show();" style="width:30px" />                                                                            
+			 </p:columnGroup>    
         </p:column>
         
         <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
