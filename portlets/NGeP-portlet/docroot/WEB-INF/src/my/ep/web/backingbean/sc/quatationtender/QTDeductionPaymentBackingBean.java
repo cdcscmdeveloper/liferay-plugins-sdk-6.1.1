@@ -87,25 +87,30 @@ public class QTDeductionPaymentBackingBean extends
 				this.getManagedBean().setPercentageField(true);
 				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(false);
+				this.getManagedBean().setDurationField(false);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_FIXED)) {
 				this.getManagedBean().setPercentageField(false);
 				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(true);
+				this.getManagedBean().setDurationField(true);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_NON_FIXED)) {
 				this.getManagedBean().setPercentageField(false);
 				this.getManagedBean().setDescriptionField(false);
 				this.getManagedBean().setAmountField(false);
+				this.getManagedBean().setDurationField(true);
 			} else if (getManagedBean().getDeductionPaymentArray()
 					.equalsIgnoreCase(QTConstants.DP_OTHERS)) {
 				this.getManagedBean().setPercentageField(true);
 				this.getManagedBean().setAmountField(true);
 				this.getManagedBean().setDescriptionField(true);
+				this.getManagedBean().setDurationField(true);
 			} else {
 				this.getManagedBean().setPercentageField(true);
 				this.getManagedBean().setAmountField(true);
 				this.getManagedBean().setDescriptionField(true);
+				this.getManagedBean().setDurationField(true);
 			}
 		}
 		// getManagedBean().setDeductionPaymentArray(getManagedBean().getDeductionPaymentArray());

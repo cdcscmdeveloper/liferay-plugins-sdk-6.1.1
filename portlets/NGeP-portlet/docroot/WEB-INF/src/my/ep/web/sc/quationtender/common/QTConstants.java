@@ -23,13 +23,13 @@ public interface QTConstants {
 	public static final String QT_DETAILS_TAB="Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB="Supplier Qualification Criteria";
 	public static final String QT_APPROVAL_TAB="Approval";
-	public static final String QT_SCHDULE_TAB="Schedule";
+	public static final String QT_SCHDULE_TAB="Schedule & Contact Information";
 	public static final String QT_DEDUCTION_TAB="Deduction Payment";
 	public static final String QT_DOCUMENTS_TAB="Documents";
 	public static final String QT_REMARKS_TAB="Remarks";
 	public static final String QT_BUSINESS_OWNER="Business Owner";
 	public static final String QT_COMMITTEE_APPOINTMENT="Committee Appointment";
-	public static final String QT_BRIEFING_SITEVISIT="Briefing/Site Visit & Contact Information";
+	public static final String QT_BRIEFING_SITEVISIT="Briefing/Site Visit & Sample Submission";
 	
 	// Bsv Attendance Constants
 	public static final String BSV_MOCULE_CODE = "SC";
@@ -78,4 +78,12 @@ public interface QTConstants {
 	public static final String DP_NON_FIXED = "NF";
 	public static final String DP_OTHERS = "OT";
 
+	//committee Appointment
+	
+	public static final String SPECIFICATION_COMMITTEE_TAB="Specification Committee";
+	public static final String OPENING_COMMITTEE_TAB="Opening Committee";
+	public static final String TECHNICAL_COMMITTEE_TAB="Technical Evaluation Committee";
+	public static final String FINANCIAL_COMMITTEE_TAB="Financial Evaluation Committee";
+	public static final String EVALUATION_COMMITTEE_TAB="Evaluation Committee";
+	public static final String FINALIZATION_SECRETARY_TAB="Finalization Secretary";
 }

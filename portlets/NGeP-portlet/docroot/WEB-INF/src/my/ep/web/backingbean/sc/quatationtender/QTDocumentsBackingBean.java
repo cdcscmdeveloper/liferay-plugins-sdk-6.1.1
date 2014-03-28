@@ -22,7 +22,6 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -124,18 +123,20 @@ public class QTDocumentsBackingBean extends
 
 	}
 
-	public void cloneSearchCommitteAction() {
+	public void documentCloneSearchAction() {
 		try {
 			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
 					.getCloneQtnTenderSearchBean();
 			List<ScQt> cloneSearchQt = retriveQtCommittes(qtnTenderSearchBean);
-			
-			this.getManagedBean().setCloneTenderList(cloneSearchQt);
+
+			this.getManagedBean().setDocumentCloneTenderList(cloneSearchQt);
 		} catch (Exception e) {
 
 		}
-		/*List<ScQtCommittee> qtCommittee = retriveQtCommittes();
-		getManagedBean().setCloneSearchCommittes(qtCommittee);*/
+		/*
+		 * List<ScQtCommittee> qtCommittee = retriveQtCommittes();
+		 * getManagedBean().setCloneSearchCommittes(qtCommittee);
+		 */
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class QTDocumentsBackingBean extends
 				bean.setSearchValue(qtNumber);
 				searchFilterBean.add(bean);
 			}
-			
+
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -213,77 +214,115 @@ public class QTDocumentsBackingBean extends
 		} finally {
 			detailSO = null;
 		}
-		
+
 		return null != dto.getQtResultBean().getResultList() ? dto
 				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 	}
 
-/*	*//**
+	/*	*//**
 	 * @return
-	 *//*
-	private List<ScQtCommittee> retriveQtCommittes() {
-		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		ISearchBean<ScQtCommittee> searchBean = new SearchBean<ScQtCommittee>();
-		CommitteResDTO resDto = null;
-
-		if (getManagedBean().getCreatedDtFrom() != null) {
-			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			creatDtSearchBean.setSearchField("scCommittee.createdDate");
-			creatDtSearchBean.setSearchValue(getManagedBean()
-					.getCreatedDtFrom());
-			searchBean.getDataFilterBeans().add(creatDtSearchBean);
-		}
-
-		if (getManagedBean().getCreatedDtTo() != null) {
-			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			creatDtSearchBean.setSearchField("scCommittee.createdDate");
-			creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDtTo());
-			searchBean.getDataFilterBeans().add(creatDtSearchBean);
-		}
-
-		if (getManagedBean().getQtNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getQtNo())) {
-			SearchFilterBean qtnoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			qtnoSearchBean.setSearchField("scQt.qtNo");
-			qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
-
-			searchBean.getDataFilterBeans().add(qtnoSearchBean);
-		}
-
-		if (getManagedBean().getTitle() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getTitle())) {
-			SearchFilterBean qtnoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			qtnoSearchBean.setSearchField("scQt.qtTitle");
-			qtnoSearchBean.setSearchValue(getManagedBean().getTitle());
-
-			searchBean.getDataFilterBeans().add(qtnoSearchBean);
-		}
-
-		if (getManagedBean().getStatus() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getStatus())) {
-		}
-		committeReqDTO.setCommitteSearchBean(searchBean);
-
-		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-
-			resDto = committeSO.searchQTCommittees(committeReqDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return resDto.getCommitteResultBean().getResultList();
-	}*/
+	 */
+	/*
+	 * private List<ScQtCommittee> retriveQtCommittes() { CommitteReqDTO
+	 * committeReqDTO = new CommitteReqDTO(); ISearchBean<ScQtCommittee>
+	 * searchBean = new SearchBean<ScQtCommittee>(); CommitteResDTO resDto =
+	 * null;
+	 * 
+	 * if (getManagedBean().getCreatedDtFrom() != null) { SearchFilterBean
+	 * creatDtSearchBean = new SearchFilterBean(
+	 * SearchOperator.OPERATOR_EQUALS.value());
+	 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
+	 * creatDtSearchBean.setSearchValue(getManagedBean() .getCreatedDtFrom());
+	 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
+	 * 
+	 * if (getManagedBean().getCreatedDtTo() != null) { SearchFilterBean
+	 * creatDtSearchBean = new SearchFilterBean(
+	 * SearchOperator.OPERATOR_EQUALS.value());
+	 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
+	 * creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDtTo());
+	 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
+	 * 
+	 * if (getManagedBean().getQtNo() != null &&
+	 * !"".equalsIgnoreCase(getManagedBean().getQtNo())) { SearchFilterBean
+	 * qtnoSearchBean = new SearchFilterBean(
+	 * SearchOperator.OPERATOR_EQUALS.value());
+	 * qtnoSearchBean.setSearchField("scQt.qtNo");
+	 * qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
+	 * 
+	 * searchBean.getDataFilterBeans().add(qtnoSearchBean); }
+	 * 
+	 * if (getManagedBean().getTitle() != null &&
+	 * !"".equalsIgnoreCase(getManagedBean().getTitle())) { SearchFilterBean
+	 * qtnoSearchBean = new SearchFilterBean(
+	 * SearchOperator.OPERATOR_EQUALS.value());
+	 * qtnoSearchBean.setSearchField("scQt.qtTitle");
+	 * qtnoSearchBean.setSearchValue(getManagedBean().getTitle());
+	 * 
+	 * searchBean.getDataFilterBeans().add(qtnoSearchBean); }
+	 * 
+	 * if (getManagedBean().getStatus() != null &&
+	 * !"".equalsIgnoreCase(getManagedBean().getStatus())) { }
+	 * committeReqDTO.setCommitteSearchBean(searchBean);
+	 * 
+	 * try { ICommitteSO committeSO = BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+	 * 
+	 * resDto = committeSO.searchQTCommittees(committeReqDTO); } catch
+	 * (Exception ex) { ex.printStackTrace(); }
+	 * 
+	 * return resDto.getCommitteResultBean().getResultList(); }
+	 */
 
 	public void onRowCloneAction(SelectEvent event) {
-		ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
-		System.out.println("" + scQtCommittee.getQtCommitteeId());
+		ScQt scQt = (ScQt) event.getObject();
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO resDTO = null;
+		try {
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+			reqDTO.setQtId(scQt.getQtId());
+			List<String> type = new ArrayList<String>();
+			type.add("UP");
+			type.add("TD");
+			reqDTO.setCheckListType(type);
+
+			resDTO = detailSO.retriveQTDocDetails(reqDTO);
+
+			List<ScQtCheckList> list = resDTO.getDocumentResultBean()
+					.getResultList();
+
+			System.out.println("list: " + list.size());
+
+			for (ScQtCheckList scQtCheckList : list) {
+				System.out.println(scQtCheckList.getQtChecklistId() + "|"
+						+ scQtCheckList.getChecklistType() + "|"
+						+ scQtCheckList.getDocType() + "|"
+						+ scQtCheckList.getTitle() + "|"
+						+ scQtCheckList.getChecklistItemId()
+						+ "|"
+						+ scQtCheckList.getChecklistSeq()
+						// + "|" + scQtCheckList.getQtWeightageId()
+						+ "|" + scQtCheckList.getPmStatus() + "|"
+						+ scQtCheckList.getScQtCheckListAttachment() + "|"
+						+ scQtCheckList.getScQtDoc());
+			}
+			this.getManagedBean().setQtCheckLists(list);
+			System.out.println("======== list size==== : "
+					+ getManagedBean().getQtCheckLists().size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addDocumentCloneAction() {
+		debugLogger("addDocumentCloneAction");
+		
+		if (getManagedBean().getScQtChecklists() == null) {
+			getManagedBean().setScQtChecklists(getManagedBean().getSelectedQtCheckLists());
+		} else {
+			getManagedBean().getScQtChecklists().addAll(getManagedBean().getSelectedQtCheckLists());
+		}
 	}
 
 	public void standardListAction() {

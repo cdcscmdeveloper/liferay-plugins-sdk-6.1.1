@@ -1,0 +1,66 @@
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:accordionPanel id="accordpnllist"
+		value="#{qTScheduleDetailBackingBean.managedBean.briefingZoneBean}"
+		var="zonePnlList" dynamic="true" cache="true">
+		<p:ajax event="tabChange" listener="#{qTScheduleDetailBackingBean.bsvZoneTabChange}" process="@this" />
+		<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
+
+			<!-- Briefing Details -->
+			<ui:param name="briefingList" value="#{zonePnlList.briefingList}" />
+			<ui:param name="selectedbriefingList"
+				value="#{zonePnlList.briefingList}" />
+			<ui:include src="briefingIncludeDetails.xhtml" />
+			<div align="right">
+				<p:commandButton id="addtositevisitdtlid"
+					process="@this, briefdetaillistid" partialSubmit="true"
+					value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
+					actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitDtl}" />
+
+				<p:commandButton id="briefaddid" value="#{lbl['lbl.so.addbtn']}"
+					process="@this"
+					action="#{qTScheduleDetailBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
+					oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
+					icon="ui-icon-add" />
+
+				<p:commandButton value="#{lbl['lbl.so.delete']}"
+					icon="ui-icon-delete" process="@this, briefdetaillistid"
+					partialSubmit="true"
+					action="#{qTScheduleDetailBackingBean.deleteZoneBriefingDetails}"
+					update="briefdetaillistid" />
+			</div>
+
+			<!-- Site Visit Details -->
+			<h:panelGroup id="samebsvrequireid">
+				<ui:fragment
+					rendered="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv eq 'false'}">
+					<ui:param name="sitevisitList" value="#{zonePnlList.sitevisitList}" />
+					<ui:param name="selectedSitevisitList"
+						value="#{zonePnlList.sitevisitList}" />
+					<ui:include src="sitevistIncludeDetails.xhtml" />
+					<div align="right">
+						<p:commandButton id="sitevisitaddid"
+							value="#{lbl['lbl.so.addbtn']}" process="@this"
+							action="#{qTScheduleDetailBackingBean.addZoneSiteDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
+							oncomplete="dlg2.show();" update="@(.qtSitevisitDetails)"
+							icon="ui-icon-add" />
+						<p:commandButton value="#{lbl['lbl.so.delete']}"
+							icon="ui-icon-delete" process="@this, sitevisitdetaillistid"
+							partialSubmit="true" update="sitevisitdetaillistid" />
+					</div>
+				</ui:fragment>
+			</h:panelGroup>
+
+			<!-- Sample Submission and Remark -->
+			<ui:include src="briefingsampleremark.xhtml" />
+
+		</p:tab>
+	</p:accordionPanel>
+</ui:composition>

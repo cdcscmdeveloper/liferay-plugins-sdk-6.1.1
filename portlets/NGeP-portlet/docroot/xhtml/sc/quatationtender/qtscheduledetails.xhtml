@@ -20,7 +20,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
 				<td><p:inputText
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
+						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true" size="30"
 						style="margin-top:5px;" /></td>
 			</tr>
@@ -43,7 +43,8 @@
 					<h:inputText value="12:00PM" disabled="true" size="06" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.expectloadate']}" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.so.expectloadate']}" /></td>
 				<td><p:calendar
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
 						id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
@@ -59,9 +60,150 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.so.proposal.validity.until']}" /></td>
 				<td><p:inputText
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
-						readonly="true" disabled="true" style="margin-top:5px;" size="30" /></td>
+						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
+						readonly="true" disabled="true" style="margin-top:5px;" size="30">
+						<!-- <f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /> -->
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
+	<p:spacer height="3" />
+	<p:panel id="samplezoneid" header="Sample Submission" toggleable="true"
+		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
+		<p:dataTable id="sampleid" style="width : 60%">
+			<p:column headerText="Zone/Location"></p:column>
+			<p:column headerText="Address"></p:column>
+			<p:column headerText="Action"></p:column>
+		</p:dataTable>
+		<div align="right" style="width: 60%;">
+			<p:commandButton value="Apply" process="@this" partialSubmit="true"
+				update="samplePopup" icon="ui-icon-add"
+				oncomplete="sampledlg.show();" />
+
+		</div>
+	</p:panel>
+	<p:panel header="Sample Submission" toggleable="true"
+		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
+		<ui:include
+			src="/xhtml/sc/quatationtender/briefingsitevisit/samplesubmission.xhtml" />
+	</p:panel>
+	<p:spacer height="3" />
+	<p:panel header="Contact Person Details" toggleable="true">
+		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
+			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
+			editable="true"
+			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
+			styleClass="contactdetails" rowKey="#{contactpersondetails}"
+			rowIndexVar="rowIndex" rows="10">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="cpersondetailsid" />
+
+			<p:column headerText="#{lbl['lbl.so.name']}">
+				<h:outputText value="#{contactpersondetails.name}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.name}" size="50"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.phone']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.phoneNo}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.phoneNo}" size="10"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.fax']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.faxNo}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.faxNo}" size="10"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.email}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.email}"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,cpersondetailsid" partialSubmit="true"
+				action="#{qTScheduleDetailBackingBean.addContactPerson}"
+				update="cpersondetailsid" icon="ui-icon-add"
+				rendered="#{qTDetailBB.managedBean.editable}" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete"
+				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
+				update="cpersondetailsid"
+				rendered="#{qTDetailBB.managedBean.editable}" />
+		</div>
+	</p:panel>
+	<p:spacer height="3" />
+	<p:panel header="Desk Officer Admin Assistant" toggleable="true">
+
+		<p:dataTable id="doaaid" var="deskofficeradmin"
+			value="#{qTScheduleDetailBackingBean.managedBean.pmUsersList}"
+			selection="#{qTScheduleDetailBackingBean.managedBean.selectedPmUsersList}"
+			rowKey="#{deskofficeradmin}" style="width : 40%;">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="doaaid" />
+
+			<p:column headerText="Name">
+				<h:outputText
+					value="#{qTScheduleDetailBackingBean.managedBean.pmUser.userName}"
+					rendered="#{deskofficeradmin.brandNew eq false}" />
+				<p:selectOneMenu
+					value="#{qTScheduleDetailBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
+					rendered="#{deskofficeradmin.brandNew eq true}">
+					<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+					<f:selectItems
+						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
+						var="appName" itemLabel="#{appName.userName}"
+						itemValue="#{appName.userId}" />
+					<p:ajax event="change"
+						listener="#{qTScheduleDetailBackingBean.handleDeskOfficerChanged(qTScheduleDetailBackingBean.managedBean.qt.ministrySpecSecrataryId)}" />
+				</p:selectOneMenu>
+			</p:column>
+
+		</p:dataTable>
+		<div align="right" style="width: 40%;">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this, doaaid" partialSubmit="true"
+				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
+				update="doaaid" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete" update="doaaid"
+				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
+		</div>
+	</p:panel>
+
+	<p:dialog id="samplePopup" header="Sample Submission"
+		widgetVar="sampledlg" width="680" height="240">
+		<ui:include
+			src="/xhtml/sc/quatationtender/briefingsitevisit/samplesubmission.xhtml" />
+
+		<br />
+		<div>
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				icon="ui-icon-cancel" style="float:right;"
+				oncomplete="sampledlg.hide()" />
+			<p:commandButton value="#{lbl['lbl.so.okbtn']}" icon="ui-icon-accept"
+				style="float:right;" update="samplezoneid"
+				oncomplete="sampledlg.hide()" />
+		</div>
+	</p:dialog>
 </ui:composition>

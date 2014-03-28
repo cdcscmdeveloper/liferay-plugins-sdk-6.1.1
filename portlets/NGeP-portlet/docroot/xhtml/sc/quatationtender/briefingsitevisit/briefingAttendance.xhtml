@@ -1,0 +1,123 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				action="#{qTScheduleDetailBackingBean.briefingBackAction}" />
+		</div>
+
+		<p:panel>
+			<table>
+				<tr>
+					<td style="width: 120px;"><h:outputLabel value="Briefing" /></td>
+					<td><p:inputText disabled="true" size="30" /></td>
+					<td style="width: 400px;"><h:outputLabel value="Date/Time" /></td>
+					<td><p:inputText disabled="true" size="30" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
+			<ac:lovPopup />
+			<p:dataTable id="complisttbl" var="scQtBriefReg"
+				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}"
+				selection="#{qTScheduleDetailBackingBean.managedBean.selectedbriefRegistration}"
+				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
+
+				<p:ajax event="rowSelect"
+					listener="#{qTScheduleDetailBackingBean.onRowSelect}"
+					update=":form:attendanceDetailstbl" />
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
+					<c:if test="${scQtBriefReg.brandNew}">
+						<ac:lov id="test" lovId="SM_SUPPLIER" headerText="MOF NO"
+							saveObject="qTScheduleDetailBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
+							value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}">
+						</ac:lov>
+					</c:if>
+					<h:outputText rendered="#{!scQtBriefReg.brandNew}"
+						value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
+					<p:inputText value="#{scQtBriefReg.smSupplier.companyName}"
+						rendered="#{scQtBriefReg.brandNew}" />
+
+					<h:outputText value="#{scQtBriefReg.smSupplier.companyName}"
+						rendered="#{!scQtBriefReg.brandNew}" />
+				</p:column>
+			</p:dataTable>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+					process="@this" partialSubmit="true" update="complisttbl"
+					action="#{qTScheduleDetailBackingBean.addSupplierDetails}"
+					icon="ui-icon-add" />
+
+				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
+					process="@this,complisttbl" partialSubmit="true"
+					update="complisttbl"
+					action="#{qTScheduleDetailBackingBean.deleteSupplierDetails}"
+					icon="ui-icon-delete" />
+			</div>
+
+		</p:panel>
+
+		<p:panel header="Supplier Attendence List" toggleable="true"
+			id="attlistforCompId">
+			<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
+				value="#{qTScheduleDetailBackingBean.managedBean.briefingAttendanceList}"
+				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
+				selection="#{qTScheduleDetailBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+
+						</p:column>
+
+						<p:column
+							headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
+
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
+
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
+
+						</p:column>
+
+						<p:column headerText="Attendance" style="width:6%">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.name}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.icPassport}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.contactNo}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.email}" />
+				</p:column>
+				<p:column selectionMode="multiple" style="width:5%" />
+			</p:dataTable>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

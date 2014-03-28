@@ -68,10 +68,6 @@ public class QTCommitteBackingBean extends
 	}
 
 	public QTCommitteBackingBean() {
-		/*if (this.getManagedBean().getCommitteMember() == null) {
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-		}*/
-
 		getManagedBean().setRoleTypes(
 				getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE));
 	}
@@ -80,9 +76,8 @@ public class QTCommitteBackingBean extends
 		String tabTitle = ((TabBean) event.getData()).getTitleName();
 
 		ScCommittee committee = ((TabBean) event.getData()).getScCommittee();
-		System.out.println("$$$$$$$$$$$$$$$$$$$"+committee.getScCommitteeMembers());
-		/*getManagedBean().setScCommittee(committee);
-		getManagedBean().setTabTitle(tabTitle);*/
+		getManagedBean().setScCommittee(committee);
+		getManagedBean().setTabTitle(tabTitle);
 	}
 
 	/**
@@ -385,18 +380,19 @@ public class QTCommitteBackingBean extends
 		 */
 	}
 
-	@SuppressWarnings("unchecked")
 	public void addCloneDtlToTabs() {
+		debugLogger("addCloneDtlToTabs");
 		TreeNode searchCommitteeTreeNode = getManagedBean()
 				.getSearchcommitteeNode();
-		List<ScCommitteeMember> committeeMemberList = new ArrayList<ScCommitteeMember>();
-		List<ScCommittee> treeBeans = new ArrayList();
+		//List<ScCommitteeMember> committeeMemberList = new ArrayList<ScCommitteeMember>();
+		List<ScCommittee> treeBeans = new ArrayList<ScCommittee>();
 		if (searchCommitteeTreeNode != null) {
-			ScCommittee committee = null;
+			//ScCommittee committee = null;
 			for (TreeNode searchTreeNode : searchCommitteeTreeNode
 					.getChildren()) {
 
 				// ScCommittee
+				@SuppressWarnings("rawtypes")
 				ScCommittee treeBean = (ScCommittee) ((TreeNodeBean) searchTreeNode
 						.getData()).getObject();
 				treeBeans.add(treeBean);
@@ -425,7 +421,7 @@ public class QTCommitteBackingBean extends
 		}
 	}
 
-	public void addCommitteMember(ScCommittee committee) {
+	public void addCommitteMember(ScCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
 
 		this.getManagedBean().setCommitteMember(null);
@@ -434,6 +430,8 @@ public class QTCommitteBackingBean extends
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
+		getManagedBean().setScCommittee(committee);
+		getManagedBean().setTabTitle(titleName);
 	}
 
 	/**
@@ -463,39 +461,59 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setCommitteMember(committeeMember);
 		if (SelectionType.EXISITING.value().equalsIgnoreCase(
 				getManagedBean().getCommitteMember().getUserSelection())) {
-			getManagedBean().getCommitteMember().setExternalUser(true);
+			//getManagedBean().getCommitteMember().setExternalUser(true);
 
 		} else if (SelectionType.New.value().equalsIgnoreCase(
 				getManagedBean().getCommitteMember().getUserSelection())) {
-			getManagedBean().getCommitteMember().setExternalUser(true);
+			//getManagedBean().getCommitteMember().setExternalUser(true);
 
 		}
 	}
 
+	public void deleteSpecificationCommittee() {
+		debugLogger("deleteSpecificationCommittee");
+		List<TabBean> beans = getManagedBean().getScCommitteeMemberTabList();
+		List<TabBean> selectedBeans = getManagedBean()
+				.getScCommitteeMemberTabList();
+
+		if (beans.size() == selectedBeans.size()) {
+			beans.clear();
+		} else
+			for (TabBean tabBean : selectedBeans) {
+				beans.remove(tabBean);
+			}
+	}
+
+	public void addCloneToTecDtl(ScCommittee committee) {
+		debugLogger("addCloneToTecDtl");
+		this.getManagedBean().setScCommittee(committee);
+		List<TabBean> tabs = this.getManagedBean()
+				.getScCommitteeMemberTabList();
+		for (TabBean tabBean : tabs) {
+			if (tabBean.getTitleName().equalsIgnoreCase("TEC")) {
+				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
+				break;
+			}
+		}
+	}
+
 	/*
-	 * public void deleteSpecificationCommittee() {
-	 * debugLogger("deleteSpecificationCommittee"); List<ScCommitteeMember>
-	 * committeeMembersList = getManagedBean() .getSpecificationCommitteList();
-	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-	 * .getSelectSpecificationCommitteeList(); if (committeeMembersList.size()
-	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
-	 * else { for (ScCommitteeMember scCommitteeMember :
-	 * selectCommitteeMembersList) {
-	 * committeeMembersList.remove(scCommitteeMember); } } }
-	 */
-	/*
-	 * public void addCloneToTecDtl() { List<ScCommitteeMember> list =
-	 * getManagedBean() .getTechEvaluationCommitteList(); if (null == list) {
-	 * list = new ArrayList<ScCommitteeMember>(); } for (ScCommitteeMember
+	 * public void addCloneToTecDtl() { debugLogger("addCloneToTecDtl");
+	 * List<ScCommitteeMember> list = getManagedBean()
+	 * .getTechEvaluationCommitteList(); if (null == list) { list = new
+	 * ArrayList<ScCommitteeMember>(); } for (ScCommitteeMember
 	 * scCommitteeMember : getManagedBean()
 	 * .getSelectSpecificationCommitteeList()) { list.add(scCommitteeMember); }
 	 * getManagedBean().setTechEvaluationCommitteList(list);
 	 * System.out.println("TEC Dtl : " +
 	 * getManagedBean().getTechEvaluationCommitteList().size()); }
 	 */
+
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
 
+		// List<ScCommitteeMember> memberList =
+		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().getScCommitteeMembers();
 		List<ScCommitteeMember> memberList = getManagedBean().getScCommittee()
 				.getScCommitteeMembers();
 		if (null == memberList) {
@@ -523,6 +541,7 @@ public class QTCommitteBackingBean extends
 			}
 		}
 
+		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().setScCommitteeMembers(memberList);
 		getManagedBean().getScCommittee().setScCommitteeMembers(memberList);
 
 		List<TabBean> tabs = this.getManagedBean()
@@ -530,159 +549,12 @@ public class QTCommitteBackingBean extends
 		for (TabBean tabBean : tabs) {
 			if (tabBean.getTitleName().equalsIgnoreCase(
 					this.getManagedBean().getTabTitle())) {
+				// tabBean.setScCommittee(this.getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee());
 				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
 				break;
 			}
 		}
 	}
-
-	/*
-	 * public void okOpeningCommitteeAction() {
-	 * debugLogger("okOpeningCommitteeAction"); List<ScCommitteeMember>
-	 * memberList = getManagedBean() .getOpeningCommitteList(); if (null ==
-	 * memberList) { memberList = new ArrayList<ScCommitteeMember>(); } if
-	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-	 * System.out.println("******** New User *********"); ScCommitteeMember
-	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
-	 * this.getManagedBean().setOpeningCommitteList(memberList);
-	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
-	 * System.out.println("******** Existing User *********"); for (PmUser user
-	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
-	 * committeeMember = new ScCommitteeMember();
-	 * committeeMember.setMemberName(user.getUserName());
-	 * committeeMember.setIcPassport(user.getIdentificationNo());
-	 * committeeMember.setDesignation(user.getDesignation());
-	 * committeeMember.setEmail(user.getPmAddressTypes().get(0)
-	 * .getPmAddress().getEmail()); committeeMember.setGrade(user.getGrade());
-	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
-	 * getManagedBean().setOpeningCommitteList(memberList);
-	 * System.out.println("Passport : " +
-	 * getManagedBean().getOpeningCommitteList().get(0) .getIcPassport()); } }
-	 * 
-	 * public void deleteOpeningCommittee() {
-	 * debugLogger("deleteOpeningCommittee"); List<ScCommitteeMember>
-	 * committeeMembersList = getManagedBean() .getOpeningCommitteList();
-	 * 
-	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-	 * .getSelectOpeningCommitteeList();
-	 * 
-	 * if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-	 * committeeMembersList.clear(); } else { for (ScCommitteeMember
-	 * scCommitteeMember : selectCommitteeMembersList) {
-	 * committeeMembersList.remove(scCommitteeMember); } } }
-	 * 
-	 * public void okTechnicalEvaluationCommitteeAction() {
-	 * debugLogger("okTechnicalEvaluationCommitteeAction");
-	 * List<ScCommitteeMember> memberList = getManagedBean()
-	 * .getTechEvaluationCommitteList(); if (null == memberList) { memberList =
-	 * new ArrayList<ScCommitteeMember>(); } if
-	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-	 * System.out.println("******** New User *********"); ScCommitteeMember
-	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
-	 * this.getManagedBean().setTechEvaluationCommitteList(memberList);
-	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
-	 * System.out.println("******** Existing User *********"); for (PmUser user
-	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
-	 * committeeMember = new ScCommitteeMember();
-	 * committeeMember.setMemberName(user.getUserName());
-	 * committeeMember.setIcPassport(user.getIdentificationNo());
-	 * committeeMember.setDesignation(user.getDesignation());
-	 * committeeMember.setGrade(user.getGrade());
-	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
-	 * getManagedBean().setTechEvaluationCommitteList(memberList);
-	 * System.out.println("Passport : " +
-	 * getManagedBean().getTechEvaluationCommitteList().get(0)
-	 * .getIcPassport()); } }
-	 * 
-	 * public void deleteTechnicalEvaluationCommittee() {
-	 * debugLogger("deleteTechnicalEvaluationCommittee");
-	 * List<ScCommitteeMember> committeeMembersList = getManagedBean()
-	 * .getTechEvaluationCommitteList(); List<ScCommitteeMember>
-	 * selectCommitteeMembersList = getManagedBean()
-	 * .getSelectTechEvaluationCommitteeList(); if (committeeMembersList.size()
-	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
-	 * else { for (ScCommitteeMember scCommitteeMember :
-	 * selectCommitteeMembersList) {
-	 * committeeMembersList.remove(scCommitteeMember); } } }
-	 * 
-	 * public void okFinancailCommitteeAction() {
-	 * debugLogger("okFinancailCommitteeAction"); List<ScCommitteeMember>
-	 * memberList = getManagedBean() .getFinEvaluationCommitteList(); if (null
-	 * == memberList) { memberList = new ArrayList<ScCommitteeMember>(); } if
-	 * (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-	 * System.out.println("******** New User *********"); ScCommitteeMember
-	 * member = getManagedBean().getCommitteMember(); memberList.add(member);
-	 * this.getManagedBean().setFinEvaluationCommitteList(memberList);
-	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
-	 * System.out.println("******** Existing User *********"); for (PmUser user
-	 * : getManagedBean().getSelectedPmUser()) { ScCommitteeMember
-	 * committeeMember = new ScCommitteeMember();
-	 * committeeMember.setMemberName(user.getUserName());
-	 * committeeMember.setIcPassport(user.getIdentificationNo());
-	 * committeeMember.setDesignation(user.getDesignation());
-	 * committeeMember.setGrade(user.getGrade());
-	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
-	 * getManagedBean().setFinEvaluationCommitteList(memberList);
-	 * System.out.println("Passport : " +
-	 * getManagedBean().getFinEvaluationCommitteList().get(0) .getIcPassport());
-	 * } }
-	 * 
-	 * public void deleteFinancialEvaluationCommittee() {
-	 * debugLogger("deleteFinancialEvaluationCommittee");
-	 * List<ScCommitteeMember> committeeMembersList = getManagedBean()
-	 * .getFinEvaluationCommitteList(); List<ScCommitteeMember>
-	 * selectCommitteeMembersList = getManagedBean()
-	 * .getSelectFinEvaluationCommitteeList(); if (committeeMembersList.size()
-	 * == selectCommitteeMembersList.size()) { committeeMembersList.clear(); }
-	 * else { for (ScCommitteeMember scCommitteeMember :
-	 * selectCommitteeMembersList) {
-	 * committeeMembersList.remove(scCommitteeMember); } } }
-	 * 
-	 * public void okEvaluationCommitteeAction() {
-	 * debugLogger("okEvaluationCommitteeAction");
-	 * 
-	 * List<ScCommitteeMember> memberList = getManagedBean()
-	 * .getEvaluationCommitteList();
-	 * 
-	 * if (null == memberList) { memberList = new
-	 * ArrayList<ScCommitteeMember>(); }
-	 * 
-	 * if (getManagedBean().getCommitteMember().getUserSelection().equals("N"))
-	 * {
-	 * 
-	 * System.out.println("******** New User *********"); ScCommitteeMember
-	 * member = getManagedBean().getCommitteMember();
-	 * 
-	 * memberList.add(member);
-	 * this.getManagedBean().setEvaluationCommitteList(memberList);
-	 * System.out.println(" IC Passport : " + member.getIcPassport()); } else {
-	 * System.out.println("******** Existing User *********");
-	 * 
-	 * for (PmUser user : getManagedBean().getSelectedPmUser()) {
-	 * ScCommitteeMember committeeMember = new ScCommitteeMember();
-	 * committeeMember.setMemberName(user.getUserName());
-	 * committeeMember.setIcPassport(user.getIdentificationNo());
-	 * committeeMember.setDesignation(user.getDesignation());
-	 * committeeMember.setGrade(user.getGrade());
-	 * committeeMember.setPNP(user.isPMP()); memberList.add(committeeMember); }
-	 * 
-	 * getManagedBean().setEvaluationCommitteList(memberList);
-	 * System.out.println("Passport : " +
-	 * getManagedBean().getEvaluationCommitteList().get(0) .getIcPassport()); }
-	 * }
-	 * 
-	 * public void deleteEvaluationCommittee() {
-	 * debugLogger("deleteEvaluationCommittee"); List<ScCommitteeMember>
-	 * committeeMembersList = getManagedBean() .getEvaluationCommitteList();
-	 * 
-	 * List<ScCommitteeMember> selectCommitteeMembersList = getManagedBean()
-	 * .getSelectEvaluationCommitteeList();
-	 * 
-	 * if (committeeMembersList.size() == selectCommitteeMembersList.size()) {
-	 * committeeMembersList.clear(); } else { for (ScCommitteeMember
-	 * scCommitteeMember : selectCommitteeMembersList) {
-	 * committeeMembersList.remove(scCommitteeMember); } } }
-	 */
 
 	public void reset() {
 		debugLogger("reset");

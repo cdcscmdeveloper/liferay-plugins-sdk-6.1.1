@@ -35,6 +35,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -47,9 +49,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.CloneAllDataModel;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -79,8 +83,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private ScQt qt;
 
-	private ScQtBriefing qtBriefing;
-	private ScQtBriefing qtSiteBriefing;
 	private ScQtDoc qtDoc;
 	private ScQtRemark qtRemark;
 	private SmMofAccount smMofAccount;
@@ -93,7 +95,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmOrgProfile pmOrgProfile;
 
 	private String selectedBoolean1;
-	private String multiLoc;
+	// private String multiLoc;
 	private List<CtPanelSupplier> ctPanelSuppliers;
 
 	/**
@@ -115,8 +117,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> districts;
 
 	public List<ScQtBudget> gosodos;
-	public List<ScQtBriefing> briefings;
-	public List<ScQtBriefing> siteBriefings;
 	public List<ScQtDoc> scQtDocs;
 	public List<CloneAll> cloneAllList;
 	private List<ScQtContactPerson> scQtContactPersons;
@@ -167,6 +167,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
+	private List<ScQt> cloneBusinessTenderList = new ArrayList<ScQt>();
+	private List<ScQt> documentCloneTenderList = new ArrayList<ScQt>();
 	private ScQt tenderCriteria = new ScQt();
 
 	private List<TabBean> tabList;
@@ -259,7 +261,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String identificationNo = null;
 	private String identificationType;
 
-	private String panelItem = "Yes";
+	private String panelItem = "No";
 	private int publishingPeriod;
 
 	private List<SelectItem> comitteeUsers;
@@ -289,6 +291,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private int index = -1;
 
+	private ScQtSupplier scQtSupplier;
+
 	// Committee Appointment
 	private String tabTitle;
 	private ScCommittee scCommittee;
@@ -301,6 +305,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String evaluationType = "2";
 
 	private ScQt selectedCloneTender;
+	private ScQt selectedCloneBusinessTender;
+	private ScQt selectedDocumentCloneTender;
+	private List<ScQtCheckList> qtCheckLists;
+	private List<ScQtCheckList> selectedQtCheckLists;
 	private boolean ecType;
 
 	private SelectItem[] roleTypes; // Role type drop down
@@ -309,9 +317,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<TabBean> scCommitteeMemberTabList;
 
+	private Date proposalValidityUntil;
+
+	// Briefing & Site Visit Details
+	private ScQtBriefing qtBriefing;
+	private ScQtBriefing qtSiteBriefing;
+	public List<ScQtBriefing> briefings;
+	public List<ScQtBriefing> siteBriefings;
+	private String briefingZoneName;
+	private String previousPage;
+	private List<ScQtBriefingRegistration> briefingRegistrationList;
+	private ScQtBriefingRegistration selectedbriefRegistration;
+	private List<ScQtBriefingAttendance> briefingAttendanceList;
+	private TplSpecZoneDtl tplSpecZoneDtl;
+	private List<TplSpecZoneDtl> zones;
+	private List<ScRemark> remarks;
+	private TplSpecZoneDtl selectedZone;
+	private ScQtBriefingRegistration scQtBriefingRegistration;
+
+	// Schedule & Contact Information
+	private List<PmUser> pmUsersList;
+	private List<PmUser> selectedPmUsersList;
+	private PmUser pmUser;
+
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
 	private List<ScQtDeliveryLoc> selectedDeliveryLocList;
+	private TreeNode[] selectedGeneralTreeNodes;
+
+	public ScQtSupplierCriteria supplierCriteria;
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -342,10 +377,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 * ScQtBriefing(); briefing.setBriefingDesc("test");
 		 * briefings.add(briefing);
 		 */
-		briefingZoneBean.add(new BriefingZoneBean("South", briefings));
-		briefingZoneBean.add(new BriefingZoneBean("North", briefings));
-		briefingZoneBean.add(new BriefingZoneBean("East", briefings));
-		briefingZoneBean.add(new BriefingZoneBean("West", briefings));
+/*		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
+				siteBriefings));
+		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
+				siteBriefings));
+		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
+				siteBriefings));
+		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
+				siteBriefings));*/
 	}
 
 	private void getCommitteeApproverNames() {
@@ -379,7 +418,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
-		// userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
+		userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> availableApprover = userResDTO.getUserList();
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
@@ -925,92 +964,50 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.gosodos = gosodos;
 	}
 
-	/**
-	 * @return the userMinistryList
-	 */
 	public List<PmOrgProfile> getUserMinistryList() {
 		return userMinistryList;
 	}
 
-	/**
-	 * @param userMinistryList
-	 *            the userMinistryList to set
-	 */
 	public void setUserMinistryList(List<PmOrgProfile> userMinistryList) {
 		this.userMinistryList = userMinistryList;
 	}
 
-	/**
-	 * @return the userDepartmentList
-	 */
 	public List<PmOrgProfile> getUserDepartmentList() {
 		return userDepartmentList;
 	}
 
-	/**
-	 * @param userDepartmentList
-	 *            the userDepartmentList to set
-	 */
 	public void setUserDepartmentList(List<PmOrgProfile> userDepartmentList) {
 		this.userDepartmentList = userDepartmentList;
 	}
 
-	/**
-	 * @return the userDivisionList
-	 */
 	public List<PmOrgProfile> getUserDivisionList() {
 		return userDivisionList;
 	}
 
-	/**
-	 * @param userDivisionList
-	 *            the userDivisionList to set
-	 */
 	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
 		this.userDivisionList = userDivisionList;
 	}
 
-	/**
-	 * @return the goList
-	 */
 	public List<PmGo> getGoList() {
 		return goList;
 	}
 
-	/**
-	 * @param goList
-	 *            the goList to set
-	 */
 	public void setGoList(List<PmGo> goList) {
 		this.goList = goList;
 	}
 
-	/**
-	 * @return the soList
-	 */
 	public List<PmSo> getSoList() {
 		return soList;
 	}
 
-	/**
-	 * @param soList
-	 *            the soList to set
-	 */
 	public void setSoList(List<PmSo> soList) {
 		this.soList = soList;
 	}
 
-	/**
-	 * @return the doList
-	 */
 	public List<PmDo> getDoList() {
 		return doList;
 	}
 
-	/**
-	 * @param doList
-	 *            the doList to set
-	 */
 	public void setDoList(List<PmDo> doList) {
 		this.doList = doList;
 	}
@@ -1023,13 +1020,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.tenderCriteria = tenderCriteria;
 	}
 
-	public String getMultiLoc() {
-		return multiLoc;
-	}
-
-	public void setMultiLoc(String multiLoc) {
-		this.multiLoc = multiLoc;
-	}
+	/*
+	 * public String getMultiLoc() { return multiLoc; }
+	 * 
+	 * public void setMultiLoc(String multiLoc) { this.multiLoc = multiLoc; }
+	 */
 
 	public String getSelectedBoolean1() {
 		return selectedBoolean1;
@@ -1039,32 +1034,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedBoolean1 = selectedBoolean1;
 	}
 
-	/**
-	 * @return the selectedUserMinistry
-	 */
 	public PmOrgProfile getSelectedUserMinistry() {
 		return selectedUserMinistry;
 	}
 
-	/**
-	 * @param selectedUserMinistry
-	 *            the selectedUserMinistry to set
-	 */
 	public void setSelectedUserMinistry(PmOrgProfile selectedUserMinistry) {
 		this.selectedUserMinistry = selectedUserMinistry;
 	}
 
-	/**
-	 * @return the selectedUserDepartment
-	 */
 	public PmOrgProfile getSelectedUserDepartment() {
 		return selectedUserDepartment;
 	}
 
-	/**
-	 * @param selectedUserDepartment
-	 *            the selectedUserDepartment to set
-	 */
 	public void setSelectedUserDepartment(PmOrgProfile selectedUserDepartment) {
 		this.selectedUserDepartment = selectedUserDepartment;
 	}
@@ -1374,32 +1355,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.pmOrgProfile = pmOrgProfile;
 	}
 
-	/**
-	 * @return the scQtApproval
-	 */
 	public ScQtApproval getScQtApproval() {
 		return scQtApproval;
 	}
 
-	/**
-	 * @param scQtApproval
-	 *            the scQtApproval to set
-	 */
 	public void setScQtApproval(ScQtApproval scQtApproval) {
 		this.scQtApproval = scQtApproval;
 	}
 
-	/**
-	 * @return the uploadUpdateId
-	 */
 	public String getUploadUpdateId() {
 		return uploadUpdateId;
 	}
 
-	/**
-	 * @param uploadUpdateId
-	 *            the uploadUpdateId to set
-	 */
 	public void setUploadUpdateId(String uploadUpdateId) {
 		this.uploadUpdateId = uploadUpdateId;
 	}
@@ -1488,17 +1455,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isEditable = isEditable;
 	}
 
-	/**
-	 * @return the scQtDeductionList
-	 */
 	public List<ScQtDeduction> getScQtDeductionList() {
 		return scQtDeductionList;
 	}
 
-	/**
-	 * @param scQtDeductionList
-	 *            the scQtDeductionList to set
-	 */
 	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
 		this.scQtDeductionList = scQtDeductionList;
 	}
@@ -1546,440 +1506,237 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtDeductionClause = qtDeductionClause;
 	}
 
-	/**
-	 * @return the circularNo
-	 */
 	public String getCircularNo() {
 		return circularNo;
 	}
 
-	/**
-	 * @param circularNo
-	 *            the circularNo to set
-	 */
 	public void setCircularNo(String circularNo) {
 		this.circularNo = circularNo;
 	}
 
-	/**
-	 * @return the circularName
-	 */
 	public String getCircularName() {
 		return circularName;
 	}
 
-	/**
-	 * @param circularName
-	 *            the circularName to set
-	 */
 	public void setCircularName(String circularName) {
 		this.circularName = circularName;
 	}
 
-	/**
-	 * @return the itemName
-	 */
 	public String getItemName() {
 		return itemName;
 	}
 
-	/**
-	 * @param itemName
-	 *            the itemName to set
-	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
 
-	/**
-	 * @return the circularCoverage
-	 */
 	public String getCircularCoverage() {
 		return circularCoverage;
 	}
 
-	/**
-	 * @param circularCoverage
-	 *            the circularCoverage to set
-	 */
 	public void setCircularCoverage(String circularCoverage) {
 		this.circularCoverage = circularCoverage;
 	}
 
-	/**
-	 * @return the supplierName
-	 */
 	public String getSupplierName() {
 		return supplierName;
 	}
 
-	/**
-	 * @param supplierName
-	 *            the supplierName to set
-	 */
 	public void setSupplierName(String supplierName) {
 		this.supplierName = supplierName;
 	}
 
-	/**
-	 * @return the mofAccountNo
-	 */
 	public String getMofAccountNo() {
 		return mofAccountNo;
 	}
 
-	/**
-	 * @param mofAccountNo
-	 *            the mofAccountNo to set
-	 */
 	public void setMofAccountNo(String mofAccountNo) {
 		this.mofAccountNo = mofAccountNo;
 	}
 
-	/**
-	 * @return the totalSearchSupplier
-	 */
 	public int getTotalSearchSupplier() {
 		return totalSearchSupplier;
 	}
 
-	/**
-	 * @param totalSearchSupplier
-	 *            the totalSearchSupplier to set
-	 */
 	public void setTotalSearchSupplier(int totalSearchSupplier) {
 		this.totalSearchSupplier = totalSearchSupplier;
 	}
 
-	/**
-	 * @return the totalSupplier
-	 */
 	public int getTotalSupplier() {
 		return totalSupplier;
 	}
 
-	/**
-	 * @param totalSupplier
-	 *            the totalSupplier to set
-	 */
 	public void setTotalSupplier(int totalSupplier) {
 		this.totalSupplier = totalSupplier;
 	}
 
-	/**
-	 * @return the searchPanelSuppliersNode
-	 */
 	public TreeNode getSearchPanelSuppliersNode() {
 		return searchPanelSuppliersNode;
 	}
 
-	/**
-	 * @param searchPanelSuppliersNode
-	 *            the searchPanelSuppliersNode to set
-	 */
 	public void setSearchPanelSuppliersNode(TreeNode searchPanelSuppliersNode) {
 		this.searchPanelSuppliersNode = searchPanelSuppliersNode;
 	}
 
-	/**
-	 * @return the suppliersNode
-	 */
 	public TreeNode getSuppliersNode() {
 		return suppliersNode;
 	}
 
-	/**
-	 * @param suppliersNode
-	 *            the suppliersNode to set
-	 */
 	public void setSuppliersNode(TreeNode suppliersNode) {
 		this.suppliersNode = suppliersNode;
 	}
 
-	/**
-	 * @return the searchSupplierList
-	 */
 	public List<SmSupplier> getSearchSupplierList() {
 		return searchSupplierList;
 	}
 
-	/**
-	 * @param searchSupplierList
-	 *            the searchSupplierList to set
-	 */
 	public void setSearchSupplierList(List<SmSupplier> searchSupplierList) {
 		this.searchSupplierList = searchSupplierList;
 	}
 
-	/**
-	 * @return the selectedSupplierList
-	 */
 	public List<SmSupplier> getSelectedSupplierList() {
 		return selectedSupplierList;
 	}
 
-	/**
-	 * @param selectedSupplierList
-	 *            the selectedSupplierList to set
-	 */
 	public void setSelectedSupplierList(List<SmSupplier> selectedSupplierList) {
 		this.selectedSupplierList = selectedSupplierList;
 	}
 
-	/**
-	 * @return the qtSupplierList
-	 */
 	public List<ScQtSupplier> getQtSupplierList() {
 		return qtSupplierList;
 	}
 
-	/**
-	 * @param qtSupplierList
-	 *            the qtSupplierList to set
-	 */
 	public void setQtSupplierList(List<ScQtSupplier> qtSupplierList) {
 		this.qtSupplierList = qtSupplierList;
 	}
 
-	/**
-	 * @return the selectedCategoryList
-	 */
 	public List<ScQtCategory> getSelectedCategoryList() {
 		return selectedCategoryList;
 	}
 
-	/**
-	 * @param selectedCategoryList
-	 *            the selectedCategoryList to set
-	 */
 	public void setSelectedCategoryList(List<ScQtCategory> selectedCategoryList) {
 		this.selectedCategoryList = selectedCategoryList;
 	}
 
-	/**
-	 * @return the qtCategoryList
-	 */
 	public List<ScQtCategory> getQtCategoryList() {
 		return qtCategoryList;
 	}
 
-	/**
-	 * @param qtCategoryList
-	 *            the qtCategoryList to set
-	 */
 	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
 		this.qtCategoryList = qtCategoryList;
 	}
 
-	/**
-	 * @return the selectedScQtDeduction
-	 */
 	public List<ScQtDeduction> getSelectedScQtDeduction() {
 		return selectedScQtDeduction;
 	}
 
-	/**
-	 * @param selectedScQtDeduction
-	 *            the selectedScQtDeduction to set
-	 */
 	public void setSelectedScQtDeduction(
 			List<ScQtDeduction> selectedScQtDeduction) {
 		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
 
-	/**
-	 * @return the searchQTDataModel
-	 */
 	public IPagingDataModel<ScQt> getSearchQTDataModel() {
 		return searchQTDataModel;
 	}
 
-	/**
-	 * @param searchQTDataModel
-	 *            the searchQTDataModel to set
-	 */
 	public void setSearchQTDataModel(IPagingDataModel<ScQt> searchQTDataModel) {
 		this.searchQTDataModel = searchQTDataModel;
 	}
 
-	/**
-	 * @return the cloneSearchQTDataModel
-	 */
 	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
 		return cloneSearchQTDataModel;
 	}
 
-	/**
-	 * @param cloneSearchQTDataModel
-	 *            the cloneSearchQTDataModel to set
-	 */
 	public void setCloneSearchQTDataModel(
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
 	}
 
-	/**
-	 * @return the selectedLocNodes
-	 */
 	public TreeNode[] getSelectedLocNodes() {
 		return selectedLocNodes;
 	}
 
-	/**
-	 * @param selectedLocNodes
-	 *            the selectedLocNodes to set
-	 */
 	public void setSelectedLocNodes(TreeNode[] selectedLocNodes) {
 		this.selectedLocNodes = selectedLocNodes;
 	}
 
-	/**
-	 * @return the selectedAddrNodes
-	 */
 	public TreeNode[] getSelectedAddrNodes() {
 		return selectedAddrNodes;
 	}
 
-	/**
-	 * @param selectedAddrNodes
-	 *            the selectedAddrNodes to set
-	 */
 	public void setSelectedAddrNodes(TreeNode[] selectedAddrNodes) {
 		this.selectedAddrNodes = selectedAddrNodes;
 	}
 
-	/**
-	 * @return the deskOfficerAdmin
-	 */
 	public List<PmUser> getDeskOfficerAdmin() {
 		return deskOfficerAdmin;
 	}
 
-	/**
-	 * @param deskOfficerAdmin
-	 *            the deskOfficerAdmin to set
-	 */
 	public void setDeskOfficerAdmin(List<PmUser> deskOfficerAdmin) {
 		this.deskOfficerAdmin = deskOfficerAdmin;
 	}
 
-	/**
-	 * @return the ptjApprovalUsers
-	 */
 	public DualListModel<PmUser> getPtjApprovalUsers() {
 		return ptjApprovalUsers;
 	}
 
-	/**
-	 * @param ptjApprovalUsers
-	 *            the ptjApprovalUsers to set
-	 */
 	public void setPtjApprovalUsers(DualListModel<PmUser> ptjApprovalUsers) {
 		this.ptjApprovalUsers = ptjApprovalUsers;
 	}
 
-	/**
-	 * @return the deliveryLocList
-	 */
 	public List<ScQtDeliveryLoc> getDeliveryLocList() {
 		return deliveryLocList;
 	}
 
-	/**
-	 * @param deliveryLocList
-	 *            the deliveryLocList to set
-	 */
 	public void setDeliveryLocList(List<ScQtDeliveryLoc> deliveryLocList) {
 		this.deliveryLocList = deliveryLocList;
 	}
 
-	/**
-	 * @return the selectedDeliveryLocList
-	 */
 	public List<ScQtDeliveryLoc> getSelectedDeliveryLocList() {
 		return selectedDeliveryLocList;
 	}
 
-	/**
-	 * @param selectedDeliveryLocList
-	 *            the selectedDeliveryLocList to set
-	 */
 	public void setSelectedDeliveryLocList(
 			List<ScQtDeliveryLoc> selectedDeliveryLocList) {
 		this.selectedDeliveryLocList = selectedDeliveryLocList;
 	}
 
-	/**
-	 * @return the durationField
-	 */
 	public boolean isDurationField() {
 		return durationField;
 	}
 
-	/**
-	 * @param durationField
-	 *            the durationField to set
-	 */
 	public void setDurationField(boolean durationField) {
 		this.durationField = durationField;
 	}
 
-	/**
-	 * @return the committemembers
-	 */
 	public List<ScCommitteeMember> getCommittemembers() {
 		return committemembers;
 	}
 
-	/**
-	 * @param committemembers
-	 *            the committemembers to set
-	 */
 	public void setCommittemembers(List<ScCommitteeMember> committemembers) {
 		this.committemembers = committemembers;
 	}
 
-	/**
-	 * @return the roleTypes
-	 */
 	public SelectItem[] getRoleTypes() {
 		return roleTypes;
 	}
 
-	/**
-	 * @param roleTypes
-	 *            the roleTypes to set
-	 */
 	public void setRoleTypes(SelectItem[] roleTypes) {
 		this.roleTypes = roleTypes;
 	}
 
-	/**
-	 * @return the searchcommitteeNode
-	 */
 	public TreeNode getSearchcommitteeNode() {
 		return searchcommitteeNode;
 	}
 
-	/**
-	 * @param searchcommitteeNode
-	 *            the searchcommitteeNode to set
-	 */
 	public void setSearchcommitteeNode(TreeNode searchcommitteeNode) {
 		this.searchcommitteeNode = searchcommitteeNode;
 	}
 
-	/**
-	 * @return the committeNo
-	 */
 	public String getCommitteNo() {
 		return committeNo;
 	}
 
-	/**
-	 * @param committeNo
-	 *            the committeNo to set
-	 */
 	public void setCommitteNo(String committeNo) {
 		this.committeNo = committeNo;
 	}
@@ -2095,6 +1852,202 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCtZoneSupplierList(List<CtPanelSupplier> ctZoneSupplierList) {
 		this.ctZoneSupplierList = ctZoneSupplierList;
+	}
+
+	public List<ScQt> getCloneBusinessTenderList() {
+		return cloneBusinessTenderList;
+	}
+
+	public void setCloneBusinessTenderList(List<ScQt> cloneBusinessTenderList) {
+		this.cloneBusinessTenderList = cloneBusinessTenderList;
+	}
+
+	public ScQt getSelectedCloneBusinessTender() {
+		return selectedCloneBusinessTender;
+	}
+
+	public void setSelectedCloneBusinessTender(ScQt selectedCloneBusinessTender) {
+		this.selectedCloneBusinessTender = selectedCloneBusinessTender;
+	}
+
+	public ScQtSupplier getScQtSupplier() {
+		return scQtSupplier;
+	}
+
+	public void setScQtSupplier(ScQtSupplier scQtSupplier) {
+		this.scQtSupplier = scQtSupplier;
+	}
+
+	public String getBriefingZoneName() {
+		return briefingZoneName;
+	}
+
+	public void setBriefingZoneName(String briefingZoneName) {
+		this.briefingZoneName = briefingZoneName;
+	}
+
+	public ScQtSupplierCriteria getSupplierCriteria() {
+		return supplierCriteria;
+	}
+
+	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
+		this.supplierCriteria = supplierCriteria;
+	}
+
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
+	}
+
+	public TreeNode[] getSelectedGeneralTreeNodes() {
+		return selectedGeneralTreeNodes;
+	}
+
+	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
+		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
+	}
+
+	public Date getProposalValidityUntil() {
+		return proposalValidityUntil;
+	}
+
+	public void setProposalValidityUntil(Date proposalValidityUntil) {
+		this.proposalValidityUntil = proposalValidityUntil;
+	}
+
+	public List<ScQt> getDocumentCloneTenderList() {
+		return documentCloneTenderList;
+	}
+
+	public void setDocumentCloneTenderList(List<ScQt> documentCloneTenderList) {
+		this.documentCloneTenderList = documentCloneTenderList;
+	}
+
+	public ScQt getSelectedDocumentCloneTender() {
+		return selectedDocumentCloneTender;
+	}
+
+	public void setSelectedDocumentCloneTender(ScQt selectedDocumentCloneTender) {
+		this.selectedDocumentCloneTender = selectedDocumentCloneTender;
+	}
+
+	public List<ScQtCheckList> getQtCheckLists() {
+		return qtCheckLists;
+	}
+
+	public void setQtCheckLists(List<ScQtCheckList> qtCheckLists) {
+		this.qtCheckLists = qtCheckLists;
+	}
+
+	public List<ScQtCheckList> getSelectedQtCheckLists() {
+		return selectedQtCheckLists;
+	}
+
+	public void setSelectedQtCheckLists(List<ScQtCheckList> selectedQtCheckLists) {
+		this.selectedQtCheckLists = selectedQtCheckLists;
+	}
+
+	public String getPreviousPage() {
+		return previousPage;
+	}
+
+	public void setPreviousPage(String previousPage) {
+		this.previousPage = previousPage;
+	}
+
+	public List<ScQtBriefingRegistration> getBriefingRegistrationList() {
+		return briefingRegistrationList;
+	}
+
+	public void setBriefingRegistrationList(
+			List<ScQtBriefingRegistration> briefingRegistrationList) {
+		this.briefingRegistrationList = briefingRegistrationList;
+	}
+
+	public ScQtBriefingRegistration getSelectedbriefRegistration() {
+		return selectedbriefRegistration;
+	}
+
+	public void setSelectedbriefRegistration(
+			ScQtBriefingRegistration selectedbriefRegistration) {
+		this.selectedbriefRegistration = selectedbriefRegistration;
+	}
+
+	public List<ScQtBriefingAttendance> getBriefingAttendanceList() {
+		return briefingAttendanceList;
+	}
+
+	public void setBriefingAttendanceList(
+			List<ScQtBriefingAttendance> briefingAttendanceList) {
+		this.briefingAttendanceList = briefingAttendanceList;
+	}
+
+	public List<PmUser> getPmUsersList() {
+		return pmUsersList;
+	}
+
+	public void setPmUsersList(List<PmUser> pmUsersList) {
+		this.pmUsersList = pmUsersList;
+	}
+
+	public List<PmUser> getSelectedPmUsersList() {
+		return selectedPmUsersList;
+	}
+
+	public void setSelectedPmUsersList(List<PmUser> selectedPmUsersList) {
+		this.selectedPmUsersList = selectedPmUsersList;
+	}
+
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	public List<ScRemark> getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(List<ScRemark> remarks) {
+		this.remarks = remarks;
+	}
+
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+
+	public ScQtBriefingRegistration getScQtBriefingRegistration() {
+		return scQtBriefingRegistration;
+	}
+
+	public void setScQtBriefingRegistration(
+			ScQtBriefingRegistration scQtBriefingRegistration) {
+		this.scQtBriefingRegistration = scQtBriefingRegistration;
 	}
 
 }
