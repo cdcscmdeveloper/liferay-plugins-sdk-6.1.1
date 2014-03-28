@@ -6,26 +6,28 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="Clone" header="Clone Business Owner" widgetVar="screen2"
-		modal="true">
+	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
+		widgetVar="cloneBusinessOwner" modal="true">
 		<p:panel header="#{lbl['lbl.so.business.owner.search']}"
 			toggleable="true" id="searchpnlid">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Title" /></td>
 					<td colspan="3"><p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.title}" size="92" /></td>
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+							size="92" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
 					<td><p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.qtNo}" size="30" /></td>
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+							size="30" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Procurement Mode" /></td>
 					<td><p:selectOneMenu
-							value="#{qTBusinessOwnerBackingBean.managedBean.procurementMode}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems
 								value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
@@ -34,20 +36,20 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
 					<td><p:calendar
-							value="#{qTBusinessOwnerBackingBean.managedBean.createdDtFrom}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							size="30" showOn="button" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
 					<td><p:calendar
-							value="#{qTBusinessOwnerBackingBean.managedBean.createdDtTo}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 							size="30" showOn="button" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
-							value="#{qTBusinessOwnerBackingBean.managedBean.status}">
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 							<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="Active" itemValue="1" />
 							<f:selectItem itemLabel="Non-Active" itemValue="2" />
@@ -73,9 +75,9 @@
 		<p:spacer height="3" />
 		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitte"
-				value="#{qTBusinessOwnerBackingBean.managedBean.cloneSearchCommittes}"
-				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneCommittee}"
-				rowKey="#{committe}" selectionMode="single" var="committe"
+				value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessTenderList}"
+				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt"
 				styleClass="cloneResults">
 
 				<ac:paginator for="clonesearchCommitte" />
@@ -84,20 +86,20 @@
 					listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
 
 				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
-					<h:outputText value="#{committe.scQt.qtNo}" />
+					<h:outputText value="#{scQt.qtNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{committe.scQt.qtTitle}" />
+					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
-						value="#{qTBusinessOwnerBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, committe.scQt.procurementMode)}" />
+						value="#{qTBusinessOwnerBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{committe.scCommittee.createdDate}">
+					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
@@ -105,7 +107,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
-						value="#{committe.scQt.pmStatus.pmStatusDescs[0].statusName}" />
+						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -118,7 +120,7 @@
 				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
 				styleClass="cloneResults,cloneCommitteMembers">
 
-				<p:column selectionMode="multiple"></p:column>
+				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
 					<h:outputLabel value="#{member.memberName}" />
@@ -132,21 +134,21 @@
 					<h:outputLabel value="#{member.designation}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
-					<h:outputLabel value="#{member.grade}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-					<h:outputLabel value="#{member.pnp}" />
-				</p:column>
-
 				<p:column headerText="Email">
 					<h:outputLabel
 						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+					<h:outputLabel value="#{member.grade}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+					<h:outputText value="#{member.PNP ? 'Yes' : 'No'}" />
+				</p:column>
+
 				<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
-					<h:outputLabel value="#{member.consolidate}" />
+					<h:outputText value="#{member.consolidateValue ? 'Yes' : 'No'}" />
 				</p:column>
 
 			</p:dataTable>

@@ -20,21 +20,28 @@
 			<p:column headerText="#{lbl['lbl.so.bo.name']}">
 				<h:outputText value="#{businessowner.memberName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+				style="width : 15%">
 				<h:outputText value="#{businessowner.icPassport}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+			<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+				style="width : 15%">
 				<h:outputText value="#{businessowner.designation}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+			<p:column headerText="#{lbl['lbl.so.bo.email']}"
+				style="width : 15%">
+				<h:outputText value="#{businessowner.email}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width : 5%">
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-				<h:outputText value="#{businessowner.pnp}" />
+			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width : 6%">
+				<h:outputText value="#{businessowner.PNP ? 'Yes' : 'No'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
+			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
+				style="width : 10%">
 				<p:selectOneRadio value="#{businessowner.consolidateValue}">
-					<f:selectItem itemValue="t" itemLabel="" />
+					<f:selectItem itemValue="true" itemLabel="" />
 				</p:selectOneRadio>
 			</p:column>
 
@@ -42,7 +49,7 @@
 		<p:spacer height="5px" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
+				onclick="cloneBusinessOwner.show();" process="@this" icon="ui-icon-clone" />
 
 			<p:commandButton id="businessowneradd"
 				value="#{lbl['lbl.so.addbtn']}" process="@this"
@@ -58,32 +65,39 @@
 		<br />
 	</p:panel>
 	<p:spacer height="5px" />
-	<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
-		columnClasses="columnWidth20" style="margin-left: 26px;">
-		<p:selectBooleanCheckbox
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.allState}">
-		</p:selectBooleanCheckbox>
-		<h:outputLabel value="Required Approval for Specification" />
-	</h:panelGrid>
-	<p:spacer height="5px" />
-	<p:panel header="Ministry Specification Secretary" toggleable="true">
-		<!-- <p:dataTable id="ministryspecificationId" style="width:50%">
-			<p:column headerText="Secretary Name" />
-		</p:dataTable>
-		<h:column>
-			<h:outputLabel value="Secretary Name" />
-		</h:column> -->
-		<h:column>
-			<p:selectOneMenu
-				value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
-				style="width: 178px;margin-bottom: 5px;">
-				<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
-				<f:selectItems
-					value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
-					var="appName" itemLabel="#{appName.userName}"
-					itemValue="#{appName.userId}" />
-			</p:selectOneMenu>
+	<p:panel header="Specification Approval" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
+			columnClasses="columnWidth20" style="margin-left: 26px;">
+			<p:selectBooleanCheckbox
+				value="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq}">
+				<p:ajax update="approvalSpec"
+					listener="#{qTBusinessOwnerBackingBean.processChecked}" />
+			</p:selectBooleanCheckbox>
+			<h:outputLabel value="Required Approval for Specification" />
+		</h:panelGrid>
+		<p:spacer height="5px" />
 
-		</h:column>
+		<h:panelGroup id="approvalSpec">
+			<p:panel
+				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq ne '0'}">
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
+					columnClasses="columnWidth20">
+					<h:column>
+						<h:outputLabel value="* Ministry Specification Secretary" />
+					</h:column>
+					<h:column>
+						<p:selectOneMenu
+							value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+							<f:selectItems
+								value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
+								var="appName" itemLabel="#{appName.userName}"
+								itemValue="#{appName.userId}" />
+						</p:selectOneMenu>
+					</h:column>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGroup>
 	</p:panel>
 </ui:composition>
