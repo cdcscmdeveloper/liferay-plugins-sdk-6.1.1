@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog id="dlg2Id" widgetVar="dlg2" modal="true" dynamic="true"
-		hideEffect="explode" resizable="false" width="700px" height="300"
-		styleClass="pop_up_top" header="Site/Visit Details">
+	<p:dialog id="sitevisitdlg2Id" widgetVar="dlg2" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="300" styleClass="pop_up_top" header="Site/Visit Details">
 		<p:panel toggleable="true" styleClass="qtSiteBriefDetails">
 			<table style="width: 100%" border="1">
 				<tr>
@@ -22,7 +22,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.so.sitevisitdate']}" /></td>
 					<td colspan="3"><p:calendar
 							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDate}"
-							id="sitevisitDate"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
 				</tr>
 				<tr>
@@ -95,7 +94,7 @@
 				oncomplete="dlg1.hide()" icon="ui-icon-cancel">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-				styleClass="apply_button" update="accordpnllist, sitevisitdtlid"
+				styleClass="apply_button" update="sitevisitdtlid"
 				process="@(.qtSiteBriefDetails)" style="float:right;"
 				oncomplete="dlg2.hide()" icon="ui-icon-check"
 				action="#{qTScheduleDetailBackingBean.addToSiteBriefingList}">

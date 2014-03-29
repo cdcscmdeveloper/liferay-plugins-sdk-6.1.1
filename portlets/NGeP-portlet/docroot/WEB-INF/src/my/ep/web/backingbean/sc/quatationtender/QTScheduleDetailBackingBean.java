@@ -1,16 +1,22 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.factory.EpLogger;
@@ -20,15 +26,19 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBreifingZoneRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -121,11 +131,10 @@ public class QTScheduleDetailBackingBean extends
 		 * this.getManagedBean().setQt(new ScQt()); }
 		 */
 
-		initializeRemark(new ArrayList<ScQtBriefingRemark>());
-		//getDeskOfficerAdminAssistant();
+		getDeskOfficerAdminAssistant();
 	}
 
-	/*private void getDeskOfficerAdminAssistant() {
+	private void getDeskOfficerAdminAssistant() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
@@ -135,61 +144,53 @@ public class QTScheduleDetailBackingBean extends
 		List<PmUser> deskOfficer = userResDTO.getUserList();
 		getManagedBean().setDeskOfficerAdmin(deskOfficer);
 
-	}*/
-
-	/**
-	 * @param arrayList
-	 */
-	private void initializeRemark(
-			ArrayList<ScQtBriefingRemark> scQtBriefingRemarks) {
-		FacesScopes facesScopes = new FacesScopes();
-
-		/*if (scQtBriefingRemarks.size() == 0
-				|| !compareUserName(scQtBriefingRemarks.get(0).getCreatedUser())) {
-			ScQtBriefingRemark qtBriefingRemark = new ScQtBriefingRemark();
-
-			qtBriefingRemark.setCreatedBy(facesScopes.getUserSessionBean()
-					.getUserId());
-			qtBriefingRemark.setCreatedDate(new Timestamp(System
-					.currentTimeMillis()));
-			qtBriefingRemark.setChangedBy(qtBriefingRemark.getCreatedBy());
-			qtBriefingRemark.setChangedDate(qtBriefingRemark.getCreatedDate());
-			qtBriefingRemark.setCreatedUsername(facesScopes
-					.getUserSessionBean().getLoginId());
-			getManagedBean().getQtBriefing().getScQt().setScQtBriefingRemarks(
-					scQtBriefingRemarks);
-			getManagedBean().getQtBriefing().getScQt().getScQtBriefingRemarks()
-					.add(0, qtBriefingRemark);
-		} else {
-			getManagedBean().getQtBriefing().getScQt().setScQtBriefingRemarks(
-					scQtBriefingRemarks);
-		}*/
-
 	}
-	
+
 	public void bsvZoneTabChange(TabChangeEvent evnt) {
+		debugLogger("bsvZoneTabChange");
 		ScQt scQt = getManagedBean().getQt();
-		
+
 		BriefingZoneBean briefingZoneBean = (BriefingZoneBean) evnt.getData();
-		
+
 		TplSpecZoneDtl tplSpecZoneDtl = briefingZoneBean.getTplSpecZoneDtl();
 		getManagedBean().setSelectedZone(tplSpecZoneDtl);
+		List<ScQtBriefing> briefings=null;
+		List<ScQtBriefing> siteVisit=null;
 		if (scQt.isSameBsv()) {
-			List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+			briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId(),
 					scQt.getAttendenceType());
 			this.getManagedBean().setBriefings(briefings);
 		} else {
-			List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+			 briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId(), "B");
 			this.getManagedBean().setBriefings(briefings);
-			List<ScQtBriefing> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+			 siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId(), "S");
 
 			this.getManagedBean().setSiteBriefings(siteVisit);
 
 		}
-		
+
+		List<BriefingZoneBean> zoneBean = getManagedBean()
+				.getBriefingZoneBean();
+		for (int i = 0; i < zoneBean.size(); i++) {
+
+			if (zoneBean
+					.get(i)
+					.getTplSpecZoneDtl()
+					.getZoneName()
+					.equalsIgnoreCase(
+							briefingZoneBean.getTplSpecZoneDtl().getZoneName())) {
+				BriefingZoneBean bean = new BriefingZoneBean(tplSpecZoneDtl,
+						briefings, siteVisit);
+				//getManagedBean().getBriefingZoneBean().remove(i);
+				getManagedBean().getBriefingZoneBean().add(i,bean);
+				break;
+			}
+		}
+		initializeRemarks(scQt.isZonal());
+
 	}
 
 	/**
@@ -200,6 +201,7 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	private List<ScQtBriefing> retrieveBriefingSiteVisitDtlsByZoneNQtId(
 			Long qtId, Long zoneId, String bsvType) {
+		debugLogger("retrieveBriefingSiteVisitDtlsByZoneNQtId");
 		IQTBriefingSO qTBriefingSO;
 
 		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -214,6 +216,41 @@ public class QTScheduleDetailBackingBean extends
 		return briefingResDTO.getBriefingResultBean().getResultList();
 	}
 
+	public void initializeRemarks(boolean isZonal) {
+		FacesScopes facesScopes = new FacesScopes();
+		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+		ScRemark remark = null;
+		if (isZonal) {
+			remark = new ScQtBreifingZoneRemark();
+		} else {
+			remark = new ScQtBriefingRemark();
+		}
+		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		remark.setChangedBy(remark.getCreatedBy());
+		remark.setCreatedUser(facesScopes.getUserSessionBean());
+		PmStatus status = new PmStatus();
+		status.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		if (status != null) {
+			statusReqDTO.setStatusId(status.getStatusId());
+			StatusResDTO statusResDTO = iStatusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			remark.setPmStatus(statusResDTO.getPmStatus());
+			getManagedBean().getRemarks().add(remark);
+
+		}
+	}
+
+	public void processChecked(AjaxBehaviorEvent e) {
+		System.out.println("====enter process checked===="
+				+ getManagedBean().getSelectedBoolean1());
+		Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
+		System.out.println("=======get id value=====" + id);
+	}
+
 	public void addZoneBriefingDetails(String briefingZoneName) {
 		debugLogger("addBriefingDetails");
 		getManagedBean().setBriefingZoneName(briefingZoneName);
@@ -224,49 +261,16 @@ public class QTScheduleDetailBackingBean extends
 		getManagedBean().setBriefingZoneName(briefingZoneName);
 	}
 
-	public void addBriefingDetails() {
-		debugLogger("addBriefingDetails");
-		List<ScQtBriefing> briefingdetails = this.getManagedBean()
-				.getBriefings();
-		if (briefingdetails == null) {
-			briefingdetails = new ArrayList<ScQtBriefing>();
-		}
-
-		// briefingdetails.add(this.getManagedBean().getQtBriefing());
-
-		this.getManagedBean().setBriefings(briefingdetails);
-
-	}
-
-	public void addSiteDetails() {
-		List<ScQtBriefing> sitedetails = this.getManagedBean()
-				.getSiteBriefings();
-		if (sitedetails == null) {
-			sitedetails = new ArrayList<ScQtBriefing>();
-
-		}
-
-		// sitedetails.add(this.getManagedBean().getQtSiteBriefing());
-		this.getManagedBean().setSiteBriefings(sitedetails);
-
-	}
-
-	public void addToBriefingList() {
-		debugLogger("addToBriefingList");
-		/* List<ScQtBriefing> brefings = this.getManagedBean().getBriefings(); */
+	public void addToBriefingListByZone() {
+		debugLogger("addToBriefingListByZone");
 		ScQtBriefing selectedBirefing = this.getManagedBean().getQtBriefing();
-		/*
-		 * if (brefings == null) { if (null == brefings) { brefings = new
-		 * ArrayList<ScQtBriefing>(); } if (null != selectedBirefing) {
-		 * brefings.add(selectedBirefing); }
-		 * 
-		 * } else {
-		 */
-
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
-			if (briefingZoneBean.getZoneName().equalsIgnoreCase(
-					this.getManagedBean().getBriefingZoneName())) {
+			if (briefingZoneBean
+					.getTplSpecZoneDtl()
+					.getZoneName()
+					.equalsIgnoreCase(
+							this.getManagedBean().getBriefingZoneName())) {
 				List<ScQtBriefing> briefings = briefingZoneBean
 						.getBriefingList();
 				if (null == briefings) {
@@ -277,17 +281,19 @@ public class QTScheduleDetailBackingBean extends
 				break;
 			}
 		}
-		/* } */
 	}
 
-	public void addToSitevisitList() {
-		debugLogger("addToSitevisitList");
+	public void addToSitevisitListByZone() {
+		debugLogger("addToSitevisitListByZone");
 		ScQtBriefing selectedSiteBriefing = this.getManagedBean()
 				.getQtSiteBriefing();
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
-			if (briefingZoneBean.getZoneName().equalsIgnoreCase(
-					this.getManagedBean().getBriefingZoneName())) {
+			if (briefingZoneBean
+					.getTplSpecZoneDtl()
+					.getZoneName()
+					.equalsIgnoreCase(
+							this.getManagedBean().getBriefingZoneName())) {
 				List<ScQtBriefing> sitevisit = briefingZoneBean
 						.getSitevisitList();
 				if (null == sitevisit) {
@@ -300,28 +306,26 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
-	/*public void addZoneContactPerson(String briefingZoneName) {
-		debugLogger("addZoneContactPerson");
-		getManagedBean().setBriefingZoneName(briefingZoneName);
-		ScQtContactPerson contactperson = new ScQtContactPerson();
-		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
-		for (BriefingZoneBean briefingZoneBean : beans) {
-			if (briefingZoneBean.getZoneName().equalsIgnoreCase(
-					this.getManagedBean().getBriefingZoneName())) {
-				List<ScQtContactPerson> contactList = briefingZoneBean
-						.getContactPersonsList();
-				if (null == contactList) {
-					contactList = new ArrayList<ScQtContactPerson>();
-				}
-				for (ScQtContactPerson scQtContactPerson : contactList) {
-					scQtContactPerson.setBrandNew(false);
-				}
-				System.out.println("list size : " + contactList.size());
-				contactList.add(contactperson);
-				briefingZoneBean.setContactPersonsList(contactList);
-			}
-		}
-	}*/
+	public void addToSiteVisitZoneDtl() {
+		debugLogger("addToSiteVisitZoneDtl");
+	}
+
+	/*
+	 * public void addZoneContactPerson(String briefingZoneName) {
+	 * debugLogger("addZoneContactPerson");
+	 * getManagedBean().setBriefingZoneName(briefingZoneName); ScQtContactPerson
+	 * contactperson = new ScQtContactPerson(); List<BriefingZoneBean> beans =
+	 * getManagedBean().getBriefingZoneBean(); for (BriefingZoneBean
+	 * briefingZoneBean : beans) { if
+	 * (briefingZoneBean.getZoneName().equalsIgnoreCase(
+	 * this.getManagedBean().getBriefingZoneName())) { List<ScQtContactPerson>
+	 * contactList = briefingZoneBean .getContactPersonsList(); if (null ==
+	 * contactList) { contactList = new ArrayList<ScQtContactPerson>(); } for
+	 * (ScQtContactPerson scQtContactPerson : contactList) {
+	 * scQtContactPerson.setBrandNew(false); } System.out.println("list size : "
+	 * + contactList.size()); contactList.add(contactperson);
+	 * briefingZoneBean.setContactPersonsList(contactList); } } }
+	 */
 
 	public void addContactPerson() {
 		debugLogger("addContactPerson");
@@ -339,6 +343,49 @@ public class QTScheduleDetailBackingBean extends
 			this.getManagedBean().setScQtContactPersons(contactList);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
+		}
+	}
+
+	public void addBriefingDetails() {
+		debugLogger("addBriefingDetails");
+		List<ScQtBriefing> briefingdetails = this.getManagedBean()
+				.getBriefings();
+		if (briefingdetails == null) {
+			briefingdetails = new ArrayList<ScQtBriefing>();
+		}
+		this.getManagedBean().setBriefings(briefingdetails);
+	}
+
+	public void addSiteDetails() {
+		List<ScQtBriefing> sitedetails = this.getManagedBean()
+				.getSiteBriefings();
+		if (sitedetails == null) {
+			sitedetails = new ArrayList<ScQtBriefing>();
+		}
+		this.getManagedBean().setSiteBriefings(sitedetails);
+	}
+
+	public void addToBriefingList() {
+		List<ScQtBriefing> brefings = this.getManagedBean().getBriefings();
+		ScQtBriefing selectedBrefing = this.getManagedBean().getQtBriefing();
+		if (null == brefings) {
+			brefings = new ArrayList<ScQtBriefing>();
+		}
+		if (null != selectedBrefing) {
+			brefings.add(selectedBrefing);
+		}
+	}
+
+	public void addToSiteBriefingList() {
+		List<ScQtBriefing> siteBriefings = this.getManagedBean()
+				.getSiteBriefings();
+		ScQtBriefing selectedSiteBriefing = this.getManagedBean()
+				.getQtSiteBriefing();
+		if (null == siteBriefings) {
+			siteBriefings = new ArrayList<ScQtBriefing>();
+		}
+		if (null != selectedSiteBriefing) {
+			siteBriefings.add(selectedSiteBriefing);
 		}
 	}
 
@@ -478,19 +525,14 @@ public class QTScheduleDetailBackingBean extends
 
 	public String briefingBackAction() {
 		debugLogger("briefingBackAction");
-		/*
-		 * return this.getManagedBean().getPreviousPage() +
-		 * ".xhtml?faces-redirect=true";
-		 */
 
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
-
 	}
 
 	public void handleDeskOfficerChanged(PmUser user) {
 		List<PmUser> list = getManagedBean().getDeskOfficerAdmin();
 		for (PmUser pmUser : list) {
-			if(pmUser.getUserId() == user.getUserId()) {
+			if (pmUser.getUserId() == user.getUserId()) {
 				getManagedBean().setPmUser(pmUser);
 			}
 		}

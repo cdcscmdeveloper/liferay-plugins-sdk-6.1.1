@@ -9,8 +9,10 @@
 
 	<p:accordionPanel id="accordpnllist"
 		value="#{qTScheduleDetailBackingBean.managedBean.briefingZoneBean}"
-		var="zonePnlList" dynamic="true" cache="true">
-		<p:ajax event="tabChange" listener="#{qTScheduleDetailBackingBean.bsvZoneTabChange}" process="@this" />
+		var="zonePnlList" >
+		<p:ajax event="tabChange"
+			listener="#{qTScheduleDetailBackingBean.bsvZoneTabChange}"
+			process="@this" />
 		<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
 
 			<!-- Briefing Details -->
@@ -22,12 +24,12 @@
 				<p:commandButton id="addtositevisitdtlid"
 					process="@this, briefdetaillistid" partialSubmit="true"
 					value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-					actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitDtl}" />
+					actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitZoneDtl}" />
 
 				<p:commandButton id="briefaddid" value="#{lbl['lbl.so.addbtn']}"
 					process="@this"
 					action="#{qTScheduleDetailBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
-					oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
+					oncomplete="zonebriefing.show();" update="@(.qtBriefDetails)"
 					icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
@@ -49,7 +51,7 @@
 						<p:commandButton id="sitevisitaddid"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
 							action="#{qTScheduleDetailBackingBean.addZoneSiteDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
-							oncomplete="dlg2.show();" update="@(.qtSitevisitDetails)"
+							oncomplete="zonesitevisit.show();" update="@(.qtSitevisitDetails)"
 							icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.so.delete']}"
 							icon="ui-icon-delete" process="@this, sitevisitdetaillistid"

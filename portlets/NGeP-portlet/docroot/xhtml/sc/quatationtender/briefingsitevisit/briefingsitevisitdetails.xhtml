@@ -22,12 +22,11 @@
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.briefsamevisit']}" /></td>
 					<td><p:selectOneRadio
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv}"
-							disabled="#{!qTDetailBB.managedBean.editable}">
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv}">
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
 							<p:ajax update="sameasbsvrequired, addtositebutton"
-								listener="#{qTSupplierQulCriteriaBackingBean.processChecked}" />
+								listener="#{qTScheduleDetailBackingBean.processChecked}" />
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
@@ -89,7 +88,7 @@
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
 							action="#{qTScheduleDetailBackingBean.addBriefingDetails}"
 							oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
-							rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-add" />
+							icon="ui-icon-add" />
 
 						<p:commandButton value="#{lbl['lbl.so.delete']}"
 							icon="ui-icon-delete"
@@ -156,11 +155,9 @@
 								<p:commandButton id="addsitevisitid"
 									value="#{lbl['lbl.so.addbtn']}" process="@this"
 									action="#{qTScheduleDetailBackingBean.addSiteDetails}"
-									rendered="#{qTDetailBB.managedBean.editable}"
 									oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"
 									icon="ui-icon-add" />
 								<p:commandButton value="#{lbl['lbl.so.delete']}"
-									rendered="#{qTDetailBB.managedBean.editable}"
 									icon="ui-icon-delete" />
 							</div>
 						</f:facet>
@@ -169,59 +166,33 @@
 			</h:panelGroup>
 		</h:panelGroup>
 
-		<!-- <p:panel header="Sample Submission" toggleable="true">
-				<table>
-					<tr>
-						<td style="width: 80px;"><p:outputLabel value="* Address 1" /></td>
-						<td><p:inputText value="abc" size="30" /></td>
-						<td style="width: 200px;"><p:outputLabel value="* City/Town" /></td>
-						<td><p:inputText value="KL" size="30" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="Address 2" /></td>
-						<td><p:inputText value="cde" size="30" /></td>
-						<td><p:outputLabel value="District" /></td>
-						<td><p:inputText value="fg" size="30" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="Address 3" /></td>
-						<td><p:inputText value="wes" size="30" /></td>
-						<td><p:outputLabel value="* State" /></td>
-						<td><p:inputText value="KL" size="30" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="Address 4" /></td>
-						<td><p:inputText value="wer" size="30" /></td>
-						<td><p:outputLabel value="* Postalcode" /></td>
-						<td><p:inputText value="2150" size="30" /></td>
-					</tr>
-				</table>
-			</p:panel> -->
-
 		<p:panel header="Remark" toggleable="true">
 			<table style="width: 100%" id="remarkslists">
 				<tr>
 					<td class="TableFieldLeft" style="width: 60px;"><p:outputLabel
 							value="Remark" /></td>
 					<td class="TableFieldRight"><p:dataGrid
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQt.scQtBriefingRemarks}"
+							value="#{qTScheduleDetailBackingBean.managedBean.remarks}"
 							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 							<table>
 								<tr>
 									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUsername)}"
+											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 											height="30" width="30" /></td>
 									<td width="5"></td>
-									<td><h:outputText value="#{remarkVar.createdUsername}" />,
-										<h:outputText id="remarkDates"
-											value="#{remarkVar.changedDate}">
+									<td><h:outputText
+											value="#{remarkVar.createdUser.userName}" />, <h:outputText
+											id="remarkDates" value="#{remarkVar.changedDate}">
 											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 										</h:outputText></td>
 								</tr>
 								<tr>
 									<td></td>
-									<td><p:inputTextarea cols="40"
-											value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.approverRemark}" /></td>
+									<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+											value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId ne null}"
+											style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
 								</tr>
 							</table>
 						</p:dataGrid></td>

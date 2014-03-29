@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog id="dlg2Id" widgetVar="zonesitevisit" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="300" styleClass="pop_up_top" header="Site/Visit Details">
+		<p:panel toggleable="true" styleClass="qtSiteBriefDetails">
+			<table style="width: 100%" border="1">
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.so.sitevisitdesc']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDesc}"
+							style="margin-top:5px;" size="82"
+							disabled="#{!qTDetailBB.managedBean.editable}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.sitevisitdate']}" /></td>
+					<td colspan="3"><p:calendar
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDate}"
+							id="sitevisitDate"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.location}"
+							style="margin-top:5px;" size="30" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address1}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmCity.cityName}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address2}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmDistrict.districtName}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address3}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.state']}" /></td>
+					<td><p:selectOneMenu
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmState.stateName}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="Selangor" itemValue="1" />
+							<f:selectItem itemLabel="Kaula lumpur" itemValue="2" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address4}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.postcode}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.coordinatingOfficer}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.maxattendance']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.maxNoAttendance}"
+							size="30" /></td>
+				</tr>
+			</table>
+
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				styleClass="apply_button" style="float:right;"
+				oncomplete="zonesitevisit.hide()" icon="ui-icon-cancel">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				styleClass="apply_button" update="accordpnllist"
+				process="@(.qtSiteBriefDetails)" style="float:right;"
+				oncomplete="zonesitevisit.hide()" icon="ui-icon-check"
+				action="#{qTScheduleDetailBackingBean.addToSitevisitListByZone}">
+			</p:commandButton>
+
+		</p:panel>
+	</p:dialog>
+</ui:composition>
