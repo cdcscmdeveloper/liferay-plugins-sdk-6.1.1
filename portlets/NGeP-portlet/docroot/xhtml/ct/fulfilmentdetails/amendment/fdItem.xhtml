@@ -36,7 +36,6 @@
 		         <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
 			  </p:selectOneMenu>         
 		  </h:panelGrid>
-		  <p:spacer height="20"/>
 		  <p:outputPanel columns="1" style="width:100%"
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
 			   and contractDetailsBackingBean.managedBean.selectedItem!=null}">
@@ -52,14 +51,12 @@
 			   </p:column>              
 			   <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
 			   <p:column headerText="Effective Date">
-			       <h:outputText value="#{data.effDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
+				  <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+				  disabled="true" />
 			   </p:column>       
 			   <p:column headerText="Expiry Date">
-			    <h:outputText value="#{data.expDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
+				  <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				   disabled="true"  />
 			   </p:column>       
 			</p:dataTable>
 		  </p:outputPanel>  
@@ -79,24 +76,18 @@
 				  <p:outputLabel value="#{data.ctAgency.orgProfile.orgName}" style="float:left;" />
 				</p:column>              
 				<p:column headerText="Ceiling Quantity" style="text-align: right;">
-					<p:inputText style="width:70px;" styleClass="ppRightBtn" value="#{data.ceilingQuantity}">
-					 <f:convertNumber pattern="#,###.00" /></p:inputText>
+					<p:inputText style="width:70px;" value="#{data.ceilingQuantity}" />
 				</p:column>            
 				<p:column headerText="Effective Date">
-				     <h:outputText value="#{data.effDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
-			    </p:column>       
+				   <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+				</p:column>       
 				<p:column headerText="Expiry Date">
-				     <h:outputText value="#{data.expDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
+				   <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
 				</p:column>           
 			  </p:dataTable>
 		  	</h:panelGrid>  
 		</p:outputPanel> 
   	 </p:panel>
-  	 <p:spacer height="50"/>
   	 <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
@@ -105,7 +96,7 @@
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
 		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
 		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		      <p:column headerText="Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
+		      <p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
 		      <p:column headerText="UOM Per Month"  style="text-align: right;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  
@@ -167,7 +158,6 @@
 				</td>
 			</tr>
 		</table>
-	</p:panel>		  	
-  	
+	</p:panel>		  		
  </ui:composition>
 

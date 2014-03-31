@@ -9,94 +9,135 @@
     <p:panel id="scheduleId" header="Frequency Schedule"   toggleable="true"  toggleSpeed="500">
 	  <h:panelGrid style="width:100%;">
         <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
-	          widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
-	          <ac:paginator for="tableSchedule" />
-	          <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
-		        <p:column selectionMode="multiple" style="width:18px;"/>
-		      </c:if>  
-		      <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
-		        <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
-		      </p:column> 
-		      <p:column style="width:260px;" headerText="Start Period" >
-		         <p:selectOneMenu id="fromMonth" value="#{schedVar.fromDate}"> 
-		           <f:selectItem itemLabel="-Select One-" itemValue=""/>
-                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" var="mon" itemValue="#{mon}" itemLabel="#{mon}"  />  
-                 </p:selectOneMenu> 
-                 <p:spacer width="1"/>
-                 <p:selectOneMenu id="fromYear" value="#{schedVar.fromDate}"> 
-                   <f:selectItem itemLabel="-Select One-" itemValue=""/>
-                   <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                 </p:selectOneMenu> 
+	       widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
+	         <ac:paginator for="tableSchedule" />
+	           <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
+		            <p:column selectionMode="multiple" style="width:18px;"/>
+		       </c:if>  
+		       <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
+		           <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
+		       </p:column> 
+		       <p:column style="width:260px;" headerText="Start Period">
+		           <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:100px;"> 
+		              <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                      <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
+                      <p:ajax event="change" update="toMonth,toYear" />
+                   </p:selectOneMenu> 
+                   <p:spacer width="1"/>
+                   <p:selectOneMenu id="fromYear" value="#{schedVar.fromTranYear}" style="width:100px;"> 
+                      <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                      <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
+                      <p:ajax event="change" update="toMonth,toYear" />
+                   </p:selectOneMenu> 
 		       </p:column> 	
 		       <p:column style="width:260px;" headerText="End Period">
-		         <p:selectOneMenu id="toMonth"  style="width:100px;" >
-		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" var="endMon" itemValue="#{endMon}" itemLabel="#{endMon}"  />  
-                 </p:selectOneMenu>
-                 <p:spacer width="1"/>
-                 <p:selectOneMenu id="toYear" style="width:100px;" >
-            	    <f:selectItem itemLabel="-Select One-" itemValue=""/>
-                   <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="endYear" itemValue="#{endYear}" itemLabel="#{endYear}"  />  
-                 </p:selectOneMenu>
-		      </p:column> 
-		    </p:dataTable>  
-		    </h:panelGrid>
-	        <p:spacer height="2" />
-		    <div class="ppRightBtn"> 
-		      <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
-		        <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
-		           action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
-			    <p:commandButton value="Delete" process="@form" onsuccess="schedule.show()" icon="ui-icon-delete" />  
-			  </c:if>
-			</div>
-			<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			   severity="alert" widgetVar="schedule">
-               <h:panelGrid columns="2">
-				 <p:commandButton value="Yes" update="tableSchedule" partialSubmit="true" process="@form"
-				    onclick="schedule.hide();" action="#{contractDetailsBackingBean.deleteScheduleDetails}"/>
-				 <p:commandButton value="No" 	onclick="schedule.hide()" type="button" />
-			   </h:panelGrid>
-			</p:confirmDialog>
-	  </p:panel>
+		            <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:100px;" >
+		              <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                      <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                      <p:ajax event="change" update="toYear" />
+                   </p:selectOneMenu>
+                   <p:spacer width="1"/>
+                   <p:selectOneMenu id="toYear" value="#{schedVar.toTranYears}" style="width:100px;" >
+            	      <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                      <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
+                      <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                   </p:selectOneMenu>
+		       </p:column> 
+		       <p:column style="width:50px;" headerText="Action" >
+		           <p:commandLink id="validateAction" process="@this"  onclick="dlgDateValidation.show(); return false;" 
+		               styleClass="column-align-center" rendered="#{schedVar.validateScheduleDate}">
+		               <p:graphicImage library="ep/images/design" name="exclamation.png"
+			          value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+		           </p:commandLink>
+		       </p:column>
+		  </p:dataTable>  
+		</h:panelGrid>
+	    <p:spacer height="2" />
+		 <div class="ppRightBtn"> 
+		   <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
+		     <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
+		       action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
+		 	 <p:commandButton value="Delete" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
+		   </c:if>
+	    </div>
+	    <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" header="Delete Confirmation" styleClass="screen-title"  
+          resizable="false" modal="true" width="325" height="90">  
+            <h:panelGrid columns="3">
+               <p:graphicImage library="ep/images/design" name="exclamation.png"
+			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+               <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                  styleClass="ui-inputtextarea"></p:inputTextarea>
+             </h:panelGrid>
+             <div class="ppRightBtn">
+		        <p:commandButton value="Yes" icon="ui-icon-accept" update="tableSchedule" process="@form" 
+			      action="#{contractDetailsBackingBean.deleteScheduleDetails}" onclick="dlgSchedule.hide();"/>
+			    <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
+		    </div>
+         </p:dialog>
+         <p:dialog id="dlgDateValidation" widgetVar="dlgDateValidation" header="Error List" styleClass="screen-title"  
+            resizable="false" modal="true" width="325" height="90">  
+             <h:panelGrid columns="3">
+                <p:graphicImage library="ep/images/design" name="exclamation.png"
+			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			    <p:spacer width="10"/>
+                <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+            </h:panelGrid>
+            <div class="ppRightBtn">
+		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
+		   </div>
+         </p:dialog>    
+	   </p:panel>
 	  <p:spacer height="50"/>
 	  <p:panel id="frequencyId" header="Progressive Payment"  toggleable="true"  toggleSpeed="500">
-	   <h:panelGrid style="width:100%;">
+	      <h:panelGrid style="width:100%;">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		       <ac:paginator for="tableProgress" />
 		       <p:column selectionMode="multiple" style="width:2%;"/> 
-               <p:column style="width:60px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
-                 <p:inputText value="#{ProgVar.phase}" style="width:25px;" />
+               <p:column style="width:7%;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
+                 <p:inputText value="#{ProgVar.phase}" style="width:95%;" />
                </p:column>
-		       <p:column style="width:300px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
-		          <p:inputText style="width:300px;"/>
+		       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
+		          <p:inputText style="width:95%;"/>
 		       </p:column>
-                <p:column style="width:150px;" headerText="Start Period" >
-		         <p:selectOneMenu id="fromMonth"  style="width:100px;" >
-		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		<f:selectItem itemLabel="January" itemValue="January"/>
-                 </p:selectOneMenu>
+                <p:column style="width:23%;" headerText="Start Period" >
+		      <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:50%;"> 
+		           <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                    <p:ajax event="change" update="toProMonth,toProYear" />
+                 </p:selectOneMenu> 
                    <p:spacer width="1"/>
-                 <p:selectOneMenu id="fromYear" style="width:100px;" >
-            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
-                 </p:selectOneMenu>
+                <p:selectOneMenu id="fromProYear" value="#{ProgVar.fromProYear}" style="width:50%;"> 
+                   <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
+                     <p:ajax event="change" update="toProMonth,toProYear" />
+                 </p:selectOneMenu> 
 		       </p:column> 	
-		      <p:column style="width:150px;" headerText="End Period">
-		         <p:selectOneMenu id="toMonth"  style="width:100px;" >
+		      <p:column style="width:23%;" headerText="End Period">
+		        <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:50%;" >
 		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		<f:selectItem itemLabel="January" itemValue="January"/>
+                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                       <p:ajax event="change" update="toProYear" />
                  </p:selectOneMenu>
                  <p:spacer width="1"/>
-                 <p:selectOneMenu id="toYear" style="width:100px;" >
-            	     <f:selectItem itemLabel="-Select One-" itemValue=""/>
-            		 <f:selectItem itemLabel="2014" itemValue="2014"/>
+                  <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:50%;" >
+            	    <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                   <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
+                   <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
                  </p:selectOneMenu>
 		      </p:column>       
-               <p:column style="width:80px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
-                  <p:inputText value="#{ProgVar.percentage}" style="width:70px;" styleClass="ppRightBtn">
+               <p:column style="width:10%;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
+                  <p:inputText value="#{ProgVar.percentage}" style="width:90%;" styleClass="ppRightBtn">
                      <f:convertNumber pattern="#,###.00" /></p:inputText>
-               </p:column> 
+               </p:column>
+               <p:column style="width:50px;" headerText="Action">
+		        <p:commandLink id="validateProAction" process="@this"  onclick="dlgProValidation.show(); return false;" 
+		           styleClass="column-align-center" rendered="#{ProgVar.validateProgressiveDate}">
+		           <p:graphicImage library="ep/images/design" name="exclamation.png"
+			       value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+		         </p:commandLink>
+		       </p:column> 
 		     </p:dataTable>  
 		     </h:panelGrid>
 			 <p:spacer height="2" />
@@ -104,16 +145,35 @@
 		           <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add" 
 		              update="tableProgress" action="#{contractDetailsBackingBean.addFrequencyDetails()}"/>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="Delete" partialSubmit="true" process="@this" onsuccess="progressive.show()"  icon="ui-icon-delete"/>
+		           <p:commandButton value="Delete" partialSubmit="true" process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
 		        </div>
-		        <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			       severity="alert" widgetVar="progressive">
-                   <h:panelGrid columns="2">
-				     <p:commandButton value="Yes" update="tableProgress"  process="@form"
-				        onclick="progressive.hide();" action="#{contractDetailsBackingBean.deleteFrequencyDetails}"/>
-				     <p:commandButton value="No" 	onclick="progressive.hide()" type="button" />
-				   </h:panelGrid>
-			    </p:confirmDialog> 
+		    <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" header="Delete Confirmation" styleClass="screen-title"  
+                resizable="false" modal="true" width="325" height="90">  
+               <h:panelGrid columns="3">
+                <p:graphicImage library="ep/images/design" name="exclamation.png"
+			       value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			    <p:spacer width="10"/>
+                <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                 styleClass="ui-inputtextarea"></p:inputTextarea>
+              </h:panelGrid>
+              <div class="ppRightBtn">
+		        <p:commandButton value="Yes" icon="ui-icon-accept" update="tableProgress" process="@form" 
+				   action="#{contractDetailsBackingBean.deleteFrequencyDetails}" onclick="dlgProgressive.hide();"/>
+			    <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgProgressive.hide();" type="button" />
+		     </div>
+          </p:dialog>
+          <p:dialog id="dlgProValidation" widgetVar="dlgProValidation" header="Error List" styleClass="screen-title"  
+           resizable="false" modal="true" width="325" height="90">  
+           <h:panelGrid columns="3">
+             <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			  <p:spacer width="10"/>
+              <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+            </h:panelGrid>
+            <div class="ppRightBtn">
+		        <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgProValidation.hide();" type="button" />
+		    </div>
+          </p:dialog>     
      </p:panel>
      <p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">

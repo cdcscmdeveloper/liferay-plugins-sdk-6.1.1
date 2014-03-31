@@ -14,13 +14,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +26,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletResponse;
@@ -75,8 +74,12 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -86,11 +89,14 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -134,7 +140,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] chkDeductionClause;
-
+	
 	public ContractDetailsBackingBean() {
 	  if(this.getManagedBean().getAction() == null) {
 		 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
@@ -172,29 +178,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   reqDTO.setOrgProfileId(1250L);
 		   resDTO = userSO.retrieveUserGroupList(reqDTO);
 			
-		   if(getManagedBean().getContractVer().getPmUserGroup()==null) {
-			  PmUserGroup pmUserGroup = new PmUserGroup();
-			  getManagedBean().getContractVer().setPmUserGroup(pmUserGroup);
-		   }
 		   if(getManagedBean().getApproverModel()==null) {
 			  List<String> source = new ArrayList<String>(); 
 		      List<String> target = new ArrayList<String>();  
 		      getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		   }			
 			
-		   getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
-		   int i = 0;
-		   for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
-			   getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
-			   if(i==0) {
-				  getManagedBean().getContractVer().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
-				  List<String> source = new ArrayList<String>();
-				  for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
-					 source.add(user.getPmUser().getUserName());
-				  }
-				  getManagedBean().getApproverModel().setSource(source);
-			   }i++;
-			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -242,19 +231,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		    this.getManagedBean().getApproverModel().getSource().clear();
-			if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
-			   for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
-				  getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-				}
-			}else{
-					resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
-			}
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			} 
 			 
 		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+		    this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
 		    	this.getManagedBean().setDirectPurchase(true);
@@ -268,6 +251,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	        initializeRemarks();
+	        
+	        retrieveZonDetails();
 			  
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -383,7 +368,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public String fileNames(String filePath){
 		 
-		String fileName = null;
+		String fileName = "";
+		if(filePath == null || filePath=="")
+		  return fileName;
+		
 		File file = new File(filePath);
 		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 	    return fileName;
@@ -656,7 +644,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
 	}
 	
-	public void userGroupChangeListener() {
+	/*public void userGroupChangeListener() {
 		
 		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getContractVer().getPmUserGroup().getUserGroupId());
 		List<String> source = new ArrayList<String>(); 
@@ -667,7 +655,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().getApproverModel().setSource(source);
 		getManagedBean().getApproverModel().setTarget(target);
 	}
-	
+	*/
 	public SelectItem[] getUserGroupDropdown() {
 		
 		SelectItem[] items = null;
@@ -676,7 +664,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			int i = 0;
 			for(PmUserGroup userGroup : this.getManagedBean().getUserGroupMap().values()) 
 			  items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
-		}catch (Exception e) {
+		}catch(Exception e){
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
@@ -800,6 +788,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
+			reqDTO.setLanguageCode("EN");
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			return resDTO.getPmParameter().getParameterCode();
@@ -821,6 +810,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			reqDTO.setParameterType("DDT");
+			reqDTO.setLanguageCode("EN");
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			return resDTO.getParameterDescList().get(0).getCodeName();
@@ -953,13 +943,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	      this.getManagedBean().getApproverModel().getSource().clear();
-		  if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
-				for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
-					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-				}
-			} else {
-				resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
-			}
+		  
 		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -991,13 +975,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	      this.getManagedBean().getApproverModel().getSource().clear();
-		  if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
-				for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
-					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-				}
-			} else {
-				resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
-			}
+		 
 		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -1177,19 +1155,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    return items;
 	}
 	
-	private List<String> monthList;
-	private List<String> yearList;
-
-	public List<String> getMonthList() {
-		List<String> monthsList = new ArrayList<String>();
-        String[] months = new DateFormatSymbols().getMonths();
-        for (int i = 0; i < months.length; i++) {
-            monthsList.add(months[i]);
-        }return monthsList;
-	}
-
-	public void setMonthList(List<String> monthList) {
-		this.monthList = monthList;
+	public SelectItem[] getMonthList(){
+		
+		SelectItem[] items = new SelectItem[12];
+		try{
+	        String[] months = new DateFormatSymbols().getMonths();
+	        for (int i = 0; i < months.length; i++) {
+	        	  if(i == 12){
+	        		  break;
+	        	  }
+	        	items[i] = new SelectItem(String.valueOf(i),months[i]);
+	        }      
+		}catch(Exception e){
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
 	}
 
 	public List<String> getYearList() {
@@ -1203,5 +1184,127 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  return yearList;
 	}
 
+/*	public SelectItem[] getYearList() {
+		SelectItem[] items = new SelectItem[50];
+	    for (int i = 2000; i< 2050; i++) {
+	    	    if(i == 2050){
+	    	    	break;
+	    	    }
+			    items[i] = new SelectItem(String.valueOf(i), String.valueOf(i));
+			     if(String.valueOf(i) == null){
+			    	 break;
+			     }
+	         }
+		  return items;
+	}*/
 	
+	public void selectLocation(AjaxBehaviorEvent event) {
+		String location = (String) event.getComponent().getAttributes().get("value");
+		this.getManagedBean().setSupplierLocation(location);
+	}
+
+	public void retrieveZonDetails(){
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		ScQuoteZone zone = new ScQuoteZone();
+
+		zone.setZoneName(getManagedBean().getZoneName());
+		getManagedBean().getZoneTrees().add(
+				LocationSingleton.getInstance().buildZoneTree(zone,
+						states, districts, divisions, cities));
+
+	}
+	
+	public String getItemOriginTypes(PmParameter pmParameter) throws NamingException{
+		
+		if(retrieveParameterById(pmParameter.getParameterId()).equalsIgnoreCase("L")){
+			this.getManagedBean().setPopupForImportedItems("I");
+		}else{
+			this.getManagedBean().setPopupForImportedItems("L");
+		}
+		return getParameterDesc(pmParameter);
+	}
+	
+	 public int retrieveParameterByTypeAndCode(String parameterCode) throws NamingException {
+			
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterCode(parameterCode);
+			reqDTO.setParameterType("TDT");
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			return resDTO.getPmParameter().getParameterId().intValue();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return 0;
+	 } 
+	 
+	 public String getContractItemType(Long paramterId){
+		 return new String();
+	 }
+	 
+	 private boolean validateScheduleDate;
+	 public void validateDate(CtSchedule ctSchedule){
+		 
+		  int startMonthValue = Integer.valueOf((String) ctSchedule.getFromTranDate());
+	      int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear()); 
+	      int toMonthValue = Integer.valueOf((String) ctSchedule.getToTranDate()); 
+	      int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
+	      if((startMonthValue > toMonthValue && startYearValue > toyearValue) || startYearValue > toyearValue){
+	      for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+	    		 if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
+	    		     dataList.setValidateScheduleDate(true);
+	    		 }
+	         }
+	     }else{
+	    	  for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+		    		 if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
+		    		     dataList.setValidateScheduleDate(false);
+		    		 }
+		         }
+	     }
+	 }
+	 
+	 public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
+		 
+		 int startMonthValue = Integer.valueOf((String) ctProgressivePayment.getFromProDate());
+	      int startYearValue = Integer.valueOf((String) ctProgressivePayment.getFromProYear()); 
+	      int toMonthValue = Integer.valueOf((String) ctProgressivePayment.getToProDate()); 
+	      int toyearValue = Integer.valueOf((String) ctProgressivePayment.getToProYears()); 
+	      if((startMonthValue > toMonthValue && startYearValue > toyearValue) || startYearValue > toyearValue){
+	    	  for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+	    	  
+	    		  if(dataList.equals(ctProgressivePayment)){
+	    			  	     dataList.setValidateProgressiveDate(true);
+	    		  }
+	         }
+	     }else{
+	    	 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+
+	    		  if(dataList.equals(ctProgressivePayment)){
+	    			  	     dataList.setValidateProgressiveDate(false);
+	    		  }
+	         }
+	     }
+	 }
+	 
+	 public boolean isValidateScheduleDate() {
+			return validateScheduleDate;
+		}
+
+		public void setValidateScheduleDate(boolean validateScheduleDate) {
+			this.validateScheduleDate = validateScheduleDate;
+		}
+		
 }

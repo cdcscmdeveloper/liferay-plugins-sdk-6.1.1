@@ -1,93 +1,55 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-    <p:panel id="zoneId" header="Zone Details"  toggleable="true"  toggleSpeed="500">
-     <h:panelGrid style="width:100%;">
-     <p:dataTable id="zoneTable" var="ctZones" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractZones}" widgetVar="dataTableObj" 
-        rowKey="#{ctZones}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedCtZone}"
-        lazy="true" dynamic="true">
-          <ac:paginator for="zoneTable"/>
-          <p:ajax event="rowSelect" update=":form:tabview:updateZoneDetails" 
-			 listener="#{contractDetailsBackingBean.selectedZoneValue()}" />
-            <p:columnGroup type="header"> 
-			        <p:row> 
-		               <p:column style="width:400px;" headerText="#{lbl['lbl.ct.zone.tree.name']}" /> 	
-		               <p:column style="width:400px;" headerText="#{lbl['lbl.ct.zone.tree.period']}"/> 
-		            </p:row>
-		     </p:columnGroup>
-		           <p:column> <p:outputLabel value="#{ctZones.zoneName}" style="float:left;"/></p:column>
-		           <p:column><h:inputText value="#{ctZones.deliveryTerm}" size="5" /> </p:column>
-       </p:dataTable>
-       <p:outputLabel id="updateZoneDetails" style="width:100%;float:left;">
-         <p:spacer height="20"/>
-        <h:panelGrid style="width:100%;" rendered="#{contractDetailsBackingBean.managedBean.showZoneDetails}">
-        <p:dataTable id="zoneDetails" var="zoneVar" value="#{contractDetailsBackingBean.managedBean.ctContractZoneDtls}" 
-            lazy="true" dynamic="true">
-              <p:columnGroup type="header"> 
-			        <p:row> 
-		               <p:column style="width:210px;" headerText="City" /> 	
-		               <p:column style="width:210px;" headerText="District"/> 
-		               <p:column style="width:210px;" headerText="State" /> 	
-		               <p:column style="width:210px;" headerText="Division"/> 
-		            </p:row>
-		     </p:columnGroup>
-		     <p:column> <p:outputLabel value="#{zoneVar.city.cityName}" style="float:left;"/> </p:column>
-		     <p:column> <p:outputLabel value="#{zoneVar.district.districtName}" style="float:left;"/> </p:column>
-		     <p:column> <p:outputLabel value="#{zoneVar.state.stateName}" style="float:left;"/> </p:column>
-		     <p:column> <p:outputLabel value="#{zoneVar.division.divisionName}" style="float:left;"/> </p:column>
-      </p:dataTable>
-      </h:panelGrid>
-    </p:outputLabel>
-   </h:panelGrid>
-   </p:panel>
-   <p:panel header="Remarks" toggleable="true">
+	<p:panel header="Zone Details" toggleable="true">
 		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top">
-					<table style="width: 100%">
-						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
-							<td class="TableFieldRight">
-								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.zoneRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
-									<table>
-										<tr>
-											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{contractDetailsBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
-											</td>
-											<td width="5"></td>
-											<td>
-												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-												</h:outputText>
-											</td>
-										</tr>
-										<tr>
-											<td></td>
-											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
-												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-											</td>
-										</tr>
-									</table>
-								</p:dataGrid>
-							</td>
-						</tr>
-					</table>    					
-				</td>
-				<td width="50%" valign="top">
-				</td>
-			</tr>
-		</table>
-	</p:panel>		    
+		  <tr>
+			  <td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+			  <td><p:selectOneMenu id="locLevels" style="width: 178px;margin-bottom: 5px;" disabled="true"
+			        value="#{contractDetailsBackingBean.managedBean.supplierLocation}">
+                    <f:selectItems
+						value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+					    <p:ajax event="change" listener="#{contractDetailsBackingBean.selectLocation}"></p:ajax>
+				  </p:selectOneMenu></td>
+			  </tr>
+		  </table>
+ 		 <h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="zoneLocationDataTable" value="#{contractDetailsBackingBean.managedBean.zoneTrees}"
+			   var="zoneTree" rowIndexVar="index">
+			   <p:column headerText="Location">
+				  <p:tree value="#{zoneTree}" var="location">
+                      <p:treeNode type="zone">
+						 <h:outputText value="#{location.locationName}" />
+					  </p:treeNode>
+					  <p:treeNode type="state">
+						 <h:outputText value="#{location.locationName}" />
+					  </p:treeNode>
+					  <p:treeNode type="division">
+						 <h:outputText value="#{location.locationName}" />
+					  </p:treeNode>
+					  <p:treeNode type="district">
+						  <h:outputText value="#{location.locationName}" />
+					  </p:treeNode>
+					  <p:treeNode type="city">
+					    <h:outputText value="#{location.locationName}" />
+					  </p:treeNode>
+					</p:tree>
+				 </p:column>
+				 <p:column headerText="Delivery Term">
+					<p:inputText style="width:40px;"/>
+					<p:spacer width="1"/>
+                    <p:selectOneMenu id="dTerms" style="width:100px;"> 
+                       <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                       <f:selectItem itemValue="Days" itemLabel="Days"  />  
+                       <f:selectItem itemValue="Months" itemLabel="Months"  />  
+                       <f:selectItem itemValue="Years" itemLabel="Years" />  
+                    </p:selectOneMenu> 		
+				 </p:column>
+			</p:dataTable>
+		 </h:panelGrid>
+	 </p:panel>
 </ui:composition>
-
-
-
-                                       
-                                       

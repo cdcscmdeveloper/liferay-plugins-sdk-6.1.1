@@ -18,41 +18,44 @@
                     <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
                     <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" /> 	
 		            <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
-		            <p:column headerText="Action" styleClass="column-align-center"  /> 
+		            <p:column headerText="Attachment"/> 
+		            <p:column headerText="Status"/> 
                </p:row>							
 	        </p:columnGroup>
   
-    <p:column selectionMode="multiple" style="width:18px;" rendered="#{VarPerform.performanceBondId != null and contractDetailsBackingBean.managedBean.updateContract}" disabledSelection="true" />
-    <p:column selectionMode="multiple" style="width:18px;" rendered="#{VarPerform.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}"/>  
+            <p:column selectionMode="multiple" style="width:18px;" disabledSelection="true" 
+               rendered="#{VarPerform.performanceBondId != null and contractDetailsBackingBean.managedBean.updateContract}" />
+            <p:column selectionMode="multiple" style="width:18px;" 
+               rendered="#{VarPerform.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}"/>  
             <p:column>
-                    <p:outputLabel value="#{VarPerform.refNo}"  style="float:left;" rendered="#{VarPerform.refNo != null or VarPerform.refNo != ''}"/>
-                    <p:inputText value="#{VarPerform.refNo}" style="width:70px;" rendered="#{VarPerform.refNo == null or VarPerform.refNo == ''}"/>
+               <p:outputLabel value="#{VarPerform.refNo}"  style="float:left;" rendered="#{VarPerform.refNo != null or VarPerform.refNo != ''}"/>
+               <p:inputText value="#{VarPerform.refNo}" style="width:70px;" rendered="#{VarPerform.refNo == null or VarPerform.refNo == ''}"/>
+             </p:column>	
+             <p:column>
+               <p:outputLabel value="#{VarPerform.financialOrg.finOrgName}"  style="float:left;" rendered="#{VarPerform.financialOrg.finOrgName != null}"/>
+               <p:selectOneMenu id="orgName" disabled="false"  style="width:120px;" rendered="#{VarPerform.financialOrg.finOrgName == null}">
+                  <f:selectItem itemLabel="-Select One-" itemValue="-Select One-"/>
+               </p:selectOneMenu>         
+              </p:column>	
+              <p:column>  
+                 <h:outputLabel value="#{VarPerform.bondAmount}" rendered="#{VarPerform.bondAmount != 0.0}">
+                 <f:convertNumber pattern="#,###.00" /></h:outputLabel>
+                 <p:inputText value="#{VarPerform.bondAmount}" styleClass="ppRightBtn" rendered="#{VarPerform.bondAmount == 0.0}" style="width:60px;" >
+                 <f:convertNumber pattern="#,###.00" /></p:inputText>
                </p:column>	
                <p:column>
-                    <p:outputLabel value="#{VarPerform.financialOrg.finOrgName}"  style="float:left;" rendered="#{VarPerform.financialOrg.finOrgName != null}"/>
-                    <p:selectOneMenu id="orgName" disabled="false"  style="width:120px;" rendered="#{VarPerform.financialOrg.finOrgName == null}">
-                      <f:selectItem itemLabel="-Select One-" itemValue="-Select One-"/>
-            	    </p:selectOneMenu>         
-               </p:column>	
-               <p:column>  
-                    <h:outputLabel value="#{VarPerform.bondAmount}" rendered="#{VarPerform.bondAmount != 0.0}">
-                     <f:convertNumber pattern="#,###.00" /></h:outputLabel>
-                    <p:inputText value="#{VarPerform.bondAmount}" styleClass="ppRightBtn" rendered="#{VarPerform.bondAmount == 0.0}" style="width:60px;" >
-                     <f:convertNumber pattern="#,###.00" /></p:inputText>
-               </p:column>	
-               <p:column>
-                    <h:outputText value="#{VarPerform.effDate}" style="float:left;" rendered="#{VarPerform.effDate !=null}">
-                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                    </h:outputText>
-                     <p:calendar value="#{VarPerform.effDate}" id="popupButtonCal4" showOn="button"  size="12"
-                     pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.effDate ==null}"/>
+                 <h:outputText value="#{VarPerform.effDate}" style="float:left;" rendered="#{VarPerform.effDate !=null}">
+                   <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                 </h:outputText>
+                 <p:calendar value="#{VarPerform.effDate}" id="popupButtonCal4" showOn="button"  size="12"
+                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.effDate ==null}"/>
                 </p:column>	
                 <p:column>
-                     <h:outputText value="#{VarPerform.expDate}" style="float:left;" rendered="#{VarPerform.expDate !=null}">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
-                     <p:calendar value="#{VarPerform.expDate}" id="popupButtonCal5" showOn="button"  
-                            pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.expDate == null}" size="12"/>
+                   <h:outputText value="#{VarPerform.expDate}" style="float:left;" rendered="#{VarPerform.expDate !=null}">
+                     <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                   </h:outputText>
+                   <p:calendar value="#{VarPerform.expDate}" id="popupButtonCal5" showOn="button"  
+                     pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.expDate == null}" size="12"/>
                  </p:column>	
                  <p:column styleClass="column-align-center">
                     <h:panelGroup id="uploadBondPg">
@@ -62,14 +65,17 @@
 				     <h:commandLink value="#{contractDetailsBackingBean.fileNames(VarPerform.filePath)}" styleClass="blue_font" action="#{contractDetailsBackingBean.downloadFile(VarPerform.filePath)}" />					
 			        </h:panelGroup>
               </p:column>
+               <p:column></p:column>
 	    </p:dataTable>
        <div class="ppRightBtn"> 
-		       <p:commandButton value="Add" process="@form" partialSubmit="true"  icon="ui-icon-add"
-		         action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" rendered="#{contractDetailsBackingBean.managedBean.updateContract}"/>
-		        <p:spacer width="1"/>
-		        <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="performanceBondDlg.show()" rendered="#{contractDetailsBackingBean.managedBean.updateContract}"/> 
+         <c:if test ='#{contractDetailsBackingBean.managedBean.updateContract}'>
+		   <p:commandButton value="Add" process="@form"  icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" />
+		   <p:spacer width="1"/>
+		   <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="performanceBondDlg.show()"/> 
+	   	</c:if> 
 	   	 </div>
-	   	 <p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+	   	 <p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false" resizable="false" width="700px" height="350" 
+	   	    styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		    <p:ajax event="close" />
 	      	<p:fileUpload style="display:inline;" mode="advanced" 
 			  fileUploadListener="#{contractDetailsBackingBean.fileUpload}" 
@@ -81,7 +87,7 @@
 	         <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
 			   severity="alert" widgetVar="performanceBondDlg">
                  <h:panelGrid columns="2">
-				 <p:commandButton value="Yes" update="tableBond" partialSubmit="true" process="@form"
+				 <p:commandButton value="Yes" process="@form" update=":form"
 				    onclick="performanceBondDlg.hide();" actionListener="#{contractDetailsBackingBean.delBondDetails()}"/>
 				  <p:commandButton value="No" 	onclick="performanceBondDlg.hide()" type="button" />
 				</h:panelGrid>
