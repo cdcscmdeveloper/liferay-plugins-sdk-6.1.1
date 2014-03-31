@@ -289,54 +289,6 @@ public class LocationSingleton {
 			// build state tree
 		
 			
-		/*	if(location.equalsIgnoreCase("C")){
-				
-				for (PmDistrict district : state.getPmDistricts()) {
-					if(district.getPmDivision() == null){
-						
-						LocationDTO districtLocation = new LocationDTO(district);
-						TreeNode districtNode = new DefaultTreeNode("district",districtLocation, stateNode);
-						// build district tree
-						for (PmCity city : district.getPmCities()) {
-							LocationDTO cityLocation = new LocationDTO(city);
-							TreeNode cityNode = new DefaultTreeNode("city",cityLocation, districtNode);
-							if (cityIds.contains(city.getCityId())) {
-								cityNode.setSelected(Boolean.TRUE);
-							}
-						}
-						if (districtIds.contains(district.getDistrictId())) {
-							districtNode.setSelected(Boolean.TRUE);
-						}
-					}
-				}
-				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
-				
-					for (PmDivision division : state.getPmDivisions()) {
-						LocationDTO divisionLocation = new LocationDTO(division);
-						TreeNode divisionNode = new DefaultTreeNode("division",divisionLocation, stateNode);
-						// build division tree
-						for (PmDistrict district : division.getPmDistricts()) {
-							LocationDTO districtLocation = new LocationDTO(district);
-							TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
-							// build district tree
-							for (PmCity city : district.getPmCities()) {
-								LocationDTO cityLocation = new LocationDTO(city);
-								TreeNode cityNode = new DefaultTreeNode("city",cityLocation, districtNode);
-								if (cityIds.contains(city.getCityId())) {
-									cityNode.setSelected(Boolean.TRUE);
-								}
-							}
-						}
-						if (divisionIds.contains(division.getDivisionId())) {
-							divisionNode.setSelected(Boolean.TRUE);
-						}
-					}
-				}
-				if (stateIds.contains(state.getStateId())) {
-					stateNode.setSelected(Boolean.TRUE);
-				}
-			}
-			*/
 			
 			if(location==2){
 				

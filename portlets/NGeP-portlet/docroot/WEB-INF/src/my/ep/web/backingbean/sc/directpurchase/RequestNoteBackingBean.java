@@ -25,6 +25,7 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -331,7 +332,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqBpm = new BpmRequestDTO();
+		//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
+		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
+			reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			directPurchaseSO.approvalRequestNote(reqDTO);
+		}
 		FacesScopes facesScopes = new FacesScopes();
+		
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		try {
 			reqBpm.setTaskId(getManagedBean().getTaskId());
