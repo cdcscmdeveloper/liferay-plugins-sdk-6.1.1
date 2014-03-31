@@ -66,6 +66,8 @@ public class LovBackingBean implements Serializable {
 	
 	private List resultList = new ArrayList();
 	private BaseEntity selectedEntity;
+	private List<BaseEntity> selectedEntities;
+//	private BaseEntity[] selectedEntities;
 	
 	private List<LovColumnBean> columnsToDisplay = new ArrayList<LovColumnBean>();
 	
@@ -178,6 +180,7 @@ public class LovBackingBean implements Serializable {
 		String clientId = facesScopes.getParameter("clientId");
 		String update = facesScopes.getParameter("update");
 		String postUpdateListener = facesScopes.getParameter("postUpdateListener");
+		String selectionMode = facesScopes.getParameter("selectionMode");
 		
 		debugLogger("headerText: " + headerText);
 		debugLogger("saveObject: " + saveObject);
@@ -199,6 +202,7 @@ public class LovBackingBean implements Serializable {
 			lovBean.setConditionField(conditionField);
 			lovBean.setUpdate(update);
 			lovBean.setPostUpdateListener(postUpdateListener);
+			lovBean.setSelectionMode(selectionMode);
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
 			lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
@@ -358,36 +362,73 @@ public class LovBackingBean implements Serializable {
 	public void populateToSaveObject() {
 		debugLogger("In populateToSaveObject");
 		
-		if(selectedEntity != null) {
-			FacesContext context = FacesContext.getCurrentInstance();
-			String expressionString = this.getLovBean().getSaveObject();
+		FacesContext context = FacesContext.getCurrentInstance();
+		String expressionString = this.getLovBean().getSaveObject();
 			
-			debugLogger("Save Object: " + expressionString);
+		debugLogger("Save Object: " + expressionString);
 			
-			if(!FacesScopes.isValueReference(expressionString)) {
-				expressionString = "#{" + expressionString + "}";
+		if(!FacesScopes.isValueReference(expressionString)) {
+			expressionString = "#{" + expressionString + "}";
+		}
+		
+		if(this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
+			
+			debugLogger("this.getSelectedEntity(): " + this.getSelectedEntity());
+			
+			if(selectedEntity != null) {
+				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
+													.createValueExpression(context.getELContext(),
+															expressionString, BaseEntity.class);
+		
+				valueExpression.setValue(context.getELContext(), selectedEntity);
+		
+				debugLogger("postUpdateListener" + this.getLovBean().getPostUpdateListener());
+					
+				if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListener())) {
+		
+					MethodExpression postUpdateListenerMethodExpr = FacesScopes
+		                        .createMethodExpression(context,
+		                        		this.getLovBean().getPostUpdateListener(), null,
+		                                new Class[] { BaseEntity.class });
+					
+		            postUpdateListenerMethodExpr.invoke(context.getELContext(),
+		                        new Object[] { selectedEntity });
+				}
+	
+				this.resetAction();
+				this.setLovBean(new LovBean());
+	
 			}
-			ValueExpression valueExpression = context.getApplication().getExpressionFactory()
-												.createValueExpression(context.getELContext(),
-														expressionString, BaseEntity.class);
-
-			valueExpression.setValue(context.getELContext(), selectedEntity);
-
-			debugLogger("postUpdateListener" + this.getLovBean().getPostUpdateListener());
+		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
 			
-			if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListener())) {
-
-                MethodExpression postUpdateListenerMethodExpr = FacesScopes
-                        .createMethodExpression(context,
-                        		this.getLovBean().getPostUpdateListener(), null,
-                                new Class[] { BaseEntity.class });
-                postUpdateListenerMethodExpr.invoke(context.getELContext(),
-                        new Object[] { selectedEntity });
+			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
+			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
+			
+			if(selectedEntities != null && !selectedEntities.isEmpty()) {
+				
+				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
+													.createValueExpression(context.getELContext(),
+															expressionString, List.class);
+		
+				valueExpression.setValue(context.getELContext(), selectedEntities);
+		
+				debugLogger("postUpdateListener" + this.getLovBean().getPostUpdateListener());
+					
+				if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListener())) {
+		
+					MethodExpression postUpdateListenerMethodExpr = FacesScopes
+		                        .createMethodExpression(context,
+		                        		this.getLovBean().getPostUpdateListener(), null,
+		                                new Class[] { List.class });
+					
+		            postUpdateListenerMethodExpr.invoke(context.getELContext(),
+		                        new Object[] { selectedEntities });
+				}
+	
+				this.resetAction();
+				this.setLovBean(new LovBean());
+	
 			}
-
-			this.resetAction();
-			this.setLovBean(new LovBean());
-
 		}
 		
 	}
@@ -453,6 +494,15 @@ public class LovBackingBean implements Serializable {
 	public void setSelectedEntity(BaseEntity selectedEntity) {
 		this.selectedEntity = selectedEntity;
 	}
+
+	public List<BaseEntity> getSelectedEntities() {
+		return selectedEntities;
+	}
+
+	public void setSelectedEntities(List<BaseEntity> selectedEntities) {
+		this.selectedEntities = selectedEntities;
+	}
+
 
 	public List<LovColumnBean> getColumnsToDisplay() {
 		return columnsToDisplay;

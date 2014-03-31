@@ -16,6 +16,7 @@ public class LovBean {
 	private String clientId;
 	private String update;
 	private String postUpdateListener;
+	private String selectionMode;
 	
 
 	public String getLovId() {
@@ -89,6 +90,12 @@ public class LovBean {
 	}
 	public void setPostUpdateListener(String postUpdateListener) {
 		this.postUpdateListener = postUpdateListener;
+	}
+	public String getSelectionMode() {
+		return selectionMode;
+	}
+	public void setSelectionMode(String selectionMode) {
+		this.selectionMode = selectionMode;
 	}
 	
 	

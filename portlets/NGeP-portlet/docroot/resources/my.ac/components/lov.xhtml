@@ -17,18 +17,21 @@
 	<cc:attribute name="update" default="" />
 	<cc:attribute name="size" />
 	<cc:attribute name="postUpdateListener" default="" />
+	<cc:attribute name="selectionMode" default="single" />
 </cc:interface>
 
 <cc:implementation>
 
 <h:panelGroup id="#{cc.attrs.id}">
 
-	<p:inputText id="#{cc.attrs.id}lov" 
-		value="#{cc.attrs.value}"
-		size="#{cc.attrs.size}"
-		readonly="#{cc.attrs.readonly}"
-		disabled="#{cc.attrs.disabled}">
-	</p:inputText>
+	<h:panelGroup id="sMode" rendered="#{cc.attrs.selectionMode eq 'single'}">
+		<p:inputText id="#{cc.attrs.id}lov" 
+			value="#{cc.attrs.value}"
+			size="#{cc.attrs.size}"
+			readonly="#{cc.attrs.readonly}"
+			disabled="#{cc.attrs.disabled}">
+		</p:inputText>
+	</h:panelGroup>
 	
 	<p:commandButton
 		id="#{cc.attrs.id}lovBtn"
@@ -36,8 +39,7 @@
 		action="#{lovBackingBean.initLov}"
 		oncomplete="updateSearchDialog(); lovPopup.show();"
 		disabled="#{cc.attrs.disabled}"
-		readonly="#{cc.attrs.readonly}"
-		>
+		readonly="#{cc.attrs.readonly}">
 		
 		<f:param name="lovId" value="#{cc.attrs.lovId}" />
 		<f:param name="componentId" value="#{cc.attrs.id}" />
@@ -47,6 +49,7 @@
 		<f:param name="clientId" value="#{p:component(cc.attrs.id)}" />
 		<f:param name="update" value="#{cc.attrs.update}" />
 		<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+		<f:param name="selectionMode" value="#{cc.attrs.selectionMode}" />
 		
 	</p:commandButton>
 	

@@ -5,8 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
    	xmlns:p="http://primefaces.org/ui"
-   	xmlns:ac="http://ac.my/jsf/composite/cc"
-   	xmlns:c="http://java.sun.com/jstl/core">
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
     
 <cc:interface>
 	<!-- <cc:attribute name="required" />
@@ -20,7 +19,7 @@
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();">
 	
 		<f:facet name="header">
-			<h:panelGroup id="lovTitle">#{lovBackingBean.lovBean.title} Listing</h:panelGroup>
+			<h:panelGroup id="lovTitle">#{lovBackingBean.lovBean.title} Listing #{lovBackingBean.lovBean.selectionMode}</h:panelGroup>
 		</f:facet>
 		
 		<p:panel header="Search" toggleable="true">
@@ -43,7 +42,7 @@
 				action="#{lovBackingBean.searchAction}"
 				partialSubmit="true"
 				process="searchPanel"
-				update="lovTb">
+				update="resultPanel">
 			</p:commandButton>		
 		</TD></tr></table>
 
@@ -51,7 +50,8 @@
 		</p:panel>
 		<p:panel header="Result" toggleable="true">
 		<h:panelGroup id="resultPanel" style="width:100%;">
-		
+			
+			<h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
 			<p:dataTable id="lovTb"
 				var="entity" 
 				selection="#{lovBackingBean.selectedEntity}"
@@ -82,14 +82,48 @@
 				</p:columns>
 				
 			</p:dataTable>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'multiple'}">
+			<p:dataTable id="lovTb2"
+				var="entity" 
+				selection="#{lovBackingBean.selectedEntities}"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				value="#{lovBackingBean.searchDataModel}" >
+				
+				<ac:paginator for="lovTb2" />
+				
+				<p:column selectionMode="multiple" style="width:2%" /> 
+				
+				<!-- <p:column width="5%">
+					<f:facet name="header">
+						<p:outputLabel value="No." />
+					</f:facet>
+					<p:outputLabel value="#{rowIndex + 1}" />
+				</p:column> -->
+				
+				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
+				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>
 
 			<table style="width:100%;"><tr><TD style="text-align:right;">
 				<p:commandButton 
 					id="slbtn"
 					value="Select"
 					action="#{lovBackingBean.populateToSaveObject}"
-					update="lovTb searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
+					process="resultPanel"
 					partialSubmit="true" />	
 			</TD></tr></table>
 			
