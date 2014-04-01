@@ -7,12 +7,14 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -27,15 +29,13 @@ import org.primefaces.model.TreeNode;
 public class NoticeBoardManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	
-
 	// dynamic tabs
 	private List<Tab> tabList;
 	private Integer activeTabIndex = 0;
 	private Integer tabIndex = 0;
 
 	public ISearchBean<ScQt> searchBean;
-	
+
 	private ScQt scQt;
 
 	// TODO: need to remove above fields...
@@ -43,6 +43,10 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	// Properties Added by vidyasagar for new noticeboard...
 
 	private String title;
+	private String qtNo;
+	private PmOrgProfile ministryProfile= new PmOrgProfile();
+	private PmOrgProfile ptjProfile = new PmOrgProfile();
+	private PmCategoryL3 categoryL3 =  new PmCategoryL3();
 
 	private List<ScQt> scQtSearchlist;
 
@@ -64,27 +68,11 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	private boolean isSvShow = false;
 
-	private TreeNode minstryRootNode;
-
-	private TreeNode categoryRootNode;
-
 	private TreeNode locationRootNode;
-
-	private TreeNode ministrySelectedNode;
-
-	private TreeNode categorySelectedNode;
 
 	private TreeNode locationSelectedNode;
 
-	private ISearchBean<PmOrgProfile> mistrySearchBean;
-
-	private ISearchBean<Object> categorySearchBean;
-
 	private ISearchBean<Object> locationSearchBean;
-
-	private TreeNode tempMinstryRootNode;
-
-	private TreeNode tempCategoryRootNode;
 
 	private TreeNode tempLocationRootNode;
 
@@ -100,39 +88,40 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	private boolean isShowSiteDate;
 
-	private NoticeBoardSearchDataBean publishSearchDataBean ;
+	private NoticeBoardSearchDataBean publishSearchDataBean;
 
-	private NoticeBoardSearchDataBean briefSearchDataBean ;
+	private NoticeBoardSearchDataBean briefSearchDataBean;
 
-	private NoticeBoardSearchDataBean siteVisitDataBean ;
+	private NoticeBoardSearchDataBean siteVisitDataBean;
 
-	private NoticeBoardSearchDataBean clsDataBean ;
+	private NoticeBoardSearchDataBean clsDataBean;
 
 	private List<ScQtContactPerson> contactPersons;
 	private List<ScQtBriefing> briefingDtls;
 	private List<ScQtBriefing> siteVisitDtls;
-	
+
 	private List<TreeNode> locationNodes;
-	
+
 	private List<ScQtCategory> categoryList;
-	
+
 	private String address;
 	private String location;
-	
+
 	private SmMofAccount mofAccount;
-	
+
 	private SmSupplier smSupplier;
-	private String tabTitle="Publish";
-	
+	private String tabTitle = "Publish";
+
 	private ScQtBriefing[] selectedBriefingDtls;
 	private ScQtBriefing[] selectedsiteVisitDtls;
-	
+	private List<TplSpecZoneDtl> zones;
+
+	private List<PmOrgProfile>ptjList;
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
 
 	}
-
 
 	/**
 	 * @return the scQt
@@ -165,9 +154,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.scQtSearchlist = scQtSearchlist;
 	}
 
-	
-
-	
 	/**
 	 * @return the tabList
 	 */
@@ -182,7 +168,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setTabList(List<Tab> tabList) {
 		this.tabList = tabList;
 	}
-
 
 	/**
 	 * @return the activeTabIndex
@@ -214,7 +199,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.tabIndex = tabIndex;
 	}
 
-	
 	/**
 	 * @return the searchBean
 	 */
@@ -310,22 +294,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.isSvShow = isSvShow;
 	}
 
-	public TreeNode getMinstryRootNode() {
-		return minstryRootNode;
-	}
-
-	public void setMinstryRootNode(TreeNode minstryRootNode) {
-		this.minstryRootNode = minstryRootNode;
-	}
-
-	public TreeNode getCategoryRootNode() {
-		return categoryRootNode;
-	}
-
-	public void setCategoryRootNode(TreeNode categoryRootNode) {
-		this.categoryRootNode = categoryRootNode;
-	}
-
 	public TreeNode getLocationRootNode() {
 		return locationRootNode;
 	}
@@ -334,44 +302,12 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.locationRootNode = locationRootNode;
 	}
 
-	public TreeNode getMinistrySelectedNode() {
-		return ministrySelectedNode;
-	}
-
-	public void setMinistrySelectedNode(TreeNode ministrySelectedNode) {
-		this.ministrySelectedNode = ministrySelectedNode;
-	}
-
-	public TreeNode getCategorySelectedNode() {
-		return categorySelectedNode;
-	}
-
-	public void setCategorySelectedNode(TreeNode categorySelectedNode) {
-		this.categorySelectedNode = categorySelectedNode;
-	}
-
 	public TreeNode getLocationSelectedNode() {
 		return locationSelectedNode;
 	}
 
 	public void setLocationSelectedNode(TreeNode locationSelectedNode) {
 		this.locationSelectedNode = locationSelectedNode;
-	}
-
-	public ISearchBean<PmOrgProfile> getMistrySearchBean() {
-		return mistrySearchBean;
-	}
-
-	public void setMistrySearchBean(ISearchBean<PmOrgProfile> mistrySearchBean) {
-		this.mistrySearchBean = mistrySearchBean;
-	}
-
-	public ISearchBean<Object> getCategorySearchBean() {
-		return categorySearchBean;
-	}
-
-	public void setCategorySearchBean(ISearchBean<Object> categorySearchBean) {
-		this.categorySearchBean = categorySearchBean;
 	}
 
 	public ISearchBean<Object> getLocationSearchBean() {
@@ -388,22 +324,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setTabs(List<String> tabs) {
 		this.tabs = tabs;
-	}
-
-	public TreeNode getTempMinstryRootNode() {
-		return tempMinstryRootNode;
-	}
-
-	public void setTempMinstryRootNode(TreeNode tempMinstryRootNode) {
-		this.tempMinstryRootNode = tempMinstryRootNode;
-	}
-
-	public TreeNode getTempCategoryRootNode() {
-		return tempCategoryRootNode;
-	}
-
-	public void setTempCategoryRootNode(TreeNode tempCategoryRootNode) {
-		this.tempCategoryRootNode = tempCategoryRootNode;
 	}
 
 	public TreeNode getTempLocationRootNode() {
@@ -512,97 +432,124 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.siteVisitDtls = siteVisitDtls;
 	}
 
-
 	public List<TreeNode> getLocationNodes() {
 		return locationNodes;
 	}
-
 
 	public void setLocationNodes(List<TreeNode> locationNodes) {
 		this.locationNodes = locationNodes;
 	}
 
-
 	public List<ScQtCategory> getCategoryList() {
 		return categoryList;
 	}
-
 
 	public void setCategoryList(List<ScQtCategory> categoryList) {
 		this.categoryList = categoryList;
 	}
 
-
-	
-
-
 	public String getAddress() {
 		return address;
 	}
-
 
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-
 	public String getLocation() {
 		return location;
 	}
-
 
 	public void setLocation(String location) {
 		this.location = location;
 	}
 
-
 	public SmMofAccount getMofAccount() {
 		return mofAccount;
 	}
-
 
 	public void setMofAccount(SmMofAccount mofAccount) {
 		this.mofAccount = mofAccount;
 	}
 
-
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
-
 
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
 
-
 	public String getTabTitle() {
 		return tabTitle;
 	}
-
 
 	public void setTabTitle(String tabTitle) {
 		this.tabTitle = tabTitle;
 	}
 
-
 	public ScQtBriefing[] getSelectedBriefingDtls() {
 		return selectedBriefingDtls;
 	}
-
 
 	public void setSelectedBriefingDtls(ScQtBriefing[] selectedBriefingDtls) {
 		this.selectedBriefingDtls = selectedBriefingDtls;
 	}
 
-
 	public ScQtBriefing[] getSelectedsiteVisitDtls() {
 		return selectedsiteVisitDtls;
 	}
 
-
 	public void setSelectedsiteVisitDtls(ScQtBriefing[] selectedsiteVisitDtls) {
 		this.selectedsiteVisitDtls = selectedsiteVisitDtls;
+	}
+
+	public String getQtNo() {
+		return qtNo;
+	}
+
+	public void setQtNo(String qtNo) {
+		this.qtNo = qtNo;
+	}
+
+	public PmOrgProfile getMinistryProfile() {
+		return ministryProfile;
+	}
+
+	public void setMinistryProfile(PmOrgProfile ministryProfile) {
+		this.ministryProfile = ministryProfile;
+	}
+
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
+	}
+
+	public PmCategoryL3 getCategoryL3() {
+		return categoryL3;
+	}
+
+	public void setCategoryL3(PmCategoryL3 categoryL3) {
+		this.categoryL3 = categoryL3;
+	}
+
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	public List<PmOrgProfile> getPtjList() {
+		return ptjList;
+	}
+
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
 	}
 
 }
