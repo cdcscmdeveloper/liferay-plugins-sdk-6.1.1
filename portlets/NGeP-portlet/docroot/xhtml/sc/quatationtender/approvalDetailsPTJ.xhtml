@@ -16,36 +16,18 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Approval Details Section" toggleable="true">
-		<table>
-			<tr>
-				<td style="width: 140px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.appname']}" /></td>
-				<td><p:selectOneMenu
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItem itemLabel="ROSLAN" itemValue="1" />
-						<f:selectItem itemLabel="KHAIR" itemValue="2" />
-					</p:selectOneMenu></td>
-				<td style="width: 206px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.appdate']}" /></td>
-				<td><p:calendar
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverActionDate}"
-						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Status" /></td>
-				<td colspan="3"><p:selectOneMenu
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverAction}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItem itemLabel="Approve" itemValue="a" />
-						<f:selectItem itemLabel="Reject" itemValue="r" />
-						<f:selectItem itemLabel="Revice" itemValue="re" />
-					</p:selectOneMenu></td>
-			</tr>
-		</table>
+	<p:panel header="  PTJ Approver Setting" toggleable="true">
+		<p:spacer height="3" />
+		<div style="width: 100%">
+			<p:pickList id="ptjapproverid"
+				value="#{approvalBackingBean.managedBean.ptjApprovalUsers}"
+				var="approverUser" showTargetControls="true"
+				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
+				converter="approverConverter">
+				<f:facet name="sourceCaption">Available </f:facet>
+				<f:facet name="targetCaption">Selected</f:facet>
+			</p:pickList>
+		</div>
 	</p:panel>
 
 	<p:panel header="Remark" toggleable="true" id="uploadfileid">
@@ -132,6 +114,8 @@
 			</p:column>
 			<p:column headerText="To">
 			</p:column>
+			<p:column headerText="Approved By">
+			</p:column>
 			<p:column headerText="Status">
 			</p:column>
 			<p:column headerText="Date">
@@ -139,4 +123,17 @@
 		</p:dataTable>
 	</p:panel>
 
+	<p:dialog id="attachfileDlgids" widgetVar="attachDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			mode="advanced" id="uploadfilesids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="uploadfileid" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 </ui:composition>

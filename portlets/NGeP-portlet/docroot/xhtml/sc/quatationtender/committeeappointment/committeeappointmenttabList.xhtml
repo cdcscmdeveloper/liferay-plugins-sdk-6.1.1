@@ -8,32 +8,37 @@
 	<p:panel>
 
 		<ui:include src="addspecificationcommittee.xhtml" />
-		<p:tabView id="tabView" orientation="top" 
-			var="committeeApproval"			
+		<p:tabView id="tabView" orientation="top" var="committeeApproval"
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
-			<p:ajax event="tabChange"
-				listener="#{qTCommitteBackingBean.onTabChangeAction}" />
-
-
 			<p:tab title="#{committeeApproval.titleName}">
+				<ui:fragment
+					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
+
+					<ui:param name="membersList"
+						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+
+					<ui:param name="selectedMembersList"
+						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+
+					<ui:include src="businessOwnerCommittee.xhtml" />
+				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{committeeApproval.titleName ne 'Finalization Secretary'}">
+					rendered="#{committeeApproval.titleName ne 'Finalization Secretary' and committeeApproval.titleName ne 'Business Owner'}">
 
-                        <ui:param name="membersList"
-							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					<ui:param name="membersList"
+						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
 
-						<ui:param name="selectedMembersList"
-							value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
-					<ui:include src="specificationCommitteeDetails.xhtml">
-						
-					</ui:include>
+					<ui:param name="selectedMembersList"
+						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					<ui:include src="specificationCommitteeDetails.xhtml" />
+
 
 					<div align="right">
 						<p:commandButton id="specificationcommitteeadd"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scCommittee)}"
+							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scCommittee, committeeApproval.titleName)}"
 							oncomplete="newspecificationcommittee.show();"
 							update="@(.scAddMember)" icon="ui-icon-add" />
 
@@ -41,6 +46,11 @@
 							icon="ui-icon-delete"
 							action="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 							update="specificationcommitteeid" />
+
+						<p:commandButton value="Clone To TEC"
+							process="@this"
+							rendered="#{committeeApproval.titleName eq 'Specification Committee'}"
+							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scCommittee)}" />
 					</div>
 				</ui:fragment>
 

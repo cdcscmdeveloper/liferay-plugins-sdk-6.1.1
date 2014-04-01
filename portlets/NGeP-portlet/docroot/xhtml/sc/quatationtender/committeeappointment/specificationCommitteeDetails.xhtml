@@ -50,7 +50,7 @@
 			</p:column>
 
 			<p:column headerText="P&amp;P">
-				<h:outputText value="#{specificationcommittee.PNP}" />
+				<h:outputText value="#{specificationcommittee.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">

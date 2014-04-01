@@ -12,7 +12,7 @@
 			<ui:include src="nrmqtntender.xhtml" />
 		</c:if>
 		<c:if
-			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != ParameterTypeConst.quotationTenderTypeOpen and qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != ParameterTypeConst.quotationTenderTypeRestrictedTender and qTSupplierQulCriteriaBackingBean.managedBean.panelItem eq 'Yes'}">
+			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != ParameterTypeConst.quotationTenderTypeOpen and qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != ParameterTypeConst.quotationTenderTypeRestrictedTender and qTSupplierQulCriteriaBackingBean.managedBean.qt.panel eq 'Yes'}">
 			<ui:include src="panel/panelDetails.xhtml" />
 		</c:if>
 		<c:if

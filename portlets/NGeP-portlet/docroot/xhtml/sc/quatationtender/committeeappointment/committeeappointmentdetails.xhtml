@@ -12,7 +12,7 @@
 				<td style="width: 108px"><p:outputLabel
 						value="Evaluation Type " /></td>
 				<td><p:inputText
-						value="#{qTDetailBB.managedBean.scQtSpec.evaluationType}"
+						value="#{qTDetailBB.managedBean.qt.evaluationType ? 'One Tier' : 'Two Tier'}"
 						style="margin-right:5px;" disabled="true" readonly="true" /></td>
 			</tr>
 		</table>

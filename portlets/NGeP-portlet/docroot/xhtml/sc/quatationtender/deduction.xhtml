@@ -11,9 +11,9 @@
 		<p:dataTable id="deductPaymentId" var="deductpayment"
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
-			rowKey="#{deductpayment}" rows="10">
+			rowKey="#{deductpayment}">
 
-			<p:column selectionMode="multiple" style="width:5%" />
+			<p:column selectionMode="multiple" style="width:2%" />
 
 			<ac:paginator for="deductPaymentId" />
 
@@ -57,8 +57,10 @@
 			</p:column>
 
 			<p:column headerText="Duration"
-				rendered="#{qTDeductionPaymentBackingBean.managedBean.amountField}">
-				<p:inputText value="#{deductpayment.deductionAmount}"
+				rendered="#{qTDeductionPaymentBackingBean.managedBean.durationField}">
+				<h:outputText value="#{deductpayment.duration}"
+					rendered="#{deductpayment.brandNew eq false}" />
+				<p:inputText value="#{deductpayment.duration}"
 					rendered="#{deductpayment.brandNew eq true}" />
 			</p:column>
 		</p:dataTable>

@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Document" toggleable="true">
+	<p:panel header="Document List" toggleable="true">
 		<p:dataTable var="document" id="doctbl"
 			value="#{qTDocumentsBackingBean.managedBean.scQtChecklists}"
 			editable="true"
@@ -57,15 +57,23 @@
 					rendered="#{document.brandNew eq true}" />
 			</p:column> -->
 
-			<p:column headerText="#{lbl['lbl.so.temp.status']}" style="width:20%">
+			<!-- <p:column headerText="#{lbl['lbl.so.temp.status']}" style="width:20%">
 				<h:outputText value="" size="2"
 					rendered="#{document.checklistType eq 'UP'}" />
 				<h:outputText
 					value="#{document.scQtDoc.tplDocMaster.templateStatus}" size="2"
 					rendered="#{document.checklistType eq 'TD'}" />
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="#{lbl['lbl.so.attachment']}" style="width:20%">
+				<h:outputText value="#{document.scQtCheckListAttachment.fileName}"
+					rendered="#{!empty document.scQtCheckListAttachment}" />
+
+				<p:commandButton oncomplete="attachDlg1.show();return false;"
+					icon="iconAttachment" update="doctbl" value="Attach Files">
+					<f:setPropertyActionListener value="#{document}"
+						target="#{qTDocumentsBackingBean.managedBean.qtCheckList}" />
+				</p:commandButton>
 
 			</p:column>
 
@@ -107,54 +115,20 @@
 			update="attachmentId" oncomplete="attachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
+	
+	<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
+			mode="advanced" id="upload1"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="doctbl" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+	
 
-	<p:panel header="Final Document" toggleable="true" id="attachmentId">
-		<table style="width: 50%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft"><h:outputLabel
-						value="Attachment" /></td>
-				<td class="TableFieldRight">
-					<table style="width: 150px;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="attachmentId"
-									value="Attach Files" /></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="fineUploadId"
-									value="#{qTDocumentsBackingBean.managedBean.checklistAttachment}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
-									<table>
-										<tr>
-											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
-													name="#{qTDocumentsBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
-											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
-													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
-													action="#{qTDocumentsBackingBean.deleteUploadFile}"
-													immediate="true" update="fineUploadId">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
 </ui:composition>

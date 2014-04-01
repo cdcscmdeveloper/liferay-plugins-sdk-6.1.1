@@ -7,77 +7,63 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.so.general.info']}" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
-
-			<h:column>
-				<h:outputLabel value="* #{lbl['lbl.so.title']}" />
-			</h:column>
-			<h:column>
-				<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="107"
-					disabled="#{!qTDetailBB.managedBean.editable}" />
-			</h:column>
-		</h:panelGrid>
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-
-			<h:column>
-				<h:outputLabel value="* #{lbl['lbl.so.fileno']}" />
-			</h:column>
-			<h:column>
-				<p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}"
-					disabled="#{!qTDetailBB.managedBean.editable}" size="30" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.crtdt']}" />
-			</h:column>
-			<h:column>
-				<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"
-					disabled="true" size="30">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-				</p:inputText>
-			</h:column>
-			<h:column>
-				<h:outputLabel value="* #{lbl['lbl.so.procmode']}" />
-			</h:column>
-			<h:column>
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-					<p:selectOneMenu
-						value="#{qTDetailBB.managedBean.qt.procurementMode}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}" />
-					</p:selectOneMenu>
-				</c:if>
-				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:inputText
-						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scProcurementMode, qTDetailBB.managedBean.qt.procurementMode)}"
-						disabled="true" size="30" />
-				</c:if>
-			</h:column>
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.estimated']}" />
-			</h:column>
-			<h:column>
-				<p:inputText id="estprice"
-					value="#{qTDetailBB.managedBean.qt.qtAmount}" size="30"
-					disabled="true" readonly="true" />
-				<h:inputText value="MYR" disabled="true" size="1" />
-			</h:column>
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td style="width: 154px;" valign="top"><p:outputLabel
+						value="#{lbl['lbl.so.title']}" /></td>
+				<td colspan="3"><p:inputTextarea
+						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="120" rows="2"
+						disabled="#{!qTDetailBB.managedBean.editable}"
+						style=" margin-bottom:5px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.fileno']}" /></td>
+				<td><p:inputText id="fileno"
+						value="#{qTDetailBB.managedBean.qt.fileNo}"
+						disabled="#{!qTDetailBB.managedBean.editable}" size="30" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.so.crtdt']}" /></td>
+				<td><p:inputText
+						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true"
+						size="30">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
+				<td><c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+						<p:selectOneMenu
+							value="#{qTDetailBB.managedBean.qt.procurementMode}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="approvalWorkFlow"
+								listener="#{qTDetailBB.onChangeAction}" />
+						</p:selectOneMenu>
+					</c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+						<p:inputText
+							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scProcurementMode, qTDetailBB.managedBean.qt.procurementMode)}"
+							disabled="true" size="30" />
+					</c:if></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
+				<td><p:inputText id="estprice"
+						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
+						disabled="true" readonly="true" /></td>
+			</tr>
+		</table>
 	</p:panel>
 	<p:spacer height="5" />
-	<p:panel header="#{lbl['lbl.so.gosodo.list']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.so.goso.list']}" toggleable="true"
 		rendered="#{!qTDetailBB.managedBean.qt.planned}">
 		<p:dataTable id="gosodoList"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
 			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
-			rowKey="#{gosodo}" rowIndexVar="rowIndex" rows="10">
+			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 50%">
+
 			<p:column selectionMode="multiple" style="width:2%" />
+
 			<ac:paginator for="gosodoList" />
 
 			<p:column headerText="GO Code">
@@ -91,7 +77,7 @@
 							itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
 						<p:ajax event="change"
 							listener="#{qTDetailBB.handleGoChanged(gosodo)}"
-							partialSubmit="true" process="@this" update="solist, dolist" />
+							partialSubmit="true" process="@this" update="solist" />
 					</p:selectOneMenu>
 				</c:if>
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
@@ -107,16 +93,13 @@
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 						<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
 							itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
-						<p:ajax event="change"
-							listener="#{qTDetailBB.handleSoChanged(gosodo)}"
-							partialSubmit="true" process="@this" update="dolist" />
-					</p:selectOneMenu>
+						</p:selectOneMenu>
 				</c:if>
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:inputText value="#{gosodo.pmSo.soCode}" disabled="true" />
 				</c:if>
 			</p:column>
-			<p:column headerText="DO Code">
+			<!-- <p:column headerText="DO Code">
 				<h:outputText value="#{gosodo.pmDo.doCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -134,10 +117,8 @@
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:inputText value="#{gosodo.pmDo.doCode}" disabled="true" />
 				</c:if>
-			</p:column>
-			<p:column headerText="Budget Request">
-			</p:column>
-			<p:column headerText="Budget Balance">
+			</p:column> -->
+			<p:column headerText="Amount (RM)">
 			</p:column>
 			<!-- <p:column headerText="Budget Availability"> 
        			#{empty gosodo.budgetAvailable ? (gosodo.budgetAvailable ? 'Yes' : 'No') : ''}
@@ -148,28 +129,14 @@
 				</p:commandLink>
 			</p:column>  -->
 		</p:dataTable>
-		<div align="left">
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
-				columnClasses="columnWidth20">
-				<h:column>
-					<h:outputLabel value="Total Budget Request" />
-				</h:column>
-				<h:column>
-					<p:inputText id="totalbudgetreq" value="" size="30" disabled="true"
-						readonly="true" />
-				</h:column>
-			</h:panelGrid>
-		</div>
 		<p:spacer height="15" />
-		<div align="right">
+		<div align="right" style="width: 50%;">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
 				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}" />
-			<p:commandButton value="#{lbl['lbl.so.checkbalbtn']}"
-				rendered="#{qTDetailBB.managedBean.editable}" />
 		</div>
 	</p:panel>
 </ui:composition>

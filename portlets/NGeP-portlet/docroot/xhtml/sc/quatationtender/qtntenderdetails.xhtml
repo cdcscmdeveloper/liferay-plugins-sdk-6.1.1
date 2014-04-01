@@ -7,8 +7,10 @@
 	<p:panel header="Details" toggleable="true">
 		<table style="width: 100%" border="1">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.qttentype']}" /></td>
-				<td><c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<td style="width: 150px;"><p:outputLabel
+						value="#{lbl['lbl.so.qttentype']}" /></td>
+				<td colspan="3"><c:if
+						test="#{qTDetailBB.managedBean.qt.brandNew}">
 						<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}"
 							style="width: 178px;margin-bottom: 5px;"
 							disabled="#{qTDetailBB.managedBean.panelItem eq 'Yes'}">
@@ -25,33 +27,41 @@
 							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.quotationTenderType, qTDetailBB.managedBean.qt.qtType)}"
 							disabled="true" size="30" />
 					</c:if></td>
-				<td></td>
-				<td></td>
 			</tr>
 			<tr>
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 215px"><p:outputLabel value="* Panel"
+								<td style="width: 150px;"><p:outputLabel value="* Panel"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
-										value="#{qTDetailBB.managedBean.panelItem}" readonly="true"
-										size="30" disabled="true"
+										value="#{qTDetailBB.managedBean.qt.panel ? 'Yes' : 'No'}"
+										readonly="true" size="30" disabled="true"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
-									rendered="#{qTDetailBB.managedBean.panelItem ne 'Yes'}">
-									<td style="width: 70px"><p:outputLabel value="* Open For"
+									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
+									<td style="width: 220px"><p:outputLabel value="Open For"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
-									<td><p:selectOneRadio
+									<td><p:inputText
+											value="#{qTDetailBB.managedBean.qt.openFor ? 'Bumiputra' : 'All'}"
+											readonly="true" size="30" disabled="true"
+											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
+									<!-- <td><p:selectOneRadio
 											value="#{qTDetailBB.managedBean.qt.openFor}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}">
 											<f:selectItem itemLabel="Bumiputra" itemValue="true" />
 											<f:selectItem itemLabel="All" itemValue="false" />
-										</p:selectOneRadio></td>
+										</p:selectOneRadio></td> -->
 								</ui:fragment>
 							</tr>
 						</table>
 					</p:outputPanel></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.so.existing.contract.no']}" /></td>
+				<td colspan="3"></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" /></td>
@@ -63,13 +73,13 @@
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}"
 						readonly="true" size="30" /></td>
 			</tr>
-			<tr>
+			<!-- 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.rfp']}"
 						rendered="#{qTDetailBB.managedBean.qt.qtNo != null}" /></td>
 				<td><p:inputText id="rfpType" value="" disabled="true"
 						size="30" rendered="#{qTDetailBB.managedBean.qt.qtNo != null}" /></td>
-				<td></td>
-				<td></td>
+				<td />
+				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.asqttype']}"
@@ -77,10 +87,43 @@
 				<td><p:inputText id="AsnTenderNo"
 						value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true"
 						rendered="#{qTDetailBB.managedBean.qt.qtNo != null}" size="30" /></td>
-				<td></td>
-				<td></td>
+				<td />
+				<td />
+			</tr> -->
+			<tr>
+				<td><p:outputLabel value="Zone/Location" /></td>
+				<td><p:inputText
+						value="#{qTDetailBB.managedBean.qt.zonal ? 'Yes' : 'No'}"
+						disabled="true" size="30" /></td>
+				<td />
+				<td />
+			</tr>
+		</table>
+	</p:panel>
+	<p:spacer height="5" />
+
+	<p:panel header="Zone/Location Info" toggleable="true"
+		rendered="#{qTDetailBB.managedBean.qt.zonal}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 150px"><p:outputLabel value="Location Level" /></td>
+				<td><p:inputText
+						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.zoneLocationLevel, qTDetailBB.managedBean.qt.zoneLocationLevel)}"
+						disabled="true" size="30" /></td>
+				<td />
+				<td />
 			</tr>
 		</table>
 
+		<p:tree id="ctSupplierZones" style="border:none;"
+			value="#{qTDetailBB.managedBean.ctZoneSuppliers}" var="ctZones"
+			selectionMode="single" dynamic="true">
+			<p:treeNode type="zone">
+				<h:outputText value="#{ctZones.name}" />
+			</p:treeNode>
+			<p:treeNode type="state">
+				<h:outputText value="#{ctZones.stateName}" />
+			</p:treeNode>
+		</p:tree>
 	</p:panel>
 </ui:composition>

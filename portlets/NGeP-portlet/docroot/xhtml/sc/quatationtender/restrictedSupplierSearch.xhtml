@@ -6,66 +6,74 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-		columns="2" columnClasses="columnWidth20AlignTop">
+	<p:panel id="searchrestrictedsupp" header="Search" toggleable="true">
 
-		<p:dataTable
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-			var="scQtCategory" id="restrcatcode">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20AlignTop">
 
-			<ac:paginator for="restrcatcode" />
+			<p:dataTable
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
+				var="scQtCategory" id="restrcatcode">
 
-			<p:column headerText="#{lbl['lbl.so.category']}">
-				<p:inputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}"
-					disabled="true" />
-				<p:inputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}"
-					disabled="true" />
-				<p:inputText value="#{scQtCategory.pmCategoryL3.categoryL3Code}"
-					disabled="true" />
-			</p:column>
-			<p:column headerText="Main-Category" />
-			<p:column headerText="Sub-Category" />
-			<p:column headerText="Sub-Category Division" />
-			<p:column headerText="Category Type" />
-			<p:column headerText="#{lbl['lbl.so.mandatory']}"
-				style="width: 150px;">
-				<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
-					disabled="true" />
-			</p:column>
-		</p:dataTable>
-	</h:panelGrid>
+				<ac:paginator for="restrcatcode" />
 
-	<br />
-	<br />
+				<p:column headerText="#{lbl['lbl.so.category']}">
+					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryL3Code}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
+					<h:outputText
+						value="#{scQtCategory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
+				</p:column>
 
-	<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-		columns="4"
-		columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
+					<h:outputText
+						value="#{scQtCategory.pmCategoryL3.pmCategoryL2.categoryName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
+					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column headerText="Category Type"></p:column>
+				<p:column headerText="#{lbl['lbl.so.mandatory']}"
+					style="width: 150px;">
+					<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
+						disabled="true" />
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
 
-		<h:column>
-			<h:outputLabel value="Supplier Name" />
-		</h:column>
-		<h:column>
-			<p:inputText
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierName}" />
-		</h:column>
-		<h:column>
-			<h:outputLabel value="#{lbl['lbl.so.mofno']}" />
-		</h:column>
-		<h:column>
-			<p:inputText
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.mofAccountNo}" />
-		</h:column>
-		<h:column>
-			<h:outputLabel value="#{lbl['lbl.so.paidup']}" />
-		</h:column>
-		<h:column>
-			<p:inputText
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"
-				disabled="true" />
-			<h:inputText value="MYR" disabled="true" size="1" />
-		</h:column>
-	</h:panelGrid>
+		<br />
+		<br />
+
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20,columnWidth50">
+
+			<h:column>
+				<h:outputLabel value="Supplier Name" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierName}" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.mofno']}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.mofAccountNo}" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.paidup']}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}" />
+			</h:column>
+		</h:panelGrid>
+	</p:panel>
+	<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+		action="#{qTSupplierQulCriteriaBackingBean.reset}"
+		update="searchrestrictedsupp" icon="ui-icon-reset" resetValues="true"
+		partialSubmit="true" process="@this" />
 
 	<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 		styleClass="apply_button" style="float:right;" id="restrictSupplier"

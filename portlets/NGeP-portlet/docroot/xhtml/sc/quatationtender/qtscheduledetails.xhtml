@@ -166,7 +166,7 @@
 					value="#{qTScheduleDetailBackingBean.managedBean.pmUser.userName}"
 					rendered="#{deskofficeradmin.brandNew eq false}" />
 				<p:selectOneMenu
-					value="#{qTScheduleDetailBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
+					value="#{qTScheduleDetailBackingBean.managedBean.qtContactPerson.officerType}"
 					rendered="#{deskofficeradmin.brandNew eq true}">
 					<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
 					<f:selectItems
@@ -174,7 +174,7 @@
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
 					<p:ajax event="change"
-						listener="#{qTScheduleDetailBackingBean.handleDeskOfficerChanged(qTScheduleDetailBackingBean.managedBean.qt.ministrySpecSecrataryId)}" />
+						listener="#{qTScheduleDetailBackingBean.handleDeskOfficerChanged(deskofficeradmin)}" />
 				</p:selectOneMenu>
 			</p:column>
 

@@ -26,12 +26,18 @@
 		</table>
 
 		<p:spacer height="10" />
-		
+
 		<p:tabView var="approvalCategory" orientation="top"
 			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
 			value="#{approvalBackingBean.managedBean.tabList}">
 
 			<p:tab title="#{approvalCategory.titleName}">
+				<ui:fragment
+					rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
+
+					<ui:include
+						src="approvalDetailSection.xhtml" />
+				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
 
@@ -39,17 +45,11 @@
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Committee Approval'}">
+					rendered="#{approvalCategory.titleName eq 'Committee Appointment Approval'}">
 
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
 				</ui:fragment>
-				<!-- <ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Publication Approval'}">
-
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
-				</ui:fragment> -->
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'PTJ Approval'}">
 
@@ -58,10 +58,10 @@
 						src="/xhtml/sc/quatationtender/approvalDetailsPTJ.xhtml" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Procurement Board Approval'}">
+					rendered="#{approvalCategory.titleName eq 'Finalization Committee Approval'}">
 
-					<!-- <ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" /> -->
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsProcurement.xhtml" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Others Approval'}">
