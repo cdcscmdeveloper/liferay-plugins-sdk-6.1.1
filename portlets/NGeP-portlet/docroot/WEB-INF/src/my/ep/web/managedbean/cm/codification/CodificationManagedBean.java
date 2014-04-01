@@ -91,10 +91,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<ExtensionCodeVO> extensionVoList;
 	private ExtensionCodeVO[] selectedExtensionVO;
 	
+	private Object[] selectedObject;
 	
 	
 	
 	
+	
+	public Object[] getSelectedObject() {
+		return selectedObject;
+	}
+
+	public void setSelectedObject(Object[] selectedObject) {
+		this.selectedObject = selectedObject;
+	}
+
 	public ExtensionCodeVO[] getSelectedExtensionVO() {
 		return selectedExtensionVO;
 	}
