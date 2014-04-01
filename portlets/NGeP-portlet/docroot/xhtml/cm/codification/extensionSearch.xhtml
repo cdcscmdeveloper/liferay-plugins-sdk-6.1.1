@@ -138,13 +138,13 @@
 
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
-
+ 
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
 					rowKey="#{obj}" 
 					var="obj" 
 					rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedExtensionVO}"
+					selection="#{codificationBackingBean.managedBean.selectedObject}"
 					lazy="true">
 
 					<p:column selectionMode="multiple" style="width:2%" />

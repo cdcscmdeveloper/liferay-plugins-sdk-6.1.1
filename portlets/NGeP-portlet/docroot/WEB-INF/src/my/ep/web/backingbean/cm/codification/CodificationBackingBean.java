@@ -77,7 +77,10 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	private SearchFilterBean measurementFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private IPagingDataModel<CmItem> searchItemDataModel = new SearchItemPagingDataModel();
+	
 	private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
+	
+	
 
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -90,6 +93,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
+
 
 	private TreeNode rootNodes;
 	private TreeNode selectedNode;
@@ -129,57 +133,11 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 					familiesVO.setUnspscLevel(1);
 					TreeNode families = new DefaultTreeNode("families",familiesVO, segmentNode);
 				}
-
-
 			}
-
-
 		}*/
 
-
-
 	}
-
-
-
-	public void extensionCodeSearch(){
-
-		extensionSearchItemDataModel.reloadData();
-		
-//		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-//
-//		System.out.println("Unspsc Code:"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-//
-//		CodificationReqDTO reqDTO = new CodificationReqDTO();
-//
-//		CodificationResDTO resDTO = codificationSO.searchExtension(reqDTO);
-//
-//		System.out.println("getExtensionlist:"+resDTO.getExtensionlist().size());
-//		List list = resDTO.getExtensionlist();
-//		for(int i = 0; i < list.size(); i++) {
-//			ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-//			Object[] objects = (Object[])list.get(i);
-//
-//
-//			extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-//			extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-//			extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-//			extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-//
-//			System.out.println("******type NAme******"+String.valueOf(objects[4]));
-//			extCodeVO.setTypeName(String.valueOf(objects[4]));
-//			extCodeVO.setBrandName(String.valueOf(objects[5]));
-//			extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-//			extCodeVO.setColorName(String.valueOf(objects[7]));
-//
-//			this.getManagedBean().getExtensionVoList().add(extCodeVO);
-//
-//
-//		}
-
-	}
-
-
+	
 	private class ExtensionSearchItemDataModel extends PagingDataModel<Object[]> {
 
 		public ExtensionSearchItemDataModel() {
@@ -237,7 +195,73 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		}
 		
 	}
-	
+
+
+
+	public void extensionCodeSearch(){
+
+		
+		extensionSearchItemDataModel.reloadData();
+		/*ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		this.getManagedBean().setExtensionVoList(null);
+
+		System.out.println("Unspsc Code:"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		reqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+
+		if (StringUtils.isNotBlank((String)colorFilterBean.getSearchValue())) {
+			reqDTO.setColorId(Long.valueOf(colorFilterBean.getSearchValue().toString()));
+		}
+
+		System.out.println("typeFilterBean.getSearchValue()"+typeFilterBean.getSearchValue());
+		if (StringUtils.isNotBlank((String)typeFilterBean.getSearchValue())) {
+			reqDTO.setTypeId(Long.valueOf(typeFilterBean.getSearchValue().toString()));
+
+		}
+
+		if (StringUtils.isNotBlank((String)brandFilterBean.getSearchValue())) {
+			reqDTO.setBrandId(Long.valueOf(brandFilterBean.getSearchValue().toString()));
+
+		}
+
+		if (StringUtils.isNotBlank((String)measurementFilterBean.getSearchValue())) {
+			reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean.getSearchValue().toString()));
+		}
+
+
+
+		CodificationResDTO resDTO = codificationSO.searchExtension(reqDTO);
+
+		System.out.println("getExtensionlist:"+resDTO.getExtensionlist().size());
+		List list = resDTO.getExtensionlist();
+		for(int i = 0; i < list.size(); i++) {
+			ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
+			Object[] objects = (Object[])list.get(i);
+
+
+			extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+			extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+			extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+			extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+
+			System.out.println("******type NAme******"+String.valueOf(objects[4]));
+			extCodeVO.setTypeName(String.valueOf(objects[4]));
+			extCodeVO.setBrandName(String.valueOf(objects[5]));
+			extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+			extCodeVO.setColorName(String.valueOf(objects[7]));
+
+			this.getManagedBean().getExtensionVoList().add(extCodeVO);
+
+
+		}
+*/
+	}
+
+
+
 
 	private class SearchItemPagingDataModel extends PagingDataModel<CmItem> {
 
@@ -613,63 +637,29 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		CodificationResDTO resDTO = null;
 
 
+		CmColor colorObj = searchColorObjByColorId(this.getManagedBean().getExtensionVoList().get(index).getColorId());
+
+
+		String colorCode = colorObj.getColorCode();
+		String colorName = colorObj.getColorName();
 
 
 
-		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
-		colorFilterBean.setSearchField("colorId");
-		colorFilterBean.setSearchValue(this.getManagedBean().getExtensionVoList().get(index).getColorId());
+		CmType typeObj = searchTypeOjbyTypeId(this.getManagedBean().getExtensionVoList().get(index).getTypeId());
 
-		searchBeanColor.getDataFilterBeans().add(colorFilterBean);
-		reqDTO.setColorSearchBean(searchBeanColor);
-		resDTO = codificationSO.searchColorObj(reqDTO);
+		String typeCode = typeObj.getTypeCode();
+		String typeName = typeObj.getTypeName();
 
-		String colorCode = resDTO.getColorList().get(0).getColorCode();
-		String colorName = resDTO.getColorList().get(0).getColorName();
+		CmBrand brandObj = searchBrandObjByBrandId(this.getManagedBean().getExtensionVoList().get(index).getBrandId());
+		
+		String brandCode = brandObj.getBrandCode();
+		String brandName = brandObj.getBrandName();
 
+		CmMeasurement meaObj = searchMeasurementByMeasurementId(this.getManagedBean().getExtensionVoList().get(index).getMeasurementId());
+		
 
-
-
-		ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
-		typeFilterBean.setSearchField("typeId");
-		typeFilterBean.setSearchValue(this.getManagedBean().getExtensionVoList().get(index).getTypeId());
-		searchBeanType.getDataFilterBeans().add(typeFilterBean);
-		reqDTO.setTypeSearchBean(searchBeanType);
-		resDTO = codificationSO.searchTypeObj(reqDTO);
-
-		String typeCode = resDTO.getTypeList().get(0).getTypeCode();
-		String typeName = resDTO.getTypeList().get(0).getTypeName();
-
-		ISearchBean<CmBrand> searchBeanBrand = new SearchBean<CmBrand>();
-		brandFilterBean.setSearchField("brandId");
-		brandFilterBean.setSearchValue(this.getManagedBean().getExtensionVoList().get(index).getBrandId());
-		searchBeanBrand.getDataFilterBeans().add(brandFilterBean);
-
-		reqDTO.setBrandSearchBean(searchBeanBrand);
-
-		resDTO = codificationSO.searchBrandObj(reqDTO);
-
-		String brandCode = resDTO.getBrandList().get(0).getBrandCode();
-		String brandName = resDTO.getBrandList().get(0).getBrandName();
-
-
-
-
-		ISearchBean<CmMeasurement> searchBeanMeasurement = new SearchBean<CmMeasurement>();
-		measurementFilterBean.setSearchField("measurementId");
-		measurementFilterBean.setSearchValue(this.getManagedBean().getExtensionVoList().get(index).getMeasurementId());
-		searchBeanMeasurement.getDataFilterBeans().add(measurementFilterBean);
-
-		reqDTO.setMeasurementSearchBean(searchBeanMeasurement);
-
-		resDTO = codificationSO.searchMeasurementObj(reqDTO);
-
-		String measurementCode = resDTO.getMeasurementList().get(0).getMeasurementCode();
-		String measurementName = resDTO.getMeasurementList().get(0).getMeasurementName();
-
-
-
-
+		String measurementCode = meaObj.getMeasurementCode();
+		String measurementName = meaObj.getMeasurementName();
 
 		CmRecommendCode recommend = new CmRecommendCode();
 
@@ -897,7 +887,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		}
 
 		reqDTO.setCmBrand(resDTO.getBrandList().get(0));
-		//////////////////////////////
 
 		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 		colorFilterBean.setSearchField("colorCode");
@@ -914,7 +903,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		reqDTO.setCmColor(resDTO.getColorList().get(0));
 
-		////////////////////
 
 		ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
 		typeFilterBean.setSearchField("typeCode");
@@ -930,7 +918,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		reqDTO.setCmType(resDTO.getTypeList().get(0));
 
-		///////////////////////////
 
 		ISearchBean<CmMeasurement> searchBeanMeasurement = new SearchBean<CmMeasurement>();
 		measurementFilterBean.setSearchField("measurementCode");
@@ -947,15 +934,11 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 		reqDTO.setCmMeasurement(resDTO.getMeasurementList().get(0));
-		////////////////////////////////////////
-
-
+		
 		resDTO = codificationSO.editExtensionCode(reqDTO);
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		/*Flash flash = facesContext.getExternalContext().getFlash();
-		flash.setKeepMessages(true);
-		flash.setRedirect(true);*/
+
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 		return "extensionSearch";
@@ -1389,7 +1372,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 			System.out.println("**getColorName**"+resDTO.getColorList().get(0).getColorName());
 			unspscBB.getManagedBean().getRequestCode().setColorName(resDTO.getColorList().get(0).getColorName());
-			
+
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(false);
 		}else{
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(true);
@@ -1422,7 +1405,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			resDTO = unspscSO.searchBrandObj(reqDTO);
 
 			unspscBB.getManagedBean().getRequestCode().setBrandName(resDTO.getBrandList().get(0).getBrandName());
-			
+
 			unspscBB.getManagedBean().getRequestCode().setRequestBrand(false);
 
 		}else{
@@ -1439,7 +1422,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			reqDTO.setMeasurementSearchBean(searchBeanColor);
 
 			resDTO = unspscSO.searchMeasurementObj(reqDTO);
-			
+
 			unspscBB.getManagedBean().getRequestCode().setMeasurementName(resDTO.getMeasurementList().get(0).getMeasurementName());
 			unspscBB.getManagedBean().getRequestCode().setRequestMeasurement(false);
 		}else{
@@ -1450,7 +1433,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		unspscBB.getManagedBean().getRequestCode().setTempTitle(this.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle());
 
 
-		
+
 		reqDTO.setToken(token);
 		reqDTO.setTaskId(unspscBB.getManagedBean().getTaskId());
 
@@ -1466,6 +1449,83 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 		return "BPMtesting";
+	}
+
+
+	public CmType searchTypeOjbyTypeId(Long typeId){
+
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+		ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
+		typeFilterBean.setSearchField("typeId");
+		typeFilterBean.setSearchValue(typeId);
+		searchBeanType.getDataFilterBeans().add(typeFilterBean);
+		reqDTO.setTypeSearchBean(searchBeanType);
+		resDTO = codificationSO.searchTypeObj(reqDTO);
+
+
+
+		return resDTO.getTypeList().get(0);
+	}
+
+
+	public CmColor searchColorObjByColorId(Long colorId){
+
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+		colorFilterBean.setSearchField("colorId");
+		colorFilterBean.setSearchValue(colorId);
+
+		searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+		reqDTO.setColorSearchBean(searchBeanColor);
+		resDTO = codificationSO.searchColorObj(reqDTO);
+
+		return resDTO.getColorList().get(0);
+
+	}
+	
+	public CmBrand searchBrandObjByBrandId(Long brandId){
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+		ISearchBean<CmBrand> searchBeanBrand = new SearchBean<CmBrand>();
+		brandFilterBean.setSearchField("brandId");
+		brandFilterBean.setSearchValue(brandId);
+		searchBeanBrand.getDataFilterBeans().add(brandFilterBean);
+
+		reqDTO.setBrandSearchBean(searchBeanBrand);
+
+		resDTO = codificationSO.searchBrandObj(reqDTO);
+		
+		return resDTO.getBrandList().get(0);
+		
+		
+	}
+	
+	
+	public CmMeasurement searchMeasurementByMeasurementId(Long measurementId){
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+		
+		ISearchBean<CmMeasurement> searchBeanMeasurement = new SearchBean<CmMeasurement>();
+		measurementFilterBean.setSearchField("measurementId");
+		measurementFilterBean.setSearchValue(measurementId);
+		searchBeanMeasurement.getDataFilterBeans().add(measurementFilterBean);
+
+		reqDTO.setMeasurementSearchBean(searchBeanMeasurement);
+
+		resDTO = codificationSO.searchMeasurementObj(reqDTO);
+		
+		return resDTO.getMeasurementList().get(0);
+		
 	}
 
 
