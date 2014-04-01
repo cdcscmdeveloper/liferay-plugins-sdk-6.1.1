@@ -10,9 +10,7 @@
 	<p:accordionPanel id="accordpnllist"
 		value="#{qTScheduleDetailBackingBean.managedBean.briefingZoneBean}"
 		var="zonePnlList" >
-		<p:ajax event="tabChange"
-			listener="#{qTScheduleDetailBackingBean.bsvZoneTabChange}"
-			process="@this" />
+		
 		<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
 
 			<!-- Briefing Details -->
