@@ -9,18 +9,21 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:panel header="#{lbl['lbl.so.searchqtn']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.so.searchqtn']}" toggleable="true"
+			id="qtsearchid">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 				columns="4"
 				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
 				<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
 				<p:inputText id="qtnno"
-					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}" />
+					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}"
+					size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
 				<p:selectOneMenu
-					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}">
+					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
+					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
 				</p:selectOneMenu>
@@ -28,45 +31,50 @@
 				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
-					id="crdateFrm" showOn="button" />
+					id="crdateFrm" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.creatdtto']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toCreatedDate}"
-					id="crdateTo" showOn="button" />
+					id="crdateTo" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromPublishDate}"
-					id="pbdateFrom" showOn="button" />
+					id="pbdateFrom" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.pbldtto']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toPublishDate}"
-					id="pbdateTo" showOn="button" />
+					id="pbdateTo" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromClosingDate}"
-					id="cldateFrom" showOn="button" />
+					id="cldateFrom" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.clsdtto']}" />
 				<p:calendar
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toClosingDate}"
-					id="cldateTo" showOn="button" />
+					id="cldateTo" showOn="button" size="29" />
 
 				<h:outputLabel value="#{lbl['lbl.so.status']}" />
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
-					style="margin-top:5px;">
+					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 				</p:selectOneMenu>
 			</h:panelGrid>
 
+			<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+				action="#{qTDetailBB.reset}" update="qtsearchid"
+				icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+				process="@this" />
+
 			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 				style="float:right;" action="#{qTDetailBB.searchQTAction}"
-				update="searchQTs" icon="ui-icon-search" />
+				update="searchQTs" icon="ui-icon-search" process="@this, qtsearchid"/>
 			<br />
 			<br />
 		</p:panel>
@@ -81,7 +89,7 @@
 
 					<p:column headerText="#{lbl['lbl.so.qtnno']}" style="width:100px;">
 						<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
-							style="margin-right:20px;">
+							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<h:outputText value="#{scQt.qtNo}" />
 						</p:commandLink>
 					</p:column>
@@ -121,9 +129,30 @@
 
 			<br />
 
-			<p:commandButton value="#{lbl['lbl.so.qtmscreen']}"
-				style="float:right;" action="#{qTDetailBB.newAction}"
-				icon="ui-icon-add" />
+			<div align="right">
+				<table style="width: 50%">
+					<tr>
+						<td style="width: 220px; margin-top: 9px;"><h:outputLabel
+								value="Select PTJ" /></td>
+						<td style="width: 190px;"><p:selectOneMenu
+								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
+								style="width: 170px;">
+								<f:selectItem itemLabel="Select One" itemValue="null" />
+								<f:selectItems
+									value="#{qTDetailBB.managedBean.userDivisionList}"
+									var="pmOrgProfile"
+									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+									itemValue="#{pmOrgProfile.orgProfileId}" />
+								<p:ajax event="change"
+									listener="#{qTDetailBB.handlePTJNameChanged(qTDetailBB.managedBean.qt.pmOrgProfile)}" />
+							</p:selectOneMenu></td>
+						<td style="width: 200px;"><p:commandButton
+								value="#{lbl['lbl.so.qtmscreen']}"
+								action="#{qTDetailBB.newAction}" icon="ui-icon-add"
+								rendered="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId != 'null'}" /></td>
+					</tr>
+				</table>
+			</div>
 			<br />
 			<br />
 		</p:panel>
