@@ -750,6 +750,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 for(int i=0; i<selectedPmOrgProfile.length; i++){
 			 PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
 			 CtAgency ctAgency = new CtAgency();
+			 ctAgency.setEffDate(pmOrgProfile.getPmOrgValidity().getEffDate());
+			 ctAgency.setExpDate(pmOrgProfile.getPmOrgValidity().getExpDate());
 			 ctAgency.setOrgProfile(pmOrgProfile);
 			 this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
 		  }selectedPmOrgProfile = null;
