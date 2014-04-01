@@ -693,7 +693,7 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			status = pmStatus.getPmStatus();
-			scQt.setPmStatus(status);
+			//scQt.setPmStatus(status);
 		} catch (Exception e) {
 
 		} finally {
@@ -941,32 +941,33 @@ public class QTDetailBackingBean extends
 				
 				if (scQt.isZonal()) {
 					getManagedBean().setZones(resDTO.getZonesList());
-					
-					getManagedBean().setSelectedZone(resDTO.getZonesList().get(0));
 					List<ScQtBriefing> briefings =null;
 					List<ScQtBriefing> siteVisit=null;
-					if (scQt.isSameBsv()) {
-						 briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-								scQt.getQtId(), resDTO.getZonesList().get(0)
-										.getSpecZoneId(), scQt.getAttendenceType());
-						//getManagedBean().setBriefings(briefings);
-					} else {
-						 briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-								scQt.getQtId(), resDTO.getZonesList().get(0)
-										.getSpecZoneId(), "B");
-						
-						 siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-								scQt.getQtId(), resDTO.getZonesList().get(0)
-										.getSpecZoneId(), "S");
-						
-					}
 					
-					for (TplSpecZoneDtl tplSpecZoneDtl : getManagedBean().getZones()) {
+             for (TplSpecZoneDtl tplSpecZoneDtl : getManagedBean().getZones()) {
+            	 if (scQt.isSameBsv()) {
+					 briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+							scQt.getQtId(), tplSpecZoneDtl
+									.getSpecZoneId(), scQt.getAttendenceType());
+					
+				} else {
+					 briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+							scQt.getQtId(), tplSpecZoneDtl
+									.getSpecZoneId(), "B");
+					
+					 siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+							scQt.getQtId(), tplSpecZoneDtl
+									.getSpecZoneId(), "S");
+					
+				}				
 						BriefingZoneBean bean = new BriefingZoneBean(tplSpecZoneDtl, briefings,siteVisit);
 						getManagedBean().getBriefingZoneBean().add(bean);
 					}
-					getManagedBean().setBriefings(briefings);
-					getManagedBean().setSiteBriefings(siteVisit);
+					getManagedBean().setSelectedZone(resDTO.getZonesList().get(0));
+										
+					
+				//	getManagedBean().setBriefings(briefings);
+				//	getManagedBean().setSiteBriefings(siteVisit);
 					
 				} else {
 					// Briefing Details Listing
