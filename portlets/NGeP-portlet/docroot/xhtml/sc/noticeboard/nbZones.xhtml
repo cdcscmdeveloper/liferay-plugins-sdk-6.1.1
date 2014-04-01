@@ -9,7 +9,7 @@
 
 
 	<p:tabView var="zones" dynamic="true" cache="true" orientation="left"
-		value="#{noticeBoardBackingBean.managedBean.zoneList}">
+		value="#{noticeBoardBackingBean.managedBean.zones}">
 		<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.zoneTabChange}" />
 		<p:tab title="#{zones.zoneName}">
 

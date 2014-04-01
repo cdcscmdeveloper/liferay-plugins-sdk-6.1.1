@@ -7,31 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Check Supplier Qualification">
-		<h:panelGrid columns="2">
-		<h:outputLabel value="MOF No"></h:outputLabel>
-		<ac:lov id="mofNumber" lovId="SM_MOFNO"
-						headerText="Mof Number"
-						saveObject="noticeBoardBackingBean.managedBean.smSupplier"					
-						value="#{noticeBoardBackingBean.managedBean.mofAccount.mofNo}"
-						>
-					</ac:lov> <ac:lovPopup />
-		</h:panelGrid>
-		<h:panelGrid columnClasses="2">
-		<p:commandButton value="Check" style="float:left;"
-			icon="ui-icon-search"
-			action="#{noticeBoardBackingBean.searchNoticeBoard}"
-			update="supplierQulification">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="MOF No"></h:outputLabel>
+			<p:inputText value="#{noticeBoardBackingBean.mofNo}"></p:inputText>
+
+			<p:commandButton value="Check" icon="ui-icon-Tick"
+				action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
+				update="supplierQulification">
 
 
-		</p:commandButton>
+			</p:commandButton>
 		</h:panelGrid>
 	</p:panel>
 
-	<p:panel  header="Qualification Status">
+	<p:panel header="Supplier Qualification Status">
 
-		<p:dataTable id="supplierQulification"
-				var="scqt" styleClass="test" rows="20">
-				
+		<p:dataTable id="supplierQulification" var="scqt" styleClass="test"
+			rows="20">
+
 			<p:column headerText="Criteria">
 				<h:outputText value="Test" />
 			</p:column>
@@ -42,32 +35,12 @@
 			<p:column headerText="Qualification Status" style="width:120px;">
 				<h:outputText value="123-234-4567" />
 			</p:column>
-			
+
 		</p:dataTable>
 
 	</p:panel>
-	
-	<p:panel header="Locality" >
-
-		<p:dataTable 
-				var="scqt" styleClass="test" rows="20">
-				
 
 
-			<p:column headerText="State">
-				<h:outputText value="Test" />
-			</p:column>
-			<p:column headerText="District" style="width:100px;">
-				<h:outputText value="011-525-45689" />
-			</p:column>
 
-			<p:column headerText="Qualification Status" style="width:120px;">
-				<h:outputText value="123-234-4567" />
-			</p:column>
-			
-		</p:dataTable>
 
-	</p:panel>
-	
-	
-	</ui:composition>
+</ui:composition>

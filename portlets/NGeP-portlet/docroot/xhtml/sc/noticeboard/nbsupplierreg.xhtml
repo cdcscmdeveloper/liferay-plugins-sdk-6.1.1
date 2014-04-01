@@ -17,12 +17,12 @@
 					</p:column>
 				</p:row>
 			</p:panelGrid>
-			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.multiLocality}">
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 			</c:if>
 			
-			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.multiLocality}">
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="/xhtml/sc/noticeboard/nbsupplierregbyzone.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 			</c:if>
