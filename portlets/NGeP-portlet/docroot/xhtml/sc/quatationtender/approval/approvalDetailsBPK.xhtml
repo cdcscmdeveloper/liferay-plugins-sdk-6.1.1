@@ -13,33 +13,17 @@
 			</p:column>
 			<p:column headerText="To">
 			</p:column>
-			<p:column headerText="Decision By Approver">
+			<p:column headerText="Approved By">
+			</p:column>
+			<p:column headerText="Status">
+			</p:column>
+			<p:column headerText="Date">
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-
-	<p:panel header="Approval Details" toggleable="true">
-		<table>
-			<tr>
-				<td style="width: 140px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.appname']}" /></td>
-				<td><p:selectOneMenu
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverId}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItem itemLabel="ROSLAN" itemValue="1" />
-						<f:selectItem itemLabel="KHAIR" itemValue="2" />
-					</p:selectOneMenu></td>
-				<td style="width: 206px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.appdate']}" /></td>
-				<td><p:calendar
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverActionDate}"
-						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
-			</tr>
-		</table>
-	</p:panel>
-
-	<p:panel header="Remark" toggleable="true" id="uploadids">
+	<p:spacer height="5" />
+	
+	<p:panel header="Remark" toggleable="true" id="uploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -74,7 +58,7 @@
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="uploadids" value="Attach Files">
+									icon="iconAttachment" update="uploads" value="Attach Files">
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -114,5 +98,18 @@
 		</table>
 	</p:panel>
 
-	<!-- <ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" /> -->
+	<p:dialog id="attachedDlgids" widgetVar="attachDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			mode="advanced" id="dialogsuploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="uploads" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
 </ui:composition>

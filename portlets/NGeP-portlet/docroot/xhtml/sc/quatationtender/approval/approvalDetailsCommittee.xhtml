@@ -11,7 +11,7 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Approval Details Section" toggleable="true">
+	<p:panel header="  Committee Approver Setting" toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="committeeapproverid"
@@ -25,7 +25,7 @@
 		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true">
+	<p:panel header="Remark" toggleable="true" id="uploadsids">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -51,6 +51,50 @@
 							</tr>
 						</table>
 					</p:dataGrid></td>
+				<td class="TableFieldLeft"><p:outputLabel
+						value="Supporting Document" /></td>
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									oncomplete="attachDlg.show();return false;"
+									icon="iconAttachment" update="uploadsids" value="Attach Files">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="attachIds"
+									value="#{approvalBackingBean.managedBean.attachments}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText value="#{attachFile.user.userName}" />,
+												<h:outputText value="#{attachFile.changedDate}">
+													<f:convertDateTime
+														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" /> <p:commandLink
+													action="#{approvalBackingBean.deleteUploadFile}"
+													immediate="true" update="attachIds">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+
+					</table>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
@@ -68,4 +112,19 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+
+	<p:dialog id="attachDlgids" widgetVar="attachDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			mode="advanced" id="dialoguploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="uploadsids" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
 </ui:composition>
