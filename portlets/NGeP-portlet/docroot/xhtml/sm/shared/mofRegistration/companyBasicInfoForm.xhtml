@@ -56,8 +56,7 @@
 							value="#{backingBean.managedBean.smAppl.applNo}" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="* #{lbl['lbl.sm.regtype']}" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:inputText disabled="true" readonly="true"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							size="35" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
@@ -77,8 +76,7 @@
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.incomeTaxNo}"
 							disabled="true" readonly="true" size="35" /></td>
-					<td><p:outputLabel
-							value="* #{lbl['lbl.sm.estdate']}" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.estdate']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
 							readonly="true" size="35">
@@ -87,21 +85,28 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-					<td><p:inputText size="35" colspan="3" /></td>
+					<td><p:inputText size="35" colspan="3"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText size="35" colspan="3" /></td>
+					<td><p:inputText size="35" colspan="3"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText size="35" colspan="3" /></td>
+					<td><p:inputText size="35" colspan="3"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<!-- <f:selectItem itemLabel="Select " itemValue="" /> -->
-							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="basicCountry"
+								value="#{backingBean.managedBean.countryLs}"
+								itemValue="#{basicCountry.countryId}"
+								itemLabel="#{basicCountry.countryName}" />
 						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
@@ -109,52 +114,59 @@
 				<tr>
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="" />
-							<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-							<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-								itemValue="KL" />
-							<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="basicState"
+								value="#{backingBean.managedBean.basicCompanyStates}"
+								itemValue="#{basicState.stateId}"
+								itemLabel="#{basicState.stateName}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="" />
-							<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-							<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-							<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="dist"
+								value="#{backingBean.managedBean.basicCompanyDistricts}"
+								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						</p:selectOneMenu></td>
 
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="" />
-							<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-							<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-							<f:selectItem itemLabel="NILAI" itemValue="PG" />
-							<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="city"
+								value="#{backingBean.managedBean.basicCompanyCities}"
+								itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText size="35" /></td>
+					<td><p:inputText size="35"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-					<td><p:inputText size="35" /></td>
+					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText size="35"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" /></td>
 					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText size="35" /></td>
+					<td><p:inputText size="35"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.website']}" /></td>
 					<td colspan="3">http://<p:inputText size="30"
-							value="www.StarMarketing.com" /> <!-- #{backingBean.managedBean.smSupplier.webSite} --></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.website}" />
+						<!-- #{backingBean.managedBean.smSupplier.webSite} --></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* #{lbl['lbl.sm.annualRev']}" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItem itemLabel="Kuarang Daripada RM 100,000"
-								itemValue="1" />
+								itemValue="0" />
 							<f:selectItem itemLabel="Kuarang Daripada RM 500,000"
 								itemValue="2" />
 							<f:selectItem itemLabel="Kuarang Daripada RM 1,000,000"

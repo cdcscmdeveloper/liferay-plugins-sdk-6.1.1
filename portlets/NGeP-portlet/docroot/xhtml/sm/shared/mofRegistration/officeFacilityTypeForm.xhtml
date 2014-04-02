@@ -48,7 +48,7 @@
 				<tr>
 					<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
 					<td colspan="3" style="padding-bottom: 2px;"><p:selectOneRadio
-							value="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType}">
+							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}">
 							<f:selectItem itemLabel="Own" itemValue="O" />
 							<f:selectItem itemLabel="Rent" itemValue="R" />
 							<p:ajax update="ofp" event="change"
@@ -58,12 +58,12 @@
 				</tr>
 			</table>
 			<ui:fragment
-				rendered="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType eq 'R'}">
+				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 				<table style="width: 100%">
 					<tr>
 						<td width="127px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].facilityType}">
+								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 
@@ -73,60 +73,79 @@
 					<tr>
 						<td><p:outputLabel value="* Landlord's Name" /></td>
 						<td><p:inputText
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].ownerName}"
+								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" /></td>
 						<td><p:outputLabel value="* Monthly Rental (RM.)" /></td>
 						<td><p:inputText
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].rentalRate}"
+								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 								size="35" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
 						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address1}" /></td>
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" /></td>
 					</tr>
 					<tr>
 						<td></td>
 						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address2}" /></td>
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
 					</tr>
 					<tr>
 						<td></td>
 						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address3}" /></td>
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}">
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItems var="basicCountry"
+									value="#{backingBean.managedBean.countryLs}"
+									itemValue="#{basicCountry.countryId}"
+									itemLabel="#{basicCountry.countryName}" />
+							</p:selectOneMenu></td>
+
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select One --" itemValue="" />
-								<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}">
+								<f:selectItem itemLabel="
+								-- Select One --"
+									itemValue="0" />
+								<f:selectItem itemLabel="SELANGOR" itemValue="1" />
 								<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-									itemValue="KL" />
-								<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+									itemValue="2" />
+								<f:selectItem itemLabel="PULAU PINANG" itemValue="3" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select One --" itemValue="" />
-								<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-								<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-								<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
+								<f:selectItem itemLabel="
+								-- Select One --"
+									itemValue="0" />
+								<f:selectItem itemLabel="NABAWAN" itemValue="1" />
+								<f:selectItem itemLabel="PADANG TERAP" itemValue="2" />
+								<f:selectItem itemLabel="PAKAN" itemValue="3" />
 							</p:selectOneMenu></td>
 
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select One --" itemValue="" />
-								<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-								<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-								<f:selectItem itemLabel="NILAI" itemValue="PG" />
-								<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
+								<f:selectItem itemLabel="
+								-- Select One --"
+									itemValue="0" />
+								<f:selectItem itemLabel="CYBERJAYA" itemValue="1" />
+								<f:selectItem itemLabel="SEPANG" itemValue="2" />
+								<f:selectItem itemLabel="NILAI" itemValue="3" />
+								<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="4" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:inputText size="35"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.postcode}" /></td>
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>
 					</tr>
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
@@ -166,20 +185,20 @@
 					<tr>
 						<td width="127px;"><p:outputLabel value="* Owner Name" /></td>
 						<td colspan="3"><p:inputText
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].ownerName}"
+								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" /></td>
 					</tr>
 					<tr>
 						<td width="127px;"><p:outputLabel value="* Purchase Date" /></td>
 						<td colspan="3"><p:calendar showOn="button"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].purchaseDate}"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 								style="margin-bottom:5px;" /></td>
 					</tr>
 					<tr>
 						<td width="127px;"><p:outputLabel
 								value="* Purchase Price (RM.)" /></td>
 						<td colspan="3"><p:inputText size="35"
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].purchasePrice}" />
+								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" />
 						</td>
 
 					</tr>

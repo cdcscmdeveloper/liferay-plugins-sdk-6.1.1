@@ -13,45 +13,42 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:panel header="#{lbl['lbl.sm.mofReg.headerLbl']}">
-				<table style="width: 100%">
-					<tr>
-						<td><p:outputPanel>
-								<p>
-									<h:outputText value="#{lbl['lbl.sm.mofReg.descData']}"
-										escape="false" />
-								</p>
-								<p:separator />
-								<p>Note : Before proceed please select the Supplier Type</p>
-								<br />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputPanel>
+							<p>
+								<h:outputText value="#{lbl['lbl.sm.mofReg.descData']}"
+									escape="false" />
+							</p>
+							<br />
 
-								<table style="width: 23%">
-									<tr>
-										<td><p:outputLabel
-												value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
-										<td><p:selectOneMenu
-												value="#{backingBean.managedBean.newSupplierType}">
-												<f:selectItem itemLabel="Contractor " itemValue="1" />
-												<f:selectItem itemLabel="Consultant" itemValue="2" />
-											</p:selectOneMenu></td>
-									</tr>
-								</table>
-							</p:outputPanel></td>
+							<p>Note : Before proceed please select the Supplier Type</p>
+							<table style="width: 23%">
+								<tr>
+									<td><p:outputLabel
+											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
+									<td><p:selectOneMenu
+											value="#{backingBean.managedBean.newSupplierType}">
+											<f:selectItem itemLabel="Contractor " itemValue="1" />
+											<f:selectItem itemLabel="Consultant" itemValue="2" />
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</p:outputPanel></td>
 
-					</tr>
-				</table>
-				<table>
-					<tr>
+				</tr>
+			</table>
+			<table>
+				<tr>
 
-						<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
-								value="#{backingBean.managedBean.termsAccepted}">
-								<p:ajax event="change" update=":form:basCmdBtn" />
-							</p:selectBooleanCheckbox></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-					</tr>
+					<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:basCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
 
-				</table>
-			</p:panel>
+			</table>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
 					action="#{backingBean.proceedToApplication('N')}"

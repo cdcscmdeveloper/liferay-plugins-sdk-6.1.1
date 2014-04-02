@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
+
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
 	<ui:include src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" />
@@ -27,7 +27,7 @@
 				<div align="right" style="width: 99%" class="button-wrapper">
 					<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
 						iconPos="right" actionListener="#{backingBean.setTabValue(0,1)}"
-						action="#{backingBean.updateSmAppl}" update=":form" />
+						action="#{backingBean.updateSmAppl('N','1')}" update=":form" />
 				</div>
 			</td>
 		</tr>

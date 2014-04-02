@@ -47,7 +47,7 @@
 			<p:dataTable var="certBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 				selection="#{backingBean.managedBean.selectedCertList}"
-				rowKey="#{certBean.supplierCertId}" rowIndexVar="index" id="certDt">
+				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
 				<ac:paginator for="certDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
@@ -134,11 +134,13 @@
 
 			<tr>
 				<td><p:outputLabel value="Certificate Body *" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
-						<f:selectItem itemLabel="Cert Body1" itemValue="M" />
-						<f:selectItem itemLabel="Cert Body2" itemValue="B" />
-						<f:selectItem itemLabel="Cert Body3" itemValue="T" />
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+						<f:selectItems var="certBody"
+							value="#{backingBean.managedBean.certBodyLs}"
+							itemValue="#{certBody.certBodyId}"
+							itemLabel="#{certBody.bodyName}" />
 					</p:selectOneMenu></td>
 			</tr>
 
