@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel header="ORDER SUMMARY" toggleable="true">
+		<p:dataTable id="delAddressSummary" var="delAddressSummary"
+			styleClass="orderSummaryChange hide-column-names"
+			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			<p:column style="width:2%">
+				<p:rowToggler />
+			</p:column>
+			<p:column headerText="Delivery Address">
+				<h:outputText rendered="#{delAddressSummary.addressType != null}"
+					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}, #{delAddressSummary.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
+					value="#{delAddressSummary.pmAddress.address1}, #{delAddressSummary.pmAddress.address2}, #{delAddressSummary.pmAddress.address3}, #{delAddressSummary.pmAddress.address4}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="Delivery Term" />
+				<p:spacer width="10" />
+				<p:inputText size="5" disabled="true" />
+				<p:spacer width="5" />
+				<h:inputText size="5" disabled="true" value="Days" />
+			</p:column>
+			<p:column>
+				<h:outputText value="Delivery Start" />
+				<p:spacer width="7" />
+				<p:inputText size="13" value="10/02/2014" disabled="true" />
+			</p:column>
+			<p:column>
+				<h:outputText value="Delivery End" />
+				<p:spacer width="10" />
+				<p:inputText size="13" value="22/02/2014" disabled="true" />
+			</p:column>
+			<p:rowExpansion>
+			
+				<p:dataTable id="newItems" var="newItems"
+					styleClass="show-column-names"
+					value="#{delAddressSummary.flFulfilmentItemAddr}">
+					<p:column headerText="Item Type">
+						<h:outputText
+							value="#{newItems.scRequestItem.itemType}" />
+					</p:column>
+					<p:column headerText="Item Code">
+						<h:outputText />
+					</p:column>
+					<p:column headerText="Item Name">
+						<h:outputText
+							value="#{newItems.scRequestItem.itemName}" />
+					</p:column>
+					<p:column headerText="UOM">
+						<h:outputText />
+					</p:column>
+					<p:column headerText="Unit Price (RM)">
+						<h:outputText value="#{newItems.unitPrice}"
+							style="text-align:right">
+							<f:convertNumber pattern="#,#00.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Ordered Qty.">
+						<h:outputText value="#{newItems.orderedQty}" />
+					</p:column>
+					<p:column headerText="Ordered Amt.(RM)">
+						<h:outputText value="#{newItems.orderedAmt}" />
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

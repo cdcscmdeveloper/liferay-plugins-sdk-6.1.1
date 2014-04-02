@@ -15,16 +15,17 @@
 		<f:event listener="#{purchaseRequestBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error, info" />
+			closable="true" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+				<td><p:commandButton value="Back" immediate="true"
+						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
-
 						<p:commandButton value="#{bpmAction}" ajax='false'
-							styleClass="ui-button" icon="#{iconVar}"
+							styleClass="ui-button"
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
@@ -50,24 +51,30 @@
 			</tr>
 		</table>
 		<ui:include src="prReviewHeaderPage.xhtml" />
-		<p:spacer height="20px"/>
+		<p:spacer height="20px" />
 		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="true">
 			<p:tab id="tab1" title="General">
 				<ui:include src="prGeneral.xhtml" />
 			</p:tab>
-			<p:tab id="tab2" title="Item and Remarks">
+			<p:tab id="tab2" title="Delivery Address and Item " >
 				<ui:include src="prItem.xhtml" />
 			</p:tab>
-			<p:tab id="tab3" title="Approval Setting"
+			<p:tab id="tab3" title="Order Summary">
+				<ui:include src="prordersummary.xhtml" />
+			</p:tab>
+			<p:tab id="tab4" title="Charge Line">
+				<ui:include src="chargeline.xhtml" />
+			</p:tab>
+			<p:tab id="tab5" title="Approval Setting"
 				rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}">
 				<p:panel id="settingId" header="Approver Setting" toggleable="true"
 					toggleSpeed="500">
 					<h:panelGrid columns="1">
 						<h:panelGrid columns="2">
-							<h:outputLabel value="Approver Group" />
+							<h:outputLabel value="Approver Group" style="text-align: top" />
 							<p:selectOneMenu
 								value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}"
-								style="width:80px; margin-bottom:5px;">
+								style="width:350px; margin-bottom:5px;">
 								<p:ajax event="change"
 									listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"
 									process="@this" update="approverpickList" />

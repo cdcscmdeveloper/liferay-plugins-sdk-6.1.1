@@ -4,9 +4,11 @@
 package my.ep.web.managedbean.fl.pr;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -27,15 +29,23 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
+import com.octetstring.vde.EntrySet;
 
 /**
  * Managed Bean for Create Purchase Order
@@ -58,6 +68,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//private List<FlFulfilmentItem> selectedItemsRows;
 	//private List<FlDeliveryAddress> selectedAddressRows;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
+	private List <FlFulfilmentItemAddr>  showAllItemsRows;
 	
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
@@ -73,7 +84,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	//private List<PmAddressType> selectedPmAddrTypeList;FFFF
 	private List<PmOrgAddress> selectedAddrTypeList;
-	private List<PmMaksud> maksudCodeList;
 	private List<ScRequestNote> requestNoteList;
 	private boolean checkPtjFlg = true;
 	private ScRequestNote selectedRequestNote;
@@ -135,6 +145,125 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmCity pmCity ;
 	private FlDeliveryAddress flManulaAddress;
 	
+	private String chargeCheck ="false";
+	
+	// for Manual Address
+	private List<PmCountry> countryList;
+	private List<PmState> stateList;
+	private List<PmDivision> divisionList;
+	private List<PmCity> cityList;
+	private List<PmDistrict> districtList;
+	
+	//chargeline
+	private TreeNode chargeLineItemRoot ;
+	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
+	//private  List<TreeNode> selectedNodes;
+	private TreeNode[] selectedNodes;
+	private FlFulfilmentItemAddr selectedItemChargeSection;
+	//private Long pmPrjSetia;
+	
+	
+/**
+	 * @return the chargeLineItemRoot
+	 */
+	public TreeNode getChargeLineItemRoot() {
+		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
+		prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
+		return chargeLineItemRoot;
+	}
+
+	/**
+	 * @param chargeLineItemRoot the chargeLineItemRoot to set
+	 */
+	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
+		this.chargeLineItemRoot = chargeLineItemRoot;
+	}
+
+	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
+			if(null !=this.getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlDeliveryAddress  deliveryAddress :this.getFulfilmentRequest().getFlDeliveryAddresses()){
+					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
+						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
+							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
+							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+							
+							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
+								//code for calculating duplicate charge line order amount and quantity for same unit price 
+								//Condition for checking unit price same.
+								boolean notContained=true;
+								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
+									if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
+										//BigDecimal chargeOrderedAmt=containedItem.getChargeOrderedAmt();
+										containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
+										containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
+										notContained=false;
+									}
+								}
+								if(notContained){
+									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
+								}
+								
+							} else {
+								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
+								itemAddressList.add(itemAddress);
+								//Copy order amount ,qty to charge line fields and set.
+								chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
+							}
+						}
+					}
+				}
+			}
+			return chargeLineItemsMap;
+		}
+	
+	
+	private void prepareChargeLineTreeNode(
+			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
+		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
+			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
+			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
+			if(null!=flItemAddress){
+				//Do create New Item Address and copy the first element data manually.
+				
+				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
+				BigDecimal totalOrderAmt=new BigDecimal(0);
+				for(FlFulfilmentItemAddr itemAddr:itemAddress){
+					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
+					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
+				}
+				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
+			}
+			
+		}
+	
+		
+	}
+	
+	private FlFulfilmentItemAddr getFulfilmentItemAddress(
+			FlFulfilmentItemAddr flFulfilmentItemAddr) {
+		FlFulfilmentItemAddr itemAddress = new FlFulfilmentItemAddr();
+		// Do Convertions
+
+		//itemAddress.setFlFulfilmentItem(new FlFulfilmentItem());
+		//itemAddress.getFlFulfilmentItem().setScRequestNoteDtl(new ScRequestNoteDtl());
+		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().setScRequestSupplierItem(new ScRequestSupplierItem());
+		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
+		itemAddress.setScRequestItem(new ScRequestItem());
+		itemAddress.setParent(true);
+		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
+		
+		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
+		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
+		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
+		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
+		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
+		
+		return itemAddress;
+	}
+
 	/**
 	 * @return the flRemark
 	 */
@@ -247,20 +376,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfillmentReqId(String fulfillmentReqId) {
 		this.fulfillmentReqId = fulfillmentReqId;
-	}
-
-	/**
-	 * @return the maksudCodeList
-	 */
-	public List<PmMaksud> getMaksudCodeList() {
-		return maksudCodeList;
-	}
-
-	/**
-	 * @param maksudCodeList the maksudCodeList to set
-	 */
-	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
-		this.maksudCodeList = maksudCodeList;
 	}
 
 	/**
@@ -968,4 +1083,148 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
 		this.flManulaAddress = flManulaAddress;
 	}
+
+	/**
+	 * @return the chargeCheck
+	 */
+	public String getChargeCheck() {
+		return chargeCheck;
+	}
+
+	/**
+	 * @param chargeCheck the chargeCheck to set
+	 */
+	public void setChargeCheck(String chargeCheck) {
+		this.chargeCheck = chargeCheck;
+	}
+
+	/**
+	 * @return the showAllItemsRows
+	 */
+	public List<FlFulfilmentItemAddr> getShowAllItemsRows() {
+		return showAllItemsRows;
+	}
+
+	/**
+	 * @param showAllItemsRows the showAllItemsRows to set
+	 */
+	public void setShowAllItemsRows(List<FlFulfilmentItemAddr> showAllItemsRows) {
+		this.showAllItemsRows = showAllItemsRows;
+	}
+
+	/**
+	 * @return the countryList
+	 */
+	public List<PmCountry> getCountryList() {
+		return countryList;
+	}
+
+	/**
+	 * @param countryList the countryList to set
+	 */
+	public void setCountryList(List<PmCountry> countryList) {
+		this.countryList = countryList;
+	}
+
+	/**
+	 * @return the stateList
+	 */
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+	/**
+	 * @param stateList the stateList to set
+	 */
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	/**
+	 * @return the cityList
+	 */
+	public List<PmCity> getCityList() {
+		return cityList;
+	}
+
+	/**
+	 * @param cityList the cityList to set
+	 */
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
+	}
+
+	/**
+	 * @return the districtList
+	 */
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	/**
+	 * @param districtList the districtList to set
+	 */
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+	/**
+	 * @return the divisionList
+	 */
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+	/**
+	 * @param divisionList the divisionList to set
+	 */
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	/**
+	 * @return the chargeLineSelectedItemAddress
+	 */
+	public FlFulfilmentItemAddr getChargeLineSelectedItemAddress() {
+		return chargeLineSelectedItemAddress;
+	}
+
+	/**
+	 * @param chargeLineSelectedItemAddress the chargeLineSelectedItemAddress to set
+	 */
+	public void setChargeLineSelectedItemAddress(
+			FlFulfilmentItemAddr chargeLineSelectedItemAddress) {
+		this.chargeLineSelectedItemAddress = chargeLineSelectedItemAddress;
+	}
+	/**
+	 * @return the selectedItemChargeSection
+	 */
+	public FlFulfilmentItemAddr getSelectedItemChargeSection() {
+		return selectedItemChargeSection;
+	}
+
+	/**
+	 * @param selectedItemChargeSection the selectedItemChargeSection to set
+	 */
+	public void setSelectedItemChargeSection(
+			FlFulfilmentItemAddr selectedItemChargeSection) {
+		this.selectedItemChargeSection = selectedItemChargeSection;
+	}
+
+	/**
+	 * @return the selectedNodes
+	 */
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+	/**
+	 * @param selectedNodes the selectedNodes to set
+	 */
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+
+	
+
 }
