@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.sm.registration;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,9 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.UploadedFile;
+
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -21,6 +23,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -68,6 +71,23 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCert> smSuppCerts;
 	private Map<String, String> serviceLs;
 
+	private List<PmBusinessNature> businessNatureL1;
+	private List<PmBusinessNature> businessNatureL2;
+	private List<PmBusinessNature> businessNatureL3;
+	private List<PmBusinessNature> businessNatureL4;
+	private List<PmBusinessNature> businessNatureL5;
+	private List<SmSupplierBusiness> suppBusinessNatureLs;
+	private SmSupplierBusiness[] selectedBusinessNatureLs;
+	private SmSupplierBusiness selectedBusinessNature;
+	private SmSupplierBusiness suppBusinessNature;
+	
+	private Long bizIdL1;
+	private Long bizIdL2;
+	private Long bizIdL3;
+	private Long bizIdL4;
+
+	private UploadedFile uploadedFile;  
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -313,6 +333,121 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setServiceLs(Map<String, String> serviceLs) {
 		this.serviceLs = serviceLs;
+	}
+
+	public UploadedFile getUploadedFile() {
+		return uploadedFile;
+	}
+
+	public void setUploadedFile(UploadedFile uploadedFile) {
+		this.uploadedFile = uploadedFile;
+	}
+
+	public List<PmBusinessNature> getBusinessNatureL1() {
+		return businessNatureL1;
+	}
+
+	public void setBusinessNatureL1(List<PmBusinessNature> businessNatureL1) {
+		this.businessNatureL1 = businessNatureL1;
+	}
+
+	public List<PmBusinessNature> getBusinessNatureL2() {
+		return businessNatureL2;
+	}
+
+	public void setBusinessNatureL2(List<PmBusinessNature> businessNatureL2) {
+		this.businessNatureL2 = businessNatureL2;
+	}
+
+	public List<PmBusinessNature> getBusinessNatureL3() {
+		return businessNatureL3;
+	}
+
+	public void setBusinessNatureL3(List<PmBusinessNature> businessNatureL3) {
+		this.businessNatureL3 = businessNatureL3;
+	}
+
+	public List<PmBusinessNature> getBusinessNatureL4() {
+		return businessNatureL4;
+	}
+
+	public void setBusinessNatureL4(List<PmBusinessNature> businessNatureL4) {
+		this.businessNatureL4 = businessNatureL4;
+	}
+
+	public List<PmBusinessNature> getBusinessNatureL5() {
+		return businessNatureL5;
+	}
+
+	public void setBusinessNatureL5(List<PmBusinessNature> businessNatureL5) {
+		this.businessNatureL5 = businessNatureL5;
+	}
+
+	public SmSupplierBusiness getSuppBusinessNature() {
+		return suppBusinessNature;
+	}
+
+	public void setSuppBusinessNature(SmSupplierBusiness suppBusinessNature) {
+		this.suppBusinessNature = suppBusinessNature;
+	}
+	
+	public List<SmSupplierBusiness> getSuppBusinessNatureLs() {
+		return suppBusinessNatureLs;
+	}
+
+	public void setSuppBusinessNatureLs(
+			List<SmSupplierBusiness> suppBusinessNatureLs) {
+		this.suppBusinessNatureLs = suppBusinessNatureLs;
+	}
+
+
+	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
+		return selectedBusinessNatureLs;
+	}
+
+	public void setSelectedBusinessNatureLs(
+			SmSupplierBusiness[] selectedBusinessNatureLs) {
+		this.selectedBusinessNatureLs = selectedBusinessNatureLs;
+	}
+
+	public SmSupplierBusiness getSelectedBusinessNature() {
+		return selectedBusinessNature;
+	}
+
+	public void setSelectedBusinessNature(SmSupplierBusiness selectedBusinessNature) {
+		this.selectedBusinessNature = selectedBusinessNature;
+	}
+
+	public Long getBizIdL1() {
+		return bizIdL1;
+	}
+
+	public void setBizIdL1(Long bizIdL1) {
+		this.bizIdL1 = bizIdL1;
+	}
+
+	public Long getBizIdL2() {
+		return bizIdL2;
+	}
+
+	public void setBizIdL2(Long bizIdL2) {
+		this.bizIdL2 = bizIdL2;
+	}
+
+	public Long getBizIdL3() {
+		return bizIdL3;
+	}
+
+	public void setBizIdL3(Long bizIdL3) {
+		this.bizIdL3 = bizIdL3;
+	}
+
+	public Long getBizIdL4() {
+		return bizIdL4;
+	}
+
+	public void setBizIdL4(Long bizIdL4) {
+		this.bizIdL4 = bizIdL4;
 	}
 
 }

@@ -16,8 +16,7 @@
 						<p:ajax event="change" update="pnlContactInfo"
 							listener="#{registrationBackingBean.checkSameAddress}" />
 						<!-- 							process="@this,txtPermAdd1,txtPermAdd2,txtPermAdd3,txtPermAdd4,txtPermPostcode,cmbPermState,cmbPermDistrict,cmbPermCity" /> -->
-					</p:selectBooleanCheckbox>
-					<h:outputText value="Same as abv."></h:outputText></td>
+					</p:selectBooleanCheckbox> <h:outputText value="Same as abv."></h:outputText></td>
 				<!-- 					Same as Permenant Address -->
 			</tr>
 
@@ -85,9 +84,12 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
+						<p:ajax event="change"
+							listener="#{registrationBackingBean.populateCityByAddType('residential')}"
+							update="cmbResCity" />
 					</p:selectOneMenu></td>
-					
-					
+
+
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.towncity']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResCity"

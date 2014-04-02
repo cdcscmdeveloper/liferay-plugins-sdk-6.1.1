@@ -14,7 +14,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
-							<f:selectItem itemLabel="Basic Account" itemValue="O" />
+							<f:selectItem itemLabel="Basic Account" itemValue="B" />
 							<f:selectItem itemLabel="MOF Registeration" itemValue="M" />
 							<p:ajax event="change" update="agreementId" />
 						</p:selectOneRadio></td>
@@ -27,38 +27,45 @@
 				<c:choose>
 					<c:when
 						test="${registrationBackingBean.managedBean.applType == 'M'}">
-						<b>MOF Account</b><br/>
+						<b>MOF Account</b>
+						<br />
 						<p>Lorem ipsum dolor sit amet, ea sit tation exerci soluta. Ut
 							sit facete quaestio consetetur. Vide justo te eum, id sea posse
 							prodesset adversarium. Id mei error graece. Choro dicant
-							persecuti ut pri.</p><br />
+							persecuti ut pri.</p>
+						<br />
 
 						<p>Ne scripta eleifend sed. Salutatus efficiantur qui ex. In
 							quo facete minimum. Quo in semper atomorum salutandi, ea albucius
-							inciderint per, eam cu doming feugiat euripidis.</p><br />
+							inciderint per, eam cu doming feugiat euripidis.</p>
+						<br />
 
 						<p>Elit scaevola officiis cu cum, eam no liber quaestio
 							complectitur. Novum iusto pri te, malis diceret pertinacia eam
 							et. Reque facilis cum in, nec et rebum maluisset. Movet simul est
 							cu, mundi verear adipisci id nam, falli minimum reprimique vis
-							te.</p><br />
+							te.</p>
+						<br />
 
 						<p>Eu congue tamquam discere pro, tation platonem vix id. An
 							nam tantas option definitiones, in vidit dicam graece pro.
 							Menandri qualisque ex mel, pro ei recteque scribentur. Deleniti
 							indoctum incorrupte qui te, ridens volumus delicatissimi ad quo.
-							Vero nostrud interesset ut per, ut ferri equidem delenit eam.</p><br />
+							Vero nostrud interesset ut per, ut ferri equidem delenit eam.</p>
+						<br />
 
 						<p>Ea sea inermis accusata, nonumy phaedrum cu eum. Ei
 							recteque patrioque qui. Ea duo mutat periculis, pro autem dicta
 							ne. Vix ex mazim constituto conclusionemque, tota tantas at has.
 							Eum ut saepe possim honestatis, vis altera suscipit ut. Cu sit
 							unum wisi vidit, scaevola posidonium in mei, id qui autem numquam
-							voluptua. Ei facete delenit facilis mea, doming eruditi eum cu.</p><br />
+							voluptua. Ei facete delenit facilis mea, doming eruditi eum cu.</p>
+						<br />
 					</c:when>
 
 					<c:otherwise>
-						<b>Basic Account</b><br />
+						<b>Basic Account</b>
+						<br />
 						<p>Lorem ipsum dolor sit amet, enim evertitur percipitur id
 							qui, altera torquatos voluptaria ex duo. Mei utinam praesent
 							dignissim at. Et graeci definiebas vel. Eros iudicabit te sea.</p>

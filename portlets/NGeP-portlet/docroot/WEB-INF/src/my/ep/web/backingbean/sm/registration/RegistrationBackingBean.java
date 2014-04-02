@@ -1,13 +1,16 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -17,6 +20,8 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
@@ -33,6 +38,7 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -47,6 +53,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
@@ -60,8 +67,7 @@ import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
-public class RegistrationBackingBean extends
-BaseBackingBean<RegistrationManagedBean> {
+public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
 
 	public static final String SUPPLIER = "SUP";
 
@@ -72,6 +78,7 @@ BaseBackingBean<RegistrationManagedBean> {
 	private static String firstUserRegistration = "firstUserRegistration";
 	private static int defaultRevNo = 1;
 	private static String defaultAccPurpose = "R";
+	private static Map<Long, Object> bizNatureL5Map;
 
 	public RegistrationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -96,8 +103,7 @@ BaseBackingBean<RegistrationManagedBean> {
 
 			this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 			this.getManagedBean().setSmAppl(new SmAppl());
-			this.getManagedBean().setSmSuppBanks(
-					new ArrayList<SmSupplierBank>());
+			this.getManagedBean().setSmSuppBanks(new ArrayList<SmSupplierBank>());
 
 			SmAppl smAppl = this.getManagedBean().getSmAppl();
 			smAppl.setSmCompanyBasic(new SmCompanyBasic());
@@ -133,23 +139,22 @@ BaseBackingBean<RegistrationManagedBean> {
 			this.getManagedBean().setSameAddress(false);
 			this.getManagedBean().setSmPersonnel(new SmPersonnel());
 			this.getManagedBean().getSmPersonnel().setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-
+			this.getManagedBean().setSuppBusinessNatureLs(new ArrayList<SmSupplierBusiness>());
+			
 			this.retrievePmCountryList();
 			this.populateStateByAddType("permenant");
 			this.populateStateByAddType("residential");
 			this.populateStateByAddType("business");
 			this.retrieveFinancialOrgList();
+			
+			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
+			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+			this.retrieveBusinessNatureL5Map();
+			this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
+			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
 
 			log.info("**********permenant"+ this.getManagedBean().getPermenantStateLs().size());
 			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
-			// this.retrievePmBusinessType("BTB");
-
-			// for(PmParameterDesc test :
-			// this.getManagedBean().getBusinessTypeLs()){
-			// log.info("-------------PmParameter------------"+test.getPmParameter().getParameterCode());
-			// log.info("-------------PmParameterDESC------------" +
-			// test.getCodeName());
-			// }
 		}
 
 		if (this.getManagedBean().getApplType().equals("B")) {
@@ -220,8 +225,7 @@ BaseBackingBean<RegistrationManagedBean> {
 		log.info("-------------------addProfessionalCert-----------"
 				+ this.getManagedBean().getSmSuppCerts());
 		if (this.getManagedBean().getSmSuppCerts() == null) {
-			this.getManagedBean().setSmSuppCerts(
-					new ArrayList<SmSupplierCert>());
+			this.getManagedBean().setSmSuppCerts(new ArrayList<SmSupplierCert>());
 			this.retrieveCertBody();
 		}
 
@@ -230,8 +234,7 @@ BaseBackingBean<RegistrationManagedBean> {
 
 	public void removeProfessionalCert() {
 		log.info("-------------------removeProfessionalCert-----------");
-		for (SmSupplierCert suppCert : this.getManagedBean()
-				.getSelectedSuppCerts()) {
+		for (SmSupplierCert suppCert : this.getManagedBean().getSelectedSuppCerts()) {
 			this.getManagedBean().getSmSuppCerts().remove(suppCert);
 			log.info("---removeSupplierCert---" + suppCert);
 			// suppBank.getPmFinancialOrg().getFinancialOrgId()
@@ -266,33 +269,47 @@ BaseBackingBean<RegistrationManagedBean> {
 		smAppl.getSmCompanyBasic().setRevNo(defaultRevNo);
 		smAppl.getSmCompanyBasic().setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
 		
-		/* add personnel to smappl */
+		/* add personnel And personnel address */
 		smPersonnel.setRevNo(defaultRevNo);
-		if(this.getManagedBean().isSameAddress()){
-			smResAdd = smPermAdd;
-		}
-		
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
 		
 		personnelAddRes.setAddressType("R");
-		personnelAddRes.setSmAddress(smResAdd);
-		personnelAddRes.setSmPersonnel(smPersonnel);
+		if(this.getManagedBean().isSameAddress()){
+			personnelAddRes.setSmAddress(smPermAdd);
+			personnelAddRes.setSmPersonnel(smPersonnel);
+		}else{
+			personnelAddRes.setSmAddress(smResAdd);
+			personnelAddRes.setSmPersonnel(smPersonnel);
+			smResAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+			smResAdd.getSmPersonnelAddresses().add(personnelAddRes);
+		}
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
-		smResAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		smResAdd.getSmPersonnelAddresses().add(personnelAddRes);
 		
 		personnelAddPerm.setAddressType("P");
 		personnelAddPerm.setSmAddress(smPermAdd);
 		personnelAddPerm.setSmPersonnel(smPersonnel);
-		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
 		smPermAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		smPermAdd.getSmPersonnelAddresses().add(personnelAddPerm);
+		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
 		
 		smPersonnel.setSmAppl(smAppl);
 		smAppl.getSmPersonnels().add(smPersonnel);	
 		
-		/* add detail to smcompanyaddress */
+		for(SmPersonnelAddress spa : smPersonnel.getSmPersonnelAddresses()){
+			log.info("****************Object**************" + spa.getSmAddress().getSmPersonnelAddresses().size());
+			log.info("***************Personnel Name**************" + spa.getSmAddress().getSmPersonnelAddresses().get(0).getSmPersonnel().getName());
+			log.info("**************SPA country code****************" + spa.getSmAddress().getPmCountry().getCountryId());
+			log.info("**************SPA district code****************" + spa.getSmAddress().getPmDistrict().getDistrictId());
+			log.info("**************SPA City code****************" + spa.getSmAddress().getPmCity().getCityId());
+			log.info("**************SPA State****************" + spa.getSmAddress().getPmState().getStateId());
+			log.info("**************SPA postcode****************" + spa.getSmAddress().getPostcode());
+			log.info("**************SPA Add Type****************" + spa.getSmAddress().getSmPersonnelAddresses().get(0).getAddressType());
+			log.info("");
+			
+		}
+		
+		/* add company address */
 		SmCompanyAddress smCompAdd = new SmCompanyAddress();
 		smCompAdd.setAddressType("C");
 		smCompAdd.setSmCompanyBasic(smAppl.getSmCompanyBasic());
@@ -306,6 +323,9 @@ BaseBackingBean<RegistrationManagedBean> {
 			smAppl.getSmSupplierBanks().add(suppBank);
 		}
 		
+		/*
+		 * Add all related objects to Parent SmSupplier
+		 */
 		smSupp.getSmAppls().add(smAppl);
 		smSupp.setPmStatus(new PmStatus());
 		smSupp.getPmStatus().setStatusId(20101L);
@@ -337,15 +357,6 @@ BaseBackingBean<RegistrationManagedBean> {
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
-		// this.getManagedBean().getSmSuppBank()
-		// .setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
-		// log.info("---------------getSmSuppBank----------------"
-		// + this.getManagedBean().getSmSuppBank().getAccountNo());
-		// log.info("---------------getSmSuppBank----------------"
-		// + this.getManagedBean().getSmSuppBank().getSupplierBankId());
-		// this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()
-		// .set(0, this.getManagedBean().getSmSuppBank());
-
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
@@ -368,8 +379,7 @@ BaseBackingBean<RegistrationManagedBean> {
 		// this.getManagedBean().getSmAppl().getSmSupplierBanks()
 		// .add(new SmSupplierBank());
 		if (this.getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
-			this.getManagedBean().getSmAppl()
-			.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+			this.getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
 		}
 		SmSupplierBank smSuppBank = new SmSupplierBank();
 		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
@@ -379,40 +389,106 @@ BaseBackingBean<RegistrationManagedBean> {
 
 	public void removeSupplierBank() {
 		// this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(this.getManagedBean().getSelectedSuppBanks());
-
 		log.info("---removeSupplierBank---");
-		for (SmSupplierBank suppBank : this.getManagedBean()
-				.getSelectedSuppBanks()) {
+		for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
 			this.getManagedBean().getSmSuppBanks().remove(suppBank);
 			log.info("---removeSupplierBank---" + suppBank);
 			// suppBank.getPmFinancialOrg().getFinancialOrgId()
 		}
 	}
-
-	public void checkSameAddress() {
-		if (this.getManagedBean().isSameAddress()) {
-			// this.getManagedBean().setSmResAdd(
-			// this.getManagedBean().getSmPermenantAdd());
-			// this.getManagedBean().setResidentialStateLs(
-			// this.getManagedBean().getPermenantStateLs());
-			// this.getManagedBean().setResidentialDistrictLs(
-			// this.getManagedBean().getPermenantDistrictLs());
-			// this.getManagedBean().setResidentialCityLs(
-			// this.getManagedBean().getPermenantCityLs());
-			// log.info("-----------is same address---------------"
-			// + this.getManagedBean().getSmPermenantAdd().getAddress1());
-		} else {
-			// log.info("-----------is diff address---------------");
-			// this.getManagedBean().getSmResAdd().setAddress1(null);
-			// this.getManagedBean().getSmResAdd().setAddress2(null);
-			// this.getManagedBean().getSmResAdd().setAddress3(null);
-			// this.getManagedBean().getSmResAdd().setAddress4(null);
-			// this.getManagedBean().getSmResAdd().setPostcode(null);
-			// this.getManagedBean().setResidentialDistrictLs(null);
-			// this.getManagedBean().setResidentialCityLs(null);
-
+	
+	public void addBusinessNature() {
+		log.info("-----------addBusinessNature--------------");
+		this.getManagedBean().setBizIdL1(new Long(0L));
+		this.getManagedBean().setBizIdL2(new Long(0L));
+		this.getManagedBean().setBizIdL3(new Long(0L));
+		this.getManagedBean().setBizIdL4(new Long(0L));
+		this.getManagedBean().setBusinessNatureL2(new ArrayList<PmBusinessNature>());
+		this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
+		this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
+		this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+		
+		this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
+		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
+		
+	}
+	
+	public void addSupplierBusinessNature(){
+		log.info("----------addSupplierBusiness Nature--------------" + bizNatureL5Map.size());
+		log.info("----------addSupplierBusiness Nature--------------" + this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+		
+		PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+		
+		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
+		this.getManagedBean().getSuppBusinessNatureLs().add(this.getManagedBean().getSuppBusinessNature());
+	}
+	
+	public void removeBusinessNature() {
+		log.info("---------------removeBusinessNature count------------" + this.getManagedBean().getSelectedBusinessNatureLs().length);
+		for (SmSupplierBusiness suppBusinessNature : this.getManagedBean().getSelectedBusinessNatureLs()) {
+			log.info("---------------removeBusinessNature.------------" + suppBusinessNature);
+			this.getManagedBean().getSuppBusinessNatureLs().remove(suppBusinessNature);
 		}
 	}
+	
+	public void editBusinessNature(){
+		log.info("-----editBusinessNature-----" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
+		log.info("********edit Parent ID*********"  + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+		
+		List<PmBusinessNature> parentObjList = retrieveBusinessNatureByLevelParent(null,this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+		//List<PmBusinessNature> parentObj = retrieveBusinessNatureByLevelParent(null,this.get);
+	}
+	
+	public void businessLvlOnChange(String bizLvl){
+		switch (bizLvl) {
+			case "20" : 
+				this.getManagedBean().setBusinessNatureL2(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1()));
+				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+			break;
+			case "30" : 
+				this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2()));
+				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+			break;
+			case "40" : 
+				this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3()));
+				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+			break;
+			
+			case "50" : 
+				this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4()));
+//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+			break;
+		}
+	}
+	
+	
+//	public void businessLvlOnChange(String bizLvl){
+//		switch (bizLvl) {
+//			case "20" : 
+//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1());
+//				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
+//				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
+//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+//			break;
+//			case "30" : 
+//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2());
+//				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
+//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+//			break;
+//			case "40" : 
+//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3());
+//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+//			break;
+//			
+//			case "50" : 
+//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4());
+////				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+//			break;
+//		}
+//	}
 
 	public void businessTypeOnChange() {
 		if (this.getManagedBean().getSmSupp().getBusinessType().equals("13")) {
@@ -507,17 +583,56 @@ BaseBackingBean<RegistrationManagedBean> {
 		log.info("*****certbody count" + resDTO.getCertBodyList().size());
 		this.getManagedBean().setProfCertBodyLs(resDTO.getCertBodyList());
 	}
+	
+//	private void retrieveBusinessNatureByLevelParent(String busLvl, long parentId){
+//		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+//		if(busLvl != "10"){
+//			reqDTO.setParentBusinessNatureId(parentId);
+//		}
+//		reqDTO.setBusinessLevel(busLvl);
+//		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+//		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureListByLevel(reqDTO);
+//
+//		switch (busLvl) {
+//			case "10" : this.getManagedBean().setBusinessNatureL1(resDTO.getBusinessNatureList());
+//			break;
+//			case "20" : this.getManagedBean().setBusinessNatureL2(resDTO.getBusinessNatureList());
+//			break;
+//			case "30" : this.getManagedBean().setBusinessNatureL3(resDTO.getBusinessNatureList());
+//			break;
+//			case "40" : this.getManagedBean().setBusinessNatureL4(resDTO.getBusinessNatureList());
+//			break;
+//			case "50" : this.getManagedBean().setBusinessNatureL5(resDTO.getBusinessNatureList());
+//			break;
+//		}
+//
+//		log.info("*********Business Nature" + busLvl +"***********" + resDTO.getBusinessNatureList().size());
+//	}
 
+	
+	private List<PmBusinessNature> retrieveBusinessNatureByLevelParent(String busLvl, long parentId){
+		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+		if(busLvl != "" || busLvl != null){
+			reqDTO.setBusinessLevel(busLvl);
+		}
+		
+		if(busLvl != "10"){
+			reqDTO.setParentBusinessNatureId(parentId);
+		}
+		
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureListByLevel(reqDTO);
+
+		return resDTO.getBusinessNatureList();
+	}
+
+	
 	public void populateStateByAddType(String typeAdd) {
 		if (typeAdd.equals("business")) {
-			List<PmState> stateLs = this.retrievePmStateList(this
-					.getManagedBean().getSmBusinessAdd().getPmCountry()
-					.getCountryId());
+			List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setBusinessStateLs(stateLs);
 		} else if (typeAdd.equals("residential")) {
-			List<PmState> stateLs = this.retrievePmStateList(this
-					.getManagedBean().getSmResAdd().getPmCountry()
-					.getCountryId());
+			List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setResidentialStateLs(stateLs);
 		} else if (typeAdd.equals("permenant")) {
 			List<PmState> stateLs = this.retrievePmStateList(this
@@ -542,9 +657,7 @@ BaseBackingBean<RegistrationManagedBean> {
 			log.info("------------permenant----------------"
 					+ this.getManagedBean().getSmPermenantAdd().getPmState()
 					.getStateId());
-			List<PmDistrict> districtLs = this.retrievePmDistrictList(this
-					.getManagedBean().getSmPermenantAdd().getPmState()
-					.getStateId());
+			List<PmDistrict> districtLs = this.retrievePmDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
 			this.getManagedBean().setPermenantDistrictLs(districtLs);
 
 			log.info("------permenant LS-------------"
@@ -556,16 +669,13 @@ BaseBackingBean<RegistrationManagedBean> {
 		log.info("---------------City By Type--------------------");
 		if (typeAdd.equals("business")) {
 			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
-			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean()
-					.getSmBusinessAdd().getPmDistrict().getDistrictId());
+			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setBusinessCityLs(cityLs);
 		} else if (typeAdd.equals("residential")) {
-			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean()
-					.getSmResAdd().getPmDistrict().getDistrictId());
+			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean().getSmResAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setResidentialCityLs(cityLs);
 		} else if (typeAdd.equals("permenant")) {
-			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean()
-					.getSmPermenantAdd().getPmDistrict().getDistrictId());
+			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setPermenantCityLs(cityLs);
 			log.info("------permenant City LS-------------"
 					+ this.getManagedBean().getPermenantCityLs().size());
@@ -581,14 +691,12 @@ BaseBackingBean<RegistrationManagedBean> {
 		// reqDTO.setSupplierId(30);
 		reqDTO.setSupplierId(80);
 
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
 
 		this.getManagedBean().setSmSupp(resDTO.getSmSupp());
 		this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
-		this.getManagedBean().setSmSuppOwner(
-				resDTO.getSmSupp().getSmSupplierOwners().get(0));
+		this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 		
 		log.info("---------Supplier Type-----------"
 				+ this.getManagedBean().getSmAppl().getSupplierType());
@@ -646,10 +754,27 @@ BaseBackingBean<RegistrationManagedBean> {
 
 		this.getManagedBean().setBusinessTypeLs(resDTO.getParameterDescList());
 	}
+	
 
 	public void imageUpload(FileUploadEvent event) throws Exception {
 		log.info("------CB HK-------");
 	}
+	
+	public void retrieveBusinessNatureL5Map(){
+		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+		reqDTO.setBusinessLevel("50");
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureListByLevel(reqDTO);
+		
+		bizNatureL5Map = new HashMap<Long,Object>();
+		for(PmBusinessNature bizNat : resDTO.getBusinessNatureList()){
+			bizNatureL5Map.put(bizNat.getBusinessNatureId(), bizNat);
+			System.out.println("*****MAP Result******" + bizNat.getBusinessNatureId());
+		}
+		
+		System.out.println("************MAP Result***************" + bizNatureL5Map.size());
+	}
+	
 	
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
@@ -747,7 +872,4 @@ BaseBackingBean<RegistrationManagedBean> {
 	//
 	// ntfSO.processAndPublish(reqDTO);
 	// }
-
-	
-
 }
