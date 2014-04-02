@@ -117,15 +117,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		   
 			this.getManagedBean().setCtAgreement(new CtAgreement());
 	     	this.getManagedBean().getCtAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
-			this.getManagedBean().getCtAgreement().setPmUserGroup(new PmUserGroup());
 			if(this.getManagedBean().getCtAgreement().getClauseDocMaster() == null){
 			   this.getManagedBean().getCtAgreement().setClauseDocMaster(new TplDocMaster());
 			   this.getManagedBean().getCtAgreement().getClauseDocMaster().setDocMasterId(33L);
 			}
 		}
-	   if(this.getManagedBean().getCtAgreement().getPmUserGroup()== null){
-		   this.getManagedBean().getCtAgreement().setPmUserGroup(new PmUserGroup());
-	   }
+	   
 	   if(getManagedBean().getUserGroupMap()==null) {
 			initializeApproverGroup();
 		}
@@ -183,10 +180,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setOrgProfileId(1250L);
 			resDTO = userSO.retrieveUserGroupList(reqDTO);
 			
-			if(this.getManagedBean().getCtAgreement().getPmUserGroup()==null) {
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				this.getManagedBean().getCtAgreement().setPmUserGroup(pmUserGroup);
-			}
 			if(this.getManagedBean().getApproverModel()==null) {
 				List<String> source = new ArrayList<String>(); 
 		        List<String> target = new ArrayList<String>();  
@@ -197,7 +190,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
 				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
 				if(i==0) {
-					getManagedBean().getCtAgreement().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
 						source.add(user.getPmUser().getUserName());
@@ -267,15 +259,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} 
 			
 			if(resDTO.getAgreement() != null){
-				if(resDTO.getAgreement().getPmUserGroup()!=null) {
-				  this.getManagedBean().getApproverModel().getSource().clear();
-					for(PmUserGroupUser user : resDTO.getAgreement().getPmUserGroup().getPmUserGroupUsers()) {
-						this.getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-					}
-			      }else{
-				    resDTO.getAgreement().setPmUserGroup(new PmUserGroup());
-			      }
-			
 			   if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			     this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			     this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -370,7 +353,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			
 			 reqDTO.setUserRole(getUserRole());
-			 if(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId()!=null) {
+			 /*if(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId()!=null) {
 					PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId());
 					Map<String, PmUser> userMap = new HashMap<String, PmUser>();
 					if(pmUserGroup!=null) {
@@ -379,7 +362,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						}
 					}
 					reqDTO.setUserMap(userMap);
-				}
+				}*/
 			 
 			 if(this.getManagedBean().getUserLoginId() == null)
 			    reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
@@ -819,12 +802,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 
 	 public void userGroupChangeListener() {
 			
-		PmUserGroup selectedUserGroup = this.getManagedBean().getUserGroupMap().get(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId());
+		//PmUserGroup selectedUserGroup = this.getManagedBean().getUserGroupMap().get(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId());
 		List<String> source = new ArrayList<String>(); 
 	    List<String> target = new ArrayList<String>();  
-		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
+		/*for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
 				source.add(userGroupUser.getPmUser().getUserName());
-		}
+		}*/
 		this.getManagedBean().getApproverModel().setSource(source);
 		this.getManagedBean().getApproverModel().setTarget(target);
 	 }
