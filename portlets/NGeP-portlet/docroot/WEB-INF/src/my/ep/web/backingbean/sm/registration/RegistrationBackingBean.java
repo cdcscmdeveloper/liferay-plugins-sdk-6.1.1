@@ -432,11 +432,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void editBusinessNature(){
-		log.info("-----editBusinessNature-----" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
-		log.info("********edit Parent ID*********"  + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
-		
-		List<PmBusinessNature> parentObjList = retrieveBusinessNatureByLevelParent(null,this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
-		//List<PmBusinessNature> parentObj = retrieveBusinessNatureByLevelParent(null,this.get);
+//		log.info("-----editBusinessNature-----" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
+//		log.info("********edit Parent ID*********"  + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+//		
+//		//Get Parent Obj of L5 value and List of Level 5
+//		this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent("50",this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId()));
+//		List<PmBusinessNature> parentObjListOfL5 = retrieveBusinessNatureByLevelParent("40",this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+//		PmBusinessNature objL4 = parentObjListOfL5.get(0).getParentBusinessNature();
+//		
+//		
+//		//Get Parent Obj of L4 value and List of Level 4
+//		this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent("40",objL4.getParentBusinessNature().getBusinessNatureId()));
+//		List<PmBusinessNature> parentObjListOfL4 = retrieveBusinessNatureByLevelParent("30",objL4.getParentBusinessNature().getBusinessNatureId());
+//		PmBusinessNature objL3 = parentObjListOfL4.get(0).getParentBusinessNature();
+//		
+//		log.info("******BizNat lvl5 list***********" + this.getManagedBean().getBusinessNatureL5());
+//		log.info("******BizNat lvl4 value**********" + objL4.getParentBusinessNature().getBusinessNatureId());
+//		
+//		log.info("******BizNat lvl4 list***********" + this.getManagedBean().getBusinessNatureL4());
+//		log.info("******BizNat lvl3 value**********" + objL3.getParentBusinessNature().getBusinessNatureId());
 	}
 	
 	public void businessLvlOnChange(String bizLvl){
@@ -463,32 +477,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			break;
 		}
 	}
-	
-	
-//	public void businessLvlOnChange(String bizLvl){
-//		switch (bizLvl) {
-//			case "20" : 
-//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1());
-//				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
-//				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
-//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-//			break;
-//			case "30" : 
-//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2());
-//				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
-//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-//			break;
-//			case "40" : 
-//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3());
-//				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-//			break;
-//			
-//			case "50" : 
-//				retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4());
-////				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-//			break;
-//		}
-//	}
 
 	public void businessTypeOnChange() {
 		if (this.getManagedBean().getSmSupp().getBusinessType().equals("13")) {
@@ -583,31 +571,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("*****certbody count" + resDTO.getCertBodyList().size());
 		this.getManagedBean().setProfCertBodyLs(resDTO.getCertBodyList());
 	}
-	
-//	private void retrieveBusinessNatureByLevelParent(String busLvl, long parentId){
-//		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
-//		if(busLvl != "10"){
-//			reqDTO.setParentBusinessNatureId(parentId);
-//		}
-//		reqDTO.setBusinessLevel(busLvl);
-//		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
-//		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureListByLevel(reqDTO);
-//
-//		switch (busLvl) {
-//			case "10" : this.getManagedBean().setBusinessNatureL1(resDTO.getBusinessNatureList());
-//			break;
-//			case "20" : this.getManagedBean().setBusinessNatureL2(resDTO.getBusinessNatureList());
-//			break;
-//			case "30" : this.getManagedBean().setBusinessNatureL3(resDTO.getBusinessNatureList());
-//			break;
-//			case "40" : this.getManagedBean().setBusinessNatureL4(resDTO.getBusinessNatureList());
-//			break;
-//			case "50" : this.getManagedBean().setBusinessNatureL5(resDTO.getBusinessNatureList());
-//			break;
-//		}
-//
-//		log.info("*********Business Nature" + busLvl +"***********" + resDTO.getBusinessNatureList().size());
-//	}
 
 	
 	private List<PmBusinessNature> retrieveBusinessNatureByLevelParent(String busLvl, long parentId){
