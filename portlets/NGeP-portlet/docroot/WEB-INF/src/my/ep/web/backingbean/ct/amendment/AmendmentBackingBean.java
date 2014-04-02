@@ -286,7 +286,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	 public void chkContractValue(){
 		 
-		 if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange())
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isIsItemPriceChange())
 			this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		 else
 		    this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
