@@ -119,11 +119,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
 			getManagedBean().getCancelCircularReq().setStatus(status);
-			if(getManagedBean().getCircularVer().getItemCategory()==null) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
-				getManagedBean().getCircularVer().setItemCategory(parameter);
-			}			
+						
 			if(getManagedBean().getCircularVer().getZonalLevel()==null) {
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
@@ -162,10 +158,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			resDTO = userSO.retrieveUserGroupList(reqDTO);
 			
-			if(getManagedBean().getCircularVer().getPmUserGroup()==null) {
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getCircularVer().setPmUserGroup(pmUserGroup);
-			}
 			if(getManagedBean().getApproverModel()==null) {
 				List<String> source = new ArrayList<String>(); 
 		        List<String> target = new ArrayList<String>();  
@@ -177,7 +169,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
 				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
 				if(i==0) {
-					getManagedBean().getCircularVer().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
 						source.add(user.getPmUser().getUserName());
@@ -321,7 +312,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				reqDTO.getCircularVer().setApprovedDate(new Date());
 			}
 			
-			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
+			/*if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
 				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
 				if(pmUserGroup!=null) {
@@ -330,7 +321,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 				}
 				reqDTO.setUserMap(userMap);
-			}
+			}*/
 			
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
@@ -415,7 +406,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				reqDTO.getCancelCircularReq().setApprovedDate(new Date());
 			}
 			
-			if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
+			/*if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
 				getManagedBean().getCancelCircularReq().setPmUserGroup(getManagedBean().getCircularVer().getPmUserGroup());
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCancelCircularReq().getPmUserGroup().getUserGroupId());
 				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
@@ -425,7 +416,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 				}
 				reqDTO.setUserMap(userMap);
-			}
+			}*/
 			
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -809,12 +800,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void userGroupChangeListener() {
-		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId());
 		List<String> source = new ArrayList<String>(); 
         List<String> target = new ArrayList<String>();  
-		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
+		/*for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
 			source.add(userGroupUser.getPmUser().getUserName());
-		}
+		}*/
 		getManagedBean().getApproverModel().setSource(source);
 		getManagedBean().getApproverModel().setTarget(target);
 	}
@@ -851,11 +841,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedPanelItem(null);
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getItemCategory()==null) {
-					PmParameter parameter = new PmParameter();
-					parameter.setParameterId(-1L);
-					resDTO.getCircularVer().setItemCategory(parameter);
-				}
+				
 				if(resDTO.getCircularVer().getZonalLevel()==null) {
 					PmParameter parameter = new PmParameter();
 					parameter.setParameterId(-1L);
@@ -875,11 +861,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getItemCategory()==null) {
-					PmParameter parameter = new PmParameter();
-					parameter.setParameterId(-1L);
-					resDTO.getCircularVer().setItemCategory(parameter);
-				}				
+								
 				if(resDTO.getCircularVer().getZonalLevel()==null) {
 					PmParameter parameter = new PmParameter();
 					parameter.setParameterId(-1L);
@@ -894,13 +876,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			getManagedBean().getApproverModel().getSource().clear();
-			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
-				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
-					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-				}
-			} else {
-				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
-			}
 			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -964,11 +939,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(resDTO.getCircularVer().getUpdateEffDate()!=null) {
 				getManagedBean().setUpdateAction(true);
 			}
-			if(resDTO.getCircularVer().getItemCategory()==null) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
-				resDTO.getCircularVer().setItemCategory(parameter);
-			}			
+						
 			if(resDTO.getCircularVer().getZonalLevel()==null) {
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
@@ -984,13 +955,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			getManagedBean().getApproverModel().getSource().clear();
-			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
-				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
-					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
-				}
-			} else {
-				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
-			}
 			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
