@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -44,6 +45,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -51,6 +53,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -63,6 +67,8 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -71,6 +77,8 @@ import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -102,6 +110,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -243,7 +252,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
 		    
-		    
+		    retriveZonesByContractVer();
 	        CombineSupAddress(resDTO.getCtContractVer());
 	          
 	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
@@ -262,6 +271,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	 }finally{
 	 		
 	 	 }
+	}
+	
+	public void retriveZonesByContractVer() {
+		
+		if (this.getManagedBean().getContractVer().getCtContractZones() != null) {
+			List<TreeNode> localList = new ArrayList<TreeNode>();
+			TreeNode rootLocationTree = new DefaultTreeNode("Root", null);
+			
+			for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
+				System.out.println(zone.getZoneName());
+				TreeNode zoneNode = new DefaultTreeNode("zone", zone, rootLocationTree);
+				TreeNode stateNode = null;
+				if (zone.getCtContractZoneDtls() != null) {
+					for (CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
+						stateNode = new DefaultTreeNode("state",zoneDtl.getState(), zoneNode);
+						// System.out.println(zoneDtl.getState().getStateName());pa
+						// System.out.println(zoneDtl.getDistrict().getDistrictName());
+					}
+				}
+				localList.add(rootLocationTree);
+			}
+			this.getManagedBean().setCtZoneTrees(rootLocationTree);
+		}
 	}
     
     public void CombineSupAddress(CtContractVer ctContractVer){
