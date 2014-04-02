@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 /**
  * Managed Bean For Contract Details
  * 
@@ -119,7 +120,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean viewContract = false;
 	private List<CtAgency> listOfAgency;
 	private boolean updateContract;
+	private String popupForImportedItems ="L";
 	
+	private String supplierLocation;
+	private	String	zoneName;
+	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+	
+	private String contractType;
+	private boolean validateScheduleDate;
+	
+	private TreeNode ctZoneTrees ;
 	
 	public String[] getAction() {
 		return action;
@@ -636,7 +646,61 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setUpdateContract(boolean updateContract) {
 		this.updateContract = updateContract;
 	}
-	
-	
+
+	public String getSupplierLocation() {
+		return supplierLocation;
+	}
+
+	public void setSupplierLocation(String supplierLocation) {
+		this.supplierLocation = supplierLocation;
+	}
+
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	public String getPopupForImportedItems() {
+		return popupForImportedItems;
+	}
+
+	public void setPopupForImportedItems(String popupForImportedItems) {
+		this.popupForImportedItems = popupForImportedItems;
+	}
+
+	public String getContractType() {
+		return contractType;
+	}
+
+	public void setContractType(String contractType) {
+		this.contractType = contractType;
+	}
+
+	public boolean isValidateScheduleDate() {
+		return validateScheduleDate;
+	}
+
+	public void setValidateScheduleDate(boolean validateScheduleDate) {
+		this.validateScheduleDate = validateScheduleDate;
+	}
+
+	public TreeNode getCtZoneTrees() {
+		return ctZoneTrees;
+	}
+
+	public void setCtZoneTrees(TreeNode ctZoneTrees) {
+		this.ctZoneTrees = ctZoneTrees;
+	}
 	
 }
