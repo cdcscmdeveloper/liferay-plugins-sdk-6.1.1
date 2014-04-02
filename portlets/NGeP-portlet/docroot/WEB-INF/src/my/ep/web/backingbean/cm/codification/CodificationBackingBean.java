@@ -186,6 +186,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 				
 				CodificationResDTO resDTO = codificationSO.searchExtension(reqDTO);
 				
+				
 				return resDTO.getExtensionResultBean();
 			} finally {
 				codificationSO = null;
@@ -627,7 +628,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		return NAV_TO_EDIT_EXTENSION;
 	}
 
-	public String recommendItemCode(int index){
+	public String recommendItemCode(Object [] objects){
 
 
 
@@ -636,8 +637,25 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
+		//System.out.println("index:"+obj);
+		System.out.println("length:"+objects);
+		
+		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
+		//Object[] objects = (Object[])this.getManagedBean().getSelectedObject()[index];
 
-		CmColor colorObj = searchColorObjByColorId(this.getManagedBean().getExtensionVoList().get(index).getColorId());
+		extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+		extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+		extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+		extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+
+		System.out.println("******type NAme******"+String.valueOf(objects[4]));
+		extCodeVO.setTypeName(String.valueOf(objects[4]));
+		extCodeVO.setBrandName(String.valueOf(objects[5]));
+		extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+		extCodeVO.setColorName(String.valueOf(objects[7]));
+		
+
+		CmColor colorObj = searchColorObjByColorId(extCodeVO.getColorId());
 
 
 		String colorCode = colorObj.getColorCode();
@@ -645,17 +663,17 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 
-		CmType typeObj = searchTypeOjbyTypeId(this.getManagedBean().getExtensionVoList().get(index).getTypeId());
+		CmType typeObj = searchTypeOjbyTypeId(extCodeVO.getTypeId());
 
 		String typeCode = typeObj.getTypeCode();
 		String typeName = typeObj.getTypeName();
 
-		CmBrand brandObj = searchBrandObjByBrandId(this.getManagedBean().getExtensionVoList().get(index).getBrandId());
+		CmBrand brandObj = searchBrandObjByBrandId(extCodeVO.getBrandId());
 		
 		String brandCode = brandObj.getBrandCode();
 		String brandName = brandObj.getBrandName();
 
-		CmMeasurement meaObj = searchMeasurementByMeasurementId(this.getManagedBean().getExtensionVoList().get(index).getMeasurementId());
+		CmMeasurement meaObj = searchMeasurementByMeasurementId(extCodeVO.getMeasurementId());
 		
 
 		String measurementCode = meaObj.getMeasurementCode();

@@ -62,7 +62,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
+				<p:calendar value="#{tier.startDate}" showOn="button" size="10" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -70,7 +70,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10"
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -79,11 +79,27 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteZonalTierPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+				
+				<table width="5%">
+					<tr>
+						<td><p:commandLink title="Promotion" rendered="#{tier.showFlag}"
+								action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
+								update="@form">
+								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
+						<td><p:commandLink title="Clone" rendered="#{tier.showFlag}"
+								action="#{catalogueBackingBean.cloneZonalTierPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
+								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
+						<td style="text-align: right;"><p:commandLink title="Delete"
+								action="#{catalogueBackingBean.deleteZonalTierPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
+				
 
 			</p:column>
 

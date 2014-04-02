@@ -10,34 +10,68 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-	
-	<p:messages id="catalogFileMsg" globalOnly="true"></p:messages>
+
+		<p:messages id="catalogFileMsg" globalOnly="true"></p:messages>
 
 		<h:panelGroup>
-			<p:tabView id="maintenanceTabId" activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}" dynamic="true" cache="false">
+			<p:tabMenu id="maintenanceTabId"
+				activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
 
-				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" update=":form:maintenanceTabId :form:catalogFileMsg"/>
-					
-				<p:tab id="tab1" title="#{lbl['lbl.cm.draft']}">
-					<ui:include src="draftSupplierItem.xhtml" />
-				</p:tab>
-				<p:tab id="tab3" title="#{lbl['lbl.cm.approval']}">
-					<ui:include src="approvalSupplierItem.xhtml" />
-				</p:tab>
-				<p:tab id="tab4" title="#{lbl['lbl.cm.approved']}">
-					<ui:include src="approvedSupplierItem.xhtml" />
-				</p:tab>
-				<p:tab id="tab5" title="#{lbl['lbl.cm.reject']}">
-					<ui:include src="rejectedOrReviseSupplierItem.xhtml" />
-				</p:tab>
-				<p:tab id="tab6" title="#{lbl['lbl.cm.published']}">
-					<ui:include src="publishedSupplierItem.xhtml" />
-				</p:tab>
-				<p:tab id="tab2" title="#{lbl['lbl.cm.expired']}">
-					<ui:include src="expiredSupplierItem.xhtml" />
-				</p:tab>
-				
-			</p:tabView>
+				<p:menuitem value="#{lbl['lbl.cm.draft']}"
+					action="#{catalogueBackingBean.onTabChange1('Draft')}"
+					update="@form" />
+				<p:menuitem value="#{lbl['lbl.cm.approval']}"
+					action="#{catalogueBackingBean.onTabChange1('Approval')}"
+					update="@form" />
+				<p:menuitem value="#{lbl['lbl.cm.approved']}"
+					action="#{catalogueBackingBean.onTabChange1('Approved')}"
+					update="@form" />
+				<p:menuitem value="#{lbl['lbl.cm.reject']}"
+					action="#{catalogueBackingBean.onTabChange1('Rejected')}"
+					update="@form" />
+				<p:menuitem value="#{lbl['lbl.cm.published']}"
+					action="#{catalogueBackingBean.onTabChange1('Published')}"
+					update="@form" />
+				<p:menuitem value="#{lbl['lbl.cm.expired']}"
+					action="#{catalogueBackingBean.onTabChange1('Expired')}"
+					update="@form" />
+			</p:tabMenu>
+
+
+
+
+			<c:choose>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 0}">
+					<ui:include src="draftSupplierItem.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 1}">
+					<ui:include src="approvalSupplierItem.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 2}">
+					<ui:include src="approvedSupplierItem.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 3}">
+					<ui:include src="rejectedOrReviseSupplierItem.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 4}">
+					<ui:include src="publishedSupplierItem.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{catalogueBackingBean.managedBean.tabActiveIndex == 5}">
+					<ui:include src="expiredSupplierItem.xhtml"></ui:include>
+				</c:when>
+
+			</c:choose>
+
+
+
+
+
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

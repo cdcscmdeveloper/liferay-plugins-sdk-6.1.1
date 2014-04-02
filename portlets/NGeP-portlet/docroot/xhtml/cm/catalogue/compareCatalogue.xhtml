@@ -145,6 +145,13 @@
 					<p:tab title="Normal">
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>
+					
+					<p:tab title="Promotion"
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/promotionPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+					
 					<p:tab title="#{lbl['lbl.cm.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />

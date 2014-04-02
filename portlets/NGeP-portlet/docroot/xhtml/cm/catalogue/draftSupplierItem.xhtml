@@ -20,7 +20,7 @@
 
 		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
 			action="#{catalogueBackingBean.submitToReviewItems}"
-			update="draftSupplierItemID"></p:commandButton>
+			update="@form"></p:commandButton>
 	</div>
 
 	<ac:lovPopup />
@@ -47,7 +47,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}*
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10"></p:inputText>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricings[0].price}" size="10"></p:inputText>
 
 		</p:column>
 		<p:column width="5%">
@@ -65,7 +65,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}*
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricings[0].startDate}"
 				showOn="button" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
@@ -74,7 +74,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}*
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricings[0].endDate}"
 				showOn="button" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
@@ -90,7 +90,7 @@
 			</p:commandLink>
 			<p:commandLink style="margin-left: 10px;" title="Delete"
 				action="#{catalogueBackingBean.deleteDraftItem(rowIndex)}"
-				update=":form:maintenanceTabId:draftSupplierItemID :form:catalogFileMsg">
+				update="@form">
 				<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 			</p:commandLink>
 		</p:column>

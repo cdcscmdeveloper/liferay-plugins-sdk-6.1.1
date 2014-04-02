@@ -1681,6 +1681,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	public String requestExtensionCode(){
+		
+		
+		
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 
 		this.getManagedBean().getSelectedLovUnspsc().setUnspscCode(codeBB.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());

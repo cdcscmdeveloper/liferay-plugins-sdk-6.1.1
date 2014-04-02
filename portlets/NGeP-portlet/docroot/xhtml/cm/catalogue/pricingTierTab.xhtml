@@ -41,6 +41,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{price.startDate}" showOn="button"
+					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -49,19 +50,37 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{price.endDate}" showOn="button"
+					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 
-			<p:column>
+			<p:column width="5%">
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteTierPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+
+				<table width="5%">
+					<tr>
+						<td><p:commandLink title="Promotion" rendered="#{price.showFlag}" 
+								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
+								update="@form">
+								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
+						<td><p:commandLink title="Clone" rendered="#{price.showFlag}"
+								action="#{catalogueBackingBean.cloneTierPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
+								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
+						<td style="text-align: right;"><p:commandLink title="Delete"
+								action="#{catalogueBackingBean.deleteTierPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
+
+
 
 			</p:column>
 
@@ -72,7 +91,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
 				action="#{catalogueBackingBean.addNewTierPricing()}"
-				update="priceTierPageID" process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
+				update="priceTierPageID"
+				process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
 		</div>
 
 	</p:outputPanel>

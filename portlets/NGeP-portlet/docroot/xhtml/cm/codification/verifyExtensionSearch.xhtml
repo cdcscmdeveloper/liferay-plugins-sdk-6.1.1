@@ -176,41 +176,41 @@
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
-				<p:dataTable id="itemTableID" lazy="true"
-					value="#{codificationBackingBean.managedBean.extensionVoList}"
+				<p:dataTable id="itemTableID"
+					value="#{codificationBackingBean.extensionSearchItemDataModel}"
 					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedExtensionVO}">
+					lazy="true">
 
+					
 					<ac:paginator for="itemTableID"></ac:paginator>
 
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
-						#{obj.typeName}
+						#{obj[4]}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
-						#{obj.brandName}
+						#{obj[5]}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
-						#{obj.measurementName}
-					
+						
+						#{obj[6]}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
-						#{obj.colorName}
+						#{obj[7]}
 					</p:column>
-
 
 
 					<p:column>
@@ -220,7 +220,7 @@
 						<table>
 							<tr>
 								<td width="2px"><p:commandLink title="Recommend"
-										action="#{codificationBackingBean.recommendItemCode(rowIndex)}">
+										action="#{codificationBackingBean.recommendItemCode(obj)}">
 										<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
 									</p:commandLink></td>
 							</tr>
@@ -229,7 +229,6 @@
 
 
 					</p:column>
-
 
 				</p:dataTable>
 

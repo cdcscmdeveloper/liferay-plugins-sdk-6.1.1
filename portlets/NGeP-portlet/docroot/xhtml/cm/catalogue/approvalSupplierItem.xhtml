@@ -28,7 +28,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{approval.cmStandardPricing.price}" disabled="true" size="10"></p:inputText>
+			<p:inputText value="#{approval.cmStandardPricings[0].price}" disabled="true" size="10"></p:inputText>
 
 		</p:column>
 		<p:column width="5%">
@@ -44,14 +44,14 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar value="#{approval.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricings[0].startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar value="#{approval.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricings[0].endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column width="2%">
