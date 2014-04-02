@@ -166,10 +166,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			resDTO = userSO.retrieveUserGroupList(reqDTO);
 			
-			if(getManagedBean().getCircularVer().getPmUserGroup()==null) {
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getCircularVer().setPmUserGroup(pmUserGroup);
-			}
 			if(getManagedBean().getApproverModel()==null) {
 				List<String> source = new ArrayList<String>(); 
 		        List<String> target = new ArrayList<String>();  
@@ -181,7 +177,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
 				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
 				if(i==0) {
-					getManagedBean().getCircularVer().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
 						source.add(user.getPmUser().getUserName());
@@ -230,12 +225,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	public void userGroupChangeListener() {
-		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId());
 		List<String> source = new ArrayList<String>(); 
         List<String> target = new ArrayList<String>();  
-		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
-			source.add(userGroupUser.getPmUser().getUserName());
-		}
+		
 		getManagedBean().getApproverModel().setSource(source);
 		getManagedBean().getApproverModel().setTarget(target);
 	}
@@ -477,7 +469,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		for(CtContractItem ctContractItem : circularContract.getCtContract().getLatestContractVer().getCtContractItems()) {
 			ctCircularItem = new CtCircularItem();
 			ctCircularItem.setCtContractItem(ctContractItem);
-			ctCircularItem.setQtItem(ctContractItem.getQtItem());
+			ctCircularItem.setQtItem(ctContractItem.getRequestItemId());
 			ctCircularItem.setItemName(ctContractItem.getItemName());
 			ctCircularItem.setMaxProcureAmount(new BigDecimal(ctContractItem.getMaxProcureAmount()));
 			ctCircularItem.setMinimumOrderQty(new BigDecimal(ctContractItem.getMinimumOrderQty()));
@@ -485,8 +477,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
 				ctCircularItemPrice = new CtCircularItemPrice();
 				ctCircularItemPrice.setCtCircularZone(new CtCircularZone());
-				ctCircularItemPrice.setTierFrom(ctItemPrice.getTierFrom());
-				ctCircularItemPrice.setTierTo(ctItemPrice.getTierTo());
+				ctCircularItemPrice.setTierFrom(ctItemPrice.getFromQty());
+				ctCircularItemPrice.setTierTo(ctItemPrice.getToQty());
 				ctCircularItemPrice.setUnitPrice(ctItemPrice.getUnitPrice());
 				circularItemPrices.add(ctCircularItemPrice);
 			}
@@ -632,7 +624,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				reqDTO.getCircularVer().setApprovedDate(new Date());
 			}
 			
-			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
+			/*if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
 				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
 				if(pmUserGroup!=null) {
@@ -641,7 +633,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					}
 				}
 				reqDTO.setUserMap(userMap);
-			}
+			}*/
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -793,14 +785,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().getCircularVer().setItemZonalLevel(parameter);
 			}				
 			
-			getManagedBean().getApproverModel().getSource().clear();
+			/*getManagedBean().getApproverModel().getSource().clear();
 			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
 				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
 					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
 				}
 			} else {
 				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
-			}
+			}*/
 			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -862,14 +854,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setUpdateAction(true);
 			}
 			
-			getManagedBean().getApproverModel().getSource().clear();
+			/*getManagedBean().getApproverModel().getSource().clear();
 			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
 				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
 					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
 				}
 			} else {
 				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
-			}
+			}*/
 			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
