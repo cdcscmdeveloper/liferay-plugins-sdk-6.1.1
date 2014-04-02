@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +12,21 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.certbody.ICertBodySO;
+import my.ep.biz.service.pm.common.city.ICitySO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
@@ -20,6 +34,7 @@ import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -33,6 +48,7 @@ import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -80,6 +96,8 @@ public class SmApplicationBackingBean extends
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
 						+ getManagedBean().getSmAppl().getSupplierType());
+		retrievePmCountryList();
+		retrievePmCertBodyList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -138,17 +156,49 @@ public class SmApplicationBackingBean extends
 				smAppl.setApplCategoryType("S");
 			}
 
+			if (smAppl.getSmCompanyBasic() != null) {
+				if (!smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+						.isEmpty()) {
+					SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0);
+					SmAddress addr = comAdd.getSmAddress();
+					this.getManagedBean().setBasicCompanyStates(
+							retrievePmStateList(addr.getPmCountry()
+									.getCountryId()));
+					this.getManagedBean().setBasicCompanyDistricts(
+							retrievePmDistrictList(addr.getPmState()
+									.getStateId()));
+					this.getManagedBean().setBasicCompanyCities(
+							retrievePmCityList(addr.getPmDistrict()
+									.getDistrictId()));
+				}
+			}
+
 			if (smAppl.getSmFacilities().isEmpty()) {
 				System.out.println("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
-				fac.setOwnerName("Sample");
-				SmAddress addr = new SmAddress();
+				// fac.setOwnerName("Sample");
+				// fac.setFacilityType("H");
+				SmAddress addr = setDefaultAddr();
 				addr.setAddress1("Sample");
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
+				fac.setRevNo(new BigDecimal(1));
 				smAppl.getSmFacilities().add(fac);
+				this.getManagedBean().setBasicCompanyFacility(fac);
+
 			} else {
 				// TODO
+				System.out.println("*** Existing Facility******");
+				for (SmFacility fac : smAppl.getSmFacilities()) {
+					if (fac.getFacilityType().equalsIgnoreCase("B")
+							|| fac.getFacilityType().equalsIgnoreCase("H")) {
+						System.out
+								.println("********* getPmCountry NULL VALUE **********");
+						this.getManagedBean().setBasicCompanyFacility(fac);
+						break;
+					}
+				}
 			}
 			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
@@ -182,7 +232,6 @@ public class SmApplicationBackingBean extends
 					+ getManagedBean().getSmAppl().getSmSupplier()
 							.getBusinessType());
 			getManagedBean().setTabActiveIndex(0);
-			getManagedBean().setOfficeFacility(new SmFacility());
 
 			System.out
 					.println(" **** APPLICATION TYPE **** " + applicationType);
@@ -296,7 +345,6 @@ public class SmApplicationBackingBean extends
 					.setSmStaffTotals(getStaffList(bpmSmAppl.getSupplierType()));
 			getManagedBean().setSmAppl(bpmSmAppl);
 			getManagedBean().setTabActiveIndex(0);
-			getManagedBean().setOfficeFacility(new SmFacility());
 			// TODo Remove hard code later
 			if (getManagedBean().isApproverUser()
 					|| getManagedBean().isPoUser()) {
@@ -403,9 +451,50 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void updateSmAppl(String navTo, String pageType) {
-
+		IMofRegistrationSO mofRegistrationSO = null;
 		try {
+			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
+				this.getManagedBean().getSmAppl().getSmFacilities()
+						.add(this.getManagedBean().getBasicCompanyFacility());
 
+			} else {
+				// TODO
+				for (int i = 0; i < this.getManagedBean().getSmAppl()
+						.getSmFacilities().size(); i++) {
+					if (this.getManagedBean().getSmAppl().getSmFacilities()
+							.get(i).getFacilityType().equalsIgnoreCase("B")
+							|| this.getManagedBean().getSmAppl()
+									.getSmFacilities().get(i).getFacilityType()
+									.equalsIgnoreCase("H")) {
+						this.getManagedBean()
+								.getSmAppl()
+								.getSmFacilities()
+								.set(i,
+										this.getManagedBean()
+												.getBasicCompanyFacility());
+						break;
+					}
+				}
+			}
+			// Save or update to DB
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			System.out.println("Supplier for this application ==== >>>"
+					+ this.getManagedBean().getSmAppl().getSmSupplier()
+							.getSupplierId());
+			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+			System.out.println("*** My Entity ***"
+					+ this.getManagedBean().getSmAppl().getApplId()
+					+ "is New == "
+					+ this.getManagedBean().getSmAppl().isBrandNew());
+			reqDto.setAppType(this.getManagedBean().getSmAppl().getApplType());
+			// TODO remove the clone later (Problem at company basic clone
+			// to be fixed)
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.updateApplication(reqDto);
+			getManagedBean().setTabActiveIndex(outputTab);
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
@@ -416,6 +505,8 @@ public class SmApplicationBackingBean extends
 							"PrimeFaces makes no mistakes"));
 			getManagedBean().setTabActiveIndex(currentTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
+		} finally {
+			mofRegistrationSO = null;
 		}
 	}
 
@@ -478,10 +569,15 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
-		System.out.println(" ******* On Change Office Facility ***** "
-				+ getManagedBean().getOfficeFacility().getOwnershipType());
+		System.out
+				.println(" ******* On Change Office Facility ***** "
+						+ getManagedBean().getBasicCompanyFacility()
+								.getOwnershipType());
 		System.out.println(" **** Values In loop *********"
-				+ getManagedBean().getOfficeFacility().getRentalRate());
+				+ getManagedBean().getBasicCompanyFacility().getRentalRate());
+		System.out.println("********* TEst getPmCountry NULL VALUE **********"
+				+ this.getManagedBean().getBasicCompanyFacility()
+						.getSmAddress().getPmCountry().getCountryId());
 	}
 
 	public void assignPersonnelPrivilege(AjaxBehaviorEvent e) {
@@ -663,11 +759,14 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Certs Start
 	public void addOrUpdateCertsToSmAppl() throws ParseException {
+		getManagedBean().getSelectedCert().setSmAppl(
+				getManagedBean().getSmAppl());
 		if (getManagedBean().getSmAppl().getSmSupplierCerts()
 				.contains(getManagedBean().getSelectedCert())) {
 
 			System.out.println(" **** THIS IS AN UPDATE Certs******");
 		} else {
+			System.out.println(" **** THIS IS AN SAVE NEW Certs******");
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
 		}
@@ -678,7 +777,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewCert() {
-		getManagedBean().setSelectedCert(new SmSupplierCert());
+		SmSupplierCert cert = new SmSupplierCert();
+		cert.setPmCertBody(new PmCertBody());
+		cert.setRevNo(new BigDecimal(1));
+		getManagedBean().setSelectedCert(cert);
 	}
 
 	// -- Process Certss End
@@ -1568,6 +1670,7 @@ public class SmApplicationBackingBean extends
 		SmAppl app = getManagedBean().getSmAppl();
 		if (supplierType.equals("1")) {
 			SmStaffTotal stf = new SmStaffTotal();
+			stf.setRevNo(new BigDecimal(1));
 			stf.setStaffCategory("C");
 			stf.setSmAppl(app);
 			staffList.add(stf);
@@ -1575,17 +1678,65 @@ public class SmApplicationBackingBean extends
 			SmStaffTotal stf1 = new SmStaffTotal();
 			stf1.setStaffCategory("P");
 			stf1.setSmAppl(app);
+			stf1.setRevNo(new BigDecimal(1));
 			staffList.add(stf1);
 			SmStaffTotal stf2 = new SmStaffTotal();
 			stf2.setStaffCategory("S");
 			stf2.setSmAppl(app);
+			stf2.setRevNo(new BigDecimal(1));
 			staffList.add(stf2);
 			SmStaffTotal stf3 = new SmStaffTotal();
 			stf3.setStaffCategory("L");
 			stf3.setSmAppl(app);
+			stf3.setRevNo(new BigDecimal(1));
 			staffList.add(stf3);
 		}
 		return staffList;
+	}
+
+	private void retrievePmCountryList() {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryList();
+
+		this.getManagedBean().setCountryLs(resDTO.getCountryList());
+	}
+
+	private void retrievePmCertBodyList() {
+		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICertBodySO.class);
+		CertBodyResDTO resDTO = reqSO.retrieveCertifiedBodyList();
+
+		this.getManagedBean().setCertBodyLs(resDTO.getCertBodyList());
+		System.out.println("****** After getting the cert body list *******"
+				+ getManagedBean().getCertBodyLs().size());
+	}
+
+	private List<PmState> retrievePmStateList(long countryId) {
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryId(countryId);
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		return resDTO.getStateList();
+	}
+
+	private List<PmDistrict> retrievePmDistrictList(long stateId) {
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setStateId(stateId);
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IDistrictSO.class);
+		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
+		return resDTO.getDistrictList();
+	}
+
+	private List<PmCity> retrievePmCityList(long districtId) {
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setDistrictId(districtId);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICitySO.class);
+		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+		return resDTO.getCityList();
 	}
 
 	private SmAppl defaultSmAppl(SmAppl appl) {
@@ -1801,4 +1952,5 @@ public class SmApplicationBackingBean extends
 		}
 		return s;
 	}
+
 }

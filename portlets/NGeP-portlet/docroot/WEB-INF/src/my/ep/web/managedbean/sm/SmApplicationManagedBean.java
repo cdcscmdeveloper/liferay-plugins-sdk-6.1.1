@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -80,8 +81,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierCategory selectedCategory;
 
 	private SmAddress defaultAddr;
-
-	private SmFacility officeFacility;
 
 	private SmFacility selectedFactoryFacility;
 
@@ -192,6 +191,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String dummyCatType;
 
+	private SmFacility basicCompanyFacility;
+	// Address fields for all the forms
+	private List<PmCountry> countryLs;
+	private List<PmState> basicCompanyStates;
+	private List<PmDistrict> basicCompanyDistricts;
+	private List<PmCity> basicCompanyCities;
+	private List<PmCertBody> certBodyLs;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -252,6 +259,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
+		selectedCert.setPmCertBody(new PmCertBody());
 		selectedCompanyExperiences = new ArrayList<SmCompanyExperience>();
 		selectedCompanyExperience = new SmCompanyExperience();
 		// selectedConstProjs = new ArrayList<SmProjectExperience>();
@@ -457,14 +465,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedBranches(List<SmSupplierBranch> selectedBranches) {
 		this.selectedBranches = selectedBranches;
-	}
-
-	public SmFacility getOfficeFacility() {
-		return officeFacility;
-	}
-
-	public void setOfficeFacility(SmFacility officeFacility) {
-		this.officeFacility = officeFacility;
 	}
 
 	public int getTabActiveIndex() {
@@ -1107,6 +1107,54 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void addRelatedCompany() {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Related Company Body");
 		relatedCompanies.add(new Object());
+	}
+
+	public List<PmCountry> getCountryLs() {
+		return countryLs;
+	}
+
+	public void setCountryLs(List<PmCountry> countryLs) {
+		this.countryLs = countryLs;
+	}
+
+	public List<PmState> getBasicCompanyStates() {
+		return basicCompanyStates;
+	}
+
+	public void setBasicCompanyStates(List<PmState> basicCompanyStates) {
+		this.basicCompanyStates = basicCompanyStates;
+	}
+
+	public List<PmDistrict> getBasicCompanyDistricts() {
+		return basicCompanyDistricts;
+	}
+
+	public void setBasicCompanyDistricts(List<PmDistrict> basicCompanyDistricts) {
+		this.basicCompanyDistricts = basicCompanyDistricts;
+	}
+
+	public List<PmCity> getBasicCompanyCities() {
+		return basicCompanyCities;
+	}
+
+	public void setBasicCompanyCities(List<PmCity> basicCompanyCities) {
+		this.basicCompanyCities = basicCompanyCities;
+	}
+
+	public SmFacility getBasicCompanyFacility() {
+		return basicCompanyFacility;
+	}
+
+	public void setBasicCompanyFacility(SmFacility basicCompanyFacility) {
+		this.basicCompanyFacility = basicCompanyFacility;
+	}
+
+	public List<PmCertBody> getCertBodyLs() {
+		return certBodyLs;
+	}
+
+	public void setCertBodyLs(List<PmCertBody> certBodyLs) {
+		this.certBodyLs = certBodyLs;
 	}
 
 }
