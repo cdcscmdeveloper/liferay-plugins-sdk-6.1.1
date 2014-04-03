@@ -28,7 +28,12 @@
 			id="bankInfoId" rowKey="#{bankInfo}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
-			<p:column headerText="Bank Name">
+			<p:column>
+				
+				<f:facet name="header">
+					Bank Name
+				</f:facet>
+			
 				<p:selectOneMenu value="#{bankInfo.pmFinancialOrg.financialOrgId}">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
 					<f:selectItems
@@ -37,7 +42,17 @@
 						itemLabel="#{finOrg.finOrgName}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="Account Number">
+			<p:column>
+			
+				<f:facet name="header">
+					Account Number
+					&#160;
+					<p:graphicImage id="banti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="bantt" for="banti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
+					</p:tooltip>
+				</f:facet>
+			
 				<p:inputText value="#{bankInfo.accountNo}" />
 			</p:column>
 		</p:dataTable>

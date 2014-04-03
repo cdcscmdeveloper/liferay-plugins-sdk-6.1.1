@@ -130,7 +130,13 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.email']}" /></td>
 				<td class="tdContent"><p:inputText size="40" id="usrEmail"
-						value="#{registrationBackingBean.managedBean.smPersonnel.email}" /></td>
+						value="#{registrationBackingBean.managedBean.smPersonnel.email}" />
+					&#160;
+					<p:graphicImage id="emailti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="emailtt" for="emailti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
+					</p:tooltip>
+				</td>
 			</tr>
 
 			<tr>
@@ -142,11 +148,26 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.notificationmode']}" /></td>
-				<td class="tdContent"><p:selectManyCheckbox
-						id="notificationMode">
-						<f:selectItem itemLabel="Email" itemValue="0" />
-						<f:selectItem itemLabel="SMS" itemValue="1" />
-					</p:selectManyCheckbox></td>
+				<td class="tdContent">
+					<table>
+						<tr>
+							<td>
+								<p:selectManyCheckbox
+									id="notificationMode">
+									<f:selectItem itemLabel="Email" itemValue="0" />
+									<f:selectItem itemLabel="SMS" itemValue="1" />
+								</p:selectManyCheckbox>							
+							</td>
+							<td>
+								&#160;
+								<p:graphicImage id="smsti" library="ep/images/design" name="tooltips.png" />
+								<p:tooltip id="smstt" for="smsti">
+									<p:outputLabel escape="false" value="#{lbl['tt.sm.sms.notification']}"  />
+								</p:tooltip>							
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
 	</p:panel>

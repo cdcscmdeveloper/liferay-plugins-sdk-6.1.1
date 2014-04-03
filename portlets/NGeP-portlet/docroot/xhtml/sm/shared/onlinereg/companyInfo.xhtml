@@ -14,12 +14,24 @@
 				<td class="tdContent"><p:inputText id="regNo"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
-						size="40" /></td>
+						size="40" />
+					&#160;
+					<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="regNott" for="regNoti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.no']}"  />
+					</p:tooltip>
+				</td>
 
 				<td class="tdTitle"><p:outputLabel value="* Owner Name" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
-						size="40" /></td>
+						size="40" />
+					&#160;
+					<p:graphicImage id="ownNmti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="ownNmtt" for="ownNmti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.name']}"  />
+					</p:tooltip>
+				</td>
 			</tr>
 
 			<tr>
@@ -40,7 +52,13 @@
 				<td class="tdContent"><p:inputMask id="txtIdNumber"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
 						size="30"
-						mask="#{registrationBackingBean.managedBean.suppOwnerIdMask}" /></td>
+						mask="#{registrationBackingBean.managedBean.suppOwnerIdMask}" />
+					&#160;
+					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="ictt" for="icti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.ic']}"  />
+					</p:tooltip>
+				</td>
 			</tr>
 
 			<tr>

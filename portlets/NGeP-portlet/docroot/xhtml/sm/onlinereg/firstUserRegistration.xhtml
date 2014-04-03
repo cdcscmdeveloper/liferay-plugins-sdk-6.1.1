@@ -23,6 +23,11 @@
 					<td class="tdContent" colspan="3"><p:inputText size="40"
 							id="fullName"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
+						&#160;
+						<p:graphicImage id="fNmti" library="ep/images/design" name="tooltips.png" />
+						<p:tooltip id="fNmtt" for="fNmti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.full.name']}"  />
+						</p:tooltip>
 					</td>
 				</tr>
 
@@ -52,7 +57,13 @@
 							value="* #{lbl['lbl.sm.identificationno']}" /></td>
 					<td class="tdContent"><p:inputText id="txtIdNumber"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-							size="40" /></td>
+							size="40" />
+						&#160;
+						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
+						<p:tooltip id="uidtt" for="uidti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}"  />
+						</p:tooltip>
+					</td>
 				</tr>
 
 				<tr>
@@ -75,7 +86,13 @@
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
 					<td class="tdContent" colspan="2"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
-							id="txtPermAdd1" /></td>
+							id="txtPermAdd1" />
+						&#160;
+						<p:graphicImage id="addti" library="ep/images/design" name="tooltips.png" />
+						<p:tooltip id="addtt" for="addti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.address']}"  />
+						</p:tooltip>
+					</td>
 				</tr>
 
 				<tr>

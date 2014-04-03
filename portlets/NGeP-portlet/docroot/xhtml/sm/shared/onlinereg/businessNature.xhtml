@@ -12,11 +12,22 @@
 			selection="#{registrationBackingBean.managedBean.selectedBusinessNatureLs}"
 			id="suppBizNatureId" rowKey="#{suppBizNature}">
 			<p:column selectionMode="multiple" style="width:2%" />
-			<p:column headerText="Nature of Business">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Nature of Business" />
+					&#160;
+					<p:graphicImage id="bnti" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="bntt" for="bnti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.biz.nature']}"  />
+					</p:tooltip>
+				</f:facet>
 				#{suppBizNature.pmBusinessNature.levelName}
 			</p:column>
 
-			<p:column headerText="Action">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Action" />
+				</f:facet>
 				<p:commandLink id="btnBizNatEdit" oncomplete="bizDlg.show();" action="#{registrationBackingBean.editBusinessNature}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
