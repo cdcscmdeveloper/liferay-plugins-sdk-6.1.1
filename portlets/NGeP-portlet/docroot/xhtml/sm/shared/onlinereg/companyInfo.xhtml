@@ -80,7 +80,17 @@
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						size="30" showOn="button" /></td>
 			</tr>
-
+			
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="Income Tax No" /></td>
+				<td class="tdContent">
+					<p:inputText
+						value="#{registrationBackingBean.managedBean.smSupp.incomeTaxNo}"
+						size="40" id="incomeTaxId" />
+				</td>
+			</tr>
+			
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.country']}" /></td>

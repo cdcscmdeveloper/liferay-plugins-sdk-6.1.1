@@ -8,7 +8,7 @@
 	<p:panel header="Professional Body Information" id="pnlProfCert"
 		toggleable="true">
 		<p:dataTable var="suppCert" id="profCertId"
-			value="#{registrationBackingBean.managedBean.smSuppCerts}"
+			value="#{registrationBackingBean.managedBean.smAppl.smSupplierCerts}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppCerts}" rowKey="#{suppCert}">
 			<!-- 				<ac:paginator for="dt" /> -->
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -17,7 +17,7 @@
 			</p:column>
 
 			<p:column headerText="Certification Body">
-				<p:selectOneMenu>
+				<p:selectOneMenu id="certBodyId" value="#{suppCert.pmCertBody.certBodyId}">
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.profCertBodyLs}"
 						var="certBody" itemLabel="#{certBody.bodyName}"

@@ -8,43 +8,12 @@
 
 	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
-
-	<c:if
-		test="#{registrationBackingBean.managedBean.smSupp.businessType == 'P'}">
-		<p:panel header="Professional Body Information" id="pnlProfCert"
-			toggleable="true">
-			<p:dataTable var="suppCert" id="profCertDt"
-				value="#{registrationBackingBean.managedBean.smSuppCerts}">
-				<!-- 				<ac:paginator for="dt" /> -->
-				<p:column headerText="Certificate Name">
-					<p:inputText value="#{suppCert.certName}" />
-				</p:column>
-
-				<p:column headerText="Certification Body">
-					<p:inputText value="#{suppCert.certBody}" />
-				</p:column>
-
-				<p:column headerText="Start Date">
-					<p:calendar value="#{suppCert.certStartDate}" id="startDateId"
-						showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</p:column>
-
-				<p:column headerText="End Date">
-					<p:calendar value="#{suppCert.certEndDate}" id="endDateId"
-						showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</p:column>
-			</p:dataTable>
-
-			<div align="right">
-				<p:commandButton value="Add"
-					action="#{registrationBackingBean.addProfessionalCert}"
-					update="pnlProfCert" />
-				<p:commandButton value="Remove"
-					action="#{registrationBackingBean.removeProfessionalCert}"
-					update="pnlProfCert" />
-			</div>
-		</p:panel>
-	</c:if>
+	<p:outputPanel id="outPnlProfCert">
+		<c:if
+			test="#{registrationBackingBean.managedBean.smAppl.supplierType == 'J'}">
+			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" />
+		</c:if>
+	</p:outputPanel>
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">

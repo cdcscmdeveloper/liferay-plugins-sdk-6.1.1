@@ -51,7 +51,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	private boolean sameAddress;
 	private SmSupplierBank[] selectedSuppBanks;
-	private List<SmSupplierBank> smSuppBanks;
+//	private List<SmSupplierBank> smSuppBanks;
 
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
@@ -68,7 +68,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmCertBody> profCertBodyLs;
 
 	private SmSupplierCert[] selectedSuppCerts;
-	private List<SmSupplierCert> smSuppCerts;
+//	private List<SmSupplierCert> smSuppCerts;
 	private Map<String, String> serviceLs;
 
 	private List<PmBusinessNature> businessNatureL1;
@@ -76,7 +76,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmBusinessNature> businessNatureL3;
 	private List<PmBusinessNature> businessNatureL4;
 	private List<PmBusinessNature> businessNatureL5;
-	private List<SmSupplierBusiness> suppBusinessNatureLs;
+	//private List<SmSupplierBusiness> suppBusinessNatureLs;
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplierBusiness selectedBusinessNature;
 	private SmSupplierBusiness suppBusinessNature;
@@ -192,13 +192,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSuppOwner = smSuppOwner;
 	}
 
-	public List<SmSupplierCert> getSmSuppCerts() {
-		return smSuppCerts;
-	}
-
-	public void setSmSuppCerts(List<SmSupplierCert> smSuppCerts) {
-		this.smSuppCerts = smSuppCerts;
-	}
+//	public List<SmSupplierCert> getSmSuppCerts() {
+//		return smSuppCerts;
+//	}
+//
+//	public void setSmSuppCerts(List<SmSupplierCert> smSuppCerts) {
+//		this.smSuppCerts = smSuppCerts;
+//	}
 
 	public SmPersonnelAddress getSmPersonnelAdd() {
 		return smPersonnelAdd;
@@ -240,13 +240,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smAppl = smAppl;
 	}
 
-	public List<SmSupplierBank> getSmSuppBanks() {
-		return smSuppBanks;
-	}
-
-	public void setSmSuppBanks(List<SmSupplierBank> smSuppBanks) {
-		this.smSuppBanks = smSuppBanks;
-	}
+//	public List<SmSupplierBank> getSmSuppBanks() {
+//		return smSuppBanks;
+//	}
+//
+//	public void setSmSuppBanks(List<SmSupplierBank> smSuppBanks) {
+//		this.smSuppBanks = smSuppBanks;
+//	}
 
 	public String getApplType() {
 		return applType;
@@ -391,14 +391,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.suppBusinessNature = suppBusinessNature;
 	}
 	
-	public List<SmSupplierBusiness> getSuppBusinessNatureLs() {
-		return suppBusinessNatureLs;
-	}
-
-	public void setSuppBusinessNatureLs(
-			List<SmSupplierBusiness> suppBusinessNatureLs) {
-		this.suppBusinessNatureLs = suppBusinessNatureLs;
-	}
+//	public List<SmSupplierBusiness> getSuppBusinessNatureLs() {
+//		return suppBusinessNatureLs;
+//	}
+//
+//	public void setSuppBusinessNatureLs(
+//			List<SmSupplierBusiness> suppBusinessNatureLs) {
+//		this.suppBusinessNatureLs = suppBusinessNatureLs;
+//	}
 
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {

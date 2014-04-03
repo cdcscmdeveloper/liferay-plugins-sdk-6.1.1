@@ -13,8 +13,7 @@
 						value="* #{lbl['lbl.sm.correspondenceadd']}" /></td>
 				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
-						<p:ajax event="change" update="pnlContactInfo"
-							listener="#{registrationBackingBean.checkSameAddress}" />
+						<p:ajax event="change" update="pnlContactInfo" />
 						<!-- 							process="@this,txtPermAdd1,txtPermAdd2,txtPermAdd3,txtPermAdd4,txtPermPostcode,cmbPermState,cmbPermDistrict,cmbPermCity" /> -->
 					</p:selectBooleanCheckbox> <h:outputText value="Same as abv."></h:outputText></td>
 				<!-- 					Same as Permenant Address -->

@@ -23,7 +23,7 @@
 	</p:panel> -->
 	<p:panel header="Bank Information" toggleable="true" id="pnlBankInfo">
 		<p:dataTable var="bankInfo"
-			value="#{registrationBackingBean.managedBean.smSuppBanks}"
+			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}"
 			id="bankInfoId" rowKey="#{bankInfo}">
 
