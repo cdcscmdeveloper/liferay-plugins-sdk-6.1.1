@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -133,6 +134,21 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> nonFederalScoreyears=new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> nonFederalContractScore=new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> itemScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> checkListSelectScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringForSelectYears=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalSelectScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalSelectScoreyears=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> warantySelectScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> trainingSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalStaffSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> totalEmployeeSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finGovContractSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finPrivateContractSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditfacilitySelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> cashSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankSelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetLiabilitySelectList=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> paidUpSelectList=new ArrayList<ScQtCheckListScore>();
 	
 	private List<ScQtSchedule> scheduleList;
 	private List<ScQtSchedule> progressivePaymentList;
@@ -168,6 +184,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> suppCriteriaopenList;
 
 	private	TreeNode rootLocationTree;
+	private	TreeNode rootZoanlTree;
 	private	String	zoneName;
 
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
@@ -255,6 +272,17 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQtScoreOfferPrice packageScoreSetting;
 	private ScQtScoreOfferPrice itemScoreSetting;
 	private ScQtScoreWeightage scQtScoreWeightage;
+	private ScQtScoreSetting technicalScoreSetting;
+	private ScQtScoreSetting financialScoreSetting;
+	private String procuremntCategory;
+	private String fulfilmentType;
+	
+	private BigDecimal technicalpackage;
+	private BigDecimal financialpackage;
+	private BigDecimal recommendationPackageTotal;
+	private BigDecimal recommendTechnicalScore;
+	private BigDecimal recommendfinancialScore;
+	private int tabActiveIndex;
 	
 	
 	
@@ -2619,6 +2647,487 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setScQtContractScore(ScQtCheckListScore scQtContractScore) {
 		this.scQtContractScore = scQtContractScore;
 	}
+
+
+
+	/**
+	 * @return the procuremntCategory
+	 */
+	public String getProcuremntCategory() {
+		return procuremntCategory;
+	}
+
+
+
+	/**
+	 * @param procuremntCategory the procuremntCategory to set
+	 */
+	public void setProcuremntCategory(String procuremntCategory) {
+		this.procuremntCategory = procuremntCategory;
+	}
+
+
+
+	/**
+	 * @return the fulfilmentType
+	 */
+	public String getFulfilmentType() {
+		return fulfilmentType;
+	}
+
+
+
+	/**
+	 * @param fulfilmentType the fulfilmentType to set
+	 */
+	public void setFulfilmentType(String fulfilmentType) {
+		this.fulfilmentType = fulfilmentType;
+	}
+
+
+
+	/**
+	 * @return the technicalScoreSetting
+	 */
+	public ScQtScoreSetting getTechnicalScoreSetting() {
+		return technicalScoreSetting;
+	}
+
+
+
+	/**
+	 * @param technicalScoreSetting the technicalScoreSetting to set
+	 */
+	public void setTechnicalScoreSetting(ScQtScoreSetting technicalScoreSetting) {
+		this.technicalScoreSetting = technicalScoreSetting;
+	}
+
+
+
+	/**
+	 * @return the financialScoreSetting
+	 */
+	public ScQtScoreSetting getFinancialScoreSetting() {
+		return financialScoreSetting;
+	}
+
+
+
+	/**
+	 * @param financialScoreSetting the financialScoreSetting to set
+	 */
+	public void setFinancialScoreSetting(ScQtScoreSetting financialScoreSetting) {
+		this.financialScoreSetting = financialScoreSetting;
+	}
+
+
+
+	/**
+	 * @return the technicalpackage
+	 */
+	public BigDecimal getTechnicalpackage() {
+		return technicalpackage;
+	}
+
+
+
+	/**
+	 * @param technicalpackage the technicalpackage to set
+	 */
+	public void setTechnicalpackage(BigDecimal technicalpackage) {
+		this.technicalpackage = technicalpackage;
+	}
+
+
+
+	/**
+	 * @return the financialpackage
+	 */
+	public BigDecimal getFinancialpackage() {
+		return financialpackage;
+	}
+
+
+
+	/**
+	 * @param financialpackage the financialpackage to set
+	 */
+	public void setFinancialpackage(BigDecimal financialpackage) {
+		this.financialpackage = financialpackage;
+	}
+
+
+
+	/**
+	 * @return the recommendationPackageTotal
+	 */
+	public BigDecimal getRecommendationPackageTotal() {
+		return recommendationPackageTotal;
+	}
+
+
+
+	/**
+	 * @param recommendationPackageTotal the recommendationPackageTotal to set
+	 */
+	public void setRecommendationPackageTotal(BigDecimal recommendationPackageTotal) {
+		this.recommendationPackageTotal = recommendationPackageTotal;
+	}
+
+
+
+	/**
+	 * @return the recommendTechnicalScore
+	 */
+	public BigDecimal getRecommendTechnicalScore() {
+		return recommendTechnicalScore;
+	}
+
+
+
+	/**
+	 * @param recommendTechnicalScore the recommendTechnicalScore to set
+	 */
+	public void setRecommendTechnicalScore(BigDecimal recommendTechnicalScore) {
+		this.recommendTechnicalScore = recommendTechnicalScore;
+	}
+
+
+
+	/**
+	 * @return the recommendfinancialScore
+	 */
+	public BigDecimal getRecommendfinancialScore() {
+		return recommendfinancialScore;
+	}
+
+
+
+	/**
+	 * @param recommendfinancialScore the recommendfinancialScore to set
+	 */
+	public void setRecommendfinancialScore(BigDecimal recommendfinancialScore) {
+		this.recommendfinancialScore = recommendfinancialScore;
+	}
+
+
+
+	/**
+	 * @return the checkListSelectScore
+	 */
+	public List<ScQtCheckListScore> getCheckListSelectScore() {
+		return checkListSelectScore;
+	}
+
+
+
+	/**
+	 * @param checkListSelectScore the checkListSelectScore to set
+	 */
+	public void setCheckListSelectScore(
+			List<ScQtCheckListScore> checkListSelectScore) {
+		this.checkListSelectScore = checkListSelectScore;
+	}
+
+
+
+	/**
+	 * @return the scoringForSelectYears
+	 */
+	public List<ScQtCheckListScore> getScoringForSelectYears() {
+		return scoringForSelectYears;
+	}
+
+
+
+	/**
+	 * @param scoringForSelectYears the scoringForSelectYears to set
+	 */
+	public void setScoringForSelectYears(
+			List<ScQtCheckListScore> scoringForSelectYears) {
+		this.scoringForSelectYears = scoringForSelectYears;
+	}
+
+
+
+	/**
+	 * @return the nonFederalSelectScore
+	 */
+	public List<ScQtCheckListScore> getNonFederalSelectScore() {
+		return nonFederalSelectScore;
+	}
+
+
+
+	/**
+	 * @param nonFederalSelectScore the nonFederalSelectScore to set
+	 */
+	public void setNonFederalSelectScore(
+			List<ScQtCheckListScore> nonFederalSelectScore) {
+		this.nonFederalSelectScore = nonFederalSelectScore;
+	}
+
+
+
+	/**
+	 * @return the nonFederalSelectScoreyears
+	 */
+	public List<ScQtCheckListScore> getNonFederalSelectScoreyears() {
+		return nonFederalSelectScoreyears;
+	}
+
+
+
+	/**
+	 * @param nonFederalSelectScoreyears the nonFederalSelectScoreyears to set
+	 */
+	public void setNonFederalSelectScoreyears(
+			List<ScQtCheckListScore> nonFederalSelectScoreyears) {
+		this.nonFederalSelectScoreyears = nonFederalSelectScoreyears;
+	}
+
+
+
+	/**
+	 * @return the warantySelectScore
+	 */
+	public List<ScQtCheckListScore> getWarantySelectScore() {
+		return warantySelectScore;
+	}
+
+
+
+	/**
+	 * @param warantySelectScore the warantySelectScore to set
+	 */
+	public void setWarantySelectScore(List<ScQtCheckListScore> warantySelectScore) {
+		this.warantySelectScore = warantySelectScore;
+	}
+
+
+
+	/**
+	 * @return the trainingSelectList
+	 */
+	public List<ScQtCheckListScore> getTrainingSelectList() {
+		return trainingSelectList;
+	}
+
+
+
+	/**
+	 * @param trainingSelectList the trainingSelectList to set
+	 */
+	public void setTrainingSelectList(List<ScQtCheckListScore> trainingSelectList) {
+		this.trainingSelectList = trainingSelectList;
+	}
+
+
+
+	/**
+	 * @return the technicalStaffSelectList
+	 */
+	public List<ScQtCheckListScore> getTechnicalStaffSelectList() {
+		return technicalStaffSelectList;
+	}
+
+
+
+	/**
+	 * @param technicalStaffSelectList the technicalStaffSelectList to set
+	 */
+	public void setTechnicalStaffSelectList(
+			List<ScQtCheckListScore> technicalStaffSelectList) {
+		this.technicalStaffSelectList = technicalStaffSelectList;
+	}
+
+
+
+	/**
+	 * @return the totalEmployeeSelectList
+	 */
+	public List<ScQtCheckListScore> getTotalEmployeeSelectList() {
+		return totalEmployeeSelectList;
+	}
+
+
+
+	/**
+	 * @param totalEmployeeSelectList the totalEmployeeSelectList to set
+	 */
+	public void setTotalEmployeeSelectList(
+			List<ScQtCheckListScore> totalEmployeeSelectList) {
+		this.totalEmployeeSelectList = totalEmployeeSelectList;
+	}
+
+
+
+	/**
+	 * @return the finGovContractSelectList
+	 */
+	public List<ScQtCheckListScore> getFinGovContractSelectList() {
+		return finGovContractSelectList;
+	}
+
+
+
+	/**
+	 * @param finGovContractSelectList the finGovContractSelectList to set
+	 */
+	public void setFinGovContractSelectList(
+			List<ScQtCheckListScore> finGovContractSelectList) {
+		this.finGovContractSelectList = finGovContractSelectList;
+	}
+
+
+
+	/**
+	 * @return the finPrivateContractSelectList
+	 */
+	public List<ScQtCheckListScore> getFinPrivateContractSelectList() {
+		return finPrivateContractSelectList;
+	}
+
+
+
+	/**
+	 * @param finPrivateContractSelectList the finPrivateContractSelectList to set
+	 */
+	public void setFinPrivateContractSelectList(
+			List<ScQtCheckListScore> finPrivateContractSelectList) {
+		this.finPrivateContractSelectList = finPrivateContractSelectList;
+	}
+
+
+
+	/**
+	 * @return the creditfacilitySelectList
+	 */
+	public List<ScQtCheckListScore> getCreditfacilitySelectList() {
+		return creditfacilitySelectList;
+	}
+
+
+
+	/**
+	 * @param creditfacilitySelectList the creditfacilitySelectList to set
+	 */
+	public void setCreditfacilitySelectList(
+			List<ScQtCheckListScore> creditfacilitySelectList) {
+		this.creditfacilitySelectList = creditfacilitySelectList;
+	}
+
+
+
+	/**
+	 * @return the cashSelectList
+	 */
+	public List<ScQtCheckListScore> getCashSelectList() {
+		return cashSelectList;
+	}
+
+
+
+	/**
+	 * @param cashSelectList the cashSelectList to set
+	 */
+	public void setCashSelectList(List<ScQtCheckListScore> cashSelectList) {
+		this.cashSelectList = cashSelectList;
+	}
+
+
+
+	/**
+	 * @return the bankSelectList
+	 */
+	public List<ScQtCheckListScore> getBankSelectList() {
+		return bankSelectList;
+	}
+
+
+
+	/**
+	 * @param bankSelectList the bankSelectList to set
+	 */
+	public void setBankSelectList(List<ScQtCheckListScore> bankSelectList) {
+		this.bankSelectList = bankSelectList;
+	}
+
+
+
+	/**
+	 * @return the assetLiabilitySelectList
+	 */
+	public List<ScQtCheckListScore> getAssetLiabilitySelectList() {
+		return assetLiabilitySelectList;
+	}
+
+
+
+	/**
+	 * @param assetLiabilitySelectList the assetLiabilitySelectList to set
+	 */
+	public void setAssetLiabilitySelectList(
+			List<ScQtCheckListScore> assetLiabilitySelectList) {
+		this.assetLiabilitySelectList = assetLiabilitySelectList;
+	}
+
+
+
+	/**
+	 * @return the paidUpSelectList
+	 */
+	public List<ScQtCheckListScore> getPaidUpSelectList() {
+		return paidUpSelectList;
+	}
+
+
+
+	/**
+	 * @param paidUpSelectList the paidUpSelectList to set
+	 */
+	public void setPaidUpSelectList(List<ScQtCheckListScore> paidUpSelectList) {
+		this.paidUpSelectList = paidUpSelectList;
+	}
+
+
+
+	/**
+	 * @return the tabActiveIndex
+	 */
+	public int getTabActiveIndex() {
+		return tabActiveIndex;
+	}
+
+
+
+	/**
+	 * @param tabActiveIndex the tabActiveIndex to set
+	 */
+	public void setTabActiveIndex(int tabActiveIndex) {
+		this.tabActiveIndex = tabActiveIndex;
+	}
+
+
+
+	/**
+	 * @return the rootZoanlTree
+	 */
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+
+
+	/**
+	 * @param rootZoanlTree the rootZoanlTree to set
+	 */
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+
+
 
 
 

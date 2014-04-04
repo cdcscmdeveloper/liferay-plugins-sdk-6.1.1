@@ -8,6 +8,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +44,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
@@ -90,9 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZoneLocation;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -100,12 +100,17 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -150,6 +155,8 @@ public class SpecificationBackingBean extends
 	private int count;
 
 	private String selctValue;
+	private int currentTab;
+	private int outputTab;
 
 	public SpecificationBackingBean() {
 		FacesScopes scope = new FacesScopes();
@@ -164,73 +171,136 @@ public class SpecificationBackingBean extends
 		this.count = count;
 	}
 
-	private List<ScQuoteZone> getQuoteZones(List<TreeNode> treeNodes,
-			ScQuote quote) {
-		List<ScQuoteZone> results = new ArrayList<ScQuoteZone>();
+	public String saveCommitteeGeneral() {
+		return "specificationCommitteeView.xhtml";
+	}
+
+	public String saveCommitteeTechnical() {
+		this.getManagedBean().setTabActiveIndex(2);
+		return "technicalChecklist.xhtml";
+	}
+
+	public String saveCommitteeFinancial() {
+		this.getManagedBean().setTabActiveIndex(3);
+		return "financialChecklist.xhtml";
+	}
+
+	public String saveCommitteeRecommendation() {
+		this.getManagedBean().setTabActiveIndex(6);
+		return "recomondation.xhtml";
+	}
+
+	public String saveCommitteeFulfilment() {
+		this.getManagedBean().setTabActiveIndex(7);
+		return "schedule.xhtml";
+	}
+
+	public String saveCommitteeDeliveryAddress() {
+		this.getManagedBean().setTabActiveIndex(8);
+		return "deliveryAddress.xhtml";
+	}
+
+	public String saveCommitteeEndorsment() {
+		this.getManagedBean().setTabActiveIndex(9);
+		return "specificationSignoff.xhtml";
+	}
+
+	public String saveCommitteeQualificationCriteria() {
+		this.getManagedBean().setTabActiveIndex(1);
+		return "SupplierCommitteeQualificationCriteria.xhtml";
+	}
+
+	private List<? extends TplSpecLoc> getQuoteZones(List<TreeNode> treeNodes,
+			ScQtSupplierCriteria supplierCriteria) {
+		List<TplSpecLoc> results = new ArrayList<TplSpecLoc>();
+		
 		for (TreeNode treeNode : treeNodes) {
-			for (TreeNode childNode : treeNode.getChildren()) {
-				LocationDTO locationDTO = (LocationDTO) childNode.getData();
-				if (locationDTO.getZone() != null) {
-					ScQuoteZone zone = locationDTO.getZone();
+			 List<TreeNode> stateNodes = treeNode.getChildren();
+			 
+			 for (TreeNode treeNode2 : stateNodes) {
+				List<TreeNode> district =  treeNode2.getChildren();
+			
+				for (TreeNode devision : district) {
+					if(devision.getChildCount()>0){
+						for (TreeNode districtNode : devision.getChildren()) {
+							ScQtLocCriteria criteria= new ScQtLocCriteria();
+							criteria.setPmDistrict(((ScQtLocCriteria)districtNode.getData()).getPmDistrict());
+							criteria.setPmDivision(((ScQtLocCriteria)districtNode.getParent().getData()).getPmDivision());
+							criteria.setPmState(((ScQtLocCriteria)treeNode2.getData()).getPmState()); 
+							criteria.setScQtSupplierCriteria(supplierCriteria);
+							results.add(criteria);
+						}
+					}else{
+					ScQtLocCriteria criteria= new ScQtLocCriteria();
+					criteria.setPmDistrict(((ScQtLocCriteria)devision.getData()).getPmDistrict());
+					criteria.setPmState(((ScQtLocCriteria)treeNode2.getData()).getPmState()); 
+					criteria.setScQtSupplierCriteria(supplierCriteria);
+					results.add(criteria);
+					}
+					
+				}
+			}
+				/*//ScQtLocCriteria locationDTO = (ScQtLocCriteria) childNode.getData();
 					List<PmState> pmStates = getPmStates(treeNode.getChildren());
 					System.out.println("======pmStates====" + pmStates.size());
-					List<ScQuoteZoneLocation> zoneStateLocations = new ArrayList<ScQuoteZoneLocation>();
+					List<ScQtLocCriteria> zoneStateLocations = new ArrayList<ScQtLocCriteria>();
 					if (pmStates != null && pmStates.size() > 0) {
 						for (PmState pmState : pmStates) {
-							ScQuoteZoneLocation zoneStateLocation = new ScQuoteZoneLocation();
-							zoneStateLocation.setZone(zone);
+							ScQtLocCriteria zoneStateLocation = new ScQtLocCriteria();
 							zoneStateLocation.setPmState(pmState);
 							zoneStateLocations.add(zoneStateLocation);
 						}
 					}
-					List<ScQuoteZoneLocation> zoneDivisionLocation = new ArrayList<ScQuoteZoneLocation>();
+					List<ScQtLocCriteria> zoneDivisionLocation = new ArrayList<ScQtLocCriteria>();
 					List<PmDivision> pmDivisions = getPmDivisions(treeNode
 							.getChildren());
 					System.out.println("======pmDivisions===="
 							+ pmDivisions.size());
 					if (pmDivisions != null && pmDivisions.size() > 0) {
 						for (PmDivision pmDivision : pmDivisions) {
-							ScQuoteZoneLocation zoneStateLocation = new ScQuoteZoneLocation();
-							zoneStateLocation.setZone(zone);
-							zoneStateLocation.setDivision(pmDivision);
+							ScQtLocCriteria zoneStateLocation = new ScQtLocCriteria();
+							zoneStateLocation.setPmDivision(pmDivision);
 							zoneDivisionLocation.add(zoneStateLocation);
 						}
 					}
-					List<ScQuoteZoneLocation> zoneDistrictLocation = new ArrayList<ScQuoteZoneLocation>();
+					List<ScQtLocCriteria> zoneDistrictLocation = new ArrayList<ScQtLocCriteria>();
 					List<PmDistrict> pmDistricts = getPmDistricts(treeNode
 							.getChildren());
 					System.out.println("======pmDistricts===="
 							+ pmDistricts.size());
 					if (pmDivisions != null && pmDivisions.size() > 0) {
 						for (PmDistrict pmDistrict : pmDistricts) {
-							ScQuoteZoneLocation zoneStateLocation = new ScQuoteZoneLocation();
-							zoneStateLocation.setZone(zone);
+							ScQtLocCriteria zoneStateLocation = new ScQtLocCriteria();
 							zoneStateLocation.setPmDistrict(pmDistrict);
 							zoneDistrictLocation.add(zoneStateLocation);
 						}
 					}
+					localList.addAll(zoneStateLocations);
+					localList.addAll(zoneStateLocations);
+					localList.addAll(zoneDistrictLocation);
 					zone.setZoneLocations(zoneStateLocations);
-					zone.getZoneLocations().addAll(zoneDivisionLocation);
+					zone.getZoneLocations().addAll(localList.addAll(zoneStateLocations););
 					zone.getZoneLocations().addAll(zoneDistrictLocation);
 					zone.setQuote(quote);
-					results.add(zone);
+					results.addAll(localList);*/
+			 return results;
 				}
-			}
-		}
+			
+		
 		return results;
 	}
 
 	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		List<PmState> results = new ArrayList<PmState>();
 		for (TreeNode treeNode : treeNodes) {
-			for (TreeNode stateNode : treeNode.getChildren()) {
-				if (treeNode.getChildren() != null) {
-					LocationDTO locationDTO = (LocationDTO) stateNode.getData();
-					if (locationDTO.getState() != null) {
-						results.add(locationDTO.getState());
+			
+				
+					ScQtLocCriteria locationDTO = (ScQtLocCriteria) treeNode.getData();
+					if (locationDTO.getPmState() != null) {
+						results.add(locationDTO.getPmState());
 					}
-				}
-			}
+				
+			
 		}
 		return results;
 	}
@@ -241,10 +311,10 @@ public class SpecificationBackingBean extends
 			for (TreeNode childNode : treeNode.getChildren()) {
 				for (TreeNode divNode : childNode.getChildren()) {
 					if (divNode.getChildren() != null) {
-						LocationDTO locationDTO = (LocationDTO) divNode
+						ScQtLocCriteria locationDTO = (ScQtLocCriteria) divNode
 								.getData();
-						if (locationDTO.getDivision() != null) {
-							results.add(locationDTO.getDivision());
+						if (locationDTO.getPmDivision() != null) {
+							results.add(locationDTO.getPmDivision());
 						}
 					}
 				}
@@ -257,9 +327,9 @@ public class SpecificationBackingBean extends
 		List<PmDistrict> results = new ArrayList<PmDistrict>();
 		for (TreeNode treeNode : treeNodes) {
 			if (treeNode.isLeaf()) {
-				LocationDTO locationDTO = (LocationDTO) treeNode.getData();
-				if (locationDTO.getDistrict() != null) {
-					results.add(locationDTO.getDistrict());
+				ScQtLocCriteria locationDTO = (ScQtLocCriteria) treeNode.getData();
+				if (locationDTO.getPmDistrict() != null) {
+					results.add(locationDTO.getPmDistrict());
 				}
 			} else {
 				if (treeNode.getChildren() != null) {
@@ -889,97 +959,126 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveTechnicalScoring() {
-		List<ScQtCheckList> checklist = this.getManagedBean()
-				.getScQtCheckSt2techProposal();
-		if (checklist == null) {
-			checklist = new ArrayList<ScQtCheckList>();
-		}
+	public String retriveTechnicalScoring() {
+		try {
+			this.getManagedBean().setTabActiveIndex(4);
+			List<ScQtCheckList> checklist = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (checklist == null) {
+				checklist = new ArrayList<ScQtCheckList>();
+			}
 
-		List<ScQtCheckList> technicalScoring = this.getManagedBean()
-				.getTechnicalScoring();
-		if (technicalScoring == null) {
-			technicalScoring = new ArrayList<ScQtCheckList>();
-		}
+			List<ScQtCheckList> technicalScoring = this.getManagedBean()
+					.getTechnicalScoring();
+			if (technicalScoring == null) {
+				technicalScoring = new ArrayList<ScQtCheckList>();
+			}
 
-		if (checklist.size() != technicalScoring.size()) {
-			System.out.println("====enter not null loop===");
-			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
-			int score = 0;
+			if (checklist.size() != technicalScoring.size()) {
+
+				List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+				int score = 0;
+				float addScore = 0;
+				for (ScQtCheckList list : checklist) {
+                  System.out.println("====tech scoring score===="+list.getQtScoreWeightage().getScore());
+					if (list.getQtScoreWeightage().getScore() == null) {
+						list.getQtScoreWeightage().setScore(new BigDecimal(0));
+					}
+					addScore = addScore + list.getQtScoreWeightage().getScore().intValue();
+					score = (int) addScore;
+
+				}
+				System.out.println("===out of llop===" + score);
+				this.getManagedBean().setTechPoints(score);
+
+				/*
+				 * for (ScQtCheckList list : checklist) { float addScore = 0; if
+				 * (list.getScQtCheckListScores() != null) {
+				 * 
+				 * for (ScQtCheckListScore checklistScore : list
+				 * .getScQtCheckListScores()) { //addScore = addScore +
+				 * checklistScore.getScore();
+				 * System.out.println(" add score====" + addScore);
+				 * if(getManagedBean
+				 * ().getTechnicalChecklistScoring()<checklistScore
+				 * .getScore().intValue()){ System.out.println(
+				 * "======getManagedBean().getTechnicalChecklistScoring()==="
+				 * +getManagedBean().getTechnicalChecklistScoring());
+				 * getManagedBean(
+				 * ).setTechnicalChecklistScoring(checklistScore.getScore
+				 * ().intValue()); list.setMaxScore(new
+				 * BigDecimal(getManagedBean().getTechnicalChecklistScoring()));
+				 * } // int local; //int local = (int) addScore; //score = score
+				 * + local; //this.getManagedBean().setTechPoints(score); } int
+				 * itemIndex = checklist.indexOf(list); //
+				 * checklist.remove(list); checklist.set(itemIndex,list); //
+				 * localChecklist.add(list);
+				 * 
+				 * }
+				 * 
+				 * }
+				 */
+				this.getManagedBean().setTechnicalScoring(checklist);
+			}
 			/*
-			 * for (ScQtCheckList list : checklist) { float addScore = 0; if
-			 * (list.getScQtCheckListScores() != null) {
-			 * 
-			 * for (ScQtCheckListScore checklistScore : list
-			 * .getScQtCheckListScores()) { //addScore = addScore +
-			 * checklistScore.getScore(); System.out.println(" add score====" +
-			 * addScore);
-			 * if(getManagedBean().getTechnicalChecklistScoring()<checklistScore
-			 * .getScore().intValue()){ System.out.println(
-			 * "======getManagedBean().getTechnicalChecklistScoring()==="
-			 * +getManagedBean().getTechnicalChecklistScoring());
-			 * getManagedBean(
-			 * ).setTechnicalChecklistScoring(checklistScore.getScore
-			 * ().intValue()); list.setMaxScore(new
-			 * BigDecimal(getManagedBean().getTechnicalChecklistScoring())); }
-			 * // int local; //int local = (int) addScore; //score = score +
-			 * local; //this.getManagedBean().setTechPoints(score); } int
-			 * itemIndex = checklist.indexOf(list); // checklist.remove(list);
-			 * checklist.set(itemIndex,list); // localChecklist.add(list);
-			 * 
-			 * }
-			 * 
-			 * }
+			 * else if(checklist.size()==technicalScoring.size()){
+			 * System.out.println("====equal===");
+			 * this.getManagedBean().setTechnicalScoring(checklist); }
 			 */
-			this.getManagedBean().setTechnicalScoring(checklist);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		/*
-		 * else if(checklist.size()==technicalScoring.size()){
-		 * System.out.println("====equal===");
-		 * this.getManagedBean().setTechnicalScoring(checklist); }
-		 */
+		return "weightageGroup.xhtml";
 	}
 
-	public void retriveFinancialScoring() {
-		List<ScQtCheckList> checklist = this.getManagedBean()
-				.getScQtCheckSt2financeProposalList();
-		if (checklist == null) {
-			checklist = new ArrayList<ScQtCheckList>();
-		}
+	public String retriveFinancialScoring() {
+		try {
+			this.getManagedBean().setTabActiveIndex(5);
+			List<ScQtCheckList> checklist = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (checklist == null) {
+				checklist = new ArrayList<ScQtCheckList>();
+			}
 
-		List<ScQtCheckList> financialScoring = this.getManagedBean()
-				.getFinancialScoring();
-		if (financialScoring == null) {
-			financialScoring = new ArrayList<ScQtCheckList>();
-		}
+			List<ScQtCheckList> financialScoring = this.getManagedBean()
+					.getFinancialScoring();
+			if (financialScoring == null) {
+				financialScoring = new ArrayList<ScQtCheckList>();
+			}
 
-		if (checklist.size() != financialScoring.size()) {
-			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
-			int score = 0;
-			/*
-			 * for (ScQtCheckList list : checklist) { float addScore = 0; if
-			 * (list.getScQtCheckListScores() != null) {
-			 * 
-			 * for (ScQtCheckListScore checklistScore : list
-			 * .getScQtCheckListScores()) { addScore = addScore +
-			 * checklistScore.getScore();
-			 * 
-			 * list.setMaxScore(new BigDecimal(addScore)); int local = (int)
-			 * addScore; score = score + local;
-			 * this.getManagedBean().setFinPoints(score); } //
-			 * checklist.remove(list); int itemIndex = checklist.indexOf(list);
-			 * // checklist.remove(list); checklist.set(itemIndex, list); //
-			 * checklist.add(list); // localChecklist.add(list); }
-			 * 
-			 * }
-			 */
-			this.getManagedBean().setFinancialScoring(checklist);
+			if (checklist.size() != financialScoring.size()) {
+				List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+				int score = 0;
+				float addScore = 0;
+				for (ScQtCheckList list : checklist) {
+
+					if (list.getQtScoreWeightage().getScore() == null) {
+						list.getQtScoreWeightage().setScore(new BigDecimal(0));
+					}
+
+					addScore = addScore + list.getQtScoreWeightage().getScore().intValue();
+
+					System.out.println("=====add score====" + addScore);
+
+					// list.setMaxScore(new BigDecimal(addScore)); int local =
+					// (int)
+					// addScore; score = score + local;
+					int local = (int) addScore;
+					this.getManagedBean().setFinPoints(local);
+				} //
+					// checklist.remove(list); int itemIndex =
+					// checklist.indexOf(list);
+					// checklist.remove(list); checklist.set(itemIndex, list);
+					// //
+					// checklist.add(list); // localChecklist.add(list); }
+
+				this.getManagedBean().setFinancialScoring(checklist);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		/*
-		 * else if(checklist.size()==financialScoring.size()){
-		 * 
-		 * this.getManagedBean().setFinancialScoring(checklist); }
-		 */
+		return "financialScoring.xhtml";
+
 	}
 
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
@@ -987,16 +1086,32 @@ public class SpecificationBackingBean extends
 
 	}
 
-	private List<LocationDTO> getLocations(TreeNode zoneLocation) {
-		List<LocationDTO> results = new ArrayList<LocationDTO>();
+	private List<ScQtLocCriteria> getLocations(TreeNode zoneLocation) {
+		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		if (zoneLocation.isLeaf()) {
-			LocationDTO locationDTO = (LocationDTO) zoneLocation.getData();
+			ScQtLocCriteria locationDTO = (ScQtLocCriteria) zoneLocation.getData();
 			results.add(locationDTO);
 		} else {
 			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
 				results.addAll(getLocations(childrendLocationNode));
 			}
 		}
+		return results;
+	}
+	
+	
+	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
+		System.out.println("=====enter getZoneLocations method===");
+		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
+		if (zoneLocation.isLeaf()) {
+			TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) zoneLocation.getData();
+			results.add(locationDTO);
+		} else {
+			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
+				results.addAll(getZoneLocations(childrendLocationNode));
+			}
+		}
+		System.out.println("=====end getZoneLocations method===");
 		return results;
 	}
 
@@ -1028,9 +1143,9 @@ public class SpecificationBackingBean extends
 	}
 
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
-		List<LocationDTO> locationDTOs = getLocations(rootZoneLocation);
+	List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
 
-		ScQuoteZone zone = getZone(rootZoneLocation);
+		//ScQuoteZone zone = getZone(rootZoneLocation);
 		List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTOs(locationDTOs);
 		List<PmDivision> divisions = SourcingLocationHelper
@@ -1045,16 +1160,13 @@ public class SpecificationBackingBean extends
 		int i = index;
 
 		this.getManagedBean().setIndex(i);
-		/*
-		 * getManagedBean().getZoneTrees().remove(
-		 * LocationSingleton.getInstance().buildZoneTree(zone, states,
-		 * districts, divisions, cities));
-		 */
-		getManagedBean().setZoneName(zone.getZoneName());
-		/*
-		 * if (zone != null) { getManagedBean().setZoneName(zone.getZoneName());
-		 * }
-		 */
+		
+		
+		 
+		//getManagedBean().setZoneName(zone.getZoneName());
+		
+	
+		 
 	}
 
 	public void showZoneLocationPopup() {
@@ -1067,6 +1179,19 @@ public class SpecificationBackingBean extends
 		}
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L, null,
+						null, null, null, locationLevel));
+	}
+	
+	public void showGeneralZoneLocationPopup() {
+
+		Integer locationLevel = (Integer) this.getManagedBean().getScQt()
+				.getZoneLocationLevel();
+
+		if (locationLevel == null) {
+			locationLevel = 3;
+		}
+		getManagedBean().setRootZoanlTree(
+				LocationSingleton.getInstance().buildLocationZonalTree(1L, null,
 						null, null, null, locationLevel));
 	}
 
@@ -1083,13 +1208,13 @@ public class SpecificationBackingBean extends
 	}
 
 	public void updateZoneLocation() {
-		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 		// TreeNode[] listSelectedTreeNode =
 		// getManagedBean().getSelectedNodes().clone();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (!treeNode.getParent().isSelected()) {
-					List<LocationDTO> locationDTO = getLocations(treeNode);
+					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
 					locationDTOs.addAll(locationDTO);
@@ -1097,11 +1222,39 @@ public class SpecificationBackingBean extends
 			}
 		}
 
-		ScQuoteZone zone = new ScQuoteZone();
+		//ScQuoteZone zone = new ScQuoteZone();
 
-		zone.setZoneName(getManagedBean().getZoneName());
-		getManagedBean().setZoneName(null);
-		if (this.getManagedBean().getScQt().isZonal() == true
+		//zone.setZoneName(getManagedBean().getZoneName());
+		
+
+			List<PmState> states = SourcingLocationHelper
+					.getStateFromLocationDTOs(locationDTOs);
+
+			List<PmDivision> divisions = SourcingLocationHelper
+					.getDivisionFromLocationDTOs(locationDTOs);
+			List<PmDistrict> districts = SourcingLocationHelper
+					.getDistrictFromLocationDTOs(locationDTOs);
+			List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTOs(locationDTOs);
+
+			if (getManagedBean().getIndex() == -1) {
+
+				getManagedBean().getZoneTrees().add(
+						LocationSingleton.getInstance().buildZoneTree(null,
+								states, districts, divisions, cities));
+			}
+			
+			
+			if (getManagedBean().getIndex() >= 0) {
+				getManagedBean().getZoneTrees().remove(getManagedBean().getIndex());
+				getManagedBean().getZoneTrees().add(
+						getManagedBean().getIndex(),
+						LocationSingleton.getInstance().buildZoneTree(null, states,
+								districts, divisions, cities));
+			}
+			this.getManagedBean().setIndex(-1);
+
+		/*if (this.getManagedBean().getScQt().isZonal() == false
 				&& this.getManagedBean().getSupplierCriteria().isAllState() == false) {
 
 			List<PmState> states = SourcingLocationHelper
@@ -1121,29 +1274,8 @@ public class SpecificationBackingBean extends
 								states, districts, divisions, cities));
 			}
 		}
-
-		if (this.getManagedBean().getScQt().isZonal() == false
-				&& this.getManagedBean().getSupplierCriteria().isAllState() == false) {
-
-			List<PmState> states = SourcingLocationHelper
-					.getStateFromLocationDTOs(locationDTOs);
-
-			List<PmDivision> divisions = SourcingLocationHelper
-					.getDivisionFromLocationDTOs(locationDTOs);
-			List<PmDistrict> districts = SourcingLocationHelper
-					.getDistrictFromLocationDTOs(locationDTOs);
-			List<PmCity> cities = SourcingLocationHelper
-					.getCityFromLocationDTOs(locationDTOs);
-
-			if (getManagedBean().getIndex() == -1) {
-
-				getManagedBean().getZoneTrees().add(
-						LocationSingleton.getInstance().buildZoneTree(null,
-								states, districts, divisions, cities));
-			}
-		}
-
-		if (this.getManagedBean().getScQt().isZonal() == true
+*/
+	/*	if (this.getManagedBean().getScQt().isZonal() == true
 				&& this.getManagedBean().getSupplierCriteria().isAllState() == true) {
 
 			List<PmState> states = new ArrayList<PmState>();
@@ -1178,8 +1310,8 @@ public class SpecificationBackingBean extends
 					getManagedBean().getIndex(),
 					LocationSingleton.getInstance().buildZoneTree(zone, states,
 							districts, divisions, cities));
-		}
-		this.getManagedBean().setIndex(-1);
+		}*/
+		
 		/*
 		 * getManagedBean().setRootLocationTree(
 		 * LocationSingleton.getInstance().buildLocationTree(1L, null, null,
@@ -1192,14 +1324,14 @@ public class SpecificationBackingBean extends
 	}
 
 	public void updateZoneGeneralLocation() {
-		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		// TreeNode[] listSelectedTreeNode =
 		// getManagedBean().getSelectedNodes().clone();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
 			for (TreeNode treeNode : getManagedBean()
 					.getSelectedGeneralTreeNodes()) {
 				if (!treeNode.getParent().isSelected()) {
-					List<LocationDTO> locationDTO = getLocations(treeNode);
+					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
 					locationDTOs.addAll(locationDTO);
@@ -1209,27 +1341,27 @@ public class SpecificationBackingBean extends
 		System.out.println("==managed bean zone name==="
 				+ getManagedBean().getZoneName());
 
-		ScQuoteZone zone = new ScQuoteZone();
+		TplSpecZoneDtl zone = new TplSpecZoneDtl();
 
 		zone.setZoneName(getManagedBean().getZoneName());
 		getManagedBean().setZoneName(null);
 
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTOs(locationDTOs);
+		/*List<PmState> states = SourcingLocationHelper
+				.getStateFromZoneLocationDTOs(locationDTOs);
 		System.out.println("===stae===" + states.size());
 		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTOs(locationDTOs);
+				.getDivisionFromZoneLocationDTOs(locationDTOs);
 		System.out.println("===divisions===" + divisions.size());
 		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTOs(locationDTOs);
+				.getDistrictFromZoneLocationDTOs(locationDTOs);
 		System.out.println("===districts===" + districts.size());
 		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTOs(locationDTOs);
+				.getCityFromZoneLocationDTOs(locationDTOs);
 
 		if (getManagedBean().getIndex() == -1) {
 			System.out.println("====enter -1 loop" + zone.getZoneName());
 			getManagedBean().getZoneGeneralTrees().add(
-					LocationSingleton.getInstance().buildZoneTree(zone, states,
+					LocationSingleton.getInstance().buildGeneralZoneTree(zone, states,
 							districts, divisions, cities));
 
 		}
@@ -1240,10 +1372,13 @@ public class SpecificationBackingBean extends
 					getManagedBean().getIndex());
 			getManagedBean().getZoneGeneralTrees().add(
 					getManagedBean().getIndex(),
-					LocationSingleton.getInstance().buildZoneTree(zone, states,
+					LocationSingleton.getInstance().buildGeneralZoneTree(zone, states,
 							districts, divisions, cities));
 		}
-		this.getManagedBean().setIndex(-1);
+		this.getManagedBean().setIndex(-1);*/
+		TreeNode rootTree= LocationSingleton.getInstance().constuctTreeNode(zone, locationDTOs);
+		getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().constuctTreeNode(zone, locationDTOs));
+		
 		/*
 		 * getManagedBean().setRootLocationTree(
 		 * LocationSingleton.getInstance().buildLocationTree(1L, null, null,
@@ -1256,19 +1391,19 @@ public class SpecificationBackingBean extends
 	}
 
 	public void updateZoneLocationList() {
-		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 		// TreeNode[] listSelectedTreeNode =
 		// getManagedBean().getSelectedNodes().clone();
 		if (getManagedBean().getSelectedLocNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedLocNodes()) {
 				if (!treeNode.getParent().isSelected()) {
-					LocationDTO locationDTO = (LocationDTO) treeNode.getData();
+					ScQtLocCriteria locationDTO = (ScQtLocCriteria) treeNode.getData();
 					locationDTOs.add(locationDTO);
 				}
 			}
 		}
 
-		ScQuoteZone zone = new ScQuoteZone();
+		TplSpecZoneDtl zone = new TplSpecZoneDtl();
 		System.out.println("zone name : " + getManagedBean().getZoneName1());
 		zone.setZoneName(getManagedBean().getZoneName1());
 		getManagedBean().setZoneName(null);
@@ -1294,17 +1429,15 @@ public class SpecificationBackingBean extends
 		// System.out.println("Zone Name : " + getManagedBean().getZoneName());
 	}
 
-	public void calculateFromAmount() {
-
-		int amount = this.getManagedBean().getScQt().getEstimatedAmount()
-				.intValue()
-				* this.getManagedBean().getFromJulat() / 100;
-		int totalamount = this.getManagedBean().getScQt().getEstimatedAmount()
-				.intValue()
-				+ amount;
-		this.getManagedBean().setFromPrice(new BigDecimal(totalamount));
-	}
-
+	/*
+	 * public void calculateFromAmount() {
+	 * 
+	 * int amount = this.getManagedBean().getScQt().getEstimatedAmount()
+	 * .intValue() this.getManagedBean().getFromJulat() / 100; int totalamount =
+	 * this.getManagedBean().getScQt().getEstimatedAmount() .intValue() +
+	 * amount; this.getManagedBean().setFromPrice(new BigDecimal(totalamount));
+	 * }
+	 */
 	public void calculateToAmount() {
 
 		int amount = this.getManagedBean().getScQt().getEstimatedAmount()
@@ -1484,8 +1617,9 @@ public class SpecificationBackingBean extends
 
 		// scqtSpec.setScQtCheckLists(collectionAll);
 		// scqtSpec.setScQtWeightages(weightList);
-		getQuoteZones(this.getManagedBean().getZoneGeneralTrees(),
-				new ScQuote());
+		 List<ScQtLocCriteria> locCriteria=	(List<ScQtLocCriteria>) getQuoteZones(this.getManagedBean().getZoneTrees(),null);
+		
+		 System.out.println("============treenode loc criteria list size====="+locCriteria.size());
 
 		// scQt.setScQtSpec(scqtSpec);
 
@@ -1544,6 +1678,15 @@ public class SpecificationBackingBean extends
 				if (this.getManagedBean().getItemScoreSetting() == null) {
 					this.getManagedBean().setItemScoreSetting(
 							new ScQtScoreOfferPrice());
+				}
+
+				if (this.getManagedBean().getTechnicalScoreSetting() == null) {
+					this.getManagedBean().setTechnicalScoreSetting(
+							new ScQtScoreSetting());
+				}
+				if (this.getManagedBean().getFinancialScoreSetting() == null) {
+					this.getManagedBean().setFinancialScoreSetting(
+							new ScQtScoreSetting());
 				}
 
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
@@ -1634,22 +1777,63 @@ public class SpecificationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*this.getManagedBean().getScQtCheckSt2techProposal().get(0)
-				.setChecklistType(type);*/
+		/*
+		 * this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+		 * .setChecklistType(type);
+		 */
 	}
 
 	public void checklistActionChange(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
-		/*this.getManagedBean().getScQtCheckSt2techProposal().get(0)
-				.setChecklistAction(type);*/
+		/*
+		 * this.getManagedBean().getScQtCheckSt2techProposal().get(0)
+		 * .setChecklistAction(type);
+		 */
 	}
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
-		String type = (String) event.getComponent().getAttributes()
-				.get("value");
-		System.out.println("====fulfilment value====" + type);
-		this.getManagedBean().getScQt().setFulfilmentType(type);
+		try {
+			String type = (String) event.getComponent().getAttributes()
+					.get("value");
+
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
+			if (type != null) {
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterId()
+							.equals(Long.valueOf(type))) {
+
+						this.getManagedBean().setFulfilmentType(
+								paramDesc.getCodeName());
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void procurementChange(AjaxBehaviorEvent event) {
+		try {
+			Long type = (Long) event.getComponent().getAttributes()
+					.get("value");
+
+			this.getManagedBean().getScQt()
+					.setFulfilmentType(String.valueOf(type));
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
+			for (PmParameterDesc paramDesc : localParamDesc) {
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(Long.valueOf(type))) {
+
+					this.getManagedBean().setProcuremntCategory(
+							paramDesc.getCodeName());
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void stateChange(AjaxBehaviorEvent event) {
@@ -2226,10 +2410,9 @@ public class SpecificationBackingBean extends
 
 	public ScQtCheckList createSpecList(String stage) {
 		// ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
-		ScQtScoreWeightage weightage = this.getManagedBean()
-				.getScQtScoreWeightage();
+		ScQtScoreWeightage weightage = new ScQtScoreWeightage();
 		ScQtCheckList additionProposalst1 = new ScQtCheckList();
-		
+		additionProposalst1.setQtScoreWeightage(weightage);
 		// additionProposalst1.sets
 
 		// additionProposalst1.setScQtSpec(scQtSpec);
@@ -2343,6 +2526,7 @@ public class SpecificationBackingBean extends
 			ScQtCheckList st2financeproposalList2 = createSpecList("2");
 			st2financeproposalList2.setDocType("3");
 			st2financeproposalList2.setChecklistType("UP");
+			st2financeproposalList2.setScoringReq(true);
 			// st2financeproposalList2.setEvaluationStage("2");
 			st2financeproposalList.add(st2financeproposalList2);
 			this.getManagedBean().setScoringList(null);
@@ -2435,6 +2619,7 @@ public class SpecificationBackingBean extends
 						+ bean.getPmCheckList().getChecklistType());
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
 				scqtlist.setManditory(true);
+				scqtlist.setScoringReq(true);
 				compilance.add(scqtlist);
 				scqtlist.setDocType("1");
 				// scqtlist.setEnable(true);
@@ -2461,9 +2646,10 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st2technicalproposalList1 = new ScQtCheckList();
+			ScQtCheckList st2technicalproposalList1 = createSpecList("2");
 
 			st2technicalproposalList1.setDocType("1");
+			st2technicalproposalList1.setScoringReq(true);
 			// st2technicalproposalList1.setChecklistType("UP");
 			// st2technicalproposalList1.setEvaluationStage("2");
 			// st2technicalproposalList1.setScQtCheckListScores();
@@ -2510,6 +2696,7 @@ public class SpecificationBackingBean extends
 				ScQtCheckList scqtlist = createSpecList("2");
 				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
 				scqtlist.setDocType("3");
+				scqtlist.setScoringReq(true);
 				// scqtlist.setEnable(true);
 				scqtlist.setChecklistType(bean.getPmCheckList()
 						.getChecklistType());
@@ -3098,6 +3285,7 @@ public class SpecificationBackingBean extends
 
 		try {
 			/* System.out.println("=enter addscore method==="); */
+			int year = Calendar.getInstance().get(Calendar.YEAR);
 			List<ScQtSchedule> freqSchedule = this.getManagedBean()
 					.getScheduleList();
 			if (null == freqSchedule) {
@@ -3117,7 +3305,7 @@ public class SpecificationBackingBean extends
 				int listsize = freqSchedule.size();
 				int textsize = this.getManagedBean().getTotalFrequency();
 				int lesstotal = listsize - textsize;
-
+				System.out.println("==========if loop====");
 				freqSchedule = new ArrayList<ScQtSchedule>();
 				for (int j = 0; j < textsize; j++) {
 					ScQtSchedule schedule = new ScQtSchedule();
@@ -3127,8 +3315,11 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = freqSchedule.size(); i < this.getManagedBean()
 					.getTotalFrequency(); i++) {
-				ScQtSchedule schedule = new ScQtSchedule();
 
+				;
+				ScQtSchedule schedule = new ScQtSchedule();
+				schedule.setStartYear(String.valueOf(year));
+				schedule.setEndYear(String.valueOf(year));
 				freqSchedule.add(schedule);
 			}
 			this.getManagedBean().setScheduleList(freqSchedule);
@@ -3139,10 +3330,47 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public void calculateStartMonth(AjaxBehaviorEvent event) {
+		String startMonth = (String) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("======select start month===" + startMonth);
+
+	}
+
+	public void calculateSchedulePercentage(ScQtSchedule schedule) {
+		/*
+		 * String endMonth = (String) event.getComponent().getAttributes()
+		 * .get("value");
+		 */
+		List<ScQtSchedule> freqSchedule = this.getManagedBean()
+				.getScheduleList();
+		if (null == freqSchedule) {
+			freqSchedule = new ArrayList<ScQtSchedule>();
+
+		}
+
+		int start = Integer.parseInt(schedule.getStartMonth());
+		int end = Integer.parseInt(schedule.getEndMonth());
+		int count = 0;
+
+		for (int i = start + 1; i <= end + 1; i++) {
+
+			count++;
+
+			schedule.setTotalMonths(new BigDecimal(count));
+		}
+
+		int index = freqSchedule.indexOf(schedule);
+		freqSchedule.set(index, schedule);
+
+		this.getManagedBean().setScheduleList(freqSchedule);
+	}
+
 	public void addProgressiveDetails() {
 
 		try {
 			/* System.out.println("=enter addscore method==="); */
+			int year = Calendar.getInstance().get(Calendar.YEAR);
 			List<ScQtSchedule> progressive = this.getManagedBean()
 					.getProgressivePaymentList();
 			if (null == progressive) {
@@ -3168,8 +3396,10 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = progressive.size(); i < this.getManagedBean()
 					.getTotalProgressivePayment(); i++) {
+				System.out.println("=====dispaly  payment year===" + year);
 				ScQtSchedule payment = new ScQtSchedule();
-
+				payment.setStartMonth(String.valueOf(year));
+				payment.setEndYear(String.valueOf(year));
 				progressive.add(payment);
 			}
 			this.getManagedBean().setProgressivePaymentList(progressive);
@@ -3186,119 +3416,175 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public void calculateTotalPackage() {
+		try {
+			if (this.getManagedBean().getTechnicalpackage() == null) {
+				this.getManagedBean().setTechnicalpackage(new BigDecimal(0));
+			}
+			if (this.getManagedBean().getFinancialpackage() == null) {
+				this.getManagedBean().setFinancialpackage(new BigDecimal(0));
+			}
+			int local = this.getManagedBean().getTechnicalpackage().intValue()
+					+ this.getManagedBean().getFinancialpackage().intValue();
+
+			this.getManagedBean().setRecommendationPackageTotal(
+					new BigDecimal(local));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
+		try {
+			if (technical.getOverallTechnical() == null) {
+				technical.setOverallTechnical(new BigDecimal(0));
+			}
+			if (technical.getOverallOtherTechnical() == null) {
+				technical.setOverallOtherTechnical(new BigDecimal(0));
+			}
+			int local = technical.getOverallTechnical().intValue()
+					+ technical.getOverallOtherTechnical().intValue();
+
+			this.getManagedBean().setRecommendTechnicalScore(
+					new BigDecimal(local));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
+		try {
+			if (financial.getOverallFin() == null) {
+				financial.setOverallFin(new BigDecimal(0));
+			}
+			if (financial.getOverallOtherFin() == null) {
+				financial.setOverallOtherFin(new BigDecimal(0));
+			}
+			int local = financial.getOverallFin().intValue()
+					+ financial.getOverallOtherFin().intValue();
+
+			this.getManagedBean().setRecommendfinancialScore(
+					new BigDecimal(local));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void acceptCompanyScoring() {
-		try{
-		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-		ScQtCheckListScore noContract = this.getManagedBean()
-				.getScQtCheckListScore();
-		ScQtCheckListScore scoreOfYears = this.getManagedBean()
-				.getScQtContractScore();
-		if (noContract == null) {
-			noContract = new ScQtCheckListScore();
-		}
-		if (scoreOfYears == null) {
-			scoreOfYears = new ScQtCheckListScore();
-		}
+		try {
+			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+			ScQtCheckListScore noContract = this.getManagedBean()
+					.getScQtCheckListScore();
+			ScQtCheckListScore scoreOfYears = this.getManagedBean()
+					.getScQtContractScore();
+			if (noContract == null) {
+				noContract = new ScQtCheckListScore();
+			}
+			if (scoreOfYears == null) {
+				scoreOfYears = new ScQtCheckListScore();
+			}
 
-		List<ScQtCheckListScore> checkListScore = this.getManagedBean()
-				.getCheckListScore();
-		if (null == checkListScore) {
-			checkListScore = new ArrayList<ScQtCheckListScore>();
+			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
+					.getCheckListScore();
+			if (null == checkListScore) {
+				checkListScore = new ArrayList<ScQtCheckListScore>();
 
-		}
-		List<ScQtCheckListScore> scoreYears = this.getManagedBean()
-				.getScoringForYears();
-		if (null == scoreYears) {
-			scoreYears = new ArrayList<ScQtCheckListScore>();
+			}
+			List<ScQtCheckListScore> scoreYears = this.getManagedBean()
+					.getScoringForYears();
+			if (null == scoreYears) {
+				scoreYears = new ArrayList<ScQtCheckListScore>();
 
-		}
-		List<ScQtCheckListScore> scoreContract = this.getManagedBean()
-				.getContractAmount();
-		if (null == scoreContract) {
-			scoreContract = new ArrayList<ScQtCheckListScore>();
+			}
+			List<ScQtCheckListScore> scoreContract = this.getManagedBean()
+					.getContractAmount();
+			if (null == scoreContract) {
+				scoreContract = new ArrayList<ScQtCheckListScore>();
 
-		}
-		List<ScQtCheckListScore> localList = this.getManagedBean()
-				.getCollectionScoring();
-		if (localList == null) {
-			localList = new ArrayList<ScQtCheckListScore>();
-		}
-		int checklistScore = 0;
-		if (checkListScore.size() > 0) {
-			System.out.println("=== company checkListScore list not null==");
-			getManagedBean().setTechnicalChecklistScoring(0);
-			for (ScQtCheckListScore score : checkListScore) {
+			}
+			List<ScQtCheckListScore> localList = this.getManagedBean()
+					.getCollectionScoring();
+			if (localList == null) {
+				localList = new ArrayList<ScQtCheckListScore>();
+			}
+			int checklistScore = 0;
+			if (checkListScore.size() > 0) {
+				System.out
+						.println("=== company checkListScore list not null==");
+				getManagedBean().setTechnicalChecklistScoring(0);
+				for (ScQtCheckListScore score : checkListScore) {
 
-				if (getManagedBean().getTechnicalChecklistScoring() < score
-						.getScore().intValue()) {
-					;
-					getManagedBean().setTechnicalChecklistScoring(
-							score.getScore().intValue());
-					checklistScore = getManagedBean()
-							.getTechnicalChecklistScoring();
+					if (getManagedBean().getTechnicalChecklistScoring() < score
+							.getScore().intValue()) {
+						;
+						getManagedBean().setTechnicalChecklistScoring(
+								score.getScore().intValue());
+						checklistScore = getManagedBean()
+								.getTechnicalChecklistScoring();
 
+					}
+					score.setScoreType(new BigDecimal(this.getManagedBean()
+							.getChecklistScoreType()));
+					int index = checkListScore.indexOf(score);
+					checkListScore.set(index, score);
 				}
-				score.setScoreType(new BigDecimal(this.getManagedBean()
+				localList.addAll(checkListScore);
+			}
+			int scoreYear = 0;
+			if (scoreYears.size() > 0) {
+
+				getManagedBean().setTechnicalChecklistScoring(0);
+				for (ScQtCheckListScore score : scoreYears) {
+
+					if (getManagedBean().getTechnicalChecklistScoring() < score
+							.getScore().intValue()) {
+						;
+						getManagedBean().setTechnicalChecklistScoring(
+								score.getScore().intValue());
+						scoreYear = getManagedBean()
+								.getTechnicalChecklistScoring();
+
+					}
+					score.setScoreType(new BigDecimal(this.getManagedBean()
+							.getCompanyScoreType()));
+					int index = scoreYears.indexOf(score);
+					scoreYears.set(index, score);
+				}
+				localList.addAll(scoreYears);
+			}
+
+			if (noContract.getScore() != null) {
+
+				noContract.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				int index = checkListScore.indexOf(score);
-				checkListScore.set(index, score);
+
+				checklistScore = noContract.getScore().intValue();
+				localList.add(noContract);
 			}
-			localList.addAll(checkListScore);
-		}
-		int scoreYear = 0;
-		if (scoreYears.size() > 0) {
 
-			getManagedBean().setTechnicalChecklistScoring(0);
-			for (ScQtCheckListScore score : scoreYears) {
+			if (scoreOfYears.getScore() != null) {
 
-				if (getManagedBean().getTechnicalChecklistScoring() < score
-						.getScore().intValue()) {
-					;
-					getManagedBean().setTechnicalChecklistScoring(
-							score.getScore().intValue());
-					scoreYear = getManagedBean().getTechnicalChecklistScoring();
-
-				}
-				score.setScoreType(new BigDecimal(this.getManagedBean()
+				scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
 						.getCompanyScoreType()));
-				int index = scoreYears.indexOf(score);
-				scoreYears.set(index, score);
+
+				scoreYear = scoreOfYears.getScore().intValue();
+				localList.add(scoreOfYears);
 			}
-			localList.addAll(scoreYears);
-		}
+			int localScore = scoreYear + checklistScore;
 
-		if (noContract.getScore() != null) {
+			checkList.getQtScoreWeightage().setScore(new BigDecimal(localScore));
+			// itemIndex = checklist.indexOf(list); // checklist.remove(list);
+			// * checklist.set(itemIndex,list);
+			/*
+			 * if (scoreContract != null) {
+			 * 
+			 * localList.addAll(scoreContract); }
+			 */
 
-			noContract.setScoreType(new BigDecimal(this.getManagedBean()
-					.getChecklistScoreType()));
-
-			checklistScore = noContract.getScore().intValue();
-			localList.add(noContract);
-		}
-
-		if (scoreOfYears.getScore() != null) {
-
-			scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
-					.getCompanyScoreType()));
-
-			scoreYear = scoreOfYears.getScore().intValue();
-			localList.add(scoreOfYears);
-		}
-		int localScore = scoreYear + checklistScore;
-
-		checkList.setMaxScore(new BigDecimal(localScore));
-		// itemIndex = checklist.indexOf(list); // checklist.remove(list);
-		// * checklist.set(itemIndex,list);
-		/*
-		 * if (scoreContract != null) {
-		 * 
-		 * localList.addAll(scoreContract); }
-		 */
-
-		checkList.setScQtCheckListScores(localList);
-		// this.getManagedBean().setCollectionScoring(localList);
-		// }ll
-		}catch(Exception e){
+			checkList.setScQtCheckListScores(localList);
+			// this.getManagedBean().setCollectionScoring(localList);
+			// }ll
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -3387,26 +3673,28 @@ public class SpecificationBackingBean extends
 
 				localList.addAll(scoreContract);
 			}
-              if(noContract.getScore()!=null){
-				
-				noContract.setScoreType(new BigDecimal(this.getManagedBean().getChecklistScoreType()));
-				
-				checklistScore=noContract.getScore().intValue();
+			if (noContract.getScore() != null) {
+
+				noContract.setScoreType(new BigDecimal(this.getManagedBean()
+						.getChecklistScoreType()));
+
+				checklistScore = noContract.getScore().intValue();
 				localList.add(noContract);
 			}
-              
-              if(scoreOfYears.getScore()!=null){
-  				
-            	  scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean().getCompanyScoreType()));
-  				
-            	  scoreYear=scoreOfYears.getScore().intValue();
-  				localList.add(scoreOfYears);
-  			}
+
+			if (scoreOfYears.getScore() != null) {
+
+				scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
+						.getCompanyScoreType()));
+
+				scoreYear = scoreOfYears.getScore().intValue();
+				localList.add(scoreOfYears);
+			}
 
 			int localScore = scoreYear + checklistScore;
 			System.out.println("=====max score value save value===="
 					+ localScore);
-			checkList.setMaxScore(new BigDecimal(localScore));
+			checkList.getQtScoreWeightage().setScore(new BigDecimal(localScore));
 
 			checkList.setScQtCheckListScores(localList);
 			// this.getManagedBean().setCollectionScoring(localList);
@@ -3467,7 +3755,7 @@ public class SpecificationBackingBean extends
 			contractScore = finCompanyScore.getScore().intValue();
 			localList.add(finCompanyScore);
 		}
-		checkList.setMaxScore(new BigDecimal(contractScore));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
 
 		checkList.setScQtCheckListScores(localList);
 
@@ -3523,7 +3811,7 @@ public class SpecificationBackingBean extends
 			localList.add(finPrivateScore);
 		}
 
-		checkList.setMaxScore(new BigDecimal(contractScore));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
 
 		checkList.setScQtCheckListScores(localList);
 
@@ -3578,7 +3866,7 @@ public class SpecificationBackingBean extends
 			warranty = checkListScore.getScore().intValue();
 			localList.add(checkListScore);
 		}
-		checkList.setMaxScore(new BigDecimal(warranty));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(warranty));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3634,7 +3922,7 @@ public class SpecificationBackingBean extends
 			training = checkListScore.getScore().intValue();
 			localList.add(checkListScore);
 		}
-		checkList.setMaxScore(new BigDecimal(training));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(training));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3689,7 +3977,7 @@ public class SpecificationBackingBean extends
 			technical = technicalEmployee.getScore().intValue();
 			localList.add(technicalEmployee);
 		}
-		checkList.setMaxScore(new BigDecimal(technical));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(technical));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3746,7 +4034,7 @@ public class SpecificationBackingBean extends
 			localList.add(employeeChecklist);
 		}
 
-		checkList.setMaxScore(new BigDecimal(employee));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(employee));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3802,7 +4090,7 @@ public class SpecificationBackingBean extends
 			credit = creditFacility.getScore().intValue();
 			localList.add(creditFacility);
 		}
-		checkList.setMaxScore(new BigDecimal(credit));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(credit));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3858,7 +4146,7 @@ public class SpecificationBackingBean extends
 			cash = acceptCash.getScore().intValue();
 			localList.add(acceptCash);
 		}
-		checkList.setMaxScore(new BigDecimal(cash));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(cash));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3914,7 +4202,7 @@ public class SpecificationBackingBean extends
 			bank = bankDetails.getScore().intValue();
 			localList.add(bankDetails);
 		}
-		checkList.setMaxScore(new BigDecimal(bank));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(bank));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -3970,7 +4258,7 @@ public class SpecificationBackingBean extends
 			asset = assetChecklist.getScore().intValue();
 			localList.add(assetChecklist);
 		}
-		checkList.setMaxScore(new BigDecimal(asset));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(asset));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -4027,7 +4315,7 @@ public class SpecificationBackingBean extends
 			localList.add(paidUpChecklist);
 		}
 
-		checkList.setMaxScore(new BigDecimal(paidUp));
+		checkList.getQtScoreWeightage().setScore(new BigDecimal(paidUp));
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
@@ -4087,30 +4375,24 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getYearList();
 	}
 
-	public void checkListDefChange(AjaxBehaviorEvent event) {
-		String type = (String) event.getComponent().getAttributes()
-				.get("value");
-		System.out.println("=====checklist change type value===" + type);
-		try {
-			List<SelectItem> selectItems = new ArrayList<SelectItem>();
-			if (type.equalsIgnoreCase("S")) {
-				this.getManagedBean().setTechnicalChecklistAction(null);
-				System.out.println("====sample===");
-				selectItems.add(new SelectItem("M", "Manual"));
-				this.getManagedBean().setTechnicalChecklistAction(selectItems);
-			}
-			if (type.equalsIgnoreCase("UP")) {
-				System.out.println("====upload===");
-				this.getManagedBean().setTechnicalChecklistAction(null);
-				selectItems.add(new SelectItem(null, "--Select One--"));
-				selectItems.add(new SelectItem("V", "View"));
-				selectItems.add(new SelectItem("O", "Online Submit"));
-				this.getManagedBean().setTechnicalChecklistAction(selectItems);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * public void checkListDefChange(AjaxBehaviorEvent event) { String type =
+	 * (String) event.getComponent().getAttributes() .get("value");
+	 * System.out.println("=====checklist change type value===" + type); try {
+	 * List<SelectItem> selectItems = new ArrayList<SelectItem>(); if
+	 * (type.equalsIgnoreCase("S")) {
+	 * this.getManagedBean().setTechnicalChecklistAction(null);
+	 * System.out.println("====sample==="); selectItems.add(new SelectItem("M",
+	 * "Manual"));
+	 * this.getManagedBean().setTechnicalChecklistAction(selectItems); } if
+	 * (type.equalsIgnoreCase("UP")) { System.out.println("====upload===");
+	 * this.getManagedBean().setTechnicalChecklistAction(null);
+	 * selectItems.add(new SelectItem(null, "--Select One--"));
+	 * selectItems.add(new SelectItem("V", "View")); selectItems.add(new
+	 * SelectItem("O", "Online Submit"));
+	 * this.getManagedBean().setTechnicalChecklistAction(selectItems); } } catch
+	 * (Exception e) { e.printStackTrace(); } }
+	 */
 
 	public List<SelectItem> getProcurementDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
@@ -4627,17 +4909,314 @@ public class SpecificationBackingBean extends
 	}
 
 	public void deleteScoring() {
-		List<ScQtCheckListScore> scoringList = getManagedBean()
-				.getScoringList();
+		try {
+			// delete for company experience for Government company Technical
+			// checklist
+			List<ScQtCheckListScore> scoringList = getManagedBean()
+					.getCheckListScore();
+			if (scoringList == null) {
+				scoringList = new ArrayList<ScQtCheckListScore>();
+			}
 
-		List<ScQtCheckListScore> selectScoring = this.getManagedBean()
-				.getSelectscoring();
+			List<ScQtCheckListScore> selectchecklistScoring = this
+					.getManagedBean().getCheckListSelectScore();
+			if (selectchecklistScoring == null) {
+				selectchecklistScoring = new ArrayList<ScQtCheckListScore>();
+			}
 
-		if (scoringList.size() == selectScoring.size()) {
-			scoringList.clear();
-		} else {
-			for (ScQtCheckListScore scoring : selectScoring)
-				scoringList.remove(scoring);
+			if (scoringList.size() == selectchecklistScoring.size()) {
+				scoringList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : selectchecklistScoring)
+					scoringList.remove(scoring);
+			}
+
+			// delete company experience for federal government company scoring
+			// years technical checklist
+			List<ScQtCheckListScore> scoringYears = getManagedBean()
+					.getScoringForYears();
+			if (scoringYears == null) {
+				scoringYears = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> selectGovScoringYears = this
+					.getManagedBean().getScoringForSelectYears();
+			if (selectGovScoringYears == null) {
+				selectGovScoringYears = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (scoringYears.size() == selectGovScoringYears.size()) {
+				scoringYears.clear();
+			} else {
+				for (ScQtCheckListScore scoring : selectGovScoringYears)
+					scoringYears.remove(scoring);
+			}
+
+			// delete for company experience for federal private company scoring
+			// Technical Checklist
+			List<ScQtCheckListScore> nonfederalCompany = getManagedBean()
+					.getNonFederalScore();
+			if (nonfederalCompany == null) {
+				nonfederalCompany = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> nonFederalSelect = this.getManagedBean()
+					.getNonFederalSelectScore();
+			if (nonFederalSelect == null) {
+				nonFederalSelect = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (nonfederalCompany.size() == nonFederalSelect.size()) {
+				nonfederalCompany.clear();
+			} else {
+				for (ScQtCheckListScore scoring : nonFederalSelect)
+					nonfederalCompany.remove(scoring);
+			}
+
+			// delete for company experience for federal private company scoring
+			// yers Technical Checklist
+			List<ScQtCheckListScore> nonfederalCompanyYears = getManagedBean()
+					.getNonFederalScoreyears();
+			if (nonfederalCompanyYears == null) {
+				nonfederalCompanyYears = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> nonFederalSelectYears = this
+					.getManagedBean().getNonFederalSelectScoreyears();
+			if (nonFederalSelectYears == null) {
+				nonFederalSelectYears = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (nonfederalCompanyYears.size() == nonFederalSelectYears.size()) {
+				nonfederalCompanyYears.clear();
+			} else {
+				for (ScQtCheckListScore scoring : nonFederalSelectYears)
+					nonfederalCompanyYears.remove(scoring);
+			}
+
+			// delete for warranty scoring Technical Checklist
+			List<ScQtCheckListScore> warrantyScore = getManagedBean()
+					.getWarantySelectScore();
+			if (warrantyScore == null) {
+				warrantyScore = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> warrantySelectList = this.getManagedBean()
+					.getWarantySelectScore();
+			if (warrantySelectList == null) {
+				warrantySelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (warrantyScore.size() == warrantySelectList.size()) {
+				warrantyScore.clear();
+			} else {
+				for (ScQtCheckListScore scoring : warrantySelectList)
+					warrantyScore.remove(scoring);
+			}
+
+			// delete for training scoring Technical Checklist
+			List<ScQtCheckListScore> trainingScoreList = getManagedBean()
+					.getTrainingScore();
+			if (trainingScoreList == null) {
+				trainingScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> trainingSelectList = this.getManagedBean()
+					.getTrainingSelectList();
+			if (trainingSelectList == null) {
+				trainingSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (trainingScoreList.size() == trainingSelectList.size()) {
+				trainingScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : trainingSelectList)
+					trainingScoreList.remove(scoring);
+			}
+
+			// delete for technical staff scoring Technical Checklist
+			List<ScQtCheckListScore> staffScoreList = getManagedBean()
+					.getTechnicalStaffScore();
+			if (staffScoreList == null) {
+				staffScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> staffSelectList = this.getManagedBean()
+					.getTechnicalStaffSelectList();
+			if (staffSelectList == null) {
+				staffSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (staffScoreList.size() == staffSelectList.size()) {
+				staffScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : staffSelectList)
+					staffScoreList.remove(scoring);
+			}
+
+			// delete for total employee scoring Technical Checklist
+			List<ScQtCheckListScore> totalEmployeeScoreList = getManagedBean()
+					.getTotalEmployeeScore();
+			if (totalEmployeeScoreList == null) {
+				totalEmployeeScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> totalEmployeeSelectList = this
+					.getManagedBean().getTotalEmployeeSelectList();
+			if (totalEmployeeSelectList == null) {
+				totalEmployeeSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (totalEmployeeScoreList.size() == totalEmployeeSelectList.size()) {
+				totalEmployeeScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : totalEmployeeSelectList)
+					totalEmployeeScoreList.remove(scoring);
+			}
+
+			// delete for federal Government financial Checklist
+			List<ScQtCheckListScore> finGovScoreList = getManagedBean()
+					.getContractAmount();
+			if (finGovScoreList == null) {
+				finGovScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> finGovSelectList = this.getManagedBean()
+					.getFinGovContractSelectList();
+			if (finGovSelectList == null) {
+				finGovSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (finGovScoreList.size() == finGovSelectList.size()) {
+				finGovScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : finGovSelectList)
+					finGovScoreList.remove(scoring);
+			}
+
+			// delete for federal Private financial Checklist
+			List<ScQtCheckListScore> finPrivateScoreList = getManagedBean()
+					.getNonFederalContractScore();
+			if (finPrivateScoreList == null) {
+				finPrivateScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> finPrivateSelectList = this
+					.getManagedBean().getFinPrivateContractSelectList();
+			if (finPrivateSelectList == null) {
+				finPrivateSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (finPrivateScoreList.size() == finPrivateSelectList.size()) {
+				finPrivateScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : finPrivateSelectList)
+					finPrivateScoreList.remove(scoring);
+			}
+
+			// delete for credit facility financial Checklist
+			List<ScQtCheckListScore> creditfacilitycoreList = getManagedBean()
+					.getCreditFacility();
+			if (creditfacilitycoreList == null) {
+				creditfacilitycoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> creditFacilitySelectList = this
+					.getManagedBean().getCreditfacilitySelectList();
+			if (creditFacilitySelectList == null) {
+				creditFacilitySelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (creditfacilitycoreList.size() == creditFacilitySelectList
+					.size()) {
+				creditfacilitycoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : creditFacilitySelectList)
+					creditfacilitycoreList.remove(scoring);
+			}
+
+			// delete for cah on hand financial Checklist
+			List<ScQtCheckListScore> cashScoreList = getManagedBean()
+					.getScoringCash();
+			if (cashScoreList == null) {
+				cashScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> cashSelectList = this.getManagedBean()
+					.getCreditfacilitySelectList();
+			if (cashSelectList == null) {
+				cashSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (cashScoreList.size() == cashSelectList.size()) {
+				cashScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : cashSelectList)
+					cashScoreList.remove(scoring);
+			}
+
+			// delete for bank statement financial Checklist
+			List<ScQtCheckListScore> bankScoreList = getManagedBean()
+					.getBankStamentScore();
+			if (bankScoreList == null) {
+				bankScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> bankSelectList = this.getManagedBean()
+					.getBankSelectList();
+			if (bankSelectList == null) {
+				bankSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (bankScoreList.size() == bankSelectList.size()) {
+				bankScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : bankSelectList)
+					bankScoreList.remove(scoring);
+			}
+
+			// delete for Assets Liabilities financial Checklist
+			List<ScQtCheckListScore> assetScoreList = getManagedBean()
+					.getAssetScore();
+			if (assetScoreList == null) {
+				assetScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> assetSelectList = this.getManagedBean()
+					.getAssetLiabilitySelectList();
+			if (assetSelectList == null) {
+				assetSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (assetScoreList.size() == assetSelectList.size()) {
+				assetScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : assetSelectList)
+					assetScoreList.remove(scoring);
+			}
+
+			// delete for PaidUp Capital financial Checklist
+			List<ScQtCheckListScore> paidUpScoreList = getManagedBean()
+					.getPaidUpCapitalScore();
+			if (paidUpScoreList == null) {
+				paidUpScoreList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			List<ScQtCheckListScore> paidUpSelectList = this.getManagedBean()
+					.getPaidUpSelectList();
+			if (paidUpSelectList == null) {
+				paidUpSelectList = new ArrayList<ScQtCheckListScore>();
+			}
+
+			if (paidUpScoreList.size() == paidUpSelectList.size()) {
+				paidUpScoreList.clear();
+			} else {
+				for (ScQtCheckListScore scoring : paidUpSelectList)
+					paidUpScoreList.remove(scoring);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -4755,7 +5334,10 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
 				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				total = total + weight.getWeightage().intValue();
+				if (weight.getQtScoreWeightage().getWeightage() == null) {
+					weight.getQtScoreWeightage().setWeightage(new BigDecimal(0));
+				}
+				total = total + weight.getQtScoreWeightage().getWeightage().intValue();
 				BigDecimal b1 = new BigDecimal(total);
 				BigDecimal techWeightage = new BigDecimal(100);
 				MathContext mc = new MathContext(4);
@@ -4779,15 +5361,19 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
 				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (getManagedBean().getTechnicalChecklistScoring() < weight
+				if (weight.getQtScoreWeightage().getWeightage() == null) {
+					weight.getQtScoreWeightage().setWeightage(new BigDecimal(0));
+				}
+				if (getManagedBean().getTechnicalChecklistScoring() < weight.getQtScoreWeightage()
 						.getWeightage().intValue()) {
 					getManagedBean().setTechnicalChecklistScoring(
-							weight.getWeightage().intValue());
+							weight.getQtScoreWeightage().getWeightage().intValue());
 					getManagedBean().setScoreVarience(
 							new BigDecimal(getManagedBean()
 									.getTechnicalChecklistScoring()));
 				}
-				total = total + weight.getWeightage().intValue();
+
+				total = total + weight.getQtScoreWeightage().getWeightage().intValue();
 				BigDecimal b1 = new BigDecimal(total);
 				BigDecimal techWeightage = new BigDecimal(100);
 				MathContext mc = new MathContext(4);
@@ -5010,6 +5596,36 @@ public class SpecificationBackingBean extends
 	public void setTemplateSpecCreate(
 			IPagingDataModel<ScQtDoc> templateSpecCreate) {
 		this.templateSpecCreate = templateSpecCreate;
+	}
+
+	/**
+	 * @return the currentTab
+	 */
+	public int getCurrentTab() {
+		return currentTab;
+	}
+
+	/**
+	 * @param currentTab
+	 *            the currentTab to set
+	 */
+	public void setCurrentTab(int currentTab) {
+		this.currentTab = currentTab;
+	}
+
+	/**
+	 * @return the outputTab
+	 */
+	public int getOutputTab() {
+		return outputTab;
+	}
+
+	/**
+	 * @param outputTab
+	 *            the outputTab to set
+	 */
+	public void setOutputTab(int outputTab) {
+		this.outputTab = outputTab;
 	}
 
 }
