@@ -456,6 +456,7 @@ public class LocationSingleton {
 			TplSpecZoneLoc locCriteria= new TplSpecZoneLoc();
 			locCriteria.setPmState(state);
 			TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
+			
 			// build state tree
 		
 			
@@ -747,7 +748,7 @@ public class LocationSingleton {
 		//LocationDTO zoneLocation = new LocationDTO(zone);
 		
 		// Build zone - state
-		 zoneNode = new DefaultTreeNode("zone",zone.getZoneName(), rootLocationTree);
+		 zoneNode = new DefaultTreeNode("zone",zone, rootLocationTree);
 		}
 
 		//LocationDTO	zoneLocation	=	new LocationDTO(zone);
@@ -1021,30 +1022,32 @@ public class LocationSingleton {
 		if(tplSpecZoneDtl!=null){
 			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneDtl,root);
 			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			TreeNode stateNode=null;
+			TreeNode divisonNode = null;
 			//List<TreeNode> locations = new ArrayList<TreeNode>();
 			for (TplSpecLoc locCriteria : specLocs) {
 				PmState pmState = locCriteria.getPmState();
 				
-				if (!states.contains(pmState)) {
+				if (null != pmState && !states.contains(pmState)) {
 					 stateNode = new DefaultTreeNode("state", locCriteria, zoneNode);					
 					//locations.add(root);
 				}
 				PmDivision division = locCriteria.getPmDivision();
-				TreeNode divisonNode = null;
+				
 				if (division != null) {
 					divisonNode = new DefaultTreeNode("division", locCriteria, stateNode);
 					
 				}
 				PmDistrict pmDistrict = locCriteria.getPmDistrict();
-				TreeNode districtNode = null;
+				
 				if (pmDistrict != null) {
 					if (divisonNode == null) {
-						districtNode = new DefaultTreeNode("division", locCriteria,
+						 new DefaultTreeNode("district", locCriteria,
 								stateNode);
 						
 					} else {
-						districtNode = new DefaultTreeNode("district", locCriteria,
+						 new DefaultTreeNode("district", locCriteria,
 								divisonNode);
 						
 					}

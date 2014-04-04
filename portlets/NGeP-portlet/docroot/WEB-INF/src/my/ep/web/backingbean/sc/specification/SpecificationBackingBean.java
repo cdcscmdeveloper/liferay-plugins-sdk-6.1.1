@@ -1324,18 +1324,21 @@ public class SpecificationBackingBean extends
 	}
 
 	public void updateZoneGeneralLocation() {
-		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
+		//List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		// TreeNode[] listSelectedTreeNode =
 		// getManagedBean().getSelectedNodes().clone();
+		List<TplSpecZoneLoc> allNodes= new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
 			for (TreeNode treeNode : getManagedBean()
 					.getSelectedGeneralTreeNodes()) {
+			
 				if (!treeNode.getParent().isSelected()) {
 					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
-					locationDTOs.addAll(locationDTO);
+					allNodes.addAll(locationDTO);
 				}
+				
 			}
 		}
 		System.out.println("==managed bean zone name==="
@@ -1346,17 +1349,17 @@ public class SpecificationBackingBean extends
 		zone.setZoneName(getManagedBean().getZoneName());
 		getManagedBean().setZoneName(null);
 
-		/*List<PmState> states = SourcingLocationHelper
-				.getStateFromZoneLocationDTOs(locationDTOs);
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromZoneLocationDTOs(allNodes);
 		System.out.println("===stae===" + states.size());
 		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromZoneLocationDTOs(locationDTOs);
+				.getDivisionFromZoneLocationDTOs(allNodes);
 		System.out.println("===divisions===" + divisions.size());
 		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromZoneLocationDTOs(locationDTOs);
+				.getDistrictFromZoneLocationDTOs(allNodes);
 		System.out.println("===districts===" + districts.size());
 		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromZoneLocationDTOs(locationDTOs);
+				.getCityFromZoneLocationDTOs(allNodes);
 
 		if (getManagedBean().getIndex() == -1) {
 			System.out.println("====enter -1 loop" + zone.getZoneName());
@@ -1375,10 +1378,10 @@ public class SpecificationBackingBean extends
 					LocationSingleton.getInstance().buildGeneralZoneTree(zone, states,
 							districts, divisions, cities));
 		}
-		this.getManagedBean().setIndex(-1);*/
-		TreeNode rootTree= LocationSingleton.getInstance().constuctTreeNode(zone, locationDTOs);
-		getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().constuctTreeNode(zone, locationDTOs));
-		
+		this.getManagedBean().setIndex(-1);
+		/*TreeNode rootTree= LocationSingleton.getInstance().constuctTreeNode(zone, locationDTOs);
+		getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().constuctTreeNode(zone, allNodes));
+		*/
 		/*
 		 * getManagedBean().setRootLocationTree(
 		 * LocationSingleton.getInstance().buildLocationTree(1L, null, null,
