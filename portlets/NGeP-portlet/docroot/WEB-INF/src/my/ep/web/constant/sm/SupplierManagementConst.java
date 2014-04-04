@@ -57,4 +57,13 @@ public class SupplierManagementConst {
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
 	public static final String SM_OFFICE_FACILITY_INFO_PANEL = "OfficeFacilityInfoPanel";
 
+	public static final String INDIVIDUAL_FLAG = "13";
+	public static final String STYPE_CONSULTANT = "J";
+	public static final String STYPE_CONTRACTOR = "K";
+	public static final String STYPE_BASIC = "B";
+	public static final String PERM_ADD = "P";
+	public static final String BUS_ADD = "C";
+	public static final String RES_ADD = "R";
+	public static final int DEFAULT_REV_NO = 1;
+	public static final String PROF_SERVICE = "P";
 }
