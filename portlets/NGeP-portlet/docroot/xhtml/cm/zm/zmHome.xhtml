@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="contentSection">
+	
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
+					process="@all, zoneDetailsDataTable" partialSubmit="true"
+		     action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
+						style="float:right;" icon="ui-icon-save" />
+	
+				</p:column>
+			</p:row>
+		</p:panelGrid>	
+		<h:panelGrid id="zoneTable" width="100%" style="margin-top:20px">
+			<p:dataTable id="zoneDetailsDataTable" 
+				        value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}" var="zoneTree"
+				        rowIndexVar="index">
+					<p:column headerText="Details">
+					<p:tree id="treeZoneDetails"
+						value="#{zoneTree}"
+						var="zN" >
+						 <p:treeNode type="cmSupplierZone">
+							<h:outputText value="#{zN.locationName}" />
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{zN.locationName}" />
+						</p:treeNode>
+						<p:treeNode type="division">
+							<h:outputText value="#{zN.locationName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{zN.locationName}" />
+						</p:treeNode>
+					</p:tree>
+				</p:column>	
+				<p:column headerText="Action">
+				
+				<p:commandLink 
+					     actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
+					     process="@this" update="@([id$=zonePopupPanel])" oncomplete="ZL.show();">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+					<p:commandLink process="@all" update="zoneDetailsDataTable"
+					     actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
+						<p:graphicImage library="ep/images/design" name="trash.png"
+							value="/resources/ep/images/design/trash.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>	
+		</h:panelGrid>
+				&#160;&#160;
+				
+		<div align="right" style="width: 100%">
+			<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" 
+			     update="@([id$=zonePopupPanel])" partialSubmit="true" 
+				 oncomplete="ZL.show();" 
+				 actionListener="#{zoneMaintenanceBackingBean.showZonePopup}" icon="ui-icon-add"/>
+		</div>	
+		
+		<p:dialog header="ZL" widgetVar="ZL" modal="true"
+		width="800" height="500">
+			<h:panelGroup id="zonePopupPanel">
+				<table styleClass="noBorders tr,noBorders td" >
+					<TR>
+						<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
+						</TD>
+						<TD width="80%"><p:inputText id="zoneNameId"
+								value="#{zoneMaintenanceBackingBean.managedBean.zoneName}" ></p:inputText>
+						</TD>
+					</TR>
+					<TR>
+						<TD width="20%" valign="top"><p:outputLabel value="Zone Details"></p:outputLabel>
+						</TD>
+						<TD width="80%">
+						
+							<p:tree id="treeZoneLocationPopup"
+								value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
+								var="location"
+								selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
+								selectionMode="checkbox" >
+								 <p:treeNode type="state">
+									<h:outputText value="#{location.locationName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.locationName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.locationName}" />
+								</p:treeNode> 
+							</p:tree>
+						</TD>
+					</TR>
+				</table>
+			</h:panelGroup>
+			<p:commandButton
+					value="#{lbl['lbl.cm.zm.btn.ok']}"
+					style="float:right;" onclick="ZL.hide();" process="@all ,zoneNameId"
+					update="@this, zonePopupPanel" partialSubmit="true"
+					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
+		   </p:commandButton>
+					&#160;&#160;
+			
+			
+			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;"
+				onclick="ZL.hide();"></p:commandButton>
+		</p:dialog>	 			
+	</ui:define>	
+</ui:composition>
