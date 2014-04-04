@@ -15,7 +15,10 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -284,8 +287,11 @@ public class LocationSingleton {
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 		
 		for (PmState state : allStates) {
-			LocationDTO stateLocation = new LocationDTO(state);
-			TreeNode stateNode = new DefaultTreeNode("state",stateLocation, rootLocationTree);
+			//LocationDTO stateLocation = new LocationDTO(state);
+			System.out.println("======display state name==="+state.getStateName());
+			ScQtLocCriteria locCriteria= new ScQtLocCriteria();
+			locCriteria.setPmState(state);
+			TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
 			// build state tree
 		
 			
@@ -295,11 +301,11 @@ public class LocationSingleton {
 				for (PmDistrict district : state.getPmDistricts()) {
 					if(district.getPmDivision() == null){
 						
-						LocationDTO districtLocation = new LocationDTO(district);
+						//LocationDTO districtLocation = new LocationDTO(district);
 						//TreeNode districtNode = new DefaultTreeNode(districtLocation, stateNode);
 						// build district tree
 						for (PmCity city : district.getPmCities()) {
-							LocationDTO cityLocation = new LocationDTO(city);
+							///LocationDTO cityLocation = new LocationDTO(city);
 							//TreeNode cityNode = new DefaultTreeNode(cityLocation, districtNode);
 							if (cityIds.contains(city.getCityId())) {
 								//cityNode.setSelected(Boolean.TRUE);
@@ -313,11 +319,13 @@ public class LocationSingleton {
 				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 				
 					for (PmDivision division : state.getPmDivisions()) {
-						LocationDTO divisionLocation = new LocationDTO(division);
-						TreeNode divisionNode = new DefaultTreeNode("division",divisionLocation, stateNode);
+						System.out.println("======display location 2 division not null name==="+division.getDivisionName());
+						ScQtLocCriteria locCriteria1= new ScQtLocCriteria();
+						locCriteria1.setPmDivision(division);
+						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
 						// build division tree
 						for (PmDistrict district : division.getPmDistricts()) {
-							LocationDTO districtLocation = new LocationDTO(district);
+							//LocationDTO districtLocation = new LocationDTO(district);
 							//TreeNode districtNode = new DefaultTreeNode(districtLocation, divisionNode);
 							// build district tree
 							for (PmCity city : district.getPmCities()) {
@@ -345,8 +353,11 @@ public class LocationSingleton {
 				for (PmDistrict district : state.getPmDistricts()) {
 					if(district.getPmDivision() == null){
 						
-						LocationDTO districtLocation = new LocationDTO(district);
-						TreeNode districtNode = new DefaultTreeNode("district",districtLocation, stateNode);
+				
+						
+						ScQtLocCriteria criteria= new ScQtLocCriteria();
+						criteria.setPmDistrict(district);
+						TreeNode districtNode = new DefaultTreeNode("district",criteria, stateNode);
 						// build district tree
 						for (PmCity city : district.getPmCities()) {
 							LocationDTO cityLocation = new LocationDTO(city);
@@ -363,12 +374,180 @@ public class LocationSingleton {
 				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 				
 					for (PmDivision division : state.getPmDivisions()) {
-						LocationDTO divisionLocation = new LocationDTO(division);
-						TreeNode divisionNode = new DefaultTreeNode("division",divisionLocation, stateNode);
+						ScQtLocCriteria locCriteria1= new ScQtLocCriteria();
+						locCriteria1.setPmDivision(division);
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
 						// build division tree
 						for (PmDistrict district : division.getPmDistricts()) {
-							LocationDTO districtLocation = new LocationDTO(district);
-							TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
+							//LocationDTO districtLocation = new LocationDTO(district);
+							ScQtLocCriteria locCriteria11= new ScQtLocCriteria();
+							locCriteria11.setPmDistrict(district);
+							TreeNode districtNode = new DefaultTreeNode("district",locCriteria11, divisionNode);
+							// build district tree
+							for (PmCity city : district.getPmCities()) {
+								LocationDTO cityLocation = new LocationDTO(city);
+								//TreeNode cityNode = new DefaultTreeNode(cityLocation, districtNode);
+								if (cityIds.contains(city.getCityId())) {
+									//cityNode.setSelected(Boolean.TRUE);
+								}
+							}
+						}
+						if (divisionIds.contains(division.getDivisionId())) {
+							divisionNode.setSelected(Boolean.TRUE);
+						}
+					}
+				}
+				if (stateIds.contains(state.getStateId())) {
+					stateNode.setSelected(Boolean.TRUE);
+				}
+			}
+			
+		}
+		return rootLocationTree;
+	}
+	
+	
+	
+	public TreeNode buildLocationZonalTree(Long countryId, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities,Integer location) {
+		List<PmState> allStates = mapStates.get(countryId);
+		Set<Long> stateIds = new HashSet<Long>();
+		Set<Long> districtIds = new HashSet<Long>();
+		Set<Long> divisionIds = new HashSet<Long>();
+		Set<Long> cityIds = new HashSet<Long>();
+		
+		// get list Id for all state, district, division, city
+		if (listStates != null && listStates.size() > 0) {
+			
+			for (PmState state : listStates) {
+				stateIds.add(state.getStateId());
+			}
+		}
+		if (listDistricts != null && listDistricts.size() > 0) {
+			
+			for (PmDistrict district : listDistricts) {
+				districtIds.add(district.getDistrictId());
+			}
+		}
+		if (listDivisions != null && listDivisions.size() > 0) {
+			
+			for (PmDivision division : listDivisions) {
+				divisionIds.add(division.getDivisionId());
+			}
+		}
+		if (listCities != null && listCities.size() > 0) {
+		
+			for (PmCity city : listCities) {
+				cityIds.add(city.getCityId());
+			}
+		}
+
+		if (allStates == null) {
+			
+			allStates = initialStatesForCountry(countryId);
+		}
+
+		// build tree
+		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
+		
+		for (PmState state : allStates) {
+			//LocationDTO stateLocation = new LocationDTO(state);
+			System.out.println("======display state name==="+state.getStateName());
+			TplSpecZoneLoc locCriteria= new TplSpecZoneLoc();
+			locCriteria.setPmState(state);
+			TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
+			// build state tree
+		
+			
+			
+			if(location==2){
+				
+				for (PmDistrict district : state.getPmDistricts()) {
+					if(district.getPmDivision() == null){
+						
+						//LocationDTO districtLocation = new LocationDTO(district);
+						//TreeNode districtNode = new DefaultTreeNode(districtLocation, stateNode);
+						// build district tree
+						for (PmCity city : district.getPmCities()) {
+							///LocationDTO cityLocation = new LocationDTO(city);
+							//TreeNode cityNode = new DefaultTreeNode(cityLocation, districtNode);
+							if (cityIds.contains(city.getCityId())) {
+								//cityNode.setSelected(Boolean.TRUE);
+							}
+						}
+						if (districtIds.contains(district.getDistrictId())) {
+							//districtNode.setSelected(Boolean.TRUE);
+						}
+					}
+				}
+				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
+				
+					for (PmDivision division : state.getPmDivisions()) {
+						System.out.println("======display location 2 division not null name==="+division.getDivisionName());
+						TplSpecZoneLoc locCriteria1= new TplSpecZoneLoc();
+						locCriteria1.setPmDivision(division);
+						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
+						// build division tree
+						for (PmDistrict district : division.getPmDistricts()) {
+							//LocationDTO districtLocation = new LocationDTO(district);
+							//TreeNode districtNode = new DefaultTreeNode(districtLocation, divisionNode);
+							// build district tree
+							for (PmCity city : district.getPmCities()) {
+								LocationDTO cityLocation = new LocationDTO(city);
+								//TreeNode cityNode = new DefaultTreeNode(cityLocation, districtNode);
+								if (cityIds.contains(city.getCityId())) {
+									//cityNode.setSelected(Boolean.TRUE);
+								}
+							}
+						}
+						if (divisionIds.contains(division.getDivisionId())) {
+							divisionNode.setSelected(Boolean.TRUE);
+						}
+					}
+				}
+				if (stateIds.contains(state.getStateId())) {
+					stateNode.setSelected(Boolean.TRUE);
+				}
+			}
+			
+			
+			
+			if(location==3){
+				
+				for (PmDistrict district : state.getPmDistricts()) {
+					if(district.getPmDivision() == null){
+						
+				
+						
+						TplSpecZoneLoc criteria= new TplSpecZoneLoc();
+						criteria.setPmDistrict(district);
+						TreeNode districtNode = new DefaultTreeNode("district",criteria, stateNode);
+						// build district tree
+						for (PmCity city : district.getPmCities()) {
+							LocationDTO cityLocation = new LocationDTO(city);
+							//TreeNode cityNode = new DefaultTreeNode(cityLocation, districtNode);
+							if (cityIds.contains(city.getCityId())) {
+								//cityNode.setSelected(Boolean.TRUE);
+							}
+						}
+						if (districtIds.contains(district.getDistrictId())) {
+							districtNode.setSelected(Boolean.TRUE);
+						}
+					}
+				}
+				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
+				
+					for (PmDivision division : state.getPmDivisions()) {
+						TplSpecZoneLoc locCriteria1= new TplSpecZoneLoc();
+						locCriteria1.setPmDivision(division);
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
+						// build division tree
+						for (PmDistrict district : division.getPmDistricts()) {
+							//LocationDTO districtLocation = new LocationDTO(district);
+							TplSpecZoneLoc locCriteria11= new TplSpecZoneLoc();
+							locCriteria11.setPmDistrict(district);
+							TreeNode districtNode = new DefaultTreeNode("district",locCriteria11, divisionNode);
 							// build district tree
 							for (PmCity city : district.getPmCities()) {
 								LocationDTO cityLocation = new LocationDTO(city);
@@ -401,7 +580,7 @@ public class LocationSingleton {
 	 * @param listCities
 	 * @return
 	 */
-	public TreeNode buildZoneTree(ScQuoteZone zone, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
+	public TreeNode buildZoneTree(TplSpecZoneDtl zone, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 		
 		Map<PmState, Map<PmDistrict,List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(listDistricts, listCities);
@@ -410,10 +589,10 @@ public class LocationSingleton {
 		
 		TreeNode zoneNode=null;
 		if(zone !=null){
-		LocationDTO zoneLocation = new LocationDTO(zone);
+		//LocationDTO zoneLocation = new LocationDTO(zone);
 		
 		// Build zone - state
-		 zoneNode = new DefaultTreeNode("zone",zoneLocation, rootLocationTree);
+		 zoneNode = new DefaultTreeNode("zone",zone.getZoneName(), rootLocationTree);
 		}
 
 		//LocationDTO	zoneLocation	=	new LocationDTO(zone);
@@ -421,7 +600,9 @@ public class LocationSingleton {
 		//TreeNode zoneNode = new DefaultTreeNode("zone",zoneLocation, rootLocationTree);
 		if(listStates != null && listStates.size() > 0){
 			for(PmState state: listStates){
-				LocationDTO stateLocation = new LocationDTO(state);
+				//LocationDTO stateLocation = new LocationDTO(state);
+				ScQtLocCriteria stateLocation= new ScQtLocCriteria();
+				stateLocation.setPmState(state);
 				TreeNode stateNode=null;
 				if(zoneNode !=null){
 					 stateNode =new DefaultTreeNode("state",stateLocation, zoneNode);
@@ -436,7 +617,9 @@ public class LocationSingleton {
 		Set<PmState>	statesDivisionKeySet	=	mapStatesDivision.keySet();
 		if(statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()){
 			for(PmState state: statesDivisionKeySet){
-				LocationDTO stateLocation = new LocationDTO(state);
+				//LocationDTO stateLocation = new LocationDTO(state);
+				ScQtLocCriteria stateLocation= new ScQtLocCriteria();
+				stateLocation.setPmState(state);
 				TreeNode stateNode=null;
 				if(zoneNode !=null){
 					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
@@ -449,7 +632,9 @@ public class LocationSingleton {
 				List<PmDivision>	divisions	=	mapStatesDivision.get(state);
 				if(divisions != null && !divisions.isEmpty()){
 					for(PmDivision division: divisions){
-						LocationDTO divisionLocation = new LocationDTO(division);
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						ScQtLocCriteria divisionLocation= new ScQtLocCriteria();
+						divisionLocation.setPmDivision(division);
 						TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
 					}
 				}
@@ -459,7 +644,9 @@ public class LocationSingleton {
 		Set<PmState>	statesDistrictsCitiesKeySet	=	mapStatesDistrictsCities.keySet();
 		if(statesDistrictsCitiesKeySet != null && !statesDistrictsCitiesKeySet.isEmpty()){
 			for(PmState state: statesDistrictsCitiesKeySet){
-				LocationDTO stateLocation = new LocationDTO(state);
+				//LocationDTO stateLocation = new LocationDTO(state);
+				ScQtLocCriteria stateLocation= new ScQtLocCriteria();
+				stateLocation.setPmState(state);
 				TreeNode stateNode=null;
 				if(zoneNode !=null){
 					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
@@ -473,7 +660,9 @@ public class LocationSingleton {
 				Set<PmDistrict>		districtsCitiesKeySet	=	mapDistrictsCities.keySet();
 				if(districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()){
 					for(PmDistrict district: districtsCitiesKeySet){
-						LocationDTO districtLocation = new LocationDTO(district);
+						//LocationDTO districtLocation = new LocationDTO(district);
+						ScQtLocCriteria districtLocation= new ScQtLocCriteria();
+						districtLocation.setPmDistrict(district);
 						TreeNode districtNode = new DefaultTreeNode("district",districtLocation, stateNode);
 						List<PmCity>	cities	=	mapDistrictsCities.get(district);
 						if(cities != null && !cities.isEmpty()){
@@ -490,7 +679,9 @@ public class LocationSingleton {
 		Set<PmState>	statesDivisionsDistrictsCitiesKeySet	=	mapStatesDivisionsDistrictsCities.keySet();
 		if(statesDivisionsDistrictsCitiesKeySet != null && !statesDivisionsDistrictsCitiesKeySet.isEmpty()){
 			for(PmState state: statesDivisionsDistrictsCitiesKeySet){
-				LocationDTO stateLocation = new LocationDTO(state);
+				//LocationDTO stateLocation = new LocationDTO(state);
+				ScQtLocCriteria stateLocation= new ScQtLocCriteria();
+				stateLocation.setPmState(state);
 				TreeNode stateNode=null;
 				if(zoneNode !=null){
 					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
@@ -503,13 +694,17 @@ public class LocationSingleton {
 				Set<PmDivision>	divisionsDistrictsCitiesKeySet	=	mapDivisionsDistrictsCities.keySet();
 				if(divisionsDistrictsCitiesKeySet != null && !divisionsDistrictsCitiesKeySet.isEmpty()){
 					for(PmDivision division: divisionsDistrictsCitiesKeySet){
-						LocationDTO divisionLocation = new LocationDTO(division);
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						ScQtLocCriteria divisionLocation= new ScQtLocCriteria();
+						divisionLocation.setPmDivision(division);
 						TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
 						Map<PmDistrict,List<PmCity>>	mapDistrictsCities	=	mapDivisionsDistrictsCities.get(division);
 						Set<PmDistrict>		districtsCitiesKeySet	=	mapDistrictsCities.keySet();
 						if(districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()){
 							for(PmDistrict district: districtsCitiesKeySet){
-								LocationDTO districtLocation = new LocationDTO(district);
+								//LocationDTO districtLocation = new LocationDTO(district);
+								ScQtLocCriteria districtLocation= new ScQtLocCriteria();
+								districtLocation.setPmDistrict(district);
 								TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
 								List<PmCity>	cities	=	mapDistrictsCities.get(district);
 								if(cities != null && !cities.isEmpty()){
@@ -526,6 +721,163 @@ public class LocationSingleton {
 		}
 		return rootLocationTree;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param zone
+	 * @param listStates
+	 * @param listDistricts
+	 * @param listDivisions
+	 * @param listCities
+	 * @return
+	 */
+	public TreeNode buildGeneralZoneTree(TplSpecZoneDtl zone, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
+		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
+		
+		Map<PmState, Map<PmDistrict,List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(listDistricts, listCities);
+		Map<PmState,Map<PmDivision,Map<PmDistrict,List<PmCity>>>> mapStatesDivisionsDistrictsCities = getUniqueStatesDivisionsDistrictsCities(listDistricts, listCities);
+		Map<PmState,List<PmDivision>>	mapStatesDivision	=	getUniqueStatesDivision(listDivisions);
+		
+		TreeNode zoneNode=null;
+		if(zone !=null){
+		//LocationDTO zoneLocation = new LocationDTO(zone);
+		
+		// Build zone - state
+		 zoneNode = new DefaultTreeNode("zone",zone.getZoneName(), rootLocationTree);
+		}
+
+		//LocationDTO	zoneLocation	=	new LocationDTO(zone);
+		//Build zone - state
+		//TreeNode zoneNode = new DefaultTreeNode("zone",zoneLocation, rootLocationTree);
+		if(listStates != null && listStates.size() > 0){
+			for(PmState state: listStates){
+				//LocationDTO stateLocation = new LocationDTO(state);
+				TplSpecZoneLoc stateLocation= new TplSpecZoneLoc();
+				stateLocation.setPmState(state);
+				TreeNode stateNode=null;
+				if(zoneNode !=null){
+					 stateNode =new DefaultTreeNode("state",stateLocation, zoneNode);
+					}else{
+						stateNode = new DefaultTreeNode("state",stateLocation,
+								rootLocationTree);
+					}
+
+				//TreeNode stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+			}
+		}
+		Set<PmState>	statesDivisionKeySet	=	mapStatesDivision.keySet();
+		if(statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()){
+			for(PmState state: statesDivisionKeySet){
+				//LocationDTO stateLocation = new LocationDTO(state);
+				TplSpecZoneLoc stateLocation= new TplSpecZoneLoc();
+				stateLocation.setPmState(state);
+				TreeNode stateNode=null;
+				if(zoneNode !=null){
+					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+					}else{
+						 stateNode = new DefaultTreeNode("state",stateLocation,
+								rootLocationTree);
+					}
+
+				//new DefaultTreeNode("state",stateLocation, zoneNode);
+				List<PmDivision>	divisions	=	mapStatesDivision.get(state);
+				if(divisions != null && !divisions.isEmpty()){
+					for(PmDivision division: divisions){
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						TplSpecZoneLoc divisionLocation= new TplSpecZoneLoc();
+						divisionLocation.setPmDivision(division);
+						TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
+					}
+				}
+			}
+		}
+		//build zone - state - district - city
+		Set<PmState>	statesDistrictsCitiesKeySet	=	mapStatesDistrictsCities.keySet();
+		if(statesDistrictsCitiesKeySet != null && !statesDistrictsCitiesKeySet.isEmpty()){
+			for(PmState state: statesDistrictsCitiesKeySet){
+				//LocationDTO stateLocation = new LocationDTO(state);
+				TplSpecZoneLoc stateLocation= new TplSpecZoneLoc();
+				stateLocation.setPmState(state);
+				TreeNode stateNode=null;
+				if(zoneNode !=null){
+					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+					}else{
+						 stateNode = new DefaultTreeNode("state",stateLocation,
+								rootLocationTree);
+					}
+
+				//TreeNode stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+				Map<PmDistrict,List<PmCity>>	mapDistrictsCities	=	mapStatesDistrictsCities.get(state);
+				Set<PmDistrict>		districtsCitiesKeySet	=	mapDistrictsCities.keySet();
+				if(districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()){
+					for(PmDistrict district: districtsCitiesKeySet){
+						//LocationDTO districtLocation = new LocationDTO(district);
+						TplSpecZoneLoc districtLocation= new TplSpecZoneLoc();
+						districtLocation.setPmDistrict(district);
+						TreeNode districtNode = new DefaultTreeNode("district",districtLocation, stateNode);
+						List<PmCity>	cities	=	mapDistrictsCities.get(district);
+						if(cities != null && !cities.isEmpty()){
+							for(PmCity city: cities){
+								LocationDTO cityLocation	=	new LocationDTO(city);
+								TreeNode	cityNode	=	new DefaultTreeNode("city",cityLocation, districtNode);
+							}
+						}
+					}
+				}
+			}
+		}
+		//build zone - state - division - city
+		Set<PmState>	statesDivisionsDistrictsCitiesKeySet	=	mapStatesDivisionsDistrictsCities.keySet();
+		if(statesDivisionsDistrictsCitiesKeySet != null && !statesDivisionsDistrictsCitiesKeySet.isEmpty()){
+			for(PmState state: statesDivisionsDistrictsCitiesKeySet){
+				//LocationDTO stateLocation = new LocationDTO(state);
+				TplSpecZoneLoc stateLocation= new TplSpecZoneLoc();
+				stateLocation.setPmState(state);
+				TreeNode stateNode=null;
+				if(zoneNode !=null){
+					stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+					}else{
+						 stateNode = new DefaultTreeNode("state",stateLocation,
+								rootLocationTree);
+					}
+				//TreeNode stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
+				Map<PmDivision,Map<PmDistrict,List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities.get(state);
+				Set<PmDivision>	divisionsDistrictsCitiesKeySet	=	mapDivisionsDistrictsCities.keySet();
+				if(divisionsDistrictsCitiesKeySet != null && !divisionsDistrictsCitiesKeySet.isEmpty()){
+					for(PmDivision division: divisionsDistrictsCitiesKeySet){
+						//LocationDTO divisionLocation = new LocationDTO(division);
+						TplSpecZoneLoc divisionLocation= new TplSpecZoneLoc();
+						divisionLocation.setPmDivision(division);
+						TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
+						Map<PmDistrict,List<PmCity>>	mapDistrictsCities	=	mapDivisionsDistrictsCities.get(division);
+						Set<PmDistrict>		districtsCitiesKeySet	=	mapDistrictsCities.keySet();
+						if(districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()){
+							for(PmDistrict district: districtsCitiesKeySet){
+								//LocationDTO districtLocation = new LocationDTO(district);
+								TplSpecZoneLoc districtLocation= new TplSpecZoneLoc();
+								districtLocation.setPmDistrict(district);
+								TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
+								List<PmCity>	cities	=	mapDistrictsCities.get(district);
+								if(cities != null && !cities.isEmpty()){
+									for(PmCity city: cities){
+										LocationDTO cityLocation	=	new LocationDTO(city);
+										TreeNode	cityNode	=	new DefaultTreeNode("city",cityLocation, districtNode);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return rootLocationTree;
+	}
+	
+	
 	private	Map<PmState,List<PmDivision>>	getUniqueStatesDivision(List<PmDivision> divisions){
 		Map<PmState,List<PmDivision>>	results	=	new HashMap<PmState,List<PmDivision>>();
 		if(divisions != null && !divisions.isEmpty()){
@@ -663,4 +1015,46 @@ public class LocationSingleton {
 		}
 		return false;
 	}
+	
+	public TreeNode constuctTreeNode(TplSpecZoneDtl tplSpecZoneDtl, List<TplSpecZoneLoc> specLocs){
+		TreeNode root=new DefaultTreeNode("root",null);
+		if(tplSpecZoneDtl!=null){
+			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneDtl,root);
+			List<PmState> states = new ArrayList<PmState>();
+			TreeNode stateNode=null;
+			//List<TreeNode> locations = new ArrayList<TreeNode>();
+			for (TplSpecLoc locCriteria : specLocs) {
+				PmState pmState = locCriteria.getPmState();
+				
+				if (!states.contains(pmState)) {
+					 stateNode = new DefaultTreeNode("state", locCriteria, zoneNode);					
+					//locations.add(root);
+				}
+				PmDivision division = locCriteria.getPmDivision();
+				TreeNode divisonNode = null;
+				if (division != null) {
+					divisonNode = new DefaultTreeNode("division", locCriteria, stateNode);
+					
+				}
+				PmDistrict pmDistrict = locCriteria.getPmDistrict();
+				TreeNode districtNode = null;
+				if (pmDistrict != null) {
+					if (divisonNode == null) {
+						districtNode = new DefaultTreeNode("division", locCriteria,
+								stateNode);
+						
+					} else {
+						districtNode = new DefaultTreeNode("district", locCriteria,
+								divisonNode);
+						
+					}
+				}
+				states.add(pmState);
+			}
+		}else{
+			
+		}
+	return root;
+	}
+	
 }
