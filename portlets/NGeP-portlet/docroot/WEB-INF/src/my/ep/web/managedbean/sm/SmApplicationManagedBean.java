@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
@@ -197,7 +198,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmState> basicCompanyStates;
 	private List<PmDistrict> basicCompanyDistricts;
 	private List<PmCity> basicCompanyCities;
+	private List<PmState> basicOffFacStates;
+	private List<PmDistrict> basicOffFacDistricts;
+	private List<PmCity> basicOffFacCities;
 	private List<PmCertBody> certBodyLs;
+
+	// Panels
+	private String basicCompanyPanel;
+	private String basicOffFacPanel;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -423,7 +431,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For CategoryCodes End
 
 		testBlock = Boolean.TRUE;
-
+		// setdefault panel names
+		setDefaultPanelNames();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
@@ -1155,6 +1164,51 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCertBodyLs(List<PmCertBody> certBodyLs) {
 		this.certBodyLs = certBodyLs;
+	}
+
+	public String getBasicCompanyPanel() {
+		return basicCompanyPanel;
+	}
+
+	public void setBasicCompanyPanel(String basicCompanyPanel) {
+		this.basicCompanyPanel = basicCompanyPanel;
+	}
+
+	public List<PmState> getBasicOffFacStates() {
+		return basicOffFacStates;
+	}
+
+	public void setBasicOffFacStates(List<PmState> basicOffFacStates) {
+		this.basicOffFacStates = basicOffFacStates;
+	}
+
+	public List<PmDistrict> getBasicOffFacDistricts() {
+		return basicOffFacDistricts;
+	}
+
+	public void setBasicOffFacDistricts(List<PmDistrict> basicOffFacDistricts) {
+		this.basicOffFacDistricts = basicOffFacDistricts;
+	}
+
+	public List<PmCity> getBasicOffFacCities() {
+		return basicOffFacCities;
+	}
+
+	public void setBasicOffFacCities(List<PmCity> basicOffFacCities) {
+		this.basicOffFacCities = basicOffFacCities;
+	}
+
+	public String getBasicOffFacPanel() {
+		return basicOffFacPanel;
+	}
+
+	public void setBasicOffFacPanel(String basicOffFacPanel) {
+		this.basicOffFacPanel = basicOffFacPanel;
+	}
+
+	private void setDefaultPanelNames() {
+		setBasicCompanyPanel(SupplierManagementConst.SM_BASIC_INFO_PANEL);
+		setBasicOffFacPanel(SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 	}
 
 }

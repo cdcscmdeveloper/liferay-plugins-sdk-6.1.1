@@ -53,4 +53,8 @@ public class SupplierManagementConst {
 	public static final int RENEW_APPL_REVIEW_MAXCOUNT = 14;
 	public static final int ADDLN_CATCODES_APPL_REVIEW_MAXCOUNT = 13;
 
+	// Panel Names
+	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
+	public static final String SM_OFFICE_FACILITY_INFO_PANEL = "OfficeFacilityInfoPanel";
+
 }

@@ -186,6 +186,10 @@ public class SmApplicationBackingBean extends
 				fac.setRevNo(new BigDecimal(1));
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
+				getManagedBean()
+						.setBasicOffFacStates(
+								retrievePmStateList(addr.getPmCountry()
+										.getCountryId()));
 
 			} else {
 				// TODO
@@ -193,6 +197,9 @@ public class SmApplicationBackingBean extends
 				for (SmFacility fac : smAppl.getSmFacilities()) {
 					if (fac.getFacilityType().equalsIgnoreCase("B")
 							|| fac.getFacilityType().equalsIgnoreCase("H")) {
+						getManagedBean().setBasicOffFacStates(
+								retrievePmStateList(fac.getSmAddress()
+										.getPmCountry().getCountryId()));
 						System.out
 								.println("********* getPmCountry NULL VALUE **********");
 						this.getManagedBean().setBasicCompanyFacility(fac);
@@ -779,7 +786,7 @@ public class SmApplicationBackingBean extends
 	public void assignNewCert() {
 		SmSupplierCert cert = new SmSupplierCert();
 		cert.setPmCertBody(new PmCertBody());
-		cert.setRevNo(new BigDecimal(1));
+		cert.setRevNo(1);
 		getManagedBean().setSelectedCert(cert);
 	}
 
@@ -1657,8 +1664,10 @@ public class SmApplicationBackingBean extends
 
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
+		PmCountry cntry = new PmCountry();
+		cntry.setCountryId(1l);
 		addr.setPmCity(new PmCity());
-		addr.setPmCountry(new PmCountry());
+		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
 
@@ -1953,4 +1962,95 @@ public class SmApplicationBackingBean extends
 		return s;
 	}
 
+	public void populateStatesByCountry(long coutryId, String panelName,
+			PmState state, PmDistrict district, PmCity city,
+			List<PmDistrict> distList, List<PmCity> cityList) {
+
+		List<PmState> stateLs = this.retrievePmStateList(coutryId);
+		switch (panelName) {
+		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+			System.out.println("**** This is my correct Basic Country Panel ");
+			this.getManagedBean().setBasicCompanyStates(stateLs);
+			break;
+		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+			System.out
+					.println("**** This is my correct Basic Office facility Panel ");
+			this.getManagedBean().setBasicOffFacStates(stateLs);
+			break;
+
+		default:
+			System.out.println("**** This is an unknown panel ***** ");
+			break;
+		}
+		resetState(state);
+		resetDistrictValues(district, distList);
+		resetCityValues(city, cityList);
+
+	}
+
+	public void populateDistrictsByState(long stateId, String panelName,
+			PmDistrict district, PmCity city, List<PmCity> cityList) {
+		List<PmDistrict> distLs = this.retrievePmDistrictList(stateId);
+		switch (panelName) {
+		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+			System.out.println("**** This is my correct Basic dist Panel ");
+			this.getManagedBean().setBasicCompanyDistricts(distLs);
+			break;
+		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+			System.out
+					.println("**** This is my correct Basic Office facility dist Panel ");
+			this.getManagedBean().setBasicOffFacDistricts(distLs);
+			break;
+
+		default:
+			System.out.println("**** This is an unknown panel ***** ");
+			break;
+		}
+		resetDistrict(district);
+		resetCityValues(city, cityList);
+
+	}
+
+	public void populateCitiesByDistrict(long districtId, String panelName,
+			PmCity city) {
+		List<PmCity> cityLs = this.retrievePmCityList(districtId);
+		switch (panelName) {
+		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+			System.out.println("**** This is my correct Basic City Panel ");
+			this.getManagedBean().setBasicCompanyCities(cityLs);
+			break;
+		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+			System.out
+					.println("**** This is my correct Basic Office facility dist Panel ");
+			this.getManagedBean().setBasicOffFacCities(cityLs);
+			break;
+		default:
+			System.out.println("**** This is an unknown panel ***** ");
+			break;
+		}
+		resetCity(city);
+
+	}
+
+	private void resetDistrictValues(PmDistrict dist, List<PmDistrict> distList) {
+		dist.setDistrictId(null);
+		distList = new ArrayList<PmDistrict>();
+	}
+
+	private void resetCityValues(PmCity city, List<PmCity> cityList) {
+		city.setCityId(null);
+		cityList = new ArrayList<PmCity>();
+	}
+
+	private void resetDistrict(PmDistrict dist) {
+		dist.setDistrictId(null);
+	}
+
+	private void resetCity(PmCity city) {
+		city.setCityId(null);
+	}
+
+	private void resetState(PmState state) {
+		state.setStateId(null);
+	}
 }
