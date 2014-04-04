@@ -9,6 +9,10 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZoneLocation;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 
 public class SourcingLocationHelper {
@@ -21,11 +25,21 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmState>	getStateFromLocationDTOs(List<LocationDTO> locationDTOs){
+	public	static	List<PmState>	getStateFromLocationDTOs(List<ScQtLocCriteria> locationDTOs){
 		List<PmState>	results	=	new ArrayList<>();
-		for(LocationDTO locationDTO: locationDTOs){
-			if(locationDTO.getState() != null){
-				results.add(locationDTO.getState());
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmState() != null){
+				results.add(locationDTO.getPmState());
+			}
+		}
+		return results;
+	}
+	
+	public	static	List<PmState>	getStateFromZoneLocationDTOs(List<TplSpecZoneLoc> locationDTOs){
+		List<PmState>	results	=	new ArrayList<>();
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmState() != null){
+				results.add(locationDTO.getPmState());
 			}
 		}
 		return results;
@@ -39,11 +53,21 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmDistrict>	getDistrictFromLocationDTOs(List<LocationDTO> locationDTOs){
+	public	static	List<PmDistrict>	getDistrictFromLocationDTOs(List<ScQtLocCriteria> locationDTOs){
 		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
-		for(LocationDTO locationDTO: locationDTOs){
-			if(locationDTO.getDistrict() != null){
-				results.add(locationDTO.getDistrict());
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmDistrict() != null){
+				results.add(locationDTO.getPmDistrict());
+			}
+		}
+		return results;
+	}
+	
+	public	static	List<PmDistrict>	getDistrictFromZoneLocationDTOs(List<TplSpecZoneLoc> locationDTOs){
+		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmDistrict() != null){
+				results.add(locationDTO.getPmDistrict());
 			}
 		}
 		return results;
@@ -57,11 +81,22 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmDivision>	getDivisionFromLocationDTOs(List<LocationDTO> locationDTOs){
+	public	static	List<PmDivision>	getDivisionFromLocationDTOs(List<ScQtLocCriteria> locationDTOs){
 		List<PmDivision>	results	=	new ArrayList<PmDivision>();
-		for(LocationDTO locationDTO: locationDTOs){
-			if(locationDTO.getDivision() != null){
-				results.add(locationDTO.getDivision());
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmDivision() != null){
+				results.add(locationDTO.getPmDivision());
+			}
+		}
+		return results;
+	}
+	
+	
+	public	static	List<PmDivision>	getDivisionFromZoneLocationDTOs(List<TplSpecZoneLoc> locationDTOs){
+		List<PmDivision>	results	=	new ArrayList<PmDivision>();
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmDivision() != null){
+				results.add(locationDTO.getPmDivision());
 			}
 		}
 		return results;
@@ -76,13 +111,16 @@ public class SourcingLocationHelper {
 		}
 		return result;
 	}
-	public	static	List<PmCity>	getCityFromLocationDTOs(List<LocationDTO> locationDTOs){
+	public	static	List<PmCity>	getCityFromLocationDTOs(List<ScQtLocCriteria> locationDTOs){
 		List<PmCity>	results	=	new ArrayList<PmCity>();
-		for(LocationDTO locationDTO: locationDTOs){
-			if(locationDTO.getCity() != null){
-				results.add(locationDTO.getCity());
-			}
-		}
+		
+			
+		return results;
+	}
+	public	static	List<PmCity>	getCityFromZoneLocationDTOs(List<TplSpecZoneLoc> locationDTOs){
+		List<PmCity>	results	=	new ArrayList<PmCity>();
+		
+			
 		return results;
 	}
 	
