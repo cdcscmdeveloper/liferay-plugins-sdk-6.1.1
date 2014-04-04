@@ -377,35 +377,38 @@ public class CmSupplierZoneSingleton {
 					}
 				}
 				
-				for (PmDivision division : listDivisions) {
-						
-					PmState div = division.getPmState();
-					
-					if(div.getStateId() == state.getStateId()){
-						
-						CmSupplierZoneStateDistrictDTO divisionLocation = new CmSupplierZoneStateDistrictDTO(division);
-						TreeNode divisionNode = new DefaultTreeNode("division",divisionLocation, stateNode);
-						// build division tree
-						
-						for (PmDistrict district : listDistricts) {
+				
+				/*if(listDivisions != null && listDivisions.size() > 0){
+					for (PmDivision division : listDivisions) {
 							
-							PmDivision d = district.getPmDivision();
+						PmState div = division.getPmState();
+						
+						if(div.getStateId() == state.getStateId()){
 							
-							if(d.getDivisionId() == division.getDivisionId()){
+							CmSupplierZoneStateDistrictDTO divisionLocation = new CmSupplierZoneStateDistrictDTO(division);
+							TreeNode divisionNode = new DefaultTreeNode("division",divisionLocation, stateNode);
+							// build division tree
 							
-								CmSupplierZoneStateDistrictDTO districtLocation = new CmSupplierZoneStateDistrictDTO(district);
-								TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
-								// build district tree
-								if (districtIds.contains(district.getDistrictId())) {
-									districtNode.setSelected(Boolean.TRUE);
+							for (PmDistrict district : listDistricts) {
+								
+								PmDivision d = district.getPmDivision();
+								
+								if(d.getDivisionId() == division.getDivisionId()){
+								
+									CmSupplierZoneStateDistrictDTO districtLocation = new CmSupplierZoneStateDistrictDTO(district);
+									TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
+									// build district tree
+									if (districtIds.contains(district.getDistrictId())) {
+										districtNode.setSelected(Boolean.TRUE);
+									}
 								}
 							}
-						}
-						if (divisionIds.contains(division.getDivisionId())) {
-							divisionNode.setSelected(Boolean.TRUE);
+							if (divisionIds.contains(division.getDivisionId())) {
+								divisionNode.setSelected(Boolean.TRUE);
+							}
 						}
 					}
-				}
+				}*/
 			}	
 		}
 		

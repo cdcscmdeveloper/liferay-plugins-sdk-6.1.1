@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -310,6 +311,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		
 		List<CmSupplierZoneDTL> newCmSupplierZoneDTLs = new ArrayList<CmSupplierZoneDTL>();
 		
+		HashMap<Long, PmState> exStateMap = new HashMap<Long, PmState>(); 
+		HashMap<Long, PmDistrict> exDistrictMap = new HashMap<Long, PmDistrict>();
+		HashMap<Long, PmDivision> exDivisionMap = new HashMap<Long, PmDivision>();
+		
 		List<PmState> existingStates = new ArrayList<PmState>();
 		List<PmDistrict> existingDistricts = new ArrayList<PmDistrict>();
 		List<PmDivision> existingDivisions = new ArrayList<PmDivision>();
@@ -322,6 +327,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			existingStates.add(cmDtl.getPmState());
 			existingDistricts.add(cmDtl.getPmDistrict());
 			existingDivisions.add(cmDtl.getPmDivision());
+			
+//			exStateMap.put(cmDtl.getCmSupplierZone().getSuppZoneId(), cmDtl.getPmState());
+//			exDistrictMap.put(cmDtl.getCmSupplierZone().getSuppZoneId(), cmDtl.getPmDistrict());
+//			exDivisionMap.put(cmDtl.getCmSupplierZone().getSuppZoneId(), cmDtl.getPmDivision());
 		}
 		
 		
@@ -646,36 +655,55 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			selZone.setCmSupplierZoneDtls(newCmSupplierZoneDTLs);
 		}
 		
-		System.out.println("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
-		
-		existingStates.removeAll(selectedStates);
-		existingDivisions.removeAll(selectedDivisions);
-		existingDistricts.removeAll(selectedDistricts);
-		
-		System.out.println("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
-		
-		if(existingStates.size() > 0 || existingDistricts.size() > 0 || existingDivisions.size() > 0){
-			
-			unSelectedStates = existingStates;
-			unSelectedDivisions = existingDivisions;
-			unSelectedDistricts = existingDistricts;
-			
-			if(selZone.getCmSupplierZoneDtls() != null){
-				
-				Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
-				
-				while(ite.hasNext()){
-					CmSupplierZoneDTL cmDtl = ite.next();
-					if(unSelectedStates.contains(cmDtl.getPmState()) || unSelectedDistricts.contains(cmDtl.getPmDistrict()) || unSelectedDivisions.contains(cmDtl.getPmDivision())){
-						ite.remove();
-						System.out.println("Removed");
-					}
-				}
+		for(PmState st : existingStates){
+			if(!selectedStates.contains(st)){
+				unSelectedStates.add(st);
 			}
 		}
 		
-		System.out.println("Count After" + selZone.getCmSupplierZoneDtls().size());
+		for(PmDistrict dt : existingDistricts){
+			if(!selectedDistricts.contains(dt)){
+				unSelectedDistricts.add(dt);
+			}
+		}
 		
+		for(PmDivision dv : existingDivisions){
+			if(!selectedDivisions.contains(dv)){
+				unSelectedDivisions.add(dv);
+			}
+		}
+		
+		System.out.println("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
+		
+/*		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
+			
+//			existingStates.removeAll(selectedStates);
+//			existingDivisions.removeAll(selectedDivisions);
+//			existingDistricts.removeAll(selectedDistricts);
+			
+			System.out.println("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
+			
+				
+//				unSelectedStates = existingStates;
+//				unSelectedDivisions = existingDivisions;
+//				unSelectedDistricts = existingDistricts;
+				
+				if(selZone.getCmSupplierZoneDtls() != null){
+					
+					Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
+					
+					while(ite.hasNext()){
+						CmSupplierZoneDTL cmDtl = ite.next();
+						if(unSelectedStates.contains(cmDtl.getPmState()) || unSelectedDistricts.contains(cmDtl.getPmDistrict()) || unSelectedDivisions.contains(cmDtl.getPmDivision())){
+							ite.remove();
+							System.out.println("Removed");
+						}
+					}
+				}
+			}
+		
+		System.out.println("Count After" + selZone.getCmSupplierZoneDtls().size());
+		*/
 		
 		if(!getManagedBean().getCmSupplierZoneList().contains(selZone))
 			getManagedBean().getCmSupplierZoneList().add(selZone);
