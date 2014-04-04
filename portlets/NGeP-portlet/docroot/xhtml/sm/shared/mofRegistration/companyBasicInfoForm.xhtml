@@ -107,6 +107,15 @@
 								value="#{backingBean.managedBean.countryLs}"
 								itemValue="#{basicCountry.countryId}"
 								itemLabel="#{basicCountry.countryName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId, 
+								backingBean.managedBean.basicCompanyPanel,
+								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,
+								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
+								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity,
+								backingBean.managedBean.basicCompanyDistricts,
+								backingBean.managedBean.basicCompanyCities)}"
+								update="basicComState,basicCompDist,basicCompCity" />
 						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
@@ -115,20 +124,34 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="basicComState"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="basicState"
 								value="#{backingBean.managedBean.basicCompanyStates}"
 								itemValue="#{basicState.stateId}"
 								itemLabel="#{basicState.stateName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId, 
+											backingBean.managedBean.basicCompanyPanel,
+											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
+											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity,
+											backingBean.managedBean.basicCompanyCities)}"
+								update="basicCompDist,basicCompCity" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="basicCompDist"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="dist"
 								value="#{backingBean.managedBean.basicCompanyDistricts}"
 								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId,
+								backingBean.managedBean.basicCompanyPanel,
+								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
+								update="basicCompCity" />
 						</p:selectOneMenu></td>
 
 				</tr>
@@ -136,6 +159,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="basicCompCity"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="city"

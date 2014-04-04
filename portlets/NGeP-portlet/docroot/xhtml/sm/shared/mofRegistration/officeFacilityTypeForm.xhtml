@@ -102,6 +102,15 @@
 									value="#{backingBean.managedBean.countryLs}"
 									itemValue="#{basicCountry.countryId}"
 									itemLabel="#{basicCountry.countryName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
+								backingBean.managedBean.basicOffFacPanel,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmState,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity,
+								backingBean.managedBean.basicOffFacDistricts,
+								backingBean.managedBean.basicOffFacCities)}"
+									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
 							</p:selectOneMenu></td>
 
 					</tr>
@@ -109,24 +118,36 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}">
-								<f:selectItem itemLabel="
-								-- Select One --"
-									itemValue="0" />
-								<f:selectItem itemLabel="SELANGOR" itemValue="1" />
-								<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-									itemValue="2" />
-								<f:selectItem itemLabel="PULAU PINANG" itemValue="3" />
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
+								id="basicOffFacState">
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItems var="offState"
+									value="#{backingBean.managedBean.basicOffFacStates}"
+									itemValue="#{offState.stateId}"
+									itemLabel="#{offState.stateName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
+								backingBean.managedBean.basicOffFacPanel,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity,
+								backingBean.managedBean.basicOffFacCities)}"
+									update="basicOffFacDist,basicOffFacCity" />
+
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacDist"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
-								<f:selectItem itemLabel="
-								-- Select One --"
-									itemValue="0" />
-								<f:selectItem itemLabel="NABAWAN" itemValue="1" />
-								<f:selectItem itemLabel="PADANG TERAP" itemValue="2" />
-								<f:selectItem itemLabel="PAKAN" itemValue="3" />
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItems var="offDist"
+									value="#{backingBean.managedBean.basicOffFacDistricts}"
+									itemValue="#{offDist.districtId}"
+									itemLabel="#{offDist.districtName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
+								backingBean.managedBean.basicOffFacPanel,
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
+									update="basicOffFacCity" />
 							</p:selectOneMenu></td>
 
 					</tr>
@@ -134,14 +155,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacCity"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
-								<f:selectItem itemLabel="
-								-- Select One --"
-									itemValue="0" />
-								<f:selectItem itemLabel="CYBERJAYA" itemValue="1" />
-								<f:selectItem itemLabel="SEPANG" itemValue="2" />
-								<f:selectItem itemLabel="NILAI" itemValue="3" />
-								<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="4" />
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItems var="offCity"
+									value="#{backingBean.managedBean.basicOffFacCities}"
+									itemValue="#{offCity.cityId}" itemLabel="#{offCity.cityName}" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:inputText size="35"
