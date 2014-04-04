@@ -283,7 +283,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
 
-		if(selZone.getSuppZoneId() == 0){
+		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
 			selZone = new CmSupplierZone();
 			
 			if(selZone.getSmSupplier() == null){
@@ -324,9 +324,12 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			cmDtls.addAll(selZone.getCmSupplierZoneDtls()); 
 		
 		for(CmSupplierZoneDTL cmDtl : cmDtls){
-			existingStates.add(cmDtl.getPmState());
-			existingDistricts.add(cmDtl.getPmDistrict());
-			existingDivisions.add(cmDtl.getPmDivision());
+			if(cmDtl.getPmState() != null)
+				existingStates.add(cmDtl.getPmState());
+			if(cmDtl.getPmDistrict() != null)
+				existingDistricts.add(cmDtl.getPmDistrict());
+			if(cmDtl.getPmDivision() != null)
+				existingDivisions.add(cmDtl.getPmDivision());
 			
 //			exStateMap.put(cmDtl.getCmSupplierZone().getSuppZoneId(), cmDtl.getPmState());
 //			exDistrictMap.put(cmDtl.getCmSupplierZone().getSuppZoneId(), cmDtl.getPmDistrict());
@@ -675,7 +678,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		
 		System.out.println("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
 		
-/*		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
+		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
 			
 //			existingStates.removeAll(selectedStates);
 //			existingDivisions.removeAll(selectedDivisions);
@@ -703,7 +706,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			}
 		
 		System.out.println("Count After" + selZone.getCmSupplierZoneDtls().size());
-		*/
 		
 		if(!getManagedBean().getCmSupplierZoneList().contains(selZone))
 			getManagedBean().getCmSupplierZoneList().add(selZone);
