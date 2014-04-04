@@ -51,6 +51,8 @@
 				<h:panelGroup id="paidGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.paidUpCapitalScore}" />
+					<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.paidUpSelectList}" />
 					<ui:param name="componentName" value="Paid Up Capital" />
 					<ui:param name="scoringPnlId" value="paidUpId" />
 					<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
@@ -61,7 +63,9 @@
 							update="#{scoringPnlId}" icon="ui-icon-add"
 							actionListener="#{specificationBackingBean.addPaidUpCapitalScoring}" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete" update="#{scoringPnlId}" />
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
 
 					</div>
 				</h:panelGroup>

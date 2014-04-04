@@ -12,27 +12,28 @@
 	<ac:lovPopup />
 	<p:tabView dynamic="true" cache="true" orientation="left"
 		id="businessSpecId">
-		<p:ajax event="tabChange" listener="#{specificationBackingBean.businessOwnerTabChange}" />
+		<p:ajax event="tabChange"
+			listener="#{specificationBackingBean.businessOwnerTabChange}" />
 
 		<p:tab title="#{lbl['lbl.sc.spec.general']}">
-			<ui:include
-				src="/xhtml/sc/specification/specificationBusinessOwner.xhtml"></ui:include>
+			<ui:include src="specificationBusinessOwner.xhtml"></ui:include>
 
 		</p:tab>
 
 		<p:tab title="Supplier Qualification Criteria">
-			<ui:include
-				src="/xhtml/sc/specification/supplierQualificationCriteria.xhtml"></ui:include>
+			<ui:include src="supplierQualificationCriteria.xhtml"></ui:include>
 		</p:tab>
 
 		<p:tab title="Technical Specification">
-			<ui:include
-				src="/xhtml/sc/specification/technicalSpecification.xhtml"></ui:include>
+			<ui:include src="technicalSpecification.xhtml"></ui:include>
 		</p:tab>
 
 		<p:tab title="Financial Specification">
-			<ui:include
-				src="/xhtml/sc/specification/financialSpecification.xhtml"></ui:include>
+			<ui:include src="financialSpecification.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Approval">
+			<ui:include src="approvalBusinessOwner.xhtml"></ui:include>
 		</p:tab>
 
 

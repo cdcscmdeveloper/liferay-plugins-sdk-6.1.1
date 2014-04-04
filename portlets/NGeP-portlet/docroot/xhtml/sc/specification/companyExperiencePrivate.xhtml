@@ -113,6 +113,8 @@
 				<h:panelGroup id="contractorGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.nonFederalScore}" />
+						<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.nonFederalSelectScore}" />
 					<ui:param name="componentName" value="contractor" />
 					<ui:param name="scoringPnlId" value="contractorListId" />
 					<ui:param name="scoringPnlName"
@@ -165,6 +167,8 @@
 				<h:panelGroup id="scoringofYearsGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.nonFederalScoreyears}" />
+						<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.nonFederalSelectScoreyears}" />
 					<ui:param name="componentName" value="ScoringYear" />
 					<ui:param name="scoringPnlId" value="scoringYearId" />
 					<ui:param name="scoringPnlName"

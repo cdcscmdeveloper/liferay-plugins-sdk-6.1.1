@@ -58,6 +58,8 @@
 		<h:panelGroup id="warantyGroupId">
 			<ui:param name="scoringList"
 				value="#{specificationBackingBean.managedBean.warantyScore}" />
+				<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.warantySelectScore}" />
 			<ui:param name="componentName" value="Waranty" />
 			<ui:param name="scoringPnlId" value="warantyId" />
 			<ui:param name="scoringPnlName" value="Scoring For Total Warranty"></ui:param>
@@ -68,8 +70,9 @@
 					update="#{scoringPnlId}" icon="ui-icon-add"
 					actionListener="#{specificationBackingBean.addScoringWaranty}" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" update="#{scoringPnlId}" />
-
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
 			</div>
 		</h:panelGroup>
 		</p:panel>

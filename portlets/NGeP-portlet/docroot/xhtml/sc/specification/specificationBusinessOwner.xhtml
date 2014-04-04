@@ -146,21 +146,18 @@
 					<p:tree value="#{zoneTree}" var="location">
 
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.locationName}" />
-						</p:treeNode>
+							<h:outputText value="#{location.zoneName}" />
+						</p:treeNode> 
 
 						<p:treeNode type="state">
-							<h:outputText value="#{location.locationName}" />
-						</p:treeNode>
-						<p:treeNode type="division">
-							<h:outputText value="#{location.locationName}" />
-						</p:treeNode>
-						<p:treeNode type="district">
-							<h:outputText value="#{location.locationName}" />
-						</p:treeNode>
-						<p:treeNode type="city">
-							<h:outputText value="#{location.locationName}" />
-						</p:treeNode>
+								<h:outputText value="#{location.pmState.stateName}"/>
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
 
 
 
@@ -183,7 +180,7 @@
 		<div align="right" style="width: 65%">
 			<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this"
 				update="@([id$=zonePopupGeneral])" oncomplete="ZoneGeneral.show();"
-				actionListener="#{specificationBackingBean.showZoneLocationPopup}"
+				actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 				icon="ui-icon-add" />
 		</div>
 	</p:panel>
@@ -206,21 +203,21 @@
 							value="Zone Location" /></TD>
 					<TD width="80%"><p:panel></p:panel> <p:tree
 							id="treeZoneGeneralPopup"
-							value="#{specificationBackingBean.managedBean.rootLocationTree}"
+							value="#{specificationBackingBean.managedBean.rootZoanlTree}"
 							var="location"
 							selection="#{specificationBackingBean.managedBean.selectedGeneralTreeNodes}"
 							selectionMode="checkbox">
 							<p:treeNode type="state">
-								<h:outputText value="#{location.locationName}" />
+								<h:outputText value="#{location.pmState.stateName}"/>
 							</p:treeNode>
 							<p:treeNode type="division">
-								<h:outputText value="#{location.locationName}" />
+								<h:outputText value="#{location.pmDivision.divisionName}" />
 							</p:treeNode>
 							<p:treeNode type="district">
-								<h:outputText value="#{location.locationName}" />
+								<h:outputText value="#{location.pmDistrict.districtName}" />
 							</p:treeNode>
 							<p:treeNode type="city">
-								<h:outputText value="#{location.locationName}" />
+								<h:outputText value="#{pmCity.cityName}" />
 							</p:treeNode>
 						</p:tree></TD>
 				</TR>

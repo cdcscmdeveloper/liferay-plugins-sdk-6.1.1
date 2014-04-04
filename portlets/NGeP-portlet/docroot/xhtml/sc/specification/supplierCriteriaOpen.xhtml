@@ -141,26 +141,15 @@
 						var="zoneTree" style="width:65%" rowIndexVar="index">
 						<p:column headerText="Location">
 							<p:tree value="#{zoneTree}" var="location">
-
-								<p:treeNode type="zone">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-
 								<p:treeNode type="state">
-									<h:outputText value="#{location.locationName}" />
+									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>
 								<p:treeNode type="division">
-									<h:outputText value="#{location.locationName}" />
+									<h:outputText value="#{location.pmDivision.divisionName}" />
 								</p:treeNode>
 								<p:treeNode type="district">
-									<h:outputText value="#{location.locationName}" />
+									<h:outputText value="#{location.pmDistrict.districtName}" />
 								</p:treeNode>
-								<p:treeNode type="city">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-
-
-
 
 							</p:tree>
 						</p:column>
@@ -219,18 +208,15 @@
 									<h:outputText value="#{location.locationName}" />
 								</p:treeNode>
 
-								<p:treeNode type="state">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-								<p:treeNode type="division">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-								<p:treeNode type="district">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-								<p:treeNode type="city">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
+							<p:treeNode type="state">
+							<h:outputText value="#{location.pmState.stateName}"/>
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
 
 
 
@@ -251,8 +237,7 @@
 				<p:panel id="zonePopupPanel" header="ADD LOCATION">
 					<table styleClass="noBorders tr,noBorders td">
 						<TR>
-							<TD width="20%" valign="top"><p:outputLabel
-									value="Zone Location" /></TD>
+							
 							<TD width="80%"><p:panel></p:panel> <p:tree
 									id="treeZoneLocationPopup"
 									value="#{specificationBackingBean.managedBean.rootLocationTree}"
@@ -260,16 +245,16 @@
 									selection="#{specificationBackingBean.managedBean.selectedNodes}"
 									selectionMode="checkbox">
 									<p:treeNode type="state">
-										<h:outputText value="#{location.locationName}" />
+										<h:outputText value="#{location.pmState.stateName}" />
 									</p:treeNode>
 									<p:treeNode type="division">
-										<h:outputText value="#{location.locationName}" />
+										<h:outputText value="#{location.pmDivision.divisionName}" />
 									</p:treeNode>
 									<p:treeNode type="district">
-										<h:outputText value="#{location.locationName}" />
+										<h:outputText value="#{location.pmDistrict.districtName}" />
 									</p:treeNode>
 									<p:treeNode type="city">
-										<h:outputText value="#{location.locationName}" />
+										<h:outputText value="#{pmCity.cityName}" />
 									</p:treeNode>
 								</p:tree></TD>
 						</TR>

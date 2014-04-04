@@ -59,6 +59,9 @@
 		<h:panelGroup id="trainingGroupId">
 			<ui:param name="scoringList"
 				value="#{specificationBackingBean.managedBean.trainingScore}" />
+				<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.trainingSelectList}" />
+				
 			<ui:param name="componentName" value="Training" />
 			<ui:param name="scoringPnlId" value="trainingId" />
 			<ui:param name="scoringPnlName" value="Scoring For Training"></ui:param>
@@ -68,8 +71,9 @@
 					process="@this,#{scoringPnlId}" partialSubmit="true"
 					update="#{scoringPnlId}" icon="ui-icon-add" action="#{specificationBackingBean.addTrainingScoring}"/>
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" update="#{scoringPnlId}" />
-
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
 			</div>
 		</h:panelGroup>
 		  </p:panel>

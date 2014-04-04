@@ -6,26 +6,25 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-
-	<p:panel header="#{lbl['lbl.sc.spec.tech.check.list']}"
-		toggleable="true">
+	<p:panel id="techCommitteeChecklist"
+		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			style="width:100%" rowIndexVar="index"
-			
-			>
+			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
+			rowKey="#{stageTwoTechnical}">
 			<ac:paginator for="stageTwotechProposal" />
-            <!--   <p:column>
+			<!--   <p:column>
               sample#{index}
               selection="#{specificationBackingBean.managedBean.s2TechSelect}"
               rowKey="#{stageTwoTechnical.title}"
               </p:column> -->
-			<!-- <p:column selectionMode="multiple" style="text-align:left;"
+			<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwoTechnical.manditory !='true'}" />
 			<p:column style="text-align:left;"
-				rendered="#{stageTwoTechnical.manditory =='true'}" /> -->
-				
+				rendered="#{stageTwoTechnical.manditory =='true'}" />
+
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:30%">
@@ -94,22 +93,22 @@
 						<f:selectItem itemLabel="Sample" itemValue="S" />
 						<f:selectItem itemLabel="Upload" itemValue="UP" />
 						<f:selectItem itemLabel="Presentation/Demo" itemValue="PD" />
-						<p:ajax event="change" process="@this"
-							 update="@(.sample#{index})" partialSubmit="true"
+						<p:ajax event="change" process="@this" update="@(.sample#{index})"
+							partialSubmit="true"
 							listener="#{specificationBackingBean.typeChange}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
 
 			</p:column>
-			<p:column  headerText="#{lbl['lbl.sc.spec.supplier.action']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
 				<!--  <h:panelGroup id="supplier">  -->
 				<ui:fragment rendered="#{stageTwoTechnical.checklistAction ==null}">
-					<p:selectOneMenu styleClass="sample#{index}" value="#{stageTwoTechnical.checklistAction}">
+					<p:selectOneMenu styleClass="sample#{index}"
+						value="#{stageTwoTechnical.checklistAction}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
-						<p:ajax event="change" process="@this"
-							 update="@(.score#{index})"
+						<p:ajax event="change" process="@this" update="@form"
 							listener="#{specificationBackingBean.checklistActionChange}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
@@ -151,14 +150,14 @@
 			</p:column>
 
 			<p:column headerText="Scoring" style="width:10%">
-				<p:selectBooleanCheckbox  styleClass="score#{index}"
-					disabled="true" rendered="#{stageTwoTechnical.checklistAction  ne 'O'}"
-					>
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+					disabled="true"
+					rendered="#{stageTwoTechnical.checklistAction  ne 'O'}">
 
 				</p:selectBooleanCheckbox>
-				
-				<p:selectBooleanCheckbox  styleClass="score#{index}" rendered="#{stageTwoTechnical.checklistAction eq 'O'}"
-					>
+
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+					rendered="#{stageTwoTechnical.checklistAction eq 'O'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -191,7 +190,8 @@
 				style="width:10%">
 				<!-- rendered="#{stageTwoTechnical.checklistType eq 'SD' or stageTwoTechnical.checklistType eq 'TS' or stageTwoTechnical.checklistType eq 'WF'}" <h:panelGroup id="edit"> -->
 				<p:commandLink
-					action="#{specificationBackingBean.technicalChecklistEditAction(stageTwoTechnical)}">
+					action="#{specificationBackingBean.technicalChecklistEditAction(stageTwoTechnical)}"
+					rendered="#{stageTwoTechnical.checklistType eq 'SD' or stageTwoTechnical.checklistType eq 'TS' or stageTwoTechnical.checklistType eq 'WF'}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -206,17 +206,16 @@
 		<div align="right">
 			<p:commandButton
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
-				process="@this" 
-				oncomplete="stageTwoTech.show();"
+				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
 				update="compilencestageTwo" />
-			<p:commandButton value="Create Specification"
-				process="@this" partialSubmit="true"
+			<p:commandButton value="Create Specification" process="@this"
+				partialSubmit="true"
 				action="#{specificationBackingBean.retriveTemplatespec}"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this" 
+				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
 				update="stageTwotechProposal" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
@@ -233,4 +232,7 @@
 
 
 	</p:panel>
+	
+
+	
 </ui:composition>

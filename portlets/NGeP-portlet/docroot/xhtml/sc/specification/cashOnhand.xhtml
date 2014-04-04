@@ -85,6 +85,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 		<h:panelGroup id="cashGroupId">
 			<ui:param name="scoringList"
 				value="#{specificationBackingBean.managedBean.scoringCash}" />
+				<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.cashSelectList}" />
 			<ui:param name="componentName" value="CashOnHand" />
 			<ui:param name="scoringPnlId" value="cashId" />
 			<ui:param name="scoringPnlName"

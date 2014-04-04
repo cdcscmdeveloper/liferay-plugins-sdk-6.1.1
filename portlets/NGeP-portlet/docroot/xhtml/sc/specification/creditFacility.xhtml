@@ -82,6 +82,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 		<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 		<h:panelGroup id="creditFacilityGroupId">
 			<ui:param name="scoringList" value="#{specificationBackingBean.managedBean.creditFacility}" />
+			<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.creditfacilitySelectList}" />
 			<ui:param name="componentName" value="creditFacility"/>
 			<ui:param name="scoringPnlId" value="creditFacilityId" />
 			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.total.credit.facility']}"></ui:param>

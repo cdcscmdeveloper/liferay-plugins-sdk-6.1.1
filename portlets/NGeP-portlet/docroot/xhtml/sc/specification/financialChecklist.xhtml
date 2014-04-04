@@ -117,8 +117,13 @@
 				</ui:fragment>
 			</p:column>
 			<p:column headerText="Scoring" style="width:10%">
-				<p:selectBooleanCheckbox
-					disabled="#{stageTwofunctional.checklistAction !='O' and stageTwofunctional.checklistType !='UP'}">
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+					disabled="true"
+					rendered="#{stageTwofunctional.checklistAction ne 'O' }">
+
+				</p:selectBooleanCheckbox>
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+					rendered="#{stageTwofunctional.checklistAction eq 'O'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -149,7 +154,8 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink
-					action="#{specificationBackingBean.financialChecklistEditAction(stageTwofunctional)}">
+					action="#{specificationBackingBean.financialChecklistEditAction(stageTwofunctional)}"
+					rendered="#{stageTwofunctional.checklistType eq 'SD' or stageTwofunctional.checklistType eq 'TS' or stageTwofunctional.checklistType eq 'WF'}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

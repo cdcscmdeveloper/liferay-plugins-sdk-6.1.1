@@ -13,7 +13,7 @@
 	<!-- <ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include> -->
 	<p:tabView dynamic="true" cache="true" orientation="left"
 		id="businessSpecId">
-		<p:ajax event="tabChange"
+		<p:ajax event="tabChange" update="@([id$=recommendationid])"
 			listener="#{specificationBackingBean.onTabChangeAction}" />
 
 
@@ -73,7 +73,7 @@
 		</p:tab>
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}">
+		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}" rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled' or specificationBackingBean.managedBean.fulfilmentType eq 'As and When'}">
 			<ui:include src="/xhtml/sc/specification/schedule.xhtml" />
 		</p:tab>
 

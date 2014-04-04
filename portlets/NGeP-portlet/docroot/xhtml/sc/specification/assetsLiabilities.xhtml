@@ -186,6 +186,9 @@
 				<h:panelGroup id="assetsGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.assetScore}" />
+						<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.assetLiabilitySelectList}" />
+						
 					<ui:param name="componentName" value="Assets" />
 					<ui:param name="scoringPnlId" value="assetId" />
 					<ui:param name="scoringPnlName" value="Scoring For Net Amount"></ui:param>

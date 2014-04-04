@@ -10,10 +10,10 @@
 			toggleable="true">
 
 			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
-			value="#{scoringList}"
+			value="#{scoringList}" selection="#{selectionList}"
 			var="checkListScoring" rowKey="#{checkListScoring}" >
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+			 <p:column  selectionMode="multiple" style="width:2px;"></p:column> 
 				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}" style="width:40%">
 				<p:inputText value="#{checkListScoring.rangeFrom}"></p:inputText>
 				</p:column>

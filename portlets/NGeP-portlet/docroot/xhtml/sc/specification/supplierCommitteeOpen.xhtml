@@ -10,9 +10,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
 		<p:commandLink value="CategoryCodeList"></p:commandLink>
-		<p:dataTable id="openPnlId" var="cateGory"
-			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
-			style="width:100%" rowIndexVar="index" styleClass="openPnlId">
+		<p:dataTable id="openPnlId" var="cateGory" style="width:100%"
+			rowIndexVar="index" styleClass="openPnlId">
 
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
@@ -85,7 +84,6 @@
 				<tr>
 					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
 					<td><p:selectOneMenu id="locLevels" disabled="true"
-							value="#{specificationBackingBean.managedBean.qtCriteria.supplierLocation}"
 							style="width: 178px;margin-bottom: 5px;">
 
 							<f:selectItems
@@ -135,9 +133,7 @@
 		<tr>
 			<td style="width: 150px"><p:outputLabel
 					value="#{lbl['lbl.so.paidup']}" /></td>
-			<td><p:inputText
-					value="#{specificationBackingBean.managedBean.qtCriteria.paidUpCaptial}"
-					style="margin-right:5px;" disabled="true" /> </td>
+			<td><p:inputText style="margin-right:5px;" disabled="true" /></td>
 		</tr>
 		<tr>
 			<td style="width: 150px"><p:outputLabel value="Total Supplierrs" /></td>
