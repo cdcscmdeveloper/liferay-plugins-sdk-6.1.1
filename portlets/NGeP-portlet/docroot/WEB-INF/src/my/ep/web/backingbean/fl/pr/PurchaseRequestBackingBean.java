@@ -246,7 +246,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//System will block the submission of the purchase request 
 			//Amount of purchase request to be <= RM50K, with the exception of emergency procurement and G2G procurement.
 			
-			checkPurchaseRequestAmount();
 			//accumulativeProcurementValue();
 			
 			if(isFlFulfilmentApprover()) {
@@ -822,13 +821,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
-			//System.out.println("Out come is:: "+res.getAction());
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
-			//System.out.println("req id from BPM::::::: "+flPurchaseOrd.getPurchaseRequestId());
-			//System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getDocType());
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
@@ -1113,24 +1109,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 		 }	
 	 }
-	//submission of the purchase request amount to be <= RM50K
-		// with the exception of emergency procurement and G2G procurement
-		// currently assuming that non emergency procurement and non G2G procurement
-	 public void checkPurchaseRequestAmount(){
-		 int validationOrdAmt=0;
-		/* for(FlDeliveryAddress item : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-					System.out.println("order amount:: "+itemAddr.getOrderedAmt());
-					validationOrdAmt=validationOrdAmt+itemAddr.getOrderedAmt().intValue();
-				}
-					System.out.println("validationOrdAmt: "+validationOrdAmt);
-		}*/
-		if(validationOrdAmt>50000){
-			throw new EpException(" Order Amount  has been exceeded the RM 50K .");
-			}
-	 }
-
-	
 	
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
