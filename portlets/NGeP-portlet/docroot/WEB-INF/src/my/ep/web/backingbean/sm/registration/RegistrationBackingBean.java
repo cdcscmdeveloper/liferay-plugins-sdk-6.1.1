@@ -36,9 +36,9 @@ import my.ep.dto.pm.common.state.StateResDTO;
 
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
-//import my.ep.ntf.dto.NtfRequestDTO;
-//import my.ep.ntf.dto.NtfResponseDTO;
-//import my.ep.ntf.service.INtfSO;
+import my.ep.ntf.dto.NtfRequestDTO;
+import my.ep.ntf.dto.NtfResponseDTO;
+import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 //import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -362,7 +363,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			//this.sendActivationEmail();
+			this.sendActivationEmail();
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days.",
@@ -759,38 +760,39 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		System.out.println("************MAP Result***************" + bizNatureL5Map.size());
 	}
 	
-//	public void sendActivationEmail(){
-//		System.out.println("initiateTask******");
-//		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
-//
-//		NtfRequestDTO reqDTO = new NtfRequestDTO();
-//		reqDTO.setTemplateId("399999");
-//
-//		List<String> emailLst = new ArrayList<String>();
-//		emailLst.add(this.getManagedBean().getSmPersonnel().getEmail());
-//		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
-//
-//		List<String> subParaLst = new ArrayList<String>();
-//		subParaLst.add("#SM#");
-//		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
-//		List<String> cntParaLst = new ArrayList<String>();
-//		cntParaLst.add(this.getManagedBean().getSmPersonnel().getName());
-//
-//		cntParaLst.add("<a href=\"http://google.com.my\">dadfas</a><br />Hello&lt;add&gt;World<br />");
-//		cntParaLst.add("U_103301");
-//		cntParaLst.add("123");
-//		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-//
-//		try {
-//			NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
-//			System.out.println(resDTO.getStatusCode());
-//			System.out.println(resDTO.getSeverity());
-//			System.out.println(resDTO.getStatusDesc());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println("END");
-//	}
+	
+	public void sendActivationEmail(){
+		System.out.println("initiateTask******");
+		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
+
+		NtfRequestDTO reqDTO = new NtfRequestDTO();
+		reqDTO.setTemplateId("399999");
+
+		List<String> emailLst = new ArrayList<String>();
+		emailLst.add(this.getManagedBean().getSmPersonnel().getEmail());
+		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
+
+		List<String> subParaLst = new ArrayList<String>();
+		subParaLst.add("#SM#");
+		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
+		List<String> cntParaLst = new ArrayList<String>();
+		cntParaLst.add(this.getManagedBean().getSmPersonnel().getName());
+
+		cntParaLst.add("<a href=\"http://google.com.my\">dadfas</a><br />Hello&lt;add&gt;World<br />");
+		cntParaLst.add("U_103301");
+		cntParaLst.add("123");
+		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
+
+		try {
+			NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
+			System.out.println(resDTO.getStatusCode());
+			System.out.println(resDTO.getSeverity());
+			System.out.println(resDTO.getStatusDesc());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("END");
+	}
 
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
