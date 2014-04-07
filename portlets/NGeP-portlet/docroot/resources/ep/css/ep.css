@@ -4588,6 +4588,8 @@ label > span.ui-button-text {
 
 .portlet-borderless-container {
 	background-color: #FFFFFF;
+	margin: 0 0 8px 0;
+	border: 1px solid #DDDDDD;
 }
 
 .ui-tabmenu {
