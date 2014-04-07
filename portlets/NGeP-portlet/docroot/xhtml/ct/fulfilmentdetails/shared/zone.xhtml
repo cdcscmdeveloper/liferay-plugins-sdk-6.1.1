@@ -18,38 +18,43 @@
 			  </tr>
 		  </table>
  		 <h:panelGrid width="100%" style="margin-top:20px">
-			<p:dataTable id="zoneLocationDataTable" value="#{contractDetailsBackingBean.managedBean.zoneTrees}"
-			   var="zoneTree" rowIndexVar="index">
-			   <p:column headerText="Location">
-				  <p:tree value="#{zoneTree}" var="location">
-                      <p:treeNode type="zone">
-						 <h:outputText value="#{location.locationName}" />
-					  </p:treeNode>
-					  <p:treeNode type="state">
-						 <h:outputText value="#{location.locationName}" />
-					  </p:treeNode>
-					  <p:treeNode type="division">
-						 <h:outputText value="#{location.locationName}" />
-					  </p:treeNode>
-					  <p:treeNode type="district">
-						  <h:outputText value="#{location.locationName}" />
-					  </p:treeNode>
-					  <p:treeNode type="city">
-					    <h:outputText value="#{location.locationName}" />
-					  </p:treeNode>
-					</p:tree>
-				 </p:column>
-				 <p:column headerText="Delivery Term">
-					<p:inputText style="width:40px;"/>
-					<p:spacer width="1"/>
-                    <p:selectOneMenu id="dTerms" style="width:100px;"> 
-                       <f:selectItem itemLabel="-Select One-" itemValue=""/>
+ 		  <p:treeTable id="zoneLocationDataTable"  value="#{contractDetailsBackingBean.managedBean.ctZoneTrees}"
+ 		    var="zoneTree">
+ 		    
+ 		    <p:column style="width:70%;">
+            <f:facet name="header">  Location Name </f:facet>
+              <p:treeNode type="zone">
+                  <h:outputText value="#{zoneTree.zone.zoneName}"/>
+              </p:treeNode>
+              <p:treeNode type="state">
+               <h:outputText value="#{zoneTree.state.stateName}"  />
+              </p:treeNode>
+              <p:treeNode type="district">
+               <h:outputText value="#{zoneTree.district.districtName}"  />
+              </p:treeNode>
+               
+              
+        </p:column>
+ 
+        <p:column style="width:30%;">
+            <f:facet name="header"> * Delivery Term </f:facet>
+             <p:treeNode type="zone">
+            <p:inputText value="#{zoneTree.deliveryTerm}" rendered="#{zoneTree.zone.zoneName != null}"  style="width:40px;" />
+            <p:spacer width="2" />
+            <p:selectOneMenu id="dTerms" style="width:100px;" rendered="#{zoneTree.zone.zoneName != null}"> 
+                        <f:selectItem itemLabel="-Select One-" itemValue=""/>
                        <f:selectItem itemValue="Days" itemLabel="Days"  />  
                        <f:selectItem itemValue="Months" itemLabel="Months"  />  
                        <f:selectItem itemValue="Years" itemLabel="Years" />  
-                    </p:selectOneMenu> 		
-				 </p:column>
-			</p:dataTable>
+                    </p:selectOneMenu> 	
+            </p:treeNode>
+        </p:column>
+        
+ 		    
+ 		  </p:treeTable>
+ 		  
+ 		  
+ 		   
 		 </h:panelGrid>
 	 </p:panel>
 </ui:composition>

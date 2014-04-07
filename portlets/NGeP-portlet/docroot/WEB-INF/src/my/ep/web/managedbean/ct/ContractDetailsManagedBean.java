@@ -124,8 +124,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String supplierLocation;
 	private	String	zoneName;
-	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
-	
+	private List<TreeNode>	zoneTrees;
+	private List<TreeNode>	zoneGeneralTrees = new ArrayList<TreeNode>();
 	private String contractType;
 	private boolean validateScheduleDate;
 	
@@ -701,6 +701,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
+	}
+
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
 	
 }

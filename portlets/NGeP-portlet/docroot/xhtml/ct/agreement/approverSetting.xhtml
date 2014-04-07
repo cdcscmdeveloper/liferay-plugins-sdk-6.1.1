@@ -9,23 +9,11 @@
 		<h:panelGrid columns="1">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="Approver Group"/>
-				<p:selectOneMenu value="#{agreementBackingBean.managedBean.ctAgreement.pmUserGroup.userGroupId}" style="width:80px;">
-					<p:ajax event="change" listener="#{agreementBackingBean.userGroupChangeListener()}" process="@this" update="approverpickList" />
-					<f:selectItems value="#{agreementBackingBean.getUserGroupDropdown()}" />
+				<p:selectOneMenu  style="width:80px;">
+						<f:selectItems />
 				</p:selectOneMenu>		
 			</h:panelGrid>
 			<p:spacer height="1" />
-			<h:panelGrid style="width:500px;">
-				<p:pickList id="approverpickList" value="#{agreementBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
-					showTargetControls="true" filterMatchMode="contains">
-					<f:facet name="sourceCaption">Available</f:facet>  
-        			<f:facet name="targetCaption">Selected</f:facet> 
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
-				</p:pickList>
-			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

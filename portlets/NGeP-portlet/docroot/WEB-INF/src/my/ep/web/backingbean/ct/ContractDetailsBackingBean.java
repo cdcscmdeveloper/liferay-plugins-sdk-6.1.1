@@ -26,7 +26,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletResponse;
@@ -37,7 +36,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -45,7 +43,6 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -53,8 +50,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.circular.CircularDetailReqDTO;
-import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -67,8 +62,6 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -82,12 +75,8 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -97,14 +86,11 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
-import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
-import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -260,8 +246,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	        initializeRemarks();
-	        
-	        retrieveZonDetails();
+	  
 			  
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -273,28 +258,75 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	 }
 	}
 	
-	public void retriveZonesByContractVer() {
+	/*public void retriveZonesByContractVer() {
+		
+		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
+		TreeNode zoneNode =  null;
+		this.getManagedBean().setZoneTrees(null);
+		if(this.getManagedBean().getZoneTrees() == null)
+			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		
 		if (this.getManagedBean().getContractVer().getCtContractZones() != null) {
 			List<TreeNode> localList = new ArrayList<TreeNode>();
-			TreeNode rootLocationTree = new DefaultTreeNode("Root", null);
-			
 			for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
-				System.out.println(zone.getZoneName());
-				TreeNode zoneNode = new DefaultTreeNode("zone", zone, rootLocationTree);
+				zoneNode = new DefaultTreeNode(new LocationDTO(zone), rootLocationTree);
 				TreeNode stateNode = null;
+				List<PmState> state = new ArrayList<PmState>();
 				if (zone.getCtContractZoneDtls() != null) {
 					for (CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
-						stateNode = new DefaultTreeNode("state",zoneDtl.getState(), zoneNode);
-						// System.out.println(zoneDtl.getState().getStateName());pa
-						// System.out.println(zoneDtl.getDistrict().getDistrictName());
-					}
-				}
-				localList.add(rootLocationTree);
+						  if(zoneDtl.getState() != null){
+							  if(!state.contains(zoneDtl.getState())){
+							     stateNode = new DefaultTreeNode("state", new LocationDTO(zoneDtl.getState()), zoneNode);
+							  }
+							  state.add(zoneDtl.getState());
+					      }
+						  if(zoneDtl.getDistrict() != null){
+							   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getState()), stateNode);
+						  }
+				    }
+			     }
+				this.getManagedBean().getZoneTrees().add(rootLocationTree);
+			//	rootLocationTree =  new DefaultTreeNode("Root", null);
+			//	zoneNode = null;
 			}
 			this.getManagedBean().setCtZoneTrees(rootLocationTree);
-		}
-	}
+		  }
+	}*/
+	
+	public void retriveZonesByContractVer() {
+		
+		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
+		TreeNode zoneNode =  null;
+		this.getManagedBean().setZoneTrees(null);
+		if(this.getManagedBean().getZoneTrees() == null)
+			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		
+		if (this.getManagedBean().getContractVer().getCtContractZones() != null) {
+			List<TreeNode> localList = new ArrayList<TreeNode>();
+			for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
+				zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone, zone.getDeliveryTerm()), rootLocationTree);
+				TreeNode stateNode = null;
+				List<PmState> state = new ArrayList<PmState>();
+				if (zone.getCtContractZoneDtls() != null) {
+					for (CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
+						  if(zoneDtl.getState() != null){
+							  if(!state.contains(zoneDtl.getState())){
+							     stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getState()) , zoneNode);
+							  }
+							  state.add(zoneDtl.getState());
+					      }
+						  if(zoneDtl.getDistrict() != null){
+							   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getDistrict()), stateNode);
+						  }
+				    }
+			     }
+				this.getManagedBean().getZoneTrees().add(rootLocationTree);
+			//	rootLocationTree =  new DefaultTreeNode("Root", null);
+			//	zoneNode = null;
+			}
+			this.getManagedBean().setCtZoneTrees(rootLocationTree);
+		  }
+	} 
     
     public void CombineSupAddress(CtContractVer ctContractVer){
     	
@@ -1231,26 +1263,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	         }
 		  return items;
 	}*/
-	
-	public void selectLocation(AjaxBehaviorEvent event) {
-		String location = (String) event.getComponent().getAttributes().get("value");
-		this.getManagedBean().setSupplierLocation(location);
-	}
-
-	public void retrieveZonDetails(){
-		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
-		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
-		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
-		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
-		List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
-		ScQuoteZone zone = new ScQuoteZone();
-
-		zone.setZoneName(getManagedBean().getZoneName());
-		getManagedBean().getZoneTrees().add(
-				LocationSingleton.getInstance().buildZoneTree(zone,
-						states, districts, divisions, cities));
-
-	}
 	
 	public String getItemOriginTypes(PmParameter pmParameter) throws NamingException{
 		
