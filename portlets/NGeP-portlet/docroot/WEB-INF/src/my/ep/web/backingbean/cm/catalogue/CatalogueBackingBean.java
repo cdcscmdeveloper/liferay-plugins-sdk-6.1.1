@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.faces.application.FacesMessage;
@@ -91,6 +92,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+import org.python.modules.newmodule;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -189,9 +191,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		}
-		
-		
-		
+
+
+
 		if(bb.getManagedBean().getExtensionVoList() !=null && bb.getManagedBean().getExtensionVoList().size()>0){
 			for(int i = 0; i < bb.getManagedBean().getExtensionVoList().size(); i++) {
 
@@ -1106,6 +1108,164 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
 
+			//////////////// grouping tier price start///////////
+			Map tierMap = new HashMap();
+			List<CmTierPricing> tierList = new ArrayList<CmTierPricing>();
+			for(CmTierPricing tier : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
+				System.out.println("tier.getStartDate()"+tier.getStartDate());
+				if(tierMap.containsKey(tier.getStartDate())){
+					tierList.add(tier);
+					tierMap.put(tier.getStartDate(), tierList);
+				}else{
+					System.out.println("*********new**********");
+					System.out.println("tier.getStartDate()"+tier.getStartDate());
+					tierList = new ArrayList<CmTierPricing>();
+					tierList.add(tier);
+					tierMap.put(tier.getStartDate(), tierList);
+				}
+			}
+
+			System.out.println("tierMap.size():"+tierMap.size());
+			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+				Iterator itMap = tierMap.entrySet().iterator();
+
+
+				while(itMap.hasNext()) {
+					Map.Entry entry = (Map.Entry)itMap.next();		
+					List <CmTierPricing>dataList = (List)entry.getValue();
+
+					System.out.println("dataList:"+dataList.size());
+
+					CmTierPricing [] obj = new CmTierPricing [dataList.size()];
+					for(int i=0; i<dataList.size(); i++){
+						int count =0;
+						for(int j=0; j<dataList.size(); j++){
+
+							if(dataList.get(i).getFromQty() > dataList.get(j).getFromQty()){
+								count = count + 1;
+							}
+						}
+						obj[count] =dataList.get(i);
+					}
+
+					List <CmTierPricing> sortedList = new ArrayList<CmTierPricing>();
+					for(int i=0; i<obj.length; i++){
+						sortedList.add(obj[i]);
+					}
+
+					for(CmTierPricing sorted : sortedList){
+						System.out.println("sorted:"+sorted.getFromQty());
+					}
+
+					System.out.println("dataList.get(0).getStartDate():"+dataList.get(0).getStartDate());
+					tierMap.put(dataList.get(0).getStartDate(), sortedList);
+				}
+
+			}
+			////////////////////////////////////////////////////////////////
+
+			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+				Iterator itMap = tierMap.entrySet().iterator();
+
+
+				while(itMap.hasNext()) {
+					Map.Entry entry = (Map.Entry)itMap.next();		
+					List <CmTierPricing>dataList = (List)entry.getValue();
+
+					CmTierPricing previousObj = null;
+					for(int i =0; i<dataList.size(); i++){
+						CmTierPricing tier = dataList.get(i);
+
+						if(previousObj!=null){
+							if(previousObj.getToQty() >= tier.getFromQty()){
+								FacesContext facesContext = FacesContext.getCurrentInstance();
+								facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Tier Overlapping", ""));
+							}
+
+						}
+
+
+						if(tier.getFromQty() >= tier.getToQty()){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," To Qty must be greater than From Qty", ""));
+
+							return "addCatalogView";
+						}
+
+						previousObj = tier;
+
+					}
+
+
+				}
+			}
+
+
+			/////////////////////////////////////////////////////////////////////
+			SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
+			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+				Set keyset = tierMap.keySet();
+
+				Object[] keysetarray = keyset.toArray();
+				Object [] obj = new Object [keysetarray.length];
+				System.out.println("keysetarray.length:"+keysetarray.length);
+				for(int i=0; i<keysetarray.length; i++){
+					System.out.println("******key:"+formot.format(keysetarray[i]));
+					int count = 0;
+					for(int j=0; j<keysetarray.length; j++){
+						System.out.println("**************in****************");
+						if(formot.format(keysetarray[i]).compareToIgnoreCase(formot.format(keysetarray[j]))>0){
+							count = count + 1;
+						}
+
+					}
+					System.out.println("count:"+count);
+					System.out.println("i:"+i);
+					List <CmTierPricing>dataList  = (List)tierMap.get(keysetarray[i]);	
+
+					obj[count] = dataList;
+				}
+
+				List <Object> sortedList = new ArrayList<Object>();
+				for(int i=0; i<obj.length; i++){
+
+					sortedList.add(obj[i]);
+				}
+
+
+
+				List <CmTierPricing> perviouslyList = new ArrayList<CmTierPricing>();
+				for(Object sorted : sortedList){
+					List <CmTierPricing> sortedTier = (List<CmTierPricing>) sorted; 
+
+					if(perviouslyList!=null && perviouslyList.size()>0){
+
+						if(perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate())>0){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Start date Overlapping", ""));
+
+							return "addCatalogView";
+						}
+					}
+					for(int i=0; i<sortedTier.size(); i++){
+						CmTierPricing tier = sortedTier.get(i);
+
+						if(tier.getStartDate().compareTo(tier.getEndDate())>0){
+
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," End date must be greater than start date", ""));
+
+							return "addCatalogView";
+						}
+					}
+					perviouslyList = sortedTier;
+				}
+			}
+
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 			for(CmImage image: this.getManagedBean().getSelectedMaintainItem().getCmImages()){
@@ -1116,9 +1276,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 			System.out.println("compareDesc:"+this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
 			System.out.println("getItemDesc:"+this.getManagedBean().getSelectedMaintainItem().getItemDesc());
-
-
-
 
 			if(this.getManagedBean().getSelectedMaintainItem().getCompareDesc()!=null && this.getManagedBean().getSelectedMaintainItem().getCompareDesc().trim().length()>0){
 				if(!(this.getManagedBean().getSelectedMaintainItem().getCompareDesc().equalsIgnoreCase(this.getManagedBean().getSelectedMaintainItem().getItemDesc()))){
@@ -1232,7 +1389,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		}catch(Exception ex){
-			System.out.println("***********error********");
+			System.out.println("***********error********"+ex.getMessage());
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Error", ""));
 
@@ -2246,17 +2403,60 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
 
 		if(resDTO.getPriceLs()==null || resDTO.getPriceLs().isEmpty()){
-			System.out.println("*************copy******************");
-			reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
-			resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
 
-			System.out.println("size:"+resDTO.getPriceLs().size());
-			for(CmPricing pricing: resDTO.getPriceLs()){
-				CmPromotionTierPricing price = new CmPromotionTierPricing();
-				price.setFromQty(pricing.getFromQty());
-				price.setToQty(pricing.getToQty());
-				this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
+
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()!=null 
+					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().size()>0){
+				boolean existFlag = false;
+				for(CmPromotionTierPricing promotion : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+					
+					if(promotion.getStartDate().equals(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate())){	
+						existFlag = true;			
+					}
+				}
+				
+				System.out.println("existFlag:"+existFlag);
+				if(existFlag){
+					System.out.println("*************exist******************");
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Promotion price exist", ""));
+					
+				}else{
+					System.out.println("*************copy******************");
+					reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
+					resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+
+					System.out.println("size:"+resDTO.getPriceLs().size());
+					System.out.println("this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings():"+this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().size());
+					for(CmPricing pricing: resDTO.getPriceLs()){
+						CmPromotionTierPricing price = new CmPromotionTierPricing();
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setFromQty(pricing.getFromQty());
+						price.setToQty(pricing.getToQty());
+
+						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
+						
+					}
+				}
+
+			}else{
+				
+				System.out.println("*************1st copy******************");
+				reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
+				resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+
+				System.out.println("size:"+resDTO.getPriceLs().size());
+				for(CmPricing pricing: resDTO.getPriceLs()){
+					CmPromotionTierPricing price = new CmPromotionTierPricing();
+					price.setStartDate(pricing.getStartDate());
+					price.setEndDate(pricing.getEndDate());
+					price.setFromQty(pricing.getFromQty());
+					price.setToQty(pricing.getToQty());
+					this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
+				}
 			}
+			
 		}else{
 			System.out.println("*************exist******************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -2306,7 +2506,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			}
 		}catch(Exception ex){
-			
+
 		}
 
 	}
@@ -2359,8 +2559,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public static void main (String args []) {
 
-		
-		
+
+
 
 		int [] number1 = new int [] {10,2,13,4,51,6,7};
 		int [] sorted = new int[7];
