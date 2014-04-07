@@ -66,7 +66,6 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -116,7 +115,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
 			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
+			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
 			getManagedBean().getCancelCircularReq().setStatus(status);
 						
@@ -270,7 +269,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
-				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR_CREATION);
+				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR);
 			}
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -488,7 +487,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
-			reqDTO.setFilterStatusId(ContractStatusConst.APPROVED);
+			reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -754,13 +753,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
 			
 			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.APPROVED);
-			statusIdList.add(ContractStatusConst.REJECTED);
-			statusIdList.add(ContractStatusConst.CANCELLED);
+			statusIdList.add(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			statusIdList.add(ContractStatusConst.PQ_PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.PQ_PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.PQ_PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.PQ_APPROVED);
+			statusIdList.add(ContractStatusConst.PQ_REJECTED);
 			
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");

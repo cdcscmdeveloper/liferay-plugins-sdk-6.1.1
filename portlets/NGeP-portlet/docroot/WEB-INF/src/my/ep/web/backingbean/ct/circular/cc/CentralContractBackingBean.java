@@ -78,7 +78,6 @@ import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -126,7 +125,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			getManagedBean().setCircularVer(new CtCircularVer());
 			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
+			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
 			if(getManagedBean().getCircularVer().getZonalLevel()==null) {
 				PmParameter parameter = new PmParameter();
@@ -240,13 +239,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
 			
 			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.APPROVED);
-			statusIdList.add(ContractStatusConst.REJECTED);
-			statusIdList.add(ContractStatusConst.CANCELLED);
+			statusIdList.add(ContractStatusConst.CQ_PENDING_SUBMISSION);
+			statusIdList.add(ContractStatusConst.CQ_PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.CQ_PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.CQ_APPROVED);
+			statusIdList.add(ContractStatusConst.CQ_REJECTED);
 			
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");
@@ -579,7 +577,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
-				circularVer.setDocType(ContractConst.DOC_TYPE_CC_CIRCULAR_CREATION);
+				circularVer.setDocType(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR);
 			}
 			
 			if(circularVer.getCtCircularZones().size()>0) {
