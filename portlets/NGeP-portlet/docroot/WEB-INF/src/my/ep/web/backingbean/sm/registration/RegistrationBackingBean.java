@@ -680,7 +680,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("--------------------viewOnlineAccount----------------");
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(331);
+		reqDTO.setSupplierId(345);
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
