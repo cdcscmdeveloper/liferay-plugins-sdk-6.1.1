@@ -36,28 +36,27 @@
 				id="poprofBlc" />
 
 			<p:dataTable var="profBean"
-				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
-				selection="#{backingBean.managedBean.selectedCertList}"
-				rowKey="#{profBean.supplierprofId}" rowIndexVar="index" id="profDt">
+				value="#{backingBean.managedBean.smAppl.smAssociationBodies}"
+				selection="#{backingBean.managedBean.selectedAssocBodyList}"
+				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
 
 				<p:column headerText="Professionl Body">
-					<h:outputText value="#{profBean.profName}" />
+					<h:outputText
+						value="#{profBean.pmCertBody.certBodyId} - #{profBean.regNo}" />
 				</p:column>
-
-
 
 				<p:column headerText="Expiry Date">
-					<h:outputText value="#{profBean.certEndDate}">
-						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+					<h:outputText value="#{profBean.expDate}">
+						<f:convertDateTime type="date"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
-
 				</p:column>
 				<p:column headerText="Action">
-					<p:commandLink oncomplete="profDialog.show();"
-						update=":form:tt:profPop">
+					<p:commandLink action="#{backingBean.assignSelAssocBody(profBean)}"
+						oncomplete="profDialog.show();" update=":form:tt:profPop">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
 							style="margin-right:2px;" />
@@ -66,9 +65,12 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add " oncomplete="profDialog.show();"
-					update=":form:tt:profPop" />
-				<p:commandButton value="Delete " />
+				<p:commandButton value="Add "
+					action="#{backingBean.assignNewAssocBody}"
+					oncomplete="profDialog.show();" update=":form:tt:profPop" />
+				<p:commandButton value="Delete "
+					action="#{backingBean.deleteSelectedAssocBodies}"
+					update=":form:tt:profDt" />
 
 			</div>
 			<br />
@@ -106,34 +108,42 @@
 
 
 			<tr>
-				<td><p:outputLabel value="* Professional Body *" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
-						<f:selectItem itemLabel="prof Body1" itemValue="M" />
-						<f:selectItem itemLabel="prof Body2" itemValue="B" />
-						<f:selectItem itemLabel="prof Body3" itemValue="T" />
+				<td><p:outputLabel value="* Professional Body" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						value="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId}">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+						<f:selectItems var="profBody"
+							value="#{backingBean.managedBean.profBodyLs}"
+							itemValue="#{profBody.certBodyId}"
+							itemLabel="#{profBody.bodyName}" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="If others, please specify" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedAssocBody.otherAssociation}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Registration NO." /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:outputLabel value="
+						* Registration NO." /></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedAssocBody.regNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* End Date" /></td>
-				<td><p:calendar showOn="button" /></td>
+				<td><p:calendar showOn="button"
+						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /></td>
 			</tr>
 
 		</table>
 		<!-- </p:panel> -->
 		<br />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="profDialog.hide();"
-				update=":form:tt:profDt" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateAssocBodiesToSmAppl}"
+				partialSubmit="true" process="profPop"
+				oncomplete="profDialog.hide();" update=":form:tt:profDt" />
 			<p:commandButton value="Cancel" onclick="profDialog.hide();" />
 		</div>
 

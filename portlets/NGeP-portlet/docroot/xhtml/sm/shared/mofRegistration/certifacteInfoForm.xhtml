@@ -62,13 +62,15 @@
 
 				<p:column headerText="Issue Date">
 					<h:outputText value="#{certBean.certStartDate}">
-						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						<f:convertDateTime type="date"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="Expiry Date">
 					<h:outputText value="#{certBean.certEndDate}">
-						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						<f:convertDateTime type="date"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 
 				</p:column>
@@ -85,7 +87,9 @@
 			<div align="right">
 				<p:commandButton value="Add " oncomplete="certDialog.show();"
 					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
-				<p:commandButton value="Delete " />
+				<p:commandButton value="Delete "
+					action="#{backingBean.deleteSelectedCerts}"
+					update=":form:tt:certDt" />
 
 			</div>
 			<br />
@@ -122,12 +126,9 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Certificate Type" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedCert.certTypeId}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-						<f:selectItem itemLabel="MOF" itemValue="1" />
-						<f:selectItem itemLabel="Bumiputera" itemValue="2" />
-						<f:selectItem itemLabel="Type3" itemValue="3" />
+						<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
 					</p:selectOneMenu></td>
 			</tr>
 

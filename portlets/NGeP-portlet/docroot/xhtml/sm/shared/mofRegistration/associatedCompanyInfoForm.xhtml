@@ -163,44 +163,80 @@
 						size="35" /></td>
 			</tr>
 			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryCode}"
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="assCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{assCountry.countryId}"
+							itemLabel="#{assCountry.countryName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId, 
+								backingBean.managedBean.assocCompanyPanel,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmState,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity,
+								backingBean.managedBean.assocCompanyDistricts,
+								backingBean.managedBean.assocCompanyCities)}"
+							update="assocState,assocDist,assocCity" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-						<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
-						<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}"
+						id="assocState">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="assState"
+							value="#{backingBean.managedBean.assocCompanyStates}"
+							itemValue="#{assState.stateId}" itemLabel="#{assState.stateName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId, 
+								backingBean.managedBean.assocCompanyPanel,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity,
+								backingBean.managedBean.assocCompanyCities)}"
+							update="assocDist,assocCity" />
+
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-						<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-						<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						id="assocDist"
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="assDist"
+							value="#{backingBean.managedBean.assocCompanyDistricts}"
+							itemValue="#{assDist.districtId}"
+							itemLabel="#{assDist.districtName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId, 
+								backingBean.managedBean.assocCompanyPanel,
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
+							update="assocCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-						<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-						<f:selectItem itemLabel="NILAI" itemValue="PG" />
-						<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						id="assocCity"
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="assCity"
+							value="#{backingBean.managedBean.assocCompanyCities}"
+							itemValue="#{assCity.cityId}" itemLabel="#{assCity.cityName}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
