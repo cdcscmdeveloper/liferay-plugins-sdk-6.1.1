@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	
-	public static String hashSupplierId(String supplierId) {
+	public static String hashString(String str) {
 		
         MessageDigest md = null;
 
@@ -19,7 +19,7 @@ public class SmCommonUtil {
             System.out.println(ex.getMessage());
 //            return;
         }
-        md.update(supplierId.getBytes());
+        md.update(str.getBytes());
         byte[] shaDig = md.digest();
         return new String(Hex.encodeHex(shaDig));
 	}
