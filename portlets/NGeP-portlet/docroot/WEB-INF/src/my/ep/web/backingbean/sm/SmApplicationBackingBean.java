@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -98,6 +99,7 @@ public class SmApplicationBackingBean extends
 						+ getManagedBean().getSmAppl().getSupplierType());
 		retrievePmCountryList();
 		retrievePmCertBodyList();
+		retrievePmProfBodyList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -183,7 +185,7 @@ public class SmApplicationBackingBean extends
 				addr.setAddress1("Sample");
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
-				fac.setRevNo(new BigDecimal(1));
+				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
 				getManagedBean()
@@ -210,9 +212,10 @@ public class SmApplicationBackingBean extends
 			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
-
-			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
+			getManagedBean().getSmAppl().setSmStaffTotals(
+					getStaffList(smAppl.getSupplierType()));
+			// getManagedBean().setSmAppl(smAppl);
 			// TODO remove this hard coded data and make dynamic later
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
 			System.out.println(" ---- Business  Type ----"
@@ -483,22 +486,26 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
+			if (!getManagedBean().getSmAppl().getSmAssociationBodies()
+					.isEmpty()) {
+				System.out
+						.println(" ******* ASSOCIATION BODIES ADDED *********");
+				for (SmAssociationBody assoc : getManagedBean().getSmAppl()
+						.getSmAssociationBodies()) {
+					System.out.println(" ** THE CERT VALUE BEFORE SAVE ***"
+							+ assoc.getPmCertBody().getCertBodyId());
+				}
+			}
+			System.out.println("******** Before save cert size ******"
+					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			// Save or update to DB
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			System.out.println("Supplier for this application ==== >>>"
-					+ this.getManagedBean().getSmAppl().getSmSupplier()
-							.getSupplierId());
+
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-			System.out.println("*** My Entity ***"
-					+ this.getManagedBean().getSmAppl().getApplId()
-					+ "is New == "
-					+ this.getManagedBean().getSmAppl().isBrandNew());
-			reqDto.setAppType(this.getManagedBean().getSmAppl().getApplType());
-			// TODO remove the clone later (Problem at company basic clone
-			// to be fixed)
+
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.updateApplication(reqDto);
 			getManagedBean().setTabActiveIndex(outputTab);
@@ -513,6 +520,28 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(currentTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 		} finally {
+			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
+			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
+			System.out.println("********* Final Block Id *****"
+					+ finReqDto.getApplId());
+			try {
+
+				MofRegistrationResDTO resDTO = mofRegistrationSO
+						.retrieveCurrentDraftApplication(finReqDto);
+				getManagedBean().setSmAppl(resDTO.getSmAppl());
+				if (!getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
+					for (SmFacility fac : getManagedBean().getSmAppl()
+							.getSmFacilities()) {
+						if (fac.getFacilityType().equalsIgnoreCase("B")
+								|| fac.getFacilityType().equalsIgnoreCase("H")) {
+							this.getManagedBean().setBasicCompanyFacility(fac);
+							break;
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			mofRegistrationSO = null;
 		}
 	}
@@ -722,7 +751,13 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewBranchBean() {
 		getManagedBean().setSelectedBranch(new SmSupplierBranch());
+		getManagedBean().getSelectedBranch().setRevNo(1);
 		getManagedBean().getSelectedBranch().setSmAddress((setDefaultAddr()));
+		getManagedBean().getSelectedBranch().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().setBranchCompanyStates(
+				retrievePmStateList(getManagedBean().getSelectedBranch()
+						.getSmAddress().getPmCountry().getCountryId()));
 	}
 
 	public void deleteSelectedBranches() {
@@ -758,8 +793,14 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewAssocBean() {
 		getManagedBean().setSelectedAssocCompany(new SmAssociateCompany());
+		getManagedBean().getSelectedAssocCompany().setRevNo(1);
 		getManagedBean().getSelectedAssocCompany().setSmAddress(
 				(setDefaultAddr()));
+		getManagedBean().getSelectedAssocCompany().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().setAssocCompanyStates(
+				retrievePmStateList(getManagedBean().getSelectedAssocCompany()
+						.getSmAddress().getPmCountry().getCountryId()));
 	}
 
 	// -- Process Associated Companies End
@@ -788,9 +829,79 @@ public class SmApplicationBackingBean extends
 		cert.setPmCertBody(new PmCertBody());
 		cert.setRevNo(1);
 		getManagedBean().setSelectedCert(cert);
+		cert.setSmAppl(getManagedBean().getSmAppl());
+	}
+
+	public void deleteSelectedCerts() {
+		System.out.println("******** Before delete ******"
+				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
+		System.out.println("*** Delete Certs ******* "
+				+ getManagedBean().getSelectedCertList().size());
+		if (getManagedBean().getSelectedCertList().size() > 0) {
+			for (SmSupplierCert cert : getManagedBean().getSelectedCertList()) {
+				getManagedBean().getSmAppl().getSmSupplierCerts().remove(cert);
+			}
+			getManagedBean().getSelectedCertList().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+		System.out.println("******** After delete ******"
+				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 	}
 
 	// -- Process Certss End
+	// -- Process Assoc Bodies Start
+	public void addOrUpdateAssocBodiesToSmAppl() throws ParseException {
+		getManagedBean().getSelectedAssocBody().setSmAppl(
+				getManagedBean().getSmAppl());
+		if (getManagedBean().getSmAppl().getSmAssociationBodies()
+				.contains(getManagedBean().getSelectedAssocBody())) {
+
+			System.out.println(" **** THIS IS AN UPDATE Certs******");
+		} else {
+			System.out
+					.println(" **** THIS IS AN SAVE NEW Association Body******"
+							+ getManagedBean().getSelectedAssocBody()
+									.getRevNo()
+							+ " *** Sample id *** "
+							+ getManagedBean().getSelectedAssocBody()
+									.getPmCertBody().getCertBodyId());
+			getManagedBean().getSmAppl().getSmAssociationBodies()
+					.add(getManagedBean().getSelectedAssocBody());
+		}
+	}
+
+	public void assignSelAssocBody(SmAssociationBody assocBean) {
+		getManagedBean().setSelectedAssocBody(assocBean);
+	}
+
+	public void assignNewAssocBody() {
+		SmAssociationBody assocBean = new SmAssociationBody();
+		assocBean.setPmCertBody(new PmCertBody());
+		assocBean.setRevNo(1);
+		getManagedBean().setSelectedAssocBody(assocBean);
+	}
+
+	public void deleteSelectedAssocBodies() {
+
+		System.out.println("*** Delete AssocBodies ******* "
+				+ getManagedBean().getSelectedAssocBodyList().size());
+		if (getManagedBean().getSelectedAssocBodyList().size() > 0) {
+			for (SmAssociationBody assoc : getManagedBean()
+					.getSelectedAssocBodyList()) {
+				getManagedBean().getSmAppl().getSmAssociationBodies()
+						.remove(assoc);
+			}
+			getManagedBean().getSelectedAssocBodyList().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
+	}
+
+	// -- Process Assoc Bodies End
 	// -- Process Contract Projs Start
 	public void addOrUpdateContractProjsToSmAppl() {
 		// if (getManagedBean().getSmAppl().getSmContractExperiences()
@@ -1721,6 +1832,16 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCertBodyLs().size());
 	}
 
+	private void retrievePmProfBodyList() {
+		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICertBodySO.class);
+		CertBodyResDTO resDTO = reqSO.retrieveProfessionalBodyList();
+
+		this.getManagedBean().setProfBodyLs(resDTO.getCertBodyList());
+		System.out.println("****** After getting the prof body list *******"
+				+ getManagedBean().getProfBodyLs().size());
+	}
+
 	private List<PmState> retrievePmStateList(long countryId) {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(countryId);
@@ -1756,15 +1877,12 @@ public class SmApplicationBackingBean extends
 		if (appl.getSmAssociateCompanies() == null) {
 			appl.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
 		}
+		if (appl.getSmAssociationBodies() == null) {
+			appl.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+		}
 		if (appl.getSmSupplierCerts() == null) {
 			appl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
 		}
-		// if (appl.getSmContractExperiences() == null) {
-		// appl.setSmContractExperiences(new ArrayList<SmContractExperience>());
-		// }
-		// if (appl.getSmProjectExperiences() == null) {
-		// appl.setSmProjectExperiences(new ArrayList<SmProjectExperience>());
-		// }
 		if (appl.getSmEquityCompanies() == null) {
 			appl.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 		}
@@ -1978,6 +2096,12 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().setBasicOffFacStates(stateLs);
 			break;
 
+		case SupplierManagementConst.SM_BRANCH_PANEL:
+			this.getManagedBean().setBranchCompanyStates(stateLs);
+			break;
+		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+			this.getManagedBean().setAssocCompanyStates(stateLs);
+			break;
 		default:
 			System.out.println("**** This is an unknown panel ***** ");
 			break;
@@ -2002,6 +2126,13 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().setBasicOffFacDistricts(distLs);
 			break;
 
+		case SupplierManagementConst.SM_BRANCH_PANEL:
+			this.getManagedBean().setBranchCompanyDistricts(distLs);
+			break;
+		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+			this.getManagedBean().setAssocCompanyDistricts(distLs);
+			break;
+
 		default:
 			System.out.println("**** This is an unknown panel ***** ");
 			break;
@@ -2023,6 +2154,12 @@ public class SmApplicationBackingBean extends
 			System.out
 					.println("**** This is my correct Basic Office facility dist Panel ");
 			this.getManagedBean().setBasicOffFacCities(cityLs);
+			break;
+		case SupplierManagementConst.SM_BRANCH_PANEL:
+			this.getManagedBean().setBranchCompanyCities(cityLs);
+			break;
+		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+			this.getManagedBean().setAssocCompanyCities(cityLs);
 			break;
 		default:
 			System.out.println("**** This is an unknown panel ***** ");

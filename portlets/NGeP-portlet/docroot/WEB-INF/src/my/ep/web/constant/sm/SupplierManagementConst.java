@@ -56,6 +56,8 @@ public class SupplierManagementConst {
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
 	public static final String SM_OFFICE_FACILITY_INFO_PANEL = "OfficeFacilityInfoPanel";
+	public static final String SM_BRANCH_PANEL = "BranchCompanyPanel";
+	public static final String SM_ASSOC_COMPANY_PANEL = "AssocCompanyPanel";
 
 	//Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "13";

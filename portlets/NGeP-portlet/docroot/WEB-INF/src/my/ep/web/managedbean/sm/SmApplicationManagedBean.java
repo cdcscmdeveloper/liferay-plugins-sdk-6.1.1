@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -66,6 +67,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCert> selectedCertList;
 
 	private SmSupplierCert selectedCert;
+
+	private List<SmAssociationBody> selectedAssocBodyList;
+
+	private SmAssociationBody selectedAssocBody;
 
 	private List<SmCompanyExperience> selectedCompanyExperiences;
 
@@ -198,14 +203,27 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmState> basicCompanyStates;
 	private List<PmDistrict> basicCompanyDistricts;
 	private List<PmCity> basicCompanyCities;
+
 	private List<PmState> basicOffFacStates;
 	private List<PmDistrict> basicOffFacDistricts;
 	private List<PmCity> basicOffFacCities;
+
+	private List<PmState> branchCompanyStates;
+	private List<PmDistrict> branchCompanyDistricts;
+	private List<PmCity> branchCompanyCities;
+
+	private List<PmState> assocCompanyStates;
+	private List<PmDistrict> assocCompanyDistricts;
+	private List<PmCity> assocCompanyCities;
+
 	private List<PmCertBody> certBodyLs;
+	private List<PmCertBody> profBodyLs;
 
 	// Panels
 	private String basicCompanyPanel;
 	private String basicOffFacPanel;
+	private String branchCompanyPanel;
+	private String assocCompanyPanel;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -268,6 +286,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
+		selectedAssocBodyList = new ArrayList<SmAssociationBody>();
+		selectedAssocBody = new SmAssociationBody();
+		selectedAssocBody.setPmCertBody(new PmCertBody());
 		selectedCompanyExperiences = new ArrayList<SmCompanyExperience>();
 		selectedCompanyExperience = new SmCompanyExperience();
 		// selectedConstProjs = new ArrayList<SmProjectExperience>();
@@ -434,6 +455,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// setdefault panel names
 		setDefaultPanelNames();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
+	}
+
+	private void setDefaultPanelNames() {
+		setBasicCompanyPanel(SupplierManagementConst.SM_BASIC_INFO_PANEL);
+		setBasicOffFacPanel(SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		setBranchCompanyPanel(SupplierManagementConst.SM_BRANCH_PANEL);
+		setAssocCompanyPanel(SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -1206,9 +1234,94 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.basicOffFacPanel = basicOffFacPanel;
 	}
 
-	private void setDefaultPanelNames() {
-		setBasicCompanyPanel(SupplierManagementConst.SM_BASIC_INFO_PANEL);
-		setBasicOffFacPanel(SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+	public List<SmAssociationBody> getSelectedAssocBodyList() {
+		return selectedAssocBodyList;
+	}
+
+	public void setSelectedAssocBodyList(
+			List<SmAssociationBody> selectedAssocBodyList) {
+		this.selectedAssocBodyList = selectedAssocBodyList;
+	}
+
+	public SmAssociationBody getSelectedAssocBody() {
+		return selectedAssocBody;
+	}
+
+	public void setSelectedAssocBody(SmAssociationBody selectedAssocBody) {
+		this.selectedAssocBody = selectedAssocBody;
+	}
+
+	public List<PmCertBody> getProfBodyLs() {
+		return profBodyLs;
+	}
+
+	public void setProfBodyLs(List<PmCertBody> profBodyLs) {
+		this.profBodyLs = profBodyLs;
+	}
+
+	public List<PmState> getBranchCompanyStates() {
+		return branchCompanyStates;
+	}
+
+	public void setBranchCompanyStates(List<PmState> branchCompanyStates) {
+		this.branchCompanyStates = branchCompanyStates;
+	}
+
+	public List<PmDistrict> getBranchCompanyDistricts() {
+		return branchCompanyDistricts;
+	}
+
+	public void setBranchCompanyDistricts(
+			List<PmDistrict> branchCompanyDistricts) {
+		this.branchCompanyDistricts = branchCompanyDistricts;
+	}
+
+	public List<PmCity> getBranchCompanyCities() {
+		return branchCompanyCities;
+	}
+
+	public void setBranchCompanyCities(List<PmCity> branchCompanyCities) {
+		this.branchCompanyCities = branchCompanyCities;
+	}
+
+	public String getBranchCompanyPanel() {
+		return branchCompanyPanel;
+	}
+
+	public void setBranchCompanyPanel(String branchCompanyPanel) {
+		this.branchCompanyPanel = branchCompanyPanel;
+	}
+
+	public List<PmState> getAssocCompanyStates() {
+		return assocCompanyStates;
+	}
+
+	public void setAssocCompanyStates(List<PmState> assocCompanyStates) {
+		this.assocCompanyStates = assocCompanyStates;
+	}
+
+	public List<PmDistrict> getAssocCompanyDistricts() {
+		return assocCompanyDistricts;
+	}
+
+	public void setAssocCompanyDistricts(List<PmDistrict> assocCompanyDistricts) {
+		this.assocCompanyDistricts = assocCompanyDistricts;
+	}
+
+	public List<PmCity> getAssocCompanyCities() {
+		return assocCompanyCities;
+	}
+
+	public void setAssocCompanyCities(List<PmCity> assocCompanyCities) {
+		this.assocCompanyCities = assocCompanyCities;
+	}
+
+	public String getAssocCompanyPanel() {
+		return assocCompanyPanel;
+	}
+
+	public void setAssocCompanyPanel(String assocCompanyPanel) {
+		this.assocCompanyPanel = assocCompanyPanel;
 	}
 
 }
