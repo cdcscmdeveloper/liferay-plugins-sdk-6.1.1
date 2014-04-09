@@ -131,7 +131,8 @@
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
 		<portlet id="Welcome"></portlet>
-		
+
+		<portlet id="UserProfileMaintenance"></portlet>
 	</category>
 
 	<category name="Template">

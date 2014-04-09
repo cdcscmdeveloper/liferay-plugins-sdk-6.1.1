@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="contentSection">
+	
+	<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td" style="text-align:left">
+		<p:outputLabel value="Username" />
+		<p:inputText size="35" />
+		
+		<p:outputLabel value="User eP Role" />
+		<p:selectOneMenu style="width: 207px; margin-bottom: 5px;">
+			<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+		</p:selectOneMenu>
+		
+		<p:outputLabel value="Company Role" />
+		<p:selectOneMenu style="width: 207px; margin-bottom: 5px;">
+			<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+		</p:selectOneMenu>
+		<div>		
+			<p:commandButton value="Search" icon="ui-icon-search" />
+  		</div>
+	</p:panelGrid>
+		
+	<h:panelGrid id="search" style="width:100%;">
+	 
+	<p:panel header="Results" toggleable="true">
+	<p:dataTable id="searchProfile" value="" var="userprofile" editable="true" style="word-wrap: break-word;table-layout: fixed;">
+ 
+       <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
+        <h:outputText value="" /> 
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
+        <h:outputText value="" />  
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}" >
+        <h:outputText />  
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
+        <h:outputText />    
+       </p:column>
+    
+       <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" > 
+        <h:outputText />
+       </p:column>
+    <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
+    	<p:commandLink title="Edit"
+				action="#{smUserProfileBackingBean.navigateToUpdateUserPage}">
+			<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+		</p:commandLink>
+	</p:column>
+     </p:dataTable>
+	</p:panel>
+	
+	<!-- <ui:include src="/xhtml/sm/userProfileMaintenance/basicUserProfile.xhtml" /> -->
+	
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+      <p:commandButton value="Add New User (Basic Acct)" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
+	  </p:commandButton>
+	  
+	   	
+	 </h:panelGrid>	
+	 </p:panel>
+</h:panelGrid>
+    
+     <p:dialog id="confirmDialog" header="Confirmation" widgetVar="confirmDialog" modal="true" width="500" height="100">
+     <p:panel id="dPanel" style="width:100%">
+	     <table>
+	    	<tr>
+	    	<td>
+	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 3 users can be added. Do you wish to continue?" />
+	    	</td>
+	    	</tr>
+	    	<tr>
+			<td>
+				<div align="center">
+				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" 
+				action="#{smUserProfileBackingBean.navigateToAddNewUserPage}"/>
+				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
+				</div>
+			</td>		
+			</tr>		
+		</table>
+	</p:panel>			
+	</p:dialog>
+    
+</ui:define>
+</ui:composition>
