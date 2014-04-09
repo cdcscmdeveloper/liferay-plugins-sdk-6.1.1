@@ -14,7 +14,9 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -34,9 +36,10 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -48,6 +51,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
@@ -88,7 +92,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private SmMofAccount smMofAccount;
 	private ScRemark scRemark;
 	private ScQtCheckList qtCheckList;
-	private ScQtContactPerson qtContactPerson;
+	private ScQtContactPerson qtContactPerson = new ScQtContactPerson();
 	private ScQtDeduction qtDeduction;
 	private ScQtDeductionClause qtDeductionClause;
 	private PpPlan ppPlan;
@@ -119,7 +123,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public List<ScQtBudget> gosodos;
 	public List<ScQtDoc> scQtDocs;
 	public List<CloneAll> cloneAllList;
-	private List<ScQtContactPerson> scQtContactPersons;
+	
 	private List<CtCircular> ctCirculars;
 	private List<ScQtRemark> scQtRemarks;
 	private List<ScQtCheckList> scQtChecklists;
@@ -127,9 +131,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtDeductionClause> scQtDeductionClauses;
 	private List<CtPanelSupplier> panelSupplierList;
 
-	private List<ScQtBriefing> selectedBriefingDetails;
-	private List<ScQtBriefing> selectedSiteVisitDetails;
-	private List<ScQtContactPerson> selectedContactPersons;
+	private List<ScQtBsvDtl> selectedBriefingDetails;
+	private List<ScQtBsvDtl> selectedSiteVisitDetails;
 	private List<ScQtCheckList> selectedCheckLists;
 	private List<ScQtBudget> selectedGosodoBudgets;
 	private List<SmMofAccount> selectedpanelsupplier;
@@ -282,7 +285,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtApprovalAttachment> attachments;
 	private List<ScQtCheckListAttachment> checklistAttachment;
 
-	private List<ScQtBriefing> test;
+	private List<ScQtBsvDtl> test;
 
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
@@ -292,6 +295,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int index = -1;
 
 	private ScQtSupplier scQtSupplier;
+	private CtContract ctContract = new CtContract();
+	private List<CtPanelItem> selectpanelItem;
 
 	// Committee Appointment
 	private String tabTitle;
@@ -313,6 +318,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private SelectItem[] roleTypes; // Role type drop down
 
+	private SelectItem[] finalizeComm;
+
 	private String roleName;
 
 	private List<TabBean> scCommitteeMemberTabList;
@@ -320,25 +327,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date proposalValidityUntil;
 
 	// Briefing & Site Visit Details
-	private ScQtBriefing qtBriefing;
-	private ScQtBriefing qtSiteBriefing;
-	public List<ScQtBriefing> briefings;
-	public List<ScQtBriefing> siteBriefings;
+	private ScQtBsvDtl qtBriefing;
+	private ScQtBsvDtl qtSiteBriefing = new ScQtBsvDtl();
+	public List<ScQtBsvDtl> briefings;
+	public List<ScQtBsvDtl> siteBriefings;
 	private String briefingZoneName;
 	private String previousPage;
-	private List<ScQtBriefingRegistration> briefingRegistrationList;
-	private ScQtBriefingRegistration selectedbriefRegistration;
+	private List<ScQtBsvRegistration> briefingRegistrationList;
+	private ScQtBsvRegistration selectedbriefRegistration;
 	private List<ScQtBriefingAttendance> briefingAttendanceList;
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private List<TplSpecZoneDtl> zones;
 	private List<ScRemark> remarks;
 	private TplSpecZoneDtl selectedZone;
-	private ScQtBriefingRegistration scQtBriefingRegistration;
+	private ScQtBsvRegistration scQtBsvRegistration;
+	private ScQtBsv scQtBsv;
+	private ScQtBsv scQtBriefing;
+	private ScQtBsv scQtSitevisit;
 
 	// Schedule & Contact Information
+	private List<ScQtContactPerson> pmuserContactpersonList;
+	private List<ScQtContactPerson> selectedpmuserContactpersonList;
 	private List<PmUser> pmUsersList;
 	private List<PmUser> selectedPmUsersList;
 	private PmUser pmUser;
+	private ScQtSampleSubmission scQtSampleSubmission = new ScQtSampleSubmission();
+	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
+	private List<ScQtSampleSubmission> selectedSubmissionList;
+	private List<ScQtContactPerson> scQtContactPersons;
+	private List<ScQtContactPerson> selectedContactPersons;
 
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
@@ -372,19 +389,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		getCommitteeApproverNames();
 		getPTJApproverNames();
 
-		/*
-		 * briefings= new ArrayList<>(); ScQtBriefing briefing= new
-		 * ScQtBriefing(); briefing.setBriefingDesc("test");
-		 * briefings.add(briefing);
-		 */
-/*		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
-				siteBriefings));
-		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
-				siteBriefings));
-		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
-				siteBriefings));
-		briefingZoneBean.add(new BriefingZoneBean(tplSpecZoneDtl, briefings,
-				siteBriefings));*/
 	}
 
 	private void getCommitteeApproverNames() {
@@ -475,11 +479,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.briefingZoneBean = briefingZoneBean;
 	}
 
-	public List<ScQtBriefing> getTest() {
+	public List<ScQtBsvDtl> getTest() {
 		return test;
 	}
 
-	public void setTest(List<ScQtBriefing> test) {
+	public void setTest(List<ScQtBsvDtl> test) {
 		this.test = test;
 	}
 
@@ -1134,19 +1138,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.subTabIndex = subTabIndex;
 	}
 
-	public ScQtBriefing getQtBriefing() {
+	public ScQtBsvDtl getQtBriefing() {
 		return qtBriefing;
 	}
 
-	public void setQtBriefing(ScQtBriefing qtBriefing) {
+	public void setQtBriefing(ScQtBsvDtl qtBriefing) {
 		this.qtBriefing = qtBriefing;
 	}
 
-	public ScQtBriefing getQtSiteBriefing() {
+	public ScQtBsvDtl getQtSiteBriefing() {
 		return qtSiteBriefing;
 	}
 
-	public void setQtSiteBriefing(ScQtBriefing qtSiteBriefing) {
+	public void setQtSiteBriefing(ScQtBsvDtl qtSiteBriefing) {
 		this.qtSiteBriefing = qtSiteBriefing;
 	}
 
@@ -1158,19 +1162,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtDoc = qtDoc;
 	}
 
-	public List<ScQtBriefing> getBriefings() {
+	public List<ScQtBsvDtl> getBriefings() {
 		return briefings;
 	}
 
-	public void setBriefings(List<ScQtBriefing> briefings) {
+	public void setBriefings(List<ScQtBsvDtl> briefings) {
 		this.briefings = briefings;
 	}
 
-	public List<ScQtBriefing> getSiteBriefings() {
+	public List<ScQtBsvDtl> getSiteBriefings() {
 		return siteBriefings;
 	}
 
-	public void setSiteBriefings(List<ScQtBriefing> siteBriefings) {
+	public void setSiteBriefings(List<ScQtBsvDtl> siteBriefings) {
 		this.siteBriefings = siteBriefings;
 	}
 
@@ -1371,21 +1375,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.uploadUpdateId = uploadUpdateId;
 	}
 
-	public List<ScQtBriefing> getSelectedBriefingDetails() {
+	public List<ScQtBsvDtl> getSelectedBriefingDetails() {
 		return selectedBriefingDetails;
 	}
 
 	public void setSelectedBriefingDetails(
-			List<ScQtBriefing> selectedBriefingDetails) {
+			List<ScQtBsvDtl> selectedBriefingDetails) {
 		this.selectedBriefingDetails = selectedBriefingDetails;
 	}
 
-	public List<ScQtBriefing> getSelectedSiteVisitDetails() {
+	public List<ScQtBsvDtl> getSelectedSiteVisitDetails() {
 		return selectedSiteVisitDetails;
 	}
 
 	public void setSelectedSiteVisitDetails(
-			List<ScQtBriefing> selectedSiteVisitDetails) {
+			List<ScQtBsvDtl> selectedSiteVisitDetails) {
 		this.selectedSiteVisitDetails = selectedSiteVisitDetails;
 	}
 
@@ -1958,24 +1962,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.previousPage = previousPage;
 	}
 
-	public List<ScQtBriefingRegistration> getBriefingRegistrationList() {
-		return briefingRegistrationList;
-	}
-
-	public void setBriefingRegistrationList(
-			List<ScQtBriefingRegistration> briefingRegistrationList) {
-		this.briefingRegistrationList = briefingRegistrationList;
-	}
-
-	public ScQtBriefingRegistration getSelectedbriefRegistration() {
-		return selectedbriefRegistration;
-	}
-
-	public void setSelectedbriefRegistration(
-			ScQtBriefingRegistration selectedbriefRegistration) {
-		this.selectedbriefRegistration = selectedbriefRegistration;
-	}
-
 	public List<ScQtBriefingAttendance> getBriefingAttendanceList() {
 		return briefingAttendanceList;
 	}
@@ -2041,13 +2027,123 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedZone = selectedZone;
 	}
 
-	public ScQtBriefingRegistration getScQtBriefingRegistration() {
-		return scQtBriefingRegistration;
+	public CtContract getCtContract() {
+		return ctContract;
 	}
 
-	public void setScQtBriefingRegistration(
-			ScQtBriefingRegistration scQtBriefingRegistration) {
-		this.scQtBriefingRegistration = scQtBriefingRegistration;
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
+	}
+
+	public List<CtPanelItem> getSelectpanelItem() {
+		return selectpanelItem;
+	}
+
+	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
+		this.selectpanelItem = selectpanelItem;
+	}
+
+	public SelectItem[] getFinalizeComm() {
+		return finalizeComm;
+	}
+
+	public void setFinalizeComm(SelectItem[] finalizeComm) {
+		this.finalizeComm = finalizeComm;
+	}
+
+	public ScQtSampleSubmission getScQtSampleSubmission() {
+		return scQtSampleSubmission;
+	}
+
+	public void setScQtSampleSubmission(
+			ScQtSampleSubmission scQtSampleSubmission) {
+		this.scQtSampleSubmission = scQtSampleSubmission;
+	}
+
+	public List<ScQtBsvRegistration> getBriefingRegistrationList() {
+		return briefingRegistrationList;
+	}
+
+	public void setBriefingRegistrationList(
+			List<ScQtBsvRegistration> briefingRegistrationList) {
+		this.briefingRegistrationList = briefingRegistrationList;
+	}
+
+	public ScQtBsvRegistration getSelectedbriefRegistration() {
+		return selectedbriefRegistration;
+	}
+
+	public void setSelectedbriefRegistration(
+			ScQtBsvRegistration selectedbriefRegistration) {
+		this.selectedbriefRegistration = selectedbriefRegistration;
+	}
+
+	public ScQtBsvRegistration getScQtBsvRegistration() {
+		return scQtBsvRegistration;
+	}
+
+	public void setScQtBsvRegistration(ScQtBsvRegistration scQtBsvRegistration) {
+		this.scQtBsvRegistration = scQtBsvRegistration;
+	}
+
+	public ScQtBsv getScQtBsv() {
+		return scQtBsv;
+	}
+
+	public void setScQtBsv(ScQtBsv scQtBsv) {
+		this.scQtBsv = scQtBsv;
+	}
+
+	public ScQtBsv getScQtBriefing() {
+		return scQtBriefing;
+	}
+
+	public void setScQtBriefing(ScQtBsv scQtBriefing) {
+		this.scQtBriefing = scQtBriefing;
+	}
+
+	public ScQtBsv getScQtSitevisit() {
+		return scQtSitevisit;
+	}
+
+	public void setScQtSitevisit(ScQtBsv scQtSitevisit) {
+		this.scQtSitevisit = scQtSitevisit;
+	}
+
+	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
+		return scQtSampleSubmissionList;
+	}
+
+	public void setScQtSampleSubmissionList(
+			List<ScQtSampleSubmission> scQtSampleSubmissionList) {
+		this.scQtSampleSubmissionList = scQtSampleSubmissionList;
+	}
+
+	public List<ScQtSampleSubmission> getSelectedSubmissionList() {
+		return selectedSubmissionList;
+	}
+
+	public void setSelectedSubmissionList(
+			List<ScQtSampleSubmission> selectedSubmissionList) {
+		this.selectedSubmissionList = selectedSubmissionList;
+	}
+
+	public List<ScQtContactPerson> getPmuserContactpersonList() {
+		return pmuserContactpersonList;
+	}
+
+	public void setPmuserContactpersonList(
+			List<ScQtContactPerson> pmuserContactpersonList) {
+		this.pmuserContactpersonList = pmuserContactpersonList;
+	}
+
+	public List<ScQtContactPerson> getSelectedpmuserContactpersonList() {
+		return selectedpmuserContactpersonList;
+	}
+
+	public void setSelectedpmuserContactpersonList(
+			List<ScQtContactPerson> selectedpmuserContactpersonList) {
+		this.selectedpmuserContactpersonList = selectedpmuserContactpersonList;
 	}
 
 }

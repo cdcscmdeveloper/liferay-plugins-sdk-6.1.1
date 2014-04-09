@@ -11,7 +11,7 @@ import my.ep.type.IEnumType;
  */
 public enum SelectionType implements IEnumType {
 	//PROFILE("P"),
-	EXISITING("E"),
+	Existing("E"),
 	New("N");
 
 	private String userSelection;
