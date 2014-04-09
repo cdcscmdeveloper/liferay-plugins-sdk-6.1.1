@@ -5,35 +5,45 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:decorate template="specColumnQuestionView.xhtml">
-		<ui:define name="answerSection">
-			<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.sc.tpl.rate.per.uom']}">
-				<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{tplSpecAnswer.ratePerUom}"
-					rendered="#{isQuestionTypeItem}">
-					<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(tplSpecAnswer, isItemTypeService)}" />
-				</p:inputText>
-			</p:column>
-		</ui:define>
-	</ui:decorate>
+	<ui:decorate template="specColumnQuestionView.xhtml" />
 	
-	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.sc.tpl.amount.per.year']}">
+	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+		<f:facet name="footer">
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
+		</f:facet>
+		
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.ratePerUom}"
+			rendered="#{isQuestionTypeItem}">
+			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+		</p:inputText>
+	</p:column>
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<h:panelGroup id="ansYearPG">
-			<p:inputText style="min-width:0px !important" size="13" dir="rtl" value="#{tplSpecAnswer.amountPerYear}"
-				rendered="#{isQuestionTypeItem}" disabled="true" />
+			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.amountPerYear}"
+				rendered="#{isQuestionTypeItem}" disabled="true">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			</p:inputText>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.sc.tpl.total.amount' : 'lbl.sc.tpl.answer']}">
+	<p:column style="width:130px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+		<f:facet name="footer">
+			<p:inputText style="width:96%;" value="#{templateSpecBean.specMaster.specTotal}" dir="rtl" disabled="true" rendered="#{isSpecTypeFinancial}" />
+		</f:facet>
+		
 		<h:panelGroup id="ansPG">
-			<p:inputText size="19" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
-			<p:inputText size="19" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}" />
-			<h:selectOneMenu style="width:120px;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
+			<p:inputText style="width:96%;" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
+			<p:inputText style="width:96%;" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			</p:inputText>
+			<h:selectOneMenu style="width:100%;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
 				<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
 				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 			</h:selectOneMenu>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl['lbl.sc.tpl.note']}">
-		<p:inputText size="19" value="#{tplSpecAnswer.answerRemark}" />
+	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.note']}">
+		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.answerRemark}" rows="1" />
 	</p:column>
 </ui:composition>

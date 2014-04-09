@@ -29,6 +29,13 @@
 		<managed-bean-class>my.ep.constants.CommonConstants</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+ 	<managed-bean>
+		  <description>Common Utils Class</description>
+		  <managed-bean-name>CommonUtils</managed-bean-name>
+		  <managed-bean-class>my.ep.web.util.CommonUtils</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
 
 	<managed-bean>
 		<description>Portal Util class</description>

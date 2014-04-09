@@ -3,49 +3,51 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection"></ui:define>
 
 	<ui:define name="contentSection">
-		<h:outputText value="Template Specification" styleClass="pageTitle" />			
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />		
-		<p:panel id="panel1" header="Search" toggleable="true">
+		<p:panel id="panel1" header="#{lbl['lbl.tpl.spec.search']}" toggleable="true">
 			<table style="width:100%">
 				<tr>
-					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Template Category" /></td>
-					<td class="TableFieldRight">
-						<p:selectOneMenu style="width:200px" value="#{templateSpecBackingBean.managedBean.searchProcurementCategoryId}">
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
-						</p:selectOneMenu>
-					</td>
-					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Title" /></td>
-					<td class="TableFieldRight">
+					<td class="TableFieldLeft" style="width:120px"><p:outputLabel value="#{lbl['lbl.tpl.spec.title']}" /></td>
+					<td class="TableFieldRight" colspan="3">
 						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.searchSpecName}" />
 					</td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft"><h:outputLabel value="Item Type" /></td>
-					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchItemTypeId}" >
+					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.procurement.category']}" /></td>
+					<td class="TableFieldRight" colspan="3">
+						<p:selectOneMenu style="width:289px" value="#{templateSpecBackingBean.managedBean.searchProcurementCategoryId}">
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.item.type']}" /></td>
+					<td class="TableFieldRight" style="width:330px">
+						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.searchItemTypeId}" >
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.itemType)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft"><h:outputLabel value="Specification Type" /></td>
+					<td class="TableFieldLeft" style="width:120px"><p:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchSpecTypeId}">
+						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.searchSpecTypeId}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.specificationType)}" />
 						</p:selectOneMenu>
 					</td>
 				</tr>				
 				<tr>
-					<td class="TableFieldLeft"><h:outputLabel value="Template Type" /></td>
+					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.template.type']}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchTemplateTypeId}" >
+						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.searchTemplateTypeId}" >
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft"><h:outputLabel value="Ministry Id" /></td>
+					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.ministry']}" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchOrgProfileId}">
 							<f:selectItems value="#{templateSpecBackingBean.ministryList}" />
@@ -53,68 +55,74 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4" style="text-align:right;">
-						<p:commandButton value="Search"	action="#{templateSpecBackingBean.searchResult}"
-							process="@form" update="resultID" />
+					<td colspan="4" class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"	action="#{templateSpecBackingBean.searchResult}"
+							process="@form" update="tplSpecMasterTbl"
+							icon="ui-icon-search" />
 					</td>
 				</tr>
 			</table>
 		</p:panel>
 
-		<p:panel id="panel2" header="Search Results" toggleable="true">
+		<p:panel id="panel2" header="#{lbl['lbl.tpl.spec.search.results']}" toggleable="true">
 			<table style="width:100%">
 				<tr>
 					<td>
-						<p:dataTable id="resultID" selectionMode="single" selection="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}"
-							value="#{templateSpecBackingBean.managedBean.specMasterList}" 
-							var="tplMasterObj" rowKey="#{tplMasterObj.specMasterId}" width="100%">
+						<p:dataTable id="tplSpecMasterTbl"  
+							value="#{templateSpecBackingBean.specMasterDataModel}" 
+							var="tplMasterObj"
+							lazy="true">
+							
+							<ac:paginator for="tplSpecMasterTbl" />
+							
 							<p:columnGroup type="header">
 								<p:row>
-									<p:column rowspan="1" headerText="Key"></p:column>
-									<p:column rowspan="1" headerText="Procurement Category"></p:column>
-									<p:column rowspan="1" headerText="Template Type"></p:column>
-									<p:column rowspan="1" headerText="Title"></p:column>
-									<p:column rowspan="1" headerText="Description"></p:column>
-									<p:column rowspan="1" headerText="Item Type"></p:column>
-									<p:column rowspan="1" headerText="Created User"></p:column>
-									<p:column rowspan="1" headerText="Created Date"></p:column>
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.title']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.description']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.procurement.category']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.item.type']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.template.type']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.created.user']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.created.date']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.search.action']}" />
 								</p:row>
 							</p:columnGroup>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.specMasterId}" />
+								#{tplMasterObj.specName}
 							</p:column>
 							<p:column>
-								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}" />
+								#{tplMasterObj.specDesc}
 							</p:column>
-							<p:column>
-								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.templateTypeCode)}" />
+							<p:column style="width:15%">
+								#{templateSpecBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}
 							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.specName}" />
+							<p:column style="width:6%">
+								#{templateSpecBackingBean.getParameterDesc(tplMasterObj.itemTypeCode)}
 							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.specDesc}" />
+							<p:column style="width:8%">
+								#{templateSpecBackingBean.getParameterDesc(tplMasterObj.templateTypeCode)}
 							</p:column>
-							<p:column>
-								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.itemTypeCode)}" />
+							<p:column style="width:10%">
+								#{tplMasterObj.createdBy}
 							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.createdBy}" />
-							</p:column>
-							<p:column>
+							<p:column style="width:7%">
 								<h:outputText value="#{tplMasterObj.createdDate}" >
-									<f:convertDateTime pattern="dd-MM-YYYY" />
+									<f:convertDateTime pattern="#{CommonUtils.displayDateFormat}" />
 								</h:outputText>
+							</p:column>
+							<p:column style="width:4%">
+								<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none;"
+									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}">
+									
+									<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}" value="#{tplMasterObj}" />
+								</p:commandButton>
 							</p:column>
 						</p:dataTable>
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align:right">
-						<p:commandButton value="Create New" process="@this" action="#{templateSpecBackingBean.newAction}" />
-						<p:spacer width="5px" />
-						<p:commandButton value="View Template"
-							action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}"/>
+					<td class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.create']}" process="@this" action="#{templateSpecBackingBean.newAction}" icon="ui-icon-add" />
 					</td>
 				</tr>
 			</table>

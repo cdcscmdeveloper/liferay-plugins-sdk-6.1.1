@@ -7,13 +7,15 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 
 public class TemplateSpecBean {
 	private TplSpecMaster specMaster;
-	private TplSpecQuestion selectedSpecQuestion = new TplSpecQuestion();
 	private String contentType;
 	private SmSupplier supplier;
+	private TplSpecQuestion selectedSpecQuestion = new TplSpecQuestion();
 	private List<TplSpecAnswer> specAnswerList;
+	private List<TplSpecTierQty> selectedTierQtyList;
 	
 	public TemplateSpecBean() {
 		this(TemplateSpecConst.CONTENT_TYPE_QUESTION);
@@ -35,20 +37,6 @@ public class TemplateSpecBean {
 	 */
 	public void setSpecMaster(TplSpecMaster specMaster) {
 		this.specMaster = specMaster;
-	}
-
-	/**
-	 * @return the selectedSpecQuestion
-	 */
-	public TplSpecQuestion getSelectedSpecQuestion() {
-		return selectedSpecQuestion;
-	}
-
-	/**
-	 * @param selectedSpecQuestion the selectedSpecQuestion to set
-	 */
-	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
-		this.selectedSpecQuestion = selectedSpecQuestion;
 	}
 
 	/**
@@ -80,6 +68,20 @@ public class TemplateSpecBean {
 	}
 
 	/**
+	 * @return the selectedSpecQuestion
+	 */
+	public TplSpecQuestion getSelectedSpecQuestion() {
+		return selectedSpecQuestion;
+	}
+
+	/**
+	 * @param selectedSpecQuestion the selectedSpecQuestion to set
+	 */
+	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
+		this.selectedSpecQuestion = selectedSpecQuestion;
+	}
+
+	/**
 	 * @return the specAnswerList
 	 */
 	public List<TplSpecAnswer> getSpecAnswerList() {
@@ -91,5 +93,19 @@ public class TemplateSpecBean {
 	 */
 	public void setSpecAnswerList(List<TplSpecAnswer> specAnswerList) {
 		this.specAnswerList = specAnswerList;
+	}
+
+	/**
+	 * @return the selectedTierQtyList
+	 */
+	public List<TplSpecTierQty> getSelectedTierQtyList() {
+		return selectedTierQtyList;
+	}
+
+	/**
+	 * @param selectedTierQtyList the selectedTierQtyList to set
+	 */
+	public void setSelectedTierQtyList(List<TplSpecTierQty> selectedTierQtyList) {
+		this.selectedTierQtyList = selectedTierQtyList;
 	}
 }

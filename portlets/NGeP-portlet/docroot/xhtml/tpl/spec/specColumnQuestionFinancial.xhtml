@@ -5,18 +5,35 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:155px;" headerText="#{lbl['lbl.sc.tpl.total.amount']}">
-		<p:inputText size="18" disabled="true" />	
+	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+		<f:facet name="footer">
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
+		</f:facet>
+		
+		<p:inputText style="min-width:0px !important;width:96%;" rendered="#{isQuestionTypeItem}" disabled="true" />
+	</p:column>
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value=""
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+		</p:inputText>
+	</p:column>
+	<p:column style="width:160px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+		<f:facet name="footer">
+			<p:inputText style="width:80%;" value="#{templateSpecBean.specMaster.specTotal}" dir="rtl" disabled="true" rendered="#{isSpecTypeFinancial}" />
+			<p:spacer width="16%" />
+		</f:facet>
+		
+		<p:inputText style="min-width:0px !important;width:80%;" rendered="#{isQuestionTypeItem}" disabled="true" />
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" disabled="#{(isAnswerTypeText)}" 
 			oncomplete="scoringSetting.show();"
 			partialSubmit="true" process="@this" update="@this">
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedIndex}" value="#{row}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="width:80px;" rendered="#{isEstCostReq}" headerText="#{lbl['lbl.sc.tpl.estimate.cost']}">
-		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" required="true" />
-	</p:column>
-	<p:column style="width:80px;" rendered="#{isCeilingValueReq}" headerText="#{lbl['lbl.sc.tpl.ceiling.value']}">
-		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clCeilingValue}" required="true" />
+	<p:column style="width:80px;" rendered="#{isEstCostReq}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clEstimatedCost}" required="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+		</p:inputText>
 	</p:column>
 </ui:composition>

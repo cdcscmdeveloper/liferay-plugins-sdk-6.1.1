@@ -1,0 +1,54 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable id="tierQtyTbl" widgetVar="tierQtyTbl"
+		var="tplSpecTierQty"
+		rowIndexVar="rowIndex"
+		value="#{templateSpecBean.selectedSpecQuestion.tplSpecTierQties}"
+		rowKey="#{tplSpecTierQty}"
+		selectionMode="multiple"
+		selection="#{templateSpecBean.selectedTierQtyList}">
+							
+		<ac:paginator for="tierQtyTbl" />
+		
+		<p:column selectionMode="multiple" style="width:20px;" />
+		<p:column headerText="#{lbl['lbl.tpl.spec.content.tier.from.qty']}">
+			#{templateSpecBean.selectedTierQtyList}
+			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" dir="rtl" style="width:96%;" required="true">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</p:inputText>
+		</p:column>
+		<p:column headerText="#{lbl['lbl.tpl.spec.content.tier.to.qty']}">
+			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" dir="rtl" style="width:96%;" required="true">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</p:inputText>
+		</p:column>
+		<p:column style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}" rendered="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier}">
+			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" dir="rtl" style="width:96%;" rendered="#{rowIndex > 0}" required="true">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</p:inputText>
+		</p:column>
+	</p:dataTable>
+	
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process1="@this, tierQtyTbl" partialSubmit1="true"
+				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
+				oncomplete1="tierQtyTbl.paginator.setPage(parseInt(tierQtyTbl.paginator.getTotalPages()));"
+				update="tierQtyTbl" icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this" partialSubmit="true"
+				icon="ui-icon-delete"
+				action="#{templateSpecBackingBean.deleteTierQtyAction(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedTierQtyList)}"
+				update="tierQtyTbl" />
+		</td>
+	</tr>
+	</table>
+</ui:composition>

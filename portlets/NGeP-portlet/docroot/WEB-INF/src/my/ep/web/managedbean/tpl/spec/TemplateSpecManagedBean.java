@@ -9,9 +9,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -28,7 +28,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private int selectedIndex; 
 	private String searchSpecName;
 	 
 	private Long searchProcurementCategoryId;
@@ -39,9 +38,9 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
-	private List<TplSpecMaster> specMasterList;
 	private List<TplSpecQuestion> deletedQuestions;
 	private List<TplSpecScoring> specScoringList;
+	private List<TplSpecTierQty> selectedTierQtyList;
 	
 	public List<TplSpecQuestion> getDeletedQuestions() {
 		if(deletedQuestions==null) {
@@ -94,22 +93,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.searchSpecTypeId = searchSpecTypeId;
 	}
 
-	public List<TplSpecMaster> getSpecMasterList() {
-		return specMasterList;
-	}
-
-	public void setSpecMasterList(List<TplSpecMaster> specMasterList) {
-		this.specMasterList = specMasterList;
-	}
-
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
-
-	public void setSelectedIndex(int selectedIndex) {
-		this.selectedIndex = selectedIndex;
-	}
-
 	public List<TplSpecScoring> getSpecScoringList() {
 		if(specScoringList==null) {
 			specScoringList = new ArrayList<TplSpecScoring>();
@@ -142,6 +125,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
+	}
+
+	/**
+	 * @return the selectedTierQtyList
+	 */
+	public List<TplSpecTierQty> getSelectedTierQtyList() {
+		return selectedTierQtyList;
+	}
+
+	/**
+	 * @param selectedTierQtyList the selectedTierQtyList to set
+	 */
+	public void setSelectedTierQtyList(List<TplSpecTierQty> selectedTierQtyList) {
+		this.selectedTierQtyList = selectedTierQtyList;
 	}
 
 }

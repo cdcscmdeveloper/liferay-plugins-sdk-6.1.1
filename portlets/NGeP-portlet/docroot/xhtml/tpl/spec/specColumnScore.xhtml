@@ -5,18 +5,24 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:70px;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.sc.tpl.estimate.cost']}">
-		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" disabled="true" />
+	<p:column style="width:70px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+		<h:outputText value="#{question.clEstimatedCost}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+		</h:outputText>
 	</p:column>
-	<p:column style="width:70px;" headerText="#{lbl['lbl.sc.tpl.system.score']}">
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{tplSpecAnswer.autoScore}"
-			rendered="#{isScoring}" disabled="true" />
+	<p:column style="width:70px;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}">
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.autoScore}"
+			rendered="#{isScoring}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		</p:inputText>
 	</p:column>
-	<p:column style="width:50px;" headerText="#{lbl['lbl.sc.tpl.user.score']}">
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{tplSpecAnswer.userScore}"
-			rendered="#{!isScoring}" />
+	<p:column style="width:50px;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}">
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.userScore}"
+			rendered="#{!isScoring}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		</p:inputText>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl['lbl.sc.tpl.comment']}">
-		<p:inputText size="19" value="#{tplSpecAnswer.userRemark}" />
+	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
+		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.userRemark}" rows="1" />
 	</p:column>
 </ui:composition>
