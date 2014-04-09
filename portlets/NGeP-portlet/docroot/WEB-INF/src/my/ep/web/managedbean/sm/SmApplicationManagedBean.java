@@ -86,6 +86,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmSupplierCategory selectedCategory;
 
+	private List<SmSupplierCategory> selectedCategories;
+
+	private List<PmCategoryL1> supplierParentCatList;
+
+	private List<PmCategoryL2> supplierChildCatList;
+
+	private List<PmCategoryL3> supplierSubChildCatList;
+
 	private SmAddress defaultAddr;
 
 	private SmFacility selectedFactoryFacility;
@@ -156,8 +164,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private List<SmSupplierBank> selectedBanks;
 
-	private List<SmSupplierCategory> selectedCategories;
-
 	private String delPendAckMsg;
 
 	private boolean poUser;
@@ -195,7 +201,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String catTypeConfirm;
 
-	private String dummyCatType;
 
 	private SmFacility basicCompanyFacility;
 	// Address fields for all the forms
@@ -454,6 +459,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultParentCatList = new ArrayList<PmCategoryL1>();
 		defaultParentCatList.add(p1);
 		defaultParentCatList.add(p2);
+		
+		supplierParentCatList = new ArrayList<PmCategoryL1>();
+		supplierChildCatList = new ArrayList<PmCategoryL2>();
+		supplierSubChildCatList = new ArrayList<PmCategoryL3>();
 		// For CategoryCodes End
 
 		testBlock = Boolean.TRUE;
@@ -953,14 +962,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedCompanyExperience = selectedCompanyExperience;
 	}
 
-	public String getDummyCatType() {
-		return dummyCatType;
-	}
-
-	public void setDummyCatType(String dummyCatType) {
-		this.dummyCatType = dummyCatType;
-	}
-
 	public String getCatTypeConfirm() {
 		return catTypeConfirm;
 	}
@@ -1360,6 +1361,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setEquiCompanyPanel(String equiCompanyPanel) {
 		this.equiCompanyPanel = equiCompanyPanel;
+	}
+
+	public List<PmCategoryL1> getSupplierParentCatList() {
+		return supplierParentCatList;
+	}
+
+	public void setSupplierParentCatList(List<PmCategoryL1> supplierParentCatList) {
+		this.supplierParentCatList = supplierParentCatList;
+	}
+
+	public List<PmCategoryL2> getSupplierChildCatList() {
+		return supplierChildCatList;
+	}
+
+	public void setSupplierChildCatList(List<PmCategoryL2> supplierChildCatList) {
+		this.supplierChildCatList = supplierChildCatList;
+	}
+
+	public List<PmCategoryL3> getSupplierSubChildCatList() {
+		return supplierSubChildCatList;
+	}
+
+	public void setSupplierSubChildCatList(
+			List<PmCategoryL3> supplierSubChildCatList) {
+		this.supplierSubChildCatList = supplierSubChildCatList;
 	}
 
 }

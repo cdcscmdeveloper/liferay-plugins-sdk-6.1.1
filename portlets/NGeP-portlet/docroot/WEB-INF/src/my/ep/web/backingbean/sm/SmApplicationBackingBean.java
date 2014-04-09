@@ -12,6 +12,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -19,6 +20,8 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
@@ -100,6 +103,7 @@ public class SmApplicationBackingBean extends
 		retrievePmCountryList();
 		retrievePmCertBodyList();
 		retrievePmProfBodyList();
+		retrieveParentCategoryList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -410,8 +414,6 @@ public class SmApplicationBackingBean extends
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
-			System.out.println("**** Before Value ****"
-					+ getManagedBean().getSmAppl().getApplCategoryType());
 			// TODO Un comment during iteration2
 			// boolean isNewAppln = true;
 			// for (int i = 0; i < getManagedBean().getSmSupplier().getSmAppls()
@@ -439,8 +441,6 @@ public class SmApplicationBackingBean extends
 			} else {
 				System.out.println(" ****** REMAIN PREV VALUE ********");
 			}
-			System.out.println("*** After Value ****"
-					+ getManagedBean().getSmAppl().getApplCategoryType());
 			getManagedBean().setTabActiveIndex(outputTab);
 			System.out.println("Value ----"
 					+ getManagedBean().getSmAppl().getSupportingDocMode());
@@ -768,7 +768,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.removeAll(catList);
 		}
-		getManagedBean().setDummyCatType("");
 		System.out.println("***** After confirm +++++++"
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		// TODO fix the bug and remove this hard code
@@ -782,7 +781,6 @@ public class SmApplicationBackingBean extends
 	public void resetApplnCategoryType() {
 		System.out.println("********* Reset the Values ********");
 		// getManagedBean().getSmAppl().setApplCategoryType(null);
-		getManagedBean().setDummyCatType("");
 		getManagedBean().setCatTypeConfirm(null);
 		// TODO fix the bug and remove this hard code
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
@@ -1187,19 +1185,13 @@ public class SmApplicationBackingBean extends
 							+ p3.getCategoryL3Code() + " --- Name ----"
 							+ p3.getCategoryName());
 					if (p3.getCategoryL3Code().equals("1")) {
-						getManagedBean().setDummyCatType("261");
 					} else if (p3.getCategoryL3Code().equals("2")) {
-						getManagedBean().setDummyCatType("264");
 						getManagedBean().getSelectedManufacturer().setPmUom(
 								new PmUom());
 					} else if (p3.getCategoryL3Code().equals("3")) {
-						getManagedBean().setDummyCatType("266");
 					} else {
-						getManagedBean().setDummyCatType("NA");
 					}
 					getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
-					System.out.println("***After Setting the Ps ************"
-							+ getManagedBean().getDummyCatType());
 
 				}
 			}
@@ -1220,9 +1212,9 @@ public class SmApplicationBackingBean extends
 	 * @param e
 	 */
 	private void resetSelectedCategoryParams() {
-		getManagedBean().setSelectedSubChildCat(null);
-		getManagedBean().setSelectedChildCat(null);
-		getManagedBean().setSelectedParentCat(null);
+		// getManagedBean().setSelectedSubChildCat(null);
+		// getManagedBean().setSelectedChildCat(null);
+		// getManagedBean().setSelectedParentCat(null);
 		PmCategoryL1 p = new PmCategoryL1();
 		p.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
 		getManagedBean().getSelectedCategory().setPmCategoryL1(p);
@@ -1235,43 +1227,69 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewCategoryCode() {
 		SmSupplierCategory categ = new SmSupplierCategory();
+		categ.setRevNo(1);
 		if (getManagedBean().getSmAppl().getApplCategoryType()
 				.equalsIgnoreCase("S")) {
 			categ.setSpecialCategory(true);
 		}
+		categ.setSmAppl(getManagedBean().getSmAppl());
+		categ.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setSelectedCategory(categ);
-		getManagedBean().setDummyCatType("");
 		resetSelectedCategoryParams();
 	}
 
 	public void saveSelectedCategory() {
 		// System.out.println(" ******* Save From Selection ****"
 		// + getManagedBean().getSelectedCategory().getCategoryType());
+		for (PmCategoryL1 catL1 : getManagedBean().getSupplierParentCatList()) {
+			if (catL1.getCategoryL1Id().equals(
+					getManagedBean().getSelectedCategory().getPmCategoryL1()
+							.getCategoryL1Id())) {
+				getManagedBean().getSelectedCategory().setPmCategoryL1(catL1);
+				break;
+			}
+		}
+		for (PmCategoryL2 catL2 : getManagedBean().getSupplierChildCatList()) {
+			if (catL2.getCategoryL2Id().equals(
+					getManagedBean().getSelectedCategory().getPmCategoryL2()
+							.getCategoryL2Id())) {
+				getManagedBean().getSelectedCategory().setPmCategoryL2(catL2);
+				break;
+			}
+		}
+		for (PmCategoryL3 catL3 : getManagedBean().getSupplierSubChildCatList()) {
+			if (catL3.getCategoryL3Id().equals(
+					getManagedBean().getSelectedCategory().getPmCategoryL3()
+							.getCategoryL3Id())) {
+				getManagedBean().getSelectedCategory().setPmCategoryL3(catL3);
+				break;
+			}
+		}
 		getManagedBean().getSmAppl().getSmSupplierCategories()
 				.add(getManagedBean().getSelectedCategory());
 	}
 
 	// TODO needs many validations and SO retrieve the PMcat1,2,3 details - To
 	// be impl in future
-	public void saveEnteredCategory() {
-		// System.out.println(" ******* Save From Entry ****"
-		// + getManagedBean().getSelectedCategory().getCategoryType());
-		PmCategoryL1 p = new PmCategoryL1();
-		p.setCategoryL1Code(getManagedBean().getSelectedParentCat());
-		p.setCategoryName("ParentSample");
-		getManagedBean().getSelectedCategory().setPmCategoryL1(p);
-		PmCategoryL2 p2 = new PmCategoryL2();
-		p2.setCategoryL2Code(getManagedBean().getSelectedChildCat());
-		p2.setCategoryName("ChildSample");
-		getManagedBean().getSelectedCategory().setPmCategoryL2(p2);
-		PmCategoryL3 p3 = new PmCategoryL3();
-		p3.setCategoryL3Code(getManagedBean().getSelectedSubChildCat());
-		p3.setCategoryName("SubChildSample");
-		getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
-		getManagedBean().getSmAppl().getSmSupplierCategories()
-				.add(getManagedBean().getSelectedCategory());
-
-	}
+	// public void saveEnteredCategory() {
+	// // System.out.println(" ******* Save From Entry ****"
+	// // + getManagedBean().getSelectedCategory().getCategoryType());
+	// PmCategoryL1 p = new PmCategoryL1();
+	// p.setCategoryL1Code(getManagedBean().getSelectedParentCat());
+	// p.setCategoryName("ParentSample");
+	// getManagedBean().getSelectedCategory().setPmCategoryL1(p);
+	// PmCategoryL2 p2 = new PmCategoryL2();
+	// p2.setCategoryL2Code(getManagedBean().getSelectedChildCat());
+	// p2.setCategoryName("ChildSample");
+	// getManagedBean().getSelectedCategory().setPmCategoryL2(p2);
+	// PmCategoryL3 p3 = new PmCategoryL3();
+	// p3.setCategoryL3Code(getManagedBean().getSelectedSubChildCat());
+	// p3.setCategoryName("SubChildSample");
+	// getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
+	// getManagedBean().getSmAppl().getSmSupplierCategories()
+	// .add(getManagedBean().getSelectedCategory());
+	//
+	// }
 
 	// -- Process Category Codes End
 	// factory start
@@ -2019,6 +2037,15 @@ public class SmApplicationBackingBean extends
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
 	}
 
+	private void retrieveParentCategoryList() {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1List();
+
+		this.getManagedBean().setSupplierParentCatList(
+				resDTO.getCategoryL1List());
+	}
+
 	private void retrievePmCertBodyList() {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
@@ -2064,6 +2091,26 @@ public class SmApplicationBackingBean extends
 				.getServiceObject("pm", ICitySO.class);
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		return resDTO.getCityList();
+	}
+
+	private List<PmCategoryL2> retrieveChildCategoryList(long categoryL1Id) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
+
+		return resDTO.getCategoryL2List();
+	}
+
+	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		return resDTO.getCategoryL3List();
 	}
 
 	private SmAppl defaultSmAppl(SmAppl appl) {
@@ -2280,109 +2327,169 @@ public class SmApplicationBackingBean extends
 	public void populateStatesByCountry(long coutryId, String panelName,
 			PmState state, PmDistrict district, PmCity city,
 			List<PmDistrict> distList, List<PmCity> cityList) {
+		try {
+			List<PmState> stateLs = this.retrievePmStateList(coutryId);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				System.out
+						.println("**** This is my correct Basic Country Panel ");
+				this.getManagedBean().setBasicCompanyStates(stateLs);
+				this.getManagedBean().setBasicCompanyDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setBasicCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				System.out
+						.println("**** This is my correct Basic Office facility Panel ");
+				this.getManagedBean().setBasicOffFacStates(stateLs);
+				this.getManagedBean().setBasicOffFacDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setBasicOffFacCities(
+						new ArrayList<PmCity>());
+				break;
 
-		List<PmState> stateLs = this.retrievePmStateList(coutryId);
-		switch (panelName) {
-		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-			System.out.println("**** This is my correct Basic Country Panel ");
-			this.getManagedBean().setBasicCompanyStates(stateLs);
-			break;
-		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
-			System.out
-					.println("**** This is my correct Basic Office facility Panel ");
-			this.getManagedBean().setBasicOffFacStates(stateLs);
-			break;
-
-		case SupplierManagementConst.SM_BRANCH_PANEL:
-			this.getManagedBean().setBranchCompanyStates(stateLs);
-			break;
-		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-			this.getManagedBean().setAssocCompanyStates(stateLs);
-			break;
-		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-			this.getManagedBean().setEquiCompanyStates(stateLs);
-			break;
-		default:
-			System.out.println("**** This is an unknown panel ***** ");
-			break;
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				this.getManagedBean().setBranchCompanyStates(stateLs);
+				this.getManagedBean().setBranchCompanyDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setBranchCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				this.getManagedBean().setAssocCompanyStates(stateLs);
+				this.getManagedBean().setAssocCompanyDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setAssocCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				this.getManagedBean().setEquiCompanyStates(stateLs);
+				this.getManagedBean().setEquiCompanyDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setEquiCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			default:
+				System.out.println("**** This is an unknown panel ***** ");
+				break;
+			}
+			resetState(state);
+			resetDistrict(district);
+			resetCity(city);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		resetState(state);
-		resetDistrictValues(district, distList);
-		resetCityValues(city, cityList);
-
 	}
 
 	public void populateDistrictsByState(long stateId, String panelName,
 			PmDistrict district, PmCity city, List<PmCity> cityList) {
-		List<PmDistrict> distLs = this.retrievePmDistrictList(stateId);
-		switch (panelName) {
-		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-			System.out.println("**** This is my correct Basic dist Panel ");
-			this.getManagedBean().setBasicCompanyDistricts(distLs);
-			break;
-		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
-			System.out
-					.println("**** This is my correct Basic Office facility dist Panel ");
-			this.getManagedBean().setBasicOffFacDistricts(distLs);
-			break;
+		try {
+			List<PmDistrict> distLs = this.retrievePmDistrictList(stateId);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				System.out.println("**** This is my correct Basic dist Panel ");
+				this.getManagedBean().setBasicCompanyDistricts(distLs);
+				this.getManagedBean().setBasicCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				System.out
+						.println("**** This is my correct Basic Office facility dist Panel ");
+				this.getManagedBean().setBasicOffFacDistricts(distLs);
+				this.getManagedBean().setBasicOffFacCities(
+						new ArrayList<PmCity>());
+				break;
 
-		case SupplierManagementConst.SM_BRANCH_PANEL:
-			this.getManagedBean().setBranchCompanyDistricts(distLs);
-			break;
-		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-			this.getManagedBean().setAssocCompanyDistricts(distLs);
-			break;
-		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-			this.getManagedBean().setEquiCompanyDistricts(distLs);
-			break;
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				this.getManagedBean().setBranchCompanyDistricts(distLs);
+				this.getManagedBean().setBranchCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				this.getManagedBean().setAssocCompanyDistricts(distLs);
+				this.getManagedBean().setAssocCompanyCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				this.getManagedBean().setEquiCompanyDistricts(distLs);
+				this.getManagedBean().setEquiCompanyCities(
+						new ArrayList<PmCity>());
+				break;
 
-		default:
-			System.out.println("**** This is an unknown panel ***** ");
-			break;
+			default:
+				System.out.println("**** This is an unknown panel ***** ");
+				break;
+			}
+			resetDistrict(district);
+			resetCity(city);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		resetDistrict(district);
-		resetCityValues(city, cityList);
-
 	}
 
 	public void populateCitiesByDistrict(long districtId, String panelName,
 			PmCity city) {
-		List<PmCity> cityLs = this.retrievePmCityList(districtId);
-		switch (panelName) {
-		case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-			System.out.println("**** This is my correct Basic City Panel ");
-			this.getManagedBean().setBasicCompanyCities(cityLs);
-			break;
-		case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
-			System.out
-					.println("**** This is my correct Basic Office facility dist Panel ");
-			this.getManagedBean().setBasicOffFacCities(cityLs);
-			break;
-		case SupplierManagementConst.SM_BRANCH_PANEL:
-			this.getManagedBean().setBranchCompanyCities(cityLs);
-			break;
-		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
-			this.getManagedBean().setAssocCompanyCities(cityLs);
-			break;
-		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
-			this.getManagedBean().setEquiCompanyCities(cityLs);
-			break;
-		default:
-			System.out.println("**** This is an unknown panel ***** ");
-			break;
+		try {
+			List<PmCity> cityLs = this.retrievePmCityList(districtId);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				System.out.println("**** This is my correct Basic City Panel ");
+				this.getManagedBean().setBasicCompanyCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				System.out
+						.println("**** This is my correct Basic Office facility dist Panel ");
+				this.getManagedBean().setBasicOffFacCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				this.getManagedBean().setBranchCompanyCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				this.getManagedBean().setAssocCompanyCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				this.getManagedBean().setEquiCompanyCities(cityLs);
+				break;
+			default:
+				System.out.println("**** This is an unknown panel ***** ");
+				break;
+			}
+			resetCity(city);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		resetCity(city);
-
 	}
 
-	private void resetDistrictValues(PmDistrict dist, List<PmDistrict> distList) {
-		dist.setDistrictId(null);
-		distList = new ArrayList<PmDistrict>();
+	public void populateChildCategoryByParent(long parentId,
+			PmCategoryL2 catL2, PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL2> categoryL2s = this
+					.retrieveChildCategoryList(parentId);
+
+			this.getManagedBean().setSupplierChildCatList(categoryL2s);
+			this.getManagedBean().setSupplierSubChildCatList(
+					new ArrayList<PmCategoryL3>());
+
+			resetChildCategory(catL2);
+			resetSubChildCategory(catL3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void resetCityValues(PmCity city, List<PmCity> cityList) {
-		city.setCityId(null);
-		cityList = new ArrayList<PmCity>();
+	public void populateSubChildCategoryByChild(long childId, PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL3> categoryL3s = this
+					.retrieveSubChildCategoryList(childId);
+
+			this.getManagedBean().setSupplierSubChildCatList(categoryL3s);
+
+			resetSubChildCategory(catL3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void resetDistrict(PmDistrict dist) {
@@ -2395,5 +2502,15 @@ public class SmApplicationBackingBean extends
 
 	private void resetState(PmState state) {
 		state.setStateId(null);
+	}
+
+	private void resetChildCategory(PmCategoryL2 catL2) {
+		catL2.setCategoryL2Id(null);
+
+	}
+
+	private void resetSubChildCategory(PmCategoryL3 catL3) {
+		catL3.setCategoryL3Id(null);
+
 	}
 }
