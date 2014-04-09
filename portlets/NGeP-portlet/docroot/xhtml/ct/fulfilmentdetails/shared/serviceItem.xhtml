@@ -23,7 +23,7 @@
         <p:outputPanel id="showServicePrice" columns="1" style="width:100%"
 		   rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem!=null}">
 		   <p:spacer height="20"/>
-		   <p:dataTable id="servicePriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
+		   <p:dataTable id="servicePriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}"
 			 rowKey="#{data}" lazy="true" >
 			 <ac:paginator for="servicePriceTable"/>
 			 <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>                   

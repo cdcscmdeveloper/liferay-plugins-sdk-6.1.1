@@ -19,7 +19,7 @@
 		   <p:column headerText="Minimum Order Qty." style="text-align: right;">
 		     <p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
 		   <p:column headerText="Maximum Qty." style="text-align: right;">
-		     <p:outputLabel value="#{data.maxProcureAmount}"/></p:column>     
+		     <p:outputLabel value="#{data.maxProcureAmt}"/></p:column>     
 		   <p:column headerText="Type Of Goods">
 		     <h:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}"
 		       rendered="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin) eq 'Local'}" style="float:left;"/>
@@ -43,7 +43,7 @@
 		  <p:outputPanel columns="1" style="width:100%"
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
 			   and contractDetailsBackingBean.managedBean.selectedItem!=null
-			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.itemType.parameterId) eq ''}">
+			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterId) eq ''}">
 		      <p:dataTable id="itemPriceTier" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			     rowKey="#{data}" lazy="true" >
 			     <ac:paginator for="itemPriceTier"/>
@@ -54,7 +54,9 @@
 			     <p:column headerText="To Qty." style="text-align: right;">
 				  <p:outputLabel value="#{data.toQty}"/>
 			     </p:column>  
-			     <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+			     <p:column headerText="Price (MYR)" style="text-align: right;">
+			        <p:outputLabel value="#{data.unitPrice}"/>
+			     </p:column>            
 			     <p:column headerText="Effective Date">
 			       <h:outputText value="#{data.effDate}" style="float:left;">
                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -70,7 +72,7 @@
 		  <p:outputPanel columns="1" style="width:100%"
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
 			   and contractDetailsBackingBean.managedBean.selectedItem!=null
-			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.itemType.parameterId) eq ''}">
+			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterId) eq ''}">
 		      <p:dataTable id="itemPriceTariff" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			     rowKey="#{data}" lazy="true" >
 			     <ac:paginator for="itemPriceTariff"/>

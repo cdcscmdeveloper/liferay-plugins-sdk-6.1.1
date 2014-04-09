@@ -222,8 +222,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			CTContractDataType dataType = (CTContractDataType) obj;
-			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+			//ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			//ctReqDTO.setContractId(new Long(dataType.getContractId()));
+			ctReqDTO.setContractVerId(4L);
+			ctReqDTO.setContractId(9L);
 
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
@@ -234,8 +236,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			} 
 			 
 		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-		    this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		    this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
+		  
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
@@ -1380,12 +1383,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	
 		    try {
 				
-		    	if(this.getManagedBean().getCtContract().isMto()){
-		    		this.getManagedBean().getCtContract().setMto(true);
+		    	if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+		    		this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
 		    	}else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
 		    		this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);  
 		        }else{
-		    		this.getManagedBean().getCtContract().setMto(false);
+		    		this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
 		    		this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
 		    	}
 		    

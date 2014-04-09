@@ -11,7 +11,7 @@
 			  <p:inputText for="cno" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		 	  <p:inputText for="physicalNo" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
+		 	  <p:inputText for="physicalNo" value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
@@ -68,7 +68,7 @@
 			 <p:outputLabel value="Concession" />
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
-		     <p:selectBooleanCheckbox value="true" disabled="true"/>
+		     <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
 		     <p:outputLabel value="Fee Exemption"/>
 		   </h:panelGrid>
@@ -85,7 +85,7 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.mto}" disabled="false" style="text-align:top;">
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
 			     <p:ajax event="change" update="justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -95,7 +95,8 @@
 	</h:panelGrid>
 	<p:outputPanel id="justificationPanel">
 	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
-	    rendered="#{contractDetailsBackingBean.managedBean.ctContract.mto or contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
+	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
+	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
 		    <div style="height:80px; vertical-align:top;">
 			   <p:outputLabel for="justificationLbl" value="* Justification" />

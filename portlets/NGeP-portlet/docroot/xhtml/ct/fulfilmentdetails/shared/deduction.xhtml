@@ -10,6 +10,7 @@
 		<p:dataTable id="tableDeduction" var="datas" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
 		   	rowKey="#{datas}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}" > 
 		   	<ac:paginator for="tableDeduction" />
+		   	   <p:ajax event="rowSelect" update=":form:tabview:clauseDescp"  />
 		    <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:650px;">
 	        	<p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 	        </p:column> 
@@ -19,13 +20,14 @@
 		            or contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'AP'}">
 	            	<f:convertNumber pattern="#,##0.00" />
 	            </p:inputText> 
-	            <h:outputLabel value="#{datas.amount}"  rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'FD' 
+	            <h:outputLabel value="#{datas.amount}" rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'FD' 
 		            and contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'AP'}">
 		        </h:outputLabel>
 		    </p:column>  
 		</p:dataTable>
-	 </p:panel>          
+	 </p:panel>        
 	 <p:panel id="clauseId" header="#{lbl['lbl.ct.ded.panel1.name']}" toggleable="true"  toggleSpeed="500">
+	  <p:outputPanel id="clauseDescp">  
      	<p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
         	rowKey="#{data}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
             <ac:paginator for="tableClause" />   
@@ -40,6 +42,7 @@
 		  	</p:commandButton>
 		  	<p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@form" onclick="dlgDeduction.show()" />
         </div>
+       </p:outputPanel>
 	 </p:panel>
 	   <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" header="Delete Confirmation" styleClass="screen-title"  
            resizable="false" modal="true" width="325" height="90">  
@@ -60,7 +63,8 @@
 		<p:panel  id="clause">
 		<h:panelGrid style="width:700px;">
          <p:dataTable id="tableClause1" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClauseList}" rowIndexVar="index" 
-           widgetVar="dataTableObj" scrollable="false" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.chkDeductionClause}" rowKey="#{data.deductionClauseId}">
+           widgetVar="dataTableObj" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.chkDeductionClause}"
+            rowKey="#{data.deductionClauseId}">
               <p:column selectionMode="multiple" style="width:18px" />
 					<p:column headerText="#{lbl['lbl.ct.ded.table1.clause']}">
 						<h:outputText value="#{data.clauseName}" />

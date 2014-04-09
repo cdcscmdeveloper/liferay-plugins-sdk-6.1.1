@@ -19,7 +19,7 @@
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td><p:commandButton value="#{lbl['lbl.ct.btn.submit']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 	    			<td class="ppRightBtn">
 	    			  <c:if test="#{!contractDetailsBackingBean.managedBean.viewContract}">
 			  			<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.action}">
@@ -40,7 +40,7 @@
 					<td>
 						
 							<p:inputText size="20" disabled="true"
-								value="#{contractDetailsBackingBean.managedBean.ctContract.loaNo}"  />
+								value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}"  />
 						
 					</td>		
 					<td>
