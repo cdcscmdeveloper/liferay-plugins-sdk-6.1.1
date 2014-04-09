@@ -106,9 +106,9 @@ public class LovBackingBean implements Serializable {
 			try {				
 				LovReqDTO reqDTO = new LovReqDTO();
 				
-//				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
-//					constructSearchBean(getLovBean().getConditionField());
-//				}
+				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
+					constructSearchBean(getLovBean().getConditionField());
+				}
 				searchBean.getDataFilterBeans().clear();
 				searchBean.getDataFilterBeans().addAll(getLovSearchBean().getDataFilterBeans());
 				
@@ -140,17 +140,6 @@ public class LovBackingBean implements Serializable {
 			} finally {
 				lovSO = null;
 			}
-		}
-	}
-	
-	public static void main(String[] args) {
-//		mergeRuleSO = (IMergeRulesSO)BusinessDelegate.getInstance().getServiceObject(IMergeRulesSO.class);
-//		System.out.println(BusinessDelegate.getInstance().getServiceObject(ILovSO.class));
-		
-		String columnName = "supplier.name";
-		
-		if(columnName.indexOf(".") > 0) {
-			
 		}
 	}
 
