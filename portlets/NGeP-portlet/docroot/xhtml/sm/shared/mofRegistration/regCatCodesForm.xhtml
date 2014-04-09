@@ -160,52 +160,55 @@
 					<td><p:outputLabel value="
 										* Main Category" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedParentCat}"
+							value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 							<f:selectItems
-								value="#{backingBean.managedBean.defaultParentCatList}"
+								value="#{backingBean.managedBean.supplierParentCatList}"
 								var="parent" itemLabel="#{parent.categoryName}"
-								itemValue="#{parent.categoryL1Code}" />
+								itemValue="#{parent.categoryL1Id}" />
 							<p:ajax event="change"
-								listener="#{backingBean.changeParentCategory}"
+								listener="#{backingBean.populateChildCategoryByParent(backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id,
+								backingBean.managedBean.selectedCategory.pmCategoryL2,
+								backingBean.managedBean.selectedCategory.pmCategoryL3)}"
 								update="child,subChild" />
 						</p:selectOneMenu></td>
+
+
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Sub Category" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedChildCat}" id="child"
-							style="width: 207px;margin-bottom: 5px;">
+							value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id}"
+							id="child" style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
 							<f:selectItems
-								value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
+								value="#{backingBean.managedBean.supplierChildCatList}"
 								var="child" itemLabel="#{child.categoryName}"
-								itemValue="#{child.categoryL2Code}" />
+								itemValue="#{child.categoryL2Id}" />
 							<p:ajax event="change"
-								listener="#{backingBean.changeChildCategory}" update="subChild" />
+								listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
+								update="subChild" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Sub Category Division" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedSubChildCat}"
+							value="#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Id}"
 							id="subChild" style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
 							<f:selectItems
-								value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
+								value="#{backingBean.managedBean.supplierSubChildCatList}"
 								var="subChild" itemLabel="#{subChild.categoryName}"
-								itemValue="#{subChild.categoryL3Code}" />
-							<p:ajax event="change"
-								listener="#{backingBean.changeSubChildCategory}" />
+								itemValue="#{subChild.categoryL3Id}" />
 						</p:selectOneMenu></td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td><p:outputLabel value="Business Type" /></td>
 					<td><p:inputText readonly="true"
-							title="Auto populated based on the category code enterd/selected"
+							title="Auto populated based on the category code selected"
 							size="35" /></td>
-				</tr>
+				</tr> -->
 				<tr>
 					<td colspan="2">
 						<div align="right">
