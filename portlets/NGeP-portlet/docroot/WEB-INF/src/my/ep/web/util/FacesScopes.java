@@ -11,6 +11,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
@@ -31,6 +32,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * FacesScopes is a helper class to access FacesContext instance of the current
@@ -349,6 +351,14 @@ public class FacesScopes {
 				.createMethodExpression(context.getELContext(),
 						methodExpression, expectedReturnType,
 						expectedParamTypes);
+	}
+	
+	public HttpServletRequest getOriginalServletRequest() {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+				  .getCurrentInstance().getExternalContext().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(request);
+		
+		return originalServletRequest;
 	}
 
 }
