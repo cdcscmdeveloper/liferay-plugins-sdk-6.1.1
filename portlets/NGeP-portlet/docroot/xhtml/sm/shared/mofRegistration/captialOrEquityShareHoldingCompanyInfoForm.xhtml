@@ -8,7 +8,7 @@
 
 	<p:panel header="Capital/Equity Shareholding Companies"
 		toggleable="true"
-		rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}">
+		rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1'}">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -48,10 +48,10 @@
 			<p:dataTable var="equiBean"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
-				selectionMode="multiple" rowKey="#{equiBean}" rowIndexVar="index"
-				id="eqiComDt">
+				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
+				<p:column selectionMode="multiple" width="5%" />
 				<p:column headerText="Company Name">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
@@ -82,7 +82,9 @@
 				<p:commandButton value="Add"
 					action="#{backingBean.assignNewEquiCompBean}"
 					oncomplete="eqiCompDialog.show();" update=":form:tt:eqiCompDialog" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedEquiCompanies}"
+					update=":form:tt:eqiComDt" />
 
 			</div>
 			<br />
@@ -111,9 +113,10 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="450px" header="ShareHolding / Equity Company Information"
-		id="eqiCompDialog" widgetVar="eqiCompDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true">
+	<p:dialog width="450px"
+		header="ShareHolding / Equity Company Information" id="eqiCompDialog"
+		widgetVar="eqiCompDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 		<!-- <p:panel header="Associated Company Details"> -->
 
 		<table style="width: 100%">
@@ -161,44 +164,81 @@
 						size="35" /></td>
 			</tr>
 			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryCode}"
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="equiCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{equiCountry.countryId}"
+							itemLabel="#{equiCountry.countryName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId, 
+								backingBean.managedBean.equiCompanyPanel,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmState,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity,
+								backingBean.managedBean.branchCompanyDistricts,
+								backingBean.managedBean.branchCompanyCities)}"
+							update="equiState,equiDist,equiCity" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-						<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
-						<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId}"
+						id="equiState">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="equiState"
+							value="#{backingBean.managedBean.equiCompanyStates}"
+							itemValue="#{equiState.stateId}"
+							itemLabel="#{equiState.stateName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId, 
+								backingBean.managedBean.equiCompanyPanel,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity,
+								backingBean.managedBean.branchCompanyCities)}"
+							update="equiDist,equiCity" />
+
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-						<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-						<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						id="equiDist"
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="equiDist"
+							value="#{backingBean.managedBean.equiCompanyDistricts}"
+							itemValue="#{equiDist.districtId}"
+							itemLabel="#{equiDist.districtName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId, 
+								backingBean.managedBean.equiCompanyPanel,
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity)}"
+							update="equiCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-						<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-						<f:selectItem itemLabel="NILAI" itemValue="PG" />
-						<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						id="equiCity"
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="equiCity"
+							value="#{backingBean.managedBean.equiCompanyCities}"
+							itemValue="#{equiCity.cityId}" itemLabel="#{equiCity.cityName}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>

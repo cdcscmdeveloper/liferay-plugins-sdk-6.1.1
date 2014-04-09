@@ -80,9 +80,11 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add"
-					action="#{backingBean.assignNewCompanyEcperience}"
+					action="#{backingBean.assignNewCompanyExperience}"
 					oncomplete="consDialog.show();" update=":form:tt:consDialog" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete "
+					action="#{backingBean.deleteSelectedCompanyExperiences}"
+					update=":form:tt:consDt" />
 
 			</div>
 			<br />

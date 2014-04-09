@@ -84,9 +84,11 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add "
-					action="#{backingBean.assignNewCompanyEcperience}"
+					action="#{backingBean.assignNewCompanyExperience}"
 					oncomplete="contDialog.show();" update=":form:tt:contDialog" />
-				<p:commandButton value="Delete " />
+				<p:commandButton value="Delete "
+					action="#{backingBean.deleteSelectedCompanyExperiences}"
+					update=":form:tt:contDt" />
 
 			</div>
 			<br />
@@ -151,7 +153,7 @@
 									<f:selectItem itemLabel="-- Select One--" itemValue="0" />
 									<f:selectItem itemLabel="Tender" itemValue="1" />
 									<f:selectItem itemLabel="eBidding" itemValue="2" />
-									<f:selectItem itemLabel="SebutHarga" itemValue="3" />
+									<f:selectItem itemLabel="Quotations" itemValue="3" />
 								</p:selectOneMenu></td>
 						</tr>
 

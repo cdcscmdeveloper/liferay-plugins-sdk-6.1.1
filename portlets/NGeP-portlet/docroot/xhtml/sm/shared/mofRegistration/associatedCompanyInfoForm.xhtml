@@ -79,7 +79,9 @@
 				<p:commandButton value="Add"
 					action="#{backingBean.assignNewAssocBean}"
 					oncomplete="assocDialog.show();" update=":form:tt:asDisp" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete "
+					action="#{backingBean.deleteSelectedAssocCompanies}"
+					update=":form:tt:asoc" />
 
 			</div>
 			<br />
