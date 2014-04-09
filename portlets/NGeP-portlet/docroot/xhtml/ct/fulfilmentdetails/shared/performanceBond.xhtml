@@ -6,9 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
-        <p:dataTable  id="tableBond" var="VarPerform" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-           rowKey="#{VarPerform}" selection="#{contractDetailsBackingBean.selectedBondList}"> 
+	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" 
+	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  or contractDetailsBackingBean.managedBean.updateContract}">
+        <p:dataTable  id="tableBond" var="varBond" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
+           rowKey="#{varBond}" selection="#{contractDetailsBackingBean.selectedBondList}"> 
 	      <ac:paginator for="tableBond" />
 	       <p:columnGroup type="header"> 
 	            <p:row> 
@@ -24,48 +25,44 @@
 	        </p:columnGroup>
   
             <p:column selectionMode="multiple" style="width:18px;" disabledSelection="true" 
-               rendered="#{VarPerform.performanceBondId != null and contractDetailsBackingBean.managedBean.updateContract}" />
+                   rendered="#{varBond.performanceBondId != null and contractDetailsBackingBean.managedBean.updateContract}" />
             <p:column selectionMode="multiple" style="width:18px;" 
-               rendered="#{VarPerform.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}"/>  
+               rendered="#{varBond.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}"/>  
             <p:column>
-               <p:outputLabel value="#{VarPerform.refNo}"  style="float:left;" rendered="#{VarPerform.refNo != null or VarPerform.refNo != ''}"/>
-               <p:inputText value="#{VarPerform.refNo}" style="width:70px;" rendered="#{VarPerform.refNo == null or VarPerform.refNo == ''}"/>
+                <p:inputText value="#{varBond.refNo}" disabled="#{varBond.performanceBondId != null}" style="width:70px;"/>
              </p:column>	
              <p:column>
-               <p:outputLabel value="#{VarPerform.financialOrg.finOrgName}"  style="float:left;" rendered="#{VarPerform.financialOrg.finOrgName != null}"/>
-               <p:selectOneMenu id="orgName" disabled="false"  style="width:120px;" rendered="#{VarPerform.financialOrg.finOrgName == null}">
+                <p:selectOneMenu id="orgName" disabled="#{varBond.performanceBondId != null}"  style="width:120px;">
                   <f:selectItem itemLabel="-Select One-" itemValue="-Select One-"/>
                </p:selectOneMenu>         
               </p:column>	
               <p:column>  
-                 <h:outputLabel value="#{VarPerform.bondAmount}" rendered="#{VarPerform.bondAmount != 0.0}">
-                 <f:convertNumber pattern="#,###.00" /></h:outputLabel>
-                 <p:inputText value="#{VarPerform.bondAmount}" styleClass="ppRightBtn" rendered="#{VarPerform.bondAmount == 0.0}" style="width:60px;" >
+                  <p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" disabled="#{varBond.performanceBondId != null}" style="width:60px;" >
                  <f:convertNumber pattern="#,###.00" /></p:inputText>
                </p:column>	
                <p:column>
-                 <h:outputText value="#{VarPerform.effDate}" style="float:left;" rendered="#{VarPerform.effDate !=null}">
-                   <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                 </h:outputText>
-                 <p:calendar value="#{VarPerform.effDate}" id="popupButtonCal4" showOn="button"  size="12"
-                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.effDate ==null}"/>
+                    <p:calendar value="#{varBond.effDate}" id="popupButtonCal4" showOn="button"  size="12" disabled="#{varBond.performanceBondId != null}"
+                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
                 </p:column>	
                 <p:column>
-                   <h:outputText value="#{VarPerform.expDate}" style="float:left;" rendered="#{VarPerform.expDate !=null}">
-                     <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                   </h:outputText>
-                   <p:calendar value="#{VarPerform.expDate}" id="popupButtonCal5" showOn="button"  
-                     pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{VarPerform.expDate == null}" size="12"/>
+                   <p:calendar value="#{varBond.expDate}" id="popupButtonCal5" showOn="button"  
+                     pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{varBond.performanceBondId != null}" size="12"/>
                  </p:column>	
                  <p:column styleClass="column-align-center">
                     <h:panelGroup id="uploadBondPg">
 				      <p:commandButton oncomplete="uploadBondDlg.show();return false;" icon="iconAttachment" 
-					     update=":form:tabview:tableBond" rendered="#{VarPerform.filePath == null and contractDetailsBackingBean.managedBean.updateContract}"  >
-					      <f:setPropertyActionListener value="#{VarPerform}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" /></p:commandButton>	
-				     <h:commandLink value="#{contractDetailsBackingBean.fileNames(VarPerform.filePath)}" styleClass="blue_font" action="#{contractDetailsBackingBean.downloadFile(VarPerform.filePath)}" />					
+					     update=":form:tabview:tableBond" rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}"  >
+					      <f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" /></p:commandButton>	
+				     <h:commandLink value="#{contractDetailsBackingBean.fileNames(varBond.filePath)}" style="float:left;" styleClass="blue_font" 
+				         action="#{contractDetailsBackingBean.downloadFile(varBond.filePath)}" />					
 			        </h:panelGroup>
               </p:column>
-               <p:column></p:column>
+               <p:column>
+                <p:selectOneMenu id="rStatus" disabled="#{varBond.performanceBondId != null}"  style="width:80px;">
+                    <f:selectItem itemLabel="Inactive" itemValue="Inactive"/>
+                    <f:selectItem itemLabel="Active" itemValue="Active"/>
+               </p:selectOneMenu>   
+               </p:column>
 	    </p:dataTable>
        <div class="ppRightBtn"> 
          <c:if test ='#{contractDetailsBackingBean.managedBean.updateContract}'>

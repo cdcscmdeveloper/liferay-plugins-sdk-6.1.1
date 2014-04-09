@@ -43,6 +43,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -77,6 +78,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -165,11 +167,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	   IUserSO userSO = null;
 	   try {
 		
-		   userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		   userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 		   UserReqDTO reqDTO = new UserReqDTO();
 		   reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		   UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-		   //reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+		   reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 		   reqDTO.setOrgProfileId(1250L);
 		   resDTO = userSO.retrieveUserGroupList(reqDTO);
 			
@@ -223,7 +225,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 
-		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		    this.getManagedBean().getApproverModel().getSource().clear();
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
@@ -302,9 +304,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		
 		if (this.getManagedBean().getContractVer().getCtContractZones() != null) {
-			List<TreeNode> localList = new ArrayList<TreeNode>();
 			for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
-				zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone, zone.getDeliveryTerm()), rootLocationTree);
+				zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getZoneName(), zone.getDeliveryTerm()), rootLocationTree);
 				TreeNode stateNode = null;
 				List<PmState> state = new ArrayList<PmState>();
 				if (zone.getCtContractZoneDtls() != null) {
@@ -513,7 +514,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void addDeductionDetails() {
 		IParameterSO parameterSO;
 		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 			reqDTO.setParameterCode(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
@@ -634,7 +635,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 		IContractSO contractSO = null;
 		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			
 			if(getManagedBean().getCtContractStatus()!=null) {
@@ -652,14 +653,38 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
+	
+	public void getZoneObjDetails() {
+		
+		List<CtContractZone> ctContractZone = new ArrayList<CtContractZone>();
+		for (TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
+			CtContractZone zone = new CtContractZone();
+			if(zone.getUomId() == null)
+				zone.setUomId(new PmUom());
+			zone.setZoneName(((LocationDTO)zonename.getData()).getZone());
+			zone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
+			zone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+			for (TreeNode state : zonename.getChildren()) {
+				CtContractZoneDtl ctContractZoneDtl = new CtContractZoneDtl();
+				ctContractZoneDtl.setState(((LocationDTO)state.getData()).getState());
+				for (TreeNode district : state.getChildren()){
+					 ctContractZoneDtl.setDistrict(((LocationDTO)district.getData()).getDistrict());
+					 zone.getCtContractZoneDtls().add(ctContractZoneDtl);
+				}
+			 }
+			ctContractZone.add(zone);
+		}
+	}
+	
     public String saveContract(String action){
 		
 	    IContractSO contractSO = null;
 		try{
+			getZoneObjDetails();
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
             if(this.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
             	this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);	
             }else{
@@ -740,7 +765,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		SelectItem[] items = null;     
 		try{
 		    int i = 1;
-		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 		    OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
@@ -763,7 +788,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public void resetDepartment(){
     	this.getManagedBean().setPmOrgProfileList(null);
-    	 getPtjCodeName();	 
+    	//getPtjCodeName();	 
     }
 	
 	public SelectItem[] getDepartmentDropdown() {
@@ -771,7 +796,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		SelectItem[] items = null;     
 		try{
 		   int i = 1;
-		   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		   reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 		   reqDTO.setParentOrgProfileId(this.getManagedBean().getMinistryProfileId());
@@ -792,7 +817,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 public List<PmOrgProfile> getPtjCodeName(){
 			
 		   try{
-		      IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		      IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			  OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			  reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			 
@@ -855,7 +880,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			reqDTO.setLanguageCode("EN");
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			return resDTO.getPmParameter().getParameterCode();
 		}catch(Exception e) {
@@ -875,9 +900,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
-			reqDTO.setParameterType("DDT");
+			reqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 			reqDTO.setLanguageCode("EN");
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			return resDTO.getParameterDescList().get(0).getCodeName();
 		}catch(Exception e) {
@@ -898,7 +923,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		TerminationBackingBean trBB= null;
 		try{
 			reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -931,7 +956,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		SuspensionBackingBean suspBB = null;
 		try{
             reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -939,12 +964,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			for(CtAgency agency : resDTO.getCtContractVer().getCtAgencies()) {
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
-				agency.setSuspensionType(parameter);
 			}
 			for(CtContractItem item : resDTO.getCtContractVer().getCtContractItems()) {
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
-				item.setSuspensionType(parameter);
 			}			
 			
 			suspBB = new SuspensionBackingBean();
@@ -970,7 +993,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		AmendmentBackingBean amendBB = null;
 		try {
             reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -1006,7 +1029,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 	
-	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	      this.getManagedBean().getApproverModel().getSource().clear();
 		  
@@ -1038,7 +1061,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 	
-	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	      this.getManagedBean().getApproverModel().getSource().clear();
 		 
@@ -1282,8 +1305,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType("TDT");
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			reqDTO.setParameterType(ParameterTypeConst.TERMINATION_DECISION_TYPE);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			return resDTO.getPmParameter().getParameterId().intValue();
 		}catch(Exception e) {
@@ -1351,6 +1374,28 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 		public void setValidateScheduleDate(boolean validateScheduleDate) {
 			this.validateScheduleDate = validateScheduleDate;
+		}
+		
+		public void chkJustificationAction(){
+	    	
+		    try {
+				
+		    	if(this.getManagedBean().getCtContract().isMto()){
+		    		this.getManagedBean().getCtContract().setMto(true);
+		    	}else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
+		    		this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);  
+		        }else{
+		    		this.getManagedBean().getCtContract().setMto(false);
+		    		this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
+		    	}
+		    
+		    } catch (Exception e) {
+				System.out.println(e);
+			}
+		 }
+		
+		public void searchAgencyDetails(){
+			 getPtjCodeName();	 
 		}
 		
 }

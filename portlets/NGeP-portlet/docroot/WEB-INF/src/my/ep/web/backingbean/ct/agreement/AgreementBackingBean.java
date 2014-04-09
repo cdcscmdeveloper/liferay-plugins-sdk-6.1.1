@@ -17,10 +17,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -58,16 +55,12 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -80,7 +73,6 @@ import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.primefaces.event.FileUploadEvent;
@@ -107,7 +99,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private CtAgreementParty[] selectedCtAgreementParty;
 	private CtAgreementParty[] selectedSignSuppliers;
 	private CtAgreementParty[] selectedSignWitness;
-	private CtAgreementAppendix[] selectedAppendixs;
+	//private CtAgreementAppendix[] selectedAppendixs;
 	
 	public AgreementBackingBean(){
 	   if(this.getManagedBean().getAction() == null) {
@@ -117,14 +109,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		   
 			this.getManagedBean().setCtAgreement(new CtAgreement());
 	     	this.getManagedBean().getCtAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
-			if(this.getManagedBean().getCtAgreement().getClauseDocMaster() == null){
-			   this.getManagedBean().getCtAgreement().setClauseDocMaster(new TplDocMaster());
-			   this.getManagedBean().getCtAgreement().getClauseDocMaster().setDocMasterId(33L);
-			}
-		}
-	   
-	   if(getManagedBean().getUserGroupMap()==null) {
-			initializeApproverGroup();
 		}
 	   
 	   if(this.getManagedBean().getCtAgreement().getCtAmendment() == null){
@@ -144,13 +128,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	@PostConstruct
 	public void init(){
 		agreementDetails = new AgreementDetails();	
-		if(this.getManagedBean().getCtAgreementAppendix() == null){
+	/*	if(this.getManagedBean().getCtAgreementAppendix() == null){
 			this.getManagedBean().setCtAgreementAppendix(new CtAgreementAppendix());
 			if(this.getManagedBean().getCtAgreementAppendix().getAppendixType() == null){
 			   this.getManagedBean().getCtAgreementAppendix().setAppendixType(new PmParameter());
 			   this.getManagedBean().getCtAgreementAppendix().getAppendixType().setParameterId(89L); 
 			}
-		}
+		}*/
 		ContractBackingBean ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	
@@ -185,18 +169,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		        List<String> target = new ArrayList<String>();  
 		        this.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 			}			
-			this.getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
-			int i = 0;
-			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
-				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
-				if(i==0) {
-					List<String> source = new ArrayList<String>();
-					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
-						source.add(user.getPmUser().getUserName());
-					}
-					getManagedBean().getApproverModel().setSource(source);
-				}i++;
-			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -249,7 +221,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					 IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 					 ContractResDTO conResDTO = contractSO.retrieveContract(conReqDTO);
 					 this.getManagedBean().setCtContract(conResDTO.getContract());
-					 this.getManagedBean().getCtAgreement().setCtAmendment(conResDTO.getContract().getLatestContractVer().getCtAmendment());
+					 this.getManagedBean().getCtAgreement().setCtAmendment(conResDTO.getContract().getCurrentContractVer().getCtAmendment());
 			    	
 			    }else{
 			    	resDTO = agreementSO.retrieveAgreement(ctReqDTO);
@@ -259,6 +231,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} 
 			
 			if(resDTO.getAgreement() != null){
+			
 			   if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			     this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			     this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -343,26 +316,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 			    
             this.getManagedBean().getCtAgreement().setApprovedDate(new Date());
-            this.getManagedBean().getCtAgreementAppendix().setTitle("Agreement Creation");
+       //     this.getManagedBean().getCtAgreementAppendix().setTitle("Agreement Creation");
             this.getManagedBean().getCtAgreement().setCtContract(this.getManagedBean().getCtContract());
             
-            reqDTO.setSelectedApprovers(this.getManagedBean().getApproverModel().getTarget());
-            reqDTO.setAvailableApprovers(this.getManagedBean().getApproverModel().getSource());
+           // reqDTO.setSelectedApprovers(this.getManagedBean().getApproverModel().getTarget());
+          //  reqDTO.setAvailableApprovers(this.getManagedBean().getApproverModel().getSource());
             
             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			
 			 reqDTO.setUserRole(getUserRole());
-			 /*if(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId()!=null) {
-					PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId());
-					Map<String, PmUser> userMap = new HashMap<String, PmUser>();
-					if(pmUserGroup!=null) {
-						for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
-							userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
-						}
-					}
-					reqDTO.setUserMap(userMap);
-				}*/
 			 
 			 if(this.getManagedBean().getUserLoginId() == null)
 			    reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
@@ -370,6 +333,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			    reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
 			
 			reqDTO.setAgreement(this.getManagedBean().getCtAgreement());
+			
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			
 			if(resDTO.isSuccessful()) {
@@ -485,39 +449,38 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	public void addAppendix(){
-		CtAgreementAppendix ctAgreementAppendix = new CtAgreementAppendix();
-	    ctAgreementAppendix.setAppendixType(new PmParameter());
-		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().add(ctAgreementAppendix);
+	/*	CtAgreementAppendix ctAgreementAppendix = new CtAgreementAppendix();
+	    ctAgreementAppendix.setAppendixType(new PmParameter());*/
+		
 	}
 	
 	public void deleteUserDefinedAppendix(){
-		for(int i = 0; i < selectedAppendixs.length; i++) {
+	 /*	for(int i = 0; i < selectedAppendixs.length; i++) {
 		    CtAgreementAppendix ctAgreementAppendix = selectedAppendixs[i];
 			this.getManagedBean().getCtUserAppendixList().remove(ctAgreementAppendix);
-		}selectedAppendixs = null;	
+		}selectedAppendixs = null;	*/
 	}
 	
     public void deleteAppendix(){
-		for(int i = 0; i < selectedAppendixs.length; i++) {
+	/*	for(int i = 0; i < selectedAppendixs.length; i++) {
 		    CtAgreementAppendix ctAgreementAppendix = selectedAppendixs[i];
-			this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().remove(ctAgreementAppendix);
-		}selectedAppendixs = null;	
+		}selectedAppendixs = null;	*/
 		
 	}
     
     public void addSystemAppendix(){
-    	CtAgreementAppendix ctAgreementAppendix = new CtAgreementAppendix();
+    /*	CtAgreementAppendix ctAgreementAppendix = new CtAgreementAppendix();
 		if(ctAgreementAppendix.getAppendixType() == null){
 		   ctAgreementAppendix.setAppendixType(new PmParameter());
 		   ctAgreementAppendix.setAppendixType(this.getManagedBean().getPmParameter());
-      }this.getManagedBean().getCtSystemAppendixList().add(ctAgreementAppendix);
+      }this.getManagedBean().getCtSystemAppendixList().add(ctAgreementAppendix);*/
     }
     
     public void deleteSystemDefinedAppendix(){
-		for(int i = 0; i < selectedAppendixs.length; i++) {
+	/*	for(int i = 0; i < selectedAppendixs.length; i++) {
 		    CtAgreementAppendix ctAgreementAppendix = selectedAppendixs[i];
 			this.getManagedBean().getCtSystemAppendixList().remove(ctAgreementAppendix);
-		}selectedAppendixs = null;	
+		}selectedAppendixs = null;	*/
 	}
     
 	public void fileUpload(FileUploadEvent event) throws Exception {
@@ -529,12 +492,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 	    int i=0;
-	    for(CtAgreementAppendix ctAgreementAppendix : this.getManagedBean().getCtAgreement().getCtAgreementAppendixs()){
+	 /*   for(CtAgreementAppendix ctAgreementAppendix : this.getManagedBean().getCtAgreement().getCtAgreementAppendixs()){
 	    	if(ctAgreementAppendix.equals(this.getManagedBean().getCtAgreementAppendix())){
 	    		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().get(i).setFilePath(filePath);
 	    		this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().get(i).setFileName(fileName);
 	    	 }i++;
-	     }
+	     }*/
 	    
 	  /*  int i=0;
 	    for(CtAgreementAppendix ctAgreementAppendix : this.getManagedBean().getCtUserAppendixList()){
@@ -802,12 +765,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 
 	 public void userGroupChangeListener() {
 			
-		//PmUserGroup selectedUserGroup = this.getManagedBean().getUserGroupMap().get(this.getManagedBean().getCtAgreement().getPmUserGroup().getUserGroupId());
-		List<String> source = new ArrayList<String>(); 
+			List<String> source = new ArrayList<String>(); 
 	    List<String> target = new ArrayList<String>();  
-		/*for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
-				source.add(userGroupUser.getPmUser().getUserName());
-		}*/
+		
 		this.getManagedBean().getApproverModel().setSource(source);
 		this.getManagedBean().getApproverModel().setTarget(target);
 	 }
@@ -871,16 +831,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 
 	 public void addAgreementAppendex(){
 		 
-		 for(int i=0; i<selectedAppendixs.length; i++){
+		/* for(int i=0; i<selectedAppendixs.length; i++){
 			 CtAgreementAppendix stAgreementAppendix = selectedAppendixs[i];
-			 this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().add(stAgreementAppendix);
+			// this.getManagedBean().getCtAgreement().getCtAgreementAppendixs().add(stAgreementAppendix);
 		 }selectedAppendixs = null;
 		 if(this.getManagedBean().getCtUserAppendixList().size()>0){
 			 this.getManagedBean().setCtUserAppendixList(null);
 		 }
 		 if(this.getManagedBean().getCtSystemAppendixList().size()>0){
 			 this.getManagedBean().setCtSystemAppendixList(null);
-		 }
+		 }*/
 	 }
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
@@ -1050,11 +1010,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		this.selectedSignWitness = selectedSignWitness;
 	}
 
-	public CtAgreementAppendix[] getSelectedAppendixs() {
+	/*public CtAgreementAppendix[] getSelectedAppendixs() {
 		return selectedAppendixs;
 	}
 
 	public void setSelectedAppendixs(CtAgreementAppendix[] selectedAppendixs) {
 		this.selectedAppendixs = selectedAppendixs;
-	}
+	}*/
 }

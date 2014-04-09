@@ -144,8 +144,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			   }
 			}
 			
-			if(this.getManagedBean().getContractVer().getCtTermination().isDisplinaryAction())
-				this.getManagedBean().setDisciplinaryValue(true);
+		/*	if(this.getManagedBean().getContractVer().getCtTermination().isDisplinaryAction())
+				this.getManagedBean().setDisciplinaryValue(true);*/
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -201,7 +201,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    
 		  
 		    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-		    this.getManagedBean().getContractVer().getCtTermination().setComplaintCategory(new Long(22222111));
+		   // this.getManagedBean().getContractVer().getCtTermination().setComplaintCategory(new Long(22222111));
 		    
 		    if(this.getManagedBean().isTerminateWarningLetter()){
 		    	  this.getManagedBean().getContractVer().getCtTermination().setRemedyNotice(this.getManagedBean().getEditorValue().getBytes());	 
@@ -320,8 +320,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	    try {
 	    	flushDiscip();
 			
-	    	if(this.getManagedBean().getContractVer().getCtTermination().isDisplinaryAction())
-				this.getManagedBean().setDisciplinaryValue(true);
+	    /*	if(this.getManagedBean().getContractVer().getCtTermination().isDisplinaryAction())
+				this.getManagedBean().setDisciplinaryValue(true);*/
 	    
 	    } catch (Exception e) {
 			System.out.println(e);
@@ -338,7 +338,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		    fileOuputStream.write(item.getContents());
 		    fileOuputStream.close();
-			getManagedBean().getContractVer().getCtTermination().setComplaintFilePath(filePath);
+			//getManagedBean().getContractVer().getCtTermination().setComplaintFilePath(filePath);
 		    
 		}
 	 
@@ -349,7 +349,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			String fileName = null;
 			String filePath = null;
 			
-			filePath = this.getManagedBean().getContractVer().getCtTermination().getComplaintFilePath();
+			//filePath = this.getManagedBean().getContractVer().getCtTermination().getComplaintFilePath();
 			File file = new File(filePath);
 			fileName = file.getName();
 		

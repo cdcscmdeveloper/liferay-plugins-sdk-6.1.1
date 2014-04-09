@@ -275,7 +275,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	 public void addContractValue(){
 		  
-		 double firstVaue = this.getManagedBean().getContractVer().getCtContractValue().getAdditionalAmount().doubleValue();
+		 double firstVaue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
 		 double contractValue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
 		 contractValue = contractValue + firstVaue - this.getManagedBean().getSecondValue();
 		
@@ -285,11 +285,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 }
 	 
 	 public void chkContractValue(){
-		 
-		 if(this.getManagedBean().getContractVer().getCtAmendment().isIsItemPriceChange())
+		/* 
+		 if(this.getManagedBean().getContractVer().getCtAmendment().is)
 			this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		 else
-		    this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+		    this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
 	}
 	 
     public void changeItemTypes(){

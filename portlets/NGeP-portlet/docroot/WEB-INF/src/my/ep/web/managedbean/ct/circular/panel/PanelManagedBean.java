@@ -18,8 +18,6 @@ import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -48,8 +46,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCircularVer circularVer;
 	private CtPanelSupplier selectedPanelSupplier;
 	private CtCancelCircular selectedCancelCircular;
-	private CtCircularZone selectedCircularZone;
-	private CtCircularZoneDtl selectedCircularZoneDtl;
 	private CtPanelItem selectedPanelItem;
 	private CtCancelCircularReq cancelCircularReq;
 	
@@ -295,22 +291,6 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
-	}
-
-	public CtCircularZone getSelectedCircularZone() {
-		return selectedCircularZone;
-	}
-
-	public void setSelectedCircularZone(CtCircularZone selectedCircularZone) {
-		this.selectedCircularZone = selectedCircularZone;
-	}
-
-	public CtCircularZoneDtl getSelectedCircularZoneDtl() {
-		return selectedCircularZoneDtl;
-	}
-
-	public void setSelectedCircularZoneDtl(CtCircularZoneDtl selectedCircularZoneDtl) {
-		this.selectedCircularZoneDtl = selectedCircularZoneDtl;
 	}
 
 }

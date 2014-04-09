@@ -25,23 +25,23 @@
 			</p:inputText>	
 			<p:outputLabel id="signBy" value="Signed Date" />
 			<p:inputText for="signBy" disabled="true" style="width:170px;"/>
-			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.zonalPricing}" />
-			<h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.zonalPricing}">
+			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
+			<h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
 					disabled="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
-			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.zonalPricing}"/>
-			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.zonalPricing}"/>
+			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
+			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
 			<h:outputLabel
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				rendered="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
 				value="#{lbl['lbl.ct.circularNo']}" />
 			<p:commandLink
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				rendered="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
 				style="margin-right:20px;" ajax="false">
 				<h:outputText
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo}"
+					value="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo}"
 					styleClass="linkcommand" />
 			</p:commandLink>
 			
@@ -52,14 +52,18 @@
 			</h:panelGroup>
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
+				value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}"
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
-			</h:panelGrid>		    
+			</h:panelGrid>	
+			 <p:outputLabel id="astatus" value="Agreement Status" />
+			 <p:inputText for="astatus" style="width:170px;" disabled="true" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
-			 <p:selectBooleanCheckbox value="false" disabled="false" />
+			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
+			    <p:ajax event="change" update="justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <p:outputLabel value="Concession" />
 		   </h:panelGrid>
@@ -70,25 +74,40 @@
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
-			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
+			  value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
 	       </h:panelGrid>	
 	       <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
-				 disabled="true" style="text-align:top;" />
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.mto}"
+				 disabled="false" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="false"
-				 disabled="true" style="text-align:top;" />
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.mto}" disabled="false" style="text-align:top;">
+			     <p:ajax event="change" update="justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	</h:panelGrid>
-  </p:panel>
+	<p:outputPanel id="justificationPanel">
+	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
+	    rendered="#{contractDetailsBackingBean.managedBean.ctContract.mto or contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
+         <h:panelGroup>
+		    <div style="height:80px; vertical-align:top;">
+			   <p:outputLabel for="justificationLbl" value="* Justification" />
+		    </div>
+	     </h:panelGroup>
+	  <h:panelGrid>
+	    <p:inputTextarea id="justificationLbl" 
+		  rows="4" cols="113" disabled="false" autoResize="false" />	
+	  </h:panelGrid>		
+    </h:panelGrid> 
+  </p:outputPanel>
+ </p:panel>
 </ui:composition>
 
 

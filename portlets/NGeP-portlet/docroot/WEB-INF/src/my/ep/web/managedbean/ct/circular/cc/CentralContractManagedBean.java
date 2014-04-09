@@ -18,10 +18,7 @@ import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
-import my.ep.persistence.entity.ct.circular.cc.CtCircularItemPrice;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -48,14 +45,9 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
-	private CtCircularZone selectedCircularZone;
-	private CtCircularZoneDtl selectedCircularZoneDtl;
-	private CtCircularZone selectedItemZone;
-	private CtCircularZoneDtl selectedItemZoneDtl;	
 	private CtCircularContract selectedCircularContract;
 	private CtCircularItem selectedCircularItem;
-	private CtCircularItemPrice selectedCircularItemPrice;
-	
+
 	private List<CtContract> contractList;
 	private List<CtContract> selectedContractList;
 	private List<CtContactPerson> selectedContactPersons;
@@ -229,36 +221,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setUpdateTypeDisable(boolean updateTypeDisable) {
 		this.updateTypeDisable = updateTypeDisable;
 	}
-	public CtCircularZone getSelectedCircularZone() {
-		return selectedCircularZone;
-	}
-	public void setSelectedCircularZone(CtCircularZone selectedCircularZone) {
-		this.selectedCircularZone = selectedCircularZone;
-	}
-	public CtCircularZoneDtl getSelectedCircularZoneDtl() {
-		return selectedCircularZoneDtl;
-	}
-	public void setSelectedCircularZoneDtl(CtCircularZoneDtl selectedCircularZoneDtl) {
-		this.selectedCircularZoneDtl = selectedCircularZoneDtl;
-	}
+	
 	public List<CtExemptedOrg> getSelectedExemptedOrgs() {
 		return selectedExemptedOrgs;
 	}
 	public void setSelectedExemptedOrgs(List<CtExemptedOrg> selectedExemptedOrgs) {
 		this.selectedExemptedOrgs = selectedExemptedOrgs;
 	}
-	public CtCircularZone getSelectedItemZone() {
-		return selectedItemZone;
-	}
-	public void setSelectedItemZone(CtCircularZone selectedItemZone) {
-		this.selectedItemZone = selectedItemZone;
-	}
-	public CtCircularZoneDtl getSelectedItemZoneDtl() {
-		return selectedItemZoneDtl;
-	}
-	public void setSelectedItemZoneDtl(CtCircularZoneDtl selectedItemZoneDtl) {
-		this.selectedItemZoneDtl = selectedItemZoneDtl;
-	}
+	
 	public CtCircularContract getSelectedCircularContract() {
 		return selectedCircularContract;
 	}
@@ -271,11 +241,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setSelectedCircularItem(CtCircularItem selectedCircularItem) {
 		this.selectedCircularItem = selectedCircularItem;
 	}
-	public CtCircularItemPrice getSelectedCircularItemPrice() {
-		return selectedCircularItemPrice;
-	}
-	public void setSelectedCircularItemPrice(CtCircularItemPrice selectedCircularItemPrice) {
-		this.selectedCircularItemPrice = selectedCircularItemPrice;
-	}
+	
 	
 }

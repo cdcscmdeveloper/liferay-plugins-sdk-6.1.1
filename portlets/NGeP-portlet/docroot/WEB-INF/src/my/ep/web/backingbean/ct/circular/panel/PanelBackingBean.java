@@ -61,11 +61,10 @@ import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZoneDtl;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -115,15 +114,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularVer(new CtCircularVer());
 			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
 			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
 			getManagedBean().getCancelCircularReq().setStatus(status);
 						
-			if(getManagedBean().getCircularVer().getZonalLevel()==null) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
-				getManagedBean().getCircularVer().setZonalLevel(parameter);
-			}					
+						
 			initializeRemarks();
 			
 			ContractBackingBean ctBB = new ContractBackingBean();
@@ -269,7 +264,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
-				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR);
+				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR_CREATION);
 			}
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -277,7 +272,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				return null;
 			}
 
-			if(circularVer.getCtCircularZones().size()>0) {
+			/*if(circularVer.getCtCircularZones().size()>0) {
 				Map<String, CtCircularZone> circularZoneMap = new HashMap<String, CtCircularZone>();
 				for(CtCircularZone ctCircularZone : circularVer.getCtCircularZones()) {
 					circularZoneMap.put(ctCircularZone.toString(), ctCircularZone);
@@ -292,7 +287,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						}
 					}
 				}
-			}
+			}*/
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -342,9 +337,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 					for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
-						if(panelSupplier.getCtCircularZone()==null) {
+						/*if(panelSupplier.getCtCircularZone()==null) {
 							panelSupplier.setCtCircularZone(new CtCircularZone());
-						}
+						}*/
 					}
 				}
 				
@@ -487,7 +482,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
-			reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
+			reqDTO.setFilterStatusId(ContractStatusConst.APPROVED);
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -527,7 +522,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			CtPanelSupplier panelSupplier = new CtPanelSupplier();
 			panelSupplier.setSupplier(new SmSupplier());
-			panelSupplier.setCtCircularZone(getManagedBean().getSelectedCircularZone());
+		//	panelSupplier.setCtCircularZone(getManagedBean().getSelectedCircularZone());
 			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().add(panelSupplier);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -592,18 +587,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void addCircularZone(){
-		log.info("PanelBackingBean.addCircularZone()");
+		/*log.info("PanelBackingBean.addCircularZone()");
         try {	
         	CtCircularZone circularZone = new CtCircularZone();
 			getManagedBean().getCircularVer().getCtCircularZones().add(circularZone);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		}*/
 	}
 	
 	public void deleteCircularZone(){
-		log.info("PanelBackingBean.deleteCircularZone() : "+getManagedBean().getSelectedCircularZone());
+		/*log.info("PanelBackingBean.deleteCircularZone() : "+getManagedBean().getSelectedCircularZone());
 		try {
 			getManagedBean().getCircularVer().getCtCircularZones().remove(getManagedBean().getSelectedCircularZone());
 			getManagedBean().setSelectedCircularZone(null);
@@ -611,11 +606,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		}*/
 	}
 	
 	public void selectZoneEvent() {
-		getManagedBean().setSelectedCircularZoneDtl(null);
+	//	getManagedBean().setSelectedCircularZoneDtl(null);
 	}
 	
 	public void selectItemZoneEvent() {
@@ -623,7 +618,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void addCircularZoneDtl(){
-		log.info("PanelBackingBean.addCircularZoneDtl()");
+		/*log.info("PanelBackingBean.addCircularZoneDtl()");
         try {	
         	CtCircularZoneDtl circularZoneDtl = new CtCircularZoneDtl();
         	circularZoneDtl.setState(new PmState());
@@ -632,18 +627,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		}*/
 	}
 	
 	public void deleteCircularZoneDtl(){
-		log.info("PanelBackingBean.deleteCircularZoneDtl()");
+		/*log.info("PanelBackingBean.deleteCircularZoneDtl()");
 		try {
 			getManagedBean().getSelectedCircularZone().getCtCircularZoneDtls().remove(getManagedBean().getSelectedCircularZoneDtl());
 			getManagedBean().setSelectedCircularZoneDtl(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		}*/
 	}
 	
 	public void addPanelItem(){
@@ -670,7 +665,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void selectPanelItemEvent() {
-		getManagedBean().setSelectedCircularZone(null);
+		//getManagedBean().setSelectedCircularZone(null);
 	}
 	
 	public void selectActiveCirculars(){
@@ -678,11 +673,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         try {	
         	CtCancelCircular cancelCircular = null;
         	List<CtCancelCircular> cancelCircularList = new ArrayList<CtCancelCircular>();
-        	for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
+        	/*for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
         		cancelCircular = new CtCancelCircular();
         		cancelCircular.setCtCancelCircularVer(circularVer);
         		cancelCircularList.add(cancelCircular);
-        	}
+        	}*/
         	if(getManagedBean().getCancelCircularReq()==null) {
         		getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
         	}
@@ -753,12 +748,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
 			
 			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.PQ_PENDING_SUBMISSION);
-			statusIdList.add(ContractStatusConst.PQ_PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.PQ_PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.PQ_PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.PQ_APPROVED);
-			statusIdList.add(ContractStatusConst.PQ_REJECTED);
+			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.APPROVED);
+			statusIdList.add(ContractStatusConst.REJECTED);
+			statusIdList.add(ContractStatusConst.CANCELLED);
 			
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");
@@ -824,7 +820,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public String gotoPage() {
-		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
+		/*String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
 		log.info("Action :"+action+" Id :"+circularVerId);
 		ICircularSO circularSO = null;
@@ -890,7 +886,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
-		}
+		}*/
 		return null;
 	}
 	
@@ -934,23 +930,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
-			if(resDTO.getCircularVer().getUpdateEffDate()!=null) {
-				getManagedBean().setUpdateAction(true);
-			}
-						
-			if(resDTO.getCircularVer().getZonalLevel()==null) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
-				resDTO.getCircularVer().setZonalLevel(parameter);
-			}						
+								
 			
-			for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
+			/*for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 				for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
 					if(panelSupplier.getCtCircularZone()==null) {
 						panelSupplier.setCtCircularZone(new CtCircularZone());
 					}
 				}
-			}
+			}*/
 			
 			getManagedBean().getApproverModel().getSource().clear();
 			
@@ -1137,7 +1125,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	public List<CtPanelSupplier> getPanelSupplierList() {
 		List<CtPanelSupplier> panelSuppliers = new ArrayList<CtPanelSupplier>();
-		if(getManagedBean().getSelectedPanelItem()!=null) {
+		/*if(getManagedBean().getSelectedPanelItem()!=null) {
 			List<CtPanelSupplier> panelSupplierList = getManagedBean().getSelectedPanelItem().getCtPanelSuppliers();
 			if(getManagedBean().getCircularVer().getZonalLevel().getParameterCode()!=null) {
 				for(CtPanelSupplier ctPanelSupplier : panelSupplierList) {
@@ -1148,7 +1136,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else {
 				panelSuppliers = panelSupplierList;
 			}
-		}
+		}*/
 		return panelSuppliers;
 	}
 	

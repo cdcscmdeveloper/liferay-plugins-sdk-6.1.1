@@ -148,7 +148,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		       
 		        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		        this.getManagedBean().getContractVer().setDocNo("FS"+new Long(System.currentTimeMillis()).toString().substring(10));
-		        this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
+		     //   this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
 		        this.getManagedBean().getContractVer().getCtContractValue().setSuspendActiveLetter(this.getManagedBean().getEditorValue().getBytes());
 		             
 		        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());

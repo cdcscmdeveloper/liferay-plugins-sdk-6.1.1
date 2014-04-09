@@ -64,7 +64,7 @@
 		   </div>
         </p:dialog>  
 	   </p:panel>  
-		<p:dialog id="dialogAgency"  header="Add Agencies" widgetVar="dlgAgency" modal="true" width="600" height="400">
+		<p:dialog id="dialogAgency"  header="Add Agencies" widgetVar="dlgAgency" modal="true" width="650" height="450">
 		   <p:panel  id="agencyies">
               <h:panelGrid columns="7">
                  <p:selectOneMenu for="ministry"  style="width:100px" disabled="true" >
@@ -115,6 +115,10 @@
                  <p:spacer height="1"/>
                  <p:inputText style="width:220px;"/>
 			  </h:panelGrid>
+			  	<div class="ppRightBtn">
+       		         <p:commandButton value="Search" action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search"   update="tableAgency"/> 
+			         <p:commandButton id="resetlBtn" value="Reset"/>
+		       </div>
 			   <p:spacer height="2"/>
               <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.managedBean.pmOrgProfileList}" 
                 selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}">

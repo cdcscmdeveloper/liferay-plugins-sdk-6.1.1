@@ -12,7 +12,6 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.template.CtTemplate;
@@ -55,9 +54,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String agreementType ="";
 	
 	List<AgreementDetails> agreementList;
-	private CtAgreementAppendix ctAgreementAppendix;
-	private List<CtAgreementAppendix> ctUserAppendixList;
-	private List<CtAgreementAppendix> ctSystemAppendixList;
 	
 	private Long parameterId;
 	private String userLoginId;
@@ -169,13 +165,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.sysDefined = sysDefined;
 	}
 
-	public CtAgreementAppendix getCtAgreementAppendix() {
-		return ctAgreementAppendix;
-	}
-
-	public void setCtAgreementAppendix(CtAgreementAppendix ctAgreementAppendix) {
-		this.ctAgreementAppendix = ctAgreementAppendix;
-	}
 
 	public PmOrgProfile getPmOrgProfile() {
 		return pmOrgProfile;
@@ -261,17 +250,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 
-	
-	public List<CtAgreementAppendix> getCtUserAppendixList() {
-		if(ctUserAppendixList == null)
-			ctUserAppendixList = new ArrayList<CtAgreementAppendix>();
-		return ctUserAppendixList;
-	}
-
-	public void setCtUserAppendixList(List<CtAgreementAppendix> ctUserAppendixList) {
-		this.ctUserAppendixList = ctUserAppendixList;
-	}
-
 	public List<AgreementDetails> getAgreementList() {
 		return agreementList;
 	}
@@ -286,17 +264,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setParameterId(Long parameterId) {
 		this.parameterId = parameterId;
-	}
-
-	public List<CtAgreementAppendix> getCtSystemAppendixList() {
-		if(ctSystemAppendixList == null)
-			ctSystemAppendixList = new ArrayList<CtAgreementAppendix>();
-		return ctSystemAppendixList;
-	}
-
-	public void setCtSystemAppendixList(
-			List<CtAgreementAppendix> ctSystemAppendixList) {
-		this.ctSystemAppendixList = ctSystemAppendixList;
 	}
 
 	public PmParameter getPmParameter() {
