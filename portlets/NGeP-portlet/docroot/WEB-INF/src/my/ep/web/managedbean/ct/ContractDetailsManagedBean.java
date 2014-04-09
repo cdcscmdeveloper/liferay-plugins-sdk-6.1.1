@@ -130,6 +130,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean validateScheduleDate;
 	
 	private TreeNode ctZoneTrees ;
+	private boolean chkJustification;
 	
 	public String[] getAction() {
 		return action;
@@ -710,5 +711,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
 		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
+
+	public boolean isChkJustification() {
+		return chkJustification;
+	}
+
+	public void setChkJustification(boolean chkJustification) {
+		this.chkJustification = chkJustification;
+	}
+	
+	
 	
 }

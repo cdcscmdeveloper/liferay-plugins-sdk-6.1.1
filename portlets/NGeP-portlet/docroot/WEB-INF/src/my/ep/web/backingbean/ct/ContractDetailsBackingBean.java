@@ -1225,11 +1225,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
 			
 			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.PENDING_CONTRACT_CREATION);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.APPROVED);
+			statusIdList.add(ContractStatusConst.FD_PENDING_CONTRACT_CREATION);
+			statusIdList.add(ContractStatusConst.FD_PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.FD_PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.FD_PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.FD_APPROVED);
 			
 			items = new SelectItem[statusIdList.size()+1];
 			int i = 0;
