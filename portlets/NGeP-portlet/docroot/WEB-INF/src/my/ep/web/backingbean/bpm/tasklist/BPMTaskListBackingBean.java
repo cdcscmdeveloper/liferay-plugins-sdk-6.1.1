@@ -16,9 +16,9 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FlProcessNameConst;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -40,8 +40,6 @@ public class BPMTaskListBackingBean extends
 		BaseBackingBean<BPMTaskListManagedBean> {
 	
 	public	static	final	String	DIRECT_PURCHASE_REVIEW_PATH	=	"review-directpurchase";
-	public	static	final	String	DIRECT_PURCHASE_BPM_PROCESS_NAME = "Direct Purchase Creation";
-	
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 
@@ -65,10 +63,11 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
-		temp.put(DIRECT_PURCHASE_BPM_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put("Purchase Review", DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put("Purchase Inquiry Creation", DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put("Purchase In Default Creation", DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		
 
 		// QuationTender
