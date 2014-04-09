@@ -7,12 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
-		widgetVar="cloneBusinessOwner" modal="true">
+		widgetVar="cloneBusinessOwner" width="950" height="600">
 		<p:panel header="#{lbl['lbl.so.business.owner.search']}"
 			toggleable="true" id="searchpnlid">
 			<table>
 				<tr>
-					<td><p:outputLabel value="Title" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 							size="92" /></td>
@@ -25,7 +26,8 @@
 							size="30" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Procurement Mode" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
 					<td><p:selectOneMenu
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
@@ -123,24 +125,24 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<h:outputLabel value="#{member.memberName}" />
+					<h:outputText value="#{member.memberName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
-					<h:outputLabel value="#{member.icPassport}" />
+					<h:outputText value="#{member.icPassport}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-					<h:outputLabel value="#{member.designation}" />
+					<h:outputText value="#{member.designation}" />
 				</p:column>
 
-				<p:column headerText="Email">
-					<h:outputLabel
+				<p:column headerText="#{lbl['lbl.so.bo.email']}">
+					<h:outputText
 						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
-					<h:outputLabel value="#{member.grade}" />
+					<h:outputText value="#{member.grade}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
@@ -154,10 +156,11 @@
 			</p:dataTable>
 
 			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-				style="float:right;" icon="ui-icon-cancel" onclick="screen2.hide();" />
+				style="float:right;" icon="ui-icon-cancel"
+				onclick="cloneBusinessOwner.hide();" />
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
 				action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
-				oncomplete="screen2.hide();" update="businessownerId"
+				oncomplete="cloneBusinessOwner.hide();" update="businessownerId"
 				icon="ui-icon-check" />
 		</p:panel>
 

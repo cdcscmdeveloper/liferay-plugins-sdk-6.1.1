@@ -101,7 +101,7 @@
 								<h:outputText value="#{existuser.PMP}" />
 							</p:column>
 
-							<p:column headerText="Email">
+							<p:column headerText="#{lbl['lbl.so.bo.email']}">
 								<h:outputText
 									value="#{existuser.pmAddressTypes[0].pmAddress.email}" />
 							</p:column>
@@ -151,7 +151,8 @@
 								<td />
 							</tr>
 							<tr>
-								<td><p:outputLabel value="P&amp;P" /></td>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /></td>
 								<td><p:selectOneRadio
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.PNP}">
 										<f:selectItem itemLabel="Yes" itemValue="true" />
@@ -170,7 +171,8 @@
 								<td />
 							</tr>
 							<tr>
-								<td><p:outputLabel value="* Email" /></td>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.email']}" /></td>
 								<td><p:inputText
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.email}"
 										size="30" /></td>
