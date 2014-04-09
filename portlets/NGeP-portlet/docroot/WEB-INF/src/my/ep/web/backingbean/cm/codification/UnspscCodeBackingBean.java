@@ -1411,7 +1411,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		for(CmRequestCode code : this.getManagedBean().getReviewExtCodeList()){
 
 			//if(!code.isRequestColor()){
-			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
+			if(res.getTaskName().equalsIgnoreCase("Approve Extension Code")){
 				code.setReviewedColorName(code.getColorName());
 			}
 			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
@@ -1420,7 +1420,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			//}
 
 			//if(!code.isRequestBrand()){
-			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
+			if(res.getTaskName().equalsIgnoreCase("Approve Extension Code")){
 				code.setReviewedBrandName(code.getBrandName());
 			}
 			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
@@ -1429,7 +1429,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			//	}
 
 			//	if(!code.isRequestType()){
-			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
+			if(res.getTaskName().equalsIgnoreCase("Approve Extension Code")){
 				code.setReviewedTypeName(code.getTypeName());
 			}
 			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
@@ -1438,7 +1438,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			//	}
 
 			//	if(!code.isRequestMeasurement()){
-			if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
+			if(res.getTaskName().equalsIgnoreCase("Approve Extension Code")){
 				code.setReviewedMeasurementName(code.getMeasurementName());
 			}
 			if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){
@@ -1490,7 +1490,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 		System.out.println("********res.getTaskName()********"+res.getTaskName());
-		if(res.getTaskName().equalsIgnoreCase("Review Extension Code")){
+		if(res.getTaskName().equalsIgnoreCase("Approve Extension Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCode.xhtml");
 		}else if(res.getTaskName().equalsIgnoreCase("Endorse Extension Code")){

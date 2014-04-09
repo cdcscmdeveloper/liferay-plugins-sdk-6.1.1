@@ -1108,142 +1108,296 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
 
-			//////////////// grouping tier price start///////////
-			Map tierMap = new HashMap();
-			List<CmTierPricing> tierList = new ArrayList<CmTierPricing>();
-			for(CmTierPricing tier : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
-				System.out.println("tier.getStartDate()"+tier.getStartDate());
-				if(tierMap.containsKey(tier.getStartDate())){
-					tierList.add(tier);
-					tierMap.put(tier.getStartDate(), tierList);
-				}else{
-					System.out.println("*********new**********");
-					System.out.println("tier.getStartDate()"+tier.getStartDate());
-					tierList = new ArrayList<CmTierPricing>();
-					tierList.add(tier);
-					tierMap.put(tier.getStartDate(), tierList);
-				}
-			}
+			
+			
+			Map<Date, List<CmPromotionTierPricing>> promotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings());
 
-			System.out.println("tierMap.size():"+tierMap.size());
-			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
-				Iterator itMap = tierMap.entrySet().iterator();
+			if(!promotionTierMap.isEmpty() && promotionTierMap.size() > 0 ){ 
+				
+				
+				List<Object> sortedZonalList = groupingStartDate(promotionTierMap);
+				
+				List <CmPromotionTierPricing> perviouslyList = new ArrayList<CmPromotionTierPricing>();
+				for(Object sorted : sortedZonalList){
+					List <CmPromotionTierPricing> sortedTier = (List<CmPromotionTierPricing>) sorted; 
 
+					if(perviouslyList!=null && perviouslyList.size()>0){
 
-				while(itMap.hasNext()) {
-					Map.Entry entry = (Map.Entry)itMap.next();		
-					List <CmTierPricing>dataList = (List)entry.getValue();
-
-					System.out.println("dataList:"+dataList.size());
-
-					CmTierPricing [] obj = new CmTierPricing [dataList.size()];
-					for(int i=0; i<dataList.size(); i++){
-						int count =0;
-						for(int j=0; j<dataList.size(); j++){
-
-							if(dataList.get(i).getFromQty() > dataList.get(j).getFromQty()){
-								count = count + 1;
-							}
+						if(perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate())>0){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Promotion Tier Start date Overlapping", ""));
+							this.getManagedBean().setPricingTabIndex(1);
+							this.getManagedBean().setTierPricingIndex(1);
+							return "addCatalogView";
 						}
-						obj[count] =dataList.get(i);
 					}
+					for(int i=0; i<sortedTier.size(); i++){
+						CmPromotionTierPricing tier = sortedTier.get(i);
 
-					List <CmTierPricing> sortedList = new ArrayList<CmTierPricing>();
-					for(int i=0; i<obj.length; i++){
-						sortedList.add(obj[i]);
+						if(tier.getStartDate().compareTo(tier.getEndDate())>0){
+
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Promotion Tier End date must be greater than Promotion Tier start date", ""));
+							this.getManagedBean().setPricingTabIndex(1);
+							this.getManagedBean().setTierPricingIndex(1);
+							return "addCatalogView";
+						}
 					}
-
-					for(CmTierPricing sorted : sortedList){
-						System.out.println("sorted:"+sorted.getFromQty());
-					}
-
-					System.out.println("dataList.get(0).getStartDate():"+dataList.get(0).getStartDate());
-					tierMap.put(dataList.get(0).getStartDate(), sortedList);
+					perviouslyList = sortedTier;
 				}
-
 			}
-			////////////////////////////////////////////////////////////////
+			
+			
+			
+			Map<Date, List<CmZonalPromotionTierPricing>> zPromotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings());
 
-			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
-				Iterator itMap = tierMap.entrySet().iterator();
+			if(!zPromotionTierMap.isEmpty() && zPromotionTierMap.size() > 0 ){ 
+				
+				
+				List<Object> sortedZonalList = groupingStartDate(zPromotionTierMap);
+				
+				List <CmZonalPromotionTierPricing> perviouslyList = new ArrayList<CmZonalPromotionTierPricing>();
+				for(Object sorted : sortedZonalList){
+					List <CmZonalPromotionTierPricing> sortedTier = (List<CmZonalPromotionTierPricing>) sorted; 
+
+					if(perviouslyList!=null && perviouslyList.size()>0){
+
+						if(perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate())>0){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Promotion Tier Start date Overlapping", ""));
+							this.getManagedBean().setPricingTabIndex(3);
+							this.getManagedBean().setZonalTierPricingIndex(0);
+							return "addCatalogView";
+						}
+					}
+					for(int i=0; i<sortedTier.size(); i++){
+						CmZonalPromotionTierPricing tier = sortedTier.get(i);
+
+						if(tier.getStartDate().compareTo(tier.getEndDate())>0){
+
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Promotion Tier End date must be greater than Zonal Promotion Tier start date", ""));
+							this.getManagedBean().setPricingTabIndex(3);
+							this.getManagedBean().setZonalTierPricingIndex(0);
+							return "addCatalogView";
+						}
+					}
+					perviouslyList = sortedTier;
+				}
+			}
+			
+			
+			
+
+			List<CmZonalPromotionPricing> zPromotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings());
+
+			CmZonalPromotionPricing previousZPromotionObj = null;
+			for(int i =0; i<zPromotionPricing.size(); i++){
+				CmZonalPromotionPricing standard = zPromotionPricing.get(i);
+				if(previousZPromotionObj!=null){
+					if(previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) >0){
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Promotion Start date Overlapping", ""));	
+						this.getManagedBean().setPricingTabIndex(2);
+						this.getManagedBean().setZonalPricingIndex(1);
+						return "addCatalogView";
+					}
+				}
+				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Promotion End Date must be greater than Zonal Promotion Start Date", ""));
+					this.getManagedBean().setPricingTabIndex(2);
+					this.getManagedBean().setZonalPricingIndex(1);
+					return "addCatalogView";
+				}
+				previousZPromotionObj = standard;
+			}
 
 
+			List<CmZonalStandardPricing> zStandardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getzStdPrices());
+
+			CmZonalStandardPricing previousZStandardObj = null;
+			for(int i =0; i<zStandardPricing.size(); i++){
+				CmZonalStandardPricing standard = zStandardPricing.get(i);
+				if(previousZStandardObj!=null){
+					if(previousZStandardObj.getEndDate().compareTo(standard.getStartDate()) >0){
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Standard Start date Overlapping", ""));	
+						this.getManagedBean().setPricingTabIndex(2);
+						this.getManagedBean().setZonalPricingIndex(0);
+						return "addCatalogView";
+					}
+				}
+				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Standard End Date must be greater than Zonal Standard Start Date", ""));
+					this.getManagedBean().setPricingTabIndex(2);
+					this.getManagedBean().setZonalPricingIndex(0);
+					return "addCatalogView";
+				}
+				previousZStandardObj = standard;
+			}
+
+
+			List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
+
+			CmStandardPricing previousStandardObj = null;
+			for(int i =0; i<standardPricing.size(); i++){
+				CmStandardPricing standard = standardPricing.get(i);
+				if(previousStandardObj!=null){
+					if(previousStandardObj.getEndDate().compareTo(standard.getStartDate()) >0){
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard Start date Overlapping", ""));		
+						this.getManagedBean().setPricingTabIndex(0);
+						this.getManagedBean().setNormalPricingIndex(0);
+						return "addCatalogView";
+					}
+				}
+				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
+
+					this.getManagedBean().setPricingTabIndex(0);
+					this.getManagedBean().setNormalPricingIndex(0);
+					return "addCatalogView";
+				}
+				previousStandardObj = standard;
+			}
+
+
+
+			List<CmPromotionPricing> promotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings());
+
+			CmPromotionPricing previousPromotionObj = null;
+			for(int i =0; i<promotionPricing.size(); i++){
+				CmPromotionPricing standard = promotionPricing.get(i);
+				if(previousPromotionObj!=null){
+					if(previousPromotionObj.getEndDate().compareTo(standard.getStartDate()) >0){
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Start date Overlapping", ""));	
+						this.getManagedBean().setPricingTabIndex(0);
+						this.getManagedBean().setNormalPricingIndex(1);
+						return "addCatalogView";
+					}
+				}
+				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion End Date must be greater than Normal Promotion Start Date", ""));
+					this.getManagedBean().setPricingTabIndex(0);
+					this.getManagedBean().setNormalPricingIndex(1);
+					return "addCatalogView";
+				}
+				previousPromotionObj = standard;
+			}
+
+
+
+
+			Map<Date, List<CmZonalTierPricing>> zTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
+
+			if(!zTierMap.isEmpty() && zTierMap.size() > 0 ){ 
+				Iterator itMap = zTierMap.entrySet().iterator();
 				while(itMap.hasNext()) {
 					Map.Entry entry = (Map.Entry)itMap.next();		
-					List <CmTierPricing>dataList = (List)entry.getValue();
-
-					CmTierPricing previousObj = null;
+					List <CmZonalTierPricing>dataList = (List)entry.getValue();
+					CmZonalTierPricing previousObj = null;
 					for(int i =0; i<dataList.size(); i++){
-						CmTierPricing tier = dataList.get(i);
-
+						CmZonalTierPricing tier = dataList.get(i);
 						if(previousObj!=null){
 							if(previousObj.getToQty() >= tier.getFromQty()){
 								FacesContext facesContext = FacesContext.getCurrentInstance();
-								facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Tier Overlapping", ""));
+								facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Standard Tier Overlapping", ""));	
+								this.getManagedBean().setPricingTabIndex(3);
+								this.getManagedBean().setZonalTierPricingIndex(0);
+								return "addCatalogView";
 							}
-
 						}
-
-
 						if(tier.getFromQty() >= tier.getToQty()){
 							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," To Qty must be greater than From Qty", ""));
-
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty", ""));
+							this.getManagedBean().setPricingTabIndex(3);
+							this.getManagedBean().setZonalTierPricingIndex(0);
 							return "addCatalogView";
 						}
-
 						previousObj = tier;
-
 					}
+				}
+				
+				List<Object> sortedZonalList = groupingStartDate(zTierMap);
+				
+				List <CmZonalTierPricing> perviouslyList = new ArrayList<CmZonalTierPricing>();
+				for(Object sorted : sortedZonalList){
+					List <CmZonalTierPricing> sortedTier = (List<CmZonalTierPricing>) sorted; 
 
+					if(perviouslyList!=null && perviouslyList.size()>0){
 
+						if(perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate())>0){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Standard Tier Start date Overlapping", ""));
+							this.getManagedBean().setPricingTabIndex(3);
+							return "addCatalogView";
+						}
+					}
+					for(int i=0; i<sortedTier.size(); i++){
+						CmZonalTierPricing tier = sortedTier.get(i);
+
+						if(tier.getStartDate().compareTo(tier.getEndDate())>0){
+
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Standard Tier End date must be greater than Zonal Standard Tier start date", ""));
+							this.getManagedBean().setPricingTabIndex(3);
+							return "addCatalogView";
+						}
+					}
+					perviouslyList = sortedTier;
 				}
 			}
+				
 
+			////////////////////////////////////////////////////////
 
-			/////////////////////////////////////////////////////////////////////
-			SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
+			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
+
 			if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
-				Set keyset = tierMap.keySet();
-
-				Object[] keysetarray = keyset.toArray();
-				Object [] obj = new Object [keysetarray.length];
-				System.out.println("keysetarray.length:"+keysetarray.length);
-				for(int i=0; i<keysetarray.length; i++){
-					System.out.println("******key:"+formot.format(keysetarray[i]));
-					int count = 0;
-					for(int j=0; j<keysetarray.length; j++){
-						System.out.println("**************in****************");
-						if(formot.format(keysetarray[i]).compareToIgnoreCase(formot.format(keysetarray[j]))>0){
-							count = count + 1;
+				Iterator itMap = tierMap.entrySet().iterator();
+				while(itMap.hasNext()) {
+					Map.Entry entry = (Map.Entry)itMap.next();		
+					List <CmTierPricing>dataList = (List)entry.getValue();
+					CmTierPricing previousObj = null;
+					for(int i =0; i<dataList.size(); i++){
+						CmTierPricing tier = dataList.get(i);
+						if(previousObj!=null){
+							if(previousObj.getToQty() >= tier.getFromQty()){
+								FacesContext facesContext = FacesContext.getCurrentInstance();
+								facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier Overlapping", ""));	
+								this.getManagedBean().setPricingTabIndex(1);
+								this.getManagedBean().setTierPricingIndex(0);
+								return "addCatalogView";
+							}
 						}
-
+						if(tier.getFromQty() >= tier.getToQty()){
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier To Qty must be greater than Standard Tier From Qty", ""));
+							this.getManagedBean().setPricingTabIndex(1);
+							this.getManagedBean().setTierPricingIndex(0);
+							return "addCatalogView";
+						}
+						previousObj = tier;
 					}
-					System.out.println("count:"+count);
-					System.out.println("i:"+i);
-					List <CmTierPricing>dataList  = (List)tierMap.get(keysetarray[i]);	
-
-					obj[count] = dataList;
 				}
-
-				List <Object> sortedList = new ArrayList<Object>();
-				for(int i=0; i<obj.length; i++){
-
-					sortedList.add(obj[i]);
-				}
-
-
-
+				
+				List<Object> sortedZonalList = groupingStartDate(tierMap);
+				
 				List <CmTierPricing> perviouslyList = new ArrayList<CmTierPricing>();
-				for(Object sorted : sortedList){
+				for(Object sorted : sortedZonalList){
 					List <CmTierPricing> sortedTier = (List<CmTierPricing>) sorted; 
 
 					if(perviouslyList!=null && perviouslyList.size()>0){
 
 						if(perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate())>0){
 							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Start date Overlapping", ""));
-
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier Start date Overlapping", ""));
+							this.getManagedBean().setPricingTabIndex(1);
 							return "addCatalogView";
 						}
 					}
@@ -1253,20 +1407,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						if(tier.getStartDate().compareTo(tier.getEndDate())>0){
 
 							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," End date must be greater than start date", ""));
-
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier End date must be greater than Standard Tier start date", ""));
+							this.getManagedBean().setPricingTabIndex(1);
 							return "addCatalogView";
 						}
 					}
 					perviouslyList = sortedTier;
 				}
+				
+				
+				
 			}
+			/////////////////////////////////////////////////////////////////////
+			
 
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
+			
 
 			for(CmImage image: this.getManagedBean().getSelectedMaintainItem().getCmImages()){
 				if(image.isBrandNew()){
@@ -1296,7 +1451,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
 			}
 
-
 			this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
 
 			for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
@@ -1316,30 +1470,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			System.out.println("getzStdPrices:"+this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size());
 			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
-
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-
 			}
 
 			for(CmZonalPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-
 			}
 
 			for(CmZonalTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
-
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-
 			}
 
 			for(CmZonalPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
-
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-
 			}
-
-
 
 
 			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
@@ -2409,18 +2553,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().size()>0){
 				boolean existFlag = false;
 				for(CmPromotionTierPricing promotion : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
-					
+
 					if(promotion.getStartDate().equals(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate())){	
 						existFlag = true;			
 					}
 				}
-				
+
 				System.out.println("existFlag:"+existFlag);
 				if(existFlag){
 					System.out.println("*************exist******************");
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Promotion price exist", ""));
-					
+
 				}else{
 					System.out.println("*************copy******************");
 					reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
@@ -2436,12 +2580,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setToQty(pricing.getToQty());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
-						
+
 					}
 				}
 
 			}else{
-				
+
 				System.out.println("*************1st copy******************");
 				reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
 				resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
@@ -2456,7 +2600,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 				}
 			}
-			
+
 		}else{
 			System.out.println("*************exist******************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -2557,32 +2701,129 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	public static void main (String args []) {
+	public <T extends CmPricing> Map groupingTier(List <T> commonList){
 
+		Map<Date, List<T>> tierMap = new HashMap<Date, List<T>>();
+		List<T> tierList = new ArrayList<T>();
+		for(T tier : commonList){
+			if(tierMap.containsKey(tier.getStartDate())){
+				tierList.add(tier);
+				tierMap.put(tier.getStartDate(), tierList);
+			}else{
 
-
-
-		int [] number1 = new int [] {10,2,13,4,51,6,7};
-		int [] sorted = new int[7];
-
-
-		for(int i=0; i<number1.length; i++){
-			int count =0;
-			for(int j=0; j<number1.length; j++){
-
-				if(number1[i] > number1[j]){
-					count = count+ 1;
-				}				
+				tierList = new ArrayList<T>();
+				tierList.add(tier);
+				tierMap.put(tier.getStartDate(), tierList);
 			}
-			sorted[count] = number1[i];
 		}
+		if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+			Iterator itMap = tierMap.entrySet().iterator();
 
-		for(int i=0; i<sorted.length; i++){
-			System.out.println("final:"+sorted[i]);
-		}
 
+			while(itMap.hasNext()) {
+				Map.Entry entry = (Map.Entry)itMap.next();		
+				List <T>dataList = (List)entry.getValue();
+
+				CmPricing [] obj = new CmPricing [dataList.size()];
+				for(int i=0; i<dataList.size(); i++){
+					int count =0;
+					for(int j=0; j<dataList.size(); j++){
+
+						if(dataList.get(i).getFromQty() > dataList.get(j).getFromQty()){
+							count = count + 1;
+						}
+					}
+					obj[count] =dataList.get(i);
+				}
+
+				List <T> sortedList = new ArrayList<T>();
+				for(int i=0; i<obj.length; i++){
+					sortedList.add((T) obj[i]);
+				}
+
+				for(T sorted : sortedList){
+					System.out.println("sorted:"+sorted.getFromQty());
+				}
+
+				tierMap.put(dataList.get(0).getStartDate(), sortedList);
+			}
+
+		}	
+		return tierMap;
 
 	}
+
+
+	public <T extends CmPricing> List groupingStartDate(Map<Date, List<T>> tierMap){
+
+		SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
+		List <Object> sortedList = new ArrayList<Object>();
+		if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+			Set keyset = tierMap.keySet();
+
+			Object[] keysetarray = keyset.toArray();
+			Object [] obj = new Object [keysetarray.length];
+			System.out.println("keysetarray.length:"+keysetarray.length);
+			for(int i=0; i<keysetarray.length; i++){
+				System.out.println("******key:"+formot.format(keysetarray[i]));
+				int count = 0;
+				for(int j=0; j<keysetarray.length; j++){
+					System.out.println("**************in****************");
+					if(formot.format(keysetarray[i]).compareToIgnoreCase(formot.format(keysetarray[j]))>0){
+						count = count + 1;
+					}
+
+				}
+				System.out.println("count:"+count);
+				System.out.println("i:"+i);
+				List <T>dataList  = (List)tierMap.get(keysetarray[i]);	
+				obj[count] = dataList;
+				
+			}
+			
+			for(int i=0; i<obj.length; i++){
+				sortedList.add(obj[i]);
+			}
+
+		}
+		return sortedList;
+	}
+
+
+
+
+
+
+	public <T extends CmPricing> List sortByStartDate(List <T> commonList){
+
+		SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
+
+		CmPricing [] obj = new CmPricing [commonList.size()];
+		for(int i=0; i<commonList.size(); i++){
+			int count =0;
+			for(int j=0; j<commonList.size(); j++){
+
+				if(formot.format(commonList.get(i).getStartDate()).compareToIgnoreCase(formot.format(commonList.get(j).getStartDate()))>0){
+					count = count + 1;
+				}
+			}
+			obj[count] =commonList.get(i);
+		}
+
+		List <T> sortedList = new ArrayList<T>();
+		for(int i=0; i<obj.length; i++){
+			sortedList.add((T) obj[i]);
+		}
+
+		for(T sorted : sortedList){
+			System.out.println("sorted:"+sorted.getStartDate());
+		}
+
+
+		return sortedList;
+
+	}
+
 
 
 
