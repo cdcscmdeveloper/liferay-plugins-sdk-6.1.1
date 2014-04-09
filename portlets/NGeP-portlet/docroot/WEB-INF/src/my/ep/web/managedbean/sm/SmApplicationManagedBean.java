@@ -216,6 +216,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmDistrict> assocCompanyDistricts;
 	private List<PmCity> assocCompanyCities;
 
+	private List<PmState> equiCompanyStates;
+	private List<PmDistrict> equiCompanyDistricts;
+	private List<PmCity> equiCompanyCities;
+
 	private List<PmCertBody> certBodyLs;
 	private List<PmCertBody> profBodyLs;
 
@@ -224,6 +228,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String basicOffFacPanel;
 	private String branchCompanyPanel;
 	private String assocCompanyPanel;
+	private String equiCompanyPanel;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -462,6 +467,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		setBasicOffFacPanel(SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		setBranchCompanyPanel(SupplierManagementConst.SM_BRANCH_PANEL);
 		setAssocCompanyPanel(SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+		setEquiCompanyPanel(SupplierManagementConst.SM_EQUI_COMPANY_PANEL);
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -1322,6 +1328,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAssocCompanyPanel(String assocCompanyPanel) {
 		this.assocCompanyPanel = assocCompanyPanel;
+	}
+
+	public List<PmState> getEquiCompanyStates() {
+		return equiCompanyStates;
+	}
+
+	public void setEquiCompanyStates(List<PmState> equiCompanyStates) {
+		this.equiCompanyStates = equiCompanyStates;
+	}
+
+	public List<PmDistrict> getEquiCompanyDistricts() {
+		return equiCompanyDistricts;
+	}
+
+	public void setEquiCompanyDistricts(List<PmDistrict> equiCompanyDistricts) {
+		this.equiCompanyDistricts = equiCompanyDistricts;
+	}
+
+	public List<PmCity> getEquiCompanyCities() {
+		return equiCompanyCities;
+	}
+
+	public void setEquiCompanyCities(List<PmCity> equiCompanyCities) {
+		this.equiCompanyCities = equiCompanyCities;
+	}
+
+	public String getEquiCompanyPanel() {
+		return equiCompanyPanel;
+	}
+
+	public void setEquiCompanyPanel(String equiCompanyPanel) {
+		this.equiCompanyPanel = equiCompanyPanel;
 	}
 
 }

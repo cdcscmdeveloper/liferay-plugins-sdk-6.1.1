@@ -47,6 +47,7 @@ public class SupplierManagementConst {
 	public static final String DELETE_PENDING_MOF_APPL_SUCCESS = "deletePendingMofApplnAckPage";
 	public static final String APPROVER_DECISION_ACK = "/xhtml/sm/approverDecisionPages/approverDecisionAckPage.xhtml";
 	public static final String PO_DECISION_ACK = "/xhtml/sm/poDecisionPages/poDecisionAckPage.xhtml";
+	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_REVIEW_MAXCOUNT = 14;
 	public static final int BUMI_APPL_REVIEW_MAXCOUNT = 8;
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
@@ -58,8 +59,9 @@ public class SupplierManagementConst {
 	public static final String SM_OFFICE_FACILITY_INFO_PANEL = "OfficeFacilityInfoPanel";
 	public static final String SM_BRANCH_PANEL = "BranchCompanyPanel";
 	public static final String SM_ASSOC_COMPANY_PANEL = "AssocCompanyPanel";
+	public static final String SM_EQUI_COMPANY_PANEL = "EquiCompanyPanel";
 
-	//Basic Registration && Account Maintenance
+	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "13";
 	public static final String STYPE_CONSULTANT = "J";
 	public static final String STYPE_CONTRACTOR = "K";
@@ -70,11 +72,11 @@ public class SupplierManagementConst {
 	public static final int DEFAULT_REV_NO = 1;
 	public static final String PROF_SERVICE = "P";
 	public static final int FIRST_USER_AUTHO = 1;
-	public static final int FIRST_USER_CONT_SIGNER= 1;
+	public static final int FIRST_USER_CONT_SIGNER = 1;
 	public static final int REG_SOFTCERT = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
-	
-	//Site Visit Assignment
+
+	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
 	public static final String SVO_SK = "UPS_SVO_SK";

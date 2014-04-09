@@ -460,44 +460,18 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void updateSmAppl(String navTo, String pageType) {
+	public void updateSmAppl(String applType, String pageType) {
 		IMofRegistrationSO mofRegistrationSO = null;
+		System.out.println(" ***** Business  Type After hard code *********"
+				+ getManagedBean().getSmAppl().getSmSupplier()
+						.getBusinessType());
 		try {
-			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
-				this.getManagedBean().getSmAppl().getSmFacilities()
-						.add(this.getManagedBean().getBasicCompanyFacility());
-
+			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
+				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 			} else {
-				// TODO
-				for (int i = 0; i < this.getManagedBean().getSmAppl()
-						.getSmFacilities().size(); i++) {
-					if (this.getManagedBean().getSmAppl().getSmFacilities()
-							.get(i).getFacilityType().equalsIgnoreCase("B")
-							|| this.getManagedBean().getSmAppl()
-									.getSmFacilities().get(i).getFacilityType()
-									.equalsIgnoreCase("H")) {
-						this.getManagedBean()
-								.getSmAppl()
-								.getSmFacilities()
-								.set(i,
-										this.getManagedBean()
-												.getBasicCompanyFacility());
-						break;
-					}
-				}
+				System.out.println(" ****** REMAIN PREV VALUE ********");
 			}
-			if (!getManagedBean().getSmAppl().getSmAssociationBodies()
-					.isEmpty()) {
-				System.out
-						.println(" ******* ASSOCIATION BODIES ADDED *********");
-				for (SmAssociationBody assoc : getManagedBean().getSmAppl()
-						.getSmAssociationBodies()) {
-					System.out.println(" ** THE CERT VALUE BEFORE SAVE ***"
-							+ assoc.getPmCertBody().getCertBodyId());
-				}
-			}
-			System.out.println("******** Before save cert size ******"
-					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
+			validateBeforeSave(applType, pageType);
 			// Save or update to DB
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -539,11 +513,80 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
+
+				System.out
+						.println(" ***** Business  Type After in finally block *********"
+								+ getManagedBean().getSmAppl().getSmSupplier()
+										.getBusinessType());
+				// TODO Remove later the hard code value
+				// 1-ROB,2-ROC,3-ROS
+				if (getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("N")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("1");
+				} else if (getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("A")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("2");
+				} else if (getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("R")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("3");
+				} else {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("1");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			mofRegistrationSO = null;
 		}
+	}
+
+	private void validateBeforeSave(String applType, String pageType) {
+		switch (pageType) {
+		case "BasicInfo":
+			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
+				this.getManagedBean().getSmAppl().getSmFacilities()
+						.add(this.getManagedBean().getBasicCompanyFacility());
+
+			} else {
+				// TODO
+				for (int i = 0; i < this.getManagedBean().getSmAppl()
+						.getSmFacilities().size(); i++) {
+					if (this.getManagedBean().getSmAppl().getSmFacilities()
+							.get(i).getFacilityType().equalsIgnoreCase("B")
+							|| this.getManagedBean().getSmAppl()
+									.getSmFacilities().get(i).getFacilityType()
+									.equalsIgnoreCase("H")) {
+						this.getManagedBean()
+								.getSmAppl()
+								.getSmFacilities()
+								.set(i,
+										this.getManagedBean()
+												.getBasicCompanyFacility());
+						break;
+					}
+				}
+			}
+			if (!getManagedBean().getSmAppl().getSmAssociationBodies()
+					.isEmpty()) {
+				System.out
+						.println(" ******* ASSOCIATION BODIES ADDED *********");
+				for (SmAssociationBody assoc : getManagedBean().getSmAppl()
+						.getSmAssociationBodies()) {
+					System.out.println(" ** THE CERT VALUE BEFORE SAVE ***"
+							+ assoc.getPmCertBody().getCertBodyId());
+				}
+			}
+			System.out.println("******** Before save cert size ******"
+					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
+			break;
+
+		default:
+			System.out.println("****** Not a defined page ***********");
+		}
+
 	}
 
 	public void createNewApplication() throws Exception {
@@ -605,6 +648,30 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
+		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
+				.equalsIgnoreCase("O")) {
+			System.out.println("******** SELECTED OWN FACILITY *******");
+			SmAddress addr = getManagedBean().getBasicCompanyFacility()
+					.getSmAddress();
+			if (addr.getPmState().getStateId() == null) {
+				getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.getPmState().setStateId(1l);
+			}
+			if (addr.getPmDistrict().getDistrictId() == null) {
+				getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.getPmDistrict().setDistrictId(1l);
+			}
+			if (addr.getPmCity().getCityId() == null) {
+				getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.getPmCity().setCityId(1l);
+			}
+			if (addr.getAddress1() == null) {
+				getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.setAddress1(" ");
+			}
+		} else {
+
+		}
 		System.out
 				.println(" ******* On Change Office Facility ***** "
 						+ getManagedBean().getBasicCompanyFacility()
@@ -761,15 +828,20 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedBranches() {
-		FacesContext.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Sample info message", "Delete Branch ::: "
-										+ getManagedBean()
-												.getSelectedBranches().size()));
-		System.out.println("*** Delete Branches ******* "
+
+		System.out.println("*** Delete Branches Companies ******* "
 				+ getManagedBean().getSelectedBranches().size());
+		if (getManagedBean().getSelectedBranches().size() > 0) {
+			for (SmSupplierBranch brn : getManagedBean().getSelectedBranches()) {
+				getManagedBean().getSmAppl().getSmSupplierBranches()
+						.remove(brn);
+			}
+			getManagedBean().getSelectedBranches().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
 	}
 
 	// -- Process Branches End
@@ -801,6 +873,22 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setAssocCompanyStates(
 				retrievePmStateList(getManagedBean().getSelectedAssocCompany()
 						.getSmAddress().getPmCountry().getCountryId()));
+	}
+
+	public void deleteSelectedAssocCompanies() {
+		System.out.println("*** Delete Assoc Companies ******* "
+				+ getManagedBean().getSelectedAssocCompanies().size());
+		if (getManagedBean().getSelectedAssocCompanies().size() > 0) {
+			for (SmAssociateCompany assoc : getManagedBean()
+					.getSelectedAssocCompanies()) {
+				getManagedBean().getSmAppl().getSmAssociateCompanies()
+						.remove(assoc);
+			}
+			getManagedBean().getSelectedAssocCompanies().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
 	}
 
 	// -- Process Associated Companies End
@@ -927,6 +1015,11 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Consultant or Contractor Company Experience Start
 	public void addOrUpdateCompanyExperienceToSmAppl() {
+		if (getManagedBean().getSelectedCompanyExperience()
+				.getPaymentMethodId() == null) {
+			getManagedBean().getSelectedCompanyExperience().setPaymentMethodId(
+					new BigDecimal(0));
+		}
 		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
 
@@ -944,9 +1037,33 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
 	}
 
-	public void assignNewCompanyEcperience() {
-		getManagedBean()
-				.setSelectedCompanyExperience(new SmCompanyExperience());
+	public void assignNewCompanyExperience() {
+		SmCompanyExperience exp = new SmCompanyExperience();
+		exp.setRevNo(1);
+		exp.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
+		exp.setSmAppl(getManagedBean().getSmAppl());
+		if (getManagedBean().getSmAppl().getSupplierType().equals("2")) {
+			exp.setProcurementModeId(new BigDecimal(0));
+		}
+		getManagedBean().setSelectedCompanyExperience(exp);
+	}
+
+	public void deleteSelectedCompanyExperiences() {
+
+		System.out.println("*** Delete Exps ******* "
+				+ getManagedBean().getSelectedCompanyExperiences().size());
+		if (getManagedBean().getSelectedCompanyExperiences().size() > 0) {
+			for (SmCompanyExperience exp : getManagedBean()
+					.getSelectedCompanyExperiences()) {
+				getManagedBean().getSmAppl().getSmCompanyExperiences()
+						.remove(exp);
+			}
+			getManagedBean().getSelectedCompanyExperiences().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
 	}
 
 	// ---- Process Consultant or Contractor Company Experience End
@@ -971,9 +1088,33 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewEquiCompBean() {
+
 		getManagedBean().setSelectedEquityCompany(new SmEquityCompany());
+		getManagedBean().getSelectedEquityCompany().setRevNo(1);
 		getManagedBean().getSelectedEquityCompany().setSmAddress(
 				(setDefaultAddr()));
+		getManagedBean().getSelectedEquityCompany().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().setEquiCompanyStates(
+				retrievePmStateList(getManagedBean().getSelectedEquityCompany()
+						.getSmAddress().getPmCountry().getCountryId()));
+
+	}
+
+	public void deleteSelectedEquiCompanies() {
+
+		if (getManagedBean().getSelectedEquityCompanies().size() > 0) {
+			for (SmEquityCompany equi : getManagedBean()
+					.getSelectedEquityCompanies()) {
+				getManagedBean().getSmAppl().getSmEquityCompanies()
+						.remove(equi);
+			}
+			getManagedBean().getSelectedEquityCompanies().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
 	}
 
 	// -- Process Equity Companies End
@@ -1503,15 +1644,57 @@ public class SmApplicationBackingBean extends
 	public String submitBumiApplToBpm() {
 		try {
 			initiateSmApplicationTask();
+			// StringBuffer message = new StringBuffer();
+			// message.append("The Bumiputera Status Application No : ")
+			// .append(getManagedBean().getSmAppl().getApplNo())
+			// .append("is submitted successfully.").append("\n")
+			// .append("Please wait for further notification.");
+			//
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO,
+			// "Record saved successfully.", message.toString()));
+			// return SupplierManagementConst.DEFAULT_ACK_PAGE;
 			return SupplierManagementConst.BUMI_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.BUMI_APPL_FAIL;
 		}
 	}
 
+	public String submitUpdateMofApplToBpm() {
+		try {
+			initiateSmApplicationTask();
+			// StringBuffer message = new StringBuffer();
+			// message.append("The Update MOF Details Application No : ")
+			// .append(getManagedBean().getSmAppl().getApplNo())
+			// .append("is submitted successfully.").append("\n")
+			// .append("Please wait for further notification.");
+			//
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO,
+			// "Record saved successfully.", message.toString()));
+			// return SupplierManagementConst.DEFAULT_ACK_PAGE;
+			return SupplierManagementConst.UPDATE_MOF_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.UPDATE_MOF_APPL_FAIL;
+		}
+	}
+
 	public String submitRenewMofApplToBpm() {
 		try {
 			initiateSmApplicationTask();
+			// StringBuffer message = new StringBuffer();
+			// message.append("The Renew MOF Application No : ")
+			// .append(getManagedBean().getSmAppl().getApplNo())
+			// .append("is submitted successfully.").append("\n")
+			// .append("Please wait for further notification.");
+			//
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO,
+			// "Record saved successfully.", message.toString()));
+			// return SupplierManagementConst.DEFAULT_ACK_PAGE;
 			return SupplierManagementConst.RENEW_MOF_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.RENEW_MOF_APPL_FAIL;
@@ -1521,6 +1704,18 @@ public class SmApplicationBackingBean extends
 	public String submitAddnlCategoryApplToBpm() {
 		try {
 			initiateSmApplicationTask();
+			// StringBuffer message = new StringBuffer();
+			// message.append(
+			// "The Add Additional Category Code(s) Application No : ")
+			// .append(getManagedBean().getSmAppl().getApplNo())
+			// .append("is submitted successfully.").append("\n")
+			// .append("Please wait for further notification.");
+			//
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO,
+			// "Record saved successfully.", message.toString()));
+			// return SupplierManagementConst.DEFAULT_ACK_PAGE;
 			return SupplierManagementConst.ADDNLCAT_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.ADDNLCAT_APPL_FAIL;
@@ -1530,6 +1725,17 @@ public class SmApplicationBackingBean extends
 	public String submitMofApplToBpm() {
 		try {
 			initiateSmApplicationTask();
+			// StringBuffer message = new StringBuffer();
+			// message.append("The MOF Registration Application No : ")
+			// .append(getManagedBean().getSmAppl().getApplNo())
+			// .append("is submitted successfully.").append("\n")
+			// .append("Please wait for further notification.");
+			//
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_INFO,
+			// "Record saved successfully.", message.toString()));
+			// return SupplierManagementConst.DEFAULT_ACK_PAGE;
 			return SupplierManagementConst.MOF_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.MOF_APPL_FAIL;
@@ -1762,15 +1968,6 @@ public class SmApplicationBackingBean extends
 		sec.setCategoryVerified(isVerifiedAll);
 		sec.setSitevisitVerified(isVerifiedAll);
 		return sec;
-	}
-
-	public String submitUpdateMofApplToBpm() {
-		try {
-			initiateSmApplicationTask();
-			return SupplierManagementConst.UPDATE_MOF_APPL_SUCCESS;
-		} catch (Exception e) {
-			return SupplierManagementConst.UPDATE_MOF_APPL_FAIL;
-		}
 	}
 
 	private SmAddress setDefaultAddr() {
@@ -2102,6 +2299,9 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 			this.getManagedBean().setAssocCompanyStates(stateLs);
 			break;
+		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+			this.getManagedBean().setEquiCompanyStates(stateLs);
+			break;
 		default:
 			System.out.println("**** This is an unknown panel ***** ");
 			break;
@@ -2132,6 +2332,9 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 			this.getManagedBean().setAssocCompanyDistricts(distLs);
 			break;
+		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+			this.getManagedBean().setEquiCompanyDistricts(distLs);
+			break;
 
 		default:
 			System.out.println("**** This is an unknown panel ***** ");
@@ -2160,6 +2363,9 @@ public class SmApplicationBackingBean extends
 			break;
 		case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 			this.getManagedBean().setAssocCompanyCities(cityLs);
+			break;
+		case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+			this.getManagedBean().setEquiCompanyCities(cityLs);
 			break;
 		default:
 			System.out.println("**** This is an unknown panel ***** ");
