@@ -10,14 +10,14 @@
 		<p:spacer height="2" />
 		<table style="width: 50%">
 			<tr>
-				<td><p:outputLabel value="Status" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.managedBean.title}"
 						style="margin-right:5px;" disabled="true" readonly="true" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{qTCommitteBackingBean.managedBean.ecType}" /></td>
 				<td style="width: 110px"><p:outputLabel
-						value=" Send For Approval" /></td>
+						value="#{lbl['lbl.so.send.for.approval']}" /></td>
 			</tr>
 		</table>
 		<p:spacer height="2" />
@@ -29,27 +29,27 @@
 
 			<ac:paginator for="specificationcommitteeid" />
 
-			<p:column headerText="Name">
+			<p:column headerText="#{lbl['lbl.so.bo.name']}">
 				<h:outputText value="#{specificationcommittee.memberName}" />
 			</p:column>
 
-			<p:column headerText="Identification No">
+			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
 				<h:outputText value="#{specificationcommittee.icPassport}" />
 			</p:column>
 
-			<p:column headerText="Designation">
+			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
 				<h:outputText value="#{specificationcommittee.designation}" />
 			</p:column>
 
-			<p:column headerText="Email">
+			<p:column headerText="#{lbl['lbl.so.bo.email']}">
 				<h:outputText value="#{specificationcommittee.email}" />
 			</p:column>
 
-			<p:column headerText="Grade">
+			<p:column headerText="#{lbl['lbl.so.bo.grade']}">
 				<h:outputText value="#{specificationcommittee.grade}" />
 			</p:column>
 
-			<p:column headerText="P&amp;P">
+			<p:column headerText="#{lbl['lbl.so.bo.pp']}">
 				<h:outputText value="#{specificationcommittee.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 
@@ -59,6 +59,5 @@
 			</p:column>
 
 		</p:dataTable>
-
 	</p:panel>
 </ui:composition>

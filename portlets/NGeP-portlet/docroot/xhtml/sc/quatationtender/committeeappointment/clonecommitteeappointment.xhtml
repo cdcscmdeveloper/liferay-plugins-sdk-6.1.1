@@ -11,7 +11,8 @@
 		<p:panel id="clonesearchpnlid" header="Search" toggleable="true">
 			<table>
 				<tr>
-					<td valign="top"><p:outputLabel value="Title" /></td>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 							size="92" /></td>
@@ -26,7 +27,8 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Procurement Mode" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
 					<td><p:selectOneMenu
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
@@ -37,7 +39,8 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Created Date (From)" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
 					<td><p:calendar
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							size="30" showOn="button" /></td>
@@ -45,7 +48,8 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Created Date (To)" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
 					<td><p:calendar
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 							size="30" showOn="button" /></td>

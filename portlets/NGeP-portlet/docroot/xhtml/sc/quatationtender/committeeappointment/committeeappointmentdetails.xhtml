@@ -10,7 +10,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 108px"><p:outputLabel
-						value="Evaluation Type " /></td>
+						value="#{lbl['lbl.qt.evaluation.type']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.evaluationType ? 'One Tier' : 'Two Tier'}"
 						style="margin-right:5px;" disabled="true" readonly="true" /></td>
@@ -18,11 +18,10 @@
 		</table>
 		<br />
 		<div align="right">
-			<p:commandButton value="Clone" onclick="screen2.show();"
-				process="@this" icon="ui-icon-clone" />
-
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
 		</div>
-		
+
 		<ui:include src="committeeappointmenttabList.xhtml" />
 	</p:panel>
 </ui:composition>

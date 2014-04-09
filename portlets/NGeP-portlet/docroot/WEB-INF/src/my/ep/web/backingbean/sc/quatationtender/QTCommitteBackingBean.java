@@ -31,6 +31,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.CommitteType;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -423,7 +424,12 @@ public class QTCommitteBackingBean extends
 
 	public void addCommitteMember(ScCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
-
+		
+		if(titleName.equalsIgnoreCase("Specification Committee")) {
+			committee.setCommitteeType("SC");
+		} else if(titleName.equalsIgnoreCase("Opening Committee")) {
+			committee.setCommitteeType("OC");
+		}
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
@@ -459,7 +465,7 @@ public class QTCommitteBackingBean extends
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(userSelection);
 		this.getManagedBean().setCommitteMember(committeeMember);
-		if (SelectionType.EXISITING.value().equalsIgnoreCase(
+		if (SelectionType.Existing.value().equalsIgnoreCase(
 				getManagedBean().getCommitteMember().getUserSelection())) {
 			//getManagedBean().getCommitteMember().setExternalUser(true);
 
@@ -511,7 +517,8 @@ public class QTCommitteBackingBean extends
 
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
-
+		ScCommittee scCommittee = this.getManagedBean().getScCommittee();
+		ScQt scQt = this.getManagedBean().getQt();
 		// List<ScCommitteeMember> memberList =
 		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().getScCommitteeMembers();
 		List<ScCommitteeMember> memberList = getManagedBean().getScCommittee()
@@ -525,7 +532,7 @@ public class QTCommitteBackingBean extends
 		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
 			System.out.println("******** New User *********");
 			memberList.add(member);
-			System.out.println(" IC Passport : " + member.getIcPassport());
+			this.getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
 			System.out.println("******** Existing User *********");
 			for (PmUser user : getManagedBean().getSelectedPmUser()) {
@@ -537,19 +544,29 @@ public class QTCommitteBackingBean extends
 						.getPmAddress().getEmail());
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
+				System.out.println("Role Name : " + getManagedBean().getRoleName());
+				committeeMember.setMemberRole(getManagedBean().getRoleName());
 				memberList.add(committeeMember);
 			}
+			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
-
+		
+		scCommittee.setScCommitteeMembers(memberList);
+		for (ScCommitteeMember scCommitteeMember : memberList) {
+			scCommitteeMember.setScCommittee(scCommittee);
+		}
+		
+		ScQtCommittee scQtCommittee = new ScQtCommittee();
+		scQtCommittee.setScCommittee(scCommittee);
+		scQtCommittee.setScQt(scQt);
+		this.getManagedBean().setScQtCommittee(scQtCommittee);
+		
 		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().setScCommitteeMembers(memberList);
-		getManagedBean().getScCommittee().setScCommitteeMembers(memberList);
-
-		List<TabBean> tabs = this.getManagedBean()
-				.getScCommitteeMemberTabList();
+		//getManagedBean().getScCommittee().setScCommitteeMembers(memberList);
+		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		for (TabBean tabBean : tabs) {
-			if (tabBean.getTitleName().equalsIgnoreCase(
-					this.getManagedBean().getTabTitle())) {
-				// tabBean.setScCommittee(this.getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee());
+			if (tabBean.getTitleName().equalsIgnoreCase(this.getManagedBean().getTabTitle())) {
+				//tabBean.setScCommittee(this.getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee());
 				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
 				break;
 			}

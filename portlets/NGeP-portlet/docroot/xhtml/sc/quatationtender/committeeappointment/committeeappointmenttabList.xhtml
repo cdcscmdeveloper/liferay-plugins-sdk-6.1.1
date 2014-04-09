@@ -34,7 +34,6 @@
 						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
 					<ui:include src="specificationCommitteeDetails.xhtml" />
 
-
 					<div align="right">
 						<p:commandButton id="specificationcommitteeadd"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
@@ -47,7 +46,7 @@
 							action="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 							update="specificationcommitteeid" />
 
-						<p:commandButton value="Clone To TEC"
+						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 							process="@this"
 							rendered="#{committeeApproval.titleName eq 'Specification Committee'}"
 							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scCommittee)}" />
