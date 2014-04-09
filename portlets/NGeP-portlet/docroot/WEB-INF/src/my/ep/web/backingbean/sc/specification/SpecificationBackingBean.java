@@ -906,7 +906,7 @@ public class SpecificationBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
 
 				checkList.setDocCategory("2");
-				checkList.setDefination(1);
+				checkList.setDefinationType(1);
 				checkList.setChecklistSeq(1);
 				checkList.setRecordStatus(this.getManagedBean().getScqtDoc()
 						.isRecordStatus());
@@ -1086,7 +1086,7 @@ public class SpecificationBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
 
 				checkList.setDocCategory("1");
-				checkList.setDefination(1);
+				checkList.setDefinationType(1);
 				checkList.setChecklistSeq(1);
 				checkList.setRecordStatus(this.getManagedBean().getScqtDoc()
 						.isRecordStatus());
@@ -2687,6 +2687,61 @@ public class SpecificationBackingBean extends
 		}
 		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
 	}
+	
+	
+	public String committeeSpecEditAction(ScQtCheckList checklist) {
+
+		IQTTemplateSO qtTemplateSO;
+		try {
+			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+
+			QTTemplateDocResDTO resDto = null;
+
+			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
+
+			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
+
+			try {
+
+				docReqDTO.setCheckListId(checklist.getQtChecklistId());
+				qtTemplateSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTTemplateSO.class);
+
+				resDto = qtTemplateSO
+						.retriveTemplateDocDetailsByCheckListId(docReqDTO);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+
+			templateSpecBean.setSpecMaster(resDto.getScQtCheckList()
+					.getScQtDoc().getTplSpecMaster());
+
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+
+			this.getManagedBean()
+					.getScqtDoc()
+					.setTplSpecMaster(
+							resDto.getScQtCheckList().getScQtDoc()
+									.getTplSpecMaster());
+
+			this.getManagedBean().setScqtDoc(
+					resDto.getScQtCheckList().getScQtDoc());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qtTemplateSO = null;
+		}
+		return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
+	}
 
 	public String cloneAction(ScQtDoc scqtDoc) {
 		IQTTemplateSO qtTemplateSO;
@@ -3192,7 +3247,7 @@ public class SpecificationBackingBean extends
 
 			ScQtCheckList st2financeproposalList2 = createSpecList("2");
 
-			st2financeproposalList2.setDefination(1);
+			st2financeproposalList2.setDefinationType(1);
 			st2financeproposalList2.setScoringReq(true);
 			st2financeproposalList2.setDocCategory("2");
 			st2financeproposalList2.setScoringReq(true);
@@ -3267,7 +3322,7 @@ public class SpecificationBackingBean extends
 				// scqtlist.setQtChecklistId(new Long(i));
 				scqtlist.setDocCategory("1");
 				// scqtlist.setEvaluationStage("1");
-				scqtlist.setDefination(1);
+				scqtlist.setDefinationType(1);
 				compilance.add(scqtlist);
 			}
 			getManagedBean().setScQtCheckSt1techProposal(compilance);
@@ -3322,7 +3377,7 @@ public class SpecificationBackingBean extends
 				scqtlist.setPmStatus(statusres.getPmStatus());
 				scqtlist.setDocCategory("1");
 				// scqtlist.setEnable(true);
-				scqtlist.setDefination(1);
+				scqtlist.setDefinationType(1);
 
 				// scqtlist.setEvaluationStage("2");
 			}
@@ -3412,7 +3467,7 @@ public class SpecificationBackingBean extends
 				scqtlist.setDocCategory("2");
 				scqtlist.setScoringReq(true);
 				// scqtlist.setEnable(true);
-				scqtlist.setDefination(1);
+				scqtlist.setDefinationType(1);
 				// scqtlist.setEvaluationStage("2");
 				scqtlist.setManditory(true);
 				scqtlist.setChecklistSeq(1);
