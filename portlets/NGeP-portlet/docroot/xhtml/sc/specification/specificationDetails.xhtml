@@ -40,6 +40,13 @@
 				<td><p:inputText readonly="true"
 						value="#{specificationBackingBean.managedBean.scQt.itemType}"
 						disabled="true"></p:inputText></td>
+
+				<td><h:outputLabel value="Zone/Location" /></td>
+				<td><p:inputText readonly="true" value="Yes" disabled="true"
+						rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}"></p:inputText>
+					<p:inputText readonly="true" value="Yes" disabled="true"
+						rendered="#{specificationBackingBean.managedBean.scQt.zonal =='false'}"></p:inputText>
+				</td>
 			</tr>
 
 			<tr>
@@ -77,7 +84,8 @@
 
 				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.peocure.category']}" /></td>
-				<td><p:selectOneMenu>
+				<td><p:selectOneMenu
+						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						<p:ajax event="change"
@@ -124,6 +132,63 @@
 		</table>
 
 	</p:panel>
+
+
+
+	<p:panel header="Zone/Location Info"
+		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+				<td><p:selectOneMenu id="locationLevels" disabled="true"
+						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel}"
+						style="width: 178px;margin-bottom: 5px;">
+
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+						<p:ajax event="change"
+							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel
+		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		<h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="zoneGeneralDataTable"
+				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
+				var="zoneTree" style="width:65%" rowIndexVar="index">
+				<p:column headerText="Location">
+					<p:tree value="#{zoneTree}" var="location">
+
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.zoneName}" />
+						</p:treeNode>
+
+						<p:treeNode type="state">
+							<h:outputText value="#{location.pmState.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="division">
+							<h:outputText value="#{location.pmDivision.divisionName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.pmDistrict.districtName}" />
+						</p:treeNode>
+
+
+
+
+					</p:tree>
+				</p:column>
+
+
+
+			</p:dataTable>
+		</h:panelGrid>
+
+	</p:panel>
+
 
 	<!-- 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">

@@ -94,7 +94,7 @@
 					rendered="#{specificationBackingBean.managedBean.technicalWeightage eq '1'}">
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techWeightageSum}"
-						update=":form:addpoints" />
+						update=":form:businessSpecId:addpoints" />
 				</p:inputText>
 			</p:column>
 

@@ -12,9 +12,10 @@
 		<p:commandLink value="CategoryCodeList"></p:commandLink>
 		<p:dataTable id="openPnlId" var="cateGory"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
-			style="width:100%" rowIndexVar="index" styleClass="openPnlId">
+			style="width:100%" rowIndexVar="index" styleClass="openPnlId"
+			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}" rowKey="#{cateGory}">
 
-
+            <p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
@@ -31,17 +32,17 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"></h:outputText>
+					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryL2Code}"></h:outputText>
+					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
 				style="width:20%">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryL3Code}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
@@ -82,9 +83,9 @@
 							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
-							<p:selectBooleanCheckbox
+							<p:selectBooleanCheckbox disabled="true"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.allState}">
-								<f:selectItem itemValue="true"></f:selectItem>
+								<f:selectItem itemValue="#{specificationBackingBean.managedBean.supplierCriteria.allState}"></f:selectItem>
 								<p:ajax update="supplierallStae"
 									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
@@ -115,8 +116,12 @@
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
+	<h:outputText value="manga"></h:outputText>
+	<h:outputText value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"></h:outputText>
+		<h:outputText value="#{specificationBackingBean.managedBean.supplierCriteria.allState}"></h:outputText>
+		<h:outputText value="#{specificationBackingBean.managedBean.scQt.zonal}"></h:outputText>
 			<p:panel header="Location List"
-				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='No'))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -134,7 +139,7 @@
 			</p:panel>
 
 			<p:panel
-				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='No') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='No'))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 				<h:panelGrid width="100%" style="margin-top:20px">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -172,12 +177,14 @@
 						oncomplete="ZoneLocation.show();"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					icon="ui-icon-delete" />
 				</div>
 			</p:panel>
 
 
 			<p:panel header="Location List"
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='No'}">
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -196,7 +203,7 @@
 
 
 			<p:panel
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='No'}">
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 				<h:panelGrid width="100%" style="margin-top:20px">
 					<p:dataTable id="zoneyesDataTable"
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
@@ -205,7 +212,7 @@
 							<p:tree value="#{zoneTree}" var="location">
 
 								<p:treeNode type="zone">
-									<h:outputText value="#{location.locationName}" />
+									<h:outputText value="#{location.zoneName}" />
 								</p:treeNode>
 
 							<p:treeNode type="state">

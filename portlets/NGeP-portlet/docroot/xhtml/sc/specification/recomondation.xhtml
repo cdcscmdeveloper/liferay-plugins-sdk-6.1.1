@@ -154,7 +154,7 @@
 						<p:column style="font-weight: bold;">
 							<p:inputText
 								value="#{specificationBackingBean.managedBean.financialScoreSetting.overallFin}">
-								<p:ajax event="blur" update="financialrecommendation"
+								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.financialScoreSetting)}"></p:ajax>
 							</p:inputText>
@@ -163,13 +163,13 @@
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText
 								value="#{specificationBackingBean.managedBean.financialScoreSetting.overallOtherFin}">
-								<p:ajax event="blur" update="financialrecommendation"
+								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.financialScoreSetting)}"></p:ajax>
 							</p:inputText>
 						</p:column>
 						<p:column colspan="1" style="font-weight: bold;">
-							<h:outputText id="technicalItem"
+							<h:outputText id="financial"
 								value="#{specificationBackingBean.managedBean.recommendfinancialScore}" />
 						</p:column>
 					</p:row>

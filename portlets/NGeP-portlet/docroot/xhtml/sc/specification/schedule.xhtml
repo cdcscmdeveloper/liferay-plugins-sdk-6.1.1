@@ -10,10 +10,10 @@
 
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
 			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled'}">
-			<h:outputLabel value="Schedule Type"></h:outputLabel>
-			<p:selectOneRadio>
-				<f:selectItem itemLabel="Frequency Schedule" itemValue="117"></f:selectItem>
-				<f:selectItem itemLabel="Progressive Payment" itemValue="118"></f:selectItem>
+			<p:selectOneRadio value="#{specificationBackingBean.managedBean.fulfilmentType}">
+				<f:selectItem itemLabel="Frequency Schedule" itemValue="Scheduled"></f:selectItem>
+				<f:selectItem itemLabel="Progressive Payment" itemValue="As and When"></f:selectItem>
+				<p:ajax event="change" update="progressive"></p:ajax>
 			</p:selectOneRadio>
 
 		</h:panelGrid>
@@ -70,7 +70,7 @@
 					<p:selectOneMenu value="#{frequency.endMonth}">
 
 						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-						<p:ajax event="change" update="@form"
+						<p:ajax event="change" update="@(.schedule#{index})"
 							listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 					</p:selectOneMenu>
 
@@ -83,7 +83,7 @@
 
 				</p:column>
 				<p:column headerText="Total Months" style="width:10%">
-					<h:outputText value="#{frequency.totalMonths}"></h:outputText>
+					<h:outputText styleClass="schedule#{index}" value="#{frequency.totalMonths}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
@@ -117,18 +117,20 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.phase']}"
 						style="width:20%">
-						<h:outputText value="#{index}" />
+						<p:inputText value="#{payment.phaseNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.description']}"
 						style="width:30%">
-						<p:inputText value="#{payment.scheduleDesc}"></p:inputText>
+						<p:inputText value="#{payment.phaseDesc}"></p:inputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{payment.fromDate}">
+						<p:selectOneMenu value="#{payment.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+								<p:ajax event="change"
+							listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -141,9 +143,12 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{payment.toDate}">
+						<p:selectOneMenu value="#{payment.endMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems value="#{specificationBackingBean.yearDetails}">
+							</f:selectItems>
+							<p:ajax event="change" 
+							listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -151,7 +156,7 @@
 						<!-- <p:selectOneMenu value="#{payment.toDate}">
 
 						</p:selectOneMenu> -->
-						<p:inputText value="	#{payment.endYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{payment.endYear}" disabled="true"></p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
 						style="width:10%">

@@ -12,16 +12,16 @@
 		
 			<c:if
 				test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen and  specificationBackingBean.managedBean.scQt.panel == 'No'}">
-				<ui:include src="/xhtml/sc/specification/supplierCommitteeOpen.xhtml" />
+				<ui:include src="supplierCommitteeOpen.xhtml" />
 			</c:if>
 			
 			<c:if
 				test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
-				<ui:include src="/xhtml/sc/specification/specCommitteeRestrictedtender.xhtml" />
+				<ui:include src="specCommitteeRestrictedtender.xhtml" />
 			</c:if>
             <c:if
 				test="#{ specificationBackingBean.managedBean.scQt.panel != 'No' and specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen }">
-				<ui:include src="/xhtml/sc/specification/specificationCommitteePanelInfo.xhtml" />
+				<ui:include src="specificationCommitteePanelInfo.xhtml" />
 			</c:if>
 
 

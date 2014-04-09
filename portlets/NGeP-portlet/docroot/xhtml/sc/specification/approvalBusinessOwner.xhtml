@@ -8,8 +8,9 @@
 	<p:panel header="Approver Setting" toggleable="true">
 		<table>
 			<tr>
-				<td><h:outputLabel value="Ministry Specification Secretary"/></td>
-				<td><p:inputText /></td>
+				<td><h:outputLabel value="Ministry Specification Secretary" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQt.ministrySpecSecrataryId.userName}" readonly="true" disabled="true"/></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -20,19 +21,27 @@
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="Remark" /></td>
 				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
+						value="#{specificationBackingBean.managedBean.scQtRemarksList}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage height="30"
+										value="#{specificationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 										width="30" /></td>
 								<td width="5"></td>
-								<td><h:outputText />, <h:outputText id="remarkDate">
-										<f:convertDateTime />
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 									</h:outputText></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40" /></td>
+								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
 							</tr>
 						</table>
 					</p:dataGrid></td>

@@ -49,7 +49,7 @@
 										rendered="#{specificationBackingBean.managedBean.financialWeightage eq '1'}">
 										<p:ajax event="blur" process="@this"
 											listener="#{specificationBackingBean.finWeightageSum}"
-											update=":form:finaddpoints,:form:offeredPrice" />
+											update=":form:businessSpecId:finaddpoints,:form:businessSpecId:offeredPrice" />
 									</p:inputText>
 								</p:column>
 

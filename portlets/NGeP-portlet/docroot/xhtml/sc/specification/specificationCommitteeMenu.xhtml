@@ -26,66 +26,70 @@
 
 
 		<p:tab title="#{lbl['lbl.sc.spec.general']}">
-			<ui:include src="/xhtml/sc/specification/specificationDetails.xhtml"></ui:include>
+			<ui:include src="specificationDetails.xhtml"></ui:include>
 		</p:tab>
 
 
 
 		<p:tab title="Supplier Qualification Criteria">
-			<ui:include
-				src="/xhtml/sc/specification/SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
+			<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Prepare Specification">
+			<ui:include src="prepareSpecification.xhtml"></ui:include>
 		</p:tab>
 
 		<p:tab title="#{lbl['lbl.sc.spec.tech.check.list']}">
-			<ui:include src="/xhtml/sc/specification/technicalChecklist.xhtml"></ui:include>
-			<ui:include src="/xhtml/sc/specification/stageTwoTechnical.xhtml" />
+			<ui:include src="technicalChecklist.xhtml"></ui:include>
+			<ui:include src="stageTwoTechnical.xhtml" />
 			<!-- <ui:include src="/xhtml/sc/specification/technicalEmployeeList.xhtml" /> -->
 
 
 		</p:tab>
 
+		<p:tab title="Technical Specification">
+			<ui:include src="technicalSpecification.xhtml"></ui:include>
+		</p:tab>
+
 		<p:tab title="#{lbl['lbl.sc.spec.finance.check.list']}">
-			<ui:include src="/xhtml/sc/specification/financialChecklist.xhtml"></ui:include>
-			<ui:include src="/xhtml/sc/specification/stageTwoFinancial.xhtml" />
-			<!-- <ui:include src="/xhtml/sc/specification/bankStatement.xhtml" />
-				<ui:include src="/xhtml/sc/specification/creditFacility.xhtml" />
-				<ui:include src="/xhtml/sc/specification/cashOnhand.xhtml" />
-				<ui:include src="/xhtml/sc/specification/assetsLiabilities.xhtml" />
-				<ui:include src="/xhtml/sc/specification/supplierinfo.xhtml" /> -->
+			<ui:include src="financialChecklist.xhtml"></ui:include>
+			<ui:include src="stageTwoFinancial.xhtml" />
+
 
 		</p:tab>
 
 		<p:tab title="Technical Scoring">
-			<ui:include src="/xhtml/sc/specification/weightageGroup.xhtml" />
+			<ui:include src="weightageGroup.xhtml" />
 		</p:tab>
 
 
 		<p:tab title="Financial Scoring">
-			<ui:include src="/xhtml/sc/specification/financialScoring.xhtml" />
+			<ui:include src="financialScoring.xhtml" />
 		</p:tab>
 
-		<p:tab title="Recommendation" >
-		
-			 <ui:include src="/xhtml/sc/specification/recomondation.xhtml" /> 
-			 
+		<p:tab title="Recommendation">
+
+			<ui:include src="recomondation.xhtml" />
+
 			<!--  <ui:include src="/xhtml/sc/specification/recommendationWithoutTechnical.xhtml" />  -->
-			 	
+
 		</p:tab>
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}" rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled' or specificationBackingBean.managedBean.fulfilmentType eq 'As and When'}">
-			<ui:include src="/xhtml/sc/specification/schedule.xhtml" />
+		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}"
+			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled' or specificationBackingBean.managedBean.fulfilmentType eq 'As and When'}">
+			<ui:include src="schedule.xhtml" />
 		</p:tab>
 
 
 		<p:tab title="Delivery/Service Address">
-			<ui:include src="/xhtml/sc/specification/deliveryAddress.xhtml" />
+			<ui:include src="deliveryAddress.xhtml" />
 		</p:tab>
 
 
 		<p:tab title="#{lbl['lbl.sc.spec.committee.endorse']}">
-			<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" />
-			<ui:include src="/xhtml/sc/specification/reminderpopup.xhtml" />
+			<ui:include src="specificationSignoff.xhtml" />
+			<ui:include src="reminderpopup.xhtml" />
 		</p:tab>
 
 
