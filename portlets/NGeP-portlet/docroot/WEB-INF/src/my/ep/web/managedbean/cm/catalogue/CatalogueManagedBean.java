@@ -133,6 +133,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String rejectReason;
 	
 	private List<CmSupplierZone> supplierZoneList;
+	
+	private Integer pricingTabIndex =0;
+	
+	private Integer normalPricingIndex =0;
+	
+	private Integer tierPricingIndex =0;
+	
+	private Integer zonalPricingIndex =0;
+	
+	private Integer zonalTierPricingIndex=0;
 
 
 
@@ -1032,6 +1042,59 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSupplierZoneList(List<CmSupplierZone> supplierZoneList) {
 		this.supplierZoneList = supplierZoneList;
 	}
+
+
+	public Integer getPricingTabIndex() {
+		return pricingTabIndex;
+	}
+
+
+	public void setPricingTabIndex(Integer pricingTabIndex) {
+		this.pricingTabIndex = pricingTabIndex;
+	}
+
+
+	public Integer getNormalPricingIndex() {
+		return normalPricingIndex;
+	}
+
+
+	public void setNormalPricingIndex(Integer normalPricingIndex) {
+		this.normalPricingIndex = normalPricingIndex;
+	}
+
+
+	public Integer getTierPricingIndex() {
+		return tierPricingIndex;
+	}
+
+
+	public void setTierPricingIndex(Integer tierPricingIndex) {
+		this.tierPricingIndex = tierPricingIndex;
+	}
+
+
+	public Integer getZonalPricingIndex() {
+		return zonalPricingIndex;
+	}
+
+
+	public void setZonalPricingIndex(Integer zonalPricingIndex) {
+		this.zonalPricingIndex = zonalPricingIndex;
+	}
+
+
+	public Integer getZonalTierPricingIndex() {
+		return zonalTierPricingIndex;
+	}
+
+
+	public void setZonalTierPricingIndex(Integer zonalTierPricingIndex) {
+		this.zonalTierPricingIndex = zonalTierPricingIndex;
+	}
+	
+	
+	
 	
 	
 	

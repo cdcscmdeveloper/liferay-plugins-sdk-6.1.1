@@ -174,12 +174,12 @@
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
 
 
-				<p:tabView id="headerTabId">
+				<p:tabView id="headerTabId" activeIndex="#{catalogueBackingBean.managedBean.pricingTabIndex}">
 
 
 					<p:tab title="Normal">
 
-						<p:tabView id="normalId">
+						<p:tabView id="normalId" activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
 
 
 							<p:tab title="Standard">
@@ -197,7 +197,7 @@
 
 					<p:tab title="Tier">
 
-						<p:tabView id="tierId">
+						<p:tabView id="tierId" activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
 
 
 							<p:tab title="Standard">
@@ -216,7 +216,7 @@
 
 					<p:tab title="Zonal">
 
-						<p:tabView id="zonalId">
+						<p:tabView id="zonalId" activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
 
 							<p:tab title="Standard">
 								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
@@ -235,7 +235,7 @@
 
 					<p:tab title="Zonal Tier">
 
-						<p:tabView id="zonalTierId">
+						<p:tabView id="zonalTierId" activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
 							<p:tab title="Standard">
 								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
