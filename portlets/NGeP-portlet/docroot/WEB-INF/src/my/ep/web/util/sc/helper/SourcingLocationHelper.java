@@ -29,6 +29,7 @@ public class SourcingLocationHelper {
 		List<PmState>	results	=	new ArrayList<>();
 		for(TplSpecLoc locationDTO: locationDTOs){
 			if(locationDTO.getPmState() != null){
+				
 				results.add(locationDTO.getPmState());
 			}
 		}
@@ -121,6 +122,50 @@ public class SourcingLocationHelper {
 		List<PmCity>	results	=	new ArrayList<PmCity>();
 		
 			
+		return results;
+	}
+	
+	public	static	List<PmState>	getZoneStates(List<TplSpecZoneLoc> locationDTOs){
+		List<PmState>	results	=	new ArrayList<>();
+		for(TplSpecLoc locationDTO: locationDTOs){
+			if(locationDTO.getPmState() != null){
+				results.add(locationDTO.getPmState());
+			}
+		}
+		return results;
+	}
+	
+	
+	public	static	List<PmState>	retriveStateList(List<PmState> states){
+		List<PmState>	results	=	new ArrayList<PmState>();
+		for(PmState locationDTO: states){
+			if(locationDTO.getStateId() != null){
+			
+				results.add(locationDTO);
+			}
+		}
+		return results;
+	}
+	
+	public	static	List<PmDivision>	retriveDivisionList(List<PmDivision> division){
+		List<PmDivision>	results	=	new ArrayList<PmDivision>();
+		for(PmDivision locationDTO: division){
+			if(locationDTO.getDivisionId() != null){
+			
+				results.add(locationDTO);
+			}
+		}
+		return results;
+	}
+	
+	public	static	List<PmDistrict>	retriveDistrictList(List<PmDistrict> district){
+		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
+		for(PmDistrict locationDTO: district){
+			if(locationDTO.getDistrictId() != null){
+			
+				results.add(locationDTO);
+			}
+		}
 		return results;
 	}
 	

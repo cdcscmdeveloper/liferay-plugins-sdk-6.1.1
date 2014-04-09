@@ -12,7 +12,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.ct.circular.dtl.CtCircularZone;
+
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCheckListCategory;
@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
@@ -151,7 +152,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> paidUpSelectList=new ArrayList<ScQtCheckListScore>();
 	
 	private List<ScQtSchedule> scheduleList;
-	private List<ScQtSchedule> progressivePaymentList;
+	private List<ScQtProgressivePayment> progressivePaymentList;
 	
 	private int totalFrequency;
 	private int totalProgressivePayment;
@@ -170,8 +171,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<CtPanelItem> panelItemDetailsList;
 	private List<CtPanelItem> selectItemDetailsList;
 	private boolean isPanel;
-	private List<CtCircularZone> ctZoneList;
-	private List<CtCircularZone> ctZoneSelectList;
+	//private List<CtCircularZone> ctZoneList;
+	//private List<CtCircularZone> ctZoneSelectList;
 	private TreeNode	ctZoneTrees ;
 	private TreeNode[]	ctZoneTreeSelectedNodes ;
 	private TreeNode	ctZoneSuppliers ;
@@ -182,6 +183,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	//supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> suppCriteriaopenList;
+	private List<ScQtCategory> suppCriteriaopenSelectList;
+	
 
 	private	TreeNode rootLocationTree;
 	private	TreeNode rootZoanlTree;
@@ -257,7 +260,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public List<ScQtDeliveryLoc> deleteDeliveryList;
 	public List<ScQtDeliveryLoc> selectDeliveryList;
 	
-	public ScQtSupplierCriteria supplierCriteria;
+	public ScQtSupplierCriteria supplierCriteria =new ScQtSupplierCriteria();
 	
 	public String deliveyzoneName;
 	private int technicalChecklistScoring;
@@ -283,6 +286,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private BigDecimal recommendTechnicalScore;
 	private BigDecimal recommendfinancialScore;
 	private int tabActiveIndex;
+	private List<ScQtRemark> scQtRemarksList;
+	
 	
 	
 	
@@ -2101,33 +2106,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.nonFederalContractScore = nonFederalContractScore;
 	}
 
-	/**
-	 * @return the ctZoneSelectList
-	 */
-	public List<CtCircularZone> getCtZoneSelectList() {
-		return ctZoneSelectList;
-	}
-
-	/**
-	 * @param ctZoneSelectList the ctZoneSelectList to set
-	 */
-	public void setCtZoneSelectList(List<CtCircularZone> ctZoneSelectList) {
-		this.ctZoneSelectList = ctZoneSelectList;
-	}
-
-	/**
-	 * @return the ctZoneList
-	 */
-	public List<CtCircularZone> getCtZoneList() {
-		return ctZoneList;
-	}
-
-	/**
-	 * @param ctZoneList the ctZoneList to set
-	 */
-	public void setCtZoneList(List<CtCircularZone> ctZoneList) {
-		this.ctZoneList = ctZoneList;
-	}
+	
 
 	/**
 	 * @return the ctZoneSupplierList
@@ -2614,21 +2593,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 
 
-	/**
-	 * @return the progressivePaymentList
-	 */
-	public List<ScQtSchedule> getProgressivePaymentList() {
-		return progressivePaymentList;
-	}
 
-
-
-	/**
-	 * @param progressivePaymentList the progressivePaymentList to set
-	 */
-	public void setProgressivePaymentList(List<ScQtSchedule> progressivePaymentList) {
-		this.progressivePaymentList = progressivePaymentList;
-	}
 
 
 
@@ -3124,6 +3089,62 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setRootZoanlTree(TreeNode rootZoanlTree) {
 		this.rootZoanlTree = rootZoanlTree;
+	}
+
+
+
+	/**
+	 * @return the suppCriteriaopenSelectList
+	 */
+	public List<ScQtCategory> getSuppCriteriaopenSelectList() {
+		return suppCriteriaopenSelectList;
+	}
+
+
+
+	/**
+	 * @param suppCriteriaopenSelectList the suppCriteriaopenSelectList to set
+	 */
+	public void setSuppCriteriaopenSelectList(
+			List<ScQtCategory> suppCriteriaopenSelectList) {
+		this.suppCriteriaopenSelectList = suppCriteriaopenSelectList;
+	}
+
+
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtProgressivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+
+
+	/**
+	 * @return the scQtRemarksList
+	 */
+	public List<ScQtRemark> getScQtRemarksList() {
+		return scQtRemarksList;
+	}
+
+
+
+	/**
+	 * @param scQtRemarksList the scQtRemarksList to set
+	 */
+	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
+		this.scQtRemarksList = scQtRemarksList;
 	}
 
 
