@@ -62,7 +62,7 @@ public class CommonUtils {
 				throw new IllegalArgumentException("Invalid numberFormatType.");
 		}
 		
-		return generateDecimalPrecision(decimalPrecision);
+		return genNumberFormatDecimalPrecision(decimalPrecision);
 	}
 	
 	/**
@@ -84,10 +84,10 @@ public class CommonUtils {
 				throw new IllegalArgumentException("Invalid numberFormatType.");
 		}
 		
-		return generateDecimalPrecision(decimalPrecision);
+		return genNumberFormatDecimalPrecision(decimalPrecision);
 	}
 	
-	private String generateDecimalPrecision(int decimalPrecision) {
+	private String genNumberFormatDecimalPrecision(int decimalPrecision) {
 		StringBuilder numberFormat = new StringBuilder(CommonConstants.DEFAULT_NUMBER_FORMAT);
 		
 		if (decimalPrecision > 0) {
