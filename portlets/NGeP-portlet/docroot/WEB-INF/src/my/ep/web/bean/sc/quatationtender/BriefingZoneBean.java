@@ -2,8 +2,7 @@ package my.ep.web.bean.sc.quatationtender;
 
 import java.util.List;
 
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
-import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 
@@ -15,8 +14,8 @@ public class BriefingZoneBean {
 
 	private String zoneName;
 	private TplSpecZoneDtl tplSpecZoneDtl;
-	private List<ScQtBriefing> briefingList;
-	private List<ScQtBriefing> sitevisitList;
+	private List<ScQtBsvDtl> briefingList;
+	private List<ScQtBsvDtl> sitevisitList;
 	private List<ScQtDeliveryLoc> deliveryLocList;
 	private List<ScQtDeliveryLoc> selectDeliveryList;
 	public int id;
@@ -26,7 +25,7 @@ public class BriefingZoneBean {
 	 * @param briefingList
 	 */
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
-			List<ScQtBriefing> briefingList, List<ScQtBriefing> sitevisitList) {
+			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.briefingList = briefingList;
 		this.sitevisitList = sitevisitList;
@@ -47,14 +46,6 @@ public class BriefingZoneBean {
 
 	public void setZoneName(String zoneName) {
 		this.zoneName = zoneName;
-	}
-
-	public List<ScQtBriefing> getBriefingList() {
-		return briefingList;
-	}
-
-	public void setBriefingList(List<ScQtBriefing> briefingList) {
-		this.briefingList = briefingList;
 	}
 
 	public List<ScQtDeliveryLoc> getDeliveryLocList() {
@@ -81,20 +72,28 @@ public class BriefingZoneBean {
 		this.selectDeliveryList = selectDeliveryList;
 	}
 
-	public List<ScQtBriefing> getSitevisitList() {
-		return sitevisitList;
-	}
-
-	public void setSitevisitList(List<ScQtBriefing> sitevisitList) {
-		this.sitevisitList = sitevisitList;
-	}
-
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
 
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+	public List<ScQtBsvDtl> getBriefingList() {
+		return briefingList;
+	}
+
+	public void setBriefingList(List<ScQtBsvDtl> briefingList) {
+		this.briefingList = briefingList;
+	}
+
+	public List<ScQtBsvDtl> getSitevisitList() {
+		return sitevisitList;
+	}
+
+	public void setSitevisitList(List<ScQtBsvDtl> sitevisitList) {
+		this.sitevisitList = sitevisitList;
 	}
 
 }
