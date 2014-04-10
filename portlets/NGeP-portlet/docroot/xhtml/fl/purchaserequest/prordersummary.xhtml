@@ -28,28 +28,32 @@
 			<p:column>
 				<h:outputText value="Delivery Start" />
 				<p:spacer width="7" />
-				<p:inputText size="13" value="10/02/2014" disabled="true" />
+				<p:inputText size="13" value="#{delAddressSummary.startDate}"
+					disabled="true">
+					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<h:outputText value="Delivery End" />
 				<p:spacer width="10" />
-				<p:inputText size="13" value="22/02/2014" disabled="true" />
+				<p:inputText size="13" value="#{delAddressSummary.endDate}"
+					disabled="true">
+					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+				</p:inputText>
 			</p:column>
 			<p:rowExpansion>
-			
+
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}">
 					<p:column headerText="Item Type">
-						<h:outputText
-							value="#{newItems.scRequestItem.itemType}" />
+						<h:outputText value="#{newItems.scRequestItem.itemType}" />
 					</p:column>
 					<p:column headerText="Item Code">
 						<h:outputText />
 					</p:column>
 					<p:column headerText="Item Name">
-						<h:outputText
-							value="#{newItems.scRequestItem.itemName}" />
+						<h:outputText value="#{newItems.scRequestItem.itemName}" />
 					</p:column>
 					<p:column headerText="UOM">
 						<h:outputText />

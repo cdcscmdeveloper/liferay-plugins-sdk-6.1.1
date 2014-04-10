@@ -7,25 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="CHARGE ASSIGNMENT" id="chargeAss" toggleable="true">
-		<br />
-		<br />
-		<br />
-		<table style="width: 100%">
-			<tr>
-				<td><p:selectOneRadio
-						value="#{purchaseRequestBackingBean.managedBean.chargeCheck}">
-						<f:selectItem itemLabel="Charge Detail" itemValue="true" />
-						<f:selectItem itemLabel="Charge Update" itemValue="false" />
-						<p:ajax event="change" process="@this"
-							listener="#{purchaseRequestBackingBean.chargeChecked}"
-							update="chargeLineSection, chargeLineTbl , @(.chargeAss)" partialSubmit="true" />
-					</p:selectOneRadio></td>
-			</tr>
-		</table>
 
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
-			styleClass="orderSummaryChange" selectionMode="checkbox"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedNodes}"
+			styleClass="chargeLineChange"
+			selection="#{purchaseRequestBackingBean.managedBean.selectedNode}"
+			selectionMode="single"
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}">
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
@@ -33,19 +19,18 @@
 			<p:ajax event="unselect"
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
 				update="@(.chargeLineSection)"></p:ajax>
-			<p:column selectionMode="multiple" />
-			<p:selectCheckboxMenu label="Movies" filter="true"
-				filterText="Filter" filterMatchMode="startsWith"
-				panelStyle="width:220px">
-				<f:selectItems />
-			</p:selectCheckboxMenu>
-			<p:column headerText="">
+			<p:column>
+				<p:selectBooleanCheckbox
+					value="#{chargeLineNode.selectedChargeItem}"
+					rendered="#{chargeLineNode.parent == 'true'}"
+					styleClass="myCustomChekBox" />
 			</p:column>
 			<p:column headerText="COA">
+				<h:outputText value="#{chargeLineNode.coaValue}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Type">
-				<h:outputText
-					value="#{chargeLineNode.scRequestItem.itemType}"
+				<h:outputText value="#{chargeLineNode.scRequestItem.itemType}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Code">
@@ -53,10 +38,8 @@
 					value="#{chargeLineNode.scRequestItem.requestNoteItemId}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-
 			<p:column headerText="Item Name">
-				<h:outputText
-					value="#{chargeLineNode.scRequestItem.itemName}"
+				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="UOM">
@@ -105,16 +88,15 @@
 							value="#{lbl['lbl.fl.charge.program.project']}"
 							style="margin-bottom:15px;" /></td>
 					<td><p:selectOneMenu style="margin-bottom:15px;"
-							value="#{purchaseRequestBackingBean.pmPrgActivity}">
+							value="#{purchaseRequestBackingBean.disPmPrgActivity}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
 							<f:selectItem itemLabel="PROG1" itemValue="1" />
 							<f:selectItem itemLabel="PROG2" itemValue="2" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
 							style="margin-bottom:15px;" /></td>
 					<td><p:selectOneMenu style="margin-bottom:15px;"
-							value="#{purchaseRequestBackingBean.pmPrjSetia}">
+							value="#{purchaseRequestBackingBean.disPmPrjSetia}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
 							<f:selectItem itemLabel="SETIA1" itemValue="1" />
 							<f:selectItem itemLabel="SETIA2" itemValue="2" />
@@ -140,8 +122,6 @@
 							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
 							<f:selectItem itemLabel="GOSODO1" itemValue="1" />
 							<f:selectItem itemLabel="GOSODO2" itemValue="2" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.chargeLineSelect}" />
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
@@ -149,9 +129,9 @@
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right"><p:commandButton
-						value="Apply" ajax='true' styleClass="ui-button"
-						process="@this,chargeAss"
-						action="#{purchaseRequestBackingBean.chargeLineApply}" /></td>
+						value="Bulk Update" icon="ui-icon-add" ajax='true'
+						styleClass="ui-button" process="@this,chargeAss"
+						oncomplete="applyBulkCharge.show();" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -161,11 +141,13 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Item Code" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{purchaseRequestBackingBean.queryItemCode}"/></td>
+				<td><p:inputText disabled="true" size="20"
+						value="#{purchaseRequestBackingBean.queryItemCode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Item Name"  /></td>
-				<td><p:inputText disabled="true" size="35" value="#{purchaseRequestBackingBean.queryItemName}"/></td>
+				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:inputText disabled="true" size="35"
+						value="#{purchaseRequestBackingBean.queryItemName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Query Description" /></td>
@@ -174,12 +156,88 @@
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>
-	<div style="width: 100%; text-align: right">
-		<p:commandButton value="Close" icon="ui-icon-close"
-			oncomplete="addQuery.hide();">
-		</p:commandButton>
-	</div>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Close" icon="ui-icon-close"
+				oncomplete="addQuery.hide();">
+			</p:commandButton>
+		</div>
 	</p:dialog>
-	
-
+	<p:dialog id="applyBulkChargeDialog" header="Bulk Update"
+		widgetVar="applyBulkCharge" showEffect="fade" hideEffect="fade"
+		modal="true" width="600px" height="250px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="VOT1" itemValue="1" />
+						<f:selectItem itemLabel="VOT2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.charge.program.project']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;"
+						value="#{purchaseRequestBackingBean.pmPrgActivity}">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="PROG1" itemValue="1" />
+						<f:selectItem itemLabel="PROG2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;"
+						value="#{purchaseRequestBackingBean.pmPrjSetia}">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="SETIA1" itemValue="1" />
+						<f:selectItem itemLabel="SETIA2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.subsetia']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="SUB SETIA1" itemValue="1" />
+						<f:selectItem itemLabel="SUB SETIA2" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="Loan1" itemValue="1" />
+						<f:selectItem itemLabel="Loan2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="Low Value" itemValue="1" />
+						<f:selectItem itemLabel="High Value" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+						<f:selectItem itemLabel="GOSODO1" itemValue="1" />
+						<f:selectItem itemLabel="GOSODO2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Apply" icon="ui-icon-accept"
+				process="@this,chargeAss,applyBulkChargeDialog"
+				update="chargeLineTbl"
+				action="#{purchaseRequestBackingBean.chargeLineApply}"
+				oncomplete="applyBulkCharge.hide();">
+			</p:commandButton>
+			<p:commandButton value="Cancel" icon="ui-icon-cancel"
+				oncomplete="applyBulkCharge.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
 </ui:composition>

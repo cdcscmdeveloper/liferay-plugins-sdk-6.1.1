@@ -29,14 +29,13 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId" 
+				<td><p:inputText size="5" id="issuedOrgProfileId"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
 					<p:spacer width="5" /> <ac:lov id="issuePtj"
 						lovId="PM_ORG_PROFILE" headerText="IssuePtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						update=":form:prtabs:issuedOrgProfileId"
-						readonly="true"
+						update=":form:prtabs:issuedOrgProfileId" readonly="true"
 						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
@@ -48,16 +47,14 @@
 						lovId="PM_ORG_PROFILE" headerText="ChargedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
-						update=":form:prtabs:chargeOrgProfileId"
-						readonly="true"
+						update=":form:prtabs:chargeOrgProfileId" readonly="true"
 						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
 				<td><p:inputText size="5" disabled="true" /> <p:spacer
-						width="5" />
-					<p:inputText size="39" disabled="true" /></td>
+						width="5" /> <p:inputText size="39" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -68,12 +65,12 @@
 						value="* #{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="6"
 						style=" margin-bottom:5px;"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}" />
-				</td>
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
+						required="true" /></td>
 				<td style="width: 109px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId}"
+						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -94,15 +91,16 @@
 				<td><p:inputText size="25" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" 
-						pattern="dd/mm/yyyy" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
+				<td><p:calendar mode="popup" showOn="button"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}"
+						pattern="dd-MM-yyyy" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" 
-						pattern="dd/mm/yyyy" /></td>
+				<td><p:calendar mode="popup" showOn="button"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}"
+						pattern="dd-MM-yyyy" /></td>
 			</tr>
 		</table>
 	</p:panel>

@@ -112,7 +112,7 @@
 				<p:column headerText="Ordered Qty.">
 					<p:inputText value="#{flItem.orderedQty}" size="5"
 						style="text-align:right">
-						<p:ajax event="blur" update="subTotalTxt,,@(.orderSummaryChange)"
+						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange)"
 							process="@this"
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
@@ -167,6 +167,7 @@
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu id="manCountry"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
+						required="true" requiredMessage="Please select a Country"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="countryList"
@@ -182,7 +183,8 @@
 				<td><p:outputLabel value="* Address Line 1" /></td>
 				<td><p:inputText
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
-						size="35" /></td>
+						size="35" >
+						</p:inputText></td>
 				<td><p:outputLabel value="* State" /></td>
 				<td><p:selectOneMenu id="manState"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
