@@ -61,7 +61,7 @@
 	<p:column style="width:65px;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clQuantity}" rendered="#{isPriceTypeStandard}" required="true">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY)}" />
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, null)}" />
 			</p:inputText>
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				oncomplete="tierQtyPopup.show();"

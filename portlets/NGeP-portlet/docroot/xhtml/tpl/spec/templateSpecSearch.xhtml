@@ -107,7 +107,7 @@
 							</p:column>
 							<p:column style="width:7%">
 								<h:outputText value="#{tplMasterObj.createdDate}" >
-									<f:convertDateTime pattern="#{CommonUtils.displayDateFormat}" />
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</h:outputText>
 							</p:column>
 							<p:column style="width:4%">

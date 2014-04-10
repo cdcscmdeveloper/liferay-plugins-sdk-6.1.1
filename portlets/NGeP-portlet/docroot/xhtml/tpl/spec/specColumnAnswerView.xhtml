@@ -10,20 +10,20 @@
 	<p:column style="width:55px;text-align:right;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
 		<h:outputText value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>	
 	<p:column style="width:95px;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<h:outputText value="#{tplSpecAnswer.amountPerYear}"
 			rendered="#{isQuestionTypeItem}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
 	<p:column style="width:130px;#{isAnswerTypeNumeric ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
 		<h:panelGroup>
 			<h:outputText value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" />
 			<h:outputText value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<h:outputText value="#{tplSpecAnswer.answerCompliance ? 'Yes' : 'No'}" rendered="#{isAnswerTypeDropdown}" />
 		</h:panelGroup>

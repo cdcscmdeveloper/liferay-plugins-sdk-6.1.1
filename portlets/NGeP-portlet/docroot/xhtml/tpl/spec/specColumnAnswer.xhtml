@@ -15,14 +15,14 @@
 		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}">
 			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
 	</p:column>
 	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<h:panelGroup id="ansYearPG">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.amountPerYear}"
 				rendered="#{isQuestionTypeItem}" disabled="true">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 		</h:panelGroup>
 	</p:column>
@@ -34,7 +34,7 @@
 		<h:panelGroup id="ansPG">
 			<p:inputText style="width:96%;" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
 			<p:inputText style="width:96%;" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<h:selectOneMenu style="width:100%;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
 				<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />

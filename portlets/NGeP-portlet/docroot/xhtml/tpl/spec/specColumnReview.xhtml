@@ -14,7 +14,7 @@
 	</p:column>
 	<p:column style="width:80px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 		<h:outputText value="#{question.clEstimatedCost}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PRICE)}" />
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
 	<p:column style="width:150px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
