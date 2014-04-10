@@ -1398,6 +1398,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier Start date Overlapping", ""));
 							this.getManagedBean().setPricingTabIndex(1);
+							this.getManagedBean().setTierPricingIndex(0);
 							return "addCatalogView";
 						}
 					}
@@ -1409,6 +1410,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Standard Tier End date must be greater than Standard Tier start date", ""));
 							this.getManagedBean().setPricingTabIndex(1);
+							this.getManagedBean().setTierPricingIndex(0);
 							return "addCatalogView";
 						}
 					}
@@ -2578,6 +2580,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setEndDate(pricing.getEndDate());
 						price.setFromQty(pricing.getFromQty());
 						price.setToQty(pricing.getToQty());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 
@@ -2585,19 +2589,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 
 			}else{
-
 				System.out.println("*************1st copy******************");
-				reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getPricingType());
-				resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+				Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 
-				System.out.println("size:"+resDTO.getPriceLs().size());
-				for(CmPricing pricing: resDTO.getPriceLs()){
-					CmPromotionTierPricing price = new CmPromotionTierPricing();
-					price.setStartDate(pricing.getStartDate());
-					price.setEndDate(pricing.getEndDate());
-					price.setFromQty(pricing.getFromQty());
-					price.setToQty(pricing.getToQty());
-					this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
+				if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+				
+					List <CmTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate());	
+						
+					for(CmPricing pricing: dataList){
+						CmPromotionTierPricing price = new CmPromotionTierPricing();
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setFromQty(pricing.getFromQty());
+						price.setToQty(pricing.getToQty());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
+						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
+					}
 				}
 			}
 
@@ -2617,39 +2625,80 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = null;
 
-		try{
+		reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
+		reqDTO.setStartDate1(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStartDate());
+		reqDTO.setEndDate1(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getEndDate());
+		reqDTO.setPriceType("08");
+		resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
 
-			reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
-			reqDTO.setStartDate1(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStartDate());
-			reqDTO.setEndDate1(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getEndDate());
-			reqDTO.setPriceType("08");
-			resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+		if(resDTO.getPriceLs()==null || resDTO.getPriceLs().isEmpty()){
 
-			if(resDTO.getPriceLs()==null || resDTO.getPriceLs().isEmpty()){
-				System.out.println("*************copy******************");
-				reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getPricingType());
-				resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
 
-				System.out.println("size:"+resDTO.getPriceLs().size());
-				for(CmPricing pricing: resDTO.getPriceLs()){
-					CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
-					price.setFromQty(pricing.getFromQty());
-					price.setToQty(pricing.getToQty());
-					price.setCmSupplierZone(pricing.getCmSupplierZone());
-					//price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-					this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
+			if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()!=null 
+					&& this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().size()>0){
+				boolean existFlag = false;
+				for(CmZonalPromotionTierPricing promotion : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+
+					if(promotion.getStartDate().equals(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStartDate())){	
+						existFlag = true;			
+					}
 				}
 
-				//reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
-				//catalogueSO.updateSupplierItem(reqDTO);
+				System.out.println("existFlag:"+existFlag);
+				if(existFlag){
+					System.out.println("*************exist******************");
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Promotion price exist", ""));
+
+				}else{
+					System.out.println("*************copy******************");
+					reqDTO.setPriceType(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getPricingType());
+					resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+
+					System.out.println("size:"+resDTO.getPriceLs().size());
+					for(CmPricing pricing: resDTO.getPriceLs()){
+						CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setFromQty(pricing.getFromQty());
+						price.setToQty(pricing.getToQty());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
+
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
+
+					}
+				}
 
 			}else{
-				System.out.println("*************exist******************");
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Zonal Promotion price exist", ""));
+				
+				
+				Map<Date, List<CmZonalTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
 
+				if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+				
+					List <CmZonalTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStartDate());	
+						
+					for(CmPricing pricing: dataList){
+						CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setFromQty(pricing.getFromQty());
+						price.setToQty(pricing.getToQty());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
+					}
+				}
+
+				
+				
 			}
-		}catch(Exception ex){
+
+		}else{
+			System.out.println("*************exist******************");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Promotion price exist", ""));
 
 		}
 
