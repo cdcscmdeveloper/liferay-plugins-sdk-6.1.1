@@ -138,6 +138,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] chkDeductionClause;
+	List<CtContractItem> ContractItemServiceList;
 	
 	public ContractDetailsBackingBean() {
 	  if(this.getManagedBean().getAction() == null) {
@@ -1216,8 +1217,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public List<CtContractItem> getContractItemList() {
 		List<CtContractItem> contractItemList = new ArrayList<CtContractItem>();
+		ContractItemServiceList = new ArrayList<CtContractItem>();
 		for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-			if(item.getItemType().getParameterCode().equalsIgnoreCase(getManagedBean().getItemType())) {
+			if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				this.getContractItemServiceList().add(item);
+			}else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 				contractItemList.add(item);
 			}
 		}
@@ -1420,6 +1424,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		public void searchAgencyDetails(){
 			 getPtjCodeName();	 
+		}
+
+		public List<CtContractItem> getContractItemServiceList() {
+			return ContractItemServiceList;
+		}
+
+		public void setContractItemServiceList(
+				List<CtContractItem> contractItemServiceList) {
+			ContractItemServiceList = contractItemServiceList;
 		}
 		
 }

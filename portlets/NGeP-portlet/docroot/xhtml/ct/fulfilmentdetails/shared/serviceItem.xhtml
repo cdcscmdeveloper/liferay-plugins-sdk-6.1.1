@@ -8,33 +8,45 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
-  	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
+  	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemServiceList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
            <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
-		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
-		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		      <p:column headerText="Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
+		      <p:column headerText="Item Name">
+		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
+		      </p:column>       
+		      <p:column headerText="UOM">
+		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
+		      </p:column>        
+		      <p:column headerText="Qty." style="text-align: right;">
+		        <p:outputLabel value="#{data.minimumOrderQty}"/>
+		      </p:column>               
 		      <p:column headerText="UOM Per Month"  style="text-align: right;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  
     		</p:dataTable> 
         </h:panelGrid>
-        <p:outputPanel id="showServicePrice" columns="1" style="width:100%"
-		   rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem!=null}">
+        <p:outputPanel id="showServicePrice">
 		   <p:spacer height="20"/>
-		   <p:dataTable id="servicePriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}"
-			 rowKey="#{data}" lazy="true" >
-			 <ac:paginator for="servicePriceTable"/>
-			 <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>                   
-			 <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
-			 <p:column headerText="Effective Date">
-				<p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
-			 </p:column>       
-			 <p:column headerText="Expiry Date">
-			   <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
-			 </p:column>       
-		</p:dataTable>
+		    <h:panelGrid columns="1" style="width:100%" 
+		       rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem != null}">
+		      <p:dataTable id="servicePriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}" 
+		        lazy="true">
+			    <ac:paginator for="servicePriceTable"/>
+			     <p:column headerText="Zone">
+			        <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+			     </p:column>                   
+			     <p:column headerText="Price (MYR)" style="text-align: right;">
+			        <p:outputLabel value="#{data.unitPrice}"/>
+			     </p:column>            
+			     <p:column headerText="Effective Date">
+				   <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+			     </p:column>       
+			     <p:column headerText="Expiry Date">
+			         <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
+			    </p:column>       
+		    </p:dataTable>
+		</h:panelGrid>
 	  </p:outputPanel>
   	</p:panel>
 	<p:panel header="Remarks" toggleable="true">

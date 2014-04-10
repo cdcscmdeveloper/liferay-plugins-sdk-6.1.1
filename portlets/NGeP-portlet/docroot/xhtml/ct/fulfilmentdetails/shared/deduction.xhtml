@@ -16,12 +16,12 @@
 	              </p:column> 
 		          <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:150px;text-align:right;">
 		              <p:inputText id="amtInput" value="#{datas.amount}"  style="width:70%;" styleClass="ppRightBtn"
-		                 rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'FD' 
-		                   or contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'AP'}">
+		                 rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeFixedDeposit
+		                   or datas.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}">
 	            	      <f:convertNumber pattern="#,##0.00" />
 	                 </p:inputText> 
-	                 <h:outputLabel value="#{datas.amount}" rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'FD' 
-		                and contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'AP'}">
+	                 <h:outputLabel value="#{datas.amount}" rendered="#{datas.deductionType.parameterCode ne ParameterConst.deductionTypeFixedDeposit
+		                and datas.deductionType.parameterCode ne ParameterConst.deductionTypeAdvancePayment}">
 		             </h:outputLabel>
 		         </p:column>  
 		    </p:dataTable>
@@ -38,12 +38,16 @@
            </p:dataTable>
            <p:spacer height="2" />
            <div class="ppRightBtn"> 
+           <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null}">
         	  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" icon="ui-icon-add" 
         	     action="#{contractDetailsBackingBean.addDeductionClause()}" update="tableClause"
-        	     rendered="#{contractDetailsBackingBean.retrieveParameterById(contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterId) eq 'AP'}" >
+        	     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
+        	      ParameterConst.deductionTypeAdvancePayment}" >
 		  	  </p:commandButton>
 		  	  <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@form"
-		    	rendered="#{contractDetailsBackingBean.retrieveParameterById(contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterId) eq 'AP'}" onclick="dlgDeduction.show()" />
+		    	rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}" 
+		    	onclick="dlgDeduction.show()" />
+           </c:if>
          </div>
        </p:outputPanel>
 	  </p:panel>

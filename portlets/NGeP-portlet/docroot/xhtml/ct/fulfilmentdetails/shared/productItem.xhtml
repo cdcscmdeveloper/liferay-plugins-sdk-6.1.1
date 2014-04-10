@@ -22,9 +22,9 @@
 		     <p:outputLabel value="#{data.maxProcureAmt}"/></p:column>     
 		   <p:column headerText="Type Of Goods">
 		     <h:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}"
-		       rendered="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin) eq 'Local'}" style="float:left;"/>
+		       rendered="#{data.itemOrigin.parameterCode eq 'Local'}" style="float:left;"/>
 		     <p:commandLink value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" styleClass="blue_font" 
-		     	rendered="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin) eq 'Imported'}" 
+		     	rendered="#{data.itemOrigin.parameterCode eq 'Imported'}" 
 		        onclick="importedDlg.show();return false;" />	
 		     </p:column>              
     	 </p:dataTable> 
@@ -42,64 +42,144 @@
 		  <p:spacer height="20"/>
 		  <p:outputPanel columns="1" style="width:100%"
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
-			   and contractDetailsBackingBean.managedBean.selectedItem!=null
-			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterId) eq ''}">
+			   and contractDetailsBackingBean.managedBean.selectedItem!=null}">
 		      <p:dataTable id="itemPriceTier" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			     rowKey="#{data}" lazy="true" >
 			     <ac:paginator for="itemPriceTier"/>
-			     <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
-			     <p:column headerText="From Qty." style="text-align: right;">
-				  <p:outputLabel value="#{data.fromQty}"/>
-			     </p:column>       
-			     <p:column headerText="To Qty." style="text-align: right;">
-				  <p:outputLabel value="#{data.toQty}"/>
-			     </p:column>  
-			     <p:column headerText="Price (MYR)" style="text-align: right;">
-			        <p:outputLabel value="#{data.unitPrice}"/>
-			     </p:column>            
-			     <p:column headerText="Effective Date">
-			       <h:outputText value="#{data.effDate}" style="float:left;">
+			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode eq ParameterConst.priceTypeStandard}">
+			             <p:column headerText="Price (MYR)" style="text-align: right;">
+			                <p:outputLabel value="#{data.unitPrice}"/>
+			             </p:column>   
+                          <p:column headerText="Effective Date">
+			                <h:outputText value="#{data.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="Expiry Date">
+			                <h:outputText value="#{data.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			             </p:column>
+			       </c:if>  
+			       <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode eq ParameterConst.priceTypeTier}">
+			             <p:column headerText="From Qty." style="text-align: right;">
+				              <p:outputLabel value="#{data.fromQty}"/>
+			             </p:column>       
+			             <p:column headerText="To Qty." style="text-align: right;">
+				           <p:outputLabel value="#{data.toQty}"/>
+			            </p:column> 
+			            <p:column headerText="Price (MYR)" style="text-align: right;">
+			                <p:outputLabel value="#{data.unitPrice}"/>
+			            </p:column>
+			            <p:column headerText="Effective Date">
+			                <h:outputText value="#{data.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="Expiry Date">
+			                <h:outputText value="#{data.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>     
+			        </c:if>   
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			            eq ParameterConst.priceTypeZonalStandard}">
+			             <p:column headerText="Zone">
+			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+			            </p:column>    
+			            <p:column headerText="Price (MYR)" style="text-align: right;">
+			                <p:outputLabel value="#{data.unitPrice}"/>
+			            </p:column>
+			            <p:column headerText="Effective Date">
+			                <h:outputText value="#{data.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="Expiry Date">
+			                <h:outputText value="#{data.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>     
+			         </c:if>
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			            eq ParameterConst.priceTypeZonalTier}">
+			             <p:column headerText="Zone">
+			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+			            </p:column> 
+			            <p:column headerText="From Qty." style="text-align: right;">
+				              <p:outputLabel value="#{data.fromQty}"/>
+			             </p:column>       
+			             <p:column headerText="To Qty." style="text-align: right;">
+				           <p:outputLabel value="#{data.toQty}"/>
+			            </p:column>    
+			            <p:column headerText="Price (MYR)" style="text-align: right;">
+			                <p:outputLabel value="#{data.unitPrice}"/>
+			            </p:column>
+			            <p:column headerText="Effective Date">
+			                <h:outputText value="#{data.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="Expiry Date">
+			                <h:outputText value="#{data.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>     
+			         </c:if> 
+                     <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			            eq ParameterConst.priceTypeZonalTariff}">
+			             <p:column headerText="From Qty." style="text-align: right;">
+				            <p:outputLabel value="#{data.fromQty}"/>
+			            </p:column>       
+			            <p:column headerText="To Qty." style="text-align: right;">
+				            <p:outputLabel value="#{data.toQty}"/>
+			            </p:column>  
+			            <p:column headerText="Sub Sequence" style="text-align: right;">
+				           <p:outputLabel/>
+			            </p:column> 
+			            <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+			            <p:column headerText="Effective Date">
+			              <h:outputText value="#{data.effDate}" style="float:left;">
                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
-			     </p:column>       
-			     <p:column headerText="Expiry Date">
-			       <h:outputText value="#{data.expDate}" style="float:left;">
-                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                   </h:outputText>
-			     </p:column>       
+                          </h:outputText>
+			           </p:column>       
+			           <p:column headerText="Expiry Date">
+			              <h:outputText value="#{data.expDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                          </h:outputText>
+			           </p:column>           
+			        </c:if> 
+			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			            eq ParameterConst.priceTypeZonalZonaltariff}">            
+			         <p:column headerText="Zone">
+			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+			            </p:column> 
+			            <p:column headerText="From Qty." style="text-align: right;">
+				              <p:outputLabel value="#{data.fromQty}"/>
+			             </p:column>       
+			             <p:column headerText="To Qty." style="text-align: right;">
+				           <p:outputLabel value="#{data.toQty}"/>
+			            </p:column>
+			             <p:column headerText="Sub Sequence" style="text-align: right;">
+				           <p:outputLabel/>
+			            </p:column>     
+			            <p:column headerText="Price (MYR)" style="text-align: right;">
+			                <p:outputLabel value="#{data.unitPrice}"/>
+			            </p:column>
+			            <p:column headerText="Effective Date">
+			                <h:outputText value="#{data.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="Expiry Date">
+			                <h:outputText value="#{data.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>     
+			        </c:if>
 			</p:dataTable>
 		  </p:outputPanel>  
-		  <p:outputPanel columns="1" style="width:100%"
-			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
-			   and contractDetailsBackingBean.managedBean.selectedItem!=null
-			   and contractDetailsBackingBean.getContractItemType(contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterId) eq ''}">
-		      <p:dataTable id="itemPriceTariff" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
-			     rowKey="#{data}" lazy="true" >
-			     <ac:paginator for="itemPriceTariff"/>
-			     <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
-			     <p:column headerText="From Qty." style="text-align: right;">
-				  <p:outputLabel value="#{data.fromQty}"/>
-			     </p:column>       
-			     <p:column headerText="To Qty." style="text-align: right;">
-				  <p:outputLabel value="#{data.toQty}"/>
-			     </p:column>  
-			     <p:column headerText="Sub Sequence" style="text-align: right;">
-				    <p:outputLabel/>
-			     </p:column>           
-			     <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
-			     <p:column headerText="Effective Date">
-			       <h:outputText value="#{data.effDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                     </h:outputText>
-			     </p:column>       
-			     <p:column headerText="Expiry Date">
-			       <h:outputText value="#{data.expDate}" style="float:left;">
-                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                   </h:outputText>
-			     </p:column>       
-			</p:dataTable>
-		  </p:outputPanel>  
-		  <h:panelGrid columns="1" style="width:100%"
+		   <p:outputPanel columns="1" style="width:100%"
 			 rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
 			  and contractDetailsBackingBean.managedBean.selectedItem!=null}">
 			 <p:dataTable id="ceilingTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}"
@@ -129,7 +209,7 @@
                      </h:outputText>
 				</p:column>           
 			  </p:dataTable>
-		  	</h:panelGrid>  
+		  	</p:outputPanel>
 		</p:outputPanel> 
 		<p:dialog id="importedDialog" header="Shipping Details" widgetVar="importedDlg" modal="true" width="600" height="350">
 		    
