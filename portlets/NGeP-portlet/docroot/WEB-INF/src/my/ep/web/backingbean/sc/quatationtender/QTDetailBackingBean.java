@@ -56,6 +56,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -76,10 +77,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -99,6 +103,8 @@ import my.ep.web.type.sc.quationtender.BPMOutComeTypes;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -123,7 +129,6 @@ public class QTDetailBackingBean extends
 
 		if (this.getManagedBean().getQt() == null) {
 			this.getManagedBean().setQt(new ScQt());
-			// this.getManagedBean().getQt().setEvaluationType("2");
 		}
 		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
 			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
@@ -1651,7 +1656,7 @@ public class QTDetailBackingBean extends
 	}
 
 	private void retrieveApprovalTabDtl() {
-		if (this.getManagedBean().getTabList() == null) {
+		if (this.getManagedBean().getTabList() != null) {
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1705,14 +1710,50 @@ public class QTDetailBackingBean extends
 
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQTSuppQulCriDetails(reqDTO);
+			
+			if (resDTO.getQtDetail() != null) {
+				this.getManagedBean().setQt(resDTO.getQtDetail());
+				this.getManagedBean().setQtCategoryList(
+						resDTO.getCategoryResultBean().getResultList());
+				this.getManagedBean().setSuppCriteriarestrictedList(
+						resDTO.getCategoryResultBean().getResultList());
+				if (resDTO.getQtDetail().getScQtSupplierCriteria() == null) {
+					this.getManagedBean().setSupplierCriteria(
+							new ScQtSupplierCriteria());
+				} else {
+					this.getManagedBean().setSupplierCriteria(
+							resDTO.getQtDetail().getScQtSupplierCriteria());
+					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+
+					for (TplSpecLoc localLoc : resDTO.getLocationDetails()) {
+						ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
+						locCriteria.add(criteria);
+					}
+
+					List<PmState> states = SourcingLocationHelper
+							.getStateFromLocationDTOs(locCriteria);
+
+					List<PmDivision> divisions = SourcingLocationHelper
+							.getDivisionFromLocationDTOs(locCriteria);
+					List<PmDistrict> districts = SourcingLocationHelper
+							.getDistrictFromLocationDTOs(locCriteria);
+					List<PmCity> cities = SourcingLocationHelper
+							.getCityFromLocationDTOs(locCriteria);
+
+					getManagedBean().getZoneTrees().add(
+							LocationSingleton.getInstance().buildZoneTree(null,
+									states, districts, divisions, cities));
+				}
+
+			}
 
 			/*
 			 * ScQtCriteria scQtCriteria = resDTO.getCriteria(); if
 			 * (scQtCriteria == null) { scQtCriteria = new ScQtCriteria(); }
 			 * getManagedBean().setQtCriteria(scQtCriteria);
 			 */
-			getManagedBean().setStates(resDTO.getStates());
-			getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
+			//getManagedBean().setStates(resDTO.getStates());
+			//getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(

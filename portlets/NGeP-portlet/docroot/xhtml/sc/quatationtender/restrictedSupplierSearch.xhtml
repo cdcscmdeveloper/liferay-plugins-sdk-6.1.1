@@ -32,11 +32,12 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 				</p:column>
-				<p:column headerText="Category Type"></p:column>
+				<p:column headerText="Category Type">
+					<h:outputText value="#{scQtCategory.pmCategoryL3.catType}" />
+				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mandatory']}"
 					style="width: 150px;">
-					<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
-						disabled="true" />
+					<h:outputText value="#{scQtCategory.mandatory ? 'Yes' : 'No'}"/>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>

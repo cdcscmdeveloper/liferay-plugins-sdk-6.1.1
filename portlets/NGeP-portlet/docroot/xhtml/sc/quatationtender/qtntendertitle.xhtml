@@ -32,21 +32,20 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
-				<td><c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-						<p:selectOneMenu
-							value="#{qTDetailBB.managedBean.qt.procurementMode}"
-							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								update="approvalWorkFlow"
-								listener="#{qTDetailBB.onChangeAction}" />
-						</p:selectOneMenu>
-					</c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+				<td>
+					<!-- <c:if test="#{qTDetailBB.managedBean.qt.brandNew}"> --> <p:selectOneMenu
+						value="#{qTDetailBB.managedBean.qt.procurementMode}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}" />
+					</p:selectOneMenu> <!-- </c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 						<p:inputText
 							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scProcurementMode, qTDetailBB.managedBean.qt.procurementMode)}"
 							disabled="true" size="30" />
-					</c:if></td>
+					</c:if> -->
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
 				<td><p:inputText id="estprice"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
@@ -60,16 +59,16 @@
 		<p:dataTable id="gosodoList"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
 			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
-			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 50%">
+			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 65%">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<ac:paginator for="gosodoList" />
 
-			<p:column headerText="GO Code">
+			<p:column headerText="#{lbl['lbl.so.gocode']}">
 				<h:outputText value="#{gosodo.pmGo.goCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:selectOneMenu value="#{gosodo.pmGo.goId}"
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -80,57 +79,42 @@
 							partialSubmit="true" process="@this" update="solist" />
 					</p:selectOneMenu>
 				</c:if>
-				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:inputText value="#{gosodo.pmGo.goId}" disabled="true" />
 				</c:if>
 			</p:column>
-			<p:column headerText="SO Code">
+			<p:column headerText="#{lbl['lbl.so.socode']}">
 				<h:outputText value="#{gosodo.pmSo.soCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:selectOneMenu id="solist" value="#{gosodo.pmSo.soId}"
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 						<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
 							itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
-						</p:selectOneMenu>
+						<p:ajax event="change"
+							listener="#{qTDetailBB.handleSoChanged(gosodo)}"
+							partialSubmit="true" process="@this" />
+					</p:selectOneMenu>
 				</c:if>
-				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:inputText value="#{gosodo.pmSo.soCode}" disabled="true" />
 				</c:if>
 			</p:column>
-			<!-- <p:column headerText="DO Code">
-				<h:outputText value="#{gosodo.pmDo.doCode}"
+			<p:column headerText="#{lbl['lbl.so.goso.amount']}">
+				<h:outputText value="#{gosodo.budgetAmt}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-					<p:selectOneMenu id="dolist" value="#{gosodo.pmDo.doId}"
-						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-						<f:selectItems value="#{qTDetailBB.managedBean.doList}" var="do"
-							itemLabel="#{do.doCode}" itemValue="#{do.doId}" />
-						<p:ajax event="change"
-							listener="#{qTDetailBB.handleDoChange(gosodo)}"
-							partialSubmit="true" process="@this" />
-
-					</p:selectOneMenu>
-				</c:if>
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:inputText value="#{gosodo.pmDo.doCode}" disabled="true" />
+					<p:inputText value="#{gosodo.budgetAmt}" />
 				</c:if>
-			</p:column> -->
-			<p:column headerText="Amount (RM)">
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+					<p:inputText value="#{gosodo.budgetAmt}" disabled="true" />
+				</c:if>
+
 			</p:column>
-			<!-- <p:column headerText="Budget Availability"> 
-       			#{empty gosodo.budgetAvailable ? (gosodo.budgetAvailable ? 'Yes' : 'No') : ''}
-       		</p:column> -->
-			<!-- 	<p:column headerText="Action ">
-				<p:commandLink style="margin-right:20px;" ajax="false">
-					<h:outputText value="CheckAvailability" />
-				</p:commandLink>
-			</p:column>  -->
 		</p:dataTable>
 		<p:spacer height="15" />
-		<div align="right" style="width: 50%;">
+		<div align="right" style="width: 65%;">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
 				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">

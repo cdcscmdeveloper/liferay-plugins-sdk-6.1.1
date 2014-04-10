@@ -10,19 +10,18 @@
 
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
 				
-				<p:button value="Cancel" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
-				<p:commandButton value="Submit" 
+				<p:button value="#{lbl['lbl.so.cancelbtn']}" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
+				<p:commandButton value="#{lbl['lbl.so.submit']}" 
 					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" />
-				<p:commandButton value="Save" 
+				<p:commandButton value="#{lbl['lbl.so.save']}" 
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save"/>
 				<br />
 				<br />
 			</c:if>
 			<c:if
 				test="#{((qTDetailBB.managedBean.processName != 'QuotationTender Creation' ) and (qTDetailBB.managedBean.taskId != null))}">
-				<p:commandButton value="Submit" 
+				<p:commandButton value="#{lbl['lbl.so.submit']}" 
 					action="#{qTDetailBB.updateBpmTask}" process="@all" icon="ui-icon-submit">
-
 				</p:commandButton>
 			</c:if>
 		

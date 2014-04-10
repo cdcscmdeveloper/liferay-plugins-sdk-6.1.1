@@ -3,8 +3,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel header="Details" toggleable="true">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="qtdetailsid" header="Details" toggleable="true">
 		<table style="width: 100%" border="1">
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
@@ -32,7 +34,8 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 150px;"><p:outputLabel value="* Panel"
+								<td style="width: 150px;"><p:outputLabel
+										value="#{lbl['lbl.so.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
 										value="#{qTDetailBB.managedBean.qt.panel ? 'Yes' : 'No'}"
@@ -40,7 +43,8 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 220px"><p:outputLabel value="Open For"
+									<td style="width: 220px"><p:outputLabel
+											value="#{lbl['lbl.so.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
 											value="#{qTDetailBB.managedBean.qt.openFor ? 'Bumiputra' : 'All'}"
@@ -60,13 +64,17 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.so.existing.contract.no']}" /></td>
-				<td colspan="3"></td>
+				<td colspan="3"><ac:lov id="contractLovId" lovId="CT_CONTRACT"
+						headerText="Contract Lov" update=":form:qtsubId:qtdetailsid"
+						saveObject="qTDetailBB.managedBean.ctContract"
+						value="#{qTDetailBB.managedBean.ctContract.contractNo}">
+					</ac:lov> <ac:lovPopup /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" /></td>
 				<td><p:inputText
-						value="#{qTDetailBB.managedBean.publishingPeriod}" readonly="true"
+						value="#{qTDetailBB.managedBean.qt.publishPeriod}" readonly="true"
 						size="30" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
 				<td><p:inputText

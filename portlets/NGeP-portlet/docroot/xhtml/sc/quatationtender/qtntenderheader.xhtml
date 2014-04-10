@@ -10,18 +10,18 @@
 			<table>
 				<tr>
 					<td style="width: 245px"><h:outputLabel
-							value="Quotation/Tender No" /></td>
+							value="#{lbl['lbl.so.qtnno']}" /></td>
 					<td><p:inputText value="#{qTDetailBB.managedBean.qt.qtNo}"
 							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel value="Plan No" /></td>
+					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.so.planno']}" /></td>
 					<td><p:inputText
 							value="#{qTDetailBB.managedBean.qt.ppPlan.planNo}"
 							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel value="PTJ Name" /></td>
+					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
 					<td><p:inputText
 							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}"
 							disabled="true" size="30" /></td>
-					<td style="width: 198px"><h:outputLabel value="Status" /></td>
+					<td style="width: 198px"><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 					<td><p:inputText
 							value="#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qt.qtStatus.statusId)}"
 							disabled="true" size="30" /></td>

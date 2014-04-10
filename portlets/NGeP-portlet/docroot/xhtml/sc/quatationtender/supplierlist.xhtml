@@ -8,7 +8,7 @@
 
 	<p:panel id="supplierlist" header="Supplier List" toggleable="true">
 		<c:if
-			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality 
+			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
 					or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
 			<p:treeTable id="suppliersTbl" var="supplierNode"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppliersNode}">
@@ -35,7 +35,7 @@
 			</p:treeTable>
 		</c:if>
 		<c:if
-			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality 
+			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
 					and qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != PmCodeConst.quotationTenderTypePanel}">
 			<p:dataTable id="suppliersTbl" var="qtSupplier"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
@@ -43,11 +43,20 @@
 				selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
 
 				<ac:paginator for="suppliersTbl" />
-				
-				<p:column selectionMode="multiple" style="width:5%" />
+
+				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
+					<p:commandLink update=":form:qtsubId:popupSuppDtl"
+						action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails}"
+						oncomplete="suppDetails.show();">
+						<f:setPropertyActionListener value="#{qtSupplier}"
+							target="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier}" />
+
+						<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
+					</p:commandLink>
+
+
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
 					<h:outputText

@@ -12,92 +12,90 @@
 		<p:ajax event="tabChange" listener="#{qTDetailBB.onTabChangeAction}"
 			immediate="true" />
 
-		<c:if
-			test="#{qTDetailBB.managedBean.qt.pmStatus.pmStatusDescs[0].statusName ne 'Pending Submission'}">
+		<p:tab title="#{lbl['lbl.qt.qtdetails']}">
+			<ui:include src="/xhtml/sc/quatationtender/qtgeneralinfo.xhtml" />
+		</p:tab>
 
-			<p:tab title="Quotation/Tender Details">
-				<ui:include src="/xhtml/sc/quatationtender/qtgeneralinfo.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.so.business.owner']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/businessowner/qtbusinessowner.xhtml" />
+		</p:tab>
 
-			<p:tab title="Business Owner">
-				<ui:include
-					src="/xhtml/sc/quatationtender/businessowner/qtbusinessowner.xhtml" />
-			</p:tab>
-		</c:if>
+		<p:tab title="#{lbl['lbl.qt.qtdetails']}">
+			<ui:include src="/xhtml/sc/quatationtender/qtdetails.xhtml" />
+		</p:tab>
 
-		<c:if
-			test="#{qTDetailBB.managedBean.qt.pmStatus.pmStatusDescs[0].statusName eq 'Pending Submission'}">
+		<p:tab title="#{lbl['lbl.so.committee.appointment']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+		</p:tab>
 
-			<p:tab title="Quotation/Tender Details">
-				<ui:include src="/xhtml/sc/quatationtender/qtdetails.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.supplierqulificationcriteria']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/qtsupplierqualfcriteria.xhtml" />
+		</p:tab>
 
-			<p:tab title="Committee Appointment">
-				<ui:include
-					src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.approval']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
+		</p:tab>
 
-			<p:tab title="Supplier Qualification Criteria">
-				<ui:include
-					src="/xhtml/sc/quatationtender/qtsupplierqualfcriteria.xhtml" />
-			</p:tab>
+		<!-- 
 
-			<p:tab title="Approval">
-				<ui:include
-					src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
-			</p:tab>
+		 -->
 
-			<p:tab title="Briefing/Site Visit &amp; Sample Submission">
-				<ui:include
-					src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.bsv.sample']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
+		</p:tab>
 
-			<p:tab title="Schedule &amp; Contact Information">
-				<ui:include src="/xhtml/sc/quatationtender/qtschedule.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.schedule.contact']}">
+			<ui:include src="/xhtml/sc/quatationtender/qtschedule.xhtml" />
+		</p:tab>
 
-			<p:tab title="Deduction Payment">
-				<ui:include src="/xhtml/sc/quatationtender/deduction.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.deduction.payment']}">
+			<ui:include src="/xhtml/sc/quatationtender/deduction.xhtml" />
+		</p:tab>
 
-			<p:tab title="Documents">
-				<ui:include src="/xhtml/sc/quatationtender/documents.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.documents']}">
+			<ui:include src="/xhtml/sc/quatationtender/documents.xhtml" />
+		</p:tab>
 
-			<p:tab title="Activities">
-				<ui:include
-					src="/xhtml/sc/quatationtender/qtactivitiestracking.xhtml" />
-			</p:tab>
+		<p:tab title="#{lbl['lbl.qt.activities']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/qtactivitiestracking.xhtml" />
+		</p:tab>
 
-			<p:tab title="Publication Approval">
-				<ui:include
-					src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
-			</p:tab>
-
-		</c:if>
+		<p:tab title="#{lbl['lbl.qt.public.approval']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
+		</p:tab>
 
 		<!-- <p:tab title="Budget Approval Setting">
 			<ui:include src="/xhtml/sc/quatationtender/qtbudgetapproval.xhtml" />
-		</p:tab> -->
+		</p:tab>
 
-		<!-- <p:tab title="Delivery Location">
+		<p:tab title="Delivery Location">
 			<ui:include
 				src="/xhtml/sc/quatationtender/deliverylocation/qtDeliveryLocation.xhtml" />
-		</p:tab> -->
+		</p:tab>
 
-
-
-		<!-- <p:tab title="Technical Checklist">
+		<p:tab title="Technical Checklist">
 			<ui:include
 				src="/xhtml/sc/quatationtender/qttechnicalchecklist.xhtml" />
 		</p:tab>
 
-		<p:tab title="Approver Screen">
+		 
+		 <p:tab title="BUdget Approver Screen">
 			<ui:include
-				src="/xhtml/sc/quatationtender/budgetApproval.xhtml" />
-		</p:tab> -->
+				src="/xhtml/sc/quatationtender/Approver/budgetApproval.xhtml" />
+		</p:tab>
+		<p:tab title="BPK Approver Screen">
+			<ui:include
+				src="/xhtml/sc/quatationtender/Approver/bpkApproval.xhtml" />
+		</p:tab>
 
-		<!-- <p:tab title="Remarks">
+		<p:tab title="Remarks">
 			<ui:include src="/xhtml/sc/quatationtender/qtremarks.xhtml" />
 		</p:tab> -->
 

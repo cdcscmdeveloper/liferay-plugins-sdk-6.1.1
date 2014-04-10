@@ -15,7 +15,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.circularNo}"
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.circularNo}"
 					disabled="true" size="30" />
 				<p:spacer width="5" />
 				<p:commandLink style="margin-right:20px;">
@@ -28,7 +28,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.name}"
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.name}"
 					disabled="true" size="30" />
 			</h:column>
 
@@ -37,23 +37,33 @@
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.endDate}"
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.endDate}"
 					disabled="true" size="30" />
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="Type" />
+				<h:outputLabel value="#{lbl['lbl.so.type']}" />
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.endDate}"
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.name}"
 					disabled="true" size="30" />
 			</h:column>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel header="Item Details" toggleable="true">
-		<p:dataTable id="itemdtlid">
-			<p:column headerText="Item" />
+	<p:panel header="#{lbl['lbl.so.item.details']}" toggleable="true">
+		<p:dataTable id="itemdtlid" var="panelItem" rowIndexVar="index"
+			lazy="true"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.selectpanelItem}"
+			rowKey="#{panelItem}">
+
+			<ac:paginator for="panelDataItemList"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
+				style="width:400px;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
 		</p:dataTable>
+
 	</p:panel>
 </ui:composition>

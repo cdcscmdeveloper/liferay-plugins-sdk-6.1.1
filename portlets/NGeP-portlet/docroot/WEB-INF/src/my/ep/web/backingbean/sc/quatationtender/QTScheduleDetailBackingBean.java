@@ -5,13 +5,17 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -19,6 +23,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.type.pm.RoleCode;
@@ -118,6 +124,14 @@ public class QTScheduleDetailBackingBean extends
 			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmState(new PmState());
 		}
 		
+		if(this.getManagedBean().getScQtSampleSubmission().getAddress().getPmDistrict() == null) {
+			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmDistrict(new PmDistrict());
+		}
+		
+		if(this.getManagedBean().getScQtSampleSubmission().getAddress().getPmCity() == null) {
+			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmCity(new PmCity());
+		}
+		
 		retrievePmStateList();
 		getDeskOfficerAdminAssistant();
 	}
@@ -143,17 +157,32 @@ public class QTScheduleDetailBackingBean extends
 		System.out.println("State Id : " + this.getManagedBean().getStates().get(0).getStateId());
 	}
 	
-	public void retrievePmDistrictList() {
+	public void retrievePmDistrictList(AjaxBehaviorEvent event) {
 		debugLogger("retrievePmDistrictList");
-		System.out.println("State Id : " + this.getManagedBean().getStates().get(0).getStateId());
+		Long stateId = (Long) event.getComponent().getAttributes()
+				.get("value");
+		//PmState state = (PmState) event.getBehavior();
+		System.out.println("State Id : " + stateId);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(this.getManagedBean().getStates().get(0).getStateId());
+		reqDTO.setStateId(stateId);
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
 		this.getManagedBean().setDistricts(resDTO.getDistrictList());
 	}
 
+	public void retrievePmCityList(AjaxBehaviorEvent event) {
+		Long districtId = (Long) event.getComponent().getAttributes()
+				.get("value");
+		System.out.println("District Id : " + districtId);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setDistrictId(districtId);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICitySO.class);
+		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+		this.getManagedBean().setCitys(resDTO.getCityList());
+	}
+	
 	private void getDeskOfficerAdminAssistant() {
 		debugLogger("getDeskOfficerAdminAssistant");
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()

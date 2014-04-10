@@ -10,13 +10,13 @@
 			src="/xhtml/sc/quatationtender/restrictedSupplierDtlPopUp.xhtml" />
 		<p:tabView id="restrictedtendertabView" dynamic="true">
 
-			<p:tab id="tab1" title="Supplier Qualification Criteria"
+			<p:tab id="tab1"
+				title="#{lbl['lbl.qt.supplierqulificationcriteria']}"
 				styleClass="noBorders tr,noBorders td">
-				<ui:include
-					src="restrictedSuppQualCriteria.xhtml" />
+				<ui:include src="restrictedSuppQualCriteria.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab2" title="Supplier List"
+			<p:tab id="tab2" title="#{lbl['lbl.qt.supplier.list']}"
 				styleClass="noBorders tr,noBorders td">
 				<ui:include src="/xhtml/sc/quatationtender/restictedtender.xhtml" />
 			</p:tab>
