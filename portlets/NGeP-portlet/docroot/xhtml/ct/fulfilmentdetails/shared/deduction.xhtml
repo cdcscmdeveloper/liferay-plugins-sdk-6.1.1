@@ -11,47 +11,50 @@
 		   	rowKey="#{datas}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}" > 
 		   	<ac:paginator for="tableDeduction" />
 		   	   <p:ajax event="rowSelect" update=":form:tabview:clauseDescp"  />
-		    <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:650px;">
-	        	<p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-	        </p:column> 
-		    <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:150px;text-align:right;">
-		        <p:inputText id="amtInput" value="#{datas.amount}"  style="width:70%;" styleClass="ppRightBtn"
-		        rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'FD' 
-		            or contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'AP'}">
-	            	<f:convertNumber pattern="#,##0.00" />
-	            </p:inputText> 
-	            <h:outputLabel value="#{datas.amount}" rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'FD' 
-		            and contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'AP'}">
-		        </h:outputLabel>
-		    </p:column>  
-		</p:dataTable>
+		          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:650px;">
+	        	     <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+	              </p:column> 
+		          <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:150px;text-align:right;">
+		              <p:inputText id="amtInput" value="#{datas.amount}"  style="width:70%;" styleClass="ppRightBtn"
+		                 rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'FD' 
+		                   or contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) eq 'AP'}">
+	            	      <f:convertNumber pattern="#,##0.00" />
+	                 </p:inputText> 
+	                 <h:outputLabel value="#{datas.amount}" rendered="#{contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'FD' 
+		                and contractDetailsBackingBean.retrieveParameterById(datas.deductionType.parameterId) ne 'AP'}">
+		             </h:outputLabel>
+		         </p:column>  
+		    </p:dataTable>
 	 </p:panel>        
 	 <p:panel id="clauseId" header="#{lbl['lbl.ct.ded.panel1.name']}" toggleable="true"  toggleSpeed="500">
-	  <p:outputPanel id="clauseDescp">  
-     	<p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
-        	rowKey="#{data}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
-            <ac:paginator for="tableClause" />   
-				<p:column selectionMode="multiple" style="width:3%;" />
-      		  	<p:column headerText="#{lbl['lbl.ct.ded.table1.clause']}"><p:outputLabel value = "#{data.clauseName}" style="float:left;"/></p:column>       
-              	<p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}"><p:outputLabel value = "#{data.clauseDesc}" style="float:left;"/></p:column>    
-        </p:dataTable>
-        <p:spacer height="2" />
-        <div class="ppRightBtn"> 
-        	<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" icon="ui-icon-add" onclick="dlg2.show();" >
-		    	<p:ajax event="change" update=":form:tableClause" process="@this" listener="#{contractDetailsBackingBean.addDeductionClause()}" />
-		  	</p:commandButton>
-		  	<p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@form" onclick="dlgDeduction.show()" />
-        </div>
+	    <p:outputPanel id="clauseDescp">  
+     	   <p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
+        	   rowKey="#{data}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
+               <ac:paginator for="tableClause" />   
+                   <p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}">
+                    <p:inputTextarea value="#{data.clauseDescription}" disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking}" 
+                       rows="1" cols="180" styleClass="ui-inputtextarea"></p:inputTextarea>
+                    </p:column>    
+           </p:dataTable>
+           <p:spacer height="2" />
+           <div class="ppRightBtn"> 
+        	  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" icon="ui-icon-add" 
+        	     action="#{contractDetailsBackingBean.addDeductionClause()}" update="tableClause"
+        	     rendered="#{contractDetailsBackingBean.retrieveParameterById(contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterId) eq 'AP'}" >
+		  	  </p:commandButton>
+		  	  <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@form"
+		    	rendered="#{contractDetailsBackingBean.retrieveParameterById(contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterId) eq 'AP'}" onclick="dlgDeduction.show()" />
+         </div>
        </p:outputPanel>
-	 </p:panel>
-	   <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" header="Delete Confirmation" styleClass="screen-title"  
-           resizable="false" modal="true" width="325" height="90">  
+	  </p:panel>
+	  <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" header="Delete Confirmation" styleClass="screen-title"  
+         resizable="false" modal="true" width="325" height="90">  
            <h:panelGrid columns="3">
-            <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			   <p:spacer width="10"/>
-             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
-                 styleClass="ui-inputtextarea"></p:inputTextarea>
+             <p:graphicImage library="ep/images/design" name="exclamation.png"
+			    value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			    <p:spacer width="10"/>
+                <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="Yes" icon="ui-icon-accept" update="tableClause" process="@form" 
@@ -59,30 +62,7 @@
 			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
 		   </div>
       </p:dialog>  
-	  <p:dialog id="dialogClause" header="Add Deduction Clause" widgetVar="dlg2" modal="true" width="750" height="450">
-		<p:panel  id="clause">
-		<h:panelGrid style="width:700px;">
-         <p:dataTable id="tableClause1" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClauseList}" rowIndexVar="index" 
-           widgetVar="dataTableObj" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.chkDeductionClause}"
-            rowKey="#{data.deductionClauseId}">
-              <p:column selectionMode="multiple" style="width:18px" />
-					<p:column headerText="#{lbl['lbl.ct.ded.table1.clause']}">
-						<h:outputText value="#{data.clauseName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}">
-						<h:outputText value="#{data.clauseDesc}" />
-					</p:column>
-          </p:dataTable>
-           <h:panelGrid columns="2" style="float:right;height:100px;vertical-align: middle;">
-             <p:commandButton value="#{lbl['lbl.ct.ded.btn.ok']}" actionListener="#{contractDetailsBackingBean.addDeductionClause}" process="dialogClause" icon="ui-icon-accept"
-              update="tableClause,dialogClause" onclick="dlg2.hide();"  />
-        	 <p:commandButton value="#{lbl['lbl.ct.ded.btn.cancel']}"   type="button" ajax="false" icon="ui-icon-cancel" onclick="dlg2.hide();" />
-       	  </h:panelGrid>
-       	   </h:panelGrid>
-	     </p:panel>    
-     </p:dialog>
-     
-	<p:panel header="Remarks" toggleable="true">
+	  <p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -122,6 +102,5 @@
 			</tr>
 		</table>
 	</p:panel>		     
-     
 </ui:composition>
                                      

@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.ct;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,41 +44,46 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
-	private CtContractVer contractVer;
-	private CtContractItem selectedItem;
-	private CtContractItem selectedCCItem;
-	private CtDeduction selectedDeduction;
-	private boolean directPurchase;
 	
-	private List<CtDeductionClause> ctDeductionClauseList;
-	private List<CtDeductionClause> selectedDeductionClauses;
-	 
 	private String taskName;
 	private String[] action;
 	private int selectedIndex;
 	private String processName;
 	private boolean bpkApprover=true;
 	
+	private CtContractVer contractVer;
+	private CtContract ctContract;
+	private List<CtContract> contractList;
+	private List<CtAgency> listOfAgency;
+	private List<PmOrgProfile> pmOrgProfileList;
+
 	private String itemType;
+	private String showItem;
 	private boolean serviceItem;
 	private boolean productItem = true;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
-	private String showItem;
+	private CtContractItem selectedItem;
+	private CtContractItem selectedCCItem;
 	private CtContractItem selectedServiceItem;
 	private List<CtContractItem> ctContractItem;
+	private String popupForImportedItems ="L";
+	private boolean directPurchase;
 	
 	private CtDeduction ctDeductionDel;
-	private CtDeductionClause ctDeductionClauseDel;
+	private CtDeduction selectedDeduction;
+	private List<CtDeductionClause> ctDeductionClauseList;
+	private CtDeductionClause selectedDeductionClauses;
 	
+	private boolean scheduleType;
 	private boolean chkProgressive;
+	private String scheduleOption="1";
+	private CtSchedule ctSchedulesDel;
 	private boolean chkSchedule = true;
 	private boolean chkScheduleNulValue;
 	private boolean chkProgressiveNulValue;
-	
-	private String scheduleOption="1";
-	private CtSchedule ctSchedulesDel;
-	private boolean scheduleType;
+	private boolean disableScheduleRadio;
+	private boolean disableProgessiveRadio;
 	private CtProgressivePayment ctProgressivePaymentDel;
 	
 	private DualListModel<String> approverModel;
@@ -86,11 +92,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
-	
-	private CtContract ctContract;
-	private List<CtContract> contractList;
-	
-	 List<PmOrgProfile> pmOrgProfileList;
 	
 	private String ctName;
 	private String ctLOANo;
@@ -107,30 +108,24 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
 	
+	private	String	zoneName;
+	private List<TreeNode>	zoneTrees;
 	private CtContractZone selectedCtZone;
+	private TreeNode ctZoneTrees ;
+	private boolean showZoneDetails;
 	private List<CtContractZoneDtl> ctContractZoneDtls;
 	
 	private Long ministryProfileId;
 	private Long departmentProfileId;
-	
-	private boolean chkButton;
-	private boolean showZoneDetails;
-	private boolean disableScheduleRadio;
-	private boolean disableProgessiveRadio;
-	private boolean viewContract = false;
-	private List<CtAgency> listOfAgency;
-	private boolean updateContract;
-	private String popupForImportedItems ="L";
-	
 	private String supplierLocation;
-	private	String	zoneName;
-	private List<TreeNode>	zoneTrees;
-	private List<TreeNode>	zoneGeneralTrees = new ArrayList<TreeNode>();
 	private String contractType;
+	private boolean chkButton;
+	private boolean updateContract;
+	private boolean viewContract = false;
 	private boolean validateScheduleDate;
-	
-	private TreeNode ctZoneTrees ;
 	private boolean chkJustification;
+	private boolean flgPaymentTracking;
+	private double advancePaymentAmt;
 	
 	public String[] getAction() {
 		return action;
@@ -170,14 +165,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	public void setCtDeductionDel(CtDeduction ctDeductionDel) {
 		this.ctDeductionDel = ctDeductionDel;
-	}
-	
-	public CtDeductionClause getCtDeductionClauseDel() {
-		return ctDeductionClauseDel;
-	}
-	
-	public void setCtDeductionClauseDel(CtDeductionClause ctDeductionClauseDel) {
-		this.ctDeductionClauseDel = ctDeductionClauseDel;
 	}
 	
 	public String getShowItem() {
@@ -578,14 +565,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.selectedDeduction = selectedDeduction;
 	}
 
-	public List<CtDeductionClause> getSelectedDeductionClauses() {
-		if(selectedDeductionClauses==null) {
-			selectedDeductionClauses = new ArrayList<CtDeductionClause>();
-		}
+	public CtDeductionClause getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
 
-	public void setSelectedDeductionClauses(List<CtDeductionClause> selectedDeductionClauses) {
+	public void setSelectedDeductionClauses(
+			CtDeductionClause selectedDeductionClauses) {
 		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 
@@ -704,20 +689,28 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctZoneTrees = ctZoneTrees;
 	}
 
-	public List<TreeNode> getZoneGeneralTrees() {
-		return zoneGeneralTrees;
-	}
-
-	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
-		this.zoneGeneralTrees = zoneGeneralTrees;
-	}
-
 	public boolean isChkJustification() {
 		return chkJustification;
 	}
 
 	public void setChkJustification(boolean chkJustification) {
 		this.chkJustification = chkJustification;
+	}
+
+	public boolean isFlgPaymentTracking() {
+		return flgPaymentTracking;
+	}
+
+	public void setFlgPaymentTracking(boolean flgPaymentTracking) {
+		this.flgPaymentTracking = flgPaymentTracking;
+	}
+
+	public double getAdvancePaymentAmt() {
+		return advancePaymentAmt;
+	}
+
+	public void setAdvancePaymentAmt(double advancePaymentAmt) {
+		this.advancePaymentAmt = advancePaymentAmt;
 	}
 	
 	

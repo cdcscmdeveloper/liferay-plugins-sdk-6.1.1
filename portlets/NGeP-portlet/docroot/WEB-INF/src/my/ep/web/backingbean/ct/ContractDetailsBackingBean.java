@@ -18,6 +18,7 @@ import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -222,29 +223,53 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			CTContractDataType dataType = (CTContractDataType) obj;
-			//ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
-			//ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractVerId(4L);
-			ctReqDTO.setContractId(9L);
-
+			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+		
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		    this.getManagedBean().getApproverModel().getSource().clear();
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-			 
+		  
 		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		    
+		    if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+		      for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
+		    	 if(retrieveParameterById(deduct.getDeductionType().getParameterId()).equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
+		    		this.getManagedBean().setFlgPaymentTracking(true);
+		    		this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
+		    	  }
+		       }
+		    }
+		    
+		    if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
+		      
+		    	 SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+			     Calendar cal = Calendar.getInstance();
+		    	 for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
+		    	
+		    	    cal.setTime(ctschedule.getFromDate());
+		    	    ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
+		    	    ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
+		    	    
+		    	    cal.setTime(ctschedule.getToDate());
+		    	    ctschedule.setToTranDate(cal.get(Calendar.MONTH));
+		    	    ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
+		       }
+		    }
+		    
 		    this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
-		  
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
 		    
 		    retriveZonesByContractVer();
 	        CombineSupAddress(resDTO.getCtContractVer());
+	        
+	        this.getManagedBean().getApproverModel().getSource().clear();
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
 	          
 	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -535,19 +560,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().setSelectedDeduction(null);
 	}
 	
-	public void addDeductionClause(ActionEvent event) {
-		for(int i = 0; i < chkDeductionClause.length; i++) {
-			CtDeductionClause ad = chkDeductionClause[i];
-			this.getManagedBean().getCtDeductionClauseList().add(ad);
-		}
-		chkDeductionClause = null;
+	public void addDeductionClause() {
+		CtDeductionClause clause = new CtDeductionClause();
+		this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().add(clause);
+		
+		
 	}
 
 	public void deleteClauseDetails() {
-		this.getManagedBean().getCtDeductionClauseList().remove(this.getManagedBean().getCtDeductionClauseDel());
+		this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().remove(this.getManagedBean().getSelectedDeductionClauses());
 	}
-	
-	public void addDeductionClause() {}
+
 
     public void onEdit(RowEditEvent event){}
     
@@ -1329,11 +1352,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 private boolean validateScheduleDate;
 	 public void validateDate(CtSchedule ctSchedule){
 		 
-		  int startMonthValue = Integer.valueOf((String) ctSchedule.getFromTranDate());
-	      int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear()); 
-	      int toMonthValue = Integer.valueOf((String) ctSchedule.getToTranDate()); 
+	      int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear());  
 	      int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
-	      if((startMonthValue > toMonthValue && startYearValue > toyearValue) || startYearValue > toyearValue){
+	      if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue > toyearValue) || startYearValue > toyearValue){
 	      for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
 	    		 if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
 	    		     dataList.setValidateScheduleDate(true);

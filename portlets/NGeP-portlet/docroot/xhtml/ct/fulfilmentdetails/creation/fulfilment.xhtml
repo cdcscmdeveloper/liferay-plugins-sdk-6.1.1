@@ -103,13 +103,17 @@
 			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 			</p:tab>
+			<p:tab id="tabFactoring" title="Factoring" rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}">
+				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
+			</p:tab>
+			<p:tab id="paymentTracking" title="Advanced Payment Tracking" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
+			</p:tab>
 			<p:tab id="tabSetting" title="#{lbl['lbl.ct.menu.sett']}">
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 			</p:tab>
-			<p:tab id="tabFactoring" title="Factoring" rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}" >
-				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
-			</p:tab>
+			
 		</p:tabView>
 	</ui:define>
 </ui:composition>
