@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.ct;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +25,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -87,8 +85,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtProgressivePayment ctProgressivePaymentDel;
 	
 	private DualListModel<String> approverModel;
-	private Map<Long, PmUserGroup> userGroupMap;
-	private HashMap<String, PmUserGroupUser> approverMap;
+	private Map<String, PmUser> userMap;
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -364,25 +361,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
-	}
-	
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
-		if(approverMap == null){
-			setApproverMap(new HashMap<String,PmUserGroupUser>());
-		}
-		return approverMap;
-	}
-
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
-		this.approverMap = approverMap;
-	}
-
-	public Map<Long, PmUserGroup> getUserGroupMap() {
-		return userGroupMap;
-	}
-
-	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
-		this.userGroupMap = userGroupMap;
 	}
 	
 	public List<CtContractItem> getCtContractItem() {
@@ -712,7 +690,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setAdvancePaymentAmt(double advancePaymentAmt) {
 		this.advancePaymentAmt = advancePaymentAmt;
 	}
-	
-	
+
+	public Map<String, PmUser> getUserMap() {
+		if(userMap == null){
+			setUserMap(new HashMap<String,PmUser>());
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}
 	
 }
