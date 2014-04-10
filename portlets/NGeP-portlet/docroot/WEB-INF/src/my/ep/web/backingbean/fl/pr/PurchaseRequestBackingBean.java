@@ -117,8 +117,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	private boolean checkFlg = false;
 	private boolean displayItemPnl;
+	private boolean selectedAllChargeItem;
+	
+	// bulk charge popup
 	private Long pmPrjSetia;
 	private Long pmPrgActivity;
+	
+	// display charge for selected item in main form
+	
+	private Long disPmPrjSetia;
+	private Long disPmPrgActivity;
+	
+	
 	private String test;
 	
 	private String queryItemCode;
@@ -218,6 +228,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		//retrieveStateList();
 		//retrieveDivisionList();
 		//retrieveCityList(1L);
+		//getManagedBean().getChargeLineItemRoot();
+		
+		//Populate Charge Line Items
+		getManagedBean().populateChargeLineData();
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -246,6 +260,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//System will block the submission of the purchase request 
 			//Amount of purchase request to be <= RM50K, with the exception of emergency procurement and G2G procurement.
 			
+			checkPurchaseRequestAmount();
 			//accumulativeProcurementValue();
 			
 			if(isFlFulfilmentApprover()) {
@@ -821,10 +836,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
+			//System.out.println("Out come is:: "+res.getAction());
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
+			//System.out.println("req id from BPM::::::: "+flPurchaseOrd.getPurchaseRequestId());
+			//System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getDocType());
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
@@ -833,7 +851,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//flReqDTO.setFlWorkflowDocType(flPurchaseOrd.getDocType());
 			//resDTO = fulfilmentSO.getStatusDesc(flReqDTO);
 			
-			//combineSupAddress(resDTO.getFlFulfilmentRequest());
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
@@ -1109,26 +1127,29 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 		 }	
 	 }
+	//submission of the purchase request amount to be <= RM50K
+		// with the exception of emergency procurement and G2G procurement
+		// currently assuming that non emergency procurement and non G2G procurement
+	 public void checkPurchaseRequestAmount(){
+		 int validationOrdAmt=0;
+		/* for(FlDeliveryAddress item : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+					System.out.println("order amount:: "+itemAddr.getOrderedAmt());
+					validationOrdAmt=validationOrdAmt+itemAddr.getOrderedAmt().intValue();
+				}
+					System.out.println("validationOrdAmt: "+validationOrdAmt);
+		}*/
+		if(validationOrdAmt>50000){
+			throw new EpException(" Order Amount  has been exceeded the RM 50K .");
+			}
+	 }
+
+	
 	
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
 		getManagedBean().setFlManulaAddress(flDelAddress);
 		flDelAddress.setEditable(true);
-	}
-	
-	public void chargeChecked(AjaxBehaviorEvent e) {
-		// unselect all selected nodes
-		getManagedBean().setSelectedNodes(new TreeNode[0]);
-		//getManagedBean().setSelectedNodes(new ArrayList<TreeNode> () );
-		//clear all dropdowns
-		setPmPrjSetia(0L);
-		setPmPrgActivity(0L);
-		System.out.println("====enter process checked====");
-		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
-		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
-		getManagedBean().setChargeCheck(id);
-
 	}
 	
 	public void retrieveCountryList() {
@@ -1175,48 +1196,48 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.getManagedBean().setCityList(resDTO.getCityList());
 	}
 	
-	
-	
-	/**
-	 * @return the displayItemPnl
-	 */
-	public boolean isDisplayItemPnl() {
-		return displayItemPnl;
-	}
+	/*public void chargeChecked(AjaxBehaviorEvent e) {
+		// unselect all selected nodes
+		getManagedBean().setSelectedNodes(new TreeNode[0]);
+		//getManagedBean().setSelectedNodes(new ArrayList<TreeNode> () );
+		//clear all dropdowns
+		setPmPrjSetia(0L);
+		setPmPrgActivity(0L);
+		System.out.println("====enter process checked====");
+		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
+		String id = (String) e.getComponent().getAttributes().get("value");
+		System.out.println("=======get id value=====" + id);
+		getManagedBean().setChargeCheck(id);
 
-	/**
-	 * @param displayItemPnl the displayItemPnl to set
-	 */
-	public void setDisplayItemPnl(boolean displayItemPnl) {
-		this.displayItemPnl = displayItemPnl;
-	}
-	
-	public void onNodeSelect() {
-		getManagedBean().getSelectedNodes();
-		
-		if("true".equalsIgnoreCase(getManagedBean().getChargeCheck())){
-			if(null != getManagedBean().getSelectedNodes() && getManagedBean().getSelectedNodes().length >1){
-				throw new EpException("Select Only one Node.");
-			}else{
-				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
-					for(TreeNode children:selectedNode.getChildren()){
-						//do it for others
-						setPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
-						setPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
-					}
-				}
-			}
-		}else{
+	}*/
+	public void selectItemNodeEvent() {
+		if(null != getManagedBean().getSelectedNodes() && getManagedBean().getSelectedNodes().length >1){
 			for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 				for(TreeNode children:selectedNode.getChildren()){
 					//do it for others
-					setPmPrjSetia(0L);
-					setPmPrgActivity(0L);
+					setPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
+					setPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
 				}
 			}
+		}else{
+			
 		}
 		
 	}
+	
+	public void onNodeSelect() {
+		//getManagedBean().getSelectedNodes();
+		TreeNode selectedNode=getManagedBean().getSelectedNode();
+				if(null!=selectedNode){
+					for(TreeNode children:selectedNode.getChildren()){
+						//do it for others
+						setDisPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
+						setDisPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
+						
+					}
+				}
+	}
+	
 	public void onNodeUnSelect() {
 		getManagedBean().getSelectedNodes();
 		
@@ -1253,26 +1274,71 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
-	public void chargeLineApply() {
+	
+	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
 		
-		if("true".equalsIgnoreCase(getManagedBean().getChargeCheck())){
+		System.out.println("we are in select allllllllllllllll");
+		//e.getComponent().getAttributes().get("value");
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			System.out.println("111111");
+			if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
+				System.out.println("222222");
+				for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+					System.out.println("333333");
+					if(null !=itemAddress){
+						System.out.println("4444444");
+						itemAddress.setSelectedChargeItem(true);
+						System.out.println("55555555555");
+					}
+				}
+			}
+		}	
+					
+	}
+	
+	/*public void chargeLineApply() {
+		if(null != getManagedBean().getSelectedNodes() && getManagedBean().getSelectedNodes().length ==1){
+			if(0 == getPmPrjSetia() || 0== getPmPrgActivity()){
+				throw new EpException("Please Select Setia / Sub Setia.");
+			}
+			updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); 
+			for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
+				for(TreeNode children:selectedNode.getChildren()){
+					//do it for others
+					((FlFulfilmentItemAddr)children.getData()).setPmPrjSetia(getPmPrjSetia());
+					((FlFulfilmentItemAddr)children.getData()).setPmPrgActivity(getPmPrgActivity());
+				}
+			}
+			
+		}
+		
+		
+	}*/
+	public void chargeLineApply() {
+		getPmPrjSetia();
+		getPmPrgActivity();
+		
+		  updateSelectedTreeNodes();
+		
 			if(null == getManagedBean().getSelectedNodes()){
 				throw new EpException("Please Select Item Node.");
 				//(getManagedBean().getSelectedNodes().length >0 && null !=getManagedBean().getSelectedNodes())
 			}else{
+				
 				if(0 == getPmPrjSetia() || 0== getPmPrgActivity()){
 					throw new EpException("Please Select Setia / Sub Setia.");
 				}
-				updateAllItemsWithCgargeDrops(getManagedBean().getSelectedNodes()); 
-				/*for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
+				updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); 
+				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 					for(TreeNode children:selectedNode.getChildren()){
 						//do it for others
 						((FlFulfilmentItemAddr)children.getData()).setPmPrjSetia(getPmPrjSetia());
 						((FlFulfilmentItemAddr)children.getData()).setPmPrgActivity(getPmPrgActivity());
 					}
-				}*/
+				}
 			}
-		}else{
+			getManagedBean().populateChargeLineData();
+		/*}else{
 			if(null == getManagedBean().getSelectedNodes()){
 				throw new EpException("Please Select Item Node.");
 			}else{
@@ -1282,23 +1348,38 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(int i =0;i<getManagedBean().getSelectedNodes().length;i++){
 					
 				}
-				updateAllItemsWithCgargeDrops(getManagedBean().getSelectedNodes()); 
-				/*for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
+				updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); 
+				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 					for(TreeNode children:selectedNode.getChildren()){
 						//do it for others
 						//((FlFulfilmentItemAddr)children.getData()).setAssetInd(false);
 						((FlFulfilmentItemAddr)children.getData()).setPmPrjSetia(getPmPrjSetia());
 						((FlFulfilmentItemAddr)children.getData()).setPmPrgActivity(getPmPrgActivity());
 					}
-				}*/
+				}
 			}
 			
-		}
+		}*/
 		
 	}
 	//itemAddress.getScRequestItem().getRequestNoteItemId().equals(arg0)
 
-	private void updateAllItemsWithCgargeDrops(TreeNode[] selectedNodes) {
+	private void updateSelectedTreeNodes() {
+		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
+		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		for(TreeNode node:root.getChildren()){
+			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+			if(addr.isSelectedChargeItem()){
+				System.out.println("in update methos check ");
+				selectedNodes.add(node);
+			}
+		}
+		
+      getManagedBean().setSelectedNodes(selectedNodes.toArray(new TreeNode[selectedNodes.size()]));
+		
+	}
+
+	private void updateAllItemsWithChargeDrops(TreeNode[] selectedNodes) {
 		if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
@@ -1307,6 +1388,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							for(TreeNode node:selectedNodes){
 								FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
 								if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+									itemAddress.setCoaValue("Y");
 									itemAddress.setPmPrjSetia(getPmPrjSetia());
 									itemAddress.setPmPrgActivity(getPmPrgActivity());
 								}
@@ -1328,6 +1410,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
 	}
+	/**
+	 * @return the displayItemPnl
+	 */
+	public boolean isDisplayItemPnl() {
+		return displayItemPnl;
+	}
+
+	/**
+	 * @param displayItemPnl the displayItemPnl to set
+	 */
+	public void setDisplayItemPnl(boolean displayItemPnl) {
+		this.displayItemPnl = displayItemPnl;
+	}
+	
 	/**
 	 * @return the pmPrjSetia
 	 */
@@ -1410,6 +1506,48 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 */
 	public void setQueryDesc(String queryDesc) {
 		this.queryDesc = queryDesc;
+	}
+
+	/**
+	 * @return the disPmPrjSetia
+	 */
+	public Long getDisPmPrjSetia() {
+		return disPmPrjSetia;
+	}
+
+	/**
+	 * @param disPmPrjSetia the disPmPrjSetia to set
+	 */
+	public void setDisPmPrjSetia(Long disPmPrjSetia) {
+		this.disPmPrjSetia = disPmPrjSetia;
+	}
+
+	/**
+	 * @return the disPmPrgActivity
+	 */
+	public Long getDisPmPrgActivity() {
+		return disPmPrgActivity;
+	}
+
+	/**
+	 * @param disPmPrgActivity the disPmPrgActivity to set
+	 */
+	public void setDisPmPrgActivity(Long disPmPrgActivity) {
+		this.disPmPrgActivity = disPmPrgActivity;
+	}
+
+	/**
+	 * @return the selectedAllChargeItem
+	 */
+	public boolean isSelectedAllChargeItem() {
+		return selectedAllChargeItem;
+	}
+
+	/**
+	 * @param selectedAllChargeItem the selectedAllChargeItem to set
+	 */
+	public void setSelectedAllChargeItem(boolean selectedAllChargeItem) {
+		this.selectedAllChargeItem = selectedAllChargeItem;
 	}
 	
 	

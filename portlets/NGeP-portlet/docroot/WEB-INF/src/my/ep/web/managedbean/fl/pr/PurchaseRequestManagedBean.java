@@ -159,6 +159,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
 	//private  List<TreeNode> selectedNodes;
 	private TreeNode[] selectedNodes;
+	private TreeNode selectedNode;
 	private FlFulfilmentItemAddr selectedItemChargeSection;
 	//private Long pmPrjSetia;
 	
@@ -167,10 +168,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 * @return the chargeLineItemRoot
 	 */
 	public TreeNode getChargeLineItemRoot() {
-		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
-		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
-		prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
 		return chargeLineItemRoot;
+	}
+	
+	public void populateChargeLineData(){
+		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
+			prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
 	}
 
 	/**
@@ -260,6 +264,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
 		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
+		if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
+			itemAddress.setCoaValue("N");
+		}else{
+			itemAddress.setCoaValue("Y");
+		}
+		
 		
 		return itemAddress;
 	}
@@ -1223,6 +1233,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
+	}
+
+	/**
+	 * @return the selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	/**
+	 * @param selectedNode the selectedNode to set
+	 */
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
 	}
 
 	
