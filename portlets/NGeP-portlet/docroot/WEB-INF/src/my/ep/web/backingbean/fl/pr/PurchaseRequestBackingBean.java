@@ -1277,18 +1277,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
 		
-		System.out.println("we are in select allllllllllllllll");
+		//System.out.println("we are in select allllllllllllllll");
 		//e.getComponent().getAttributes().get("value");
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			System.out.println("111111");
 			if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-				System.out.println("222222");
 				for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-					System.out.println("333333");
 					if(null !=itemAddress){
-						System.out.println("4444444");
 						itemAddress.setSelectedChargeItem(true);
-						System.out.println("55555555555");
 					}
 				}
 			}
