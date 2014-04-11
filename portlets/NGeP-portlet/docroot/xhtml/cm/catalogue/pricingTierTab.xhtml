@@ -41,7 +41,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{price.startDate}" showOn="button"
-					rendered="#{price.showFlag}"
+					disabled="#{!price.brandNew}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -50,7 +50,7 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{price.endDate}" showOn="button"
-					rendered="#{price.showFlag}"
+					disabled="#{!price.brandNew}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -62,7 +62,8 @@
 
 				<table width="5%">
 					<tr>
-						<td><p:commandLink title="Promotion" rendered="#{price.showFlag}" 
+						<td><p:commandLink title="Promotion"
+								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
 								update="@form">
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
@@ -72,9 +73,9 @@
 								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
-						<td style="text-align: right;"><p:commandLink title="Delete"
-								action="#{catalogueBackingBean.deleteTierPrice(rowIndex)}"
-								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
+						<td style="text-align: right;"><p:commandLink title="Delete" action="#{catalogueBackingBean.setRowIndex}" rendered="#{price.showFlag}"
+								oncomplete="confirmation.show()">
+								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 					</tr>
@@ -86,6 +87,8 @@
 
 		</p:dataTable>
 
+
+
 		<div class="clear"></div>
 
 		<div align="right">
@@ -94,6 +97,17 @@
 				update="priceTierPageID"
 				process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
 		</div>
+
+		<p:confirmDialog id="confirmDeleteTierId" message="Are you sure ?"
+			header="Confirmation Message" widgetVar="confirmation">
+
+			<p:commandButton id="conf" value="Yes"
+				actionListener="#{catalogueBackingBean.deleteTierPrice()}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID"
+				oncomplete="confirmation.hide()" />
+			<p:commandButton id="decline" value="No"
+				onclick="confirmation.hide()" />
+
+		</p:confirmDialog>
 
 	</p:outputPanel>
 
