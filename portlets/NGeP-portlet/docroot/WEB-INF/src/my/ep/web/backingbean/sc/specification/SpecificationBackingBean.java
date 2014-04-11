@@ -1296,7 +1296,7 @@ public class SpecificationBackingBean extends
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setSpecType("1");
+			reqDTO.setSpecType("T");
 			specSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
@@ -1335,7 +1335,7 @@ public class SpecificationBackingBean extends
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setSpecType("2");
+			reqDTO.setSpecType("F");
 			specSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
@@ -2698,6 +2698,7 @@ public class SpecificationBackingBean extends
 		checkListValue.setChangedBy(1L);
 		checkListValue.setScQtCheckList(checkList);
 		checkList.setScQtCheckListValue(checkListValue);
+	
 		if (checkList.getTitle().contains("Company Experience")) {
 			System.out.println("===checkList.getTitle()==="
 					+ checkList.getTitle());
@@ -4578,7 +4579,7 @@ public class SpecificationBackingBean extends
 					}
 					score.setScoreType(new BigDecimal(this.getManagedBean()
 							.getCompanyScoreType()));
-					score.setCriteriaType(15);
+					score.setCriteriaType(11);
 					score.setCreatedBy(1L);
 					score.setChangedBy(1L);
 					score.setCreatedDate(new Timestamp(System
@@ -4606,7 +4607,7 @@ public class SpecificationBackingBean extends
 
 				scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
 						.getCompanyScoreType()));
-				scoreOfYears.setCriteriaType(15);
+				scoreOfYears.setCriteriaType(11);
 				scoreOfYears.setCreatedBy(1L);
 				scoreOfYears.setChangedBy(1L);
 				scoreOfYears.setCreatedDate(new Timestamp(System
@@ -4698,7 +4699,7 @@ public class SpecificationBackingBean extends
 
 					score.setScoreType(new BigDecimal(this.getManagedBean()
 							.getChecklistScoreType()));
-					scoreOfYears.setCriteriaType(10);
+					scoreOfYears.setCriteriaType(15);
 					scoreOfYears.setCreatedBy(1L);
 					scoreOfYears.setChangedBy(1L);
 					scoreOfYears.setCreatedDate(new Timestamp(System
@@ -4724,7 +4725,7 @@ public class SpecificationBackingBean extends
 					}
 					score.setScoreType(new BigDecimal(this.getManagedBean()
 							.getChecklistScoreType()));
-					scoreOfYears.setCriteriaType(15);
+					scoreOfYears.setCriteriaType(16);
 					scoreOfYears.setCreatedBy(1L);
 					scoreOfYears.setChangedBy(1L);
 					scoreOfYears.setCreatedDate(new Timestamp(System
@@ -4743,7 +4744,7 @@ public class SpecificationBackingBean extends
 
 				noContract.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				noContract.setCriteriaType(10);
+				noContract.setCriteriaType(15);
 				noContract.setCreatedBy(1L);
 				noContract.setChangedBy(1L);
 				noContract.setCreatedDate(new Timestamp(System
@@ -4757,7 +4758,7 @@ public class SpecificationBackingBean extends
 
 				scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
 						.getCompanyScoreType()));
-				noContract.setCriteriaType(15);
+				noContract.setCriteriaType(16);
 				noContract.setCreatedBy(1L);
 				noContract.setChangedBy(1L);
 				noContract.setCreatedDate(new Timestamp(System
@@ -4774,6 +4775,16 @@ public class SpecificationBackingBean extends
 					.setScore(new BigDecimal(localScore));
 
 			checkList.setScQtCheckListScores(localList);
+			IQTSpecSO specSo;
+			SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+			specSo= BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+			reqDTO.setScQtCheckList(checkList);
+			SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+					reqDTO.setScQtCheckList(checkList);
+			//specSo.saveCheckListScore(reqDTO);
+			this.getManagedBean().getScQtCheckSt2techProposal().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 			// this.getManagedBean().setCollectionScoring(localList);
 			// }ll
 		} catch (Exception e) {
@@ -4817,7 +4828,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(12);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -4833,7 +4844,7 @@ public class SpecificationBackingBean extends
 
 			finCompanyScore.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			finCompanyScore.setCriteriaType(10);
+			finCompanyScore.setCriteriaType(12);
 			finCompanyScore.setCreatedBy(1L);
 			finCompanyScore.setChangedBy(1L);
 			finCompanyScore.setCreatedDate(new Timestamp(System
@@ -4845,6 +4856,18 @@ public class SpecificationBackingBean extends
 		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
 
 		checkList.setScQtCheckListScores(localList);
+		
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 
 	}
 
@@ -4883,7 +4906,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(17);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -4898,7 +4921,7 @@ public class SpecificationBackingBean extends
 
 			finPrivateScore.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			finPrivateScore.setCriteriaType(10);
+			finPrivateScore.setCriteriaType(17);
 			finPrivateScore.setCreatedBy(1L);
 			finPrivateScore.setChangedBy(1L);
 			finPrivateScore.setCreatedDate(new Timestamp(System
@@ -4911,6 +4934,17 @@ public class SpecificationBackingBean extends
 		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
 
 		checkList.setScQtCheckListScores(localList);
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 
 	}
 
@@ -4949,7 +4983,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(30);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -4965,7 +4999,7 @@ public class SpecificationBackingBean extends
 			System.out.println("==== null loop==");
 			checkListScore.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			checkListScore.setCriteriaType(10);
+			checkListScore.setCriteriaType(30);
 			checkListScore.setCreatedBy(1L);
 			checkListScore.setChangedBy(1L);
 			checkListScore.setCreatedDate(new Timestamp(System
@@ -4978,6 +5012,18 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		this.getManagedBean().getScQtCheckSt2techProposal().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
+
+
 	}
 
 	public void acceptTrainingScore() {
@@ -5015,7 +5061,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(40);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5031,7 +5077,7 @@ public class SpecificationBackingBean extends
 
 			checkListScore.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			checkListScore.setCriteriaType(10);
+			checkListScore.setCriteriaType(40);
 			checkListScore.setCreatedBy(1L);
 			checkListScore.setChangedBy(1L);
 			checkListScore.setCreatedDate(new Timestamp(System
@@ -5042,6 +5088,18 @@ public class SpecificationBackingBean extends
 		}
 		checkList.getQtScoreWeightage().setScore(new BigDecimal(training));
 		checkList.setScQtCheckListScores(localList);
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		this.getManagedBean().getScQtCheckSt2techProposal().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
+
+
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
 	}
@@ -5081,7 +5139,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(20);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5096,7 +5154,7 @@ public class SpecificationBackingBean extends
 
 			technicalEmployee.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			technicalEmployee.setCriteriaType(10);
+			technicalEmployee.setCriteriaType(20);
 			technicalEmployee.setCreatedBy(1L);
 			technicalEmployee.setChangedBy(1L);
 			technicalEmployee.setCreatedDate(new Timestamp(System
@@ -5109,6 +5167,18 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		this.getManagedBean().getScQtCheckSt2techProposal().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
+
+
 	}
 
 	public void acceptEmployeeScore() {
@@ -5146,7 +5216,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(21);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5162,7 +5232,7 @@ public class SpecificationBackingBean extends
 
 			employeeChecklist.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			employeeChecklist.setCriteriaType(10);
+			employeeChecklist.setCriteriaType(21);
 			employeeChecklist.setCreatedBy(1L);
 			employeeChecklist.setChangedBy(1L);
 			employeeChecklist.setCreatedDate(new Timestamp(System
@@ -5176,6 +5246,18 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		this.getManagedBean().getScQtCheckSt2techProposal().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
+
+
 	}
 
 	public void acceptCreditScore() {
@@ -5214,7 +5296,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(51);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5229,7 +5311,7 @@ public class SpecificationBackingBean extends
 
 			creditFacility.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			creditFacility.setCriteriaType(10);
+			creditFacility.setCriteriaType(51);
 			creditFacility.setCreatedBy(1L);
 			creditFacility.setChangedBy(1L);
 			creditFacility.setCreatedDate(new Timestamp(System
@@ -5242,6 +5324,17 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 	}
 
 	public void acceptCashScore() {
@@ -5279,7 +5372,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(52);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5295,7 +5388,7 @@ public class SpecificationBackingBean extends
 
 			acceptCash.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			acceptCash.setCriteriaType(10);
+			acceptCash.setCriteriaType(52);
 			acceptCash.setCreatedBy(1L);
 			acceptCash.setChangedBy(1L);
 			acceptCash
@@ -5308,6 +5401,17 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 	}
 
 	public void acceptBankScore() {
@@ -5345,7 +5449,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(50);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5361,7 +5465,7 @@ public class SpecificationBackingBean extends
 
 			bankDetails.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			bankDetails.setCriteriaType(10);
+			bankDetails.setCriteriaType(50);
 			bankDetails.setCreatedBy(1L);
 			bankDetails.setChangedBy(1L);
 			bankDetails
@@ -5374,6 +5478,17 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 	}
 
 	public void acceptAssetScore() {
@@ -5411,7 +5526,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(60);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5427,7 +5542,7 @@ public class SpecificationBackingBean extends
 
 			assetChecklist.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			assetChecklist.setCriteriaType(10);
+			assetChecklist.setCriteriaType(60);
 			assetChecklist.setCreatedBy(1L);
 			assetChecklist.setChangedBy(1L);
 			assetChecklist.setCreatedDate(new Timestamp(System
@@ -5440,6 +5555,17 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 	}
 
 	public void acceptPaidUpScore() {
@@ -5478,7 +5604,7 @@ public class SpecificationBackingBean extends
 				}
 				score.setScoreType(new BigDecimal(this.getManagedBean()
 						.getChecklistScoreType()));
-				score.setCriteriaType(10);
+				score.setCriteriaType(70);
 				score.setCreatedBy(1L);
 				score.setChangedBy(1L);
 				score.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -5493,7 +5619,7 @@ public class SpecificationBackingBean extends
 
 			paidUpChecklist.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
-			paidUpChecklist.setCriteriaType(10);
+			paidUpChecklist.setCriteriaType(70);
 			paidUpChecklist.setCreatedBy(1L);
 			paidUpChecklist.setChangedBy(1L);
 			paidUpChecklist.setCreatedDate(new Timestamp(System
@@ -5507,6 +5633,17 @@ public class SpecificationBackingBean extends
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
 		// }ll
+		IQTSpecSO specSo;
+		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
+		specSo= BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		reqDTO.setScQtCheckList(checkList);
+		SpecificationResDTO resDTO=specSo.saveCheckListScore(reqDTO);
+				reqDTO.setScQtCheckList(checkList);
+		//specSo.saveCheckListScore(reqDTO);
+		
+		this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), resDTO.getScQtCheckList());
 	}
 
 	public List<SelectItem> getAppDetails() {
