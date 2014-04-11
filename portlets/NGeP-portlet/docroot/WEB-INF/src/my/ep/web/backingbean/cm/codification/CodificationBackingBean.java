@@ -1463,7 +1463,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			reqDTO.setOutCome("SUBMIT");
 		}
 
-
+		reqDTO.getRequestExtList().add(unspscBB.getManagedBean().getRequestCode());
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 		return "BPMtesting";
