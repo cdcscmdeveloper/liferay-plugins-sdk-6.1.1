@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -54,6 +55,19 @@ public class ParameterHelper {
 	 * @return list of PmParameterDesc
 	 */
 	public List<PmParameterDesc> getParameterDescList(String parameterType) {
+		return getParameterDescList(parameterType, null);
+	}
+	
+	/**
+	 * Get a list of parameter description by parameter type and search bean.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @param searchBean
+	 * 			the searchBean instance
+	 * @return list of PmParameterDesc
+	 */
+	public List<PmParameterDesc> getParameterDescList(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		debugLogger("getParameterDescList.parameterType: " + parameterType);
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -77,6 +91,7 @@ public class ParameterHelper {
 				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterDescSearchBean(searchBean);
 				reqDTO.setParameterType(parameterType);
 				reqDTO.setLanguageCode(languageCode);
 				

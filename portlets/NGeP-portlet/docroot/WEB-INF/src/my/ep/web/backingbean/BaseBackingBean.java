@@ -250,11 +250,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownValues(String parameterType) {
+		return getDropdownValues(parameterType, null);
+	}
+	
+	/**
+	 * Get parameter id select items by parameter type and search bean for dropdown.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @param searchBean
+	 * 			the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValues(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(parameterType);
+					.getParameterDescList(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
@@ -281,10 +294,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * Get parameter code select items by parameter type for dropdown.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownCodeValues(String parameterType) {
+		return getDropdownCodeValues(parameterType, null);
+	}
+	
+	/**
+	 * Get parameter code select items by parameter type and search bean for dropdown.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @param searchBean
+	 * 			the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownCodeValues(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		
 		try {

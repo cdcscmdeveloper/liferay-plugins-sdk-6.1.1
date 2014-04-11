@@ -6,6 +6,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
+	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
+	
 	<p:dataTable id="tierQtyTbl" widgetVar="tierQtyTbl"
 		var="tplSpecTierQty"
 		rowIndexVar="rowIndex"
@@ -28,7 +30,7 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 		</p:column>
-		<p:column style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}" rendered="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier}">
+		<p:column style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}" rendered="#{isSelectedPriceTypeTariff}">
 			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" dir="rtl" style="width:96%;" rendered="#{rowIndex > 0}" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>

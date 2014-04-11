@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -37,6 +38,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
@@ -328,6 +330,28 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			orgProfileSO = null;
 		}
 	    return items;
+	}
+	
+	public SelectItem[] getPriceTypeList(TplSpecMaster specMaster) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> filteredList = new ArrayList<String>();
+		
+		if (specMaster.getTplSpecZone() == null) {
+			filteredList.add(ParameterConst.PRICE_TYPE_STANDARD);
+			filteredList.add(ParameterConst.PRICE_TYPE_TIER);
+			filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
+		} else {
+			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
+			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
+		}
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), 
+						filteredList));
+		
+		return super.getDropdownValues(ParameterTypeConst.PRICE_TYPE, searchBean);
 	}
 	
 	public void fulfilmentTypeChange(TplSpecQuestion specQuestion) {

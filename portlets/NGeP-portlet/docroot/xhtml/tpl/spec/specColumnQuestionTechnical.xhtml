@@ -54,7 +54,7 @@
 	
 	<p:column style="width:145px;" headerText="#{lbl['lbl.tpl.spec.content.price.type']}" rendered="#{!isItemTypeService}">
 		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="true" style="width:100%;" rendered="#{isQuestionTypeItem}">
-			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.priceType)}" />
+			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeList(templateSpecBean.specMaster)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.priceTypeChange(question)}" update="qtyPG" />
 		</h:selectOneMenu>
 	</p:column>

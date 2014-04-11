@@ -45,7 +45,9 @@
 					scrollable1="true" scrollWidth1="#{cc.attrs.scrollWidth}">
 					
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
-					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
+					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
+					<ui:param name="isPriceTypeTier" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTier}" />
+					<ui:param name="isPriceTypeTariff" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
 					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
