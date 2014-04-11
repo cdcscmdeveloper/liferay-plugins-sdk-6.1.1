@@ -49,12 +49,10 @@
 						itemLabel="#{branchCountry.countryName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmState,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyDistricts,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchesState,branchesDist,branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
@@ -70,10 +68,9 @@
 						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBranch.smAddress.pmState.stateId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchesDist,branchesCity" />
 
 				</p:selectOneMenu></td>
@@ -91,7 +88,7 @@
 						itemLabel="#{brnDist.districtName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchesCity" />
 				</p:selectOneMenu></td>

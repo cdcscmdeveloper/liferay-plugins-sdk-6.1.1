@@ -16,16 +16,16 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Dockyard Name">
-				<h:outputText value="#{doc.smAddress.address1}" />
+				<h:outputText value="-- DOC Name TBC --" />
 			</p:column>
 
 			<p:column headerText="Dockyard Address">
 				<h:outputText
-					value="#{doc.smAddress.address2},#{doc.smAddress.address3},#{doc.smAddress.address4}" />
+					value="#{doc.smAddress.address1},#{doc.smAddress.address2},#{doc.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="dockYardDialog.show();"
-					action="#{backingBean.assignSelFactory(doc)}"
+					action="#{backingBean.assignSelDockyard(doc)}"
 					update=":form:tt:dockYardDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -36,17 +36,16 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="dockYardDialog.show();"
-				action="#{backingBean.assignNewFactoryBean}"
+				action="#{backingBean.assignNewDockyardBean}"
 				update=":form:tt:dockYardDialog" />
-			<p:commandButton value="Delete " />
+			<p:commandButton value="Delete "
+				action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="480px" header="Dockyard Information"
+	<p:dialog width="500px" height="500px" header="Dockyard Information"
 		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="dockYardDialog">
-		<!-- 	<p:panel header="Factory / dockYard / Store / Shipyard Details"> -->
-
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Facility Type" /></td>
@@ -55,119 +54,150 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
-						size="35" /></td>
+				<td><p:inputText size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address1}"
 						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address2}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address3}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Country" /></td>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="dockyardCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{dockyardCountry.countryId}"
+							itemLabel="#{dockyardCountry.countryName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmState,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
+							update="dockyardState,dockyardDist,dockyardCity" />
 					</p:selectOneMenu></td>
 			</tr>
+
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-						<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
-						<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmState.stateId}"
+						id="dockyardState">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="dockyardState"
+							value="#{backingBean.managedBean.dockFacilityStates}"
+							itemValue="#{dockyardState.stateId}"
+							itemLabel="#{dockyardState.stateName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedDockyardFacility.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
+							update="dockyardDist,dockyardCity" />
+
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-						<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-						<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						id="dockyardDist"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="dockyardDist"
+							value="#{backingBean.managedBean.dockFacilityDistricts}"
+							itemValue="#{dockyardDist.districtId}"
+							itemLabel="#{dockyardDist.districtName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL,
+								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
+							update="dockyardCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-						<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-						<f:selectItem itemLabel="NILAI" itemValue="PG" />
-						<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						id="dockyardCity"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="dockyardCity"
+							value="#{backingBean.managedBean.dockFacilityCities}"
+							itemValue="#{dockyardCity.cityId}"
+							itemLabel="#{dockyardCity.cityName}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Phone NO." /></td>
-				<td><p:inputText value="-- TBC--" size="35" /></td>
+				<td><p:inputText value=" --TBC--" size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText value="-- TBC--" size="35" /></td>
+				<td><p:inputText value=" --TBC--" size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.areaSquareFeet}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Ownership Type" /></td>
 				<td><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+						value="#{backingBean.managedBean.selectedDockyardFacility.ownershipType}">
 						<f:selectItem itemLabel="Rent " itemValue="R" />
 						<f:selectItem itemLabel="Own" itemValue="O" />
-						<p:ajax event="change"
-							listener="#{backingBean.factoryOwnerTypeSel}"
+						<p:ajax event="change" listener="#{backingBean.dockOwnerTypeSel}"
 							update="docPan,docPanLbl" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="docPanLbl">
 						<p:outputLabel value="* Price (RM.)"
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}" />
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
 						<p:outputLabel value="* Rent (RM.)"
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}" />
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="docPan">
 						<ui:fragment
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
 							<p:inputText
-								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
+								value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
 								size="20" />
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
 							<p:inputText
-								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
+								value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
 								size="20" />
 						</ui:fragment>
 					</p:outputPanel></td>
@@ -177,13 +207,14 @@
 				<td><p:outputLabel value="
 								Owner Name *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
+						value="#{backingBean.managedBean.selectedDockyardFacility.ownerName}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Associated Category" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true">
+				<td><p:selectManyMenu showCheckbox="true"
+						style="width : 150px;">
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 							var="catBean"
@@ -193,11 +224,11 @@
 
 			</tr>
 		</table>
-		<!-- </p:panel> -->
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
+				action="#{backingBean.addOrUpdateDockYardToSmAppl}" type="submit"
+				partialSubmit="true" process="dockYardDialog"
 				oncomplete="dockYardDialog.hide();" update=":form:tt:docDt" />
 			<p:commandButton value="Cancel" onclick="dockYardDialog.hide();" />
 		</div>

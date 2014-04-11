@@ -11,17 +11,17 @@
 		<p:dataTable var="fac"
 			value="#{backingBean.managedBean.applFactoryFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-			rowKey="#{fac.facilityId}" rowIndexVar="index" id="facDt">
+			rowKey="#{fac}" rowIndexVar="index" id="facDt">
 			<ac:paginator for="facDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Factory Name">
-				<h:outputText value="#{fac.smAddress.address1}" />
+				<h:outputText value="-- Fac TBC Mapping --" />
 			</p:column>
 
 			<p:column headerText="Factory Address">
 				<h:outputText
-					value="#{fac.smAddress.address2},#{fac.smAddress.address3},#{fac.smAddress.address4}" />
+					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="factoryDialog.show();"
@@ -38,15 +38,15 @@
 			<p:commandButton value="Add " oncomplete="factoryDialog.show();"
 				action="#{backingBean.assignNewFactoryBean}"
 				update=":form:tt:factoryDialog" />
-			<p:commandButton value="Delete " />
+			<p:commandButton value="Delete "
+				action="#{backingBean.deleteSelectedFactories}"
+				update=":form:tt:facDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="480px" header="Factory Information"
+	<p:dialog width="500px" height="500px" header="Factory Information"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="factoryDialog">
-		<!-- 	<p:panel header="Factory / Workshop / Store / Shipyard Details"> -->
-
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Facility Type" /></td>
@@ -55,17 +55,21 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
-						size="35" /></td>
+				<td><p:inputText size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
 						size="35" /></td>
 			</tr>
 
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						size="35" /></td>
+			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
@@ -79,45 +83,71 @@
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Country" /></td>
+				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="factoryCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{factoryCountry.countryId}"
+							itemLabel="#{factoryCountry.countryName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmState,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							update="factoryState,factoryDist,factoryCity" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-						<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
-						<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateId}"
+						id="factoryState">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="facState"
+							value="#{backingBean.managedBean.factoryFacilityStates}"
+							itemValue="#{facState.stateId}" itemLabel="#{facState.stateName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							update="factoryDist,factoryCity" />
+
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-						<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-						<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						id="factoryDist"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="factoryDist"
+							value="#{backingBean.managedBean.factoryFacilityDistricts}"
+							itemValue="#{factoryDist.districtId}"
+							itemLabel="#{factoryDist.districtName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_FACTORY_FACILITY_PANEL,
+								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
+							update="factoryCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-						<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-						<f:selectItem itemLabel="NILAI" itemValue="PG" />
-						<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						id="factoryCity"
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="factoryCity"
+							value="#{backingBean.managedBean.factoryFacilityCities}"
+							itemValue="#{factoryCity.cityId}"
+							itemLabel="#{factoryCity.cityName}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -186,7 +216,8 @@
 			<tr>
 				<td><p:outputLabel value="*Associated Category" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true">
+				<td><p:selectManyMenu showCheckbox="true"
+						style="width : 150px;">
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 							var="catBean"
@@ -195,13 +226,12 @@
 					</p:selectManyMenu></td>
 
 			</tr>
-
 		</table>
-		<!-- </p:panel> -->
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
+				action="#{backingBean.addOrUpdateFactoryToSmAppl}" type="submit"
+				partialSubmit="true" process="factoryDialog"
 				oncomplete="factoryDialog.hide();" update=":form:tt:facDt" />
 			<p:commandButton value="Cancel" onclick="factoryDialog.hide();" />
 		</div>

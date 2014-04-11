@@ -16,16 +16,16 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Workshop Name">
-				<h:outputText value="#{work.smAddress.address1}" />
+				<h:outputText value="--WS Name TBC--" />
 			</p:column>
 
 			<p:column headerText="Workshop Address">
 				<h:outputText
-					value="#{work.smAddress.address2},#{work.smAddress.address3},#{work.smAddress.address4}" />
+					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="workShopDialog.show();"
-					action="#{backingBean.assignSelFactory(work)}"
+					action="#{backingBean.assignSelWorkshop(work)}"
 					update=":form:tt:workShopDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -36,16 +36,17 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="workShopDialog.show();"
-				action="#{backingBean.assignNewFactoryBean}"
+				action="#{backingBean.assignNewWorkshopBean}"
 				update=":form:tt:workShopDialog" />
-			<p:commandButton value="Delete " />
+			<p:commandButton value="Delete "
+				action="#{backingBean.deleteSelectedWorkShops}"
+				update=":form:tt:workDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="480px" header="Workshop Information"
+	<p:dialog width="500px" height="500px" header="Workshop Information"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="workShopDialog">
-		<!-- 	<p:panel header="Factory / Workshop / Store / Shipyard Details"> -->
 
 		<table style="width: 100%">
 			<tr>
@@ -55,119 +56,151 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
-						size="35" /></td>
+				<td><p:inputText size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address1}"
 						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address2}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address3}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Country" /></td>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="workshopCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{workshopCountry.countryId}"
+							itemLabel="#{workshopCountry.countryName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmState,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
+							update="workShopState,workShopDist,workShopCity" />
 					</p:selectOneMenu></td>
 			</tr>
+
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-						<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
-						<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmState.stateId}"
+						id="workShopState">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="workshopState"
+							value="#{backingBean.managedBean.workShopFacilityStates}"
+							itemValue="#{workshopState.stateId}"
+							itemLabel="#{workshopState.stateName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedWorkShopFacility.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
+							update="workShopDist,workShopCity" />
+
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-						<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-						<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+						id="workShopDist"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="workShopDist"
+							value="#{backingBean.managedBean.workShopFacilityDistricts}"
+							itemValue="#{workShopDist.districtId}"
+							itemLabel="#{workShopDist.districtName}" />
+						<p:ajax event="change"
+							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL,
+								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
+							update="workShopCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}">
-						<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-						<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-						<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-						<f:selectItem itemLabel="NILAI" itemValue="PG" />
-						<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+						id="workShopCity"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="workShopCity"
+							value="#{backingBean.managedBean.workShopFacilityCities}"
+							itemValue="#{workShopCity.cityId}"
+							itemLabel="#{workShopCity.cityName}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Phone NO." /></td>
-				<td><p:inputText value="-- TBC--" size="35" /></td>
+				<td><p:inputText value=" --TBC--" size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText value="-- TBC--" size="35" /></td>
+				<td><p:inputText value=" --TBC--" size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Ownership Type" /></td>
 				<td><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+						value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
 						<f:selectItem itemLabel="Rent " itemValue="R" />
 						<f:selectItem itemLabel="Own" itemValue="O" />
 						<p:ajax event="change"
-							listener="#{backingBean.factoryOwnerTypeSel}"
+							listener="#{backingBean.workShopOwnerTypeSel}"
 							update="workPan,workPanLbl" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="workPanLbl">
 						<p:outputLabel value="* Price (RM.)"
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}" />
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
 						<p:outputLabel value="* Rent (RM.)"
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}" />
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="workPan">
 						<ui:fragment
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
 							<p:inputText
-								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
 								size="20" />
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
 							<p:inputText
-								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
 								size="20" />
 						</ui:fragment>
 					</p:outputPanel></td>
@@ -177,13 +210,14 @@
 				<td><p:outputLabel value="
 								Owner Name *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Associated Category" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true">
+				<td><p:selectManyMenu showCheckbox="true"
+						style="width : 150px;">
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 							var="catBean"
@@ -193,11 +227,11 @@
 
 			</tr>
 		</table>
-		<!-- </p:panel> -->
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
+				action="#{backingBean.addOrUpdateWorkshopToSmAppl}" type="submit"
+				partialSubmit="true" process="workShopDialog"
 				oncomplete="workShopDialog.hide();" update=":form:tt:workDt" />
 			<p:commandButton value="Cancel" onclick="workShopDialog.hide();" />
 		</div>

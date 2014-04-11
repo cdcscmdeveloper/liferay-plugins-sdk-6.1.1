@@ -182,12 +182,10 @@
 							itemLabel="#{assCountry.countryName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId, 
-								backingBean.managedBean.assocCompanyPanel,
+								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmState,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity,
-								backingBean.managedBean.assocCompanyDistricts,
-								backingBean.managedBean.assocCompanyCities)}"
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocState,assocDist,assocCity" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -203,10 +201,9 @@
 							itemValue="#{assState.stateId}" itemLabel="#{assState.stateName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId, 
-								backingBean.managedBean.assocCompanyPanel,
+								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity,
-								backingBean.managedBean.assocCompanyCities)}"
+								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocDist,assocCity" />
 
 					</p:selectOneMenu></td>
@@ -225,7 +222,7 @@
 							itemLabel="#{assDist.districtName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId, 
-								backingBean.managedBean.assocCompanyPanel,
+								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocCity" />
 					</p:selectOneMenu></td>

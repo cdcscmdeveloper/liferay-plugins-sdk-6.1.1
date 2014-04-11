@@ -109,12 +109,10 @@
 									itemLabel="#{basicCountry.countryName}" />
 								<p:ajax event="change"
 									listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
-								backingBean.managedBean.basicOffFacPanel,
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmState,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
-								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity,
-								backingBean.managedBean.basicOffFacDistricts,
-								backingBean.managedBean.basicOffFacCities)}"
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
 							</p:selectOneMenu></td>
 
@@ -132,10 +130,9 @@
 									itemLabel="#{offState.stateName}" />
 								<p:ajax event="change"
 									listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
-								backingBean.managedBean.basicOffFacPanel,
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
-								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity,
-								backingBean.managedBean.basicOffFacCities)}"
+								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacDist,basicOffFacCity" />
 
 							</p:selectOneMenu></td>
@@ -150,7 +147,7 @@
 									itemLabel="#{offDist.districtName}" />
 								<p:ajax event="change"
 									listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
-								backingBean.managedBean.basicOffFacPanel,
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacCity" />
 							</p:selectOneMenu></td>

@@ -30,7 +30,7 @@
 		<p:dataTable var="macBean"
 			value="#{backingBean.managedBean.smAppl.smMachineDtls}"
 			selection="#{backingBean.managedBean.selectedMachineList}"
-			rowKey="#{macBean.machineDtlId}" rowIndexVar="index" id="macDt">
+			rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 			<ac:paginator for="macDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
@@ -67,7 +67,9 @@
 			<p:commandButton value="Add" oncomplete="equipmentDialog.show();"
 				update=":form:tt:eqDia"
 				action="#{backingBean.assignNewMachineryBean}" />
-			<p:commandButton value="Delete" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedMachinery}"
+				update=":form:tt:macDt" />
 		</div>
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -123,18 +125,9 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Value" /></td>
-				<td>
-					<table>
-						<tr>
-							<td style="padding-right: 5px;"><p:inputText
-									value="#{backingBean.managedBean.selectedMachine.value}"
-									size="20" /></td>
-							<td valign="top"><p:selectOneMenu style="margin-bottom:5px;">
-									<f:selectItem itemLabel="MYR" itemValue="1" />
-								</p:selectOneMenu></td>
-						</tr>
-					</table>
+				<td><p:outputLabel value="* Value (RM.)" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.value}" size="35" />
 				</td>
 			</tr>
 			<tr>
@@ -143,13 +136,17 @@
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Cash" itemValue="1" />
-						<f:selectItem itemLabel="Credit Card" itemValue="1" />
+						<f:selectItem itemLabel="Cash" itemValue="A" />
+						<f:selectItem itemLabel="Credit Card" itemValue="B" />
+						<f:selectItem itemLabel="Debit Card" itemValue="C" />
+						<f:selectItem itemLabel="Online Banking" itemValue="D" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Guarantor Name" /></td>
-				<td><p:inputText value=" -- TBC --" size="35" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.guarantorName}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Associated Facility" /></td>

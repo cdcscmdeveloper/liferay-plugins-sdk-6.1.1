@@ -181,12 +181,10 @@
 							itemLabel="#{equiCountry.countryName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId, 
-								backingBean.managedBean.equiCompanyPanel,
+								SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
 								backingBean.managedBean.selectedEquityCompany.smAddress.pmState,
 								backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyDistricts,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity)}"
 							update="equiState,equiDist,equiCity" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -204,10 +202,9 @@
 							itemLabel="#{equiState.stateName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId, 
-								backingBean.managedBean.equiCompanyPanel,
+								SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
 								backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict,
-								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity)}"
 							update="equiDist,equiCity" />
 
 					</p:selectOneMenu></td>
@@ -225,7 +222,7 @@
 							itemLabel="#{equiDist.districtName}" />
 						<p:ajax event="change"
 							listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId, 
-								backingBean.managedBean.equiCompanyPanel,
+								SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
 								backingBean.managedBean.selectedEquityCompany.smAddress.pmCity)}"
 							update="equiCity" />
 					</p:selectOneMenu></td>

@@ -6,8 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Manufacturing / Assembly Details"
-		toggleable="true">
+	<p:panel header="Manufacturing / Assembly Details" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -31,7 +30,7 @@
 		<p:dataTable var="manBean"
 			value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
 			selection="#{backingBean.managedBean.selectedManufacturingList}"
-			rowKey="#{manBean.manufacturingDtlId}" rowIndexVar="index" id="manDt">
+			rowKey="#{manBean}" rowIndexVar="index" id="manDt">
 			<ac:paginator for="manDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
@@ -47,7 +46,7 @@
 			</p:column>
 
 			<p:column headerText="Measurement Unit">
-				<h:outputText value="-- TBC--" />
+				<h:outputText value="#{manBean.pmUom.uomName}" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="manufactorDialog.show();"
@@ -65,7 +64,9 @@
 			<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
 				update=":form:tt:manDia"
 				action="#{backingBean.assignNewManufacturerBean}" />
-			<p:commandButton value="Delete" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedManufacturers}"
+				update=":form:tt:manDt" />
 		</div>
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -110,26 +111,19 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Production Capacity" /></td>
-				<td>
-					<table>
-						<tr>
-							<td style="padding-right: 5px;"><p:inputText
-									value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
-									size="15" /></td>
-							<td valign="top"><h:outputText value=" per Month" /></td>
-						</tr>
-					</table>
-				</td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="* Measurement" /></td>
 				<td valign="top"><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
+						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Unit " itemValue="Unit" />
-						<f:selectItem itemLabel="Volume" itemValue="Volume" />
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="uom" value="#{backingBean.managedBean.uomLs}"
+							itemValue="#{uom.uomId}" itemLabel="#{uom.uomName}" />
 					</p:selectOneMenu></td>
 				<!-- <td>
 						<table>

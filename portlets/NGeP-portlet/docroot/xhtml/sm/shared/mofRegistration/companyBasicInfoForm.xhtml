@@ -113,13 +113,7 @@
 								itemValue="#{basicCountry.countryId}"
 								itemLabel="#{basicCountry.countryName}" />
 							<p:ajax event="change"
-								listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId, 
-								backingBean.managedBean.basicCompanyPanel,
-								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,
-								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
-								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity,
-								backingBean.managedBean.basicCompanyDistricts,
-								backingBean.managedBean.basicCompanyCities)}"
+								listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId,SupplierManagementConst.SM_BASIC_INFO_PANEL,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 								update="basicComState,basicCompDist,basicCompCity" />
 						</p:selectOneMenu></td>
 					<td></td>
@@ -138,10 +132,9 @@
 								itemLabel="#{basicState.stateName}" />
 							<p:ajax event="change"
 								listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId, 
-											backingBean.managedBean.basicCompanyPanel,
+											SupplierManagementConst.SM_BASIC_INFO_PANEL,
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
-											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity,
-											backingBean.managedBean.basicCompanyCities)}"
+											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 								update="basicCompDist,basicCompCity" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -154,7 +147,7 @@
 								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 							<p:ajax event="change"
 								listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId,
-								backingBean.managedBean.basicCompanyPanel,
+								SupplierManagementConst.SM_BASIC_INFO_PANEL,
 								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 								update="basicCompCity" />
 						</p:selectOneMenu></td>

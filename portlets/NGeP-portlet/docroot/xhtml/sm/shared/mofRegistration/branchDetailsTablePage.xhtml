@@ -38,7 +38,7 @@
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="* Country" /></td>
+			<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 			<td><p:selectOneMenu
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
 					style="width: 207px;margin-bottom: 5px;">
@@ -49,12 +49,10 @@
 						itemLabel="#{branchCountry.countryName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmState,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyDistricts,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchState,branchDist,branchCity" />
 				</p:selectOneMenu></td>
 		</tr>
@@ -70,10 +68,9 @@
 						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBranch.smAddress.pmState.stateId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
-								backingBean.managedBean.selectedBranch.smAddress.pmCity,
-								backingBean.managedBean.branchCompanyCities)}"
+								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchDist,branchCity" />
 
 				</p:selectOneMenu></td>
@@ -91,7 +88,7 @@
 						itemLabel="#{brnDist.districtName}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId, 
-								backingBean.managedBean.branchCompanyPanel,
+								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchCity" />
 				</p:selectOneMenu></td>
