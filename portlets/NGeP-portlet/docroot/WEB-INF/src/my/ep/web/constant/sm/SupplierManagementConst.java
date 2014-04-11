@@ -60,6 +60,18 @@ public class SupplierManagementConst {
 	public static final String SM_BRANCH_PANEL = "BranchCompanyPanel";
 	public static final String SM_ASSOC_COMPANY_PANEL = "AssocCompanyPanel";
 	public static final String SM_EQUI_COMPANY_PANEL = "EquiCompanyPanel";
+	public static final String SM_FACTORY_FACILITY_PANEL = "FactoryPanel";
+	public static final String SM_DOCKYARD_FACILITY_PANEL = "DockyardPanel";
+	public static final String SM_WORKSHOP_FACILITY_PANEL = "WorkshopPanel";
+	public static final String SM_STORE_FACILITY_PANEL = "StorePanel";
+
+	// FacilityTypes
+	public static final String SM_FACILITY_TYPE_FACTORY = "F";
+	public static final String SM_FACILITY_TYPE_DOCKYARD = "D";
+	public static final String SM_FACILITY_TYPE_WORKSHOP = "W";
+	public static final String SM_FACILITY_TYPE_STORE = "S";
+	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
+	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
 
 	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "13";
@@ -81,7 +93,67 @@ public class SupplierManagementConst {
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
 	public static final String SVO_SK = "UPS_SVO_SK";
-	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
-	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
-	
+
+	// Getters for panel info
+	public String getSM_BASIC_INFO_PANEL() {
+		return SM_BASIC_INFO_PANEL;
+	}
+
+	public String getSM_OFFICE_FACILITY_INFO_PANEL() {
+		return SM_OFFICE_FACILITY_INFO_PANEL;
+	}
+
+	public String getSM_BRANCH_PANEL() {
+		return SM_BRANCH_PANEL;
+	}
+
+	public String getSM_ASSOC_COMPANY_PANEL() {
+		return SM_ASSOC_COMPANY_PANEL;
+	}
+
+	public String getSM_EQUI_COMPANY_PANEL() {
+		return SM_EQUI_COMPANY_PANEL;
+	}
+
+	// Getter for facility type info
+	public String getSM_FACILITY_TYPE_FACTORY() {
+		return SM_FACILITY_TYPE_FACTORY;
+	}
+
+	public String getSM_FACILITY_TYPE_DOCKYARD() {
+		return SM_FACILITY_TYPE_DOCKYARD;
+	}
+
+	public String getSM_FACILITY_TYPE_WORKSHOP() {
+		return SM_FACILITY_TYPE_WORKSHOP;
+	}
+
+	public String getSM_FACILITY_TYPE_STORE() {
+		return SM_FACILITY_TYPE_STORE;
+	}
+
+	public String getSM_FACILITY_TYPE_HOMEOFFICE() {
+		return SM_FACILITY_TYPE_HOMEOFFICE;
+	}
+
+	public String getSM_FACILITY_TYPE_BUSSINESSOFFICE() {
+		return SM_FACILITY_TYPE_BUSSINESSOFFICE;
+	}
+
+	public String getSM_FACTORY_FACILITY_PANEL() {
+		return SM_FACTORY_FACILITY_PANEL;
+	}
+
+	public String getSM_DOCKYARD_FACILITY_PANEL() {
+		return SM_DOCKYARD_FACILITY_PANEL;
+	}
+
+	public String getSM_WORKSHOP_FACILITY_PANEL() {
+		return SM_WORKSHOP_FACILITY_PANEL;
+	}
+
+	public String getSM_STORE_FACILITY_PANEL() {
+		return SM_STORE_FACILITY_PANEL;
+	}
+
 }

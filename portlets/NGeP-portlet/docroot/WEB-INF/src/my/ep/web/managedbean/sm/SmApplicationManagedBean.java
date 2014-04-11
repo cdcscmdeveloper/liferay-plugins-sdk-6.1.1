@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -201,7 +202,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String catTypeConfirm;
 
-
 	private SmFacility basicCompanyFacility;
 	// Address fields for all the forms
 	private List<PmCountry> countryLs;
@@ -225,15 +225,25 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmDistrict> equiCompanyDistricts;
 	private List<PmCity> equiCompanyCities;
 
+	private List<PmState> factoryFacilityStates;
+	private List<PmDistrict> factoryFacilityDistricts;
+	private List<PmCity> factoryFacilityCities;
+
+	private List<PmState> dockFacilityStates;
+	private List<PmDistrict> dockFacilityDistricts;
+	private List<PmCity> dockFacilityCities;
+
+	private List<PmState> workShopFacilityStates;
+	private List<PmDistrict> workShopFacilityDistricts;
+	private List<PmCity> workShopFacilityCities;
+
+	private List<PmState> storeFacilityStates;
+	private List<PmDistrict> storeFacilityDistricts;
+	private List<PmCity> storeFacilityCities;
+
 	private List<PmCertBody> certBodyLs;
 	private List<PmCertBody> profBodyLs;
-
-	// Panels
-	private String basicCompanyPanel;
-	private String basicOffFacPanel;
-	private String branchCompanyPanel;
-	private String assocCompanyPanel;
-	private String equiCompanyPanel;
+	private List<PmUom> uomLs;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -355,6 +365,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
 		selectedManufacturer = new SmManufacturingDtl();
+		selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachineList = new ArrayList<SmMachineDtl>();
 
@@ -459,7 +470,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultParentCatList = new ArrayList<PmCategoryL1>();
 		defaultParentCatList.add(p1);
 		defaultParentCatList.add(p2);
-		
+
 		supplierParentCatList = new ArrayList<PmCategoryL1>();
 		supplierChildCatList = new ArrayList<PmCategoryL2>();
 		supplierSubChildCatList = new ArrayList<PmCategoryL3>();
@@ -467,16 +478,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		testBlock = Boolean.TRUE;
 		// setdefault panel names
-		setDefaultPanelNames();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
-	}
-
-	private void setDefaultPanelNames() {
-		setBasicCompanyPanel(SupplierManagementConst.SM_BASIC_INFO_PANEL);
-		setBasicOffFacPanel(SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-		setBranchCompanyPanel(SupplierManagementConst.SM_BRANCH_PANEL);
-		setAssocCompanyPanel(SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
-		setEquiCompanyPanel(SupplierManagementConst.SM_EQUI_COMPANY_PANEL);
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -1201,14 +1203,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.certBodyLs = certBodyLs;
 	}
 
-	public String getBasicCompanyPanel() {
-		return basicCompanyPanel;
-	}
-
-	public void setBasicCompanyPanel(String basicCompanyPanel) {
-		this.basicCompanyPanel = basicCompanyPanel;
-	}
-
 	public List<PmState> getBasicOffFacStates() {
 		return basicOffFacStates;
 	}
@@ -1231,14 +1225,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBasicOffFacCities(List<PmCity> basicOffFacCities) {
 		this.basicOffFacCities = basicOffFacCities;
-	}
-
-	public String getBasicOffFacPanel() {
-		return basicOffFacPanel;
-	}
-
-	public void setBasicOffFacPanel(String basicOffFacPanel) {
-		this.basicOffFacPanel = basicOffFacPanel;
 	}
 
 	public List<SmAssociationBody> getSelectedAssocBodyList() {
@@ -1291,14 +1277,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.branchCompanyCities = branchCompanyCities;
 	}
 
-	public String getBranchCompanyPanel() {
-		return branchCompanyPanel;
-	}
-
-	public void setBranchCompanyPanel(String branchCompanyPanel) {
-		this.branchCompanyPanel = branchCompanyPanel;
-	}
-
 	public List<PmState> getAssocCompanyStates() {
 		return assocCompanyStates;
 	}
@@ -1321,14 +1299,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAssocCompanyCities(List<PmCity> assocCompanyCities) {
 		this.assocCompanyCities = assocCompanyCities;
-	}
-
-	public String getAssocCompanyPanel() {
-		return assocCompanyPanel;
-	}
-
-	public void setAssocCompanyPanel(String assocCompanyPanel) {
-		this.assocCompanyPanel = assocCompanyPanel;
 	}
 
 	public List<PmState> getEquiCompanyStates() {
@@ -1355,19 +1325,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.equiCompanyCities = equiCompanyCities;
 	}
 
-	public String getEquiCompanyPanel() {
-		return equiCompanyPanel;
-	}
-
-	public void setEquiCompanyPanel(String equiCompanyPanel) {
-		this.equiCompanyPanel = equiCompanyPanel;
-	}
-
 	public List<PmCategoryL1> getSupplierParentCatList() {
 		return supplierParentCatList;
 	}
 
-	public void setSupplierParentCatList(List<PmCategoryL1> supplierParentCatList) {
+	public void setSupplierParentCatList(
+			List<PmCategoryL1> supplierParentCatList) {
 		this.supplierParentCatList = supplierParentCatList;
 	}
 
@@ -1386,6 +1349,113 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSupplierSubChildCatList(
 			List<PmCategoryL3> supplierSubChildCatList) {
 		this.supplierSubChildCatList = supplierSubChildCatList;
+	}
+
+	public List<PmState> getFactoryFacilityStates() {
+		return factoryFacilityStates;
+	}
+
+	public void setFactoryFacilityStates(List<PmState> factoryFacilityStates) {
+		this.factoryFacilityStates = factoryFacilityStates;
+	}
+
+	public List<PmDistrict> getFactoryFacilityDistricts() {
+		return factoryFacilityDistricts;
+	}
+
+	public void setFactoryFacilityDistricts(
+			List<PmDistrict> factoryFacilityDistricts) {
+		this.factoryFacilityDistricts = factoryFacilityDistricts;
+	}
+
+	public List<PmCity> getFactoryFacilityCities() {
+		return factoryFacilityCities;
+	}
+
+	public void setFactoryFacilityCities(List<PmCity> factoryFacilityCities) {
+		this.factoryFacilityCities = factoryFacilityCities;
+	}
+
+	public List<PmState> getDockFacilityStates() {
+		return dockFacilityStates;
+	}
+
+	public void setDockFacilityStates(List<PmState> dockFacilityStates) {
+		this.dockFacilityStates = dockFacilityStates;
+	}
+
+	public List<PmDistrict> getDockFacilityDistricts() {
+		return dockFacilityDistricts;
+	}
+
+	public void setDockFacilityDistricts(List<PmDistrict> dockFacilityDistricts) {
+		this.dockFacilityDistricts = dockFacilityDistricts;
+	}
+
+	public List<PmCity> getDockFacilityCities() {
+		return dockFacilityCities;
+	}
+
+	public void setDockFacilityCities(List<PmCity> dockFacilityCities) {
+		this.dockFacilityCities = dockFacilityCities;
+	}
+
+	public List<PmState> getWorkShopFacilityStates() {
+		return workShopFacilityStates;
+	}
+
+	public void setWorkShopFacilityStates(List<PmState> workShopFacilityStates) {
+		this.workShopFacilityStates = workShopFacilityStates;
+	}
+
+	public List<PmDistrict> getWorkShopFacilityDistricts() {
+		return workShopFacilityDistricts;
+	}
+
+	public void setWorkShopFacilityDistricts(
+			List<PmDistrict> workShopFacilityDistricts) {
+		this.workShopFacilityDistricts = workShopFacilityDistricts;
+	}
+
+	public List<PmCity> getWorkShopFacilityCities() {
+		return workShopFacilityCities;
+	}
+
+	public void setWorkShopFacilityCities(List<PmCity> workShopFacilityCities) {
+		this.workShopFacilityCities = workShopFacilityCities;
+	}
+
+	public List<PmState> getStoreFacilityStates() {
+		return storeFacilityStates;
+	}
+
+	public void setStoreFacilityStates(List<PmState> storeFacilityStates) {
+		this.storeFacilityStates = storeFacilityStates;
+	}
+
+	public List<PmDistrict> getStoreFacilityDistricts() {
+		return storeFacilityDistricts;
+	}
+
+	public void setStoreFacilityDistricts(
+			List<PmDistrict> storeFacilityDistricts) {
+		this.storeFacilityDistricts = storeFacilityDistricts;
+	}
+
+	public List<PmCity> getStoreFacilityCities() {
+		return storeFacilityCities;
+	}
+
+	public void setStoreFacilityCities(List<PmCity> storeFacilityCities) {
+		this.storeFacilityCities = storeFacilityCities;
+	}
+
+	public List<PmUom> getUomLs() {
+		return uomLs;
+	}
+
+	public void setUomLs(List<PmUom> uomLs) {
+		this.uomLs = uomLs;
 	}
 
 }

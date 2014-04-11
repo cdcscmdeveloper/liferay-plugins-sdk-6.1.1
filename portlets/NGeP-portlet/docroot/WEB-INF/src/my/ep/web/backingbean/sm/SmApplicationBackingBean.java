@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -30,6 +31,7 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
@@ -104,6 +106,7 @@ public class SmApplicationBackingBean extends
 		retrievePmCertBodyList();
 		retrievePmProfBodyList();
 		retrieveParentCategoryList();
+		retrieveUomList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -198,20 +201,8 @@ public class SmApplicationBackingBean extends
 										.getCountryId()));
 
 			} else {
+				setApplicationFailities(smAppl.getSmFacilities());
 				// TODO
-				System.out.println("*** Existing Facility******");
-				for (SmFacility fac : smAppl.getSmFacilities()) {
-					if (fac.getFacilityType().equalsIgnoreCase("B")
-							|| fac.getFacilityType().equalsIgnoreCase("H")) {
-						getManagedBean().setBasicOffFacStates(
-								retrievePmStateList(fac.getSmAddress()
-										.getPmCountry().getCountryId()));
-						System.out
-								.println("********* getPmCountry NULL VALUE **********");
-						this.getManagedBean().setBasicCompanyFacility(fac);
-						break;
-					}
-				}
 			}
 			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
@@ -503,17 +494,8 @@ public class SmApplicationBackingBean extends
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.retrieveCurrentDraftApplication(finReqDto);
 				getManagedBean().setSmAppl(resDTO.getSmAppl());
-				if (!getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
-					for (SmFacility fac : getManagedBean().getSmAppl()
-							.getSmFacilities()) {
-						if (fac.getFacilityType().equalsIgnoreCase("B")
-								|| fac.getFacilityType().equalsIgnoreCase("H")) {
-							this.getManagedBean().setBasicCompanyFacility(fac);
-							break;
-						}
-					}
-				}
-
+				setApplicationFailities(getManagedBean().getSmAppl()
+						.getSmFacilities());
 				System.out
 						.println(" ***** Business  Type After in finally block *********"
 								+ getManagedBean().getSmAppl().getSmSupplier()
@@ -1294,28 +1276,40 @@ public class SmApplicationBackingBean extends
 	// -- Process Category Codes End
 	// factory start
 	public void addOrUpdateFactoryToSmAppl() {
+		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
+		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
-		if (getManagedBean().getSmAppl().getSmFacilities()
-				.contains(getManagedBean().getSelectedFactoryFacility())) {
+			if (getManagedBean().getApplFactoryFacilities().contains(smFac)) {
+				System.out
+						.println(" ******* THIS IS EDIT FOR EXISITING FACTORY **********");
+			}
 
-			System.out.println(" **** THIS IS AN UPDATE For Factoy******");
 		} else {
-			System.out.println("-- Before Save --"
-					+ getManagedBean().getSelectedFactoryFacility()
-							.getSmAddress().getAddress1());
-			getManagedBean().getSmAppl().getSmFacilities()
-					.add(getManagedBean().getSelectedFactoryFacility());
+			getManagedBean().getApplFactoryFacilities().add(smFac);
+			getManagedBean().getSmAppl().getSmFacilities().add(smFac);
 		}
+
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {
+		System.out.println("******** Selected value ******"
+				+ facilityBean.getSmAddress().getAddress1());
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
 	}
 
 	public void assignNewFactoryBean() {
 		getManagedBean().setSelectedFactoryFacility(new SmFacility());
+		getManagedBean().getSelectedFactoryFacility().setRevNo(1);
 		getManagedBean().getSelectedFactoryFacility().setSmAddress(
 				(setDefaultAddr()));
+		getManagedBean().getSelectedFactoryFacility().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().getSelectedFactoryFacility().setFacilityType(
+				SupplierManagementConst.SM_FACILITY_TYPE_FACTORY);
+		getManagedBean().setFactoryFacilityStates(
+				retrievePmStateList(getManagedBean()
+						.getSelectedFactoryFacility().getSmAddress()
+						.getPmCountry().getCountryId()));
 	}
 
 	public void factoryOwnerTypeSel(AjaxBehaviorEvent e) {
@@ -1324,11 +1318,220 @@ public class SmApplicationBackingBean extends
 						.getOwnershipType());
 	}
 
+	public void deleteSelectedFactories() {
+
+		System.out.println("*** Delete Branches Companies ******* "
+				+ getManagedBean().getSelectedFactoryFacilities().size());
+		if (getManagedBean().getSelectedFactoryFacilities().size() > 0) {
+			for (SmFacility sm : getManagedBean()
+					.getSelectedFactoryFacilities()) {
+				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
+				getManagedBean().getApplFactoryFacilities().remove(sm);
+			}
+			getManagedBean().getSelectedFactoryFacilities().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
+	}
+
 	// factory end
 
+	// Dockyard start
+	public void addOrUpdateDockYardToSmAppl() {
+		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
+		System.out.println("**** This is dock yard data ********"
+				+ smFac.getSmAddress().getAddress1());
+		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
+
+			if (getManagedBean().getApplDockyardFacilities().contains(smFac)) {
+				System.out
+						.println(" ******* THIS IS EDIT FOR EXISITING Doc **********");
+			}
+
+		} else {
+			getManagedBean().getApplDockyardFacilities().add(smFac);
+			getManagedBean().getSmAppl().getSmFacilities().add(smFac);
+		}
+
+	}
+
+	public void assignSelDockyard(SmFacility facilityBean) {
+		System.out.println("******** Selected dock value ******"
+				+ facilityBean.getSmAddress().getAddress1());
+		getManagedBean().setSelectedDockyardFacility(facilityBean);
+	}
+
+	public void assignNewDockyardBean() {
+		System.out.println(" ********** New doc yard value *********");
+		getManagedBean().setSelectedDockyardFacility(new SmFacility());
+		getManagedBean().getSelectedDockyardFacility().setRevNo(1);
+		getManagedBean().getSelectedDockyardFacility().setSmAddress(
+				(setDefaultAddr()));
+		getManagedBean().getSelectedDockyardFacility().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().getSelectedDockyardFacility().setFacilityType(
+				SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD);
+		getManagedBean().setDockFacilityStates(
+				retrievePmStateList(getManagedBean()
+						.getSelectedFactoryFacility().getSmAddress()
+						.getPmCountry().getCountryId()));
+	}
+
+	public void dockOwnerTypeSel(AjaxBehaviorEvent e) {
+		System.out.println("Selected Owner type === "
+				+ getManagedBean().getSelectedDockyardFacility()
+						.getOwnershipType());
+	}
+
+	public void deleteSelectedDocks() {
+
+		System.out.println("*** Delete Dockyars ******* "
+				+ getManagedBean().getSelectedDockyardFacilities().size());
+		if (getManagedBean().getSelectedDockyardFacilities().size() > 0) {
+			for (SmFacility sm : getManagedBean()
+					.getSelectedDockyardFacilities()) {
+				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
+				getManagedBean().getApplDockyardFacilities().remove(sm);
+			}
+			getManagedBean().getSelectedDockyardFacilities().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
+	}
+
+	// Dockyard end
+	// Workshop start
+	public void addOrUpdateWorkshopToSmAppl() {
+		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
+
+			if (getManagedBean().getApplWorkShopFacilities().contains(smFac)) {
+				System.out
+						.println(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+			}
+
+		} else {
+			getManagedBean().getApplWorkShopFacilities().add(smFac);
+			getManagedBean().getSmAppl().getSmFacilities().add(smFac);
+		}
+
+	}
+
+	public void assignSelWorkshop(SmFacility facilityBean) {
+		getManagedBean().setSelectedWorkShopFacility(facilityBean);
+	}
+
+	public void assignNewWorkshopBean() {
+		getManagedBean().setSelectedWorkShopFacility(new SmFacility());
+		getManagedBean().getSelectedWorkShopFacility().setRevNo(1);
+		getManagedBean().getSelectedWorkShopFacility().setSmAddress(
+				(setDefaultAddr()));
+		getManagedBean().getSelectedWorkShopFacility().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().getSelectedWorkShopFacility().setFacilityType(
+				SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP);
+		getManagedBean().setWorkShopFacilityStates(
+				retrievePmStateList(getManagedBean()
+						.getSelectedFactoryFacility().getSmAddress()
+						.getPmCountry().getCountryId()));
+	}
+
+	public void workShopOwnerTypeSel(AjaxBehaviorEvent e) {
+		System.out.println("Selected Owner type === "
+				+ getManagedBean().getSelectedWorkShopFacility()
+						.getOwnershipType());
+	}
+
+	public void deleteSelectedWorkShops() {
+		if (getManagedBean().getSelectedWorkShopFacilities().size() > 0) {
+			for (SmFacility sm : getManagedBean()
+					.getSelectedWorkShopFacilities()) {
+				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
+				getManagedBean().getApplWorkShopFacilities().remove(sm);
+			}
+			getManagedBean().getSelectedWorkShopFacilities().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
+	}
+
+	// Workshop end
+	// Workshop start
+	public void addOrUpdateStoreToSmAppl() {
+		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
+
+			if (getManagedBean().getApplStoreFacilities().contains(smFac)) {
+				System.out
+						.println(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+			}
+
+		} else {
+			getManagedBean().getApplStoreFacilities().add(smFac);
+			getManagedBean().getSmAppl().getSmFacilities().add(smFac);
+		}
+
+	}
+
+	public void assignSelStore(SmFacility facilityBean) {
+		getManagedBean().setSelectedStoreFacility(facilityBean);
+	}
+
+	public void assignNewStoreBean() {
+		getManagedBean().setSelectedStoreFacility(new SmFacility());
+		getManagedBean().getSelectedStoreFacility().setRevNo(1);
+		getManagedBean().getSelectedStoreFacility().setSmAddress(
+				(setDefaultAddr()));
+		getManagedBean().getSelectedStoreFacility().setSmAppl(
+				getManagedBean().getSmAppl());
+		getManagedBean().getSelectedStoreFacility().setFacilityType(
+				SupplierManagementConst.SM_FACILITY_TYPE_STORE);
+		getManagedBean().setStoreFacilityStates(
+				retrievePmStateList(getManagedBean()
+						.getSelectedFactoryFacility().getSmAddress()
+						.getPmCountry().getCountryId()));
+	}
+
+	public void storeOwnerTypeSel(AjaxBehaviorEvent e) {
+		System.out.println("Selected Owner type === "
+				+ getManagedBean().getSelectedStoreFacility()
+						.getOwnershipType());
+	}
+
+	public void deleteSelectedStores() {
+
+		if (getManagedBean().getSelectedStoreFacilities().size() > 0) {
+			for (SmFacility sm : getManagedBean().getSelectedStoreFacilities()) {
+				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
+				getManagedBean().getApplStoreFacilities().remove(sm);
+			}
+			getManagedBean().getSelectedStoreFacilities().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
+	}
+
+	// Workshop end
 	// manufacturer start
 	public void addOrUpdateManufacturerToSmAppl() {
-
+		if (getManagedBean().getSelectedManufacturer().getPmUom().getUomId() != null) {
+			for (PmUom uom : getManagedBean().getUomLs()) {
+				if (uom.getUomId().equals(
+						getManagedBean().getSelectedManufacturer().getPmUom()
+								.getUomId())) {
+					getManagedBean().getSelectedManufacturer().setPmUom(uom);
+					break;
+				}
+			}
+		}
 		if (getManagedBean().getSmAppl().getSmManufacturingDtls()
 				.contains(getManagedBean().getSelectedManufacturer())) {
 
@@ -1346,7 +1549,31 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewManufacturerBean() {
-		getManagedBean().setSelectedManufacturer(new SmManufacturingDtl());
+		System.out.println("**** Add new Manufacturer *********");
+		SmManufacturingDtl manu = new SmManufacturingDtl();
+		manu.setPmUom(new PmUom());
+		manu.setRevNo(1);
+		manu.setSmAppl(getManagedBean().getSmAppl());
+		getManagedBean().setSelectedManufacturer(manu);
+		System.out.println("****** After **********"
+				+ getManagedBean().getSelectedManufacturer().getPmUom()
+						.getUomName());
+
+	}
+
+	public void deleteSelectedManufacturers() {
+
+		if (getManagedBean().getSelectedManufacturingList().size() > 0) {
+			for (SmManufacturingDtl man : getManagedBean()
+					.getSelectedManufacturingList()) {
+				getManagedBean().getSmAppl().getSmManufacturingDtls()
+						.remove(man);
+			}
+			getManagedBean().getSelectedManufacturingList().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
 	}
 
 	// manufacturer end
@@ -1372,6 +1599,22 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewMachineryBean() {
 		getManagedBean().setSelectedMachine(new SmMachineDtl());
+		getManagedBean().getSelectedMachine().setRevNo(1);
+		getManagedBean().getSelectedMachine().setSmAppl(
+				getManagedBean().getSmAppl());
+	}
+
+	public void deleteSelectedMachinery() {
+
+		if (getManagedBean().getSelectedMachineList().size() > 0) {
+			for (SmMachineDtl mac : getManagedBean().getSelectedMachineList()) {
+				getManagedBean().getSmAppl().getSmMachineDtls().remove(mac);
+			}
+			getManagedBean().getSelectedMachineList().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
 	}
 
 	// manufacturer end
@@ -2056,6 +2299,14 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCertBodyLs().size());
 	}
 
+	private void retrieveUomList() {
+		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IUomSO.class);
+		UomResDTO resDTO = reqSO.retrieveUomList();
+
+		this.getManagedBean().setUomLs(resDTO.getPmUomList());
+	}
+
 	private void retrievePmProfBodyList() {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
@@ -2325,14 +2576,12 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void populateStatesByCountry(long coutryId, String panelName,
-			PmState state, PmDistrict district, PmCity city,
-			List<PmDistrict> distList, List<PmCity> cityList) {
+			PmState state, PmDistrict district, PmCity city) {
 		try {
 			List<PmState> stateLs = this.retrievePmStateList(coutryId);
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-				System.out
-						.println("**** This is my correct Basic Country Panel ");
+				System.out.println("**** This is Basic Change Country Panel ");
 				this.getManagedBean().setBasicCompanyStates(stateLs);
 				this.getManagedBean().setBasicCompanyDistricts(
 						new ArrayList<PmDistrict>());
@@ -2341,7 +2590,7 @@ public class SmApplicationBackingBean extends
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				System.out
-						.println("**** This is my correct Basic Office facility Panel ");
+						.println("**** This is my correct off fac Change Country Panel ");
 				this.getManagedBean().setBasicOffFacStates(stateLs);
 				this.getManagedBean().setBasicOffFacDistricts(
 						new ArrayList<PmDistrict>());
@@ -2350,6 +2599,8 @@ public class SmApplicationBackingBean extends
 				break;
 
 			case SupplierManagementConst.SM_BRANCH_PANEL:
+				System.out
+						.println("**** This is my branch Change Country Panel ");
 				this.getManagedBean().setBranchCompanyStates(stateLs);
 				this.getManagedBean().setBranchCompanyDistricts(
 						new ArrayList<PmDistrict>());
@@ -2357,6 +2608,8 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				System.out
+						.println("**** This is my  assoc Change Country Panel ");
 				this.getManagedBean().setAssocCompanyStates(stateLs);
 				this.getManagedBean().setAssocCompanyDistricts(
 						new ArrayList<PmDistrict>());
@@ -2364,10 +2617,39 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				System.out
+						.println("**** This is my equi Change Country Panel ");
 				this.getManagedBean().setEquiCompanyStates(stateLs);
 				this.getManagedBean().setEquiCompanyDistricts(
 						new ArrayList<PmDistrict>());
 				this.getManagedBean().setEquiCompanyCities(
+						new ArrayList<PmCity>());
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				this.getManagedBean().setFactoryFacilityStates(stateLs);
+				this.getManagedBean().setFactoryFacilityDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setFactoryFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				this.getManagedBean().setDockFacilityStates(stateLs);
+				this.getManagedBean().setDockFacilityDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setDockFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				this.getManagedBean().setWorkShopFacilityStates(stateLs);
+				this.getManagedBean().setWorkShopFacilityDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setWorkShopFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				this.getManagedBean().setStoreFacilityStates(stateLs);
+				this.getManagedBean().setStoreFacilityDistricts(
+						new ArrayList<PmDistrict>());
+				this.getManagedBean().setStoreFacilityCities(
 						new ArrayList<PmCity>());
 				break;
 			default:
@@ -2383,40 +2665,64 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void populateDistrictsByState(long stateId, String panelName,
-			PmDistrict district, PmCity city, List<PmCity> cityList) {
+			PmDistrict district, PmCity city) {
+		System.out.println("********** Panel value from page *********"
+				+ panelName);
 		try {
 			List<PmDistrict> distLs = this.retrievePmDistrictList(stateId);
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-				System.out.println("**** This is my correct Basic dist Panel ");
+				System.out.println("**** This is Basic Change State Panel ");
 				this.getManagedBean().setBasicCompanyDistricts(distLs);
 				this.getManagedBean().setBasicCompanyCities(
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
-				System.out
-						.println("**** This is my correct Basic Office facility dist Panel ");
+				System.out.println("**** This is Facility Change State Panel ");
 				this.getManagedBean().setBasicOffFacDistricts(distLs);
 				this.getManagedBean().setBasicOffFacCities(
 						new ArrayList<PmCity>());
 				break;
 
 			case SupplierManagementConst.SM_BRANCH_PANEL:
+				System.out.println("**** This is Branch Change State Panel ");
 				this.getManagedBean().setBranchCompanyDistricts(distLs);
 				this.getManagedBean().setBranchCompanyCities(
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				System.out.println("**** This is Assoc Change State Panel ");
 				this.getManagedBean().setAssocCompanyDistricts(distLs);
 				this.getManagedBean().setAssocCompanyCities(
 						new ArrayList<PmCity>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				System.out.println("**** This is Equi Change State Panel ");
 				this.getManagedBean().setEquiCompanyDistricts(distLs);
 				this.getManagedBean().setEquiCompanyCities(
 						new ArrayList<PmCity>());
 				break;
 
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				this.getManagedBean().setFactoryFacilityDistricts(distLs);
+				this.getManagedBean().setFactoryFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				this.getManagedBean().setDockFacilityDistricts(distLs);
+				this.getManagedBean().setDockFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				this.getManagedBean().setWorkShopFacilityDistricts(distLs);
+				this.getManagedBean().setWorkShopFacilityCities(
+						new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				this.getManagedBean().setStoreFacilityDistricts(distLs);
+				this.getManagedBean().setStoreFacilityCities(
+						new ArrayList<PmCity>());
+				break;
 			default:
 				System.out.println("**** This is an unknown panel ***** ");
 				break;
@@ -2434,23 +2740,39 @@ public class SmApplicationBackingBean extends
 			List<PmCity> cityLs = this.retrievePmCityList(districtId);
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-				System.out.println("**** This is my correct Basic City Panel ");
+				System.out.println("**** This is Basic Change District Panel ");
 				this.getManagedBean().setBasicCompanyCities(cityLs);
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				System.out
-						.println("**** This is my correct Basic Office facility dist Panel ");
+						.println("**** This is Facility Change District Panel ");
 				this.getManagedBean().setBasicOffFacCities(cityLs);
 				break;
 			case SupplierManagementConst.SM_BRANCH_PANEL:
+				System.out
+						.println("**** This is Branch Change District Panel ");
 				this.getManagedBean().setBranchCompanyCities(cityLs);
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				System.out.println("**** This is Assoc Change District Panel ");
 				this.getManagedBean().setAssocCompanyCities(cityLs);
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				System.out
+						.println("**** This is Equity Change District Panel ");
 				this.getManagedBean().setEquiCompanyCities(cityLs);
 				break;
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				this.getManagedBean().setFactoryFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				this.getManagedBean().setDockFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				this.getManagedBean().setWorkShopFacilityCities(cityLs);
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				this.getManagedBean().setStoreFacilityCities(cityLs);
 			default:
 				System.out.println("**** This is an unknown panel ***** ");
 				break;
@@ -2511,6 +2833,43 @@ public class SmApplicationBackingBean extends
 
 	private void resetSubChildCategory(PmCategoryL3 catL3) {
 		catL3.setCategoryL3Id(null);
+
+	}
+
+	private void setApplicationFailities(List<SmFacility> smFacilities) {
+		System.out.println("*** Existing Facility******");
+		getManagedBean().setApplFactoryFacilities(new ArrayList<SmFacility>());
+		getManagedBean().setApplDockyardFacilities(new ArrayList<SmFacility>());
+		getManagedBean().setApplWorkShopFacilities(new ArrayList<SmFacility>());
+		getManagedBean().setApplStoreFacilities(new ArrayList<SmFacility>());
+
+		for (SmFacility smFac : smFacilities) {
+			if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+					|| smFac.getFacilityType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				getManagedBean().setBasicOffFacStates(
+						retrievePmStateList(smFac.getSmAddress().getPmCountry()
+								.getCountryId()));
+				System.out
+						.println("********* getPmCountry NULL VALUE **********");
+				this.getManagedBean().setBasicCompanyFacility(smFac);
+			}
+			if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
+				getManagedBean().getApplFactoryFacilities().add(smFac);
+			} else if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
+				getManagedBean().getApplDockyardFacilities().add(smFac);
+			} else if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
+				getManagedBean().getApplWorkShopFacilities().add(smFac);
+			} else if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+				getManagedBean().getApplStoreFacilities().add(smFac);
+			}
+		}
 
 	}
 }
