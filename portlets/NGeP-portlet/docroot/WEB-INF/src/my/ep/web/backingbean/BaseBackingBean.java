@@ -250,7 +250,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownValues(String parameterType) {
-		return getDropdownValues(parameterType, null);
+		return getDropdownValuesBySearchBean(parameterType, null);
 	}
 	
 	/**
@@ -262,12 +262,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * 			the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValues(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(parameterType, searchBean);
+					.getParameterDescListBySearchBean(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
@@ -297,7 +297,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownCodeValues(String parameterType) {
-		return getDropdownCodeValues(parameterType, null);
+		return getDropdownCodeValuesBySearchBean(parameterType, null);
 	}
 	
 	/**
@@ -309,12 +309,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * 			the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownCodeValues(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(parameterType);
+					.getParameterDescListBySearchBean(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");

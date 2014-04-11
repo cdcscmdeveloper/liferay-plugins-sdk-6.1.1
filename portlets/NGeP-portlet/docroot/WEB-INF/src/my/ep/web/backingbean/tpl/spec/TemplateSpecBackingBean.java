@@ -351,7 +351,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 						SearchOperator.OPERATOR_IN.value(), 
 						filteredList));
 		
-		return super.getDropdownValues(ParameterTypeConst.PRICE_TYPE, searchBean);
+		return super.getDropdownValuesBySearchBean(ParameterTypeConst.PRICE_TYPE, searchBean);
 	}
 	
 	public void fulfilmentTypeChange(TplSpecQuestion specQuestion) {

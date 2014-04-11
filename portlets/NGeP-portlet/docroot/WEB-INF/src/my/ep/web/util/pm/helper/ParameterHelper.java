@@ -55,7 +55,7 @@ public class ParameterHelper {
 	 * @return list of PmParameterDesc
 	 */
 	public List<PmParameterDesc> getParameterDescList(String parameterType) {
-		return getParameterDescList(parameterType, null);
+		return getParameterDescListBySearchBean(parameterType, null);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class ParameterHelper {
 	 * 			the searchBean instance
 	 * @return list of PmParameterDesc
 	 */
-	public List<PmParameterDesc> getParameterDescList(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public List<PmParameterDesc> getParameterDescListBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		debugLogger("getParameterDescList.parameterType: " + parameterType);
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
