@@ -113,8 +113,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = null;
 		}
 		
-		getManagedBean().setPreviousPage(NAVIGATE_TO_SEARCH);
-		
 		return "maintenance";
 	}
 
@@ -215,8 +213,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		templateSpecBean.setSelectedSpecQuestion(new TplSpecQuestion());
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
-		
-		getManagedBean().setPreviousPage(NAVIGATE_TO_SEARCH);
 		
 		return "maintenance"; 
 	}
