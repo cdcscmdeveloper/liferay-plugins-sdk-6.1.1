@@ -24,6 +24,12 @@
 	</application>
 
 	<managed-bean>
+		<description>SupplierManagement Constants</description>
+		<managed-bean-name>SupplierManagementConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.sm.SupplierManagementConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<description>Common Constants</description>
 		<managed-bean-name>CommonConstants</managed-bean-name>
 		<managed-bean-class>my.ep.constants.CommonConstants</managed-bean-class>
