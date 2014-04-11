@@ -145,18 +145,18 @@
 									
 							</p:column>
 
-							<p:column headerText="Item Name">
+							<p:column headerText="#{lbl['lbl.cm.item.name']}">
 								#{supplierItem.itemName}
 								
 
 							</p:column>
 
-							<p:column width="10%" headerText="contract no." rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column width="10%" headerText="#{lbl['lbl.cm.contact.no']}" rendered="#{unspscCodeBackingBean.requisitioner}">
 								#{supplierItem.contractNo}
 
 							</p:column>
 
-							<p:column width="10%" headerText="pkp no." rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column width="10%" headerText="#{lbl['lbl.cm.pkp.no']}" rendered="#{unspscCodeBackingBean.requisitioner}">
 								
 									
 										#{supplierItem.circularNo}
@@ -164,7 +164,7 @@
 
 							</p:column>
 
-							<p:column headerText="Supplier Name">
+							<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
 								<h:outputText value="#{supplierItem.companyName}"
 									rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
 								<p:commandLink value="#{supplierItem.companyName}"
@@ -197,7 +197,7 @@
 										<td>
 										   <p:commandLink   
 									         action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-									          rendered="#{supplierItem.contractNo ne null and supplierItem.circularNo ne null }">
+									          rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
 											<p:graphicImage id="pid"
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
