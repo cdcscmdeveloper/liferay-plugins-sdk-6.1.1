@@ -17,12 +17,12 @@
 				value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoFinComplianceSelect}"
-				rowKey="#{compilance.checkListCategoryId}" rowIndexVar="index">
+				rowKey="#{compilance.documentId}" rowIndexVar="index">
 				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
 				<p:column selectionMode="multiple"
 					style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.spec.check.list']}">
-					<h:outputText value="#{compilance.pmCheckList.checkListName}"></h:outputText>
+					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
