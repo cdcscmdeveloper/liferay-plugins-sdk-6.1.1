@@ -34,23 +34,20 @@
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						size="40" mask="999999999999"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}" />
-					&#160;
-					<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
-					<p:tooltip id="uidtt" for="uidti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}"  />
-					</p:tooltip>
-				</td>
+					&#160; <p:graphicImage id="uidti" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="uidtt" for="uidti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}" />
+					</p:tooltip></td>
 			</tr>
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="* Full Name" /></td>
 				<td class="tdContent"><p:inputText size="40"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
-					&#160;
-					<p:graphicImage id="fNmti" library="ep/images/design" name="tooltips.png" />
-					<p:tooltip id="fNmtt" for="fNmti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.full.name']}"  />
-					</p:tooltip>
-				</td>
+					&#160; <p:graphicImage id="fNmti" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="fNmtt" for="fNmti">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.user.full.name']}" />
+					</p:tooltip></td>
 			</tr>
 
 			<tr>
@@ -58,12 +55,10 @@
 				<td class="tdContent"><p:inputText size="40" colspan="3"
 						id="txtPermAdd1"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}" />
-					&#160;
-					<p:graphicImage id="addti" library="ep/images/design" name="tooltips.png" />
-					<p:tooltip id="addtt" for="addti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.address']}"  />
-					</p:tooltip>
-				</td>
+					&#160; <p:graphicImage id="addti" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="addtt" for="addti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.address']}" />
+					</p:tooltip></td>
 			</tr>
 
 			<tr>
@@ -126,9 +121,9 @@
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
-	</p:panel>
+	</p:panel>\
 <!-- 	<ui:include src="/xhtml/sm/shared/onlinereg/businessNature.xhtml" /> -->
-<!-- 	<ui:include src="/xhtml/sm/shared/onlinereg/identityUpload.xhtml"></ui:include> -->
+	<!-- 	<ui:include src="/xhtml/sm/shared/onlinereg/identityUpload.xhtml"></ui:include> -->
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml"></ui:include>
 
 	<p:outputPanel id="outPnl">

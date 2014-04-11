@@ -8,11 +8,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -26,34 +31,13 @@ public class SvcSiteAssignBackingBean extends
 		BaseBackingBean<SvcSiteAssignManagedBean> {
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
 	
-	/*******Dummy start*****************/
-	private DualListModel<String> officers;  
-
-	public DualListModel<String> getOfficers() {
-		return officers;
-	}
-
-	public void setOfficers(DualListModel<String> officers) {
-		this.officers = officers;
-	}
-	/*******Dummy end*****************/
-	
 	public SvcSiteAssignBackingBean() {
-		/*****************Dummy data**********************/
-		 List<String> svOfficer = new ArrayList<String>(); 
-		 List<String> conSvOfficer = new ArrayList<String>(); 
-		 svOfficer.add("Mohammad Rizam");
-		 svOfficer.add("Siti Nurul");
-		 svOfficer.add("Mohammad Amin");
-		 svOfficer.add("Haiza Aida");
-		 svOfficer.add("Nurul Azlina");
-		 
-		 
-		 officers = new DualListModel<String>(svOfficer, conSvOfficer);  
+		retrieveSVOList();
 	}
 
 	public void retrieveSiteAssignInfo() {
-		//this.getManagedBean().setAppId(22);
+		this.getManagedBean().setAppId(1009);
+		//retrieveSVOList();
 		//this.getManagedBean().setSmApplSv(new SmApplSiteVisit());
 		//this.getManagedBean().getSmApplSv().get
 		
@@ -97,6 +81,26 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	public String submitSiteVisitTest (){
+		
 
+		return "";
+	}
 	
+
+	private void retrieveSVOList(){
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setRoleCode(SupplierManagementConst.SVO_HQ);
+		IUserSO reqSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
+		
+		this.getManagedBean().setSourceSVO(new ArrayList<PmUser>());
+		this.getManagedBean().setSelectedSVO(new ArrayList<PmUser>());
+
+		for(PmUser usr : resDTO.getUserList()){
+			this.getManagedBean().getSourceSVO().add(usr);
+		}
+		
+		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
+	}
 }

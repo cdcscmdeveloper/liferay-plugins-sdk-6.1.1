@@ -1,11 +1,19 @@
 package my.ep.web.managedbean.sm.sitevisit;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "siteVisitAssignMB")
 @SessionScoped
@@ -17,6 +25,11 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private String[] bpmAction;
 	private String taskId;
 	private SMSiteVisitDataType bpmPojo;
+	//private List<PmUser> svoUserList;
+	private DualListModel<PmUser> svoUserList;  
+	private List<PmUser> sourceSVO;
+	private List<PmUser> selectedSVO;
+	private String currDate;
 	
 
 	public SmApplSiteVisit getSmApplSv() {
@@ -57,6 +70,42 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setBpmPojo(SMSiteVisitDataType bpmPojo) {
 		this.bpmPojo = bpmPojo;
+	}
+
+	public DualListModel<PmUser> getSvoUserList() {
+		return svoUserList;
+	}
+
+	public void setSvoUserList(DualListModel<PmUser> svoUserList) {
+		this.svoUserList = svoUserList;
+	}
+
+	public List<PmUser> getSourceSVO() {
+		return sourceSVO;
+	}
+
+	public void setSourceSVO(List<PmUser> sourceSVO) {
+		this.sourceSVO = sourceSVO;
+	}
+
+	public List<PmUser> getSelectedSVO() {
+		return selectedSVO;
+	}
+
+	public void setSelectedSVO(List<PmUser> selectedSVO) {
+		this.selectedSVO = selectedSVO;
+	}
+
+	public String getCurrDate() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		System.out.println(dateFormat.format(date));
+		currDate = dateFormat.format(date);
+		return currDate;
+	}
+
+	public void setCurrDate(String currDate) {
+		this.currDate = currDate;
 	}
 
 }

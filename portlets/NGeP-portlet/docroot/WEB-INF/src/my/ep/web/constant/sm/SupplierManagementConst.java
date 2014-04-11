@@ -73,6 +73,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE = "P";
 	public static final int FIRST_USER_AUTHO = 1;
 	public static final int FIRST_USER_CONT_SIGNER = 1;
+	public static final boolean FIRST_USER_CONT_PERSON = true;
 	public static final int REG_SOFTCERT = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
 
@@ -80,4 +81,7 @@ public class SupplierManagementConst {
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
 	public static final String SVO_SK = "UPS_SVO_SK";
+	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
+	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
 }

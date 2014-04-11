@@ -33,7 +33,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.ntf.dto.NtfRequestDTO;
@@ -60,16 +59,15 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
-//import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import my.ep.web.constant.sm.SupplierManagementConst;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
+//import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -98,8 +96,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String proceedToCompanyInfo() {
-		log.info("-------onlineAccountAgreement start-------------");
+		log.info("-------onlineAccountAgreement start 123456-------------");
+		log.info("********************************TESTING********************************************");
 		if (this.getManagedBean().getSmSupp() == null) {
+			
 			log.info("-------RegistrationBackingBean is NUll-------------");
 			this.getManagedBean().setSmSupp(new SmSupplier());
 
@@ -118,7 +118,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmPersonnel(new SmPersonnel());
 			this.getManagedBean().getSmPersonnel().setPmCountry(new PmCountry());
 
-			smAppl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+//			smAppl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+//			this.retrieveCertBody();
 			
 			this.getManagedBean().setSmBusinessAdd(new SmAddress());
 			this.getManagedBean().getSmBusinessAdd().setPmCountry(new PmCountry());
@@ -229,19 +230,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public void addProfessionalCert() {
 		log.info("-------------------addProfessionalCert-----------");
-		if(this.getManagedBean().getProfCertBodyLs() == null){
+		if(this.getManagedBean().getSmAppl().getSmSupplierCerts() == null){
+			this.getManagedBean().getSmAppl().setSmSupplierCerts(new ArrayList<SmSupplierCert>());
 			this.retrieveCertBody();
 		}
-		
 		SmSupplierCert newSuppCert = new SmSupplierCert();
 		newSuppCert.setPmCertBody(new PmCertBody());
 		this.getManagedBean().getSmAppl().getSmSupplierCerts().add(newSuppCert);
-//				+ this.getManagedBean().getSmSuppCerts());
-//		if (this.getManagedBean().getSmSuppCerts() == null) {
-//			this.getManagedBean().setSmSuppCerts(new ArrayList<SmSupplierCert>());
-//			this.retrieveCertBody();
-//		}
-//this.getManagedBean().getSmSuppCerts().add(new SmSupplierCert());
 	}
 
 	public void removeProfessionalCert() {
@@ -289,6 +284,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().getSmPersonnel().setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 		smPersonnel.setAuthorizedFlg(SupplierManagementConst.FIRST_USER_AUTHO);
+		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
 		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
@@ -336,7 +332,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		/***
 		 * Professional Cert 
 		 */
-		if(smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) || (smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) && smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE))){
+		if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && 
+				smAppl.getSupplierType() != null)  || 
+				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
+				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
+				smSupp.getServiceCategory() != null)){
 			log.info("*****IS PROF********");
 			for(SmSupplierCert suppCert : smAppl.getSmSupplierCerts()){
 				log.info("**Cert Body****" + suppCert.getPmCertBody().getCertBodyId());
@@ -347,7 +347,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("*****NOT PROF********");
 			smAppl.setSmSupplierCerts(null);
 		}
-		
+
 		/*
 		 * Add all related objects to Parent SmSupplier
 		 */
@@ -595,12 +595,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	private void retrieveCertBody() {
 		// PmCertBodyReqDTO = new PmCertBodyReqDTO();
+		log.info("*********retrieveCertBody************");
 
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
 		CertBodyResDTO resDTO = reqSO.retrieveProfessionalBodyList();
 
 		log.info("*****certbody count" + resDTO.getCertBodyList().size());
+		this.getManagedBean().setProfCertBodyLs(new ArrayList<PmCertBody>());
 		this.getManagedBean().setProfCertBodyLs(resDTO.getCertBodyList());
 	}
 
@@ -681,7 +683,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("--------------------viewOnlineAccount----------------");
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(345);
+		reqDTO.setSupplierId(1);
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
