@@ -17,6 +17,7 @@ public interface QTConstants {
 	public static final String STATUS="";
 	
 	public static final String MAINTANANCE_PAGE="quatationtendercreation";
+	public static final String BO_MAINTANANCE_PAGE="businessownercreation";
 	
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	
