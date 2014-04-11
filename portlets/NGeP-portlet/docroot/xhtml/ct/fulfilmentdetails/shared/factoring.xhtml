@@ -7,27 +7,37 @@
 	<p:panel id="factoringId" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">     
      <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth15" >  
        <p:outputLabel  value="#{lbl['lbl.ct.fc.name']}"/>  
-       <p:inputText  value="MOF"  disabled="true" style="width:170px;" />  
+       <p:inputText value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.financialOrg.finOrgName}"  
+          disabled="true" style="width:170px;" />  
        <p:outputLabel  value="Factoring Branch"  />  
-       <p:inputText   disabled="true" style="width:170px;" />
+       <p:inputText value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.financialBranchId.branchName}" 
+          disabled="true" style="width:170px;" />
        <p:outputLabel  value="#{lbl['lbl.ct.fc.authname']}"/>  
-       <p:inputText   disabled="true" style="width:170px;"/>  
+       <p:inputText value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.authRefNo}" 
+          disabled="true" style="width:170px;"/>  
        <p:outputLabel  value="#{lbl['lbl.ct.fc.fdate']}"  />  
-       <p:inputText   disabled="true" style="width:170px;" >
+       <p:inputText value=#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.effDate}   
+          disabled="true" style="width:170px;" >
           <f:convertDateTime pattern="MM/dd/yyyy" />
        </p:inputText>  
        <p:outputLabel  value="#{lbl['lbl.ct.fc.edate']}" />  
-       <p:inputText  disabled="true" style="width:170px;">
+       <p:inputText value=#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.expDate} 
+         disabled="true" style="width:170px;">
          <f:convertDateTime pattern="MM/dd/yyyy" />
        </p:inputText>  
        <p:outputLabel  value="#{lbl['lbl.ct.fc.adate']}" />  
-       <p:inputText   disabled="true" style="width:170px;" >
+       <p:inputText value=#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.approvedDate} 
+           disabled="true" style="width:170px;" >
           <f:convertDateTime pattern="MM/dd/yyyy" />
        </p:inputText>
        <p:outputLabel  value="Payment Bank Name"  />  
        <p:inputText   disabled="true" style="width:170px;" /> 
        <p:outputLabel  value="Account No."  />  
        <p:inputText   disabled="true" style="width:170px;" />   
+       <p:outputLabel  value="Factoring Letter"  />  
+        <h:commandLink value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName}" 
+           style="float:left;" styleClass="blue_font" 
+	       action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath)}" />			
      </h:panelGrid>
    </p:panel>
 </ui:composition>

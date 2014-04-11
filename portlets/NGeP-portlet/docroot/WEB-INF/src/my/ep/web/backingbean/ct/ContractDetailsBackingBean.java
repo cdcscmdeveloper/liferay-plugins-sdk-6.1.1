@@ -136,21 +136,33 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtProgressivePayment[] selectedProgressive;
 	
 	public ContractDetailsBackingBean() {
-	  if(this.getManagedBean().getAction() == null) {
-		 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
-		 this.getManagedBean().setContractVer(new CtContractVer());
-		 
-		 if(ctBB == null){
-			 ctBB = new ContractBackingBean();
-			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		 }
-	  }initializeRemarks();
+	    if(this.getManagedBean().getAction() == null) {
+		  this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+		  this.getManagedBean().setContractVer(new CtContractVer());
+	  
+	    }if(getManagedBean().getUserMap() == null) {
+			 initializeApproverList();
+	    }
+	 
+	    initializeRemarks();
+	    if(ctBB == null){
+		  ctBB = new ContractBackingBean();
+		  ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		}
 	}
 	
 	private FacesScopes getFacesScopes(){
 	   FacesScopes facesScopes = new FacesScopes();
 	   return facesScopes;
 	}
+	
+	private void initializeApproverList() {
+		   if(getManagedBean().getApproverModel()==null) {
+			  List<String> source = new ArrayList<String>(); 
+		      List<String> target = new ArrayList<String>();  
+		      getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		   }			
+		}
 	
 	public void preRenderView() {
 		
@@ -249,7 +261,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
 	        
-	       // this.getManagedBean().getApproverModel().getSource().clear();
+	        this.getManagedBean().getApproverModel().getSource().clear();
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -260,11 +272,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	        
 	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			
+			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-	        initializeRemarks();
-	  
-			  
+	    
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 		
@@ -903,8 +915,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
 			String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterId());
 			if(parameterCode.equalsIgnoreCase(ContractConst.PARAMER_TYPE_ONOFF)){
-			   this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ON_OFF_SERVICE_FEE);	
-			   return ContractConst.ON_OFF_SERVICE_FEE;
+			   this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ONOFF_SERVICE_FEE);	
+			   return ContractConst.ONOFF_SERVICE_FEE;
 			}else{
 				this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.SCHEDULE_PERODIC_SERVICE_FEE);
 				return ContractConst.SCHEDULE_PERODIC_SERVICE_FEE;
@@ -1192,7 +1204,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
-			reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
@@ -1247,9 +1258,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
           
           this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		  initializeRemarks();
 		  ContractBackingBean ctBB = new ContractBackingBean();
 		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		  initializeRemarks();
 		  this.getManagedBean().setViewContract(true);
 		return PROCESS_VIEW_PAGE;
 	}
@@ -1282,9 +1293,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
           
           this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		  initializeRemarks();
 		  ContractBackingBean ctBB = new ContractBackingBean();
 		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		  initializeRemarks();
 		  this.getManagedBean().setViewContract(false);
 		return CONTRACT_PAGE;
 	}

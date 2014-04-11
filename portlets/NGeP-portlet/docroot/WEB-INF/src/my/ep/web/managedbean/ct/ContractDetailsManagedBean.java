@@ -26,6 +26,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -126,6 +127,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean chkJustification;
 	private boolean flgPaymentTracking;
 	private double advancePaymentAmt;
+	
+	private Map<String, PmUser> userMap;
 	
 	public String[] getAction() {
 		return action;
@@ -713,7 +716,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setAdvancePaymentAmt(double advancePaymentAmt) {
 		this.advancePaymentAmt = advancePaymentAmt;
 	}
-	
-	
+
+	public Map<String, PmUser> getUserMap() {
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}
 	
 }
