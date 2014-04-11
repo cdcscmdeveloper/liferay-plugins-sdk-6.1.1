@@ -12,11 +12,15 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
-
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCheckListCategory;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmReportSection;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -26,11 +30,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
-
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
@@ -98,10 +101,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private List<PmCheckListCategory> stageOneComplianceList;
 	private List<PmCheckListCategory> stageOneComplianceSelect;
-	private List<PmCheckListCategory> stageTwoTechComplianceList;
-	private List<PmCheckListCategory> stageTwoTechComplianceSelect;
-	private List<PmCheckListCategory> stageTwoFinComplianceList;
-	private List<PmCheckListCategory> stageTwoFinComplianceSelect;
+	private List<PmDocument> stageTwoTechComplianceList;
+	private List<PmDocument> stageTwoTechComplianceSelect;
+	private List<PmDocument> stageTwoFinComplianceList;
+	private List<PmDocument> stageTwoFinComplianceSelect;
 	private List<ScQtCheckList> s1TechSelect;
 	private List<ScQtCheckList> s1TechAddSelect;
 	private List<ScQtCheckList> s1FinSelect;
@@ -287,6 +290,18 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private BigDecimal recommendfinancialScore;
 	private int tabActiveIndex;
 	private List<ScQtRemark> scQtRemarksList;
+	private List<PmState> stateList;
+	private List<PmDistrict> districtList;
+	private Long stateId;
+	private Long districtId;
+	private Long ministryId;
+	private Long departmentId;
+	private Long ptjId;
+	
+	List<PmOrgProfile> ministryList;
+	List<PmOrgProfile> departmentList;
+	List<PmOrgProfile> ptjtList;
+	List<PmAddressType> deliveryAddressSelect;
 	
 	
 	
@@ -690,65 +705,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.stageOneComplianceSelect = stageOneComplianceSelect;
 	}
 
-	/**
-	 * @return the stageTwoTechComplianceList
-	 */
-	public List<PmCheckListCategory> getStageTwoTechComplianceList() {
-		return stageTwoTechComplianceList;
-	}
 
-	/**
-	 * @param stageTwoTechComplianceList the stageTwoTechComplianceList to set
-	 */
-	public void setStageTwoTechComplianceList(
-			List<PmCheckListCategory> stageTwoTechComplianceList) {
-		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
-	}
 
-	/**
-	 * @return the stageTwoTechComplianceSelect
-	 */
-	public List<PmCheckListCategory> getStageTwoTechComplianceSelect() {
-		return stageTwoTechComplianceSelect;
-	}
 
-	/**
-	 * @param stageTwoTechComplianceSelect the stageTwoTechComplianceSelect to set
-	 */
-	public void setStageTwoTechComplianceSelect(
-			List<PmCheckListCategory> stageTwoTechComplianceSelect) {
-		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
-	}
-
-	/**
-	 * @return the stageTwoFinComplianceList
-	 */
-	public List<PmCheckListCategory> getStageTwoFinComplianceList() {
-		return stageTwoFinComplianceList;
-	}
-
-	/**
-	 * @param stageTwoFinComplianceList the stageTwoFinComplianceList to set
-	 */
-	public void setStageTwoFinComplianceList(
-			List<PmCheckListCategory> stageTwoFinComplianceList) {
-		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
-	}
-
-	/**
-	 * @return the stageTwoFinComplianceSelect
-	 */
-	public List<PmCheckListCategory> getStageTwoFinComplianceSelect() {
-		return stageTwoFinComplianceSelect;
-	}
-
-	/**
-	 * @param stageTwoFinComplianceSelect the stageTwoFinComplianceSelect to set
-	 */
-	public void setStageTwoFinComplianceSelect(
-			List<PmCheckListCategory> stageTwoFinComplianceSelect) {
-		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
-	}
 
 	/**
 	 * @return the s1TechSelect
@@ -3145,6 +3104,280 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
 		this.scQtRemarksList = scQtRemarksList;
+	}
+
+
+
+	/**
+	 * @return the stateList
+	 */
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+
+
+	/**
+	 * @param stateList the stateList to set
+	 */
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+
+
+	/**
+	 * @return the districtList
+	 */
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+
+
+	/**
+	 * @param districtList the districtList to set
+	 */
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+
+
+	/**
+	 * @return the stateId
+	 */
+	public Long getStateId() {
+		return stateId;
+	}
+
+
+
+	/**
+	 * @param stateId the stateId to set
+	 */
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+
+
+	/**
+	 * @return the districtId
+	 */
+	public Long getDistrictId() {
+		return districtId;
+	}
+
+
+
+	/**
+	 * @param districtId the districtId to set
+	 */
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
+	}
+
+
+
+	/**
+	 * @return the ministryList
+	 */
+	public List<PmOrgProfile> getMinistryList() {
+		return ministryList;
+	}
+
+
+
+	/**
+	 * @param ministryList the ministryList to set
+	 */
+	public void setMinistryList(List<PmOrgProfile> ministryList) {
+		this.ministryList = ministryList;
+	}
+
+
+
+	/**
+	 * @return the ministryId
+	 */
+	public Long getMinistryId() {
+		return ministryId;
+	}
+
+
+
+	/**
+	 * @param ministryId the ministryId to set
+	 */
+	public void setMinistryId(Long ministryId) {
+		this.ministryId = ministryId;
+	}
+
+
+
+	/**
+	 * @return the departmentList
+	 */
+	public List<PmOrgProfile> getDepartmentList() {
+		return departmentList;
+	}
+
+
+
+	/**
+	 * @param departmentList the departmentList to set
+	 */
+	public void setDepartmentList(List<PmOrgProfile> departmentList) {
+		this.departmentList = departmentList;
+	}
+
+
+
+	/**
+	 * @return the ptjtList
+	 */
+	public List<PmOrgProfile> getPtjtList() {
+		return ptjtList;
+	}
+
+
+
+	/**
+	 * @param ptjtList the ptjtList to set
+	 */
+	public void setPtjtList(List<PmOrgProfile> ptjtList) {
+		this.ptjtList = ptjtList;
+	}
+
+
+
+	/**
+	 * @return the departmentId
+	 */
+	public Long getDepartmentId() {
+		return departmentId;
+	}
+
+
+
+	/**
+	 * @param departmentId the departmentId to set
+	 */
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
+	}
+
+
+
+	/**
+	 * @return the ptjId
+	 */
+	public Long getPtjId() {
+		return ptjId;
+	}
+
+
+
+	/**
+	 * @param ptjId the ptjId to set
+	 */
+	public void setPtjId(Long ptjId) {
+		this.ptjId = ptjId;
+	}
+
+
+
+	/**
+	 * @return the deliveryAddressSelect
+	 */
+	public List<PmAddressType> getDeliveryAddressSelect() {
+		return deliveryAddressSelect;
+	}
+
+
+
+	/**
+	 * @param deliveryAddressSelect the deliveryAddressSelect to set
+	 */
+	public void setDeliveryAddressSelect(List<PmAddressType> deliveryAddressSelect) {
+		this.deliveryAddressSelect = deliveryAddressSelect;
+	}
+
+
+
+	/**
+	 * @return the stageTwoTechComplianceList
+	 */
+	public List<PmDocument> getStageTwoTechComplianceList() {
+		return stageTwoTechComplianceList;
+	}
+
+
+
+	/**
+	 * @param stageTwoTechComplianceList the stageTwoTechComplianceList to set
+	 */
+	public void setStageTwoTechComplianceList(
+			List<PmDocument> stageTwoTechComplianceList) {
+		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
+	}
+
+
+
+	/**
+	 * @return the stageTwoTechComplianceSelect
+	 */
+	public List<PmDocument> getStageTwoTechComplianceSelect() {
+		return stageTwoTechComplianceSelect;
+	}
+
+
+
+	/**
+	 * @param stageTwoTechComplianceSelect the stageTwoTechComplianceSelect to set
+	 */
+	public void setStageTwoTechComplianceSelect(
+			List<PmDocument> stageTwoTechComplianceSelect) {
+		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
+	}
+
+
+
+	/**
+	 * @return the stageTwoFinComplianceList
+	 */
+	public List<PmDocument> getStageTwoFinComplianceList() {
+		return stageTwoFinComplianceList;
+	}
+
+
+
+	/**
+	 * @param stageTwoFinComplianceList the stageTwoFinComplianceList to set
+	 */
+	public void setStageTwoFinComplianceList(
+			List<PmDocument> stageTwoFinComplianceList) {
+		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
+	}
+
+
+
+	/**
+	 * @return the stageTwoFinComplianceSelect
+	 */
+	public List<PmDocument> getStageTwoFinComplianceSelect() {
+		return stageTwoFinComplianceSelect;
+	}
+
+
+
+	/**
+	 * @param stageTwoFinComplianceSelect the stageTwoFinComplianceSelect to set
+	 */
+	public void setStageTwoFinComplianceSelect(
+			List<PmDocument> stageTwoFinComplianceSelect) {
+		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
 	}
 
 
