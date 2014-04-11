@@ -206,7 +206,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 		}*/
 		if (getManagedBean().getApproverModel() == null) {
-			System.out.println("--renew--");
+			//System.out.println("--renew--");
 			List<String> source = getAvailableApproverList();
 			//List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();
@@ -241,7 +241,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
-			System.out.println("Del Address ID "+flFulfilmentRequest.getFlDeliveryAddresses().get(0).getAddressType().getPmAddress().getAddressId());
+			//System.out.println("Del Address ID "+flFulfilmentRequest.getFlDeliveryAddresses().get(0).getPmAddress().getAddressId());
 																		//flAddress.getAddressType().getPmAddress().getAddressId()
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(27);
@@ -583,7 +583,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setAssignedTo(13L);
 		reqDTO.setIncludeDetail(true);
 		PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
-		System.out.println("Item name::: "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
+		//System.out.println("Item name::: "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
 		List<ScRequestNoteDtl> noteDtlList=new ArrayList<ScRequestNoteDtl>();
 		if(null!=resDTO && !resDTO.getListPurchaseRequest().isEmpty()){
 			for(ScPurchaseRequest purchaseRequest:resDTO.getListPurchaseRequest()){
@@ -722,7 +722,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return availableApprovers;
 	}
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItem){
-		System.out.println("event "+flItem.getFulfilmentItemAddrId());
+		//System.out.println("event "+flItem.getFulfilmentItemAddrId());
 		int unitPrice = 0;
 		int ordQnty = 0;
 		int ordAmoun = 0;
@@ -826,7 +826,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:" + taskId);
+		//System.out.println("taskId:" + taskId);
 		getLoginUserOrg();
 		
 		if (taskId != null) {
@@ -1010,7 +1010,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
 		getManagedBean().setPmUserOrg(userOrg);
-		System.out.println("user Name:::: "+getManagedBean().getPmUserOrg().getPmUser().getUserName());
+		//System.out.println("user Name:::: "+getManagedBean().getPmUserOrg().getPmUser().getUserName());
 	}
 	
 	/**
@@ -1038,7 +1038,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(null!=resDTO.getPmParameter().getPmParameterDescs()){
 			desc=resDTO.getPmParameter().getPmParameterDescs().get(0).getCodeName();
 		} else{
-			System.out.println("Parameters Description is Empty");
+			//System.out.println("Parameters Description is Empty");
 		}
 		return desc;
 	}
@@ -1098,7 +1098,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
 	    	}
 	    	if(null != address.toString()){
-	    		System.out.println("addresss     "+address.toString());
+	    		//System.out.println("addresss     "+address.toString());
 	    	}
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
@@ -1367,7 +1367,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		for(TreeNode node:root.getChildren()){
 			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
 			if(addr.isSelectedChargeItem()){
-				System.out.println("in update methos check ");
+				//System.out.println("in update methos check ");
 				selectedNodes.add(node);
 			}
 		}
