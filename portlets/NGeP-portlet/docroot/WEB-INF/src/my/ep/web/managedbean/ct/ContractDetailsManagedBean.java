@@ -66,7 +66,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContractItem selectedItem;
 	private CtContractItem selectedCCItem;
 	private CtContractItem selectedServiceItem;
-	private List<CtContractItem> ctContractItem;
+	private List<CtContractItem> ctItemList;
+	private List<CtContractItem> ctItemServiceList;
 	private String popupForImportedItems ="L";
 	private boolean directPurchase;
 	
@@ -384,12 +385,21 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.userGroupMap = userGroupMap;
 	}
 	
-	public List<CtContractItem> getCtContractItem() {
-		return ctContractItem;
+
+	public List<CtContractItem> getCtItemList() {
+		return ctItemList;
 	}
 
-	public void setCtContractItem(List<CtContractItem> ctContractItem) {
-		this.ctContractItem = ctContractItem;
+	public void setCtItemList(List<CtContractItem> ctItemList) {
+		this.ctItemList = ctItemList;
+	}
+
+	public List<CtContractItem> getCtItemServiceList() {
+		return ctItemServiceList;
+	}
+
+	public void setCtItemServiceList(List<CtContractItem> ctItemServiceList) {
+		this.ctItemServiceList = ctItemServiceList;
 	}
 
 	public boolean isBpkApprover() {

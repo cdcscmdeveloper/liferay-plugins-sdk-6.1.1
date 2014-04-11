@@ -194,6 +194,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		    
+		    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
+		        if(this.getManagedBean().getCtItemList() == null)
+		        	 this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+		        if(this.getManagedBean().getCtItemServiceList() == null)
+		        	this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+		        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				     if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
+					     this.getManagedBean().getCtItemServiceList().add(item);
+				     else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
+					     this.getManagedBean().getCtItemList().add(item);
+			    }
+		    }
+		    
 		    if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 		      for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
 		    	 if(retrieveParameterById(deduct.getDeductionType().getParameterId()).equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
@@ -236,7 +249,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
 	        
-	        this.getManagedBean().getApproverModel().getSource().clear();
+	       // this.getManagedBean().getApproverModel().getSource().clear();
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -347,8 +360,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             
             if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0)
 				this.getManagedBean().getContractVer().getCtContractItems().clear();
-            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getContractItemList());
-            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getContractItemServiceList());
+            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
+            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemServiceList());
             
             if(this.getManagedBean().getSelectedDeduction() != null && this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().size() > 0){
                 CtDeduction ctDeduction = this.getManagedBean().getSelectedDeduction();
@@ -399,8 +412,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
-    			 String fromDate = String.valueOf(ctschedule.getFromTranDate()) + ctschedule.getFromTranYear();
-    			 String toDate = String.valueOf(ctschedule.getToTranDate()) + ctschedule.getToTranYears();
+    			 String fromDate = String.valueOf(ctschedule.getFromTranDate())+"-"+ ctschedule.getFromTranYear();
+    			 String toDate = String.valueOf(ctschedule.getToTranDate()) +"-"+ctschedule.getToTranYears();
     			 Date date = dateFormat.parse((fromDate));
     			 ctschedule.setFromDate(date);
     			 Date date1 = dateFormat.parse((toDate));
@@ -436,18 +449,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		TreeNode zoneNode =  null;
 		if(this.getManagedBean().getContractVer().getCtContractZones() != null) {
 		   for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
-			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getZoneName(), zone.getDeliveryTerm()), rootLocationTree);
+			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm()), rootLocationTree);
 			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
 				 for(CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
 				   if(zoneDtl.getState() != null){
 					  if(!state.contains(zoneDtl.getState())){
-						  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getState()) , zoneNode);
+						  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
 					   }state.add(zoneDtl.getState());
 				    }
 				   if(zoneDtl.getDistrict() != null){
-					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getDistrict()), stateNode);
+					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), stateNode);
 				   }
 				 }
 			  }
@@ -459,21 +472,25 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void getZoneObjDetails() {
     	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0)
     	   this.getManagedBean().getContractVer().getCtContractZones().clear();
-		
-    	for (TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
-			CtContractZone zone = new CtContractZone();
-			if(zone.getUomId() == null)
-				zone.setUomId(new PmUom());
-			zone.setZoneName(((LocationDTO)zonename.getData()).getZone());
-			zone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
-			zone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
-			for (TreeNode state : zonename.getChildren()) {
-				CtContractZoneDtl ctContractZoneDtl = new CtContractZoneDtl();
-				ctContractZoneDtl.setState(((LocationDTO)state.getData()).getState());
-				for (TreeNode district : state.getChildren()){
+    	for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
+			  CtContractZone zone = new CtContractZone();
+			 
+			  if(zone.getUomId() == null)
+				 zone.setUomId(new PmUom());
+			  
+			  zone.setZoneName(((LocationDTO)zonename.getData()).getZone());
+			  zone.setContractZoneId(((LocationDTO)zonename.getData()).getZoneId());
+			  zone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
+			  zone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+			  for(TreeNode state : zonename.getChildren()) {
+				  CtContractZoneDtl ctContractZoneDtl = new CtContractZoneDtl();
+				  ctContractZoneDtl.setState(((LocationDTO)state.getData()).getState());
+				  ctContractZoneDtl.setContractZoneDtlId(((LocationDTO)state.getData()).getZoneDtlId());
+				  for(TreeNode district : state.getChildren()){
 					 ctContractZoneDtl.setDistrict(((LocationDTO)district.getData()).getDistrict());
+					 ctContractZoneDtl.setContractZoneDtlId(((LocationDTO)state.getData()).getZoneDtlId());
 					 zone.getCtContractZoneDtls().add(ctContractZoneDtl);
-				}
+				  }
 		    }this.getManagedBean().getContractVer().getCtContractZones().add(zone);
 		}
 	}
@@ -940,19 +957,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			 parameterSO = null;
 		 }
 		 return null;
-	 }
-	 
-	 public List<CtContractItem> getContractItemList() {
-		List<CtContractItem> contractItemList = new ArrayList<CtContractItem>();
-		ContractItemServiceList = new ArrayList<CtContractItem>();
-		for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-			if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-				this.getContractItemServiceList().add(item);
-			}else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
-				contractItemList.add(item);
-			}
-		}
-		return contractItemList;
 	 }
 		
 	private void initializeRemarks() {

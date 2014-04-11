@@ -17,7 +17,7 @@
             </p:selectOneRadio> 
          </h:panelGrid>  
          <p:outputPanel id="paymentSchedule">   
-         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;" >    
+         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">    
 	          <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />

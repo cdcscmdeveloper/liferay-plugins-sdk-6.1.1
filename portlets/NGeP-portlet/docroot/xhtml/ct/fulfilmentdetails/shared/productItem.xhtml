@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="itemId" header="Product Details"   toggleable="true"  toggleSpeed="500">
       <h:panelGrid  style="width:100%;">
-        <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
+        <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true">
            <ac:paginator for="itemTable"/>
            <p:ajax event="rowSelect" update=":form:tabview:changeField"  />

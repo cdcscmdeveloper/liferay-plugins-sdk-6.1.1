@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
-  	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.contractItemServiceList}" rowKey="#{data}" 
+  	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
            <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
