@@ -17,10 +17,9 @@
 				update=":form:prtabs:itemDetPanelGroup,:form:prtabs:deleteAddrBtn"
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
 			<p:column headerText="Delivery Address">
-				<h:outputText rendered="#{address.addressType != null}"
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
-				<h:outputText rendered="#{address.addressType eq null}"
+				<h:outputText 
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
+				
 			</p:column>
 			<p:column headerText="Delivery Term (Days)">
 				<h:outputText style="text-align:right" />

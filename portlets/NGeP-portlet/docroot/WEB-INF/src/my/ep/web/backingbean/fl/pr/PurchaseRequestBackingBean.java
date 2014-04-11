@@ -241,7 +241,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
-			
+			System.out.println("Del Address ID "+flFulfilmentRequest.getFlDeliveryAddresses().get(0).getAddressType().getPmAddress().getAddressId());
+																		//flAddress.getAddressType().getPmAddress().getAddressId()
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(27);
 			flFulfilmentRequest.setSmSupplier(smSupplier);
@@ -338,8 +339,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if (!isAddressContains) {
 				deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				// deliveryAddr.setPmAddress(addrType.getPmAddress());
-				deliveryAddr.setAddressType(addrType);
+				 deliveryAddr.setPmAddress(addrType.getPmAddress());
+				//System.out.println("9999999999999999999  "+addrType.getAddressTypeId());
+				//deliveryAddr.setAddressType(addrType);
 				deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
 				deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
 				if (null == getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
@@ -376,7 +378,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			return false;
 		}
 		for(FlDeliveryAddress flAddress:flDeliveryAddresses){
-			if(addrType.getPmAddress().getAddressId()==flAddress.getAddressType().getPmAddress().getAddressId()){
+			if(addrType.getPmAddress().getAddressId()==flAddress.getPmAddress().getAddressId()){
 				isContains=true;
 			}
 		}
