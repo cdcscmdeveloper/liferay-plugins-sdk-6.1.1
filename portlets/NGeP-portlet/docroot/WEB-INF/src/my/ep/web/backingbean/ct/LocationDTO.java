@@ -17,6 +17,8 @@ public class LocationDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	String zone;
+	private	Long zoneId;
+	private Long zoneDtlId;
 	private	PmState	state;
 	private	PmDistrict	district;
 	private	PmCity	city;
@@ -29,21 +31,24 @@ public class LocationDTO implements Serializable{
 	public LocationDTO() {
 		super();
 	}
-	public LocationDTO(String zone, int	deliveryTerm) {
+	public LocationDTO(Long zoneId, String zone,  int	deliveryTerm) {
 		super();
 		this.zone = zone;
+		this.zoneId = zoneId;
 		this.deliveryTerm = deliveryTerm;
 	}
 
 
-	public LocationDTO(PmState state) {
+	public LocationDTO(Long zoneDtlId,PmState state) {
 		super();
 		this.state = state;
+		this.zoneDtlId = zoneDtlId;
 	}
 	
-	public LocationDTO(PmDistrict district) {
+	public LocationDTO(Long zoneDtlId, PmDistrict district) {
 		super();
 		this.district = district;
+		this.zoneDtlId = zoneDtlId;
 	}
 	public LocationDTO(PmCity city) {
 		super();
@@ -216,5 +221,17 @@ public class LocationDTO implements Serializable{
 	}
 	public void setUomId(Long uomId) {
 		this.uomId = uomId;
+	}
+	public Long getZoneId() {
+		return zoneId;
+	}
+	public void setZoneId(Long zoneId) {
+		this.zoneId = zoneId;
+	}
+	public Long getZoneDtlId() {
+		return zoneDtlId;
+	}
+	public void setZoneDtlId(Long zoneDtlId) {
+		this.zoneDtlId = zoneDtlId;
 	}
 }	
