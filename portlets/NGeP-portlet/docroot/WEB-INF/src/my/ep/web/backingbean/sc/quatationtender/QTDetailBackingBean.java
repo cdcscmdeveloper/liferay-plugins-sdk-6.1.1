@@ -74,6 +74,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -81,10 +82,12 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -109,6 +112,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -533,7 +537,7 @@ public class QTDetailBackingBean extends
 		}
 
 		onChangeAction();
-		return QTConstants.MAINTANANCE_PAGE + "?faces-redirect=true";
+		return QTConstants.BO_MAINTANANCE_PAGE + "?faces-redirect=true";
 	}
 
 	/**
@@ -668,7 +672,7 @@ public class QTDetailBackingBean extends
 		
 		//Setting the Committee Appointment details to Qtdetails
 		List<TabBean> tabBeanList = getManagedBean().getScCommitteeMemberTabList();
-		if (tabBeanList != null) {
+		if (tabBeanList != null && !tabBeanList.isEmpty()) {
 			for (TabBean tabBean : tabBeanList) {
 				if (tabBean.getScCommittee().getCommitteeType().equalsIgnoreCase(this.getManagedBean().getTabTitle())) {
 					getManagedBean().setScCommittee(tabBean.getScCommittee());
@@ -683,6 +687,84 @@ public class QTDetailBackingBean extends
 			scQt.setScQtCommittees(scQtCommitteeList);
 		}
 		
+		// Setting the Supplier Qualification Criteria details to Qtdetails.
+		List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
+				this.getManagedBean().getZoneTrees(), null);
+		if (locCriteria != null && !locCriteria.isEmpty()) {
+			this.getManagedBean().getSupplierCriteria()
+					.setScQtLocCriteria(locCriteria);
+			this.getManagedBean().getSupplierCriteria()
+					.setScQt(this.getManagedBean().getQt());
+			this.getManagedBean().getSupplierCriteria().setChangedBy(1L);
+			this.getManagedBean().getSupplierCriteria().setCreatedBy(1L);
+			this.getManagedBean().getSupplierCriteria()
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			scQt.setScQtSupplierCriteria(this.getManagedBean()
+					.getSupplierCriteria());
+		}
+		List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+				this.getManagedBean().getZoneGeneralTrees(), null);
+		if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
+			ScQtZoneCriteria zoneCriteria = this.getManagedBean().getQt()
+					.getScQtZoneCriteria();
+			List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
+			for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+				System.out.println("======enter loop tplSpecZoneDtl===");
+				tplSpecZoneDtl.setTplSpecZone(zoneCriteria);
+				zoneLocal.add(tplSpecZoneDtl);
+			}
+			zoneCriteria.setTplSpecZoneDtls(zoneLocal);
+			zoneCriteria.setChangedBy(1L);
+			zoneCriteria.setCreatedBy(1L);
+			zoneCriteria.setCreatedDate(new Timestamp(System
+					.currentTimeMillis()));
+			scQt.setScQtZoneCriteria(zoneCriteria);
+
+		}
+
+		System.out.println("============businessOwnerZone size====="
+				+ businessOwnerZone.size());
+		List<ScQtCategory> openList = this.getManagedBean()
+				.getQtCategoryList();
+		List<ScQtCategory> categoryList = new ArrayList();
+		if (openList != null && !openList.isEmpty()) {
+			for (ScQtCategory scQtCategory : openList) {
+			
+				scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
+						.getPmCategoryL2().getPmCategoryL1());
+				scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
+						.getPmCategoryL2());
+				scQtCategory.setScQt(this.getManagedBean().getQt());
+				scQtCategory.setCreatedBy(1L);
+				scQtCategory.setChangedBy(1L);
+				scQtCategory.setCreatedDate(new Timestamp(System
+						.currentTimeMillis()));
+				categoryList.add(scQtCategory);
+				scQt.setScQtCategorys(categoryList);
+			}
+
+		}
+
+		List<ScQtCategory> restrictedList = this.getManagedBean()
+				.getSuppCriteriarestrictedList();
+		if (restrictedList != null && !restrictedList.isEmpty()) {
+			
+			for (ScQtCategory scQtCategory : restrictedList) {
+				
+				scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
+						.getPmCategoryL2().getPmCategoryL1());
+				scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
+						.getPmCategoryL2());
+				scQtCategory.setScQt(this.getManagedBean().getQt());
+				scQtCategory.setCreatedBy(1L);
+				scQtCategory.setChangedBy(1L);
+				scQtCategory.setCreatedDate(new Timestamp(System
+						.currentTimeMillis()));
+				categoryList.add(scQtCategory);
+				scQt.setScQtCategorys(categoryList);
+			}
+		}
+		
 		// Setting the Business Owner details to Qtdetails
 		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
@@ -692,7 +774,7 @@ public class QTDetailBackingBean extends
 		// Setting the qtBreifing details to Qtdetails
 		List<BriefingZoneBean> beansList = getManagedBean()
 				.getBriefingZoneBean();
-		if (beansList != null) {
+		if (beansList != null && !beansList.isEmpty()) {
 			if (scQt.isZonal()) {
 				for (BriefingZoneBean briefingZoneBean : beansList) {
 					if (briefingZoneBean.getTplSpecZoneDtl().getZoneName().equalsIgnoreCase(
@@ -2060,4 +2142,121 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
 	}
+	
+	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
+			ScQtSupplierCriteria supplierCriteria) {
+		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
+
+		for (TreeNode treeNode : treeNodes) {
+			List<TreeNode> stateNodes = treeNode.getChildren();
+
+			for (TreeNode treeNode2 : stateNodes) {
+				List<TreeNode> district = treeNode2.getChildren();
+
+				for (TreeNode devision : district) {
+					if (devision.getChildCount() > 0) {
+						for (TreeNode districtNode : devision.getChildren()) {
+							ScQtLocCriteria criteria = new ScQtLocCriteria();
+							criteria.setPmDistrict(((ScQtLocCriteria) districtNode
+									.getData()).getPmDistrict());
+							criteria.setPmDivision(((ScQtLocCriteria) districtNode
+									.getParent().getData()).getPmDivision());
+							criteria.setPmState(((ScQtLocCriteria) treeNode2
+									.getData()).getPmState());
+							criteria.setScQtSupplierCriteria(this
+									.getManagedBean().getSupplierCriteria());
+							criteria.setChangedBy(1L);
+							criteria.setCreatedBy(1L);
+							criteria.setCreatedDate(new Timestamp(System
+									.currentTimeMillis()));
+							results.add(criteria);
+						}
+					} else {
+						ScQtLocCriteria criteria = new ScQtLocCriteria();
+						criteria.setPmDistrict(((ScQtLocCriteria) devision
+								.getData()).getPmDistrict());
+						criteria.setPmState(((ScQtLocCriteria) treeNode2
+								.getData()).getPmState());
+						criteria.setScQtSupplierCriteria(this.getManagedBean()
+								.getSupplierCriteria());
+						criteria.setChangedBy(1L);
+						criteria.setCreatedBy(1L);
+						criteria.setCreatedDate(new Timestamp(System
+								.currentTimeMillis()));
+						results.add(criteria);
+					}
+
+				}
+			}
+
+		}
+
+		return results;
+	}
+
+	private List<TplSpecZoneDtl> getZoneBusinessOwnerLocations(
+			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
+		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
+		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
+
+		for (TreeNode treeNode : treeNodes) {
+			List<TreeNode> zoneNodes = treeNode.getChildren();
+			// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
+			zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
+			for (TreeNode treeNode1 : zoneNodes) {
+				List<TreeNode> stateNodes = treeNode1.getChildren();
+
+				for (TreeNode treeNode2 : stateNodes) {
+					List<TreeNode> district = treeNode2.getChildren();
+
+					for (TreeNode devision : district) {
+						if (devision.getChildCount() > 0) {
+							for (TreeNode districtNode : devision.getChildren()) {
+								TplSpecZoneLoc criteria = new TplSpecZoneLoc();
+
+								criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
+										.getData()).getPmDistrict());
+								criteria.setPmDivision(((TplSpecZoneLoc) districtNode
+										.getParent().getData()).getPmDivision());
+								criteria.setPmState(((TplSpecZoneLoc) treeNode2
+										.getData()).getPmState());
+								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+										.getData()));
+								// criteria.setScQtSupplierCriteria(supplierCriteria);
+								criteria.setChangedBy(1L);
+								criteria.setCreatedBy(1L);
+								criteria.setCreatedDate(new Timestamp(System
+										.currentTimeMillis()));
+								results.add(criteria);
+
+							}
+						} else {
+
+							TplSpecZoneLoc criteria = new TplSpecZoneLoc();
+							criteria.setPmDistrict(((TplSpecZoneLoc) devision
+									.getData()).getPmDistrict());
+							criteria.setPmState(((TplSpecZoneLoc) treeNode2
+									.getData()).getPmState());
+							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+									.getData()));
+							// criteria.setScQtSupplierCriteria(supplierCriteria);
+							criteria.setChangedBy(1L);
+							criteria.setCreatedBy(1L);
+							criteria.setCreatedDate(new Timestamp(System
+									.currentTimeMillis()));
+							results.add(criteria);
+						}
+					}
+				}
+			}
+			zoneDtl.setTplSpecZoneLocs(results);
+			// zoneDtl.setTplSpecZone(new ScQtZoneCriteria());
+			zoneDtl.setChangedBy(1L);
+			zoneDtl.setCreatedBy(1L);
+			zoneDtl.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			zoneList.add(zoneDtl);
+		}
+		return zoneList;
+	}
+
 }
