@@ -903,8 +903,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
 			String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterId());
 			if(parameterCode.equalsIgnoreCase(ContractConst.PARAMER_TYPE_ONOFF)){
-			   this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ONOFF_SERVICE_FEE);	
-			   return ContractConst.ONOFF_SERVICE_FEE;
+			   this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ON_OFF_SERVICE_FEE);	
+			   return ContractConst.ON_OFF_SERVICE_FEE;
 			}else{
 				this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.SCHEDULE_PERODIC_SERVICE_FEE);
 				return ContractConst.SCHEDULE_PERODIC_SERVICE_FEE;
@@ -1192,6 +1192,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
+			reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
