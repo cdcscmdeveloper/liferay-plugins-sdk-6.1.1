@@ -85,7 +85,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -103,6 +102,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -199,7 +199,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			CTContractDataType dataType = (CTContractDataType) obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
@@ -910,23 +910,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public boolean isApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
 	}
-	
-	public double validateServiceFee(double serviceFee){
-		try{
-			String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterId());
-			if(parameterCode.equalsIgnoreCase(ContractConst.PARAMER_TYPE_ONOFF)){
-			   this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ONOFF_SERVICE_FEE);	
-			   return ContractConst.ONOFF_SERVICE_FEE;
-			}else{
-				this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.SCHEDULE_PERODIC_SERVICE_FEE);
-				return ContractConst.SCHEDULE_PERODIC_SERVICE_FEE;
-			 }
-		 } catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		 return 0.0;
-	 }
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		 IParameterSO parameterSO = null;
