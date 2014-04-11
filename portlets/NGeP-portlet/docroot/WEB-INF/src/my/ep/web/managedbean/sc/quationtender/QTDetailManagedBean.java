@@ -23,6 +23,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
@@ -115,15 +116,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmCategoryL3> categoryL3s;
 
 	private List<PmState> states;
-
 	private List<PmCountry> countries;
-
 	private List<PmDistrict> districts;
+	private List<PmCity> citys;
 
 	public List<ScQtBudget> gosodos;
 	public List<ScQtDoc> scQtDocs;
 	public List<CloneAll> cloneAllList;
-	
+
 	private List<CtCircular> ctCirculars;
 	private List<ScQtRemark> scQtRemarks;
 	private List<ScQtCheckList> scQtChecklists;
@@ -215,6 +215,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplier> selectedSupplierList;
 	private List<ScQtSupplier> qtSupplierList;
 	private List<ScQtSupplier> selectedQtSupplierList;
+	
+	//supplier Qualification Criteria List and variables
+	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> selectedCategoryList;
 	private List<ScQtCategory> qtCategoryList;
 
@@ -276,6 +279,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private DualListModel<PmUser> budgetApprovalUsers;
 	private DualListModel<PmUser> committeeApprovalUsers;
 	private DualListModel<PmUser> ptjApprovalUsers;
+	private DualListModel<PmUser> publicationApprovalUsers;
 
 	private List<PmUser> deskOfficerAdmin;
 
@@ -388,7 +392,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		getBudgetApproverNames();
 		getCommitteeApproverNames();
 		getPTJApproverNames();
+		getPublicationApprovalNames();
 
+	}
+
+	/**
+	 * 
+	 */
+	private void getPublicationApprovalNames() {
+		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDto = new UserReqDTO();
+		userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		List<PmUser> availableApprover = userResDTO.getUserList();
+		List<PmUser> selectedApprover = new ArrayList<PmUser>();
+		publicationApprovalUsers = new DualListModel<PmUser>(availableApprover,
+				selectedApprover);
 	}
 
 	private void getCommitteeApproverNames() {
@@ -1688,6 +1709,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.ptjApprovalUsers = ptjApprovalUsers;
 	}
 
+	public DualListModel<PmUser> getPublicationApprovalUsers() {
+		return publicationApprovalUsers;
+	}
+
+	public void setPublicationApprovalUsers(
+			DualListModel<PmUser> publicationApprovalUsers) {
+		this.publicationApprovalUsers = publicationApprovalUsers;
+	}
+
 	public List<ScQtDeliveryLoc> getDeliveryLocList() {
 		return deliveryLocList;
 	}
@@ -2144,6 +2174,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedpmuserContactpersonList(
 			List<ScQtContactPerson> selectedpmuserContactpersonList) {
 		this.selectedpmuserContactpersonList = selectedpmuserContactpersonList;
+	}
+
+	public List<PmCity> getCitys() {
+		return citys;
+	}
+
+	public void setCitys(List<PmCity> citys) {
+		this.citys = citys;
+	}
+
+	public List<ScQtCategory> getSuppCriteriarestrictedList() {
+		return suppCriteriarestrictedList;
+	}
+
+	public void setSuppCriteriarestrictedList(
+			List<ScQtCategory> suppCriteriarestrictedList) {
+		this.suppCriteriarestrictedList = suppCriteriarestrictedList;
 	}
 
 }
