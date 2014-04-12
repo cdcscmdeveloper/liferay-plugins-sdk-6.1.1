@@ -46,7 +46,7 @@
 		      <p:dataTable id="itemPriceTier" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			     rowKey="#{data}" lazy="true" >
 			     <ac:paginator for="itemPriceTier"/>
-			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode eq ParameterConst.priceTypeStandard}">
+			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 			             <p:column headerText="Price (MYR)" style="text-align: right;">
 			                <p:outputLabel value="#{data.unitPrice}"/>
 			             </p:column>   
@@ -61,7 +61,7 @@
                             </h:outputText>
 			             </p:column>
 			       </c:if>  
-			       <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode eq ParameterConst.priceTypeTier}">
+			       <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
 			             <p:column headerText="From Qty." style="text-align: right;">
 				              <p:outputLabel value="#{data.fromQty}"/>
 			             </p:column>       
@@ -82,7 +82,7 @@
                             </h:outputText>
 			            </p:column>     
 			        </c:if>   
-			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			            eq ParameterConst.priceTypeZonalStandard}">
 			             <p:column headerText="Zone">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
@@ -101,7 +101,7 @@
                             </h:outputText>
 			            </p:column>     
 			         </c:if>
-			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			            eq ParameterConst.priceTypeZonalTier}">
 			             <p:column headerText="Zone">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
@@ -126,8 +126,8 @@
                             </h:outputText>
 			            </p:column>     
 			         </c:if> 
-                     <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
-			            eq ParameterConst.priceTypeZonalTariff}">
+                     <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
+			            eq ParameterConst.priceTypeTariff}">
 			             <p:column headerText="From Qty." style="text-align: right;">
 				            <p:outputLabel value="#{data.fromQty}"/>
 			            </p:column>       
@@ -149,8 +149,8 @@
                           </h:outputText>
 			           </p:column>           
 			        </c:if> 
-			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceTypeId.parameterCode
-			            eq ParameterConst.priceTypeZonalZonaltariff}">            
+			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
+			            eq ParameterConst.priceTypeZonalTariff}">            
 			         <p:column headerText="Zone">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
