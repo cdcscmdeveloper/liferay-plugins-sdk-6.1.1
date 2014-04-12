@@ -47,7 +47,6 @@
 			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
-			   
 			<h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
 			     <p:ajax event="change" update="centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
@@ -55,17 +54,6 @@
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
 		   </h:panelGrid>	
-			<h:outputLabel value="#{lbl['lbl.ct.circularNo']}" 
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
-			<p:commandLink rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
-				style="margin-right:20px;" ajax="false">
-				<h:outputText
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo}"
-					styleClass="linkcommand" />
-			</p:commandLink>
-			<f:verbatim rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
-			<f:verbatim rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
-			<f:verbatim rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="centralContractName" value="Contract Title"/>
@@ -76,7 +64,15 @@
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
-			</h:panelGrid>		    
+			</h:panelGrid>	
+			<h:outputLabel value="Agreement No" 
+				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
+			<p:commandLink rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				style="margin-right:20px;" ajax="false">
+				<h:outputText
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo}"
+					styleClass="linkcommand" />
+			</p:commandLink>	    
 	 </h:panelGrid>
 	 <p:outputPanel id="centalJustificationPanel">
 	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 

@@ -32,19 +32,8 @@
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
-			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
-			<f:verbatim rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
-			<h:outputLabel
-				rendered="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
-				value="#{lbl['lbl.ct.circularNo']}" />
-			<p:commandLink
-				rendered="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
-				style="margin-right:20px;" ajax="false">
-				<h:outputText
-					value="#{contractDetailsBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo}"
-					styleClass="linkcommand" />
-			</p:commandLink>
-			
+			 <p:outputLabel id="astatus" value="Agreement Status" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
+			 <p:inputText for="astatus" style="width:170px;" disabled="true" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="Contract Title" />
@@ -56,8 +45,8 @@
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			 <p:outputLabel id="astatus" value="Agreement Status" />
-			 <p:inputText for="astatus" style="width:170px;" disabled="true" />
+			<p:outputLabel id="astatus1" value="Agreement Status" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:inputText for="astatus1" style="width:170px;" disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">

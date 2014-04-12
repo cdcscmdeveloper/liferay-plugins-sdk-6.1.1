@@ -29,8 +29,9 @@
 		     </p:column>              
     	 </p:dataTable> 
        </h:panelGrid>
-		  <p:outputPanel id="changeCentralItemField" columns="1" style="width:100%"
-			rendered="#{contractDetailsBackingBean.managedBean.selectedItem!=null}">
+		<p:outputPanel id="changeCentralItemField">
+		<p:spacer height="50"/>
+		  <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null}" columns="1" style="width:100%">
 		      <p:dataTable id="centralItemPriceTier" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			     rowKey="#{data}" lazy="true" >
 			     <ac:paginator for="centralItemPriceTier"/>
@@ -166,8 +167,9 @@
 			            </p:column>     
 			        </c:if>
 			</p:dataTable>
-		  </p:outputPanel>  
-          <p:dialog id="importedCentralDialog" header="Shipping Details" widgetVar="importedDlg" modal="true" width="600" height="350">
+		  </h:panelGrid>
+		</p:outputPanel>  
+        <p:dialog id="importedCentralDialog" header="Shipping Details" widgetVar="importedDlg" modal="true" width="600" height="350">
 		    
 		     <h:panelGrid columns="2" width="100%">
 		      

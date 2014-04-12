@@ -97,7 +97,8 @@
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
 			</p:tab>
 			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}"
-			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+			    and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
 				 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
 			</p:tab>
 			<p:tab id="tabMcItem" title="#{lbl['lbl.ct.menu.item']}"
