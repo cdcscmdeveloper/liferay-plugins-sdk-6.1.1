@@ -243,16 +243,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		    
 		    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		        if(this.getManagedBean().getCtItemList() == null)
+		        if(this.getManagedBean().getCtItemList() == null && this.getManagedBean().getCtItemServiceList() == null){
 		        	 this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-		        if(this.getManagedBean().getCtItemServiceList() == null)
-		        	this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
-		        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				     if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
-					     this.getManagedBean().getCtItemServiceList().add(item);
-				     else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
-					     this.getManagedBean().getCtItemList().add(item);
-			    }
+		        	 this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+		             
+		        	 for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				       if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
+					      this.getManagedBean().getCtItemServiceList().add(item);
+				       else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
+		        	 	  this.getManagedBean().getCtItemList().add(item);
+			         }
+		         }
 		    }
 		    
 		    if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
@@ -264,7 +265,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		       }
 		    }
 		    
+		    
 		    if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
+		       this.getManagedBean().setChkSchedule(true);
 		       SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 			   Calendar cal = Calendar.getInstance();
 		       for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
@@ -431,6 +434,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             
             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 		
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
@@ -518,29 +523,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	} 
 	
     public void getZoneObjDetails() {
-    	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0)
-    	   this.getManagedBean().getContractVer().getCtContractZones().clear();
-    	for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
-			  CtContractZone zone = new CtContractZone();
-			 
-			  if(zone.getUomId() == null)
-				 zone.setUomId(new PmUom());
-			  
-			  zone.setZoneName(((LocationDTO)zonename.getData()).getZone());
-			  zone.setContractZoneId(((LocationDTO)zonename.getData()).getZoneId());
-			  zone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
-			  zone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
-			  for(TreeNode state : zonename.getChildren()) {
-				  CtContractZoneDtl ctContractZoneDtl = new CtContractZoneDtl();
-				  ctContractZoneDtl.setState(((LocationDTO)state.getData()).getState());
-				  ctContractZoneDtl.setContractZoneDtlId(((LocationDTO)state.getData()).getZoneDtlId());
-				  for(TreeNode district : state.getChildren()){
-					 ctContractZoneDtl.setDistrict(((LocationDTO)district.getData()).getDistrict());
-					 ctContractZoneDtl.setContractZoneDtlId(((LocationDTO)state.getData()).getZoneDtlId());
-					 zone.getCtContractZoneDtls().add(ctContractZoneDtl);
-				  }
-		    }this.getManagedBean().getContractVer().getCtContractZones().add(zone);
-		}
+    	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+    		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
+    			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
+    				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
+    					if(ctContractZone.getUomId() == null)
+    					   ctContractZone.setUomId(new PmUom());
+    					ctContractZone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
+    					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+    				}
+    			}
+    		}
+    	}
 	}
     
     public void CombineSupAddress(CtContractVer ctContractVer){
@@ -797,8 +791,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	   this.getManagedBean().setItemPricing(false);
 	   this.getManagedBean().setItemCeilingQuantity(false);
 	   this.getManagedBean().setProductItem(false);
-	   this.getManagedBean().setChkSchedule(false);
-	   this.getManagedBean().setChkProgressive(false);
 	}
 	
 	public void flushItem(){
@@ -871,11 +863,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     /*Schedule Start*/
     public void progressivePayment() {
 		
-       flush();
+       this.getManagedBean().setChkSchedule(false);
+  	   this.getManagedBean().setChkProgressive(false);
+  	   
 	   if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("1"))
 		   this.getManagedBean().setChkSchedule(true);
 	   else if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("2"))
 		  this.getManagedBean().setChkProgressive(true);
+	   
 	}
     
     public void addScheduleDetails(){

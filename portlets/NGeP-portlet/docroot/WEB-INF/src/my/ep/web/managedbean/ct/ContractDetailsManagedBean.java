@@ -81,7 +81,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean chkProgressive;
 	private String scheduleOption="1";
 	private CtSchedule ctSchedulesDel;
-	private boolean chkSchedule = true;
+	private boolean chkSchedule;
 	private boolean chkScheduleNulValue;
 	private boolean chkProgressiveNulValue;
 	private boolean disableScheduleRadio;
