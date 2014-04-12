@@ -4,47 +4,59 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
-	   <h:panelGrid columns="5" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20,columnWidth15">
-		  <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
-		  <p:inputText for="cno" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" 
-			 disabled="true" style="width:170px;" />
-		  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		  <p:inputText for="physicalNo" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
-		  <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox 
-			   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
-		    <p:spacer width="2" />	
-		    <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
-	       </h:panelGrid>	
-		   <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
-		   <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
-			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
-		   <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
-		   <p:inputText for="edate" style="width:170px;" disabled="true"
-			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
-		   <h:panelGrid columns="3">
-		      <p:selectBooleanCheckbox value="false" disabled="true" />
-		      <p:spacer width="2" />	
-		       <p:outputLabel value="AP201 Exemption" />
-	       </h:panelGrid>	
-		   <h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" />
-		   <h:panelGrid columns="3">
-			 <p:inputText for="dperiod" styleClass="ppRightBtn" style="width:72px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
-			 <p:spacer width="2"/>
-			 <p:selectOneMenu id="daysMonthYears" style="width:95px;"> 
-		        <f:selectItem itemLabel="-Select One-" itemValue=""/>
-                <f:selectItem itemLabel="Days" itemValue="D"/>  
-                <f:selectItem itemLabel="Months" itemValue="M"/>
-                <f:selectItem itemLabel="Years" itemValue="Y"/>
-              </p:selectOneMenu> 
+	<p:panel id="cc" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
+	   <h:panelGrid columns="5" style="width:93%;" 
+	      columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20,columnWidth15">
+		     <p:outputLabel id="centralNo" value="#{lbl['lbl.ct.cno']}" />
+		     <p:inputText for="centralNo" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" 
+			   disabled="true" style="width:170px;" />
+		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physicalNo']}" />
+		     <p:inputText for="centralphyNo" value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"
+		        style="width:170px;" />				
+		     <h:panelGrid columns="3">
+		       <p:selectBooleanCheckbox 
+			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
+		       <p:spacer width="2" />	
+		       <p:outputLabel value="Fee Exemption" />
+	         </h:panelGrid>	
+		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		     <p:inputText for="centralEfDate" style="width:170px;" disabled="true"
+			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
+		     <p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.edate']}" />
+		     <p:inputText for="centralExpDate" style="width:170px;" disabled="true"
+			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
+		     <h:panelGrid columns="3">  
+			   <p:selectBooleanCheckbox 
+			      value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+		       <p:spacer width="2" />	
+		       <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+		     </h:panelGrid> 
+		     <h:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
+		     <h:panelGrid columns="3">
+		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:65px;" 
+		          value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
+               <p:spacer width="2" />
+               <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.uomId.uomId}" 
+                 style="width:100px;" >
+			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			   </p:selectOneMenu>
 			</h:panelGrid>	
-			<p:outputLabel id="signBy" value="Signed Date" />
-			<p:inputText for="signBy" disabled="true" style="width:170px;"/>
-			<f:verbatim/>
-			<h:outputLabel
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
-				value="#{lbl['lbl.ct.circularNo']}" />
+			<p:outputLabel id="centralSignDate" value="Signed Date" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
+			<p:inputText for="centralSignDate" 
+			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreementId.signedDate)}"
+			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
+			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
+			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
+			   
+			<h:panelGrid columns="3">
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
+			     <p:ajax event="change" update="centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
+		   </h:panelGrid>	
+			<h:outputLabel value="#{lbl['lbl.ct.circularNo']}" 
+				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
 			<p:commandLink rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
 				style="margin-right:20px;" ajax="false">
 				<h:outputText
@@ -56,16 +68,30 @@
 			<f:verbatim rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"/>
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="Contract Title"/>
+			  <p:outputLabel for="centralContractName" value="Contract Title"/>
 			</div>
 			</h:panelGroup>
 		    <h:panelGrid>
-			<p:inputTextarea id="contractName"
+			<p:inputTextarea id="centralContractName"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		    
 	 </h:panelGrid>
+	 <p:outputPanel id="centalJustificationPanel">
+	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
+	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
+         <h:panelGroup>
+		    <div style="height:80px; vertical-align:top;">
+			   <p:outputLabel for="centralJustificationLbl" value="* Justification" />
+		    </div>
+	     </h:panelGroup>
+	  <h:panelGrid>
+	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
+		  rows="4" cols="113" disabled="false" autoResize="false" />	
+	  </h:panelGrid>		
+    </h:panelGrid> 
+  </p:outputPanel>
   </p:panel>
 </ui:composition>
 

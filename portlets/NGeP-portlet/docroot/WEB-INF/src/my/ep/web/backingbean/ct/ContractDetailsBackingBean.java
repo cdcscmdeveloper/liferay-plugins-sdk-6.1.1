@@ -295,6 +295,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			       }
 			    }
 		    
+		    if(this.getManagedBean().getContractVer().getCtContractValue().getUomId() == null){
+		    	this.getManagedBean().getContractVer().getCtContractValue().setUomId(new PmUom());
+		    }
 		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
 		    	this.getManagedBean().setDirectPurchase(true);

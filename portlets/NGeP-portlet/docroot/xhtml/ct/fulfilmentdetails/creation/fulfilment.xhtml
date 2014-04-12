@@ -80,40 +80,56 @@
 			</table>	    			
 		</p:panel>
 		<p:tabView  widgetVar="CreateContractVar" id="tabview"  dynamic="true" cache="false" orientation="left">
-		 	<p:tab id="tabfd" title="#{lbl['lbl.ct.menu.fd']}">
-				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml" />
+		 	<p:tab id="tabmc" title="#{lbl['lbl.ct.menu.fd']}">
+		 	  <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		 	      <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
+		 	  </p:outputPanel>
+		 	   <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+		 	      <ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralDetails.xhtml"/>
+		 	 </p:outputPanel>
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml" />
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 			</p:tab>
-			<p:tab id="tabAgency" title="#{lbl['lbl.ct.menu.agency']}" >
+			<p:tab id="tabAgency" title="#{lbl['lbl.ct.menu.agency']}" 
+			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
 			</p:tab>
-			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}">
-				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
+			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}"
+			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
 			</p:tab>
-			<p:tab id="tabItem" title="#{lbl['lbl.ct.menu.item']}">
+			<p:tab id="tabMcItem" title="#{lbl['lbl.ct.menu.item']}"
+			   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/productItem.xhtml" />
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/serviceItem.xhtml" />
 			</p:tab>
-			  <p:tab id="tabDeduction" title="#{lbl['lbl.ct.menu.dedu']}">
-			     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
+			<p:tab id="tabCcItem" title="#{lbl['lbl.ct.menu.item']}"
+			   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
+				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 			</p:tab>
-			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}">
-				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
+			<p:tab id="tabDeduction" title="#{lbl['lbl.ct.menu.dedu']}"
+			     rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+			      <ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 			</p:tab>
-			<p:tab id="tabFactoring" title="Factoring" rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}">
+			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}"
+			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				  <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
+			</p:tab>
+			<p:tab id="tabFactoring" title="Factoring" 
+			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
 			</p:tab>
-			<p:tab id="paymentTracking" title="Advanced Payment Tracking" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+			<p:tab id="paymentTracking" title="Advanced Payment Tracking" 
+			  rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+			      and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
 			</p:tab>
 			<p:tab id="tabSetting" title="#{lbl['lbl.ct.menu.sett']}">
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 			</p:tab>
-			
 		</p:tabView>
 	</ui:define>
 </ui:composition>
