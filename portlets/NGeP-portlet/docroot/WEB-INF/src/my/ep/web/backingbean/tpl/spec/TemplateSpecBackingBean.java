@@ -332,7 +332,18 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	    return items;
 	}
 	
-	public SelectItem[] getPriceTypeList(TplSpecMaster specMaster) {
+	public SelectItem[] getItemTypeDropdownList() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+						ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE));
+		
+		return super.getDropdownValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+	}
+	
+	public SelectItem[] getPriceTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> filteredList = new ArrayList<String>();
 		

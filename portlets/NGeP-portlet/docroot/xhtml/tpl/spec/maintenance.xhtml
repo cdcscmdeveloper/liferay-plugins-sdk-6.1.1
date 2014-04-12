@@ -54,7 +54,7 @@
 					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.item.type']}" /></td>
 					<td class="TableFieldRight" style="width:330px">
 						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.itemTypeCode.parameterId}" >
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.itemType)}" />
+							<f:selectItems value="#{templateSpecBackingBean.itemTypeDropdownList}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><p:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
