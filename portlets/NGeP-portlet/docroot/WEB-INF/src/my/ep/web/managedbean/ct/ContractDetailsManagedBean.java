@@ -718,6 +718,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	}
 
 	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
 		return userMap;
 	}
 

@@ -76,6 +76,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -140,7 +141,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 		  this.getManagedBean().setContractVer(new CtContractVer());
 	  
-	    }if(getManagedBean().getUserMap() == null) {
+	    }if(getManagedBean().getUserMap().size()==0) {
 			 initializeApproverList();
 	    }
 	 
@@ -157,12 +158,47 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	private void initializeApproverList() {
-		   if(getManagedBean().getApproverModel()==null) {
-			  List<String> source = new ArrayList<String>(); 
-		      List<String> target = new ArrayList<String>();  
-		      getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-		   }			
+		if (getManagedBean().getApproverModel() == null) {
+			List<String> source = new ArrayList<String>();
+			List<String> target = new ArrayList<String>();
+			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
+	}
+	
+	private List<String> getAvailableApproverList() {
+		IUserSO userSO = null;
+		List<String> sourceList = new ArrayList<String>();
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+
+			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
+				// TODO hardcode to get the value, should remove after have real data
+				reqDTO.setOrgProfileId(1003L);
+			} else { // Central Contract	
+				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
+				// TODO hardcode to get the value, should remove after have real data
+				reqDTO.setOrgType("RSH");
+			}
+
+			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			List<PmUser> list = resDTO.getUserList();
+			
+			for (PmUser user : list) {
+				sourceList.add(user.getUserName());
+				getManagedBean().getUserMap().put(user.getUserName(), user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		return sourceList;
+	}	
 	
 	public void preRenderView() {
 		
@@ -261,7 +297,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setDirectPurchase(true);
 		    }
 	        
-	        this.getManagedBean().getApproverModel().getSource().clear();
+	        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -1222,8 +1258,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-	      this.getManagedBean().getApproverModel().getSource().clear();
 		  
+	      getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -1254,8 +1290,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-	      this.getManagedBean().getApproverModel().getSource().clear();
 		 
+	      getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
