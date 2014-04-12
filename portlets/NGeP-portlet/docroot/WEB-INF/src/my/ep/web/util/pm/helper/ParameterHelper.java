@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -18,6 +20,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -71,16 +74,21 @@ public class ParameterHelper {
 		debugLogger("getParameterDescList.parameterType: " + parameterType);
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		String key = new StringBuilder()
+		StringBuilder key = new StringBuilder()
 			.append(parameterType)
 			.append(KEY_SEPARATOR)
-			.append(languageCode)
-			.toString();
+			.append(languageCode);
+		String searchBeanKey = getSearchBeanKey(searchBean);
+		
+		if (StringUtils.isNotBlank(searchBeanKey)) {
+			key.append(KEY_SEPARATOR);
+			key.append(searchBeanKey);
+		}
 		
 		debugLogger("key: " + key);
 		
 		// Get the parameter description list from map.
-		List<PmParameterDesc> list = parameterMap.get(key);
+		List<PmParameterDesc> list = parameterMap.get(key.toString());
 		
 		debugLogger("list: " + list);
 		
@@ -101,7 +109,7 @@ public class ParameterHelper {
 			    list = resDTO.getParameterDescList();
 			    
 			    // Put parameter description list into map.
-				parameterMap.put(key, list);
+				parameterMap.put(key.toString(), list);
 				
 				debugLogger("put into list: " + list);
 			} catch (Exception e) {
@@ -113,6 +121,30 @@ public class ParameterHelper {
 		}
 		
 		return list;
+	}
+	
+	private String getSearchBeanKey(ISearchBean<PmParameterDesc> searchBean) {
+		if (searchBean == null)
+			return null;
+		
+		StringBuilder searchBeanKey = new StringBuilder();
+		
+		for (BaseSearchFilterBean baseSearchFilterBean : searchBean.getDataFilterBeans()) {
+			if (baseSearchFilterBean instanceof SearchFilterBean) {
+				SearchFilterBean searchFilterBean = (SearchFilterBean)baseSearchFilterBean;
+				
+				if (searchBeanKey.length() > 0) {
+					searchBeanKey.append(KEY_SEPARATOR);
+				}
+				searchBeanKey.append(searchFilterBean.getSearchField());
+				searchBeanKey.append(KEY_SEPARATOR);
+				searchBeanKey.append(searchFilterBean.getSearchOperator());
+				searchBeanKey.append(KEY_SEPARATOR);
+				searchBeanKey.append(searchFilterBean.getSearchValue());
+			}
+		}
+		
+		return searchBeanKey.toString();
 	}
 	
 	private void debugLogger(Object message) {
