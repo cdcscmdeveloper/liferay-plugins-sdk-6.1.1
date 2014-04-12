@@ -38,7 +38,7 @@
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
 		   	 <p:column headerText="AP178" style="width:50px;">
-		   	    <p:selectBooleanCheckbox style="width:50px;float:center;"/>
+		   	    <p:selectBooleanCheckbox value="#{data.ap178}" style="width:50px;float:center;"/>
 		   	 </p:column>
 			</p:dataTable> 
        	</div>
@@ -189,7 +189,7 @@
 		             <tr>
 			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="Attachment" /></td>
 			           <td class="TableFieldRight">
-				         <p:commandButton oncomplete="uploadDlg.show();return false;" icon="iconAttachment" 
+				         <p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
 					        update="lampiran1" value="Attach file(s)" />
 			           </td>
 		             </tr>
@@ -213,7 +213,7 @@
 							<td></td>
 							<td>
 								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-								<p:commandLink action="#{ctBackingBean.deleteAttachmentAction(attachFileIndex)}" immediate="true" 
+								<p:commandLink action="#{contractDetailsBackingBean.deleteAttachmentAction(attachFileIndex)}" immediate="true" 
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}" update="lampiran1" >
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
@@ -228,7 +228,7 @@
 	<p:dialog id="uploadDlg1" widgetVar="uploadDlg1" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{ctBackingBean.fileUpload}"
+			fileUploadListener="#{contractDetailsBackingBean.agencyFileUpload}"
 			mode="advanced" id="upload1"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"

@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -21,7 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -60,6 +63,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -72,6 +76,7 @@ import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -435,6 +440,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
             
+            reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -443,8 +449,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ 
-				this.getManagedBean().getContractVer().getContractVerId()));
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"","Record saved successfully. Contract No : "+this.getManagedBean().getCtContract().getContractNo()));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
@@ -808,11 +813,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void changeField() {
 		try{
 			flush();
-			if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
+			if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 				this.getManagedBean().setItemPricing(true);
 
-			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
+			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 				this.getManagedBean().setItemCeilingQuantity(true);
+				refreshAgencyCeilingQuantityList();
 			}
 		}catch (Exception e) {
 			System.out.println(e);
@@ -830,6 +836,24 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	} catch (Exception e) {
 			System.out.println(e);
 		}
+    }
+    
+    private void refreshAgencyCeilingQuantityList() {
+    	Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+    	for(CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+    		itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+    	}
+    	for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+    		if(!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+    			CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+    			ctItemCeilingQty.setCtAgency(ctAgency);
+    			ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
+    			ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+    			ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+    			ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+    		}
+    	}
     }
     
     /*Deduction Start*/
@@ -922,8 +946,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	   for(int i=0; i<selectedPmOrgProfile.length; i++){
 		  PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
 		  CtAgency ctAgency = new CtAgency();
-		  ctAgency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		  ctAgency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		  ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		  ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		  ctAgency.setOrgProfile(pmOrgProfile);
 		  this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
 	   }selectedPmOrgProfile = null;
@@ -944,7 +968,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public boolean isApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
 	}
-	 
+
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
+			return RoleCode.MIN_CONTRACT_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
+			return RoleCode.CT_APPROVER.value();
+		else 
+			return null;
+	}
+	
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		 IParameterSO parameterSO = null;
 		 ParameterReqDTO reqDTO = null;
@@ -1315,6 +1348,28 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		  this.getManagedBean().setViewContract(false);
 		return CONTRACT_PAGE;
+	}
+	
+	public void deleteAttachmentAction(int index) {
+		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
+	}
+	
+	public void agencyFileUpload(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
+		
+		UploadedFile item = event.getFile();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(filePath);
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		this.getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
 	}
 	
 	public String convertTime(Date time){ 
