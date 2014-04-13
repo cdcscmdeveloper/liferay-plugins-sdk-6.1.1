@@ -57,13 +57,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
 				<ui:fragment
-					rendered="#{stageTwofunctional.action.parameterId =='null'}">
+					rendered="#{stageTwofunctional.title ==null}">
 					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}">
 						<f:selectItem itemLabel="Select One" itemValue="0" />
 						<f:selectItem itemLabel="View" itemValue="8" />
 						<f:selectItem itemLabel="Online Submit" itemValue="9" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@form"></p:ajax>
+						update=":form:businessSpecId:financeProposaltwo"	></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
 				
@@ -74,12 +74,12 @@
 				
 			</p:column>
 			<p:column headerText="Scoring" style="width:10%">
-				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+				<p:selectBooleanCheckbox  value="#{stageTwofunctional.scoringReq}"
 					disabled="true"
-					rendered="#{stageTwofunctional.action.parameterId ne '8' }">
+					rendered="#{stageTwofunctional.action.parameterId ne '9' }">
 
 				</p:selectBooleanCheckbox>
-				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+				<p:selectBooleanCheckbox  value="#{stageTwofunctional.scoringReq}"
 					rendered="#{stageTwofunctional.action.parameterId eq '9'}">
 
 				</p:selectBooleanCheckbox>
@@ -111,7 +111,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink
-					action="#{specificationBackingBean.financialChecklistEditAction(stageTwofunctional)}"
+					action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional)}"
 					rendered="#{stageTwofunctional.definationType.parameterId=='184' or stageTwofunctional.definationType.parameterId=='188' or stageTwofunctionall.definationType.parameterId=='187' or stageTwofunctional.definationType.parameterId=='185'}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"

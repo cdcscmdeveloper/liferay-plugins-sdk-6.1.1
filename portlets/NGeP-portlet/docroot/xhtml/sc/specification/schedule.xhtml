@@ -7,94 +7,101 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="frequency">
-
+       
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
-			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled'}">
-			<p:selectOneRadio value="#{specificationBackingBean.managedBean.fulfilmentType}">
-				<f:selectItem itemLabel="Frequency Schedule" itemValue="Scheduled"></f:selectItem>
-				<f:selectItem itemLabel="Progressive Payment" itemValue="As and When"></f:selectItem>
-				<p:ajax event="change" update="progressive"></p:ajax>
+			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS'}">
+			<p:selectOneRadio
+				value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
+				<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
+				<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
+				<p:ajax event="change" update="progressive,schedule"></p:ajax>
 			</p:selectOneRadio>
 
 		</h:panelGrid>
-		<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
-			toggleable="true"
-			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled'}">
+		<h:panelGroup id="schedule">
+			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
+				toggleable="true"
+				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
 
 
-			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-				<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-				<p:inputText
-					value="#{specificationBackingBean.managedBean.totalFrequency}">
-					<p:ajax event="blur" update="frequencySchedule"
-						partialSubmit="false"
-						listener="#{specificationBackingBean.addScheduleDetails}" />
-				</p:inputText>
+				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
+					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
+					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
+					<p:inputText
+						value="#{specificationBackingBean.managedBean.totalFrequency}">
+						<p:ajax event="blur" update="frequencySchedule"
+							partialSubmit="true" process="@this"
+							listener="#{specificationBackingBean.addScheduleDetails}" />
+					</p:inputText>
 
-			</h:panelGrid>
-
-
-			<p:commandLink value="#{lbl['lbl.sc.spec.freq.schedule']}"></p:commandLink>
+				</h:panelGrid>
 
 
-			<p:dataTable id="frequencySchedule" var="frequency"
-				style="width:100%" rowIndexVar="index"
-				value="#{specificationBackingBean.managedBean.scheduleList}">
-				<ac:paginator for="frequencySchedule" />
+				<p:commandLink value="#{lbl['lbl.sc.spec.freq.schedule']}"></p:commandLink>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}"
-					style="width:40%">
-					<p:inputText value="#{frequency.scheduleNo}"></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
-					style="width:25%">
-					<p:selectOneMenu value="#{frequency.startMonth}">
 
-						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-						<p:ajax event="change"
-							listener="#{specificationBackingBean.calculateStartMonth}"></p:ajax>
-					</p:selectOneMenu>
-					<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
+				<p:dataTable id="frequencySchedule" var="frequency"
+					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}"
+					style="width:100%" rowIndexVar="index"
+					value="#{specificationBackingBean.managedBean.scheduleList}">
+					<ac:paginator for="frequencySchedule" />
+
+					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}"
+						style="width:40%">
+						<p:inputText value="#{frequency.scheduleNo}"></p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
+						style="width:25%">
+						<p:selectOneMenu value="#{frequency.startMonth}">
+
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<p:ajax event="change"
+								listener="#{specificationBackingBean.calculateStartMonth}"></p:ajax>
+						</p:selectOneMenu>
+						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
-				</p:column>
-				<p:column headerText="Start year" style="width:15%">
-					<!-- <p:selectOneMenu value="#{frequency.startYear}">
+					</p:column>
+					<p:column headerText="Start year" style="width:15%">
+						<!-- <p:selectOneMenu value="#{frequency.startYear}">
 
 					</p:selectOneMenu> -->
-					<p:inputText value="#{frequency.startYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{frequency.startYear}" disabled="true"></p:inputText>
 
-				</p:column>
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
-					style="width:25%">
-					<p:selectOneMenu value="#{frequency.endMonth}">
+					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
+						style="width:25%">
+						<p:selectOneMenu value="#{frequency.endMonth}">
 
-						<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-						<p:ajax event="change" update="@(.schedule#{index})"
-							listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
-					</p:selectOneMenu>
+							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<p:ajax event="change"
+								update=":form:businessSpecId:frequencySchedule"
+								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+						</p:selectOneMenu>
 
-				</p:column>
-				<p:column headerText="End year" style="width:15%">
-					<!-- <p:selectOneMenu value="#{frequency.endYear}">
+					</p:column>
+					<p:column headerText="End year" style="width:15%">
+						<!-- <p:selectOneMenu value="#{frequency.endYear}">
 
 					</p:selectOneMenu> -->
-					<p:inputText value="#{frequency.endYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{frequency.endYear}" disabled="true"></p:inputText>
 
-				</p:column>
-				<p:column headerText="Total Months" style="width:10%">
-					<h:outputText styleClass="schedule#{index}" value="#{frequency.totalMonths}"></h:outputText>
-				</p:column>
-			</p:dataTable>
+					</p:column>
+					<p:column headerText="Total Months" style="width:10%">
+						<h:outputText id="scheduleDetails"
+							value="#{frequency.totalMonths}"></h:outputText>
+					</p:column>
+				</p:dataTable>
 
-			<p:spacer height="20"></p:spacer>
+				<p:spacer height="20"></p:spacer>
 
 
-		</p:panel>
+			</p:panel>
+		</h:panelGroup>
 	</h:panelGroup>
 	<h:panelGroup id="progressive">
 		<c:if
-			test="#{specificationBackingBean.managedBean.fulfilmentType eq 'As and When'}">
+			test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.scQt.scheduleType eq 'P'}">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
 
@@ -103,7 +110,7 @@
 					<p:inputText
 						value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
 						<p:ajax event="blur" update="progressivePayment"
-							partialSubmit="false"
+							partialSubmit="true" process="@this"
 							listener="#{specificationBackingBean.addProgressiveDetails}" />
 					</p:inputText>
 
@@ -129,8 +136,8 @@
 						<p:selectOneMenu value="#{payment.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-								<p:ajax event="change"
-							listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
+							<p:ajax event="change"
+								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -147,8 +154,8 @@
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}">
 							</f:selectItems>
-							<p:ajax event="change" 
-							listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
+							<p:ajax event="change"
+								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>

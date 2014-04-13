@@ -75,7 +75,7 @@
 
 
 		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}"
-			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'Scheduled' or specificationBackingBean.managedBean.fulfilmentType eq 'As and When'}">
+			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 			<ui:include src="schedule.xhtml" />
 		</p:tab>
 

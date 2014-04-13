@@ -28,7 +28,7 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="Title"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -38,7 +38,7 @@
 			<h:panelGrid columns="2">
 				<h:outputLabel
 					value="* For company experience on the product/service which has participated since  year "></h:outputLabel>
-				<p:inputText readonly="true"></p:inputText>
+				<p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"></p:inputText>
 			</h:panelGrid>
 
 			<p:dataTable id="experience" rowIndexVar="index" var="experience"

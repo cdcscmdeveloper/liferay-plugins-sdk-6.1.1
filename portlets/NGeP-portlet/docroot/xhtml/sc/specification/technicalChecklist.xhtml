@@ -85,7 +85,7 @@
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
-						<p:ajax event="change" process="@this" update="@(.action#{index})"
+						<p:ajax event="change" process="@this" update=":form:businessSpecId:stageTwotechProposal"
 							listener="#{specificationBackingBean.checklistActionChange}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
@@ -134,9 +134,9 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:30%">
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
-				<!-- <h:panelGroup id="document"> -->
+				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
-					rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"
+					
 					update="stageTwotechProposal">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
@@ -151,10 +151,10 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-
+<!-- rendered="#{stageTwoTechnical.definationType.parameterId eq '184' or stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}" -->
 				<p:commandLink
-					action="#{specificationBackingBean.technicalChecklistEditAction(stageTwoTechnical)}"
-					rendered="#{stageTwoTechnical.definationType.parameterId eq '184' or stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}">
+					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}"
+					>
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

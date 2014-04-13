@@ -28,12 +28,20 @@
 			<tr>
 				<td><h:outputLabel value="Quotation/Tender Type" /></td>
 				<td><p:inputText readonly="true"
-						value="#{specificationBackingBean.managedBean.scQt.qtType}"
-						disabled="true"></p:inputText></td>
+						value="Open" rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
+						disabled="true"></p:inputText>
+						<p:inputText readonly="true"
+						value="Restricted" rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'R'}"
+						disabled="true"></p:inputText>
+						</td>
 				<td><h:outputLabel value="Open For" /></td>
 				<td><p:inputText readonly="true"
-						value="#{specificationBackingBean.managedBean.scQt.openFor}"
-						disabled="true"></p:inputText></td>
+						value="Bumiputra" rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'B'}"
+						disabled="true"></p:inputText>
+						<p:inputText readonly="true"
+						value="All" rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'A'}"
+						disabled="true"></p:inputText>
+						</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
@@ -53,8 +61,12 @@
 				<td><h:outputLabel
 						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
 				<td><p:inputText
-						value="#{specificationBackingBean.managedBean.scQt.evaluationType ? 'One Tier' : 'Two Tier'}"
-						readonly="true" disabled="true"></p:inputText></td>
+						value="One Tier" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}"
+						readonly="true" disabled="true"></p:inputText>
+						<p:inputText
+						value="Two Tier" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}"
+						readonly="true" disabled="true"></p:inputText>
+						</td>
 				<td><h:outputLabel value="Required Technical Evaluation" /></td>
 				<!-- update=":form:businessSpecId:recommendationid" -->
 				<td><p:selectOneRadio
@@ -108,7 +120,7 @@
 				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" /> -->
 						<!-- update="progressive,frequency,businessSpecId" -->
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentType)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="progressive,frequency,businessSpecId"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>

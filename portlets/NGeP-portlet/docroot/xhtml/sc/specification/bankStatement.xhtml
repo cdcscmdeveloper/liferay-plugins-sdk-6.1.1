@@ -29,7 +29,7 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="Title"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -45,7 +45,7 @@
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
-						</p:selectOneMenu> <p:selectOneMenu>
+						</p:selectOneMenu> <p:selectOneMenu value="#{specificationBackingBean.managedBean.startYear}">
 
 							<f:selectItem itemLabel="2014" itemValue="2014">
 							</f:selectItem>
@@ -62,7 +62,7 @@
 									listener="#{specificationBackingBean. toChange}"></p:ajax>
 
 							</p:selectOneMenu>
-							<p:selectOneMenu disabled="true">
+							<p:selectOneMenu disabled="true" value="#{specificationBackingBean.managedBean.endYear}">
 
 								<f:selectItem itemLabel="2014" itemValue="2014">
 								</f:selectItem>

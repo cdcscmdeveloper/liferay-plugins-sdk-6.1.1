@@ -29,15 +29,15 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="Title"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:panel header="Total No Of Employees" toggleable="true">
 			<h:panelGrid>
-				<p:selectOneRadio>
+				<p:selectOneRadio value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
 					<f:selectItem itemLabel="Employees Involves In This Project"
-						itemValue="1"></f:selectItem>
+						itemValue="0"></f:selectItem>
 					<f:selectItem itemLabel="All Employees" itemValue="1"></f:selectItem>
 				</p:selectOneRadio>
 			</h:panelGrid>
