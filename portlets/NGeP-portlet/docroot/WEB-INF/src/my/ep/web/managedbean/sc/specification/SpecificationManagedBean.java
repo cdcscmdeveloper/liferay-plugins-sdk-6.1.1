@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -119,6 +120,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String scheduleType;
 	private String fromMonth;
 	private String toMonth;
+	private String startYear;
+	private String endYear;
 	//B,S
 	private String businessOwner="B";
 	private List<BankingBean> bankList;
@@ -275,11 +278,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> technicalChecklistAction;
 	
 	private BigDecimal scoreVarience;
-	private ScQtScoreOfferPrice packageScoreSetting;
-	private ScQtScoreOfferPrice itemScoreSetting;
+	private ScQtScoreOfferPrice offerPricePackage;
+	private ScQtScoreOfferPrice OfferPriceItem;
 	private ScQtScoreWeightage scQtScoreWeightage;
 	private ScQtScoreSetting technicalScoreSetting;
 	private ScQtScoreSetting financialScoreSetting;
+	private ScQtScoreSetting demoScoreSetting;
+	private ScQtScoreSetting recommendationPackageScore;
+	private ScQtScoreSetting recommendationScore;
 	private String procuremntCategory;
 	private String fulfilmentType;
 	
@@ -297,21 +303,27 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long ministryId;
 	private Long departmentId;
 	private Long ptjId;
+	private String stateCode;
+	private String districtCode;
 	
-	List<PmOrgProfile> ministryList;
-	List<PmOrgProfile> departmentList;
-	List<PmOrgProfile> ptjtList;
-	List<PmAddressType> deliveryAddressSelect;
+private	List<PmOrgProfile> ministryList;
+private	List<PmOrgProfile> departmentList;
+private	List<PmOrgProfile> ptjtList;
+private	List<PmAddressType> deliveryAddressSelect;
+private	List<TplSpecZoneDtl> deliveryZones;
+private TplSpecZoneDtl tplSpecZoneDtl;;
+private List<BriefingZoneBean> addressZoneBean;
+	
 	
 	
 	
 	
 	
 	public SpecificationManagedBean(){
-		deliveryLocBean.add(new BriefingZoneBean(1,"South", deliveryLoc,deleteDeliveryList));
-		deliveryLocBean.add(new BriefingZoneBean(2,"North", deliveryLoc,deleteDeliveryList));
-		deliveryLocBean.add(new BriefingZoneBean(3,"East", deliveryLoc,deleteDeliveryList));
-		deliveryLocBean.add(new BriefingZoneBean(4,"West", deliveryLoc,deleteDeliveryList));
+		//deliveryLocBean.add(new BriefingZoneBean(1,"South", deliveryLoc,deleteDeliveryList));
+		//deliveryLocBean.add(new BriefingZoneBean(2,"North", deliveryLoc,deleteDeliveryList));
+		//deliveryLocBean.add(new BriefingZoneBean(3,"East", deliveryLoc,deleteDeliveryList));
+		//deliveryLocBean.add(new BriefingZoneBean(4,"West", deliveryLoc,deleteDeliveryList));
 		
 	}
 
@@ -2480,39 +2492,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 
 
-	/**
-	 * @return the packageScoreSetting
-	 */
-	public ScQtScoreOfferPrice getPackageScoreSetting() {
-		return packageScoreSetting;
-	}
-
-
-
-	/**
-	 * @param packageScoreSetting the packageScoreSetting to set
-	 */
-	public void setPackageScoreSetting(ScQtScoreOfferPrice packageScoreSetting) {
-		this.packageScoreSetting = packageScoreSetting;
-	}
-
-
-
-	/**
-	 * @return the itemScoreSetting
-	 */
-	public ScQtScoreOfferPrice getItemScoreSetting() {
-		return itemScoreSetting;
-	}
-
-
-
-	/**
-	 * @param itemScoreSetting the itemScoreSetting to set
-	 */
-	public void setItemScoreSetting(ScQtScoreOfferPrice itemScoreSetting) {
-		this.itemScoreSetting = itemScoreSetting;
-	}
 
 
 
@@ -3378,6 +3357,223 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setStageTwoFinComplianceSelect(
 			List<PmDocument> stageTwoFinComplianceSelect) {
 		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
+	}
+
+
+
+	/**
+	 * @return the startYear
+	 */
+	public String getStartYear() {
+		return startYear;
+	}
+
+
+
+	/**
+	 * @param startYear the startYear to set
+	 */
+	public void setStartYear(String startYear) {
+		this.startYear = startYear;
+	}
+
+
+
+	/**
+	 * @return the endYear
+	 */
+	public String getEndYear() {
+		return endYear;
+	}
+
+
+
+	/**
+	 * @param endYear the endYear to set
+	 */
+	public void setEndYear(String endYear) {
+		this.endYear = endYear;
+	}
+
+
+
+	/**
+	 * @return the offerPricePackage
+	 */
+	public ScQtScoreOfferPrice getOfferPricePackage() {
+		return offerPricePackage;
+	}
+
+
+
+	/**
+	 * @param offerPricePackage the offerPricePackage to set
+	 */
+	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
+		this.offerPricePackage = offerPricePackage;
+	}
+
+
+
+	/**
+	 * @return the offerPriceItem
+	 */
+	public ScQtScoreOfferPrice getOfferPriceItem() {
+		return OfferPriceItem;
+	}
+
+
+
+	/**
+	 * @param offerPriceItem the offerPriceItem to set
+	 */
+	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
+		OfferPriceItem = offerPriceItem;
+	}
+
+
+
+	/**
+	 * @return the demoScoreSetting
+	 */
+	public ScQtScoreSetting getDemoScoreSetting() {
+		return demoScoreSetting;
+	}
+
+
+
+	/**
+	 * @param demoScoreSetting the demoScoreSetting to set
+	 */
+	public void setDemoScoreSetting(ScQtScoreSetting demoScoreSetting) {
+		this.demoScoreSetting = demoScoreSetting;
+	}
+
+
+
+	/**
+	 * @return the recommendationPackageScore
+	 */
+	public ScQtScoreSetting getRecommendationPackageScore() {
+		return recommendationPackageScore;
+	}
+
+
+
+	/**
+	 * @param recommendationPackageScore the recommendationPackageScore to set
+	 */
+	public void setRecommendationPackageScore(
+			ScQtScoreSetting recommendationPackageScore) {
+		this.recommendationPackageScore = recommendationPackageScore;
+	}
+
+
+
+	/**
+	 * @return the recommendationScore
+	 */
+	public ScQtScoreSetting getRecommendationScore() {
+		return recommendationScore;
+	}
+
+
+
+	/**
+	 * @param recommendationScore the recommendationScore to set
+	 */
+	public void setRecommendationScore(ScQtScoreSetting recommendationScore) {
+		this.recommendationScore = recommendationScore;
+	}
+
+
+
+	/**
+	 * @return the stateCode
+	 */
+	public String getStateCode() {
+		return stateCode;
+	}
+
+
+
+	/**
+	 * @param stateCode the stateCode to set
+	 */
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+
+
+
+	/**
+	 * @return the districtCode
+	 */
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+
+
+	/**
+	 * @param districtCode the districtCode to set
+	 */
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+
+
+	/**
+	 * @return the deliveryZones
+	 */
+	public List<TplSpecZoneDtl> getDeliveryZones() {
+		return deliveryZones;
+	}
+
+
+
+	/**
+	 * @param deliveryZones the deliveryZones to set
+	 */
+	public void setDeliveryZones(List<TplSpecZoneDtl> deliveryZones) {
+		this.deliveryZones = deliveryZones;
+	}
+
+
+
+	/**
+	 * @return the tplSpecZoneDtl
+	 */
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+
+
+	/**
+	 * @param tplSpecZoneDtl the tplSpecZoneDtl to set
+	 */
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+
+
+	/**
+	 * @return the addressZoneBean
+	 */
+	public List<BriefingZoneBean> getAddressZoneBean() {
+		return addressZoneBean;
+	}
+
+
+
+	/**
+	 * @param addressZoneBean the addressZoneBean to set
+	 */
+	public void setAddressZoneBean(List<BriefingZoneBean> addressZoneBean) {
+		this.addressZoneBean = addressZoneBean;
 	}
 
 
