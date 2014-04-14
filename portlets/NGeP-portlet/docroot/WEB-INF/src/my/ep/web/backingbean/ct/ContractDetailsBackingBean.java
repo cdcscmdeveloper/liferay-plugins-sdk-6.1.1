@@ -72,7 +72,6 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
-import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -98,7 +97,6 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -387,9 +385,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			
-			if(getManagedBean().getCtContractStatus()!=null) {
-				reqDTO.setStatusId(getManagedBean().getCtContractStatus());
-			}	
+	        if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE)){
+	        	reqDTO.setContractStatus(true);
+	        }
 			
 			reqDTO.setContractSearchBean(searchBean);
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
@@ -768,20 +766,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public SelectItem[] getSearchStatusDropdown() {
 		SelectItem[] items = null;
 		try {
-				
-			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.FD_PENDING_CONTRACT_CREATION);
-			statusIdList.add(ContractStatusConst.FD_PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.FD_PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.FD_PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.FD_APPROVED);
-				
-			items = new SelectItem[statusIdList.size()+1];
+			items = new SelectItem[3];
 			int i = 0;
-			items[i++] = new SelectItem(null, "- Select One -");
-			for(Long statusId : statusIdList) {
-				items[i++] = new SelectItem(statusId, StatusHelper.getInstance().getStatusDescById(statusId).getStatusName());
-			}
+			items[i++] = new SelectItem(null,"- Select One -");
+			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE, ContractConst.CONTRACT_STATUS_COMPLETE);
+			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE, ContractConst.CONTRACT_STATUS_INCOMPLETE);
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
