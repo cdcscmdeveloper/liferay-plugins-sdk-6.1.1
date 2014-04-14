@@ -300,8 +300,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			       }
 			    }
 		    
-		    if(this.getManagedBean().getContractVer().getCtContractValue().getUomId() == null){
-		    	this.getManagedBean().getContractVer().getCtContractValue().setUomId(new PmUom());
+		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
+		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmUom());
 		    }
 		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
@@ -536,9 +536,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
     			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
     				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
-    					if(ctContractZone.getUomId() == null)
-    					   ctContractZone.setUomId(new PmUom());
-    					ctContractZone.getUomId().setUomId(((LocationDTO)zonename.getData()).getUomId());
+    					if(ctContractZone.getDeliveryTermUom() == null)
+    					   ctContractZone.setDeliveryTermUom(new PmUom());
+    					ctContractZone.getDeliveryTermUom().setUomId(((LocationDTO)zonename.getData()).getUomId());
     					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
     				}
     			}
