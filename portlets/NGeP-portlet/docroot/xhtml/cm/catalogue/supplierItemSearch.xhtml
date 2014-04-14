@@ -20,10 +20,12 @@
 						<p:tab id="tab2" title="Search">
 							<table style="margin-top: 10px; width: 100%;">
 								<tr>
-									<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.cm.item.name']}" /></td>
 									<td width="35%%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-									<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.cm.item.code']}" /></td>
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
 								</tr>
@@ -63,8 +65,8 @@
 							<table style="width: 100%">
 								<tr>
 									<td width="15%"><p:outputLabel value="State" /></td>
-									<td width="35%"><p:selectManyMenu id="stateIdDD" showCheckbox="true"
-											style="height:100px;width: 200px;"
+									<td width="35%"><p:selectManyMenu id="stateIdDD"
+											showCheckbox="true" style="height:100px;width: 200px;"
 											value="#{catalogueBackingBean.managedBean.stateId}">
 											<f:selectItems
 												value="#{catalogueBackingBean.managedBean.stateList}"
@@ -74,8 +76,8 @@
 												update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
 										</p:selectManyMenu></td>
 									<td width="15%"><p:outputLabel value="District" /></td>
-									<td width="35%"><p:selectManyMenu id="districtDD" showCheckbox="true"
-											style="height:100px;width: 200px;"
+									<td width="35%"><p:selectManyMenu id="districtDD"
+											showCheckbox="true" style="height:100px;width: 200px;"
 											value="#{catalogueBackingBean.managedBean.districtId}">
 											<f:selectItems
 												value="#{catalogueBackingBean.managedBean.districtList}"
@@ -112,6 +114,7 @@
 						style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
 
 						<div style="text-align: right;">
+						<p:commandButton value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} "></p:commandButton>
 							<p:commandButton id="compareButton"
 								action="#{catalogueBackingBean.compareSupplierItem}"
 								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
@@ -137,12 +140,11 @@
 								update="@(.ui-button[id$=compareButton])" />
 
 							<p:column headerText="Image" width="80px;">
-								<p:graphicImage
-									value="/images/#{supplierItem.imagePath}"
+								<p:graphicImage value="/images/#{supplierItem.imagePath}"
 									height="80" width="80" />
-									
-							
-									
+
+
+
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.cm.item.name']}">
@@ -151,12 +153,14 @@
 
 							</p:column>
 
-							<p:column width="10%" headerText="#{lbl['lbl.cm.contact.no']}" rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column width="10%" headerText="#{lbl['lbl.cm.contact.no']}"
+								rendered="#{unspscCodeBackingBean.requisitioner}">
 								#{supplierItem.contractNo}
 
 							</p:column>
 
-							<p:column width="10%" headerText="#{lbl['lbl.cm.circular.no']}" rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column width="10%" headerText="#{lbl['lbl.cm.circular.no']}"
+								rendered="#{unspscCodeBackingBean.requisitioner}">
 								
 									
 										#{supplierItem.circularNo}
@@ -175,7 +179,7 @@
 							<p:column headerText="UOM">
 							#{supplierItem.uomName}
 							</p:column>
-							
+
 
 							<p:column selectionMode="multiple" style="width:2%"
 								disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" />
@@ -184,27 +188,30 @@
 								rendered="#{unspscCodeBackingBean.requisitioner}">
 								<table>
 									<tr>
-									  <td>
-										 <p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem)}" 
-											   process="@this" update="@([id$=addToCartId])"
-											   oncomplete="addToCartPopup.show();return false;" partialSubmit="true" 
-											   rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }" >
-											 <p:graphicImage library="ep/images/design" name="cart_add.png"  id="addToCartId"/>
-										   </p:commandLink>
-										   <p:tooltip for="addToCartId" value="#{lbl['lbl.ss.add.to.cart']}" showEffect="fade" hideEffect="fade"  />
-										
-										</td>
-										<td>
-										   <p:commandLink   
-									         action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-									          rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
-											<p:graphicImage id="pid"
-												value="/resources/ep/images/design/icon_txt.png"
-												height="15px"></p:graphicImage>
-										   </p:commandLink> 
-										   <p:tooltip for="pid" value="#{lbl['lbl.ss.pid']}" showEffect="fade" hideEffect="fade"  />
-											
-										</td>
+										<td><p:commandLink
+												actionListener="#{requestNoteBackingBean.addToCart(supplierItem)}"
+												process="@this" update="@([id$=addToCartId])"
+												oncomplete="addToCartPopup.show();return false;"
+												partialSubmit="true"
+												rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+												<p:graphicImage library="ep/images/design"
+													name="cart_add.png" id="addToCartId" />
+											</p:commandLink> <p:tooltip for="addToCartId"
+												value="#{lbl['lbl.ss.add.to.cart']}" showEffect="fade"
+												hideEffect="fade" /></td>
+										<td><p:commandLink
+												action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
+												rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
+												<p:graphicImage id="pid"
+													value="/resources/ep/images/design/icon_txt.png"
+													height="15px"></p:graphicImage>
+											</p:commandLink> <p:tooltip for="pid" value="#{lbl['lbl.ss.pid']}"
+												showEffect="fade" hideEffect="fade" /></td>
+
+										<td><p:commandButton value="CR" update="@form"
+												action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
+												rendered="#{supplierItem.contractNo ne null}">
+											</p:commandButton></td>
 
 									</tr>
 
@@ -232,8 +239,7 @@
 			<ui:include src="viewWishListItem.xhtml"></ui:include>
 		</p:dialog> -->
 	</h:panelGroup>
-   <ui:include src="/xhtml/sc/directpurchase/common/addToCartPopup.xhtml" /> 
-
+	<ui:include src="/xhtml/sc/directpurchase/common/addToCartPopup.xhtml" />
 
 
 </ui:composition>
