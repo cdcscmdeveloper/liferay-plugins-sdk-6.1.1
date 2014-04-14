@@ -143,6 +143,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private Integer zonalPricingIndex =0;
 	
 	private Integer zonalTierPricingIndex=0;
+	
+	private int tierRowIndex;
+	
+	private List<VCmSupplierItem> tempSupplierList;
+	private List<VCmSupplierItem> ctRequestList;
 
 
 
@@ -1092,6 +1097,43 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setZonalTierPricingIndex(Integer zonalTierPricingIndex) {
 		this.zonalTierPricingIndex = zonalTierPricingIndex;
 	}
+
+
+	public int getTierRowIndex() {
+		return tierRowIndex;
+	}
+
+
+	public void setTierRowIndex(int tierRowIndex) {
+		this.tierRowIndex = tierRowIndex;
+	}
+
+
+	public List<VCmSupplierItem> getTempSupplierList() {
+		if(tempSupplierList==null)
+			tempSupplierList = new ArrayList<VCmSupplierItem>();
+		return tempSupplierList;
+	}
+
+
+	public void setTempSupplierList(List<VCmSupplierItem> tempSupplierList) {
+		this.tempSupplierList = tempSupplierList;
+	}
+
+
+	public List<VCmSupplierItem> getCtRequestList() {
+		if(ctRequestList==null)
+			ctRequestList = new ArrayList<VCmSupplierItem>();
+		return ctRequestList;
+	}
+
+
+	public void setCtRequestList(List<VCmSupplierItem> ctRequestList) {
+		this.ctRequestList = ctRequestList;
+	}
+
+
+	
 	
 	
 	

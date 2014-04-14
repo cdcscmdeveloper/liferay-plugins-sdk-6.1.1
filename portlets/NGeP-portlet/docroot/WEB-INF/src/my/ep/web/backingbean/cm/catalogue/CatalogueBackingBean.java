@@ -92,7 +92,6 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-import org.python.modules.newmodule;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -1108,15 +1107,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
 
-			
-			
+
+
 			Map<Date, List<CmPromotionTierPricing>> promotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings());
 
 			if(!promotionTierMap.isEmpty() && promotionTierMap.size() > 0 ){ 
-				
-				
+
+
 				List<Object> sortedZonalList = groupingStartDate(promotionTierMap);
-				
+
 				List <CmPromotionTierPricing> perviouslyList = new ArrayList<CmPromotionTierPricing>();
 				for(Object sorted : sortedZonalList){
 					List <CmPromotionTierPricing> sortedTier = (List<CmPromotionTierPricing>) sorted; 
@@ -1146,16 +1145,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					perviouslyList = sortedTier;
 				}
 			}
-			
-			
-			
+
+
+
 			Map<Date, List<CmZonalPromotionTierPricing>> zPromotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings());
 
 			if(!zPromotionTierMap.isEmpty() && zPromotionTierMap.size() > 0 ){ 
-				
-				
+
+
 				List<Object> sortedZonalList = groupingStartDate(zPromotionTierMap);
-				
+
 				List <CmZonalPromotionTierPricing> perviouslyList = new ArrayList<CmZonalPromotionTierPricing>();
 				for(Object sorted : sortedZonalList){
 					List <CmZonalPromotionTierPricing> sortedTier = (List<CmZonalPromotionTierPricing>) sorted; 
@@ -1185,9 +1184,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					perviouslyList = sortedTier;
 				}
 			}
-			
-			
-			
+
+
+
 
 			List<CmZonalPromotionPricing> zPromotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings());
 
@@ -1322,9 +1321,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						previousObj = tier;
 					}
 				}
-				
+
 				List<Object> sortedZonalList = groupingStartDate(zTierMap);
-				
+
 				List <CmZonalTierPricing> perviouslyList = new ArrayList<CmZonalTierPricing>();
 				for(Object sorted : sortedZonalList){
 					List <CmZonalTierPricing> sortedTier = (List<CmZonalTierPricing>) sorted; 
@@ -1352,7 +1351,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					perviouslyList = sortedTier;
 				}
 			}
-				
+
 
 			////////////////////////////////////////////////////////
 
@@ -1385,9 +1384,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						previousObj = tier;
 					}
 				}
-				
+
 				List<Object> sortedZonalList = groupingStartDate(tierMap);
-				
+
 				List <CmTierPricing> perviouslyList = new ArrayList<CmTierPricing>();
 				for(Object sorted : sortedZonalList){
 					List <CmTierPricing> sortedTier = (List<CmTierPricing>) sorted; 
@@ -1416,14 +1415,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					}
 					perviouslyList = sortedTier;
 				}
-				
-				
-				
+
+
+
 			}
 			/////////////////////////////////////////////////////////////////////
-			
 
-			
+
+
 
 			for(CmImage image: this.getManagedBean().getSelectedMaintainItem().getCmImages()){
 				if(image.isBrandNew()){
@@ -2484,10 +2483,59 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void deleteTierPrice(int index){
+	public void setRowIndex(){
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map map = context.getExternalContext().getRequestParameterMap();
+		String name1 = (String) map.get("index");
+		int index = Integer.parseInt(name1);
+		System.out.println("*************index***************"+index);
 
 
-		this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().remove(index);
+		this.getManagedBean().setTierRowIndex(index);
+
+	}
+
+	public void deleteTierPrice(){
+
+		////////////incomplete///////////
+		/*ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		CatalogueResDTO resDTO = null;
+
+		reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
+		reqDTO.setStartDate1(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(this.getManagedBean().getTierRowIndex()).getStartDate());
+		reqDTO.setEndDate1(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(this.getManagedBean().getTierRowIndex()).getEndDate());
+		reqDTO.setPriceType("04");
+		resDTO = catalogueSO.findPromotionDateByStandardDate(reqDTO);
+
+		if(resDTO.getPriceLs()!=null && resDTO.getPriceLs().size()>0){
+
+			for(CmPricing obj: resDTO.getPriceLs()){
+
+			}
+
+
+		}
+
+		Map<Date, List<CmPromotionTierPricing>> promoTierMap = groupingDate(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings());*/
+		///////////////////
+
+		Map<Date, List<CmTierPricing>> tierMap = groupingDate(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
+
+		if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
+
+			List <CmTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(this.getManagedBean().getTierRowIndex()).getStartDate());	
+
+			for(CmTierPricing price :dataList){
+
+				this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().remove(price);
+			}
+
+		}
+
+
+
 	}
 
 
@@ -2582,6 +2630,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setToQty(pricing.getToQty());
 						price.setMinDate(pricing.getStartDate());
 						price.setMaxDate(pricing.getEndDate());
+						price.setShowFlag(pricing.isShowFlag());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 
@@ -2593,15 +2642,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 
 				if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
-				
+
 					List <CmTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate());	
-						
+
 					for(CmPricing pricing: dataList){
 						CmPromotionTierPricing price = new CmPromotionTierPricing();
 						price.setStartDate(pricing.getStartDate());
 						price.setEndDate(pricing.getEndDate());
 						price.setFromQty(pricing.getFromQty());
 						price.setToQty(pricing.getToQty());
+						price.setShowFlag(pricing.isShowFlag());
 						price.setMinDate(pricing.getStartDate());
 						price.setMaxDate(pricing.getEndDate());
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
@@ -2664,6 +2714,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setToQty(pricing.getToQty());
 						price.setMinDate(pricing.getStartDate());
 						price.setMaxDate(pricing.getEndDate());
+						price.setShowFlag(pricing.isShowFlag());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
 
@@ -2671,14 +2722,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 
 			}else{
-				
-				
+
+
 				Map<Date, List<CmZonalTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
 
 				if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
-				
+
 					List <CmZonalTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStartDate());	
-						
+
 					for(CmPricing pricing: dataList){
 						CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
 						price.setStartDate(pricing.getStartDate());
@@ -2687,12 +2738,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setToQty(pricing.getToQty());
 						price.setMinDate(pricing.getStartDate());
 						price.setMaxDate(pricing.getEndDate());
+						price.setShowFlag(pricing.isShowFlag());
 						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
 					}
 				}
 
-				
-				
+
+
 			}
 
 		}else{
@@ -2803,6 +2855,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
+
+	public <T extends CmPricing> Map groupingDate(List <T> commonList){
+
+		Map<Date, List<T>> tierMap = new HashMap<Date, List<T>>();
+		List<T> tierList = new ArrayList<T>();
+		for(T tier : commonList){
+			if(tierMap.containsKey(tier.getStartDate())){
+				tierList.add(tier);
+				tierMap.put(tier.getStartDate(), tierList);
+			}else{
+
+				tierList = new ArrayList<T>();
+				tierList.add(tier);
+				tierMap.put(tier.getStartDate(), tierList);
+			}
+		}
+
+		return tierMap;
+
+	}
+
+
 	public <T extends CmPricing> List groupingStartDate(Map<Date, List<T>> tierMap){
 
 		SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
@@ -2827,9 +2901,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				System.out.println("i:"+i);
 				List <T>dataList  = (List)tierMap.get(keysetarray[i]);	
 				obj[count] = dataList;
-				
+
 			}
-			
+
 			for(int i=0; i<obj.length; i++){
 				sortedList.add(obj[i]);
 			}
@@ -2870,6 +2944,53 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		return sortedList;
+
+	}
+
+
+	public String addToContractRequest(VCmSupplierItem supplierItem){
+
+		System.out.println("************getContractNo***************"+supplierItem.getContractNo());
+
+		this.getManagedBean().setTempSupplierList(null);
+		this.getManagedBean().getTempSupplierList().add(supplierItem);
+
+
+		boolean flag = false;
+
+		if(this.getManagedBean().getCtRequestList()!=null && this.getManagedBean().getCtRequestList().size()>0){
+			for(VCmSupplierItem item: this.getManagedBean().getCtRequestList()){
+				if(!item.getContractNo().equalsIgnoreCase(supplierItem.getContractNo())){
+					System.out.println("********************different Contact No.");
+
+					flag = true;
+				}
+			}
+		}
+
+		if(flag){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Different Contact No.", ""));
+
+			return "supplierItemView";
+		}else{
+			System.out.println("size:"+this.getManagedBean().getTempSupplierList().size());
+			
+			for(VCmSupplierItem temp:this.getManagedBean().getTempSupplierList()){
+				System.out.println("temp.getDocId()"+temp.getDocId());
+				System.out.println("keySet:"+this.getManagedBean().getTempMap().keySet());
+				if(!this.getManagedBean().getTempMap().containsKey(temp.getDocId())){
+					this.getManagedBean().getCtRequestList().add(temp);
+					this.getManagedBean().getTempMap().put(temp.getDocId(), temp.getDocId());
+				}
+			}
+		}
+
+
+
+		return "supplierItemView";
+
+
 
 	}
 
