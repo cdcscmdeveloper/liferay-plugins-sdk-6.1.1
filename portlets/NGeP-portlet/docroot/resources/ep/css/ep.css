@@ -961,7 +961,7 @@ px
 	{
 	color: #ffffff;
 	font-family: Arial;
-	font-size: 11px;
+	font-size: 12px;
 	text-decoration: none;
 	background: #97d832 !important;
 	box-shadow: none;
@@ -1027,7 +1027,7 @@ px
 .ui-selectonemenu-item {
 	color: #333333;
 	font-family: Arial;
-	font-size: 11px;
+	font-size: 12px;
 	text-decoration: none;
 }
 
@@ -4105,7 +4105,7 @@ thead > tr > th.ui-state-default {
 	{
 	color: #ffffff;
 	font-family: Arial;
-	font-size: 11px;
+	font-size: 12px;
 	text-decoration: none;
 	background: #97d832 !important;
 	border-radius: 0px;
@@ -4168,8 +4168,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	font-family: Arial,Helvetica,Verdana,sans-serif;
 	font-weight: bold;
 	font-size: 16px;
-	color: #EFA723;
-	background-color: #FBFBFB;
+	color: #808080;
 	padding: 7px;
 }
 
@@ -4658,6 +4657,10 @@ label > span.ui-button-text {
 	background-color: #00FFFF;
 	padding: 5px;
 	width: 100%;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, button:hover {
+	border-color: #CCCCCC !important;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
