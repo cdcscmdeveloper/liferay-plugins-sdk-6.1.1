@@ -86,7 +86,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.sc.specificationdata.SCSpecificationDataType;
+import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -135,7 +135,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -143,6 +142,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1629,7 +1629,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalScoreSetting(
 						new ScQtScoreSetting());
 				this.getManagedBean().getTechnicalScoreSetting()
-						.setSettingType(new BigDecimal(1));
+						.setSettingType(1);
 				this.getManagedBean().getTechnicalScoreSetting()
 						.setChangedBy(1L);
 				this.getManagedBean().getTechnicalScoreSetting()
@@ -1650,7 +1650,7 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setDemoScoreSetting(new ScQtScoreSetting());
 			this.getManagedBean().getDemoScoreSetting()
-					.setSettingType(new BigDecimal(3));
+					.setSettingType(3);
 			this.getManagedBean().getDemoScoreSetting().setChangedBy(1L);
 			this.getManagedBean().getDemoScoreSetting().setCreatedBy(1L);
 			this.getManagedBean().getDemoScoreSetting()
@@ -1715,7 +1715,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setFinancialScoreSetting(
 						new ScQtScoreSetting());
 				this.getManagedBean().getFinancialScoreSetting()
-						.setSettingType(new BigDecimal(2));
+						.setSettingType(2);
 				this.getManagedBean().getFinancialScoreSetting()
 						.setScQt(this.getManagedBean().getScQt());
 
@@ -1803,7 +1803,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setRecommendationPackageScore(
 						new ScQtScoreSetting());
 				this.getManagedBean().getRecommendationPackageScore()
-						.setSettingType(new BigDecimal(4));
+						.setSettingType(4);
 				this.getManagedBean().getRecommendationPackageScore()
 						.setScQt(this.getManagedBean().getScQt());
 				this.getManagedBean().getRecommendationPackageScore()
@@ -1821,7 +1821,7 @@ public class SpecificationBackingBean extends
 						new ScQtScoreSetting());
 
 				this.getManagedBean().getRecommendationScore()
-						.setSettingType(new BigDecimal(5));
+						.setSettingType(5);
 				this.getManagedBean().getRecommendationScore()
 						.setScQt(this.getManagedBean().getScQt());
 				this.getManagedBean().getRecommendationScore()
@@ -1837,12 +1837,12 @@ public class SpecificationBackingBean extends
 
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getRecomandationSettings().getResultList()) {
-					if (recommnendationSetting.getSettingType().intValue() == 4) {
+					if (recommnendationSetting.getSettingType() == 4) {
 						this.getManagedBean().setRecommendationPackageScore(
 								recommnendationSetting);
 					}
 
-					if (recommnendationSetting.getSettingType().intValue() == 5) {
+					if (recommnendationSetting.getSettingType() == 5) {
 						this.getManagedBean().setRecommendationScore(
 								recommnendationSetting);
 					}
@@ -4785,7 +4785,7 @@ public class SpecificationBackingBean extends
 				ScQtSchedule schedule = new ScQtSchedule();
 				schedule.setStartYear(String.valueOf(year));
 				schedule.setEndYear(String.valueOf(year));
-				schedule.setScheduleType(new BigDecimal(1));
+				
 				schedule.setChangedBy(1L);
 				schedule.setCreatedBy(1L);
 				schedule.setCreatedDate(new Timestamp(System
@@ -6384,7 +6384,7 @@ public class SpecificationBackingBean extends
 		scQtChecklist.setScQtCheckListAttachment(attachment);
 	}
 
-	public void preRenderView() {
+	/*public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -6429,7 +6429,7 @@ public class SpecificationBackingBean extends
 						null,
 						"/xhtml/ss/specification/specificationview.xhtml"
 								+ "?faces-redirect=true");
-	}
+	}*/
 
 	public String submitSpecDetails(String outCome) {
 
@@ -7716,4 +7716,38 @@ public class SpecificationBackingBean extends
 		this.searchDeliveryAddress = searchDeliveryAddress;
 	}
 
+	/**
+	 * To redirect BO prepareSpec Screen..
+	 */
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		this.getManagedBean().setTaskId(taskId);
+
+		
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+		this.getManagedBean().setOutComes(res.getAction());
+		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
+
+			retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
+	}
 }
