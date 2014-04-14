@@ -31,11 +31,12 @@ public class LocationDTO implements Serializable{
 	public LocationDTO() {
 		super();
 	}
-	public LocationDTO(Long zoneId, String zone,  int	deliveryTerm) {
+	public LocationDTO(Long zoneId, String zone,  int	deliveryTerm, Long uomId) {
 		super();
 		this.zone = zone;
 		this.zoneId = zoneId;
 		this.deliveryTerm = deliveryTerm;
+		this.uomId = uomId;
 	}
 
 

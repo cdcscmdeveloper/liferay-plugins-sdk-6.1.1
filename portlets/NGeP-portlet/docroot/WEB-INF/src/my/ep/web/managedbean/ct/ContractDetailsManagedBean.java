@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.ct;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +28,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -129,7 +129,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private double advancePaymentAmt;
 	
 	private Map<String, PmUser> userMap;
-	
+	private SmSupplierBank smSupplierBanks;
+	 
 	public String[] getAction() {
 		return action;
 	}
@@ -726,6 +727,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public SmSupplierBank getSmSupplierBanks() {
+		return smSupplierBanks;
+	}
+
+	public void setSmSupplierBanks(SmSupplierBank smSupplierBanks) {
+		this.smSupplierBanks = smSupplierBanks;
 	}
 	
 }

@@ -122,11 +122,11 @@ import com.liferay.portal.util.PortalUtil;
 public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
 
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
-	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml";
-	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
-	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml";
-	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
-	private static final String CONTRACT_PAGE ="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";;
+	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
+	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
+	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
+	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
+	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	
 	private String editorValue;
 	ContractBackingBean ctBB = null;
@@ -244,86 +244,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		    this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-		    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		    setValidateContactField(resDTO);
 		    
-		    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		        if(this.getManagedBean().getCtItemList() == null && this.getManagedBean().getCtItemServiceList() == null){
-		        	 this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-		        	 this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
-		             
-		        	 for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				       if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
-					      this.getManagedBean().getCtItemServiceList().add(item);
-				       else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
-		        	 	  this.getManagedBean().getCtItemList().add(item);
-			         }
-		         }
-		    }
-		    
-		    if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
-		      for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
-		    	 if(retrieveParameterById(deduct.getDeductionType().getParameterId()).equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
-		    		this.getManagedBean().setFlgPaymentTracking(true);
-		    		this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
-		    	  }
-		       }
-		    }
-		    
-		    
-		    if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
-		       this.getManagedBean().setChkSchedule(true);
-		       SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
-			   Calendar cal = Calendar.getInstance();
-		       for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
-		    	   cal.setTime(ctschedule.getFromDate());
-		    	   ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
-		    	   ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
-		    	    
-		    	   cal.setTime(ctschedule.getToDate());
-		    	   ctschedule.setToTranDate(cal.get(Calendar.MONTH));
-		    	   ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
-		       }
-		    }
-		    
-		    if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
-			       SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
-				   Calendar cal = Calendar.getInstance();
-			       for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-			    	   cal.setTime(ctProgressivePayment.getFromDate());
-			    	   ctProgressivePayment.setFromProDate(cal.get(Calendar.MONTH));
-			    	   ctProgressivePayment.setFromProYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
-			    	    
-			    	   cal.setTime(ctProgressivePayment.getToDate());
-			    	   ctProgressivePayment.setToProDate(cal.get(Calendar.MONTH));
-			    	   ctProgressivePayment.setToProYears(dateFormatYear.format(ctProgressivePayment.getToDate()));
-			       }
-			    }
-		    
-		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
-		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmUom());
-		    }
-		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
-		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
-		    	this.getManagedBean().setDirectPurchase(true);
-		    }
-	        
-	        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-		    
-		    retriveZonesByContractVer();
-	        CombineSupAddress(this.getManagedBean().getContractVer());
-	        
-	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
-		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-	    
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 		
@@ -332,6 +254,88 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	 }finally{
 	 		
 	 	 }
+	}
+	
+	public void setValidateContactField(ContractResDTO resDTO){
+		
+		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		 
+	    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
+		     if(this.getManagedBean().getCtItemList() == null && this.getManagedBean().getCtItemServiceList() == null){
+		        this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+		        this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+		             
+		        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				    if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
+					   this.getManagedBean().getCtItemServiceList().add(item);
+				    else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
+		        	   this.getManagedBean().getCtItemList().add(item);
+			     }
+		     }
+		 }
+		 
+		 if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+		    for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
+		      if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
+		    	 this.getManagedBean().setFlgPaymentTracking(true);
+		    	 this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
+		      }
+		   }
+		 }
+		
+		 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
+		    this.getManagedBean().setChkSchedule(true);
+		    SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+			Calendar cal = Calendar.getInstance();
+		    for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
+		    	cal.setTime(ctschedule.getFromDate());
+		    	ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
+		    	ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
+		    	    
+		    	cal.setTime(ctschedule.getToDate());
+		    	ctschedule.setToTranDate(cal.get(Calendar.MONTH));
+		    	ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
+		     }
+		  }
+		    
+		 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
+			 SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+		     Calendar cal = Calendar.getInstance();
+			 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
+			     cal.setTime(ctProgressivePayment.getFromDate());
+			     ctProgressivePayment.setFromProDate(cal.get(Calendar.MONTH));
+			     ctProgressivePayment.setFromProYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
+			    	    
+			     cal.setTime(ctProgressivePayment.getToDate());
+			     ctProgressivePayment.setToProDate(cal.get(Calendar.MONTH));
+			     ctProgressivePayment.setToProYears(dateFormatYear.format(ctProgressivePayment.getToDate()));
+			  }
+		   }
+		    
+		    if(this.getManagedBean().getContractVer().getCtContractValue().getUomId() == null){
+		    	this.getManagedBean().getContractVer().getCtContractValue().setUomId(new PmUom());
+		    }
+		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
+		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
+		    	this.getManagedBean().setDirectPurchase(true);
+		    }
+		    
+		    retriveZonesByContractVer();
+	        CombineSupAddress(this.getManagedBean().getContractVer());
+	        
+	        this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
+	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			
+			initializeRemarks();
+			ContractBackingBean ctBB = new ContractBackingBean();
+		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+	    
 	}
 	
 	/*Implementation of search methode*/
@@ -370,11 +374,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().getCtDateEnd()));	
 		
 		}if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("currentContractVer.ctContractValue.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtPhysicalNo()));	
 		
 		}if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtLOANo()));	
 		}	
 				
@@ -398,6 +402,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
+	public void searchReset(){
+		this.getManagedBean().setCtNumber(null);
+		this.getManagedBean().setCtName(null);	
+		this.getManagedBean().setCtCircularNo(null);	
+		this.getManagedBean().setCtCircularName(null);	
+		this.getManagedBean().setCtSupplierId(null);	
+		this.getManagedBean().setCtSupplierName(null);	
+		this.getManagedBean().setCtDateStart(null);	
+		this.getManagedBean().setCtDateEnd(null);	
+		this.getManagedBean().setCtPhysicalNo(null);	
+		this.getManagedBean().setCtLOANo(null);		
+	}
     public String saveContract(String action){
 		
 	    IContractSO contractSO = null;
@@ -511,7 +527,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		TreeNode zoneNode =  null;
 		if(this.getManagedBean().getContractVer().getCtContractZones() != null) {
 		   for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
-			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm()), rootLocationTree);
+			   if(zone.getDeliveryTermUom() == null){
+				   zone.setDeliveryTermUom(new PmUom()); 
+				   zone.getDeliveryTermUom().setUomId(0L);
+			   }
+			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getUomId()), rootLocationTree);
 			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
@@ -537,10 +557,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
     				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
     					if(ctContractZone.getDeliveryTermUom() == null)
-    					   ctContractZone.setDeliveryTermUom(new PmUom());
-    					ctContractZone.getDeliveryTermUom().setUomId(((LocationDTO)zonename.getData()).getUomId());
-    					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
-    				}
+     					   ctContractZone.setDeliveryTermUom(new PmUom());
+     					ctContractZone.getDeliveryTermUom().setUomId(((LocationDTO)zonename.getData()).getUomId());
+     					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+     				}
     			}
     		}
     	}
@@ -1174,6 +1194,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 getManagedBean().getApproverModel().setTarget(target);
 	}*/
 	 
+	public String chkContractStatusType(CtContract ctcontract, Long pmId){
+		
+		if(ctcontract.getCurrentAgreementId() != null && ctcontract != null){
+			if(pmId == ContractStatusConst.FD_APPROVED && ctcontract.getCurrentAgreementId().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE)
+				return ContractConst.CONTRACT_STATUS_COMPLETE;
+			else
+				return ContractConst.CONTRACT_STATUS_INCOMPLETE;
+		}else{
+			return ContractConst.CONTRACT_STATUS_INCOMPLETE;
+		}
+	}
+	
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;
@@ -1286,68 +1318,27 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public String gotoViewPage() {
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 	
-	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		  
-	      getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-		  } 
-		 
-	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	      if(this.getManagedBean().getContractVer().getCtPerformanceBonds() == null || this.getManagedBean().getContractVer().getCtPerformanceBonds().size() == 0)
-	    	  this.getManagedBean().getContractVer().setCtPerformanceBonds(new ArrayList<CtPerformanceBond>());
-	      
-	      if(this.getManagedBean().getContractVer().getCtSetting() == null)
-	    	  this.getManagedBean().getContractVer().setCtSetting(new CtSetting());
-	      
-	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-          CombineSupAddress(resDTO.getCtContractVer());
-          
-          this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		  initializeRemarks();
-		  ContractBackingBean ctBB = new ContractBackingBean();
-		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		  this.getManagedBean().setViewContract(true);
+	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	    setValidateContactField(resDTO);  
+	    this.getManagedBean().setViewContract(true);
 		return PROCESS_VIEW_PAGE;
 	}
 	
 	public String gotoContractPage(){
+		
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 	
-	     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		 
-	      getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-		  } 
-		 
-	      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);
-	      if(this.getManagedBean().getContractVer().getCtPerformanceBonds() == null || this.getManagedBean().getContractVer().getCtPerformanceBonds().size() == 0)
-	    	  this.getManagedBean().getContractVer().setCtPerformanceBonds(new ArrayList<CtPerformanceBond>());
-	      
-	      if(this.getManagedBean().getContractVer().getCtSetting() == null)
-	    	  this.getManagedBean().getContractVer().setCtSetting(new CtSetting());
-	      
-	      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-          CombineSupAddress(resDTO.getCtContractVer());
-          
-          this.getManagedBean().setUpdateContract(true);
-          
-          this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		  initializeRemarks();
-		  ContractBackingBean ctBB = new ContractBackingBean();
-		  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		  this.getManagedBean().setViewContract(false);
+	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	    setValidateContactField(resDTO);
+	    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);
+	    
+	    this.getManagedBean().setUpdateContract(true);
+        this.getManagedBean().setViewContract(false);
 		return CONTRACT_PAGE;
 	}
 	

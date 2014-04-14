@@ -68,7 +68,7 @@
          <c:if test ='#{contractDetailsBackingBean.managedBean.updateContract}'>
 		   <p:commandButton value="Add" process="@form"  icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" />
 		   <p:spacer width="1"/>
-		   <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="performanceBondDlg.show()"/> 
+		   <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();"/> 
 	   	</c:if> 
 	   	 </div>
 	   	 <p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false" resizable="false" width="700px" height="350" 
@@ -81,14 +81,21 @@
 			  update=":form:tabview:tableBond" >
 		    </p:fileUpload> 
 	     </p:dialog>
-	         <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			   severity="alert" widgetVar="performanceBondDlg">
-                 <h:panelGrid columns="2">
-				 <p:commandButton value="Yes" process="@form" update=":form"
-				    onclick="performanceBondDlg.hide();" actionListener="#{contractDetailsBackingBean.delBondDetails()}"/>
-				  <p:commandButton value="No" 	onclick="performanceBondDlg.hide()" type="button" />
-				</h:panelGrid>
-			</p:confirmDialog>
+	     <p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" header="Delete Confirmation" styleClass="screen-title"  
+           resizable="false" modal="true" width="325" height="90">  
+           <h:panelGrid columns="3">
+            <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                 styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="tableBond" process="@form" 
+				actionListener="#{contractDetailsBackingBean.delBondDetails()}" onclick="dlgPerformDel.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgPerformDel.hide();" type="button" />
+		   </div>
+        </p:dialog>  
   </p:panel>
 </ui:composition>
 

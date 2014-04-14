@@ -13,25 +13,25 @@
     </style>
      <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="4" style="width:100%;">
-           <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}"  style="width:170px;"/>
-           <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}"  style="width:170px;"/>
-           <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" style="width:170px;" />
-           <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}"  style="width:170px;"/>
-           <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" style="width:170px;"/>
-           <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" style="width:170px;"/> 
-           <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" 
             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" />
-           <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="popupButtonCal1" 
              pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  showOn="button" />
-           <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" style="width:170px;"/>                     
            <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
            <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}"  style="width:170px;" />
@@ -42,6 +42,7 @@
 			</h:panelGrid>
 		  <div class="ppRightBtn"> 
               <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractDetailsBackingBean.searchContract}" icon="ui-icon-search"   update="dataTable"/>
+               <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{contractDetailsBackingBean.searchReset}" icon="ui-icon-search"   update=":form"/>
 		  </div>	
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.panel.result']}" toggleable="true"	toggleSpeed="500">
@@ -63,45 +64,55 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  style="width:8%;">
 						<h:outputText value="#{data.currentContractVer.ctContractValue.effDate}">
-							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cend']}"  style="width:8%;">
 						<h:outputText value="#{data.currentContractVer.ctContractValue.expDate}">
-							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.lno']}"  style="width:10%;">
-						<h:outputText value="#{data.loaNo}" />
+						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.status']}"  style="width:14%;">
-						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.currentContractVer.status.statusId)}" />
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data,data.currentContractVer.status.statusId)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:10%;">
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" 
+					      rendered="#{(data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId != CtStatusConst.acComplete) || 
+					         (data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete)}">
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="pause.png"
 						  value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" />
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" 
+					     rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="terminate.png"
 						  value="/resources/ep/images/design/terminate.png" title="Termination" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" />
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" 
+					     rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
+					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="revise.png"
 						   value="/resources/ep/images/design/revise.png" title="Amendment" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" >
+					   <p:spacer width="7"/>
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}">
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="evaluate.png"
 						   value="/resources/ep/images/design/evaluate.png" title="Update" />
 					   </p:commandLink>						
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId==CtStatusConst.approved or data.currentContractVer.status.statusId==CtStatusConst.rejected}" />
+					   <p:spacer width="7"/>
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="document.png"
