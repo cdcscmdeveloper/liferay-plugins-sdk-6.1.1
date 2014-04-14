@@ -5,17 +5,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approver Setting" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.approval.approver.setting']}" toggleable="true">
 		<table>
 			<tr>
-				<td><h:outputLabel value="Ministry Specification Secretary" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.approval.min.spec.secretary']}" /></td>
 				<td><p:inputText
 						value="#{specificationBackingBean.managedBean.scQt.ministrySpecSecrataryId.userName}" readonly="true" disabled="true"/></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -49,13 +49,13 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="History" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.approval.history']}" toggleable="true">
 		<p:dataTable>
-			<p:column headerText="Approved By">
+			<p:column headerText="#{lbl['lbl.sc.spec.approval.approved.by']}">
 			</p:column>
-			<p:column headerText="Status">
+			<p:column headerText="#{lbl['lbl.sc.spec.approval.status']}">
 			</p:column>
-			<p:column headerText="Date">
+			<p:column headerText="#{lbl['lbl.sc.spec.approval.date']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>

@@ -15,7 +15,7 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -28,27 +28,27 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 
-			<p:panel header="Assets" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.spec.asset.assets']}" toggleable="true">
 				<p:dataTable id="assetsCode" rowIndexVar="index" var="factory">
 					<ac:paginator for="assetsCode"></ac:paginator>
 
-					<p:column headerText="Asset Type">
+					<p:column headerText="#{lbl['lbl.sc.spec.asset.assets']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
-					<p:column headerText="Description">
+					<p:column headerText="#{lbl['lbl.sc.spec.asset.type']}">
 						<p:inputText></p:inputText>
 					</p:column>
-					<p:column headerText="Doc.Ref.No">
+					<p:column headerText="#{lbl['lbl.sc.spec.asset.doc.ref.num']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
-					<p:column headerText="Amount(RM)">
+					<p:column headerText="#{lbl['lbl.sc.spec.asset.amount']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
@@ -66,29 +66,29 @@
 			</p:panel>
 
 			<h:panelGrid columns="2">
-				<h:outputLabel value="Total Current Assets(RM)"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
 				<p:inputText></p:inputText>
-				<h:outputLabel value="Total Fixed Assets(RM)"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.asst.tot.fix.assets']}"></h:outputLabel>
 				<p:inputText></p:inputText>
 			</h:panelGrid>
 
 
-			<p:panel header="LIABILITIES" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.spec.liabilities']}" toggleable="true">
 				<p:dataTable id="liabilitiesCode" rowIndexVar="index" var="factory">
 					<ac:paginator for="liabilitiesCode"></ac:paginator>
 
-					<p:column headerText="Liabilities Type">
+					<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.type']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
-					<p:column headerText="Description">
+					<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.desc']}">
 						<p:inputText></p:inputText>
 					</p:column>
-					<p:column headerText="Doc.Ref.No">
+					<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.doc.ref.num']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
-					<p:column headerText="Amount(RM)">
+					<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.amount']}">
 						<p:inputText></p:inputText>
 					</p:column>
 
@@ -107,15 +107,15 @@
 			</p:panel>
 
 			<h:panelGrid columns="2">
-				<h:outputLabel value="Total Current Liabilities(RM)"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.cur']}"></h:outputLabel>
 				<p:inputText></p:inputText>
-				<h:outputLabel value="Total Fixed Liabilities(RM)"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.fix']}"></h:outputLabel>
 				<p:inputText></p:inputText>
 			</h:panelGrid>
 
 
 		</p:panel>
-		<p:panel header="Summary" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.asset.summary']}" toggleable="true">
 
 			<p:panelGrid style="margin-top:20px;width:100%;">
 				<f:facet name="header">
@@ -169,7 +169,7 @@
 
 		<p:panel>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
 				<p:selectOneMenu
 					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
