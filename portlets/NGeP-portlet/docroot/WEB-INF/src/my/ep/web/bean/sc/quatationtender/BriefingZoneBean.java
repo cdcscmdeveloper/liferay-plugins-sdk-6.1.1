@@ -31,13 +31,12 @@ public class BriefingZoneBean {
 		this.sitevisitList = sitevisitList;
 	}
 
-	public BriefingZoneBean(int id, String zoneName,
-			List<ScQtDeliveryLoc> deliveryLocList,
-			List<ScQtDeliveryLoc> selectDeliveryList) {
-		this.id = id;
-		this.zoneName = zoneName;
+	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
+			List<ScQtDeliveryLoc> deliveryLocList)
+			{
+		this.tplSpecZoneDtl=tplSpecZoneDtl;
 		this.deliveryLocList = deliveryLocList;
-		this.selectDeliveryList = selectDeliveryList;
+	
 	}
 
 	public String getZoneName() {
