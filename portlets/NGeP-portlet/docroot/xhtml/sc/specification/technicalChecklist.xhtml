@@ -136,7 +136,7 @@
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
-					
+					rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"
 					update="stageTwotechProposal">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
