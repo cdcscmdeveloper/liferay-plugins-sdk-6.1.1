@@ -228,6 +228,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
     }*/
 	
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+		
+		if (list != null && toBeRemovedList != null) {
+			list.removeAll(toBeRemovedList);	
+		}
+	}
+	
 	/**
 	 * Create search bean.
 	 * 
