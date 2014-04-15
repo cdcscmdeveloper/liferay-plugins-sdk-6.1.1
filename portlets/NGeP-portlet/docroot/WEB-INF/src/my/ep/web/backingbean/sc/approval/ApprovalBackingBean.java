@@ -4,34 +4,25 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
-import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
 
 /**
- * @author ACER
+ * @author Viswanath
  * 
  */
 @ManagedBean(name = "approvalBackingBean")
@@ -54,37 +45,8 @@ public class ApprovalBackingBean extends
 
 		initializeRemark(new ArrayList<ScQtApprovalRemark>());
 
-		//getBudgetApproverName();
+		// getBudgetApproverName();
 	}
-
-	
-	/*public List<SelectItem> getBudgetApproverName() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
-			if (getManagedBean().getBudgetApprover() == null) {
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setRoleCode(RoleCode.BUDGET_APPROVER.value());
-				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				comitteeUsersUsers = resDTO.getUserList();
-			}
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			for (int i = 0; i < comitteeUsersUsers.size(); i++) {
-				PmUser user = (PmUser) comitteeUsersUsers.get(i);
-				selectItems.add(new SelectItem(user.getUserId(), user
-						.getUserName()));
-			}
-			this.getManagedBean().setBudgetApprover(selectItems);
-			System.out.println("Budget Approver Names : " + getManagedBean().getBudgetApprover());
-			System.out.println("Budget Approver Names Size : " + getManagedBean().getBudgetApprover().size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return getManagedBean().getBudgetApprover();
-	}*/
 
 	/**
 	 * @param arrayList
@@ -131,19 +93,21 @@ public class ApprovalBackingBean extends
 	}
 
 	public SelectItem[] getApprovalCategories() {
-		SelectItem[] selectItems = new SelectItem[5];
+		SelectItem[] selectItems = new SelectItem[6];
 
-		selectItems[0] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(),
+		selectItems[0] = new SelectItem(
+				ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
+		selectItems[1] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(),
 				"BPK Approval");
-		selectItems[1] = new SelectItem(
+		selectItems[2] = new SelectItem(
 				ApprovalCategory.COMMITTEE_APPROVAL.value(),
-				"Committee Approval");
-		selectItems[2] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(),
+				"Committee Appointment Approval");
+		selectItems[3] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(),
 				"PTJ Approval");
-		selectItems[3] = new SelectItem(
-				ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value(),
-				"Procurement Board Approval");
 		selectItems[4] = new SelectItem(
+				ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(),
+				"Finalization Committee Approval");
+		selectItems[5] = new SelectItem(
 				ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
 
 		return selectItems;

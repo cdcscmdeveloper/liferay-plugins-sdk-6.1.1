@@ -33,7 +33,6 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -416,7 +415,7 @@ public class CommitteBackingBean extends
 		committeeMember.setPmOrgProfile(new PmOrgProfile());
 		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
 		committeeMember.setUserSelection("P");
-		committeeMember.setGovtUser(true);
+		//committeeMember.setGovtUser(true);
 		retriveGovUsers();
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
@@ -630,14 +629,14 @@ public class CommitteBackingBean extends
 			getManagedBean().getCommitteMember().setGovtUser(true);
 		} else*/ 
 		if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.EXISITING.value())) {
+				.equalsIgnoreCase(SelectionType.Existing.value())) {
 
-			getManagedBean().getCommitteMember().setExternalUser(true);
+			//getManagedBean().getCommitteMember().setExternalUser(true);
 			retriveExternalUsers();
 		} else if (this.getManagedBean().getCommitteMember().getUserSelection()
 				.equalsIgnoreCase(SelectionType.New.value())) {
 
-			getManagedBean().getCommitteMember().setExternalUser(true);
+			//getManagedBean().getCommitteMember().setExternalUser(true);
 			retriveAllMinstrys();
 		}
 
