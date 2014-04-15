@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,24 +16,39 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserOrgRole;
+import my.ep.persistence.entity.pm.authorization.PmUserPreference;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.CommitteType;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -142,8 +158,6 @@ public class QTCommitteBackingBean extends
 				this.getManagedBean().setExternalUsers(
 						resDto.getUserResultBean().getResultList());
 			}
-			System.out.println("Size : "
-					+ resDto.getUserResultBean().getResultList().size());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -157,11 +171,9 @@ public class QTCommitteBackingBean extends
 	public void onRowCloneAction(SelectEvent event) {
 		debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
-		// ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(scQt.getQtId());
-		// reqDTO.getsetCommitteId(scQtCommittee.getScCommittee().getCommitteeId());
 		CommitteResDTO resDTO = null;
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
@@ -173,14 +185,11 @@ public class QTCommitteBackingBean extends
 				this.getManagedBean().setCloneCommitteMemebers(
 						resDTO.getCommMemberResultBean().getResultList());
 			}
-			System.out.println("======== list size==== :"
-					+ getManagedBean().getCloneCommitteMemebers().size());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 		DefaultTreeNode searchcommitteeNode = null;
-
 		List<ScCommitteeMember> panelSupplierList = getManagedBean()
 				.getCloneCommitteMemebers();
 		if (panelSupplierList != null && panelSupplierList.size() > 0) {
@@ -239,8 +248,6 @@ public class QTCommitteBackingBean extends
 		} catch (Exception e) {
 
 		}
-		// List<ScQt> qtCommittee = retriveQtCommittes();
-		// getManagedBean().setCloneSearchCommittes(qtCommittee);
 	}
 
 	/**
@@ -299,86 +306,6 @@ public class QTCommitteBackingBean extends
 		return null != dto.getQtResultBean().getResultList() ? dto
 				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 
-		/*
-		 * ISearchBean<ScQt> searchBean = new SearchBean<ScQt>();
-		 * QuationTenderResDTO resDTO = null;
-		 * 
-		 * 
-		 * CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		 * ISearchBean<ScQtCommittee> searchBean = new
-		 * SearchBean<ScQtCommittee>(); CommitteResDTO resDto = null;
-		 * 
-		 * 
-		 * if (getManagedBean().getCommitteNo() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getCommitteNo())) {
-		 * SearchFilterBean committeSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * committeSearchBean.setSearchField("scCommittee.committeeId");
-		 * committeSearchBean.setSearchValue(getManagedBean().getCommitteNo());
-		 * searchBean.getDataFilterBeans().add(committeSearchBean);
-		 * 
-		 * }
-		 * 
-		 * if (getManagedBean().getSelectedCommitte() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getSelectedCommitte())) {
-		 * SearchFilterBean committeTypeSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * committeTypeSearchBean.setSearchField("scCommittee.committeeType");
-		 * committeTypeSearchBean.setSearchValue(getManagedBean()
-		 * .getSelectedCommitte());
-		 * searchBean.getDataFilterBeans().add(committeTypeSearchBean); }
-		 * 
-		 * if (getManagedBean().getCreatedDt() != null) { SearchFilterBean
-		 * creatDtSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
-		 * creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDt());
-		 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
-		 * 
-		 * if (getManagedBean().getQtNo() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getQtNo())) { SearchFilterBean
-		 * qtnoSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * qtnoSearchBean.setSearchField("scQt.qtNo");
-		 * qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
-		 * 
-		 * searchBean.getDataFilterBeans().add(qtnoSearchBean); } if
-		 * (getManagedBean().getStatus() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getStatus())) {
-		 * 
-		 * SearchFilterBean statusSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * statusSearchBean.setSearchField("scQt.qtNo");
-		 * statusSearchBean.setSearchValue(getManagedBean().getQtNo());
-		 * 
-		 * searchBean.getDataFilterBeans().add(statusSearchBean);
-		 * 
-		 * } if (getManagedBean().getEvaluationType() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getEvaluationType())) {
-		 * SearchFilterBean evaluationSearchBean = new SearchFilterBean(
-		 * SearchOperator.OPERATOR_EQUALS.value());
-		 * evaluationSearchBean.setSearchField("scQt.scQtSpec.evaluationType");
-		 * evaluationSearchBean.setSearchValue(getManagedBean()
-		 * .getEvaluationType());
-		 * 
-		 * searchBean.getDataFilterBeans().add(evaluationSearchBean); }
-		 * reqDTO.setQtSearchBean(searchBean); //
-		 * committeReqDTO.setCommitteSearchBean(searchBean);
-		 * 
-		 * try { IQTDetailSO detailSO = BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * IQTDetailSO.class);
-		 * 
-		 * ICommitteSO committeSO = BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * ICommitteSO.class);
-		 * 
-		 * resDTO = detailSO.getQuationTenders(reqDTO); // resDto =
-		 * committeSO.searchQTCommittees(committeReqDTO); } catch (Exception ex)
-		 * { ex.printStackTrace(); }
-		 * 
-		 * return resDTO.getQtResultBean();
-		 */
 	}
 
 	public void addCloneDtlToTabs() {
@@ -429,6 +356,12 @@ public class QTCommitteBackingBean extends
 			committee.setCommitteeType("SC");
 		} else if(titleName.equalsIgnoreCase("Opening Committee")) {
 			committee.setCommitteeType("OC");
+		} else if(titleName.equalsIgnoreCase("Evaluation Committee")) {
+			committee.setCommitteeType("EC");
+		} else if(titleName.equalsIgnoreCase("TEC")) {
+			committee.setCommitteeType("TEC");
+		} else if(titleName.equalsIgnoreCase("FEC")) {
+			committee.setCommitteeType("FEC");
 		}
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
@@ -459,7 +392,7 @@ public class QTCommitteBackingBean extends
 				.get("value");
 		userSelection = this.getManagedBean().getCommitteMember()
 				.getUserSelection();
-		System.out.println("------------- : " + userSelection);
+		logger.info("User Selection : " + userSelection);
 		this.getManagedBean().setExternalUsers(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
@@ -517,24 +450,122 @@ public class QTCommitteBackingBean extends
 
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
+		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IParameterSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		
 		ScCommittee scCommittee = this.getManagedBean().getScCommittee();
 		ScQt scQt = this.getManagedBean().getQt();
-		// List<ScCommitteeMember> memberList =
-		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().getScCommitteeMembers();
 		List<ScCommitteeMember> memberList = getManagedBean().getScCommittee()
 				.getScCommitteeMembers();
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
 
-		ScCommitteeMember member = getManagedBean().getCommitteMember();
-
 		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
-			System.out.println("******** New User *********");
+			ScCommitteeMember member = new ScCommitteeMember();
+			member.setMemberName(getManagedBean().getCommitteMember()
+					.getMemberName());
+			member.setIcPassport(getManagedBean().getCommitteMember()
+					.getIcPassport());
+			member.setGrade(getManagedBean().getCommitteMember().getGrade());
+			member.setDesignation(getManagedBean().getCommitteMember()
+					.getDesignation());
+			member.setPNP(getManagedBean().getCommitteMember().isPNP());
+			member.setEmail(getManagedBean().getCommitteMember().getEmail());
+			member.setMemberRole("M");
+			member.setAccessRight("E");
+			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			
+			member.setScCommittee(scCommittee);
+			
+			PmUser user = new PmUser();
+			user.setUserName(member.getMemberName());
+			user.setLoginId(member.getMemberName());
+			user.setIdentificationNo(member.getIcPassport());
+			user.setDesignation(member.getDesignation());
+			user.setGrade(member.getGrade());
+			user.setPMP(member.isPNP());
+			user.setEmail(member.getEmail());
+			
+			// Identification Code
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			parameterReqDTO
+					.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+			PmParameter identificationCode = parameterSO
+					.retrieveParameterByTypeAndCode(parameterReqDTO)
+					.getPmParameter();
+			user.setIdentificationCode(identificationCode);
+			
+			// pmUser.setPmAddressTypes(null);
+
+			// User Notification
+			List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
+			PmUserNotification pmUserNotification = new PmUserNotification();
+			pmUserNotification.setPmUser(user);
+			pmUserNotification.setNotifyMode("E");
+			pmUserNotification.setPreferred(true);
+			pmUserNotifications.add(pmUserNotification);
+			user.setPmUserNotifications(pmUserNotifications);
+			
+			// User Orgs
+			List<PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+			PmUserOrg userOrg = new PmUserOrg();
+			userOrg.setPmUser(user);
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
+			PmOrgProfile pmOrgProfile = orgProfileSO
+					.retrieveOrgProfileListByOrgType(orgProfileReqDTO)
+					.getOrgProfileList().iterator().next();
+			userOrg.setPmOrgProfile(pmOrgProfile);
+			userOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
+			Timestamp expDate = new Timestamp(System.currentTimeMillis());
+			expDate.setYear(1000);
+			userOrg.setExpDate(expDate);
+			List<PmUserOrgRole> pmUserOrgRoles = new ArrayList<PmUserOrgRole>();
+			PmUserOrgRole userOrgRole = new PmUserOrgRole();
+			userOrgRole.setPmUserOrg(userOrg);
+			PmUserRole pmUserRole = new PmUserRole();
+			pmUserRole.setPmUser(user);
+			PmRole pmRole = new PmRole();
+			pmRole.setRoleCode(RoleCode.PLAN_OFFICER.value());
+			pmUserRole.setPmRole(pmRole);
+			userOrgRole.setPmUserRole(pmUserRole);
+			pmUserOrgRoles.add(userOrgRole);
+			userOrg.setPmUserOrgRoles(pmUserOrgRoles);
+			pmUserOrgs.add(userOrg);
+			user.setPmUserOrgs(pmUserOrgs);
+
+			user.setOrgTypeCode(pmOrgProfile.getOrgTypeCode());
+
+			// User Preference
+			PmUserPreference pmUserPreference = new PmUserPreference();
+			pmUserPreference.setPmUser(user);
+			pmUserPreference.setFormatDate("DD-MMM-YYYY");
+			pmUserPreference.setFormatTime("HH:mm:ss");
+			pmUserPreference.setFormatNumber("#,##0");
+			pmUserPreference.setPreferredLanguage("en");
+			pmUserPreference.setNotifyRemovalDay(30);
+			user.setPmUserPreference(pmUserPreference);
+
+			userReqDTO.setOrgType(OrganizationType.EXTERNAL.value());
+
+			userReqDTO.setPmUser(user);
+			UserResDTO resDTO = iUserSO.saveUser(userReqDTO);
+			System.out.println("done");
+			member.setPmUser(resDTO.getPmUser());
+			
 			memberList.add(member);
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
-			System.out.println("******** Existing User *********");
 			for (PmUser user : getManagedBean().getSelectedPmUser()) {
 				ScCommitteeMember committeeMember = new ScCommitteeMember();
 				committeeMember.setMemberName(user.getUserName());
@@ -544,29 +575,26 @@ public class QTCommitteBackingBean extends
 						.getPmAddress().getEmail());
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
-				System.out.println("Role Name : " + getManagedBean().getRoleName());
-				committeeMember.setMemberRole(getManagedBean().getRoleName());
+				committeeMember.setPmUser(user);
+				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+				//committeeMember.setMemberRole(getManagedBean().getRoleName());
+				committeeMember.setMemberRole("M");
+				committeeMember.setAccessRight("E");
+				committeeMember.setScCommittee(scCommittee);
 				memberList.add(committeeMember);
 			}
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
 		
 		scCommittee.setScCommitteeMembers(memberList);
-		for (ScCommitteeMember scCommitteeMember : memberList) {
-			scCommitteeMember.setScCommittee(scCommittee);
-		}
-		
 		ScQtCommittee scQtCommittee = new ScQtCommittee();
 		scQtCommittee.setScCommittee(scCommittee);
 		scQtCommittee.setScQt(scQt);
 		this.getManagedBean().setScQtCommittee(scQtCommittee);
 		
-		// getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee().setScCommitteeMembers(memberList);
-		//getManagedBean().getScCommittee().setScCommitteeMembers(memberList);
 		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		for (TabBean tabBean : tabs) {
 			if (tabBean.getTitleName().equalsIgnoreCase(this.getManagedBean().getTabTitle())) {
-				//tabBean.setScCommittee(this.getManagedBean().getScCommitteeMemberTabList().get(0).getScCommittee());
 				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
 				break;
 			}
@@ -588,7 +616,6 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setCreatedDtFrom(null);
 		this.getManagedBean().setCreatedDtTo(null);
 		this.getManagedBean().setStatus(null);
-
 	}
 
 }

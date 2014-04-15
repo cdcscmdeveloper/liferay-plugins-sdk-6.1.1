@@ -13,7 +13,13 @@
 				<tr>
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.briefsamevisit']}" /></td>
-					<td></td>
+					<td><p:selectOneRadio
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv}">
+							<f:selectItem itemLabel="Yes" itemValue="true" />
+							<f:selectItem itemLabel="No" itemValue="false" />
+							<p:ajax update="samebsvrequireid"
+								listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
+						</p:selectOneRadio></td>
 				</tr>
 			</table>
 			<p:spacer height="3px" />
@@ -27,16 +33,13 @@
 				<ac:paginator for="briefdetaillistid" />
 
 				<p:column headerText="#{lbl['lbl.so.desc']}">
-					<p:commandLink
-						action="#{qTScheduleDetailBackingBean.editAction(briefdetails)}"
-						style="margin-right:20px;" partialSubmit="true" process="@this">
-						<h:outputText value="#{briefdetails.briefingDesc}" />
-					</p:commandLink>
+
+					<h:outputText value="#{briefdetails.bsvDesc}" />
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.date']}" style="width :5%;">
-					<h:outputText value="#{briefdetails.briefingDate}">
+					<h:outputText value="#{briefdetails.bsvDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
@@ -53,13 +56,12 @@
 
 				<p:column headerText="#{lbl['lbl.so.maxattendance']}"
 					style="width :5%;">
-					<h:outputText value="#{briefdetails.maxNoAttendance}" />
+					<h:outputText value="#{briefdetails.maxNoOfAttendance}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.briefstatus']}"
 					style="width :8%;">
-					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getStatusDescById(briefdetails.pmStatus.statusId)}" />
+
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.action']}" style="width :6%;">
 				</p:column>

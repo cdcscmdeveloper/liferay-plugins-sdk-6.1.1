@@ -22,30 +22,33 @@
 		</p:dataTable>
 	</p:panel>
 	<p:spacer height="5" />
-	
+
 	<p:panel header="Remark" toggleable="true" id="uploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="Remark" /></td>
 				<td class="TableFieldRight"><p:dataGrid
-						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						value="#{bpkApprovalRemarkList}" var="remarkVar"
+						rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 										height="30" width="30" /></td>
 								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUsername}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
 										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 									</h:outputText></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40"
-										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>

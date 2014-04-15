@@ -8,20 +8,21 @@
 	<p:panel>
 
 		<ui:include src="addspecificationcommittee.xhtml" />
+
 		<p:tabView id="tabView" orientation="top" var="committeeApproval"
+			activeIndex="#{qTCommitteBackingBean.managedBean.subTabIndex}"
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
 			<p:tab title="#{committeeApproval.titleName}">
+
 				<ui:fragment
 					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
 
 					<ui:param name="membersList"
 						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
 
-					<ui:param name="selectedMembersList"
-						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
-
 					<ui:include src="businessOwnerCommittee.xhtml" />
+
 				</ui:fragment>
 
 				<ui:fragment
@@ -31,7 +32,8 @@
 						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
 
 					<ui:param name="selectedMembersList"
-						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+						value="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}" />
+
 					<ui:include src="specificationCommitteeDetails.xhtml" />
 
 					<div align="right">

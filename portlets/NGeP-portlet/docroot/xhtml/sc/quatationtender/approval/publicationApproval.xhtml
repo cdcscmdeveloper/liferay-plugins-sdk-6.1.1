@@ -5,8 +5,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Publication Approver Setting" toggleable="true">
+	<p:panel id="publicationapprovalid" header="Publication Approver Setting" toggleable="true">
 		<p:spacer height="3" />
+		<div style="width: 100%">
+			<p:pickList id="publicationapprover"
+				value="#{approvalBackingBean.managedBean.publicationApprovalUsers}"
+				var="publicationUser" showTargetControls="true"
+				itemLabel="#{publicationUser.userName}" itemValue="#{publicationUser}"
+				converter="approverConverter">
+				<f:facet name="sourceCaption">Available </f:facet>
+				<f:facet name="targetCaption">Selected</f:facet>
+			</p:pickList>
+		</div>
 	</p:panel>
 
 	<p:panel header="Remark" toggleable="true" id="uploadsids">
@@ -30,8 +40,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40"
-										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
+								<td></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>

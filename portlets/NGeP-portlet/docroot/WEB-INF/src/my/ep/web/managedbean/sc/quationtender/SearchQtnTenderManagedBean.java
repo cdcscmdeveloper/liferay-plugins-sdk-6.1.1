@@ -308,20 +308,20 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 		// TODO Tabview start
 
-/*		ScQtApproval scQtApproval = new ScQtApproval();
+		ScQtApproval scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL
 				.value());
-		scQtApproval.setVerifyOption("1");
-		tabList.add(new TabBean("Budget Approval", scQtApproval));*/
+		//scQtApproval.setVerifyOption("1");
+		tabList.add(new TabBean("Budget Approval", scQtApproval));
 
-		ScQtApproval scQtApproval = new ScQtApproval();
+		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BPK_APPROVAL.value());
-		scQtApproval.setVerifyOption("1");
+		//scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("BPK Approval", scQtApproval));
 
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.PTJ_APPROVAL.value());
-		scQtApproval.setVerifyOption("1");
+		//scQtApproval.setVerifyOption("1");
 		// tabList.add(new TabBean("MITI Approval", scQtApproval));
 
 /*		scQtApproval = new ScQtApproval();
@@ -332,21 +332,21 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 		scQtApproval = new ScQtApproval();
 		scQtApproval
-				.setApprovalCategory(ApprovalCategory.PROCUREMENT_BOARD_APPROVAL
+				.setApprovalCategory(ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL
 						.value());
-		scQtApproval.setVerifyOption("1");
+		//scQtApproval.setVerifyOption("1");
 		// tabList.add(new TabBean("Procurement Board Approval", scQtApproval));
 
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.COMMITTEE_APPROVAL
 				.value());
-		scQtApproval.setVerifyOption("1");
+		//scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("Committee Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.OTHER_APPROVAL
 				.value());
-		scQtApproval.setVerifyOption("1");
+		//scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("Others Approval", scQtApproval));
 		
 		// Tabview end

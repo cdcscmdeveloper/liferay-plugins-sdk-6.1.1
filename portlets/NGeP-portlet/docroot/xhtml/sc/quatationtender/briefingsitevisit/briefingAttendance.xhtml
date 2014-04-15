@@ -14,7 +14,7 @@
 
 		<div>
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
-				action="#{qTScheduleDetailBackingBean.briefingBackAction}" />
+				action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
 		</div>
 
 		<p:panel>
@@ -31,18 +31,18 @@
 		<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
 			<ac:lovPopup />
 			<p:dataTable id="complisttbl" var="scQtBriefReg"
-				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}"
-				selection="#{qTScheduleDetailBackingBean.managedBean.selectedbriefRegistration}"
+				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingRegistrationList}"
+				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration}"
 				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
 
 				<p:ajax event="rowSelect"
-					listener="#{qTScheduleDetailBackingBean.onRowSelect}"
+					listener="#{qTBriefingSiteVisitBackingBean.onRowSelect}"
 					update=":form:attendanceDetailstbl" />
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
 					<c:if test="${scQtBriefReg.brandNew}">
 						<ac:lov id="test" lovId="SM_SUPPLIER" headerText="MOF NO"
-							saveObject="qTScheduleDetailBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
+							saveObject="qTBriefingSiteVisitBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
 							value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}">
 						</ac:lov>
 					</c:if>
@@ -62,13 +62,13 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
 					process="@this" partialSubmit="true" update="complisttbl"
-					action="#{qTScheduleDetailBackingBean.addSupplierDetails}"
+					action="#{qTBriefingSiteVisitBackingBean.addSupplierDetails}"
 					icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
 					process="@this,complisttbl" partialSubmit="true"
 					update="complisttbl"
-					action="#{qTScheduleDetailBackingBean.deleteSupplierDetails}"
+					action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}"
 					icon="ui-icon-delete" />
 			</div>
 
@@ -77,9 +77,9 @@
 		<p:panel header="Supplier Attendence List" toggleable="true"
 			id="attlistforCompId">
 			<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
-				value="#{qTScheduleDetailBackingBean.managedBean.briefingAttendanceList}"
+				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingAttendanceList}"
 				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
-				selection="#{qTScheduleDetailBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}">
+				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}">
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">

@@ -8,33 +8,33 @@
 
 	<p:spacer height="5px" />
 
-	<c:if test="#{qTScheduleDetailBackingBean.managedBean.qt.zonal}">
-
+	<c:if test="#{qTBriefingSiteVisitBackingBean.managedBean.qt.zonal}">
 		<ui:include src="briefingsitevisitdtlbyzone.xhtml" />
+
 	</c:if>
 
-	<c:if test="#{!qTScheduleDetailBackingBean.managedBean.qt.zonal}">
+	<c:if test="#{!qTBriefingSiteVisitBackingBean.managedBean.qt.zonal}">
 
-		<p:panel header="Briefing Details" toggleable="true">
+		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 			<p:spacer height="3px" />
 			<table style="width: 100%" border="1">
 				<tr>
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.briefsamevisit']}" /></td>
 					<td><p:selectOneRadio
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv}">
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv}">
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
 							<p:ajax update="sameasbsvrequired, addtositebutton"
-								listener="#{qTScheduleDetailBackingBean.processChecked}" />
+								listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
 			<p:spacer height="3px" />
 			<p:dataTable id="briefingdtlid" var="briefingdtls"
-				value="#{qTScheduleDetailBackingBean.managedBean.briefings}"
+				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefings}"
 				rowKey="#{briefingdtls}" rowIndexVar="index" editable="true"
-				selection="#{qTScheduleDetailBackingBean.managedBean.selectedBriefingDetails}">
+				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedBriefingDetails}">
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
@@ -42,16 +42,16 @@
 
 				<p:column headerText="#{lbl['lbl.so.desc']}">
 					<p:commandLink
-						action="#{qTScheduleDetailBackingBean.editAction(briefingdtls)}"
+						action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls)}"
 						style="margin-right:20px;" partialSubmit="true" process="@this">
-						<h:outputText value="#{briefingdtls.briefingDesc}" />
+						<h:outputText value="#{briefingdtls.bsvDesc}" />
 					</p:commandLink>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.date']}">
-					<h:outputText value="#{briefingdtls.briefingDate}">
+					<h:outputText value="#{briefingdtls.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -64,12 +64,12 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.maxattendance']}">
-					<h:outputText value="#{briefingdtls.maxNoAttendance}" />
+					<h:outputText value="#{briefingdtls.maxNoOfAttendance}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getStatusDescById(briefingdtls.pmStatus.statusId)}" />
+						value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.pmStatus.statusId)}" />
 				</p:column>
 
 			</p:dataTable>
@@ -78,35 +78,49 @@
 				<f:facet name="footer">
 					<div align="right">
 						<h:panelGroup id="addtositebutton">
-
 							<p:commandButton id="addtositevisitid" update="sitevisitdtlid"
 								value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-								actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitDtl}"
-								rendered="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv eq 'fasle'}" />
+								process="@this, briefingdtlid" partialSubmit="true"
+								actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl}"
+								rendered="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv eq 'fasle'}" />
 						</h:panelGroup>
 						<p:commandButton id="briefingaddid"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTScheduleDetailBackingBean.addBriefingDetails}"
+							action="#{qTBriefingSiteVisitBackingBean.addBriefingDetails}"
 							oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
 							icon="ui-icon-add" />
 
 						<p:commandButton value="#{lbl['lbl.so.delete']}"
 							icon="ui-icon-delete"
-							action="#{qTScheduleDetailBackingBean.deleteBriefingDetails}"
+							action="#{qTBriefingSiteVisitBackingBean.deleteBriefingDetails}"
 							update="briefingdtlid" />
 					</div>
 				</f:facet>
 			</p:panelGrid>
+			<table style="width: 100%" border="1">
+				<tr>
+					<td style="width: 160px;"><p:outputLabel
+							value="#{lbl['lbl.so.attendance.brief']}" /></td>
+					<td style="width: 130px;"><p:selectOneRadio
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.allBriefingReq}">
+							<f:selectItem itemLabel="All" itemValue="true" />
+							<f:selectItem itemLabel="At Least" itemValue="false" />
+						</p:selectOneRadio></td>
+					<td><p:inputText size="5"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.minBriefingAttend}" /></td>
+					<td />
+				</tr>
+			</table>
 		</p:panel>
 
 		<h:panelGroup id="sameasbsvrequired">
 			<h:panelGroup
-				rendered="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv eq 'fasle'}">
+				rendered="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv eq 'fasle'}">
 
-				<p:panel header="Site/Visit Details" toggleable="true">
+				<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 					<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
-						value="#{qTScheduleDetailBackingBean.managedBean.siteBriefings}"
-						selection="#{qTScheduleDetailBackingBean.managedBean.selectedSiteVisitDetails}"
+						value="#{qTBriefingSiteVisitBackingBean.managedBean.siteBriefings}"
+						selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedSiteVisitDetails}"
 						rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
 
 						<ac:paginator for="sitevisitdtlid" />
@@ -115,15 +129,14 @@
 
 						<p:column headerText="#{lbl['lbl.so.desc']}">
 							<p:commandLink
-								action="#{qTScheduleDetailBackingBean.editAction(sitevisitdtls)}"
+								action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls)}"
 								style="margin-right:20px;" partialSubmit="true" process="@this">
-								<h:outputText value="#{sitevisitdtls.briefingDesc}" />
+								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 							</p:commandLink>
-
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.so.date']}">
-							<h:outputText value="#{sitevisitdtls.briefingDate}">
+							<h:outputText value="#{sitevisitdtls.bsvDate}">
 								<f:convertDateTime
 									pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 							</h:outputText>
@@ -138,12 +151,12 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.so.maxattendance']}">
-							<h:outputText value="#{sitevisitdtls.maxNoAttendance}" />
+							<h:outputText value="#{sitevisitdtls.maxNoOfAttendance}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 							<h:outputText
-								value="#{qTScheduleDetailBackingBean.getStatusDescById(sitevisitdtls.pmStatus.statusId)}" />
+								value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.pmStatus.statusId)}" />
 						</p:column>
 
 					</p:dataTable>
@@ -154,7 +167,7 @@
 
 								<p:commandButton id="addsitevisitid"
 									value="#{lbl['lbl.so.addbtn']}" process="@this"
-									action="#{qTScheduleDetailBackingBean.addSiteDetails}"
+									action="#{qTBriefingSiteVisitBackingBean.addSiteDetails}"
 									oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"
 									icon="ui-icon-add" />
 								<p:commandButton value="#{lbl['lbl.so.delete']}"
@@ -162,6 +175,20 @@
 							</div>
 						</f:facet>
 					</p:panelGrid>
+					<table style="width: 100%" border="1">
+						<tr>
+							<td style="width: 160px;"><p:outputLabel
+									value="#{lbl['lbl.so.attendance.site']}" /></td>
+							<td style="width: 130px;"><p:selectOneRadio
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.allSiteVisitReq}">
+									<f:selectItem itemLabel="All" itemValue="true" />
+									<f:selectItem itemLabel="At Least" itemValue="false" />
+								</p:selectOneRadio></td>
+							<td><p:inputText size="5"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.minSiteVisitAttend}" /></td>
+							<td />
+						</tr>
+					</table>
 				</p:panel>
 			</h:panelGroup>
 		</h:panelGroup>
@@ -172,12 +199,12 @@
 					<td class="TableFieldLeft" style="width: 60px;"><p:outputLabel
 							value="Remark" /></td>
 					<td class="TableFieldRight"><p:dataGrid
-							value="#{qTScheduleDetailBackingBean.managedBean.remarks}"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.remarks}"
 							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 							<table>
 								<tr>
 									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+											value="#{qTBriefingSiteVisitBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 											height="30" width="30" /></td>
 									<td width="5"></td>
 									<td><h:outputText

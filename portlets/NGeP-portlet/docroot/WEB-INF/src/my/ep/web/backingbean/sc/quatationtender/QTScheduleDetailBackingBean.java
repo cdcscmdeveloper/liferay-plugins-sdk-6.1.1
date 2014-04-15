@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -42,7 +43,8 @@ import org.apache.log4j.Logger;
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
-	//private static final String NAV_TO_BSV_ATTENDANCE_PAGE = "/xhtml/sc/quatationtender/briefingsitevisit/briefingAttendance.xhtml";
+	// private static final String NAV_TO_BSV_ATTENDANCE_PAGE =
+	// "/xhtml/sc/quatationtender/briefingsitevisit/briefingAttendance.xhtml";
 
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
@@ -65,24 +67,26 @@ public class QTScheduleDetailBackingBean extends
 	}
 
 	public QTScheduleDetailBackingBean() {
-		/*ScQtBriefing briefing = new ScQtBriefing();
-
-		briefing.setPmAddress(new PmAddress());
-		briefing.getPmAddress().setPmCountry(new PmCountry());
-		briefing.getPmAddress().setPmState(new PmState());
-		briefing.getPmAddress().setPmDistrict(new PmDistrict());
-		briefing.getPmAddress().setPmCity(new PmCity());
-		// briefing.setScQtZoneCriteria(new ScQtZoneCriteria());
-		this.getManagedBean().setQtBriefing(briefing);
-
-		ScQtBriefing siteBriefing = new ScQtBriefing();
-		siteBriefing.setPmAddress(new PmAddress());
-		siteBriefing.getPmAddress().setPmCountry(new PmCountry());
-		siteBriefing.getPmAddress().setPmState(new PmState());
-		siteBriefing.getPmAddress().setPmDistrict(new PmDistrict());
-		siteBriefing.getPmAddress().setPmCity(new PmCity());
-		// siteBriefing.setScQtZoneCriteria(new ScQtZoneCriteria());
-		this.getManagedBean().setQtSiteBriefing(siteBriefing);*/
+		/*
+		 * ScQtBriefing briefing = new ScQtBriefing();
+		 * 
+		 * briefing.setPmAddress(new PmAddress());
+		 * briefing.getPmAddress().setPmCountry(new PmCountry());
+		 * briefing.getPmAddress().setPmState(new PmState());
+		 * briefing.getPmAddress().setPmDistrict(new PmDistrict());
+		 * briefing.getPmAddress().setPmCity(new PmCity()); //
+		 * briefing.setScQtZoneCriteria(new ScQtZoneCriteria());
+		 * this.getManagedBean().setQtBriefing(briefing);
+		 * 
+		 * ScQtBriefing siteBriefing = new ScQtBriefing();
+		 * siteBriefing.setPmAddress(new PmAddress());
+		 * siteBriefing.getPmAddress().setPmCountry(new PmCountry());
+		 * siteBriefing.getPmAddress().setPmState(new PmState());
+		 * siteBriefing.getPmAddress().setPmDistrict(new PmDistrict());
+		 * siteBriefing.getPmAddress().setPmCity(new PmCity()); //
+		 * siteBriefing.setScQtZoneCriteria(new ScQtZoneCriteria());
+		 * this.getManagedBean().setQtSiteBriefing(siteBriefing);
+		 */
 
 		/*
 		 * List<TreeNode> list = getManagedBean().getZoneTrees(); for (TreeNode
@@ -97,12 +101,13 @@ public class QTScheduleDetailBackingBean extends
 		// getManagedBean().getQtCriteria().setMultiLocality(false);
 
 		// Briefing Zone Bean
-		/*List<BriefingZoneBean> briefingZoneBeans = getManagedBean()
-				.getBriefingZoneBean();
-
-		if (null == briefingZoneBeans) {
-			briefingZoneBeans = new ArrayList<BriefingZoneBean>();
-		}*/
+		/*
+		 * List<BriefingZoneBean> briefingZoneBeans = getManagedBean()
+		 * .getBriefingZoneBean();
+		 * 
+		 * if (null == briefingZoneBeans) { briefingZoneBeans = new
+		 * ArrayList<BriefingZoneBean>(); }
+		 */
 
 		/*
 		 * List<ScQtBriefing> test1 = getManagedBean().getTest(); if(null ==
@@ -115,23 +120,30 @@ public class QTScheduleDetailBackingBean extends
 		 * if (this.getManagedBean().getQt() == null) {
 		 * this.getManagedBean().setQt(new ScQt()); }
 		 */
-		
-		if(this.getManagedBean().getScQtSampleSubmission().getAddress() == null) {
-			this.getManagedBean().getScQtSampleSubmission().setAddress(new PmAddress());
+
+		if (this.getManagedBean().getScQtSampleSubmission().getAddress() == null) {
+			this.getManagedBean().getScQtSampleSubmission()
+					.setAddress(new PmAddress());
 		}
-		
-		if(this.getManagedBean().getScQtSampleSubmission().getAddress().getPmState() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmState(new PmState());
+
+		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
+				.getPmState() == null) {
+			this.getManagedBean().getScQtSampleSubmission().getAddress()
+					.setPmState(new PmState());
 		}
-		
-		if(this.getManagedBean().getScQtSampleSubmission().getAddress().getPmDistrict() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmDistrict(new PmDistrict());
+
+		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
+				.getPmDistrict() == null) {
+			this.getManagedBean().getScQtSampleSubmission().getAddress()
+					.setPmDistrict(new PmDistrict());
 		}
-		
-		if(this.getManagedBean().getScQtSampleSubmission().getAddress().getPmCity() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress().setPmCity(new PmCity());
+
+		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
+				.getPmCity() == null) {
+			this.getManagedBean().getScQtSampleSubmission().getAddress()
+					.setPmCity(new PmCity());
 		}
-		
+
 		retrievePmStateList();
 		getDeskOfficerAdminAssistant();
 	}
@@ -144,29 +156,30 @@ public class QTScheduleDetailBackingBean extends
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(1l);
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		List<PmState> list = resDTO.getStateList();
 		System.out.println("list: " + list.size());
 		for (PmState pmState : list) {
-			System.out.println(pmState.getStateId()
-					+ "|" + pmState.getStateCode()
-					+ "|" + pmState.getStateName());	
+			System.out.println(pmState.getStateId() + "|"
+					+ pmState.getStateCode() + "|" + pmState.getStateName());
 		}
 		this.getManagedBean().setStates(list);
-		System.out.println("State Id : " + this.getManagedBean().getStates().get(0).getStateId());
+		System.out.println("State Id : "
+				+ this.getManagedBean().getStates().get(0).getStateId());
 	}
-	
+
 	public void retrievePmDistrictList(AjaxBehaviorEvent event) {
 		debugLogger("retrievePmDistrictList");
-		Long stateId = (Long) event.getComponent().getAttributes()
-				.get("value");
-		//PmState state = (PmState) event.getBehavior();
+		Long stateId = (Long) event.getComponent().getAttributes().get("value");
+		// PmState state = (PmState) event.getBehavior();
 		System.out.println("State Id : " + stateId);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setStateId(stateId);
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
 		this.getManagedBean().setDistricts(resDTO.getDistrictList());
 	}
@@ -178,11 +191,12 @@ public class QTScheduleDetailBackingBean extends
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setDistrictId(districtId);
 		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		this.getManagedBean().setCitys(resDTO.getCityList());
 	}
-	
+
 	private void getDeskOfficerAdminAssistant() {
 		debugLogger("getDeskOfficerAdminAssistant");
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
@@ -195,7 +209,6 @@ public class QTScheduleDetailBackingBean extends
 		getManagedBean().setDeskOfficerAdmin(deskOfficer);
 
 	}
-
 
 	/*
 	 * public void addZoneContactPerson(String briefingZoneName) {
@@ -235,8 +248,6 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
-	
-
 	public void deleteContactPerson() {
 		debugLogger("deleteContactPerson");
 		List<ScQtContactPerson> contactPersonsList = getManagedBean()
@@ -260,7 +271,7 @@ public class QTScheduleDetailBackingBean extends
 			}
 		}
 		getManagedBean().setPmUsersList(list);
-		//getManagedBean().getQtContactPerson().setUser(user);
+		// getManagedBean().getQtContactPerson().setUser(user);
 	}
 
 	public void addDeskOfficerAdminAssistant() {
@@ -270,24 +281,22 @@ public class QTScheduleDetailBackingBean extends
 		contactPerson.setOfficerType("A");
 		contactPerson.setScQt(getManagedBean().getQt());
 		contactPerson.setBrandNew(false);
-		//getManagedBean().setQtContactPerson(contactPerson);
-		/*PmUser pmUser = new PmUser();
+		// getManagedBean().setQtContactPerson(contactPerson);
+		/*
+		 * PmUser pmUser = new PmUser(); try { List<PmUser> usersList =
+		 * this.getManagedBean().getPmUsersList(); if (null == usersList) {
+		 * usersList = new ArrayList<PmUser>(); } for (PmUser user : usersList)
+		 * { user.setBrandNew(false); usersList.add(pmUser);
+		 * this.getManagedBean().setPmUsersList(usersList); }
+		 */
+
 		try {
-			List<PmUser> usersList = this.getManagedBean().getPmUsersList();
-			if (null == usersList) {
-				usersList = new ArrayList<PmUser>();
+			if (this.getManagedBean().getPmuserContactpersonList() == null) {
+				this.getManagedBean().setPmuserContactpersonList(
+						new ArrayList());
 			}
-			for (PmUser user : usersList) {
-				user.setBrandNew(false);
-				usersList.add(pmUser);
-			this.getManagedBean().setPmUsersList(usersList);
-			}*/
-			
-		try {
-			if(this.getManagedBean().getPmuserContactpersonList()== null){
-				this.getManagedBean().setPmuserContactpersonList(new ArrayList());
-			}
-			this.getManagedBean().getPmuserContactpersonList().add(contactPerson);
+			this.getManagedBean().getPmuserContactpersonList()
+					.add(contactPerson);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -305,6 +314,34 @@ public class QTScheduleDetailBackingBean extends
 				usersList.remove(pmUser);
 			}
 		}
+	}
+
+	public void applySampleSubmission() {
+		debugLogger("applySampleSubmission");
+		List<ScQtSampleSubmission> sampleSubmissionsList = getManagedBean()
+				.getScQtSampleSubmissionList();
+		log.info("List : " + sampleSubmissionsList);
+	}
+
+	public void okSubmission() {
+		debugLogger("okSubmission");
+		List<ScQtSampleSubmission> list = getManagedBean()
+				.getScQtSampleSubmissionList();
+		ScQtSampleSubmission selectedSubmission = getManagedBean()
+				.getScQtSampleSubmission();
+		if (null == list) {
+			list = new ArrayList<ScQtSampleSubmission>();
+		}
+
+		for (ScQtSampleSubmission scQtSampleSubmission : list) {
+			scQtSampleSubmission.setAddress(selectedSubmission.getAddress());
+			int index = list.indexOf(scQtSampleSubmission);
+			list.set(index, scQtSampleSubmission);
+		}
+		// if (null != selectedSubmission) {
+		// list.add(selectedSubmission);
+		// }
+		this.getManagedBean().setScQtSampleSubmissionList(list);
 	}
 
 }

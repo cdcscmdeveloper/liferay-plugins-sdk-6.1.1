@@ -8,7 +8,7 @@
 
 
 	<p:accordionPanel id="accordpnllist"
-		value="#{qTScheduleDetailBackingBean.managedBean.briefingZoneBean}"
+		value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingZoneBean}"
 		var="zonePnlList" >
 		
 		<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
@@ -22,25 +22,25 @@
 				<p:commandButton id="addtositevisitdtlid"
 					process="@this, briefdetaillistid" partialSubmit="true"
 					value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-					actionListener="#{qTScheduleDetailBackingBean.addToSiteVisitZoneDtl}" />
+					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitZoneDtl}" />
 
 				<p:commandButton id="briefaddid" value="#{lbl['lbl.so.addbtn']}"
 					process="@this"
-					action="#{qTScheduleDetailBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
+					action="#{qTBriefingSiteVisitBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
 					oncomplete="zonebriefing.show();" update="@(.qtBriefDetails)"
 					icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					icon="ui-icon-delete" process="@this, briefdetaillistid"
 					partialSubmit="true"
-					action="#{qTScheduleDetailBackingBean.deleteZoneBriefingDetails}"
+					action="#{qTBriefingSiteVisitBackingBean.deleteZoneBriefingDetails}"
 					update="briefdetaillistid" />
 			</div>
 
 			<!-- Site Visit Details -->
 			<h:panelGroup id="samebsvrequireid">
 				<ui:fragment
-					rendered="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv eq 'false'}">
+					rendered="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv eq 'false'}">
 					<ui:param name="sitevisitList" value="#{zonePnlList.sitevisitList}" />
 					<ui:param name="selectedSitevisitList"
 						value="#{zonePnlList.sitevisitList}" />
@@ -48,9 +48,9 @@
 					<div align="right">
 						<p:commandButton id="sitevisitaddid"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTScheduleDetailBackingBean.addZoneSiteDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
-							oncomplete="zonesitevisit.show();" update="@(.qtSitevisitDetails)"
-							icon="ui-icon-add" />
+							action="#{qTBriefingSiteVisitBackingBean.addZoneSiteDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
+							oncomplete="zonesitevisit.show();"
+							update="@(.qtSitevisitDetails)" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.so.delete']}"
 							icon="ui-icon-delete" process="@this, sitevisitdetaillistid"
 							partialSubmit="true" update="sitevisitdetaillistid" />

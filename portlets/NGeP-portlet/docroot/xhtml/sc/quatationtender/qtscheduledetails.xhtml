@@ -94,6 +94,7 @@
 		</p:dataTable>
 		<div align="right" style="width: 60%;">
 			<p:commandButton value="Apply" process="@this" partialSubmit="true"
+				action="#{qTScheduleDetailBackingBean.applySampleSubmission}"
 				update="samplePopup" icon="ui-icon-add"
 				oncomplete="sampledlg.show();" />
 
@@ -217,9 +218,14 @@
 			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 				icon="ui-icon-cancel" style="float:right;"
 				oncomplete="sampledlg.hide()" />
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" icon="ui-icon-accept"
-				style="float:right;" update="samplezoneid"
-				oncomplete="sampledlg.hide()" />
+
+			<p:commandButton value="#{lbl['lbl.so.okbtn']}" update="sampleid"
+				process="@this, @(.sampleDetails)" style="float:right;"
+				partialSubmit="true" oncomplete="sampledlg.hide()"
+				icon="ui-icon-check"
+				action="#{qTScheduleDetailBackingBean.okSubmission}">
+			</p:commandButton>
+
 		</div>
 	</p:dialog>
 </ui:composition>

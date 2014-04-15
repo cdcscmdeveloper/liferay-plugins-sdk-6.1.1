@@ -35,17 +35,30 @@
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
 
-					<ui:include
-						src="approvalDetailSection.xhtml" />
+					<ui:param name="budgetList"
+						value="#{approvalCategory.budgetApprovalUsers}" />
+					<ui:param name="budgetApprovalRemarkList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+
+					<ui:include src="approvalDetailSection.xhtml" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
+
+					<ui:param name="bpkApprovalRemarkList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
 
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Committee Appointment Approval'}">
+
+					<ui:param name="commiteList"
+						value="#{approvalCategory.budgetApprovalUsers}" />
+
+					<ui:param name="committeeApprovalRemarkList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
 
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />

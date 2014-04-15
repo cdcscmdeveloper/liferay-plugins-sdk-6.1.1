@@ -10,8 +10,11 @@
 		toggleable="true">
 		<p:dataTable id="openPnlId" var="cateGory"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-			style="width:100%" rowIndexVar="index" styleClass="openPnlId">
-
+			style="width:100%" rowIndexVar="index" styleClass="openPnlId"
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}" rowKey="#{cateGory}">
+			
+			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
@@ -163,6 +166,7 @@
 					</tr>
 				</table>
 			</p:panel>
+			
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
 				<h:panelGrid width="100%" style="margin-top:20px">

@@ -19,11 +19,11 @@
 				<ac:paginator for="sitevisitdetaillistid" />
 
 				<p:column headerText="#{lbl['lbl.so.desc']}">
-					<h:outputText value="#{sitevisitdtls.briefingDesc}" />
+					<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.date']}" style="width :5%;">
-					<h:outputText value="#{sitevisitdtls.briefingDate}">
+					<h:outputText value="#{sitevisitdtls.bsvDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
@@ -40,13 +40,12 @@
 
 				<p:column headerText="#{lbl['lbl.so.maxattendance']}"
 					style="width :5%;">
-					<h:outputText value="#{sitevisitdtls.maxNoAttendance}" />
+					<h:outputText value="#{sitevisitdtls.maxNoOfAttendance}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.briefstatus']}"
 					style="width :8%;">
-					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getStatusDescById(sitevisitdtls.pmStatus.statusId)}" />
+
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.action']}" style="width :6%;">
 				</p:column>

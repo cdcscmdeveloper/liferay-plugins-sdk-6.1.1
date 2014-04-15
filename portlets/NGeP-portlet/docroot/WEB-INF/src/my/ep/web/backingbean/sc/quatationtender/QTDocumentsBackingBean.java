@@ -1,23 +1,48 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.specification.SpecificationReqDTO;
+import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -34,6 +59,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author SudheerKumar
@@ -54,73 +81,63 @@ public class QTDocumentsBackingBean extends
 	}
 
 	public QTDocumentsBackingBean() {
-		if (getManagedBean().getQtCheckList() == null) {
-			getManagedBean().setQtCheckList(new ScQtCheckList());
-		}
 	}
 
 	public void addDocumentList() {
 		debugLogger("addDocumentList");
-		ScQtCheckList checkList = new ScQtCheckList();
-		try {
-			List<ScQtCheckList> qtCheckLists = getManagedBean()
-					.getScQtChecklists();
-			if (null == qtCheckLists) {
-				qtCheckLists = new ArrayList<ScQtCheckList>();
-			}
-			for (ScQtCheckList existedCheckList : qtCheckLists) {
-				existedCheckList.setBrandNew(false);
-			}
-			qtCheckLists.add(checkList);
-			this.getManagedBean().setScQtChecklists(qtCheckLists);
-		} catch (Exception e) {
-			throw new IllegalArgumentException();
+		List<ScQtCheckList> qtCheckLists = getManagedBean().getScQtChecklists();
+		if (null == qtCheckLists) {
+			qtCheckLists = new ArrayList<ScQtCheckList>();
 		}
-	}
+		ScQtCheckList checkList = new ScQtCheckList();
+		PmParameter parameter = new PmParameter();
+		parameter.setParameterId(184l);
+		checkList.setDefinationType(parameter);
+		checkList.setDocCategory(null);
+		checkList.setScoringReq(true);
+		checkList.setChecklistSeq(1);
+		checkList.setChangedBy(1L);
+		checkList.setCreatedBy(1L);
+		checkList.setScQt(getManagedBean().getQt());
 
-	/*
-	 * public void populatePreDefinedDetails() {
-	 * debugLogger("populatePreDefinedDetails"); IReportSectionSO
-	 * reportSectionSO = null; try { reportSectionSO =
-	 * BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.PROFILE_MANAGEMENT, IReportSectionSO.class);
-	 * 
-	 * ReportSectionReqDTO reportSectionReqDTO = new ReportSectionReqDTO();
-	 * reportSectionReqDTO.setReportType(9); ReportSectionResDTO resDto =
-	 * reportSectionSO .retrieveReportsByReportType(reportSectionReqDTO);
-	 * List<PmReportSection> sections = resDto
-	 * .getReportSectionResultBean().getResultList(); for (PmReportSection
-	 * pmReportSection : sections) {
-	 * System.out.println(pmReportSection.getPmCheckList() .getCheckListName() +
-	 * "@@@@@@@@@" + pmReportSection.getPmCheckList().getChecklistType()); }
-	 * getManagedBean().setSelectedPmReportSectionList( new
-	 * ArrayList<PmReportSection>());
-	 * getManagedBean().setPmReportSectionList(sections); } catch (Exception e)
-	 * {
-	 * 
-	 * } }
-	 */
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(1l);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+		checkList.setAction(resDTO.getPmParameter());
+		checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO.retrieveStatusByStatusId(statusreq);
+
+		checkList.setPmStatus(statusres.getPmStatus());
+		qtCheckLists.add(checkList);
+		this.getManagedBean().setScQtChecklists(qtCheckLists);
+	}
 
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
 		FacesScopes facesScopes = new FacesScopes();
-		List<ScQtCheckListAttachment> attachments = new ArrayList<ScQtCheckListAttachment>();
 		if (event.getFile() != null) {
-			ScQtCheckList qtCheckList = this.getManagedBean().getQtCheckList();
+			ScQtCheckList scQtCheckList = this.getManagedBean()
+					.getScQtChecklist();
 			ScQtCheckListAttachment attachment = getManagedBean()
-					.getQtCheckList().getScQtCheckListAttachment();
+					.getScQtChecklist().getScQtCheckListAttachment();
 			if (null == attachment) {
 				attachment = new ScQtCheckListAttachment();
-				attachment.setScQtCheckList(qtCheckList);
+				attachment.setScQtCheckList(scQtCheckList);
 			}
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));
 			uploadAttachment(event.getFile(), attachment);
-			attachments.add(attachment);
-			getManagedBean().setChecklistAttachment(attachments);
+			scQtCheckList.setScQtCheckListAttachment(attachment);
 		}
-
 	}
 
 	public void documentCloneSearchAction() {
@@ -133,10 +150,6 @@ public class QTDocumentsBackingBean extends
 		} catch (Exception e) {
 
 		}
-		/*
-		 * List<ScQtCommittee> qtCommittee = retriveQtCommittes();
-		 * getManagedBean().setCloneSearchCommittes(qtCommittee);
-		 */
 	}
 
 	/**
@@ -219,97 +232,33 @@ public class QTDocumentsBackingBean extends
 				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 	}
 
-	/*	*//**
-	 * @return
-	 */
-	/*
-	 * private List<ScQtCommittee> retriveQtCommittes() { CommitteReqDTO
-	 * committeReqDTO = new CommitteReqDTO(); ISearchBean<ScQtCommittee>
-	 * searchBean = new SearchBean<ScQtCommittee>(); CommitteResDTO resDto =
-	 * null;
-	 * 
-	 * if (getManagedBean().getCreatedDtFrom() != null) { SearchFilterBean
-	 * creatDtSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
-	 * creatDtSearchBean.setSearchValue(getManagedBean() .getCreatedDtFrom());
-	 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
-	 * 
-	 * if (getManagedBean().getCreatedDtTo() != null) { SearchFilterBean
-	 * creatDtSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * creatDtSearchBean.setSearchField("scCommittee.createdDate");
-	 * creatDtSearchBean.setSearchValue(getManagedBean().getCreatedDtTo());
-	 * searchBean.getDataFilterBeans().add(creatDtSearchBean); }
-	 * 
-	 * if (getManagedBean().getQtNo() != null &&
-	 * !"".equalsIgnoreCase(getManagedBean().getQtNo())) { SearchFilterBean
-	 * qtnoSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * qtnoSearchBean.setSearchField("scQt.qtNo");
-	 * qtnoSearchBean.setSearchValue(getManagedBean().getQtNo());
-	 * 
-	 * searchBean.getDataFilterBeans().add(qtnoSearchBean); }
-	 * 
-	 * if (getManagedBean().getTitle() != null &&
-	 * !"".equalsIgnoreCase(getManagedBean().getTitle())) { SearchFilterBean
-	 * qtnoSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * qtnoSearchBean.setSearchField("scQt.qtTitle");
-	 * qtnoSearchBean.setSearchValue(getManagedBean().getTitle());
-	 * 
-	 * searchBean.getDataFilterBeans().add(qtnoSearchBean); }
-	 * 
-	 * if (getManagedBean().getStatus() != null &&
-	 * !"".equalsIgnoreCase(getManagedBean().getStatus())) { }
-	 * committeReqDTO.setCommitteSearchBean(searchBean);
-	 * 
-	 * try { ICommitteSO committeSO = BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	 * 
-	 * resDto = committeSO.searchQTCommittees(committeReqDTO); } catch
-	 * (Exception ex) { ex.printStackTrace(); }
-	 * 
-	 * return resDto.getCommitteResultBean().getResultList(); }
-	 */
-
 	public void onRowCloneAction(SelectEvent event) {
 		ScQt scQt = (ScQt) event.getObject();
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO resDTO = null;
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		SpecificationResDTO specResDTO = null;
 		try {
-			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+			IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
-			reqDTO.setQtId(scQt.getQtId());
-			List<String> type = new ArrayList<String>();
-			type.add("UP");
-			type.add("TD");
-			reqDTO.setCheckListType(type);
-
-			resDTO = detailSO.retriveQTDocDetails(reqDTO);
-
-			List<ScQtCheckList> list = resDTO.getDocumentResultBean()
-					.getResultList();
-
-			System.out.println("list: " + list.size());
-
-			for (ScQtCheckList scQtCheckList : list) {
-				System.out.println(scQtCheckList.getQtChecklistId() + "|"
-						+ scQtCheckList.getChecklistType() + "|"
-						+ scQtCheckList.getDocType() + "|"
-						+ scQtCheckList.getTitle() + "|"
-						+ scQtCheckList.getChecklistItemId()
-						+ "|"
-						+ scQtCheckList.getChecklistSeq()
-						// + "|" + scQtCheckList.getQtWeightageId()
-						+ "|" + scQtCheckList.getPmStatus() + "|"
-						+ scQtCheckList.getScQtCheckListAttachment() + "|"
-						+ scQtCheckList.getScQtDoc());
+							IQTSpecSO.class);
+			specReqDTO.setQtId(scQt.getQtId());
+			specReqDTO.setSpecType(null);
+			specResDTO = iqtSpecSO.retrieveCheckLists(specReqDTO);
+			if (specResDTO.getSpecResultBean() == null) {
+				List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
+				for (PmDocument pmDoc : specResDTO.getDocumentResultBean()) {
+					ScQtCheckList checkList = new ScQtCheckList();
+					checkList.setTitle(pmDoc.getDocName());
+					checkList.setDefinationType(pmDoc
+							.getDocDefinitionTypeCode());
+					checkList.setManditory(true);
+					checkList.setAction(pmDoc.getChecklistActionCode());
+					checkListList.add(checkList);
+				}
+				this.getManagedBean().setQtCheckLists(checkListList);
+			} else {
+				getManagedBean().setQtCheckLists(
+						specResDTO.getSpecResultBean().getResultList());
 			}
-			this.getManagedBean().setQtCheckLists(list);
-			System.out.println("======== list size==== : "
-					+ getManagedBean().getQtCheckLists().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -317,11 +266,13 @@ public class QTDocumentsBackingBean extends
 
 	public void addDocumentCloneAction() {
 		debugLogger("addDocumentCloneAction");
-		
+
 		if (getManagedBean().getScQtChecklists() == null) {
-			getManagedBean().setScQtChecklists(getManagedBean().getSelectedQtCheckLists());
+			getManagedBean().setScQtChecklists(
+					getManagedBean().getSelectedQtCheckLists());
 		} else {
-			getManagedBean().getScQtChecklists().addAll(getManagedBean().getSelectedQtCheckLists());
+			getManagedBean().getScQtChecklists().addAll(
+					getManagedBean().getSelectedQtCheckLists());
 		}
 	}
 
@@ -333,26 +284,11 @@ public class QTDocumentsBackingBean extends
 			checkLists = new ArrayList<ScQtCheckList>();
 		}
 
-		/*
-		 * for (int i=0; i <
-		 * getManagedBean().getSelectedPmReportSectionList().size(); i++) {
-		 * PmReportSection pmReportSection = (PmReportSection)
-		 * getManagedBean().getSelectedPmReportSectionList().get(i);
-		 * ScQtCheckList qtCheckList = new ScQtCheckList();
-		 * qtCheckList.setTitle(
-		 * pmReportSection.getPmCheckList().getCheckListName());
-		 * qtCheckList.setChecklistType
-		 * (pmReportSection.getPmCheckList().getChecklistType());
-		 * checkLists.add(qtCheckList); }
-		 */
-
 		for (PmReportSection pmReportSection : getManagedBean()
 				.getSelectedPmReportSectionList()) {
 			ScQtCheckList qtCheckList = new ScQtCheckList();
 			qtCheckList.setTitle(pmReportSection.getPmCheckList()
 					.getCheckListName());
-			qtCheckList.setChecklistType(pmReportSection.getPmCheckList()
-					.getChecklistType());
 			qtCheckList.setCheckStatus(true);
 			checkLists.add(qtCheckList);
 		}
@@ -377,6 +313,101 @@ public class QTDocumentsBackingBean extends
 			}
 		}
 
+	}
+
+	public void documentDownLoadZipFile(List<ScQtCheckList> checkLists)
+			throws IOException {
+		debugLogger("documentDownLoadZipFile");
+
+		checkLists = getManagedBean().getScQtChecklists();
+		List<File> files = new ArrayList<File>();
+		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		for (ScQtCheckList scQtCheckList : checkLists) {
+			attachment = scQtCheckList.getScQtCheckListAttachment();
+			if (null != attachment) {
+				files.add(new File(attachment.getFilePath()));
+			}
+		}
+
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition",
+				"attachment; filename=Ngep.zip");
+
+		// ServletOutputStream out = response.getOutputStream();
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		for (File file : files) {
+			zos.putNextEntry(new ZipEntry(file.getName()));
+
+			// Get the file
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+			} catch (FileNotFoundException fnfe) {
+				zos.write(("ERROR: Could not find file " + file.getName())
+						.getBytes());
+				zos.closeEntry();
+				continue;
+			}
+			BufferedInputStream fif = new BufferedInputStream(fis);
+			// Write the contents of the file
+			int data = 0;
+			while ((data = fif.read()) != -1) {
+				zos.write(data);
+			}
+			fif.close();
+			zos.closeEntry();
+		}
+		zos.close();
+		response.flushBuffer();
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+
+	public void downloadDocumentFile(ScQtCheckList scQtCheckList)
+			throws IOException {
+		File file = new File(scQtCheckList.getScQtCheckListAttachment()
+				.getFilePath());
+		InputStream input = new FileInputStream(file);
+
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ scQtCheckList.getScQtCheckListAttachment().getFileName()
+				+ "\"");
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		if (scQtCheckList.getScQtCheckListAttachment().getFilePath() != null) {
+			try {
+				URLConnection uc = new URL(scQtCheckList
+						.getScQtCheckListAttachment().getFilePath())
+						.openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(scQtCheckList
+						.getScQtCheckListAttachment().getFilePath());
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+			input.close();
+		} else {
+			// out.write(attachment.getFileByte());
+		}
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 
 	/**

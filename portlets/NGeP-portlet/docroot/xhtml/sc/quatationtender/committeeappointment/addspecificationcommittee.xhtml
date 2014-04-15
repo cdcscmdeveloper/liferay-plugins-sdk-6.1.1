@@ -8,11 +8,10 @@
 
 
 	<p:dialog id="newspecificationcommitteeid"
-		header="New Specification Committee" dynamic="true"
-		widgetVar="newspecificationcommittee" modal="true"
+		header="New #{qTCommitteBackingBean.managedBean.tabTitle}"
+		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember">
-		<p:panel header="Specification Committee" toggleable="true">
-
+		<p:panel>
 			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:selectOneRadio
@@ -57,12 +56,12 @@
 							</tr>
 						</table>
 					</p:panel>
-					<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+					<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
 						action="#{qTCommitteBackingBean.reset}"
 						update="newCommitteeProfile" icon="ui-icon-reset"
 						resetValues="true" partialSubmit="true" process="@this" />
 
-					<p:commandButton value="Search" style="float:right;"
+					<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
 						icon="ui-icon-search"
 						action="#{qTCommitteBackingBean.existingCommitteeSearchAction}"
 						update="@(.existingCommitteeResults)" partialSubmit="true"

@@ -361,6 +361,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtContactPerson> scQtContactPersons;
 	private List<ScQtContactPerson> selectedContactPersons;
 
+	// Document
+	private ScQtCheckList scQtChecklist;
+	
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
 	private List<ScQtDeliveryLoc> selectedDeliveryLocList;
@@ -2191,6 +2194,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSuppCriteriarestrictedList(
 			List<ScQtCategory> suppCriteriarestrictedList) {
 		this.suppCriteriarestrictedList = suppCriteriarestrictedList;
+	}
+
+	public ScQtCheckList getScQtChecklist() {
+		return scQtChecklist;
+	}
+
+	public void setScQtChecklist(ScQtCheckList scQtChecklist) {
+		this.scQtChecklist = scQtChecklist;
 	}
 
 }

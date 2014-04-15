@@ -6,11 +6,19 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 
@@ -33,92 +41,77 @@ public class QTDeductionPaymentBackingBean extends
 	}
 
 	public QTDeductionPaymentBackingBean() {
-
-		// ScQtDeduction qtDeduction = new ScQtDeduction();
-
 	}
 
 	public void addDedcutionPayment() {
+		debugLogger("addDedcutionPayment");
 		ScQtDeduction qtDeduction = new ScQtDeduction();
-		try {
-			List<ScQtDeduction> deductionList = this.getManagedBean()
-					.getScQtDeductionList();
-			if (null == deductionList) {
-				deductionList = new ArrayList<ScQtDeduction>();
-			}
-			for (ScQtDeduction scQtDeduction : deductionList) {
-				scQtDeduction.setBrandNew(false);
-			}
+		qtDeduction.setDeductionType(new PmParameter());
+		qtDeduction.setScQt(getManagedBean().getQt());
 
-			deductionList.add(qtDeduction);
-			this.getManagedBean().setScQtDeductionList(deductionList);
+		try {
+			if (this.getManagedBean().getScQtDeductionList() == null) {
+				this.getManagedBean().setScQtDeductionList(new ArrayList());
+			}
+			this.getManagedBean().getScQtDeductionList().add(qtDeduction);
+
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	public void addDedcutionClause() {
+	public void addDeductionClause() {
+		debugLogger("addDeductionClause");
 		List<ScQtDeductionClause> clauses = this.getManagedBean()
 				.getScQtDeductionClauses();
 		if (clauses == null) {
 			clauses = new ArrayList<ScQtDeductionClause>();
-
 		}
 		this.getManagedBean().setQtDeductionClause(null);
 		ScQtDeductionClause qtDeductionClause = new ScQtDeductionClause();
-
+		qtDeductionClause.setScQtDeduction(getManagedBean().getQtDeduction());
 		this.getManagedBean().setQtDeductionClause(qtDeductionClause);
 		clauses.add(this.getManagedBean().getQtDeductionClause());
 		this.getManagedBean().setScQtDeductionClauses(clauses);
 
 	}
 
-	public void deductionPaymentEvent() {
+	public void deductionPaymentEvent(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionPaymentEvent");
-		System.out.println("Deduction Payment : "
-				+ getManagedBean().getDeductionPaymentArray());
-
-		if (getManagedBean().getDeductionPaymentArray() != null) {
-
-			if (getManagedBean().getDeductionPaymentArray().equalsIgnoreCase(
-					QTConstants.DP_PENALTY)
-					|| getManagedBean().getDeductionPaymentArray()
-							.equalsIgnoreCase(QTConstants.DP_ROYALTY)) {
-				this.getManagedBean().setPercentageField(true);
-				this.getManagedBean().setDescriptionField(false);
-				this.getManagedBean().setAmountField(false);
-				this.getManagedBean().setDurationField(false);
-			} else if (getManagedBean().getDeductionPaymentArray()
-					.equalsIgnoreCase(QTConstants.DP_FIXED)) {
-				this.getManagedBean().setPercentageField(false);
-				this.getManagedBean().setDescriptionField(false);
-				this.getManagedBean().setAmountField(true);
-				this.getManagedBean().setDurationField(true);
-			} else if (getManagedBean().getDeductionPaymentArray()
-					.equalsIgnoreCase(QTConstants.DP_NON_FIXED)) {
-				this.getManagedBean().setPercentageField(false);
-				this.getManagedBean().setDescriptionField(false);
-				this.getManagedBean().setAmountField(false);
-				this.getManagedBean().setDurationField(true);
-			} else if (getManagedBean().getDeductionPaymentArray()
-					.equalsIgnoreCase(QTConstants.DP_OTHERS)) {
-				this.getManagedBean().setPercentageField(true);
-				this.getManagedBean().setAmountField(true);
-				this.getManagedBean().setDescriptionField(true);
-				this.getManagedBean().setDurationField(true);
-			} else {
-				this.getManagedBean().setPercentageField(true);
-				this.getManagedBean().setAmountField(true);
-				this.getManagedBean().setDescriptionField(true);
-				this.getManagedBean().setDurationField(true);
+		IQTDetailSO detailSO;
+		PmParameter p = scQtDeduction.getDeductionType();
+		List<PmParameterDesc> list = retrieveDeductionType(ParameterTypeConst.DEDUCTION_TYPE);
+		if (list != null) {
+			for (PmParameterDesc pmParameterDesc : list) {
+				if (pmParameterDesc.getPmParameter().getParameterId()
+						.equals(p.getParameterId())) {
+					getManagedBean().setQtDeduction(scQtDeduction);
+					detailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+					Long deductionId = getManagedBean().getQtDeduction()
+							.getDeductionType().getParameterId();
+					reqDTO.setDeductionId(deductionId);
+					if (deductionId != null) {
+						QuationTenderResDTO resDTO = detailSO
+								.retrieveDeDuctionClauseDtls(reqDTO);
+						List<ScQtDeductionClause> deductionClauseList = resDTO
+								.getDeductionClauseResultBean().getResultList();
+						for (ScQtDeductionClause scQtDeductionClause : deductionClauseList) {
+							scQtDeductionClause.setClauseDescRendered(String
+									.valueOf(deductionId));
+						}
+						getManagedBean().setScQtDeductionClauses(
+								deductionClauseList);
+					}
+				}
 			}
 		}
-		// getManagedBean().setDeductionPaymentArray(getManagedBean().getDeductionPaymentArray());
 	}
 
 	public void deleteDedcutionPayment() {
 		debugLogger("deleteDedcutionPayment");
-
 		List<ScQtDeduction> deductionList = getManagedBean()
 				.getScQtDeductionList();
 		List<ScQtDeduction> selectedDeductionList = getManagedBean()
@@ -130,7 +123,9 @@ public class QTDeductionPaymentBackingBean extends
 				deductionList.remove(scQtDeduction);
 			}
 		}
-
 	}
 
+	public List<PmParameterDesc> retrieveDeductionType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+	}
 }

@@ -68,11 +68,11 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
 					action="#{qTDocumentsBackingBean.resetClone}" update="clonedocid"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
 					process="@this" />
-				<p:commandButton value="#{lbl['lbl.search']}" icon="ui-icon-search"
+				<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search"
 					style="float:right;" update="@(.cloneResults)" partialSubmit="true"
 					process="@parent"
 					action="#{qTDocumentsBackingBean.documentCloneSearchAction}" />

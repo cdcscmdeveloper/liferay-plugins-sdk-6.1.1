@@ -12,14 +12,16 @@
 			editable="true"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedCheckLists}"
 			styleClass="documentslist" rowKey="#{document}"
-			rowIndexVar="rowIndex" rows="10">
+			rowIndexVar="rowIndex">
 
 			<ac:paginator for="doctbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{document.checkStatus == true}" />
+			<p:column selectionMode="multiple" style="text-align:left;"
+				rendered="#{document.manditory !='true'}" />
+			<p:column style="text-align:left;"
+				rendered="#{document.manditory =='true'}" />
 
-			<p:column headerText="#{lbl['lbl.so.title']}">
+			<p:column headerText="#{lbl['lbl.so.title']}" style="width:58%">
 
 				<h:outputText value="#{document.title}"
 					rendered="#{document.brandNew eq false}" />
@@ -29,50 +31,20 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.type']}" style="width:10%">
-				<h:outputText value="#{document.checklistType}"
+				<h:outputText value="#{document.definationType.parameterId}"
 					rendered="#{document.brandNew eq false}" />
-				<p:selectOneMenu value="#{document.checklistType}"
-					rendered="#{document.brandNew eq true}">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItem itemLabel="UP" itemValue="UP" />
-					<f:selectItem itemLabel="TD" itemValue="TD" />
-				</p:selectOneMenu>
+				<h:outputText value="Upload"
+					rendered="#{document.definationType.parameterId=='184'}" />
 			</p:column>
-
-			<!-- <p:column headerText="#{lbl['lbl.so.document']}" style="width:25%">
-				<h:outputText value="#{document.scQtCheckListAttachment.fileName}"
-					rendered="#{!empty document.scQtCheckListAttachment}" />
-				<p:commandLink oncomplete="attachDlg.show();return false;"
-					update="doctbl">
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/upload.png" />
-					<f:setPropertyActionListener value="#{document}"
-						target="#{qTDocumentsBackingBean.managedBean.qtCheckList}" />
-				</p:commandLink>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.so.order']}" style="width:10%">
-				<h:outputText value="#{document.checklistSeq}" size="3" />
-				<p:inputText value="#{document.checklistSeq}" size="3"
-					rendered="#{document.brandNew eq true}" />
-			</p:column> -->
-
-			<!-- <p:column headerText="#{lbl['lbl.so.temp.status']}" style="width:20%">
-				<h:outputText value="" size="2"
-					rendered="#{document.checklistType eq 'UP'}" />
-				<h:outputText
-					value="#{document.scQtDoc.tplDocMaster.templateStatus}" size="2"
-					rendered="#{document.checklistType eq 'TD'}" />
-			</p:column> -->
 
 			<p:column headerText="#{lbl['lbl.so.attachment']}" style="width:20%">
-				<h:outputText value="#{document.scQtCheckListAttachment.fileName}"
-					rendered="#{!empty document.scQtCheckListAttachment}" />
+				<h:outputText value="#{document.scQtCheckListAttachment.fileName}" />
 
 				<p:commandButton oncomplete="attachDlg1.show();return false;"
+					rendered="#{document.definationType.parameterId=='184'}"
 					icon="iconAttachment" update="doctbl" value="Attach Files">
 					<f:setPropertyActionListener value="#{document}"
-						target="#{qTDocumentsBackingBean.managedBean.qtCheckList}" />
+						target="#{qTDocumentsBackingBean.managedBean.scQtChecklist}" />
 				</p:commandButton>
 
 			</p:column>
@@ -82,11 +54,23 @@
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
+
+				<p:commandLink
+					action="#{qTDocumentsBackingBean.downloadDocumentFile(document)}"
+					update="doctbl">
+					<p:graphicImage library="ep/images/design" name="download.png"
+						value="/resources/ep/images/design/download.png"
+						rendered="#{!empty document.scQtCheckListAttachment}" />
+				</p:commandLink>
+
 			</p:column>
 
 		</p:dataTable>
 		<p:spacer height="20px" />
 		<div align="right">
+			<p:commandButton ajax="false" value="Download All"
+				actionListener="#{qTDocumentsBackingBean.documentDownLoadZipFile(qTDocumentsBackingBean.managedBean.selectedCheckLists)}" />
+
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
 
@@ -102,20 +86,6 @@
 
 	</p:panel>
 
-	<p:dialog id="attachDlg" widgetVar="attachDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
-			mode="advanced" id="upload"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="attachmentId" oncomplete="attachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
-	
 	<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 		dynamic="true" hideEffect="explode" resizable="false" width="700px"
 		height="200" styleClass="pop_up_top"
@@ -126,9 +96,9 @@
 			mode="advanced" id="upload1"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="doctbl" oncomplete="attachDlg.hide()">
+			update="doctbl" oncomplete="attachDlg1.hide()">
 		</p:fileUpload>
 	</p:dialog>
-	
+
 
 </ui:composition>
