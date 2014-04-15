@@ -25,9 +25,9 @@
 		</f:facet>
 		
 		<p:inputText style="min-width:0px !important;width:80%;" rendered="#{isQuestionTypeItem}" disabled="true" />
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" disabled="#{(isAnswerTypeText)}" 
-			oncomplete="scoringSetting.show();"
-			partialSubmit="true" process="@this" update="@this">
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
+			oncomplete="scoringSetPopup.show();"
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>

@@ -10,8 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
-import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -39,8 +37,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
 	private List<TplSpecQuestion> deletedQuestions;
-	private List<TplSpecScoring> specScoringList;
-	private List<TplSpecTierQty> selectedTierQtyList;
 	
 	public List<TplSpecQuestion> getDeletedQuestions() {
 		if(deletedQuestions==null) {
@@ -93,17 +89,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.searchSpecTypeId = searchSpecTypeId;
 	}
 
-	public List<TplSpecScoring> getSpecScoringList() {
-		if(specScoringList==null) {
-			specScoringList = new ArrayList<TplSpecScoring>();
-		}
-		return specScoringList;
-	}
-
-	public void setSpecScoringList(List<TplSpecScoring> specScoringList) {
-		this.specScoringList = specScoringList;
-	}
-
 	public Long getSearchProcurementCategoryId() {
 		return searchProcurementCategoryId;
 	}
@@ -125,20 +110,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
-	}
-
-	/**
-	 * @return the selectedTierQtyList
-	 */
-	public List<TplSpecTierQty> getSelectedTierQtyList() {
-		return selectedTierQtyList;
-	}
-
-	/**
-	 * @param selectedTierQtyList the selectedTierQtyList to set
-	 */
-	public void setSelectedTierQtyList(List<TplSpecTierQty> selectedTierQtyList) {
-		this.selectedTierQtyList = selectedTierQtyList;
 	}
 
 }

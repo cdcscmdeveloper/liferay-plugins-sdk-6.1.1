@@ -67,13 +67,14 @@
 				<tr>
 					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.template.type']}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterId}" >
+						<p:selectOneMenu style="width:148px" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterId}">
+							<p:ajax event="change" partialSubmit="true" process="@this" update="ministryLBL, ministryDD" />
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.ministry']}" /></td>
+					<td class="TableFieldLeft"><p:outputLabel id="ministryLBL" value="#{lbl['lbl.tpl.spec.ministry']}" rendered="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypeMinistry}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgProfileId}">
+						<p:selectOneMenu id="ministryDD" value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgProfileId}" rendered="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypeMinistry}">
 							<f:selectItems value="#{templateSpecBackingBean.ministryList}" />
 						</p:selectOneMenu>
 					</td>

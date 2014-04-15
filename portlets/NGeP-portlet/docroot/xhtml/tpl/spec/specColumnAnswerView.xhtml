@@ -28,7 +28,7 @@
 			<h:outputText value="#{tplSpecAnswer.answerCompliance ? 'Yes' : 'No'}" rendered="#{isAnswerTypeDropdown}" />
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.note']}">
+	<p:column style="width:130px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.note']}">
 		#{tplSpecAnswer.answerRemark}
 	</p:column>
 </ui:composition>

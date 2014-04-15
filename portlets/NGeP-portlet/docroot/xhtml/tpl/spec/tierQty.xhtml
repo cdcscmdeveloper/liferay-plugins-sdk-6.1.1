@@ -8,19 +8,17 @@
 	
 	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
 	
-	<p:dataTable id="tierQtyTbl" widgetVar="tierQtyTbl"
+	<p:dataTable id="tierQtyTbl" widgetVar="tierQtyWidget"
 		var="tplSpecTierQty"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecTierQties}"
 		rowKey="#{tplSpecTierQty}"
-		selectionMode="multiple"
 		selection="#{templateSpecBean.selectedTierQtyList}">
 							
 		<ac:paginator for="tierQtyTbl" />
 		
 		<p:column selectionMode="multiple" style="width:20px;" />
 		<p:column headerText="#{lbl['lbl.tpl.spec.content.tier.from.qty']}">
-			#{templateSpecBean.selectedTierQtyList}
 			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" dir="rtl" style="width:96%;" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
@@ -37,20 +35,16 @@
 		</p:column>
 	</p:dataTable>
 	
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process1="@this, tierQtyTbl" partialSubmit1="true"
-				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
-				oncomplete1="tierQtyTbl.paginator.setPage(parseInt(tierQtyTbl.paginator.getTotalPages()));"
-				update="tierQtyTbl" icon="ui-icon-add" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this" partialSubmit="true"
-				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteTierQtyAction(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedTierQtyList)}"
-				update="tierQtyTbl" />
-		</td>
-	</tr>
-	</table>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.add']}"
+			process="@this, tierQtyTbl" partialSubmit="true"
+			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
+			oncomplete="tierQtyWidget.paginator.endLink.click();"
+			update="tierQtyTbl" icon="ui-icon-add" />
+		<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			process="@this, tierQtyTbl" partialSubmit="true"
+			icon="ui-icon-delete"
+			action="#{templateSpecBackingBean.deleteRowAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
+			update="tierQtyTbl" />
+	</div>
 </ui:composition>

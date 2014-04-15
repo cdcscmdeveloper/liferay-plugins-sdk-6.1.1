@@ -29,9 +29,9 @@
 			<ui:param name="isContentTypeReview" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeReview}" />
 			<ui:param name="isContentTypeAnswer" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeAnswer}" />
 			<ui:param name="isContentTypeScore" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeScore}" />	
-			<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == TplSpecConst.itemTypeService}" />
-			<ui:param name="isSpecTypeTechnical" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeTechnical}" />
-			<ui:param name="isSpecTypeFinancial" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeFinancial}" />
+			<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
+			<ui:param name="isSpecTypeTechnical" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeTechnical}" />
+			<ui:param name="isSpecTypeFinancial" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeFinancial}" />
 			<ui:param name="isDurationByItem" value="#{templateSpecBean.specMaster.durationByItem}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
@@ -101,48 +101,39 @@
 			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
 		</p:dialog>
 		
-		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="tierQtyPopup" modal="true" width="450" height="350">			
-			<div style="height:310px;">
-				<ui:include src="tierQty.xhtml" />
-			</div>
-			
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-					icon="ui-icon-accept"
-					update="tierQtyTbl"
-					action1="#{templateSpecBackingBean.addPanelToSupplierListAction}"  
-					oncomplete="tierQtyPopup.hide()"  />
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()" />
-			</div>
+		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="tierQtyPopup" modal="true" width="450" height="350">
+			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+				<div style="height:310px;">
+					<ui:include src="tierQty.xhtml" />
+				</div>
+				
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+						icon="ui-icon-accept"
+						update="tierQtyTbl"  
+						oncomplete="tierQtyPopup.hide()"  />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()" />
+				</div>			
+			</c:if>
 		</p:dialog>
 
-		<p:dialog header="Scoring Settings" widgetVar="scoringSetting"
-			showEffect="fade" hideEffect="fade" modal="true" height="350"
-			width="550" resizable="false">
-			<br/>
-			<p:panel id="panelOcl">
-				<table>
-					<tr>
-						<td>
-							<p:outputLabel value="Scoring:"	/>
-						</td>
-						<td>
-							<p:selectBooleanCheckbox id="checkScore" value="#{templateSpecBean.selectedSpecQuestion.scoring}" >
-								<p:ajax update="panelOcl" />
-							</p:selectBooleanCheckbox>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2"></td>
-					</tr>
-					<tr>
-						<td>
-							<p:commandButton value="OK" actionListener="#{templateSpecBackingBean.storeAnswerSetting}" process="@this"
-								oncomplete="scoringSetting.hide();return false;" update="spg" />
-						</td>
-					</tr>
-				</table>
-			</p:panel>
+		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="scoringSetPopup" modal="true" width="550" height="410">
+			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+				<div style="height:370px;">
+					<h:panelGroup id="scoreSettPnl">
+						<ui:include src="scoringSettings.xhtml" />
+					</h:panelGroup>
+				</div>
+				
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+						icon="ui-icon-accept"
+						partialSubmit="true"
+						process="scoreSettPnl" 
+						oncomplete="scoringSetPopup.hide()"  />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()" />
+				</div>
+			</c:if>
 		</p:dialog>
 
 </ui:composition>

@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:column headerText="#{lbl['lbl.tpl.spec.content.item']}">	
-		<p:inputText style="width:99%;" value="#{question.clItem}" rendered="#{isQuestionTypeItem}" required="true" />
+		<p:inputTextarea style="width:99%;" value="#{question.clItem}" rendered="#{isQuestionTypeItem}" required="true" rows="1" />
 	</p:column>
 	<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}" rendered="#{isSpecTypeTechnical}">
-		<p:inputText style="width:99%;" value="#{question.clSpecDetail}" rendered="#{!isQuestionTypeItem}"  />
+		<p:inputTextarea style="width:99%;" value="#{question.clSpecDetail}" rendered="#{!isQuestionTypeItem}" rows="1" />
 	</p:column>
 	<p:column style="width:75px;" headerText="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" rendered="#{isItemTypeService}">
 		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="true" style="width:100%;" rendered="#{isQuestionTypeItem}">
@@ -30,22 +30,22 @@
 	</p:column>
 	
 	<c:if test="#{isItemTypeService}">
-		<p:column style="width:50px;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+		<p:column style="width:50px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomFrequency}" rendered="#{isQuestionTypeItem}" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 		</p:column>
-		<p:column style="width:55px;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+		<p:column style="width:55px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem}" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 		</p:column>
-		<p:column style="width:60px;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+		<p:column style="width:60px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem}" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 		</p:column>
-		<p:column style="width:70px;" headerText="#{lbl['lbl.tpl.spec.content.duration.month']}" rendered="#{isDurationByItem}">
+		<p:column style="width:70px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.duration.month']}" rendered="#{isDurationByItem}">
 			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clDurationMonth}" rendered="#{isQuestionTypeItem}" required="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
@@ -72,13 +72,13 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:160px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
-		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" required="true" style="width:90%;">
+		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" style="width:90%;">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" disabled="#{(isAnswerTypeText)}" 
-			oncomplete="scoringSetting.show();"
-			partialSubmit="true" process="@this" update="@this">
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
+			oncomplete="scoringSetPopup.show();"
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>

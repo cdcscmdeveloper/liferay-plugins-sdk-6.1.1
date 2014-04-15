@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -79,17 +80,21 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
             log.debug(message);
         }log.info(message);
     }
+
+	public TemplateSpecBackingBean() {
+		if (getManagedBean().getTemplateSpecBean().getSupplier() == null) {
+			IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
+			registrationReqDTO.setSupplierId(1L);
+			RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
+			getManagedBean().getTemplateSpecBean().setSupplier(registrationResDTO.getSmSupp());	
+		}
+	}
 	
 	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean) {
 		ITemplateSpecSO templateSpecSO = null;
 		String contentType = templateSpecBean.getContentType();
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-		
-		IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
-		registrationReqDTO.setSupplierId(1L);
-		RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
-		templateSpecBean.setSupplier(registrationResDTO.getSmSupp());
 		
 		try {
 			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
@@ -109,7 +114,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(new TplSpecQuestion());
+				templateSpecBean.setSelectedSpecQuestion(null);
 			}
 		} finally {
 			templateSpecSO = null;
@@ -127,9 +132,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			
 			TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-			
-			// Remove header row
-			specMaster.getTplSpecQuestions().remove(0);
 			
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setDeletedQuestionList(this.getManagedBean().getDeletedQuestions());
@@ -213,7 +215,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		templateSpecBean.setSpecMaster(specMaster);
 		
-		templateSpecBean.setSelectedSpecQuestion(new TplSpecQuestion());
+		templateSpecBean.setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
 		
 		return "maintenance"; 
@@ -223,15 +225,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		debugLogger("searchResult");
 		
 		specMasterDataModel.reloadData();
-	}
-	
-	public void addScoringValue(TemplateSpecBean templateSpecBean){
-		TplSpecScoring specScore = new TplSpecScoring();
-		specScore.setRangeFrom(0);
-		specScore.setRangeTo(0);
-		specScore.setScore(0);
-		specScore.setTplSpecQuestion(templateSpecBean.getSelectedSpecQuestion());
-		getManagedBean().getSpecScoringList().add(specScore);
 	}
 	
 	public void storeAnswerSetting(ActionEvent event) {
@@ -266,6 +259,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
 			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
+			reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
+			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			newQuestion.setScoreTypeCode(resDTO.getPmParameter());
 			
 			PmUom uom = new PmUom();
 			newQuestion.setClUom(uom);
@@ -413,6 +412,33 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setAnswerTypeCode(resDTO.getPmParameter());
+			
+			if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion.getAnswerTypeCode())) {
+				reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
+				reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
+				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				specQuestion.setScoreTypeCode(resDTO.getPmParameter());	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			parameterSO = null;
+		}
+		
+	}
+	
+	public void scoreTypeChange(TplSpecQuestion specQuestion) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = specQuestion.getScoreTypeCode().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specQuestion.setScoreTypeCode(resDTO.getPmParameter());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -435,27 +461,27 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		if (isItemTypeService) {
-			Integer uomFrequency = specQuestion.getClUomFrequency();
-			Integer uomPerDay = specQuestion.getClUomPerDay();
-			Integer uomPerMonth = specQuestion.getClUomPerMonth();
-			Integer durationMonth = specMaster.getDurationMonth();
+			BigDecimal uomFrequency = specQuestion.getClUomFrequency();
+			BigDecimal uomPerDay = specQuestion.getClUomPerDay();
+			BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
+			BigDecimal durationMonth = specMaster.getDurationMonth();
 			
 			if (uomFrequency != null) {
-				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomFrequency));
+				totalPrice = totalPrice.multiply(uomFrequency);
 			}
 			
 			if (uomPerDay != null) {
-				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomPerDay));
+				totalPrice = totalPrice.multiply(uomPerDay);
 			}
 			
 			if (uomPerMonth != null) {
-				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomPerMonth));
+				totalPrice = totalPrice.multiply(uomPerMonth);
 			}
 			
 			specAnswer.setAmountPerYear(totalPrice);
 			
 			if (durationMonth != null) {
-				totalPrice = totalPrice.multiply(BigDecimal.valueOf(durationMonth));
+				totalPrice = totalPrice.multiply(durationMonth);
 			}
 		}
 		specAnswer.setAnswerNumeric(totalPrice);
@@ -475,10 +501,16 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		tplSpecTierQties.add(new TplSpecTierQty());
 	}
 	
-	public void deleteTierQtyAction(TplSpecQuestion tplSpecQuestion, List<TplSpecTierQty> toBeRemovedTierQtyList) {
-		debugLogger("deleteTierQtyAction");
+	public void addScoringAction(TplSpecQuestion tplSpecQuestion){
+		debugLogger("addScoringAction");
 		
-		tplSpecQuestion.getTplSpecTierQties().removeAll(toBeRemovedTierQtyList);
+		List<TplSpecScoring> tplSpecScorings = tplSpecQuestion.getTplSpecScorings();
+		
+		if (tplSpecScorings == null) {
+			tplSpecScorings = new ArrayList<TplSpecScoring>();
+		}
+		
+		tplSpecScorings.add(new TplSpecScoring());
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
@@ -555,7 +587,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 					likeFilterBean.setSearchField("specName");
 					likeFilterBean.setSearchValue(getManagedBean().getSearchSpecName());
 					searchBean.getDataFilterBeans().add(likeFilterBean);
-				}		
+				}
+
+				// Order by created date
+				searchBean.getSortColumns().add(new SearchOrderBean("createdDate", false));
 				
 				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 				reqDTO.setSearchBean(searchBean);

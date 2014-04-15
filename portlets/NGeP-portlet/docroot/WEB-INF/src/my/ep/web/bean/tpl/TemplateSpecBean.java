@@ -7,15 +7,17 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 
 public class TemplateSpecBean {
 	private TplSpecMaster specMaster;
 	private String contentType;
 	private SmSupplier supplier;
-	private TplSpecQuestion selectedSpecQuestion = new TplSpecQuestion();
+	private TplSpecQuestion selectedSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	private List<TplSpecTierQty> selectedTierQtyList;
+	private List<TplSpecScoring> selectedScoringList;
 	
 	public TemplateSpecBean() {
 		this(TemplateSpecConst.CONTENT_TYPE_QUESTION);
@@ -107,5 +109,19 @@ public class TemplateSpecBean {
 	 */
 	public void setSelectedTierQtyList(List<TplSpecTierQty> selectedTierQtyList) {
 		this.selectedTierQtyList = selectedTierQtyList;
+	}
+
+	/**
+	 * @return the selectedScoringList
+	 */
+	public List<TplSpecScoring> getSelectedScoringList() {
+		return selectedScoringList;
+	}
+
+	/**
+	 * @param selectedScoringList the selectedScoringList to set
+	 */
+	public void setSelectedScoringList(List<TplSpecScoring> selectedScoringList) {
+		this.selectedScoringList = selectedScoringList;
 	}
 }
