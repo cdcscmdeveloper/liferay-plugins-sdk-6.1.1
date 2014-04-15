@@ -59,7 +59,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
+				<p:calendar value="#{tier.startDate}" showOn="button" size="10" mindate="#{tier.minDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
@@ -67,7 +67,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10"
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" maxdate="#{tier.maxDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>

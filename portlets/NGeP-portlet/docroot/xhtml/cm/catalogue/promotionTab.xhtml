@@ -10,66 +10,62 @@
 
 
 
-	<p:outputPanel id="cmPromotionPricings">
-		<p:dataTable id="cmPromotionPricingsId"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricings}"
-			var="zPromotion" rowKey="#{zPromotion}" rowIndexVar="rowIndex"
-			width="100%">
 
 
+
+
+
+
+	<p:panelGrid styleClass="tablePanel">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+							Pricing Type
+						</p:column>
+				<p:column>
+							Price (RM)
+						</p:column>
+				<p:column>
+							Start Date
+						</p:column>
+				<p:column>
+							End Date
+						</p:column>
+			</p:row>
+
+		</f:facet>
 
 		
-
+		<p:row>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<h:inputText value="#{zPromotion.price}" size="10"></h:inputText>
+				<p:outputLabel value="Promotion" />
 			</p:column>
-
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.start.date']}
-				</f:facet>
-				<p:calendar value="#{zPromotion.startDate}" showOn="button"
-					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:inputText
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}"></p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.end.date']}
-				</f:facet>
-				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.action']}
-				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deletePromotionPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:normalId:cmPromotionPricingsId">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
-
-			</p:column>
+		</p:row>
 
 
-		</p:dataTable>
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}"
-				action="#{catalogueBackingBean.addNewPromotionPricing()}"
-				update="cmPromotionPricingsId"
-				process="cmPromotionPricingsId @this"></p:commandButton>
-		</div>
+	</p:panelGrid>
 
 
 
 
-	</p:outputPanel>
+
 
 
 </ui:composition>

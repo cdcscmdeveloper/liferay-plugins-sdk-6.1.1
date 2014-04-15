@@ -13,68 +13,52 @@
 
 
 
-	<p:outputPanel id="cmStandardPricings">
-		<p:dataTable id="cmStandardPricingsId"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricings}"
-			var="zStandard" rowKey="#{zStandard}" rowIndexVar="rowIndex"
-			width="100%">
 
 
 
+	<p:panelGrid styleClass="tablePanel">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+							Pricing Type
+						</p:column>
+				<p:column>
+							Price (RM)
+						</p:column>
+				<p:column>
+							Start Date
+						</p:column>
+				<p:column>
+							End Date
+						</p:column>
+			</p:row>
 
+		</f:facet>
 
+		<p:row>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<h:inputText value="#{zStandard.price}" size="10"></h:inputText>
+				<p:outputLabel value="Standard *" />
 			</p:column>
-
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.start.date']}
-				</f:facet>
-				<p:calendar value="#{zStandard.startDate}" showOn="button"
-					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
+				<p:inputText
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"></p:inputText>
 			</p:column>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.end.date']}
-				</f:facet>
-				<p:calendar value="#{zStandard.endDate}" showOn="button" size="10"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
-			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.action']}
-				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteStandardPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:normalId:cmStandardPricingsId">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+		</p:row>
 
 
-		</p:dataTable>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}"
-				action="#{catalogueBackingBean.addNewStandardPricing()}"
-				update="cmStandardPricingsId" process="cmStandardPricingsId @this"></p:commandButton>
-		</div>
-
-
-
-
-	</p:outputPanel>
-
-
-
+	</p:panelGrid>
 
 
 
