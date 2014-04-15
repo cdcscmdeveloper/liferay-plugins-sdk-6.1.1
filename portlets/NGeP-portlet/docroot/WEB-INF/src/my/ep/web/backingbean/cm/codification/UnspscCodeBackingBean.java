@@ -980,7 +980,11 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 	public void submitToBPM(){
-
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if(this.getManagedBean().getRequestExtCodeList()==null || this.getManagedBean().getRequestExtCodeList().isEmpty()){
+		 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"You should add atleast one record to RequestedExtensionCode table before submit", ""));
+		 return;
+		}
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
@@ -990,15 +994,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
 
-
-
-
-
-
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
-
-
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 	}
