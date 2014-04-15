@@ -18,6 +18,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -30,6 +31,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -45,7 +48,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.logging.LogKey;
@@ -94,6 +96,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 * @return 
 	  */
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
+		  IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		  IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 		   debugLogger("prInquiryAction");
 		   ScPrInquiry scPrInquiry = new ScPrInquiry(); 
@@ -110,21 +113,36 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  requestSupplierItem.setRequestNoteItem(scRequestItem);
 			  
 		      // WorkFlow Status
-			  List<ScPRIWorkFlowStatus> wflowStatus =  new  ArrayList<ScPRIWorkFlowStatus>();
-			  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus(SourcingConstants.PRI_PENDING_SUBMISSION);
-			  workFlowStatus.setCurrent(true);
+			  List<ScPRIWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScPRIWorkFlowStatus>();
+			  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus();
 			  workFlowStatus.setPrInquiry(scPrInquiry);
-			  wflowStatus.add(workFlowStatus);
-			  scPrInquiry.setWorkflowStatuses(wflowStatus);
+			  PmStatus status = new PmStatus();
+			  status.setStatusId(SourcingConstants.PRI_PENDING_SUBMISSION);
+			  StatusReqDTO statusReqDTO = new StatusReqDTO();
+			  if (status != null) {
+			      statusReqDTO.setStatusId(status.getStatusId());
+			      StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+			      workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			   }
+			  workFlowStatus.setCurrent(true);
+		      workFlowStatuses.add(workFlowStatus);
+			  scPrInquiry.setWorkflowStatuses(workFlowStatuses);
+			  
 			  scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			  scPrInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 			  scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
 			  scPrInquiry.setPrInquiryNo(prInquirySO.generatePrInquiryNo());
 			  // Initializing Remarks 
 			  scPrInquiry.setRemarks(initializeRemarks(scPrInquiry));
-			 
+			  // TODO check supplier is government seller or not 
+			  if(cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+				 getManagedBean().getRequestNoteDtl().setProcurementType(ParameterConst.PROC_TYPE_G2G);
+			  } else {
+				  getManagedBean().getRequestNoteDtl().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+			  }
+			  
 		      List<CmPricing>  cmPricings = new ArrayList<CmPricing>();
-		  	if (cmSupplierItem.getCmPricings() != null
+		  	  if (cmSupplierItem.getCmPricings() != null
 					&& cmSupplierItem.getCmPricings().size() > 0) {
 				List<String> priceTypes = new ArrayList<String>();
 				for (CmPricing princing : cmSupplierItem.getCmPricings()) {
@@ -145,18 +163,18 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  getManagedBean().setPriceTypes(getPriceTypeDropdownValues(
 		      ParameterTypeConst.PRICE_TYPE, priceTypes));
 			}
-		  	// get the first type of the priceTypes and populate to requestSupplierItem
-		  	List<ScRequestSupplierItem> scRequestSupplierItems = new  ArrayList<ScRequestSupplierItem>(); 
-		  	scRequestSupplierItems.add(requestSupplierItem);
-		  	// ScRequestSupplerItems
-		  	scPrInquiry.setScRequestSupplierItems(scRequestSupplierItems);
-			scPrInquiry.setRequestSupplierItem(requestSupplierItem);
-		    getManagedBean().setScPrInquiry(scPrInquiry);
+		  	 // get the first type of the priceTypes and populate to requestSupplierItem
+		  	 List<ScRequestSupplierItem> scRequestSupplierItems = new  ArrayList<ScRequestSupplierItem>(); 
+		  	 scRequestSupplierItems.add(requestSupplierItem);
+		  	 // ScRequestSupplerItems
+		     scPrInquiry.setScRequestSupplierItems(scRequestSupplierItems);
+			 scPrInquiry.setRequestSupplierItem(requestSupplierItem);
+		     getManagedBean().setScPrInquiry(scPrInquiry);
+		    // pr inquiry status
+		    getCurrentStatus(status.getStatusId());
 		  }
-		 //TODO default value to Procurement type and price type drop down listing
+		 //TODO default value to  price type drop down listing
 		 getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
-		 getManagedBean().getRequestNoteDtl().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
-		 
          return "prInquiryMain";		 
 	 }
 	  
@@ -222,8 +240,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	  public String submitPrEnquiryDtl() {
 		  debugLogger("submitPrEnquiryDtl");
 		    IPrInquirySO prInquirySO = null;
+		    IStatusSO iStatusSO = null;
 		    try {
 			     prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+                 iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				 PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();				 
 				 ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			     prInquiry.setDateToResponse(new Timestamp(System.currentTimeMillis()));
@@ -236,47 +256,38 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				     requestNoteDtls.add(requestNoteDtl);
 				     scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
 				     requestSupplierItems.add(scRequestSupplierItem);
-				}
+				 }
 			     prInquiry.setScRequestSupplierItems(requestSupplierItems);
 			     prInquiry.setCreatedDate(DateUtils.getCurrentDate());
 			     // setting remarks 
 			     prInquiry.setRemarks(initializeRemarks(prInquiry));
-			     // WorkFlow Status
-			     List<ScPRIWorkFlowStatus> wflowStatus =  new  ArrayList<ScPRIWorkFlowStatus>();
-			     ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus(SourcingConstants.PRI_PENDING_SUBMISSION);
-			     workFlowStatus.setPrInquiry(prInquiry);
-			     wflowStatus.add(workFlowStatus);
-			     prInquiry.setWorkflowStatuses(wflowStatus);
+			      // WorkFlow Status
+				  List<ScPRIWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScPRIWorkFlowStatus>();
+				  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus();
+				  workFlowStatus.setPrInquiry(prInquiry);
+				  PmStatus status = new PmStatus();
+				  status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
+				  StatusReqDTO statusReqDTO = new StatusReqDTO();
+				  if (status != null) {
+				      statusReqDTO.setStatusId(status.getStatusId());
+				      StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+				      workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				   }
+				 workFlowStatus.setCurrent(true);
+			     workFlowStatuses.add(workFlowStatus);
+			     
+			     prInquiry.setWorkflowStatuses(workFlowStatuses);
 				 FacesScopes facesScopes = new FacesScopes();
 				 String token = facesScopes.getBPMAuthenticationCtxToken();
 				 reqDTO.setToken(token);
-				 
-				 
-				 //TODO hard code for PmOrgProfile
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				// TODO hard coding PmOrgProfile to Request Note
-				orgProfileReqDTO.setOrgProfileId(4L);
-				OrgProfileResDTO pmResDTO = orgProfileSO
-						.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-			     reqDTO.setOrgProfileId(pmResDTO.getPmOrgProfile().getOrgProfileId());
-			     getManagedBean().setPmOrgProfile(pmResDTO.getPmOrgProfile());
-			     
-			     
 			     reqDTO.setPrInquiryDetail(prInquiry);
+			     reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			     reqDTO.setRequestNote(requestNote);
 				 PrInquiryResDTO prInquiryResDTO = prInquirySO.submitPrInquiry(reqDTO);
 				
 				 if (prInquiryResDTO.isSuccessful()) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Record saved successfully.", ""
-							));
-				  return "/xhtml/shared/acknowledge.xhtml";
+					 FacesContext fc = FacesContext.getCurrentInstance();
+					 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
 				} 
 				
 			} catch (Exception ex) {
@@ -306,11 +317,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
 			   PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
 			   if(resDTO.isSuccessful()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""));
-				  return "/xhtml/shared/acknowledge.xhtml";
+				  FacesContext fc = FacesContext.getCurrentInstance();
+				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
 			   }else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -328,6 +336,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						reqBpm.setCtxToken(ctxToken);
 						BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
 						boolean result = resBpm != null ? resBpm.isSuccessful() : false;
+					if (resBpm.isSuccessful()) {
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.getApplication().getNavigationHandler()
+								.handleNavigation(fc, null, "acknowledge");
+					}
 					}
 				} catch (Exception ex) {
 					FacesContext.getCurrentInstance().addMessage(
@@ -346,18 +359,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 * Initializing remarks in Purchase inquiry
 	 */
 	public List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
+		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		FacesScopes facesScopes = new FacesScopes();
-		List<ScPRIRemark> results = prInquiry.getRemarks();
-		if(results == null){
-			 results = new ArrayList<ScPRIRemark>();
-		}
+		List<ScPRIRemark> results =  new ArrayList<ScPRIRemark>();
 		if (results.size() == 0
 				|| !compareUserName(results.get(0).getUser().getLoginId())) {
 			ScPRIRemark remark = new ScPRIRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
 			remark.setUser(facesScopes.getUserSessionBean());
 			if (getManagedBean().getScPrInquiry().getRemarks() != null
 					&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
@@ -365,10 +375,16 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						.get(0).getRemark());
 			}
 			PmStatus status = new PmStatus();
-			status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
-			remark.setPmStatus(status);
-			remark.setPrInquiry(prInquiry);
-			results.add(0, remark);
+			status.setStatusId(SourcingConstants.PRI_PENDING_SUBMISSION);
+		    StatusReqDTO statusReqDTO = new StatusReqDTO();
+		    if (status != null) {
+		     statusReqDTO.setStatusId(status.getStatusId());
+		     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+		     remark.setPmStatus(statusResDTO.getPmStatus());
+		    }
+		    remark.setPmStatus(status);
+		    remark.setPrInquiry(prInquiry);
+		    results.add(0, remark);
 		}
 		return results;
 	}
@@ -440,15 +456,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 	}
 	
-	public SelectItem[]  getProcTypeDropdown() {
-		debugLogger("getProcTypeDropdown");
-		SelectItem[] selectItems = new SelectItem[4];
-		selectItems[0] = new SelectItem("N", "Normal");
-		selectItems[1] = new SelectItem("A","AdHoc");
-		selectItems[2] = new SelectItem("E", "Emergency");
-		selectItems[3] = new SelectItem("G", "G2G");
-		return selectItems;
-	}
 	
 	public	String	requisitionerAction(String action){
 		if(StringUtils.equalsIgnoreCase("PROCESSED",action)){
@@ -486,16 +493,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
 			requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
 			
-			List<ScRequestNoteRemark> results= new ArrayList<ScRequestNoteRemark>();
-			for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
-				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(remark.getCreatedBy());
-				remark.setChangedDate(remark.getCreatedDate());
-				remark.setUser(facesScopes.getUserSessionBean());
-			    results.add(remark);
-	       }
-	        requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(requestNote));
+	        requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
 			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
@@ -504,6 +502,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
+			requestNoteBackingBean.initialInformation(new ScRequestNote());
+			requestNoteBackingBean.getCurrentStatus(SourcingConstants.RN_PENDING_SUBMISSION);
+			
 			
 			//redirect to RequestNote screen
 			return "commonRequestNote";
@@ -550,28 +551,25 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 		log.info(message);
 	}
-			
-	public String getCurrentStatus() {
-		String result = "";
-		if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
-			for (ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry()
-					.getWorkflowStatuses()) {
-				if (status.isCurrent()) {
-					result = getStatusDescById(status.getPmStatus()
-							.getStatusId());
-					if (result.equalsIgnoreCase("Pending Submission")) {
-						getManagedBean().setEditFlag(false);
-						getManagedBean().setButtonFlag(false);
-					} else {
-						getManagedBean().setEditFlag(true);
-						getManagedBean().setButtonFlag(true);
-					}
-					break;
-				}
-			}
+	
+	
+	
+	 public void  getCurrentStatus(Long statusId) {
+		if (statusId != null) {
+			 getManagedBean().setPriStatus(getStatusDescById(statusId));
+		 	if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PRI_PENDING_SUBMISSION)){
+		 		getManagedBean().setRequisitionerFlag(false);
+		 		getManagedBean().setSupplierFlag(true);
+		 	} else if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PRI_PENDING_SUPP_RESPONSE)){
+		 		getManagedBean().setRequisitionerFlag(true);
+		 		getManagedBean().setSupplierFlag(false);
+		 	} else{
+		 		getManagedBean().setRequisitionerFlag(true);
+		 		getManagedBean().setSupplierFlag(true);
+		 	}
 		}
-		return result;
-	}
+	  }
+	
 	
 	public void ptjNameEvent() {
 		if (getManagedBean().getOrgProfileId() != null) {

@@ -32,7 +32,7 @@ import org.primefaces.model.DualListModel;
 public class RequestNoteManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private String sourceMethod = ParameterConst.METHOD_SC;
-	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
+	private	ScRequestNote	requestNote = new ScRequestNote(); //contain request list information
 	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
 	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
@@ -57,6 +57,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down 
     private String processName;
+    private String requestNoteStatus;
+    
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
     
@@ -377,6 +379,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setOrgProfile(PmOrgProfile orgProfile) {
 		this.orgProfile = orgProfile;
+	}
+	
+	/**
+	 * @return the requestNoteStatus
+	 */
+	public String getRequestNoteStatus() {
+		return requestNoteStatus;
+	}
+	/**
+	 * @param requestNoteStatus the requestNoteStatus to set
+	 */
+	public void setRequestNoteStatus(String requestNoteStatus) {
+		this.requestNoteStatus = requestNoteStatus;
 	}
 	public	boolean	isPrInquiry(){
 		boolean result	= false;

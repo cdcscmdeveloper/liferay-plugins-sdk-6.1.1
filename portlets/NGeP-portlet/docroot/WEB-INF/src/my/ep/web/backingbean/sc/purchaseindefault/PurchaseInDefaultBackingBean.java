@@ -15,15 +15,24 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
@@ -37,6 +46,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.ReasonCategory;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
@@ -46,6 +57,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -80,6 +92,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	  */
 		public String pidAction(VCmSupplierItem vCmSupplierItem){
 			debugLogger("pidAction");
+			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 			ContractReqDTO ConIreqDTO = new ContractReqDTO();
@@ -112,15 +125,25 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
 			   // WorkFlow Status
 			   List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
-			   ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PRI_PENDING_SUBMISSION);
+			   ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
+			   PmStatus status = new PmStatus();
+			   status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+			   StatusReqDTO statusReqDTO = new StatusReqDTO();
+			   if (status != null) {
+				   statusReqDTO.setStatusId(status.getStatusId());
+				   StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+				   workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				 }
 			   workFlowStatus.setCurrent(true);
 			   workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
 			   wflowStatus.add(workFlowStatus);
 			   scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
-		       getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-		   //}
+			   
+			getCurrentStatus(status.getStatusId());  
+		    getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			//TODO default value to justification drop down listing
 		  	getManagedBean().setJustificationType(ParameterConst.PID_CP);
+		  	initialInformation(scPurchaseInDefault);
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -132,23 +155,35 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		  debugLogger("submitPurchaseInDefault");
 		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		  try {
+			    IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			    purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			    PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-				List<ScPIDWorkFlowStatus> wflowStatuses =  new  ArrayList<ScPIDWorkFlowStatus>();
 		 		scPurchaseInDefault.setReasonType("R");
 		 		scPurchaseInDefault.setRecordStatus(true);
 		 		scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
 				// Target Approver
 				ScPIDApprovalUser approvalUser = new ScPIDApprovalUser();
-				scPurchaseInDefault.setApprovalUsers(createTargetApprover(approvalUser));
+				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
 				// Contract Item
 				//scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
-				// WorkFlow Status 
-				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus(SourcingConstants.PID_PENDING_SUBMISSION);
+				
+			    // WorkFlow Status 
+				List<ScPIDWorkFlowStatus> workflowStatuses = new ArrayList<ScPIDWorkFlowStatus>();
+				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
+				PmStatus status = new PmStatus();
+				status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				if (status != null) {
+					statusReqDTO.setStatusId(status.getStatusId());
+					StatusResDTO statusResDTO = iStatusSO
+							.retrieveStatusByStatusId(statusReqDTO);
+					workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				}
+				workFlowStatus.setCurrent(true);
 				workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-				wflowStatuses.add(workFlowStatus);
-				scPurchaseInDefault.setWorkFlowStatuses(wflowStatuses);
+				workflowStatuses.add(workFlowStatus);
+				scPurchaseInDefault.setWorkFlowStatuses(workflowStatuses);
 				// remarks
 				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 				scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
@@ -174,11 +209,41 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 		return null;
 	 }
-			
+		
+	 public void updateBpmTask(String outcome) {
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmRequestDTO reqBpm = new BpmRequestDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			try {
+				reqBpm.setTaskId(getManagedBean().getTaskId());
+				reqBpm.setOutcome(outcome);
+				if (null != ctxToken) {
+					reqBpm.setCtxToken(ctxToken);
+					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
+					boolean result = resBpm != null ? resBpm.isSuccessful() : false;
+					if(resBpm.isSuccessful()){
+					  FacesContext fc = FacesContext.getCurrentInstance();
+					  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
+					}
+				}
+			} catch (Exception ex) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Sorry We are unable to process.", ""));
+				ex.printStackTrace();
+			} finally {
+				bpmSO = null;
+			}
+		} 
+	 
 		/**
 		 * initializing remarks in Purchase In Default
 		 */
 		private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
+			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
 			FacesScopes facesScopes = new FacesScopes();
 			if (results.size() == 0
@@ -187,18 +252,21 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
-				remark.setChangedDate(remark.getCreatedDate());
 				remark.setUser(facesScopes.getUserSessionBean());
 				if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
 				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
-				} else{
-					remark.setRemark("");
-				}
+				} 
 				PmStatus status = new PmStatus();
-				status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
-				remark.setPmStatus(status);
-				remark.setPurchaseInDefault(scPurchaseInDefault);
-				results.add(0, remark);
+				status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+			    StatusReqDTO statusReqDTO = new StatusReqDTO();
+			    if (status != null) {
+			     statusReqDTO.setStatusId(status.getStatusId());
+			     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+			     remark.setPmStatus(statusResDTO.getPmStatus());
+			    }
+			    remark.setPmStatus(status);
+			    remark.setPurchaseInDefault(scPurchaseInDefault);
+			    results.add(0, remark);
 			}
 			return results;
 		}
@@ -206,9 +274,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		/**
 		 * To get Approver Pick List  in Purchase In Default
 		 */
-		private	List<ScPIDApprovalUser> createTargetApprover(ScPIDApprovalUser scPIDApprovalUser){
+		private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
 			List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-			 scPIDApprovalUser = new ScPIDApprovalUser();
+			 ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
+			 scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
 			 for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
 				  scPIDApprovalUser.setPmUser(pmUser);
 			      results.add(scPIDApprovalUser);
@@ -216,27 +285,21 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			return results;
 		}
 		
-		/**
-		  * To get status for approval in Purchase In Default
-		 */
-	    public String  getCurrentStatus() {
-			String result = "";
-			if (getManagedBean().getPurchaseInDefault().getWorkFlowStatuses() != null) {
-				for (ScPIDWorkFlowStatus status : getManagedBean()
-						.getPurchaseInDefault().getWorkFlowStatuses()) {
-					if (status.isCurrent()) {
-						result = getStatusDescById(status.getPmStatus()
-								.getStatusId());
-					    if(result.equalsIgnoreCase("Pending Submission")){
-							  getManagedBean().setEditFlag(false);
-					    } 
-						break;
-					}
-				}
-			}
-			return result;
-		}
-	    
+	  /**
+	   * To get status for pid in Purchase In Default
+	   */
+	   public void  getCurrentStatus(Long statusId) {
+		 if (statusId != null) {
+			getManagedBean().setPidStatus(getStatusDescById(statusId));
+			 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_SUBMISSION)){
+			 		//getManagedBean().setRequisitionerFlag(true);
+			 		getManagedBean().setApproverFlag(false);
+			 	} else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
+			 		//getManagedBean().setRequisitionerFlag(true);
+			 		getManagedBean().setApproverFlag(true);
+		       }
+	      }
+	  }   
 	    /**
 		 * Event for justification type drop down in pid
 		 */
@@ -277,6 +340,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			uploadAttachment(event.getFile(), attachment);
 			attachments.add(attachment);
 			getManagedBean().setAttachments(attachments);
+			
 		  }
 		}
 		
@@ -346,6 +410,35 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 		    return items;
 		}
+		
+	 public void initialInformation(ScPurchaseInDefault purchaseInDefault){
+		    DualListModel<PmUser>	approvalUsers;
+			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDto = new UserReqDTO();
+			userReqDto.setRoleCode(RoleCode.BPK_APPROVER.value());
+			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+			List<PmUser> availableApprover	=	userResDTO.getUserList();
+			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
+			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
+			
+		    if (purchaseInDefault.getApprovalUsers().size() > 0
+				&& purchaseInDefault != null) {
+			   for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
+				    selectedApprover.add(purchaseInDefault.getApprovalUsers().get(i).getPmUser());
+				    for (int j = 0; j < availableApprover.size(); j++) {
+					    if (purchaseInDefault.getApprovalUsers().get(i).getPmUser().getUserId()
+							.equals(availableApprover.get(j).getUserId())) {
+						availableApprover.remove(availableApprover.get(j));
+					}
+				}
+			}
+		    approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
+			getManagedBean().setApprovalUsers(approvalUsers);
+			} else {
+				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
+				getManagedBean().setApprovalUsers(approvalUsers);
+			}
+	   }		
 		
 	   /**
 		*  deleteUploadFile method for deleting upload fine in pid

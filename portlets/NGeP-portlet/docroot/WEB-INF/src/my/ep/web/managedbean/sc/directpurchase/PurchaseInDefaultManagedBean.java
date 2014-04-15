@@ -55,21 +55,13 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private SelectItem[] justifications; //justification drop down 
 	private List<ScPurchaseInDefaultAttachment> attachments;
 	private String processName;
+	private String pidStatus;
+	private boolean requisitionerFlag;
+	private boolean approverFlag;
     
 	public PurchaseInDefaultManagedBean() {
-		initialInformation();
 		List<ScPIDRemark> remarks = new ArrayList<ScPIDRemark>();
 		   purchaseInDefault.setRemarks(remarks);
-	}
-	
-    public void initialInformation(){
-		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.BPK_APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover	=	userResDTO.getUserList();
-		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
-		approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
 	}
 	
 	public ScPurchaseInDefault getPurchaseInDefault() {
@@ -244,6 +236,48 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
+	}
+
+	/**
+	 * @return the pidStatus
+	 */
+	public String getPidStatus() {
+		return pidStatus;
+	}
+
+	/**
+	 * @param pidStatus the pidStatus to set
+	 */
+	public void setPidStatus(String pidStatus) {
+		this.pidStatus = pidStatus;
+	}
+
+	/**
+	 * @return the requisitionerFlag
+	 */
+	public boolean isRequisitionerFlag() {
+		return requisitionerFlag;
+	}
+
+	/**
+	 * @param requisitionerFlag the requisitionerFlag to set
+	 */
+	public void setRequisitionerFlag(boolean requisitionerFlag) {
+		this.requisitionerFlag = requisitionerFlag;
+	}
+
+	/**
+	 * @return the approverFlag
+	 */
+	public boolean isApproverFlag() {
+		return approverFlag;
+	}
+
+	/**
+	 * @param approverFlag the approverFlag to set
+	 */
+	public void setApproverFlag(boolean approverFlag) {
+		this.approverFlag = approverFlag;
 	}
 
 }

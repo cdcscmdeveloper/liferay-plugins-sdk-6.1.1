@@ -50,9 +50,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private boolean procTypeOption;
 	private SelectItem[] justDropdown;
 	private SelectItem[] priceTypes; // price type drop down 
-	private boolean editFlag; // flat for editing fields in pr inquiry
-	private boolean buttonFlag; // flat for enabled and disabled buttons in pr inquiry
 	private String processName;
+	private String priStatus;
+	private boolean requisitionerFlag;
+	private boolean supplierFlag;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -292,35 +293,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setMethod(String method) {
 		this.method = method;
 	}
-
-	/**
-	 * @return the editFlag
-	 */
-	public boolean isEditFlag() {
-		return editFlag;
-	}
-
-	/**
-	 * @param editFlag the editFlag to set
-	 */
-	public void setEditFlag(boolean editFlag) {
-		this.editFlag = editFlag;
-	}
-
-	/**
-	 * @return the buttonFlag
-	 */
-	public boolean isButtonFlag() {
-		return buttonFlag;
-	}
-
-	/**
-	 * @param buttonFlag the buttonFlag to set
-	 */
-	public void setButtonFlag(boolean buttonFlag) {
-		this.buttonFlag = buttonFlag;
-	}
-
+	
 	/**
 	 * @return the pmOrgProfile
 	 */
@@ -349,4 +322,47 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.processName = processName;
 	}
 
+	/**
+	 * @return the priStatus
+	 */
+	public String getPriStatus() {
+		return priStatus;
+	}
+
+	/**
+	 * @param priStatus the priStatus to set
+	 */
+	public void setPriStatus(String priStatus) {
+		this.priStatus = priStatus;
+	}
+
+	/**
+	 * @return the requisitionerFlag
+	 */
+	public boolean isRequisitionerFlag() {
+		return requisitionerFlag;
+	}
+
+	/**
+	 * @param requisitionerFlag the requisitionerFlag to set
+	 */
+	public void setRequisitionerFlag(boolean requisitionerFlag) {
+		this.requisitionerFlag = requisitionerFlag;
+	}
+
+	/**
+	 * @return the supplierFlag
+	 */
+	public boolean isSupplierFlag() {
+		return supplierFlag;
+	}
+
+	/**
+	 * @param supplierFlag the supplierFlag to set
+	 */
+	public void setSupplierFlag(boolean supplierFlag) {
+		this.supplierFlag = supplierFlag;
+	}
+
+	
 }
