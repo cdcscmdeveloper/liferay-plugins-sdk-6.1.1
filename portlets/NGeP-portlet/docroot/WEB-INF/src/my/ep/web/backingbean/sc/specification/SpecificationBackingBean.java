@@ -756,20 +756,20 @@ public class SpecificationBackingBean extends
 	}
 
 	public String newProceedAction() {
-		if (this.getManagedBean().getScQt().isPanel() == false) {
+		if (!this.getManagedBean().getScQt().isPanel()) {
 			return "specificationCreation.xhtml?faces-redirect=true";
 		}
-		if (this.getManagedBean().getScQt().isPanel() == true
-				&& this.getManagedBean().getCircularType()
-						.equalsIgnoreCase("General")
-				|| this.getManagedBean().getCircularType()
-						.equalsIgnoreCase("Specific")) {
+		if (this.getManagedBean().getScQt().isPanel()
+				&&"General".equalsIgnoreCase(this.getManagedBean().getCircularType())
+						
+				||"Specific".equalsIgnoreCase(this.getManagedBean().getCircularType())
+						) {
 			System.out.println("==enter pcr");
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
 
-		if (this.getManagedBean().getScQt().isPanel() == true
+		if (this.getManagedBean().getScQt().isPanel()
 				&& this.getManagedBean().getCircularType()
 						.equalsIgnoreCase("Central Contract")) {
 			System.out.println("==enter CCR");
@@ -2774,10 +2774,11 @@ public class SpecificationBackingBean extends
 					getManagedBean().getScQt().setScQtZoneCriteria(
 							new ScQtZoneCriteria());
 				}
-				if (tenderResDTO.getQtDetail().getPmProcurementCategory() == null) {
+				/*if (tenderResDTO.getQtDetail().getPmProcurementCategory() == null) {
 					getManagedBean().getScQt().setPmProcurementCategory(
 							new PmParameter());
-				}
+				}*/
+				if(tenderResDTO.getZoneDetails() !=null){
 				for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
 
 					List<PmState> states = SourcingLocationHelper
@@ -2800,6 +2801,7 @@ public class SpecificationBackingBean extends
 									.buildGeneralZoneTree(zone, states,
 											districts, divisions, cities));
 
+				}
 				}
 
 			}
@@ -6501,10 +6503,10 @@ public class SpecificationBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
-		IQTSpecSO specSO = getSpecSO();
-		QuationTenderResDTO resDTO = new QuationTenderResDTO();
+		IQTDetailSO specSO = getSpecSO();
+	//	QuationTenderResDTO resDTO = new QuationTenderResDTO();
 		try {
-			// QuationTenderResDTO resDTO = specSO.updateBPMAction(spReqDTO);
+			QuationTenderResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 
 				FacesContext fc = FacesContext.getCurrentInstance();
@@ -6528,9 +6530,9 @@ public class SpecificationBackingBean extends
 
 	}
 
-	private IQTSpecSO getSpecSO() {
+	private IQTDetailSO getSpecSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 
 	/*
