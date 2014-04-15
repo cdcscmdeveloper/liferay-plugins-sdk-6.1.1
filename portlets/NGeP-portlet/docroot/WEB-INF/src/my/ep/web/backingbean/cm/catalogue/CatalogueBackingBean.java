@@ -552,7 +552,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().add(price);
 
 	}
-
+/*
 	public void addNewPromotionPricing(){
 
 
@@ -573,7 +573,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings().add(price);
 
-	}
+	}*/
 
 	public void districtChecked(){
 
@@ -1238,7 +1238,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-			List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
+			/*List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
 
 			CmStandardPricing previousStandardObj = null;
 			for(int i =0; i<standardPricing.size(); i++){
@@ -1261,11 +1261,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					return "addCatalogView";
 				}
 				previousStandardObj = standard;
-			}
+			}*/
 
 
 
-			List<CmPromotionPricing> promotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings());
+			/*List<CmPromotionPricing> promotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings());
 
 			CmPromotionPricing previousPromotionObj = null;
 			for(int i =0; i<promotionPricing.size(); i++){
@@ -1287,7 +1287,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					return "addCatalogView";
 				}
 				previousPromotionObj = standard;
-			}
+			}*/
 
 
 
@@ -1454,12 +1454,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
 
-			for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
+			/*for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}
 			for(CmStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			}
+			}*/
+			
+			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
 			for(CmPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -1601,14 +1604,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-			for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
+			/*for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}
 
-			//this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			for(CmStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			}
+			}*/
+			
+			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
 			for(CmPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -1726,9 +1731,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 				CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 				System.out.println("catalog.getPmUom().getUomName():"+catalog.getPmUom().getUomName());
-				if(catalog.getCmStandardPricings().get(0).getPrice()==null ||
-						catalog.getCmStandardPricings().get(0).getStartDate()==null ||
-						catalog.getCmStandardPricings().get(0).getEndDate() ==null ||
+				if(catalog.getCmStandardPricing().getPrice()==null ||
+						catalog.getCmStandardPricing().getStartDate()==null ||
+						catalog.getCmStandardPricing().getEndDate() ==null ||
 						catalog.getPmUom().getUomName().isEmpty()){
 
 					System.out.println("********validation**********");
@@ -1747,11 +1752,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 
 
-				//catalog.getCmStandardPricing().setCmSupplierItem(catalog);
+				catalog.getCmStandardPricing().setCmSupplierItem(catalog);
 
-				for(CmStandardPricing pricing: catalog.getCmStandardPricings()){
+				
+				/*for(CmStandardPricing pricing: catalog.getCmStandardPricings()){
 					pricing.setCmSupplierItem(catalog);
-				}
+				}*/
 
 
 				reqDTO.getSaveSupplierItems().add(catalog);
@@ -2555,13 +2561,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().remove(index);
 	}
 
-	public void deletePromotionPrice(int index){
+	/*public void deletePromotionPrice(int index){
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings().remove(index);
 	}
 
 	public void deleteStandardPrice(int index){
 		this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings().remove(index);
-	}
+	}*/
 
 	public void cloneTierPrice(int index){
 
