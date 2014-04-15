@@ -148,6 +148,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
+	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue
 
 
 
@@ -293,6 +294,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSupplierItemList());
 				System.out.println("*********after***********");
+				
+				// enable or disable simple quote in search catalogue
+				if(resDTO.getViewSuppItemResultBean().getResultList() !=null && resDTO.getViewSuppItemResultBean().getResultList().size() > 0){
+					setSimpleQuoteFlag(true);
+				} else {
+					setSimpleQuoteFlag(false);
+				}
+				
 				return resDTO.getViewSuppItemResultBean();
 
 			} finally {
@@ -1132,15 +1141,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.ctRequestList = ctRequestList;
 	}
 
-
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * @return the simpleQuoteFlag
+	 */
+	public boolean isSimpleQuoteFlag() {
+		return simpleQuoteFlag;
+	}
 
 
+	/**
+	 * @param simpleQuoteFlag the simpleQuoteFlag to set
+	 */
+	public void setSimpleQuoteFlag(boolean simpleQuoteFlag) {
+		this.simpleQuoteFlag = simpleQuoteFlag;
+	}
 
 }
