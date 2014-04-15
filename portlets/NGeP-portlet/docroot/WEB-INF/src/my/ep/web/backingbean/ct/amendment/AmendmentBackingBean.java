@@ -165,12 +165,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				 this.getManagedBean().setAmendDisable(false);  
 				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
 					  
-			 }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_HT_NAME)){
-				 FacesContext fc = FacesContext.getCurrentInstance();
-				 this.getManagedBean().setApprovrLetter(true);
-				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
-					  
-			 }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
+			 }
+//			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_HT_NAME)){
+//				 FacesContext fc = FacesContext.getCurrentInstance();
+//				 this.getManagedBean().setApprovrLetter(true);
+//				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
+//					  
+//			 }
+			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
 				 FacesContext fc = FacesContext.getCurrentInstance();
 				 this.getManagedBean().setAmendAckw(true);
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
@@ -206,10 +208,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
 	       
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-	        //TODO change it
-	        if( this.getManagedBean().getContractVer().getDocNo()==null) {
-	        	this.getManagedBean().getContractVer().setDocNo("FA"+new Long(System.currentTimeMillis()).toString().substring(10));
-	        }
 	         
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
 	            ChkComplyAP201Rule();	

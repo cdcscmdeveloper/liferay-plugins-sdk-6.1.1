@@ -25,6 +25,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -120,8 +121,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setContractVerId(11L);
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setStatus(new PmStatus());
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getStatus().setStatusId(1L);
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType("RF");
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocNo("8888878");
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
 			if(this.getManagedBean().getFactoring().getLoa() == null)
 				this.getManagedBean().getFactoring().setLoa(new ScLoa());
 		}
@@ -254,7 +254,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				populateContractList = new ArrayList<SelectItem>();
 				dbContractList = resDTO.getContractList();
 				for (CtContract obj : dbContractList) {
-					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(),obj.getLatestContractVer().getDocNo()));
+					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(),obj.getContractNo()));
 			    }      
 		  }
 		} finally {
