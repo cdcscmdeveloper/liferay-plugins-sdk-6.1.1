@@ -30,7 +30,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
 			</p:column>
 			<p:column width="25%">
-				<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.currentStatus}"  />
+				<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.managedBean.priStatus}"  />
 			</p:column>
 		</p:row>
 	</p:panelGrid>
@@ -101,7 +101,7 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /></td>
-				<td ><p:inputText  disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
+				<td ><p:inputText disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.requestNoteItem.quantity}" style="text-align:right;"/></td>
 			</tr>
 			<tr>
@@ -109,7 +109,7 @@
 						value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
 				<td>
 				   <p:selectOneMenu required="true" id="priceType" style="margin-bottom: 5px;"
-				        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
+				          disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
 						value="#{purchaseInquiryBackingBean.managedBean.priceType}">
 						<f:selectItems
 							value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
@@ -142,7 +142,8 @@
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /></td>
 						
-				<td><p:inputText id="dayToResponse" size="2" maxlength="2" disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}"
+				<td><p:inputText id="dayToResponse" size="2" maxlength="2" 
+				         disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
 				        style="text-align:right;"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
 					 <p:ajax event="keyup" update="dayToRespId" 
@@ -158,16 +159,15 @@
 			
 		    <tr>
 			    <td colspan="4">
-			    <p:panel rendered="#{unspscCodeBackingBean.requisitioner}" id="justiId">
+			    <p:panel rendered="#{!purchaseInquiryBackingBean.managedBean.requisitionerFlag}" id="justiId">
 			    
 					<table style="width: 100%">
 					  <tr>
 						 <td style="width: 250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 						<td><p:selectOneRadio style="margin-bottom: 5px;"  id="procType" 
-						        disabled="#{purchaseInquiryBackingBean.managedBean.editFlag}" 
 								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType}">
-								<f:selectItems
-									value="#{purchaseInquiryBackingBean.procTypeDropdown}" />
+								<f:selectItems 
+									value="#{purchaseInquiryBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 									<p:ajax event="change" update="justiId" 
 									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
 							</p:selectOneRadio></td>
@@ -210,9 +210,9 @@
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:selectOneRadio  id="stockAvailable"  disabled="#{unspscCodeBackingBean.requisitioner}"
+					<p:selectOneRadio  id="stockAvailable"  disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable}"
-						rendered="true" required="#{!unspscCodeBackingBean.requisitioner}">
+						rendered="true" required="#{purchaseInquiryBackingBean.managedBean.supplierFlag}">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio>
@@ -242,7 +242,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
-				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" disabled="#{unspscCodeBackingBean.requisitioner}"/>
+				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 			</p:column>
 
 		</p:dataTable>

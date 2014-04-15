@@ -56,10 +56,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;" id="procType"  
+				<td><p:selectOneRadio style="margin-bottom: 5px;" id="procType"  disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType eq 'G'}"
 						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType}">
 						<f:selectItems
-							value="#{requestNoteBackingBean.procTypeDropdown}" />
+							value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 							<p:ajax event="change" update="justiId" 
 							listener="#{requestNoteBackingBean.procurementTypeEvent}" process="@this" />
 					</p:selectOneRadio></td>
@@ -99,7 +99,7 @@
 		 </table>
 	  </p:panel>
 	  
-        <p:spacer height="15px"/>
+     <p:spacer height="15px"/>
 	 <p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">

@@ -15,15 +15,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 					 
 				<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" 
-				    rendered="#{purchaseInquiryBackingBean.managedBean.buttonFlag}"
+				    rendered="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
 					icon="ui-icon-submit" action="#{requestNoteBackingBean.addToRequestNote(purchaseInquiryBackingBean.managedBean.method)}"/>
 
-				<p:commandButton rendered="#{!purchaseInquiryBackingBean.managedBean.buttonFlag}"
+				<p:commandButton 
 					value="#{lbl['lbl.sc.common.cancel']}" action="#{purchaseInquiryBackingBean.backToPervious}"
 					icon="ui-icon-cancel" />
 					 
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-				  rendered="#{!purchaseInquiryBackingBean.managedBean.buttonFlag}"
 					action="#{purchaseInquiryBackingBean.submitPrEnquiryDtl}"
 				    style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"/>

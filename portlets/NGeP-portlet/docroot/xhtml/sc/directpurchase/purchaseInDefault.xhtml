@@ -14,10 +14,10 @@
 		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}" disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}" disabled="true" />
+		<p:inputText disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
-		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.currentStatus}"/>
+		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.managedBean.pidStatus}"/>
 
 	</h:panelGrid>
 	<p:spacer height="10px" />
@@ -27,12 +27,12 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
-				      value="" size="46" /></td>
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}" size="46" /></td>
 			</tr>
           	 <tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true"  
-				      value=""/></td>
+				      value="34"/></td>
 				      
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
 				<td style="width: 250px;"><p:inputText disabled="true"  
@@ -52,7 +52,7 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
-				       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmount}"/></td>
+				       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmt}"/></td>
 			</tr>
       </table>
       </p:panel>
@@ -76,7 +76,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">
-				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" size="30"/>
+				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" size="30" 
+				     disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
 			</p:column>
 
 		</p:dataTable>
@@ -89,7 +90,7 @@
 			<tr>
 			   <td style="width: 250px;"><p:outputLabel
 								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
-				<td><p:selectOneMenu disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"
+				<td><p:selectOneMenu disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
 					value="#{purchaseInDefaultBackingBean.managedBean.justificationType}" style="margin-bottom: 5px;">
 					<f:selectItems
 							value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
@@ -112,7 +113,7 @@
 			 <tr>
 			  <td style="width: 250px;"><p:outputLabel
 				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /></td>
-			 <td><p:inputText id="ordqty" style="text-align:right;" size="42" disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"/></td>
+			 <td><p:inputText id="ordqty" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" style="text-align:right;" size="42" disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/></td>
 			</tr>
 		</table>
 	 </h:panelGroup>
@@ -137,7 +138,7 @@
 				  </tr>
 				   <tr><td></td>
 					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" id="remark" 
-					               disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}"/>
+					               disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
 						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
 				  </tr>
@@ -154,7 +155,7 @@
 			<td class="TableFieldLeft" width="24%"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
-				 disabled="#{purchaseInDefaultBackingBean.managedBean.editFlag}" value="Attach file(s)" />
+				 disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}" value="Attach file(s)" />
 		  </td>
 		</tr>
 		 <tr><td/>
@@ -163,7 +164,7 @@
 			    <table>
 				 <tr>
 				    <td rowspan="2" style="vertical-align: top;" align="left">
-					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
+					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 					  </td>
 				   <td><h:outputText value="#{attachFile.user.userName}"/>, 
 					 <h:outputText  value="#{attachFile.changedDate}">
@@ -172,8 +173,8 @@
 				 </tr>
 				 <tr>
 					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" />
-						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId" >
-			   			<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
+						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
+			   			<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>
 			 	 		</p:commandLink>
 			 	  </td>
 				</tr>
@@ -191,7 +192,7 @@
 			header="#{lbl['lbl.sc.approve.list']}" toggleable="true"
 			toggleSpeed="500">
 		  <div style="width: 100%">
-			<p:pickList  id="approver"
+			<p:pickList  id="approver" disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
 					value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
 					var="approverUser" showTargetControls="true"
 					itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
