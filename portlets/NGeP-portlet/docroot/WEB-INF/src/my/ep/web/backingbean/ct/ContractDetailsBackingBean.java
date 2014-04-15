@@ -385,10 +385,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			
-	        if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE)){
-	        	reqDTO.setContractStatus(true);
-	        }
-			
+			if(this.getManagedBean().getCtContractStatus() != null){
+	            if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE))
+	        	   reqDTO.setContractStatus(true);
+			}
 			reqDTO.setContractSearchBean(searchBean);
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
 			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
