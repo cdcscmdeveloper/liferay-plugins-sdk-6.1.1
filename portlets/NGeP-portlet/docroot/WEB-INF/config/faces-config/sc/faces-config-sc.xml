@@ -78,6 +78,16 @@
 			<to-view-id>/xhtml/sc/directpurchase/simpleQuote.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
+   <navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>acknowledge</from-outcome>
+			<to-view-id>/xhtml/shared/acknowledge.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	
 	<converter>
 		<converter-id>approverConverter</converter-id>
 		<converter-class>my.ep.web.sc.converter.ApproverPickListConverter</converter-class>
