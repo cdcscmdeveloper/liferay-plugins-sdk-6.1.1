@@ -1237,6 +1237,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				previousZStandardObj = standard;
 			}
 
+			
+
 			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
@@ -1245,7 +1247,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().setNormalPricingIndex(0);
 				return "addCatalogView";
 			}
-			
+
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion End Date must be greater than Normal Promotion Start Date", ""));
@@ -1254,6 +1256,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				return "addCatalogView";
 			}
 			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate())>0 
+					|| this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Date must within Normal Standard Date range", ""));
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+				return "addCatalogView";
+			}
+			
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice())>0){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Price must be less than Normal Standard Price", ""));
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+				return "addCatalogView";
+				
+			}
+
 
 
 			/*List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
