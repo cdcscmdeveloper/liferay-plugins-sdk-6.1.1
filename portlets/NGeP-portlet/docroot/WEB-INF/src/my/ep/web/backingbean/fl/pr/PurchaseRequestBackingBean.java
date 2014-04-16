@@ -28,7 +28,9 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -56,6 +58,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.votfund.VotFundReqDTO;
+import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -244,8 +248,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
-			//System.out.println("Del Address ID "+flFulfilmentRequest.getFlDeliveryAddresses().get(0).getPmAddress().getAddressId());
-																		//flAddress.getAddressType().getPmAddress().getAddressId()
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(27);
 			flFulfilmentRequest.setSmSupplier(smSupplier);
@@ -261,15 +263,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			
-			//System will block the submission of the purchase request 
-			//Amount of purchase request to be <= RM50K, with the exception of emergency procurement and G2G procurement.
-			
-			checkPurchaseRequestAmount();
-			//accumulativeProcurementValue();
-			
-			if(isFlFulfilmentApprover()) {
-				// BPM Doing This Business Rule
-				//accumulativeProcurementValue();
+			if(isFlFulfilmentRequisitioner()) {
+				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
 			
 			//FulfilmentResDTO resDTO=null;
@@ -1254,24 +1249,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 		 }	
 	 }
-	//submission of the purchase request amount to be <= RM50K
-		// with the exception of emergency procurement and G2G procurement
-		// currently assuming that non emergency procurement and non G2G procurement
-	 public void checkPurchaseRequestAmount(){
-		 int validationOrdAmt=0;
-		/* for(FlDeliveryAddress item : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-					System.out.println("order amount:: "+itemAddr.getOrderedAmt());
-					validationOrdAmt=validationOrdAmt+itemAddr.getOrderedAmt().intValue();
-				}
-					System.out.println("validationOrdAmt: "+validationOrdAmt);
-		}*/
-		if(validationOrdAmt>50000){
-			throw new EpException(" Order Amount  has been exceeded the RM 50K .");
-			}
-	 }
-
-	
 	
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
@@ -1672,5 +1649,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.selectedAllChargeItem = selectedAllChargeItem;
 	}
 	
+	public VotFundResDTO getVotFund(){
+		IVotFundSO fundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject("pm",IVotFundSO.class);
+		VotFundReqDTO reqDTO = new VotFundReqDTO();
+		reqDTO.setVotFundType("B");
+		VotFundResDTO resDTO = fundSO.retrieveVotFundListByType(reqDTO);
+//		fundSO.retrieveVotFundListByType(reqDTO);
+		return resDTO;
+	}
+	
+	public void getSetia(){
+		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
+//		projectSetiaSO.retrieveProjectSetiaList(reqDTO);
+	}
 	
 }
