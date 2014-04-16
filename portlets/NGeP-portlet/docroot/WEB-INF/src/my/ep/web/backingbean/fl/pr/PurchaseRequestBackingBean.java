@@ -239,6 +239,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		//Populate Charge Line Items
 		getManagedBean().populateChargeLineData();
+		getUserProfiles();
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -262,7 +263,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
-			
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
@@ -1661,6 +1661,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void getSetia(){
 		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
 //		projectSetiaSO.retrieveProjectSetiaList(reqDTO);
+	}
+	
+	public void getUserProfiles(){
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
+		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
+		fulfilmentReqDTO.setPmUser(userResDTO.getPmUser());
 	}
 	
 }
