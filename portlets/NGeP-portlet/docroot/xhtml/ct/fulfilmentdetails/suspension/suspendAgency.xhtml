@@ -16,24 +16,24 @@
              <p:column headerText="Jabatan">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
-			  <p:column headerText="PTJ">
+			 <p:column headerText="PTJ">
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
 			 </p:column>
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" >
+			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}">
 			   <p:calendar value="#{data.effDate}" size="15" id="calloc1" showOn="button"
-			     disabled="#{data.recordStatus}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-			</p:column> 	
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}">
+			     disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			 </p:column> 	
+			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}">
 			  <p:calendar value="#{data.expDate}" size="15" id="calloc2" showOn="button"
-			    disabled="#{data.recordStatus}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-			</p:column> 		
-			<p:column headerText="Status">
-			  <p:selectOneMenu value="#{data.recordStatus}" style="width:85px;">
+			    disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			 </p:column> 	
+			 <p:column headerText="Status">
+			  <p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
+			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
-				<f:selectItem itemValue="0" itemLabel="Inactive" />
 				<p:ajax event="change" process="@this" update="agencyDetailsTable"/>
-			</p:selectOneMenu>	
-			</p:column> 			
+			   </p:selectOneMenu>	
+			 </p:column> 			
 	   </p:dataTable>	
       </p:panel>                
 </ui:composition>

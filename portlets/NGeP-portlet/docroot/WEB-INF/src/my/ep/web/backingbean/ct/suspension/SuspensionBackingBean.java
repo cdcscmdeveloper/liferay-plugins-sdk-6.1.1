@@ -5,7 +5,6 @@ package my.ep.web.backingbean.ct.suspension;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -106,6 +106,25 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			
+			if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
+				 for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
+					 if(ctContractItem.isRecordStatus())
+					    ctContractItem.setChkStatusId(1);
+				    else
+					 ctContractItem.setChkStatusId(0);
+				 }
+			}
+			
+			if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
+				for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
+					 if(ctAgency.isRecordStatus())
+						 ctAgency.setChkStatusId(1);
+				    else
+				    	ctAgency.setChkStatusId(0);
+				 }
+			}
+			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
@@ -146,6 +165,24 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		      //this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
 		      this.getManagedBean().getContractVer().getCtContractValue().setSuspendActiveLetter(this.getManagedBean().getEditorValue().getBytes());
+		      
+		      if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
+			    for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
+				    if(ctContractItem.getChkStatusId() == 1)
+					   ctContractItem.setRecordStatus(true);
+					else
+					   ctContractItem.setRecordStatus(false);
+				 }
+			  }
+				
+			  if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
+				 for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
+					if(ctAgency.getChkStatusId() == 1)
+					   ctAgency.setRecordStatus(true);
+					else
+					   ctAgency.setRecordStatus(false);
+				 }
+			  }
 		             
 		      reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 		      reqDTO.setCtContractVer(this.getManagedBean().getContractVer());

@@ -42,19 +42,19 @@
 					</td>
 					<td>
 							<p:inputText size="25" disabled="true"
-								value="#{suspensionBackingBean.managedBean.contractVer.docNo == null ? '-- System Generated --':suspensionBackingBean.managedBean.contractVer.docNo}" />
+								value="#{suspensionBackingBean.managedBean.ctContract.contractNo == null ? '-- System Generated --':suspensionBackingBean.managedBean.ctContract.contractNo}" />
 					</td>
 					 <td>
 		    			   <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 					</td>
 					<td>
-						   <p:inputText size="30" disabled="true" value="#{suspensionBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
+						   <p:inputText size="35" disabled="true" value="#{suspensionBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
 					</td>											
 					<td>
 		  				   <p:outputLabel value="Status" />
 					</td>
 					<td>
-						<p:inputText size="20" disabled="true"
+						<p:inputText size="30" disabled="true"
 								value="#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}" />
 					</td>
 				</tr>

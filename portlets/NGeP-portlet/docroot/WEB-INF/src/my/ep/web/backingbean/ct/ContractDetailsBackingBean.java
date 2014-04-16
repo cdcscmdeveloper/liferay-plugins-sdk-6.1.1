@@ -1241,15 +1241,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
-			
-			for(CtAgency agency : resDTO.getCtContractVer().getCtAgencies()) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
+			if(resDTO.getCtContractVer().getCtContractItems().size() > 0){
+				 for(CtContractItem ctContractItem : resDTO.getCtContractVer().getCtContractItems()){
+					 if(ctContractItem.isRecordStatus())
+					    ctContractItem.setChkStatusId(1);
+				    else
+					 ctContractItem.setChkStatusId(0);
+				 }
 			}
-			for(CtContractItem item : resDTO.getCtContractVer().getCtContractItems()) {
-				PmParameter parameter = new PmParameter();
-				parameter.setParameterId(-1L);
-			}			
+			
+			if(resDTO.getCtContractVer().getCtAgencies().size() > 0){
+				for(CtAgency ctAgency : resDTO.getCtContractVer().getCtAgencies()){
+					 if(ctAgency.isRecordStatus())
+						 ctAgency.setChkStatusId(1);
+				    else
+				    	ctAgency.setChkStatusId(0);
+				 }
+			}
 			
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	

@@ -13,31 +13,31 @@
             <p:column  style="width:150px;" 
 		       headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
 		       <p:outputLabel value="#{data.itemType.pmParameterType.parameterName}" style="float:left;"/>
-		   </p:column> 
-		   <p:column id="modelColumn">
+		    </p:column> 
+		    <p:column id="modelColumn">
 		       <f:facet name="header">
                  <p:outputPanel>  
                     <h:outputText value="#{lbl['lbl.ct.susp.tbl.item.name']}"/>  
                     <p:inputText id="globalFilter"  onkeyup="ctItemsTable.filter()"  style="width:100px;" />  
                  </p:outputPanel>  
               </f:facet>
-            <p:outputLabel value ="#{data.itemName}" style="float:left;width:200px;"/>
-        </p:column>
-        <p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}">
-		     <p:calendar value="#{data.effDate}" disabled="#{data.recordStatus}"
-		        id="calItem2" size="15" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		 </p:column> 	
-		 <p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}">
-		     <p:calendar value="#{data.expDate}" disabled="#{data.recordStatus}"
-		        id="calItem3" size="15" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		 </p:column> 		
-		 <p:column style="width:100px;" headerText="Status">
-			  <p:selectOneMenu  value="#{data.recordStatus}" style="width:85px;">
-				<f:selectItem itemValue="1" itemLabel="Active" />
+             <p:outputLabel value ="#{data.itemName}" style="float:left;width:200px;"/>
+           </p:column>
+           <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}">
+		     <p:calendar value="#{data.effDate}" id="calItem1" size="15" showOn="button" 
+		        disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		   </p:column> 	
+		   <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}">
+		     <p:calendar value="#{data.expDate}" id="calItem2" size="15" showOn="button"
+		        disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		   </p:column> 	
+		   <p:column style="width:100px;" headerText="Status">
+			  <p:selectOneMenu  value="#{data.chkStatusId}" style="width:85px;">
 				<f:selectItem itemValue="0" itemLabel="Inactive" />
+			    <f:selectItem itemValue="1" itemLabel="Active" />
 				<p:ajax event="change" process="@this" update="itemTable"/>
 			</p:selectOneMenu>	 
-		  </p:column>
+		   </p:column>
 	  </p:dataTable>	
     </p:panel>                    
 </ui:composition>
