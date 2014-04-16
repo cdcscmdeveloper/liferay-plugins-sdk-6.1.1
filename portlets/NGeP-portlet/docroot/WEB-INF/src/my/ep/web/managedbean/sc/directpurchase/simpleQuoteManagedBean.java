@@ -4,30 +4,52 @@
 package my.ep.web.managedbean.sc.directpurchase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScGovEPNoCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
-import my.ep.web.backingbean.sc.directpurchase.TabBean;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.EpPortletUtil;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SecurityFilterUtil;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.model.TreeNode;
 /**
  * 
@@ -46,10 +68,13 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	private	int	periodValue;
 	private Long orgProfileId;
 	private String priceType;
-	private String duration;
+	private Integer duration = 0;
+	private String durationDropdown;
+	private String createdBy;
+	private String processName;
 	
 	private List<PmOrgProfile> userDivisionList;
-	private CmSupplierItem supplierItem;
+	private CmSupplierItem cmSupplierItem;
     private List<PmUser> userList = new ArrayList<PmUser>();
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
     private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
@@ -58,13 +83,11 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
     private List<ScSupplierMofNoCriteria>	supplierMofNoCriterias;
     private List<ScSupplierMofNoCriteria>	selectedSuppMofNoCriterias;
     private List<ScGovEPNoCriteria>	govEPNoCriterias;
-    private List<ScGovEPNoCriteria>	selectedGovEPNoCriterias;
-    
+    private List<ScGovEPNoCriteria>	selectedGovEPNoCriterias = new ArrayList<ScGovEPNoCriteria>();
+    private List<ScQuoteSupplier>	panelItemSuppliers;
+    private List<ScQuoteSupplier>	selectedPanelItemSuppliers;
     private List<SmSupplier> smSuppliers;
-    private PmOrgProfile pmOrgProfile;
-    
-	private	List<TplSpecMaster>	productTpls = new ArrayList<TplSpecMaster>();
-	private	List<TplSpecMaster>	serviceTpls = new ArrayList<TplSpecMaster>();
+    private PmOrgProfile pmOrgProfile = new PmOrgProfile();
     
     private String priceTypeCode;
     private boolean justTypeOption;
@@ -72,6 +95,12 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] LocLevelDropdown; // Location Level drop down
     private Integer locationLevel;
+    private boolean byLocality = true;
+    private boolean byBusinessNature;
+    private boolean suppListFlag = true;
+    private boolean locAndBusinessFlag;
+    private boolean g2GFlag;
+    private String simpleQuoteStatus;
     
     private	String	zoneName;
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
@@ -87,17 +116,109 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	private	List<TreeNode>	locationTrees	=	new ArrayList<TreeNode>();
 	private int locIndex = -1;
     
-    private List<String> selectedCriteriaList = new ArrayList<String>();
-    private List<TabBean> criteriaTabs = new ArrayList<TabBean>();
    	private List<ScLocationStateCriteria>	stateCriterias = new ArrayList<ScLocationStateCriteria>();
 	private List<ScLocationDivisionCriteria> divistionCriterias = new ArrayList<ScLocationDivisionCriteria>();
 	private List<ScLocationDistrictCriteria>	districtsCriterias = new ArrayList<ScLocationDistrictCriteria>();
     private int activeIndex = 0;
     
+    private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
+    private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
     
+    private IPagingDataModel<ScQuote> searchQuoteDataModel;
+	private	String	procurementType;
+	private	Integer	isPanel;
+	
+	// search criteria for popup clone item spec
+	private	String searchQuoteNo;
+	private String searchProcType;
+	private String searchTitle;
+	private Date searchFromCreatedDate;
+	private Date searchToCreatedDate;
+	
+	
+	private ScQuote selectedQuote =  new ScQuote();
+	private List<ScQuote> quotes = new ArrayList<ScQuote>();
+	private String productOrService;
+	
+	
+	 //TODO TEMP 
+	 private List<PmBusinessNature>	businessNatures;
+	 private List<PmBusinessNature> selectedBusiNatures;
+	 private List<CtPanelSupplier>	ctPanelSuppliers;
+	 private List<CtPanelSupplier>	selectedCtPanelSuppliers;
+	 private List<PmOrgProfile> orgProfiles;
+	 private List<ScQuoteSupplier> supplierList; // quoteSuppliers for  supplier list
+	 private List<ScQuoteSupplier> govtSellers; // govtSellers for govt seller 
+	 
+	
     public simpleQuoteManagedBean() {
 		super();
 	}
+    
+    
+private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel();
+	
+	public void searchCloneItemSpec(){
+		scQuoteDataModel.reloadData();
+	}
+	
+	private class ScQuotePagingDataModel extends PagingDataModel<ScQuote> {
+		private static final long serialVersionUID = 1L;
+
+		public ScQuotePagingDataModel() {
+			super("scQuoteDataModel");
+        }
+		
+		@Override
+		public ISearchResultBean<ScQuote> pageChangeListener(ISearchBean<ScQuote> searchBean) {
+			   // debugLogger("pageChangeListener");
+			try {
+				
+				if(getSearchQuoteNo() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteNo",SearchOperator.OPERATOR_LIKE.value(),getSearchQuoteNo()));
+				}
+				
+				if(getSearchTitle() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getSearchTitle()));
+				}
+				
+				if(getSearchProcType() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcType()));
+				}
+				
+				if (getSearchFromCreatedDate() != null
+						&& getSearchToCreatedDate() != null) {
+					
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField("createdDate");
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(getSearchFromCreatedDate(), getSearchToCreatedDate());
+					bean.setSearchValue(betweenVal);
+					searchBean.getDataFilterBeans().add(bean);
+				}
+				
+			
+				if(getProductOrService() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.specMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
+				}
+				
+				QuoteReqDTO reqDTO = new QuoteReqDTO();
+				reqDTO.setSearchQuoteBean(searchBean);
+				
+				IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+				QuoteResDTO resDTO = quoteSO.searchQuote(reqDTO);
+
+				if(resDTO.isSuccessful()) {
+					return resDTO.getSearchQuoteResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	
 
 	/**
 	 * @return the fulfillmentType
@@ -284,19 +405,6 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	public void setPriceType(String priceType) {
 		this.priceType = priceType;
 	}
-	
-	/**
-	 * @return the supplierItem
-	 */
-	public CmSupplierItem getSupplierItem() {
-		return supplierItem;
-	}
-	/**
-	 * @param supplierItem the supplierItem to set
-	 */
-	public void setSupplierItem(CmSupplierItem supplierItem) {
-		this.supplierItem = supplierItem;
-	}
 	/**
 	 * @return the scQuote
 	 */
@@ -310,35 +418,6 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 		this.scQuote = scQuote;
 	}
 
-	/**
-	 * @return the selectedCriteriaList
-	 */
-	public List<String> getSelectedCriteriaList() {
-		return selectedCriteriaList;
-	}
-
-	/**
-	 * @param selectedCriteriaList the selectedCriteriaList to set
-	 */
-	public void setSelectedCriteriaList(List<String> selectedCriteriaList) {
-		this.selectedCriteriaList = selectedCriteriaList;
-	}
-
-	/**
-	 * @return the criteriaTabs
-	 */
-	public List<TabBean> getCriteriaTabs() {
-		return criteriaTabs;
-	}
-
-	/**
-	 * @param criteriaTabs the criteriaTabs to set
-	 */
-	public void setCriteriaTabs(List<TabBean> criteriaTabs) {
-		TabBean tabBean = new TabBean(1, "Locality");
-		criteriaTabs.add(tabBean);
-		this.criteriaTabs = criteriaTabs;
-	}
 
 	/**
 	 * @return the activeIndex
@@ -355,35 +434,7 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	}
 
 
-	/**
-	 * @return the businessNatureCriterias
-	 */
-	public List<ScBusinessNatureQuoteCriteria> getBusinessNatureCriterias() {
-		return businessNatureCriterias;
-	}
-
-	/**
-	 * @param businessNatureCriterias the businessNatureCriterias to set
-	 */
-	public void setBusinessNatureCriterias(
-			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias) {
-		this.businessNatureCriterias = businessNatureCriterias;
-	}
-
-	/**
-	 * @return the supplierMofNoCriterias
-	 */
-	public List<ScSupplierMofNoCriteria> getSupplierMofNoCriterias() {
-		return supplierMofNoCriterias;
-	}
-
-	/**
-	 * @param supplierMofNoCriterias the supplierMofNoCriterias to set
-	 */
-	public void setSupplierMofNoCriterias(
-			List<ScSupplierMofNoCriteria> supplierMofNoCriterias) {
-		this.supplierMofNoCriterias = supplierMofNoCriterias;
-	}
+	
 
 	/**
 	 * @return the selectedBusinessNature
@@ -682,21 +733,6 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 			List<ScLocationDistrictCriteria> districtsCriterias) {
 		this.districtsCriterias = districtsCriterias;
 	}
-	
-
-	/**
-	 * @return the govEPNoCriterias
-	 */
-	public List<ScGovEPNoCriteria> getGovEPNoCriterias() {
-		return govEPNoCriterias;
-	}
-
-	/**
-	 * @param govEPNoCriterias the govEPNoCriterias to set
-	 */
-	public void setGovEPNoCriterias(List<ScGovEPNoCriteria> govEPNoCriterias) {
-		this.govEPNoCriterias = govEPNoCriterias;
-	}
 
 	/**
 	 * @return the selectedGovEPNoCriterias
@@ -714,47 +750,528 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * @return the byLocality
+	 */
+	public boolean isByLocality() {
+		return byLocality;
+	}
+
+	/**
+	 * @param byLocality the byLocality to set
+	 */
+	public void setByLocality(boolean byLocality) {
+		this.byLocality = byLocality;
+	}
+
+	/**
+	 * @return the byBusinessNature
+	 */
+	public boolean isByBusinessNature() {
+		return byBusinessNature;
+	}
+
+	/**
+	 * @param byBusinessNature the byBusinessNature to set
+	 */
+	public void setByBusinessNature(boolean byBusinessNature) {
+		this.byBusinessNature = byBusinessNature;
+	}
+
+	/**
+	 * @return the suppListFlag
+	 */
+	public boolean isSuppListFlag() {
+		return suppListFlag;
+	}
+
+	/**
+	 * @param suppListFlag the suppListFlag to set
+	 */
+	public void setSuppListFlag(boolean suppListFlag) {
+		this.suppListFlag = suppListFlag;
+	}
+
+	/**
 	 * @return the duration
 	 */
-	public String getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
 	/**
 	 * @param duration the duration to set
 	 */
-	public void setDuration(String duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
 	/**
-	 * @return the productTpls
+	 * @return the durationDropdown
 	 */
-	public List<TplSpecMaster> getProductTpls() {
-		return productTpls;
+	public String getDurationDropdown() {
+		return durationDropdown;
 	}
 
 	/**
-	 * @param productTpls the productTpls to set
+	 * @param durationDropdown the durationDropdown to set
 	 */
-	public void setProductTpls(List<TplSpecMaster> productTpls) {
-		this.productTpls = productTpls;
+	public void setDurationDropdown(String durationDropdown) {
+		this.durationDropdown = durationDropdown;
 	}
 
 	/**
-	 * @return the serviceTpls
+	 * @return the createdBy
 	 */
-	public List<TplSpecMaster> getServiceTpls() {
-		return serviceTpls;
+	public String getCreatedBy() {
+		FacesScopes facesScopes = new FacesScopes();
+		this.createdBy = facesScopes.getUserSessionBean().getUserName();
+		return createdBy;
 	}
 
 	/**
-	 * @param serviceTpls the serviceTpls to set
+	 * @param createdBy the createdBy to set
 	 */
-	public void setServiceTpls(List<TplSpecMaster> serviceTpls) {
-		this.serviceTpls = serviceTpls;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
+	/**
+	 * @return the cmSupplierItem
+	 */
+	public CmSupplierItem getCmSupplierItem() {
+		return cmSupplierItem;
+	}
+
+	/**
+	 * @param cmSupplierItem the cmSupplierItem to set
+	 */
+	public void setCmSupplierItem(CmSupplierItem cmSupplierItem) {
+		this.cmSupplierItem = cmSupplierItem;
+	}
+
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
+	/**
+	 * @return the businessNatureCriterias
+	 */
+	public List<ScBusinessNatureQuoteCriteria> getBusinessNatureCriterias() {
+		return businessNatureCriterias;
+	}
+
+	/**
+	 * @param businessNatureCriterias the businessNatureCriterias to set
+	 */
+	public void setBusinessNatureCriterias(
+			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias) {
+		this.businessNatureCriterias = businessNatureCriterias;
+	}
+
+	/**
+	 * @return the supplierMofNoCriterias
+	 */
+	public List<ScSupplierMofNoCriteria> getSupplierMofNoCriterias() {
+		return supplierMofNoCriterias;
+	}
+
+	/**
+	 * @param supplierMofNoCriterias the supplierMofNoCriterias to set
+	 */
+	public void setSupplierMofNoCriterias(
+			List<ScSupplierMofNoCriteria> supplierMofNoCriterias) {
+		this.supplierMofNoCriterias = supplierMofNoCriterias;
+	}
+
+	/**
+	 * @return the govEPNoCriterias
+	 */
+	public List<ScGovEPNoCriteria> getGovEPNoCriterias() {
+		return govEPNoCriterias;
+	}
+
+	/**
+	 * @param govEPNoCriterias the govEPNoCriterias to set
+	 */
+	public void setGovEPNoCriterias(List<ScGovEPNoCriteria> govEPNoCriterias) {
+		this.govEPNoCriterias = govEPNoCriterias;
+	}
+
+	/**
+	 * @return the panelItemSuppliers
+	 */
+	public List<ScQuoteSupplier> getPanelItemSuppliers() {
+		return panelItemSuppliers;
+	}
+
+	/**
+	 * @param panelItemSuppliers the panelItemSuppliers to set
+	 */
+	public void setPanelItemSuppliers(List<ScQuoteSupplier> panelItemSuppliers) {
+		this.panelItemSuppliers = panelItemSuppliers;
+	}
+
+	/**
+	 * @return the selectedPanelItemSuppliers
+	 */
+	public List<ScQuoteSupplier> getSelectedPanelItemSuppliers() {
+		return selectedPanelItemSuppliers;
+	}
+
+	/**
+	 * @param selectedPanelItemSuppliers the selectedPanelItemSuppliers to set
+	 */
+	public void setSelectedPanelItemSuppliers(
+			List<ScQuoteSupplier> selectedPanelItemSuppliers) {
+		this.selectedPanelItemSuppliers = selectedPanelItemSuppliers;
+	}
+
+
+	/**
+	 * @return the locAndBusinessFlag
+	 */
+	public boolean isLocAndBusinessFlag() {
+		return locAndBusinessFlag;
+	}
+
+	/**
+	 * @param locAndBusinessFlag the locAndBusinessFlag to set
+	 */
+	public void setLocAndBusinessFlag(boolean locAndBusinessFlag) {
+		this.locAndBusinessFlag = locAndBusinessFlag;
+	}
+
+	/**
+	 * @return the g2GFlag
+	 */
+	public boolean isG2GFlag() {
+		return g2GFlag;
+	}
+
+	/**
+	 * @param g2gFlag the g2GFlag to set
+	 */
+	public void setG2GFlag(boolean g2gFlag) {
+		g2GFlag = g2gFlag;
+	}
+
+	/**
+	 * @return the simpleQuoteStatus
+	 */
+	public String getSimpleQuoteStatus() {
+		return simpleQuoteStatus;
+	}
+
+	/**
+	 * @param simpleQuoteStatus the simpleQuoteStatus to set
+	 */
+	public void setSimpleQuoteStatus(String simpleQuoteStatus) {
+		this.simpleQuoteStatus = simpleQuoteStatus;
+	}
 	
+	/**
+	 * @return the productTemplateSpecBean
+	 */
+	public TemplateSpecBean getProductTemplateSpecBean() {
+		return productTemplateSpecBean;
+	}
+
+	/**
+	 * @param productTemplateSpecBean the productTemplateSpecBean to set
+	 */
+	public void setProductTemplateSpecBean(TemplateSpecBean productTemplateSpecBean) {
+		this.productTemplateSpecBean = productTemplateSpecBean;
+	}
+
+	/**
+	 * @return the serviceTemplateSpecBean
+	 */
+	public TemplateSpecBean getServiceTemplateSpecBean() {
+		return serviceTemplateSpecBean;
+	}
+
+	/**
+	 * @param serviceTemplateSpecBean the serviceTemplateSpecBean to set
+	 */
+	public void setServiceTemplateSpecBean(TemplateSpecBean serviceTemplateSpecBean) {
+		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
+	}
+
+	/**
+	 * @return the searchQuoteDataModel
+	 */
+	public IPagingDataModel<ScQuote> getSearchQuoteDataModel() {
+		return searchQuoteDataModel;
+	}
+
+	/**
+	 * @param searchQuoteDataModel the searchQuoteDataModel to set
+	 */
+	public void setSearchQuoteDataModel(
+			IPagingDataModel<ScQuote> searchQuoteDataModel) {
+		this.searchQuoteDataModel = searchQuoteDataModel;
+	}
+
+	/**
+	 * @return the procurementType
+	 */
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	/**
+	 * @param procurementType the procurementType to set
+	 */
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+
+	/**
+	 * @return the isPanel
+	 */
+	public Integer getIsPanel() {
+		return isPanel;
+	}
+
+	/**
+	 * @param isPanel the isPanel to set
+	 */
+	public void setIsPanel(Integer isPanel) {
+		this.isPanel = isPanel;
+	}
+
+	/**
+	 * @return the searchQuoteNo
+	 */
+	public String getSearchQuoteNo() {
+		return searchQuoteNo;
+	}
+
+	/**
+	 * @param searchQuoteNo the searchQuoteNo to set
+	 */
+	public void setSearchQuoteNo(String searchQuoteNo) {
+		this.searchQuoteNo = searchQuoteNo;
+	}
+
+
+	/**
+	 * @return the searchProcType
+	 */
+	public String getSearchProcType() {
+		return searchProcType;
+	}
+
+	/**
+	 * @param searchProcType the searchProcType to set
+	 */
+	public void setSearchProcType(String searchProcType) {
+		this.searchProcType = searchProcType;
+	}
+
+	/**
+	 * @return the searchTitle
+	 */
+	public String getSearchTitle() {
+		return searchTitle;
+	}
+
+	/**
+	 * @param searchTitle the searchTitle to set
+	 */
+	public void setSearchTitle(String searchTitle) {
+		this.searchTitle = searchTitle;
+	}
+
+	/**
+	 * @return the searchFromCreatedDate
+	 */
+	public Date getSearchFromCreatedDate() {
+		return searchFromCreatedDate;
+	}
+
+	/**
+	 * @param searchFromCreatedDate the searchFromCreatedDate to set
+	 */
+	public void setSearchFromCreatedDate(Date searchFromCreatedDate) {
+		this.searchFromCreatedDate = searchFromCreatedDate;
+	}
+
+	/**
+	 * @return the searchToCreatedDate
+	 */
+	public Date getSearchToCreatedDate() {
+		return searchToCreatedDate;
+	}
+
+	/**
+	 * @param searchToCreatedDate the searchToCreatedDate to set
+	 */
+	public void setSearchToCreatedDate(Date searchToCreatedDate) {
+		this.searchToCreatedDate = searchToCreatedDate;
+	}
+
+	/**
+	 * @return the selectedQuote
+	 */
+	public ScQuote getSelectedQuote() {
+		return selectedQuote;
+	}
+
+	/**
+	 * @param selectedQuote the selectedQuote to set
+	 */
+	public void setSelectedQuote(ScQuote selectedQuote) {
+		this.selectedQuote = selectedQuote;
+	}
+
+	/**
+	 * @return the quotes
+	 */
+	public List<ScQuote> getQuotes() {
+		return quotes;
+	}
+
+	/**
+	 * @param quotes the quotes to set
+	 */
+	public void setQuotes(List<ScQuote> quotes) {
+		this.quotes = quotes;
+	}
+
+	/**
+	 * @return the businessNatures
+	 */
+	public List<PmBusinessNature> getBusinessNatures() {
+		return businessNatures;
+	}
+
+	/**
+	 * @param businessNatures the businessNatures to set
+	 */
+	public void setBusinessNatures(List<PmBusinessNature> businessNatures) {
+		this.businessNatures = businessNatures;
+	}
+
+
+
+	/**
+	 * @return the selectedBusiNatures
+	 */
+	public List<PmBusinessNature> getSelectedBusiNatures() {
+		return selectedBusiNatures;
+	}
+	/**
+	 * @param selectedBusiNatures the selectedBusiNatures to set
+	 */
+	public void setSelectedBusiNatures(List<PmBusinessNature> selectedBusiNatures) {
+		this.selectedBusiNatures = selectedBusiNatures;
+	}
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	/**
+	 * @return the ctPanelSuppliers
+	 */
+	public List<CtPanelSupplier> getCtPanelSuppliers() {
+		return ctPanelSuppliers;
+	}
+
+	/**
+	 * @param ctPanelSuppliers the ctPanelSuppliers to set
+	 */
+	public void setCtPanelSuppliers(List<CtPanelSupplier> ctPanelSuppliers) {
+		this.ctPanelSuppliers = ctPanelSuppliers;
+	}
+
+	/**
+	 * @return the selectedCtPanelSuppliers
+	 */
+	public List<CtPanelSupplier> getSelectedCtPanelSuppliers() {
+		return selectedCtPanelSuppliers;
+	}
+
+	/**
+	 * @param selectedCtPanelSuppliers the selectedCtPanelSuppliers to set
+	 */
+	public void setSelectedCtPanelSuppliers(
+			List<CtPanelSupplier> selectedCtPanelSuppliers) {
+		this.selectedCtPanelSuppliers = selectedCtPanelSuppliers;
+	}
+	/**
+	 * @return the scQuoteDataModel
+	 */
+	public IPagingDataModel<ScQuote> getScQuoteDataModel() {
+		return scQuoteDataModel;
+	}
+	/**
+	 * @param scQuoteDataModel the scQuoteDataModel to set
+	 */
+	public void setScQuoteDataModel(IPagingDataModel<ScQuote> scQuoteDataModel) {
+		this.scQuoteDataModel = scQuoteDataModel;
+	}
+	/**
+	 * @return the orgProfiles
+	 */
+	public List<PmOrgProfile> getOrgProfiles() {
+		return orgProfiles;
+	}
+	/**
+	 * @param orgProfiles the orgProfiles to set
+	 */
+	public void setOrgProfiles(List<PmOrgProfile> orgProfiles) {
+		this.orgProfiles = orgProfiles;
+	}
+	/**
+	 * @return the productOrService
+	 */
+	public String getProductOrService() {
+		return productOrService;
+	}
+	/**
+	 * @param productOrService the productOrService to set
+	 */
+	public void setProductOrService(String productOrService) {
+		this.productOrService = productOrService;
+	}
+	
+	/**
+	 * @return the govtSellers
+	 */
+	public List<ScQuoteSupplier> getGovtSellers() {
+		return govtSellers;
+	}
+	/**
+	 * @param govtSellers the govtSellers to set
+	 */
+	public void setGovtSellers(List<ScQuoteSupplier> govtSellers) {
+		this.govtSellers = govtSellers;
+	}
+	/**
+	 * @return the supplierList
+	 */
+	public List<ScQuoteSupplier> getSupplierList() {
+		return supplierList;
+	}
+	/**
+	 * @param supplierList the supplierList to set
+	 */
+	public void setSupplierList(List<ScQuoteSupplier> supplierList) {
+		this.supplierList = supplierList;
+	}
+
 	
 }
