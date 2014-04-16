@@ -1,0 +1,31 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="terRecord" header="RCORD" toggleable="true" collapsed="false" toggleSpeed="500">
+	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth25,columnWidth40">
+		  <p:outputLabel id="nDate" value="Notice Date" />
+		  <p:inputText for="nDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}" 
+			disabled="true" style="width:170px;">
+			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
+			 <p:outputLabel id="receiverName" value="Receiver Name" />
+		  <p:inputText for="receiverName" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" 
+			 style="width:170px;"/>
+		  <p:outputLabel id="dDate" value="Delivery Date" /> 
+          <p:calendar for="dDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"
+             id="calNoticeDate" size="24" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+          <p:outputLabel id="icNo" value="Receiver IC No."/>
+		  <p:inputText for="icNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" 
+			style="width:170px;"/>
+          <p:outputLabel id="rDate" value="Received Date" /> 
+          <p:calendar for="rDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
+             id="calRecievedDate" size="24" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+          <f:verbatim/><f:verbatim/>
+		</h:panelGrid>
+     </p:panel>      
+</ui:composition>

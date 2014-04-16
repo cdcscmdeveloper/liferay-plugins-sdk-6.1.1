@@ -225,7 +225,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			Object obj = res.getPojo();
 		      
 			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			outcome[0] = "Save";
 			int i = 1;
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
@@ -1218,6 +1218,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 	    	trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
+			
+			trBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		    	trBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		    	trBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
+		    
+		    trBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		}catch(Exception e) {
 				e.printStackTrace();
 		} finally{
@@ -1262,6 +1271,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			suspBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			
+			suspBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		    	suspBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		    	suspBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
+		    
+		    suspBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    suspBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1450,5 +1469,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			List<CtContractItem> contractItemServiceList) {
 		ContractItemServiceList = contractItemServiceList;
 	}
+	
+	
 		
 }

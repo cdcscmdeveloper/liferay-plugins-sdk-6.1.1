@@ -79,11 +79,7 @@
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data,data.currentContractVer.status.statusId)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:10%;">
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" 
-					    rendered="#{(data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
-					         and data.currentContractVer.status.statusId != CtStatusConst.acComplete) || 
-					         (data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
-					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete)}">
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 						 <p:graphicImage library="ep/images/design" name="pause.png"
 						  value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
