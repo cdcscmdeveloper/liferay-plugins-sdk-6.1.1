@@ -225,7 +225,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			Object obj = res.getPojo();
 		      
 			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
