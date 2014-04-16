@@ -6,29 +6,38 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	   <p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}" toggleable="true"  toggleSpeed="500">
-	   <div style="overflow-x:auto">
+	<p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}" toggleable="true"  toggleSpeed="500">
        <p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}" 
-         lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+         widgetVar="ctItemsTable"  filteredValue="#{suspensionBackingBean.ctFilterItems}">
 		  <ac:paginator for="itemTable"/>
-            <p:columnGroup type="header"> 
-			 <p:row> 
-				<p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}"/> 
-				<p:column style="width:200px;" headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"/> 
-				<p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}"/> 	
-				<p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}"/> 							
-				<p:column style="width:100px;" headerText="#{lbl['lbl.ct.susp.tbl.item.action']}"/>
-			 </p:row>							
-		   </p:columnGroup>
-		   <p:column><p:outputLabel value="#{data.itemType.pmParameterType.parameterName}" style="float:left;"/> </p:column> 
-		   <p:column><p:outputLabel value ="#{data.itemName}" style="float:left;width:200px;"/></p:column> 
-		   <p:column><p:calendar value="#{data.suspendFrom}" id="calItem" size="15" showOn="button"/></p:column> 
-		   <p:column> <p:calendar value="#{data.suspendTo}" id="calItem1" size="15" showOn="button"/></p:column> 
-		   <p:column>  <p:selectOneMenu value="#{data.suspensionType.parameterId}" style="width:110px;">
-				<f:selectItems value="#{suspensionBackingBean.getDropdownValues('SPT')}" />
+            <p:column  style="width:150px;" 
+		       headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
+		       <p:outputLabel value="#{data.itemType.pmParameterType.parameterName}" style="float:left;"/>
+		   </p:column> 
+		   <p:column id="modelColumn">
+		       <f:facet name="header">
+                 <p:outputPanel>  
+                    <h:outputText value="#{lbl['lbl.ct.susp.tbl.item.name']}"/>  
+                    <p:inputText id="globalFilter"  onkeyup="ctItemsTable.filter()"  style="width:100px;" />  
+                 </p:outputPanel>  
+              </f:facet>
+            <p:outputLabel value ="#{data.itemName}" style="float:left;width:200px;"/>
+        </p:column>
+        <p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}">
+		     <p:calendar value="#{data.effDate}" disabled="#{data.recordStatus}"
+		        id="calItem2" size="15" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		 </p:column> 	
+		 <p:column style="width:150px;" headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}">
+		     <p:calendar value="#{data.expDate}" disabled="#{data.recordStatus}"
+		        id="calItem3" size="15" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		 </p:column> 		
+		 <p:column style="width:100px;" headerText="Status">
+			  <p:selectOneMenu  value="#{data.recordStatus}" style="width:85px;">
+				<f:selectItem itemValue="1" itemLabel="Active" />
+				<f:selectItem itemValue="0" itemLabel="Inactive" />
+				<p:ajax event="change" process="@this" update="itemTable"/>
 			</p:selectOneMenu>	 
 		  </p:column>
-		 </p:dataTable>	
-	  </div>	
-		</p:panel>            
+	  </p:dataTable>	
+    </p:panel>                    
 </ui:composition>

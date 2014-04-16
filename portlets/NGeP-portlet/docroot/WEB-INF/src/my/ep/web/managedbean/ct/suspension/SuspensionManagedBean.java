@@ -31,15 +31,12 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String[] action;
 	private String editorValue;
-	
-	private CtContract ctContract;
-	private CtContractVer contractVer;
-	
 	private String userLoginId;
+	private CtContract ctContract;
 	private List<CtRemark> remarkList;
+	private CtContractVer contractVer;
 	private List<CtAttachment> attachmentList;
 
-	
 	public String getEditorValue() {
 		return editorValue;
 	}
@@ -107,5 +104,4 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	
 }
