@@ -552,7 +552,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().add(price);
 
 	}
-/*
+	/*
 	public void addNewPromotionPricing(){
 
 
@@ -1237,6 +1237,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				previousZStandardObj = standard;
 			}
 
+			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
+
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(0);
+				return "addCatalogView";
+			}
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion End Date must be greater than Normal Promotion Start Date", ""));
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+				return "addCatalogView";
+			}
+			
+
 
 			/*List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
 
@@ -1460,7 +1478,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			for(CmStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}*/
-			
+
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
@@ -1611,7 +1629,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			for(CmStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings()){
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}*/
-			
+
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
@@ -1754,7 +1772,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 				catalog.getCmStandardPricing().setCmSupplierItem(catalog);
 
-				
+
 				/*for(CmStandardPricing pricing: catalog.getCmStandardPricings()){
 					pricing.setCmSupplierItem(catalog);
 				}*/
@@ -2981,7 +2999,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			return "supplierItemView";
 		}else{
 			System.out.println("size:"+this.getManagedBean().getTempSupplierList().size());
-			
+
 			for(VCmSupplierItem temp:this.getManagedBean().getTempSupplierList()){
 				System.out.println("temp.getDocId()"+temp.getDocId());
 				System.out.println("keySet:"+this.getManagedBean().getTempMap().keySet());

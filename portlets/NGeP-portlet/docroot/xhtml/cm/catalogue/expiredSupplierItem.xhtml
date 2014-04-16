@@ -27,7 +27,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{expired.cmStandardPricings[0].price}" size="10"
+			<p:inputText value="#{expired.cmStandardPricing.price}" size="10"
 				disabled="true"></p:inputText>
 
 		</p:column>
@@ -42,7 +42,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar value="#{expired.cmStandardPricings[0].startDate}"
+			<p:calendar value="#{expired.cmStandardPricing.startDate}"
 				showOn="button" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
@@ -52,7 +52,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar value="#{expired.cmStandardPricings[0].endDate}"
+			<p:calendar value="#{expired.cmStandardPricing.endDate}"
 				showOn="button" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
