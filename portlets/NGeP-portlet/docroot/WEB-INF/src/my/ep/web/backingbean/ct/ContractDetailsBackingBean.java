@@ -392,7 +392,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			        reqDTO.setContractStatus(ContractConst.STATUS_INCOMPLETE);
 	            }
 			}else { // Selected nothing
-				 reqDTO.setContractStatus(ContractConst.STATUS_NOT_SELECTED);
+				 reqDTO.setContractStatus(null);
 			}
 			reqDTO.setContractSearchBean(searchBean);
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
