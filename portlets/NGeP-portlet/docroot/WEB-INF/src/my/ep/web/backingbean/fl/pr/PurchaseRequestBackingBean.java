@@ -28,6 +28,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
@@ -56,6 +57,8 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -88,7 +91,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -1665,6 +1667,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		reqDTO.setVotFundId(votFundId);
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
+		
+		return resDTO;
+	}
+	
+	public ProgramActivityResDTO getProgramList(Long votFundId) {
+		IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject("pm",IProgramActivitySO.class);
+		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
+		reqDTO.setVotFundId(votFundId);
+		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
 		
 		return resDTO;
 	}
