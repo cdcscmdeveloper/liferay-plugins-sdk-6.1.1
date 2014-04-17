@@ -182,12 +182,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long votFundId;
 	private Long projectId;
 	private Long setiaId;
-	//rivate String setiaCode;
-	//private String subSetiaCode;
 	private Long subSetiaId;
 	private Long prgActivityId;
-
-	//private String prgActivityCode;
 	
 	
 /**
