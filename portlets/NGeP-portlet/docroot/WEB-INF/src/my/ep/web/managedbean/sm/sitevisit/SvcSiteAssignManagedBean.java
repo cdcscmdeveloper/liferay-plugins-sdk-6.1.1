@@ -11,6 +11,8 @@ import javax.faces.bean.SessionScoped;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
+import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -20,7 +22,7 @@ import org.primefaces.model.DualListModel;
 public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private SmApplSiteVisit smApplSv;
+	private SmSvTask smSvTask;
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
@@ -30,14 +32,15 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private List<PmUser> sourceSVO;
 	private List<PmUser> selectedSVO;
 	private String currDate;
+	private SmRemark smRemark;
 	
 
-	public SmApplSiteVisit getSmApplSv() {
-		return smApplSv;
+	public SmSvTask getSmSvTask() {
+		return smSvTask;
 	}
 
-	public void setSmApplSv(SmApplSiteVisit smApplSv) {
-		this.smApplSv = smApplSv;
+	public void setSmSvTask(SmSvTask smSvTask) {
+		this.smSvTask = smSvTask;
 	}
 
 	public long getAppId() {
@@ -106,6 +109,14 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setCurrDate(String currDate) {
 		this.currDate = currDate;
+	}
+
+	public SmRemark getSmRemark() {
+		return smRemark;
+	}
+
+	public void setSmRemark(SmRemark smRemark) {
+		this.smRemark = smRemark;
 	}
 
 }
