@@ -56,6 +56,8 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
@@ -86,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -1649,18 +1652,39 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.selectedAllChargeItem = selectedAllChargeItem;
 	}
 	
-	public VotFundResDTO getVotFund(){
+	public VotFundResDTO getVotFundList(Long profileId){
 		IVotFundSO fundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject("pm",IVotFundSO.class);
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
-		reqDTO.setVotFundType("B");
-		VotFundResDTO resDTO = fundSO.retrieveVotFundListByType(reqDTO);
-//		fundSO.retrieveVotFundListByType(reqDTO);
+		reqDTO.setOrgId(profileId);
+		VotFundResDTO resDTO = fundSO.retrieveVotFundListByOrgId(reqDTO);
 		return resDTO;
 	}
 	
-	public void getSetia(){
+	public ProjectSetiaResDTO getProjectList(Long votFundId) {
 		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
-//		projectSetiaSO.retrieveProjectSetiaList(reqDTO);
+		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+		reqDTO.setVotFundId(votFundId);
+		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
+		
+		return resDTO;
+	}
+	
+	public ProjectSetiaResDTO getSetiaList(Long projectId){
+		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
+		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+		reqDTO.setProjectId(projectId);
+		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSetiaList(reqDTO);
+		
+		return resDTO;
+	}
+	
+	public ProjectSetiaResDTO getSubSetiaList(Long setiaId){
+		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
+		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+		reqDTO.setSetiaId(setiaId);
+		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
+		
+		return resDTO;
 	}
 	
 	public void getUserProfiles(){
