@@ -386,8 +386,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			
 			if(this.getManagedBean().getCtContractStatus() != null){
-	            if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE))
-	        	   reqDTO.setContractStatus(true);
+	            if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE)) {
+	        	   reqDTO.setContractStatus(ContractConst.STATUS_COMPLETE);
+	            } else { // Selected Incomplete
+			        reqDTO.setContractStatus(ContractConst.STATUS_INCOMPLETE);
+	            }
+			}else { // Selected nothing
+				 reqDTO.setContractStatus(ContractConst.STATUS_NOT_SELECTED);
 			}
 			reqDTO.setContractSearchBean(searchBean);
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
@@ -1186,8 +1191,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 
 	public String chkContractStatusType(CtContract ctcontract, Long pmId){
 		
-		if(ctcontract.getCurrentAgreementId() != null && ctcontract != null){
-			if(pmId == ContractStatusConst.FD_APPROVED && ctcontract.getCurrentAgreementId().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE)
+		if(ctcontract.getCurrentAgreement() != null && ctcontract != null){
+			if(pmId == ContractStatusConst.FD_APPROVED && ctcontract.getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE)
 				return ContractConst.CONTRACT_STATUS_COMPLETE;
 			else
 				return ContractConst.CONTRACT_STATUS_INCOMPLETE;
