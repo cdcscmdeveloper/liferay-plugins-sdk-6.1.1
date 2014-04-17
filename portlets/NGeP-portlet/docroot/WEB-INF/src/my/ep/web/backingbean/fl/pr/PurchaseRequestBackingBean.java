@@ -91,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+//import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -245,6 +246,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		//Populate Charge Line Items
 		getManagedBean().populateChargeLineData();
 		getUserProfiles();
+		
+		//chargeline dropdown
+		getVotFundList(4L);
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -1659,42 +1663,48 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
 		reqDTO.setOrgId(profileId);
 		VotFundResDTO resDTO = fundSO.retrieveVotFundListByOrgId(reqDTO);
+		getManagedBean().setVotFundList(resDTO.getVotFundList());
 		return resDTO;
 	}
 	
-	public ProjectSetiaResDTO getProjectList(Long votFundId) {
+	public ProjectSetiaResDTO getProjectList(AjaxBehaviorEvent e) {
+		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
 		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		reqDTO.setVotFundId(votFundId);
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
-		
+		getManagedBean().setProjectList(resDTO.getProjectList());
 		return resDTO;
 	}
 	
-	public ProgramActivityResDTO getProgramList(Long votFundId) {
+	public ProgramActivityResDTO getProgramList(AjaxBehaviorEvent e) {
+		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
 		IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject("pm",IProgramActivitySO.class);
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
 		reqDTO.setVotFundId(votFundId);
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
+		getManagedBean().setPrgActivityList(resDTO.getPrgActivityList());
 		
 		return resDTO;
 	}
 	
-	public ProjectSetiaResDTO getSetiaList(Long projectId){
+	public ProjectSetiaResDTO getSetiaList(AjaxBehaviorEvent e) {
+		Long projectId = (Long) e.getComponent().getAttributes().get("value");
 		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		reqDTO.setProjectId(projectId);
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSetiaList(reqDTO);
-		
+		getManagedBean().setSetiaList(resDTO.getSetiaList());
 		return resDTO;
 	}
 	
-	public ProjectSetiaResDTO getSubSetiaList(Long setiaId){
+	public ProjectSetiaResDTO getSubSetiaList(AjaxBehaviorEvent e) {
+		Long setiaId = (Long) e.getComponent().getAttributes().get("value");
 		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		reqDTO.setSetiaId(setiaId);
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
-		
+		getManagedBean().setSubSetiaList(resDTO.getSubSetiaList());
 		return resDTO;
 	}
 	

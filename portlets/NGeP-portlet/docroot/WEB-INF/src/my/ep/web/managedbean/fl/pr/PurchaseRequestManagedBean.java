@@ -12,6 +12,10 @@ import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -30,7 +34,12 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmProject;
+import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -162,6 +171,23 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private TreeNode selectedNode;
 	private FlFulfilmentItemAddr selectedItemChargeSection;
 	//private Long pmPrjSetia;
+	private BigDecimal orderedAmtGrandTotal ;
+	
+	// charge Line dropdown lists
+	private List<PmVotFund> votFundList;
+	private List<PmProject> projectList;
+	private List<PmSetia> setiaList;
+	private List<PmSubSetia> subSetiaList;
+	private List<PmPrgActivity> prgActivityList;
+	private Long votFundId;
+	private Long projectId;
+	private Long setiaId;
+	//rivate String setiaCode;
+	//private String subSetiaCode;
+	private Long subSetiaId;
+	private Long prgActivityId;
+
+	//private String prgActivityCode;
 	
 	
 /**
@@ -189,6 +215,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 			if(null !=this.getFulfilmentRequest().getFlDeliveryAddresses()){
 				for(FlDeliveryAddress  deliveryAddress :this.getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
+						//System.out.println("11111111111111111111111111111111111     "+deliveryAddress.getAddressType().getPmAddress().getAddressId());
+						
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
 							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
@@ -226,6 +254,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private void prepareChargeLineTreeNode(
 			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
+		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
 		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
 			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
@@ -239,6 +268,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
 				}
 				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
+				grandTotalOrderAmt=grandTotalOrderAmt.add(totalOrderAmt);
+				setOrderedAmtGrandTotal(grandTotalOrderAmt);
 			}
 			
 		}
@@ -269,7 +300,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		}else{
 			itemAddress.setCoaValue("Y");
 		}
-		
 		
 		return itemAddress;
 	}
@@ -1247,6 +1277,160 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * @return the orderedAmtGrandTotal
+	 */
+	public BigDecimal getOrderedAmtGrandTotal() {
+		return orderedAmtGrandTotal;
+	}
+
+	/**
+	 * @param orderedAmtGrandTotal the orderedAmtGrandTotal to set
+	 */
+	public void setOrderedAmtGrandTotal(BigDecimal orderedAmtGrandTotal) {
+		this.orderedAmtGrandTotal = orderedAmtGrandTotal;
+	}
+
+	/**
+	 * @return the votFundList
+	 */
+	public List<PmVotFund> getVotFundList() {
+		return votFundList;
+	}
+
+	/**
+	 * @param votFundList the votFundList to set
+	 */
+	public void setVotFundList(List<PmVotFund> votFundList) {
+		this.votFundList = votFundList;
+	}
+
+	/**
+	 * @return the projectList
+	 */
+	public List<PmProject> getProjectList() {
+		return projectList;
+	}
+
+	/**
+	 * @param projectList the projectList to set
+	 */
+	public void setProjectList(List<PmProject> projectList) {
+		this.projectList = projectList;
+	}
+
+	/**
+	 * @return the setiaList
+	 */
+	public List<PmSetia> getSetiaList() {
+		return setiaList;
+	}
+
+	/**
+	 * @param setiaList the setiaList to set
+	 */
+	public void setSetiaList(List<PmSetia> setiaList) {
+		this.setiaList = setiaList;
+	}
+
+	/**
+	 * @return the subSetiaList
+	 */
+	public List<PmSubSetia> getSubSetiaList() {
+		return subSetiaList;
+	}
+
+	/**
+	 * @param subSetiaList the subSetiaList to set
+	 */
+	public void setSubSetiaList(List<PmSubSetia> subSetiaList) {
+		this.subSetiaList = subSetiaList;
+	}
+
+	/**
+	 * @return the votFundId
+	 */
+	public Long getVotFundId() {
+		return votFundId;
+	}
+
+	/**
+	 * @param votFundId the votFundId to set
+	 */
+	public void setVotFundId(Long votFundId) {
+		this.votFundId = votFundId;
+	}
+
+	/**
+	 * @return the projectId
+	 */
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	/**
+	 * @param projectId the projectId to set
+	 */
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	/**
+	 * @return the setiaId
+	 */
+	public Long getSetiaId() {
+		return setiaId;
+	}
+
+	/**
+	 * @param setiaId the setiaId to set
+	 */
+	public void setSetiaId(Long setiaId) {
+		this.setiaId = setiaId;
+	}
+
+	/**
+	 * @return the subSetiaId
+	 */
+	public Long getSubSetiaId() {
+		return subSetiaId;
+	}
+
+	/**
+	 * @param subSetiaId the subSetiaId to set
+	 */
+	public void setSubSetiaId(Long subSetiaId) {
+		this.subSetiaId = subSetiaId;
+	}
+
+	/**
+	 * @return the prgActivityList
+	 */
+	public List<PmPrgActivity> getPrgActivityList() {
+		return prgActivityList;
+	}
+
+	/**
+	 * @param prgActivityList the prgActivityList to set
+	 */
+	public void setPrgActivityList(List<PmPrgActivity> prgActivityList) {
+		this.prgActivityList = prgActivityList;
+	}
+
+	/**
+	 * @return the prgActivityId
+	 */
+	public Long getPrgActivityId() {
+		return prgActivityId;
+	}
+
+	/**
+	 * @param prgActivityId the prgActivityId to set
+	 */
+	public void setPrgActivityId(Long prgActivityId) {
+		this.prgActivityId = prgActivityId;
 	}
 
 	
