@@ -1,0 +1,116 @@
+package my.ep.web.backingbean.ct.validator;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * User: bob
+ * Date: 5/29/12
+ * Time: 5:12 PM
+ */
+
+@ManagedBean(name="webappBean")
+@ApplicationScoped
+public class WebappBean {
+    private String webRoot = "/dcmt";
+
+    public String getWebRoot() {
+        return webRoot;
+    }
+    
+    public void validateEmail(FacesContext ctx, UIComponent fieldName, Object obj){
+		 String errMsg="Email not valid";
+		 String inputValue = (String) obj;
+		 inputValue=inputValue==null? "":inputValue;
+		 Pattern mask = null;
+		 String pattern="^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		 mask = Pattern.compile(pattern);
+		 Matcher matcher = mask.matcher(inputValue);
+		 
+		 if (!matcher.matches()) {
+			 throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		 }		
+	}
+    
+    public void checkSpaces(FacesContext ctx, UIComponent fieldName, Object obj){
+        String inputValue=(String)obj;
+        inputValue=inputValue==null? "":inputValue;
+        String errMsg="Only alphabets,numbers,underscore,hyphen are allowed";
+        String pattern="[[a-zA-Z][\\d][_][-]]+$";//[a-zA-Z]=alphabet; [\\d]or[0-9]=number; $=line end follows;
+
+        if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+    }
+
+    public void checkEmail(FacesContext ctx, UIComponent fieldName, Object obj){
+        String inputValue=(String)obj;
+        inputValue=inputValue==null? "":inputValue;
+        String errMsg="invalid email format";
+        String pattern="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]";//[a-zA-Z]=alphabet; [\\d]or[0-9]=number; $=line end follows;
+
+        if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+    }
+    /**
+     * Added by: Amar
+     * Date: 9/7/12
+     * validation for date 
+     */
+    public void validateDate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+    	String errMsg = "From date cannot be greater than to date";
+        if (value == null || component.getAttributes().get("fromDate") == null) {
+            return;
+        }
+
+        Date toDate   = (Date) value; 
+        
+        //<f:attribute name="fromDate" value="#{edf.value}" />
+        Date fromDate = (Date) component.getAttributes().get("fromDate");//<===
+        if (!toDate.after(fromDate)) {
+        	throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+    }
+    
+    protected void addInfo(String message){
+        addMessage(FacesMessage.SEVERITY_INFO,"Information:",message);
+    }
+
+    protected void addInfo(String id,String message){
+        addMessage(id,FacesMessage.SEVERITY_INFO,"Information:",message);
+    }
+
+
+
+    protected void addError(String message) {
+        addMessage(FacesMessage.SEVERITY_ERROR,"Error:",message);
+    }
+
+    protected void addError(String id,String message) {
+        addMessage(id,FacesMessage.SEVERITY_ERROR,"Error:",message);
+    }
+
+    private void addMessage(FacesMessage.Severity severity,String msgTitle,String message){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity,msgTitle, message));
+    }
+
+    private void addMessage(String id,FacesMessage.Severity severity,String msgTitle,String message){
+        FacesContext.getCurrentInstance().addMessage(id, new FacesMessage(severity,msgTitle, message));
+    }
+
+}

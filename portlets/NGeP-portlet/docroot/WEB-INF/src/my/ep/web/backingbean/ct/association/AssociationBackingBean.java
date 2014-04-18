@@ -49,8 +49,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBean> {
 
    private static Logger log = Logger.getLogger(AssociationBackingBean.class);
-   private static final String PROCESS_ASSOCIATE_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectCreation.xhtml";
-   private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml";
+   private static final String PROCESS_ASSOCIATE_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectCreation.xhtml?faces-redirect=true";
+   private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml?faces-redirect=true";
 
    private CtContract[] selectedContractList;
    private CtContract[] deleteSelectedContractList;
@@ -256,11 +256,14 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	}
     
     public String gotoAssociatePage() {
+    	try {
     	if(this.getManagedBean().getCtAssociation() != null)
         	this.getManagedBean().setCtAssociation(null);
-    	if(this.getManagedBean().getAssociateSearchList().size() != 0)
-    		this.getManagedBean().setAssociateSearchList(null);
-		return PROCESS_ASSOCIATE_PAGE;
+    	   if(this.getManagedBean().getAssociateSearchList() == null && this.getManagedBean().getAssociateSearchList().size() != 0)
+    		  this.getManagedBean().setAssociateSearchList(null);
+    	}   catch (Exception ex) {
+    			log.error("Exception>>", ex);
+    	}return PROCESS_ASSOCIATE_PAGE;
 	}
    
     public String gotoCancelPage() {

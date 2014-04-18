@@ -113,9 +113,16 @@
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" 
                id="calItem1" size="25" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 		  <f:verbatim/><f:verbatim/>
-		  <p:outputLabel value="*Termination Effective Date"/>
-          <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.terminationEffDate}"
-             id="calItem2" size="25" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		  <p:outputLabel value="*Termination Effective Date" rendered="#{terminationBackingBean.managedBean.terminateNotice}"/>
+          <p:calendar id="calItem2" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.terminationEffDate}"
+              showOn="button" rendered="#{terminationBackingBean.managedBean.terminateNotice}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		   <p:outputLabel value="*Remedy Period" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+           <h:panelGrid columns="3">
+             <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyPeriod}"
+               rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+             <p:spacer width="2"/>
+             <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+		   </h:panelGrid>
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
