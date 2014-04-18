@@ -26,6 +26,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
@@ -53,6 +54,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -89,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
@@ -1747,6 +1751,24 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
 		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
 		fulfilmentReqDTO.setPmUser(userResDTO.getPmUser());
+	}
+	
+	public GlAccountResDTO getGlAccount(Long orgProfileId){
+		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject("pm",IGlAccountSO.class);
+		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		GlAccountResDTO resDTO = glAccountSO.retrieveGlAccountList(reqDTO);
+		
+		return resDTO;
+	}
+	
+	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		reqDTO.setAddressId(addressId);
+		reqDTO.setAddressType(addressType);
+		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
+		return resDTO;
 	}
 	
 }
