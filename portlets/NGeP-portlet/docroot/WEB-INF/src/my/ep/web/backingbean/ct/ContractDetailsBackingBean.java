@@ -84,7 +84,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -312,7 +311,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   }
 		    
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
-		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmUom());
+		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
 		    }
 		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
@@ -531,10 +530,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if(this.getManagedBean().getContractVer().getCtContractZones() != null) {
 		   for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
 			   if(zone.getDeliveryTermUom() == null){
-				   zone.setDeliveryTermUom(new PmUom()); 
-				   zone.getDeliveryTermUom().setUomId(0L);
+				   zone.setDeliveryTermUom(new PmParameter()); 
+				   zone.getDeliveryTermUom().setParameterId(0L);
 			   }
-			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getUomId()), rootLocationTree);
+			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
 			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
@@ -560,8 +559,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
     				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
     					if(ctContractZone.getDeliveryTermUom() == null)
-     					   ctContractZone.setDeliveryTermUom(new PmUom());
-     					ctContractZone.getDeliveryTermUom().setUomId(((LocationDTO)zonename.getData()).getUomId());
+     					   ctContractZone.setDeliveryTermUom(new PmParameter());
+     					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
      					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
      				}
     			}
