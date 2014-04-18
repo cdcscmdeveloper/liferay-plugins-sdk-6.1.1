@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -87,4 +88,8 @@ public interface QTConstants {
 	public static final String FINANCIAL_COMMITTEE_TAB="Financial Evaluation Committee";
 	public static final String EVALUATION_COMMITTEE_TAB="Evaluation Committee";
 	public static final String FINALIZATION_SECRETARY_TAB="Finalization Secretary";
+	
+	//S2 bpm page redirect urls
+	public static final String BUSINESS_OWNER_SPEC_PREPARATION="/xhtml/sc/specification/specificationview.xhtml";
+	public static final String SPECIFICICATON_PREPARATION="/xhtml/sc/specification/specificationCommitteeView.xhtml";
 }
