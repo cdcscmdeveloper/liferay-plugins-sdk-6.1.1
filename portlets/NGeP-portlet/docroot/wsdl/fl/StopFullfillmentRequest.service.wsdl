@@ -22,7 +22,7 @@
     <wsdl:types>
         <xsd:schema targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/StopFullfillmentRequest">
             <xsd:import namespace="http://xmlns.oracle.com/bpm/bpmobject/Data/FL_StopFullfillment_Data"
-                 schemaLocation="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service?XSD=businessCatalog/Data/FL_StopFullfillment_Data.xsd"/>
+                 schemaLocation="http://192.168.120.17:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service?XSD=businessCatalog/Data/FL_StopFullfillment_Data.xsd"/>
             <xsd:element name="stopFullfillment">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -51,7 +51,7 @@
     </wsdl:binding>
     <wsdl:service name="StopFullfillmentRequest.service">
         <wsdl:port name="StopFullfillmentRequestPort" binding="tns:StopFullfillmentRequestBinding">
-            <wsdlsoap:address location="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service"/>
+            <wsdlsoap:address location="http://192.168.120.17:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
