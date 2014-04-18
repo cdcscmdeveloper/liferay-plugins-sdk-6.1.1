@@ -12,6 +12,14 @@
 
 <ui:define name="contentSection">
 
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+
+	<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+		<div align="right">
+			<p:commandButton value="Save" ajax="false" icon="ui-icon-save" action="#{smPersonnelBackingBean.update(smPersonnelBackingBean.managedBean.editSmPersonnel)}"/>
+		</div>		
+	</p:panel>
+
 	<p:panel id="pwdUpdate" styleClass="noBorders tr,noBorders td" style="width:100%;">
 		<div align="right">
 			<p:commandButton value="Change Password" ajax="false" action="passwordChange.xhtml"/>
@@ -23,38 +31,35 @@
 		<table>
 			 	<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* Name" /></td>
-					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.name}" readonly="true" disabled="true" size="35" /></td>
 					
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="eP Role : " /></td>
-					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.epRole}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* Nationality" /></td>
-					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
-					
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Account Status" /></td>
-					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.pmCountry.countryName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>		
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Old IC/Passport No." /></td>
 					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
 					
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* New IC/Passport No." /></td>
-					<td><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.identificationNo}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="DOB" /></td>
-					<td><p:calendar showOn="button" id="dobDate" pattern="MM/dd/yyyy"/></td>
+					<td><p:calendar value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.birthDate}" showOn="button" id="dobDate" pattern="MM/dd/yyyy"/></td>
 					
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* Designation" /></td>
-					<td><p:inputText size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.designation}" size="35" /></td>
 				</tr>		
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* Email" /></td>
-					<td><p:inputText size="40" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.email}" size="40" /></td>
 
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="* Phn No." /></td>
-					<td><p:inputText size="35" /></td>
+					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnel.phoneNo}" size="35" /></td>
 				</tr>
 		</table>	
 	</p:panel>
@@ -71,39 +76,39 @@
 			<table>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Address" /></td>
-					<td class="tdContent" colspan="3"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.address1}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.address2}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.address3}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.address4}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Country" /></td>
-					<td class="tdContent"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.pmCountry.countryName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="State" /></td>
-					<td class="tdContent"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.pmState.stateName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="District" /></td>
-					<td class="tdContent"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.pmDistrict.districtName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="City" /></td>
-					<td class="tdContent"><p:inputText readonly="true" disabled="true" size="35" /></td>
+					<td class="tdContent"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.pmCity.cityName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Postcode" /></td>
-					<td class="tdContent" ><p:inputText readonly="true" disabled="true" size="20" /></td>
+					<td class="tdContent" ><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelPermanentAddress.postcode}" readonly="true" disabled="true" size="20" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -112,57 +117,66 @@
 			<table>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Address" /></td>
-					<td class="tdContent" colspan="3"><p:inputText size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.address1}" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.address2}" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.address3}" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"></td>
-					<td class="tdContent" colspan="3"><p:inputText size="35" /></td>
+					<td class="tdContent" colspan="3"><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.address4}" size="35" /></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Country" /></td>
-					<td class="tdContent"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="1" />
+					<td class="tdContent"><p:selectOneMenu value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmCountry.countryId}" style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One --" itemValue="" />
+							<f:selectItems value="#{smPersonnelBackingBean.managedBean.countryList}" />
+							<p:ajax event="change" update="mailAddStateList, mailAddDistrictList, mailAddCityList"
+							listener="#{smPersonnelBackingBean.updateLists(smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmCountry.countryId,null,null)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="State" /></td>
-					<td class="tdContent"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="1" />
+					<td class="tdContent"><p:selectOneMenu id="mailAddStateList" value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmState.stateId}" style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One --" itemValue="" />
+							<f:selectItems value="#{smPersonnelBackingBean.managedBean.stateList}" />
+							<p:ajax event="change" update="mailAddDistrictList, mailAddCityList"
+							listener="#{smPersonnelBackingBean.updateLists(null,smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmState.stateId,null)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="District" /></td>
-					<td class="tdContent"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="1" />
+					<td class="tdContent"><p:selectOneMenu id="mailAddDistrictList" value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmDistrict.districtId}" style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One --" itemValue="" />
+							<f:selectItems value="#{smPersonnelBackingBean.managedBean.districtList}" />
+							<p:ajax event="change" update="mailAddCityList"
+							listener="#{smPersonnelBackingBean.updateLists(null,null,smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmDistrict.districtId)}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="City" /></td>
-					<td class="tdContent"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One --" itemValue="1" />
+					<td class="tdContent"><p:selectOneMenu id="mailAddCityList" value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.pmCity.cityId}" style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One --" itemValue="" />
+							<f:selectItems value="#{smPersonnelBackingBean.managedBean.cityList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td style="white-space:nowrap; float:left;"><p:outputLabel value="Postcode" /></td>
-					<td class="tdContent" ><p:inputText size="20" /></td>
+					<td class="tdContent" ><p:inputText value="#{smPersonnelBackingBean.managedBean.editSmPersonnelMailingAddress.postcode}" size="20" /></td>
 				</tr>
 			</table>
 		</p:panel>
 	</p:panelGrid>
 	</p:panel>
 	<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
-		<div align="center">
-			<p:commandButton value="Update" ajax="false" icon="ui-icon-save" />
-			<p:commandButton value="Cancel" ajax="false" icon="ui-icon-cancel" action="#{smUserProfileBackingBean.cancel}"/>
+		<div align="right">
+			<p:commandButton value="Cancel" ajax="false" icon="ui-icon-cancel" action="#{smPersonnelBackingBean.cancel}"/>
 		</div>		
 	</p:panel>
 	

@@ -13,35 +13,51 @@
 
 	<ui:define name="contentSection">
 	
-	<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td" style="text-align:left">
-		<p:outputLabel value="Username" />
-		<p:inputText size="35" />
+	
+	<p:panel id="searchSmUserProfile" header="Search Users" styleClass="noBorders tr,noBorders td">
+		<table style="width: 1000px;">
+			<tr>
+				<td style="width: 350px;"/>
+				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Username" /></td>
+				<td style="width: 500px;"><p:inputText id="username" value="#{smPersonnelBackingBean.managedBean.searchUsername}" size="35" /></td>
+			</tr>
+			<tr>
+				<td style="width: 350px;"/>
+				<td style="float: left; padding-top: 5px;"><p:outputLabel value="User eP Role" /></td>
+				<td style="width: 500px;"><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One--" itemValue="" />
+						<f:selectItem itemLabel="Supplier Admin" itemValue="A" />
+						<f:selectItem itemLabel="Supplier User" itemValue="U" />
+						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td style="width: 350px;"/>
+				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Company Role" /></td>
+				<td style="width: 500px;"><p:selectOneMenu id="companyRole" value="#{smPersonnelBackingBean.managedBean.searchCompanyRole}" style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One--" itemValue="" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
 		
-		<p:outputLabel value="User eP Role" />
-		<p:selectOneMenu style="width: 207px; margin-bottom: 5px;">
-			<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-		</p:selectOneMenu>
-		
-		<p:outputLabel value="Company Role" />
-		<p:selectOneMenu style="width: 207px; margin-bottom: 5px;">
-			<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-		</p:selectOneMenu>
-		<div>		
-			<p:commandButton value="Search" icon="ui-icon-search" />
+		<div align="right">		
+			<p:commandButton value="Search" action="#{smPersonnelBackingBean.searchPersonnel(smPersonnelBackingBean.managedBean.searchUsername,smPersonnelBackingBean.managedBean.searchEPRole,smPersonnelBackingBean.managedBean.searchCompanyRole)}" ajax="false"
+				update="searchProfile" icon="ui-icon-search" />
   		</div>
-	</p:panelGrid>
-		
+	
+	</p:panel>
+	
 	<h:panelGrid id="search" style="width:100%;">
 	 
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchProfile" value="" var="userprofile" editable="true" style="word-wrap: break-word;table-layout: fixed;">
+	<p:dataTable id="searchProfile" value="#{smPersonnelBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;">
  
        <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
         <h:outputText value="" /> 
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
-        <h:outputText value="" />  
+        <h:outputText value="#{personnel.name}" />  
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}" >
@@ -49,15 +65,17 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
-        <h:outputText />    
+        <h:outputText value="#{personnel.pmCountry.countryName}" />    
        </p:column>
     
        <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" > 
-        <h:outputText />
+        <h:outputText value="Y" rendered="#{personnel.authorized}"/>
+        <h:outputText value="N" rendered="!#{personnel.authorized}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" > 
-        <h:outputText />
+        <h:outputText value="Active" rendered="#{personnel.recordStatus}"/>
+        <h:outputText value="Inactive" rendered="!#{personnel.recordStatus}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
@@ -65,7 +83,8 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
-        <h:outputText />
+        <h:outputText value="Y" rendered="#{personnel.softcert}"/>
+        <h:outputText value="N" rendered="!#{personnel.softcert}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
@@ -73,18 +92,17 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" > 
-        <h:outputText />
+        <h:outputText value="Y" rendered="#{personnel.contractSigner}"/>
+        <h:outputText value="N" rendered="!#{personnel.contractSigner}"/>
        </p:column>
     <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
-    	<p:commandLink title="Edit"
-				action="#{smUserProfileBackingBean.navigateToUpdateUserPage}">
+    	<p:commandLink title="Edit" ajax="false"
+				action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
 			<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 		</p:commandLink>
 	</p:column>
      </p:dataTable>
 	</p:panel>
-	
-	<!-- <ui:include src="/xhtml/sm/userProfileMaintenance/basicUserProfile.xhtml" /> -->
 	
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
@@ -108,7 +126,7 @@
 			<td>
 				<div align="center">
 				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" 
-				action="#{smUserProfileBackingBean.navigateToAddNewUserPage}"/>
+				action="#{smPersonnelBackingBean.navigateToAddNewUserPage}"/>
 				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
 				</div>
 			</td>		
