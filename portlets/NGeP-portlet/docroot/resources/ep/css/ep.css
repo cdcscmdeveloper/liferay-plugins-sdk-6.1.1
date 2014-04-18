@@ -753,27 +753,26 @@ a:visited.menuItemLink-selected {
 /* --------------------------          Button         ------------------------------ */
 .ui-button {
 	border: 1px solid #CCCCCC;
-	color: #FFFFFF !important;
+	color: #666666 !important;
 	cursor: pointer;
 	font-family: Arial;
 	font-size: 12px !important;
 	font-weight: bold;
 	text-decoration: none;
-	height: 25px !important;
+	height: 30px !important;
 	margin:5px;
-	border-radius: 5px !important;
-	background: #8CC63E !important; /* Old browsers */
-
+	border-radius: 15px !important;
+	background: #FFFFFF !important;
 }
 
 .ui-button.ui-state-hover,.ui-button.ui-state-focus,.ui-button.ui-state-active
 	{
 	border: 1px solid #CCCCCC;
-	border-radius: 5px !important;
+	border-radius: 15px !important;
 	border-collapse: separate;
 	box-shadow: 0px 0px 8px #B4DFF8, inset 0px 1px 0px white;
-	color: #77be08;
-	background-color:#7A9Bd7 !important;
+	color: #666666;
+	background: #EEEEEE !important;
 
 }
 
@@ -1059,21 +1058,7 @@ px
 	color: #333333;
 	text-decoration: none;
 	/* height: 20px;  */
-	background: #BCE18A; /* Old browsers */
-	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
-	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF),
-		color-stop(100%, #BCE18A) ); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
-	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
-	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
-	/* IE10+ */
-	background: linear-gradient(to bottom, #FFFFFF 0%, #BCE18A 100%);
-	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
-		endColorstr='#BCE18A', GradientType=0 ); /* IE6-8 */
+	background: #F0EFEF;
 }
 
 .ui-datatable-odd {
@@ -1082,7 +1067,7 @@ px
 
 .ui-datatable-data.ui-widget-content,.ui-datatable-data .ui-widget-content
 	{
-	border: none;
+	border: 1px solid #DDD;
 	border-bottom: 1px solid #DDDDDD;
 	font-size: 12px;
 }
@@ -4072,7 +4057,6 @@ label {
 }
 
 thead > tr > th.ui-state-default {
-	border: 0px !important;
 	color:#555555 !important;
 	font-size:12px !important;
 	font-weight:bold !important;
@@ -4089,7 +4073,7 @@ thead > tr > th.ui-state-default {
 }
 
 .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
-	border:none !important;
+	border:1px solid #DDDDDD !important;
 }
 
 .ui-selectonemenu label.ui-selectonemenu-label {
@@ -4169,6 +4153,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	font-size: 16px;
 	color: #808080;
 	padding: 7px;
+	border-bottom: 1px solid #DDDDDD;
 }
 
 .section-title {
@@ -4588,6 +4573,7 @@ label > span.ui-button-text {
 	background-color: #FFFFFF;
 	margin: 0 0 8px 0;
 	border: 1px solid #DDDDDD;
+	border-radius:5px;
 }
 
 .sidemenu {
@@ -4650,6 +4636,14 @@ label > span.ui-button-text {
 	color: #333333;
 	font-weight: normal;
 	text-shadow: none;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-state-active.ui-corner-top {
+	background: #EDEDED;
+}
+
+.ui-tabmenuitem.ui-state-default.ui-corner-top {
+	background: none;
 }
 
 .ui-tabmenu {
