@@ -51,8 +51,11 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -1279,9 +1282,9 @@ public class SpecificationBackingBean extends
 	public void businessOwnerTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
 		if (tabTitle.equalsIgnoreCase("General")) {
-			retriveSpecdetails(146L);
+			retriveSpecdetails(this.getManagedBean().getScQt().getQtId());
 		} else if (tabTitle.equalsIgnoreCase("Supplier Qualification Criteria")) {
-			retriveBusinessOwnerQualificationCriteri(146L);
+			retriveBusinessOwnerQualificationCriteri(this.getManagedBean().getScQt().getQtId());
 
 		} else if (tabTitle.equalsIgnoreCase("Technical Specification")) {
 			retriveTechnicalSpecification();
@@ -1502,7 +1505,7 @@ public class SpecificationBackingBean extends
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setSpecType("1");
-			reqDTO.setCheckListTypeCode("SD");
+			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST);
 
 			// this.getManagedBean().getProcuremntCategory();
 			reqDTO.setProcurementCatCode("ICT");
@@ -1556,7 +1559,7 @@ public class SpecificationBackingBean extends
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setSpecType("2");
-			reqDTO.setCheckListTypeCode("F");
+			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
 
 			// this.getManagedBean().getProcuremntCategory();
 			reqDTO.setProcurementCatCode("MED");
@@ -2649,7 +2652,11 @@ public class SpecificationBackingBean extends
 		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
 		scQt.setItemType("P");
-
+		PmParameter parameter = scQt.getPmProcurementCategory();
+		if(null ==parameter.getParameterId())
+		{
+			scQt.setPmProcurementCategory(null);
+		}
 		List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 				this.getManagedBean().getZoneTrees(), null);
 		if (locCriteria != null && !locCriteria.isEmpty()) {
@@ -2747,7 +2754,7 @@ public class SpecificationBackingBean extends
 
 			if (getManagedBean().getScQt() == null) {
 				// this.getManagedBean().setApprovalList(getAppDetails());
-				retriveSpecdetails(146L);
+				//retriveSpecdetails(146L);
 
 			}
 
@@ -2774,10 +2781,10 @@ public class SpecificationBackingBean extends
 					getManagedBean().getScQt().setScQtZoneCriteria(
 							new ScQtZoneCriteria());
 				}
-				/*if (tenderResDTO.getQtDetail().getPmProcurementCategory() == null) {
+				if (tenderResDTO.getQtDetail().getPmProcurementCategory() == null) {
 					getManagedBean().getScQt().setPmProcurementCategory(
 							new PmParameter());
-				}*/
+				}
 				if(tenderResDTO.getZoneDetails() !=null){
 				for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
 
@@ -4144,7 +4151,7 @@ public class SpecificationBackingBean extends
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
 			reqDTO.setProcurementCatCode("FNB");
 			reqDTO.setIsMandatory(false);
-			reqDTO.setChecklistTypeCode("T");
+			reqDTO.setDocCategoryCode("T");
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
 			System.out.println("======document list size==="
@@ -4364,7 +4371,7 @@ public class SpecificationBackingBean extends
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
 			reqDTO.setProcurementCatCode("SEC");
 			reqDTO.setIsMandatory(false);
-			reqDTO.setChecklistTypeCode("F");
+			reqDTO.setDocCategoryCode("F");
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
 			System.out.println("======document list size==="
@@ -7743,13 +7750,29 @@ public class SpecificationBackingBean extends
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
-
+		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
+		String taskName = res.getTaskName();
+		if(SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)){				
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
+		}
+		else if(SCProcessNameConst.CONSOLIDATE_SPECIFICATION.equalsIgnoreCase(taskName)){				
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
+	}
+		else{
+		fc.getApplication()
+		.getNavigationHandler()
+		.handleNavigation(fc, null,
+				QTConstants.SPECIFICICATON_PREPARATION);
+		}
+	
 	}
 }
