@@ -91,6 +91,10 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmPrjSetia;
+import my.ep.persistence.entity.pm.common.PmSetia;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
 //import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -172,7 +176,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(new PmOrgProfile());
 			//getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setSmSupplier(new SmSupplier());
-			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
+			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(1L);
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 			getManagedBean().getFulfilmentRequest().setCtContract(new CtContract());
@@ -259,7 +263,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(27);
+			smSupplier.setSupplierId(1);
 			flFulfilmentRequest.setSmSupplier(smSupplier);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
@@ -534,12 +538,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		    pmParameter.setParameterId(232L);
 			CmItem cmItem = new CmItem();
 			cmItem.setItemId(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId());
-			PmVotFund pmVotFund=new PmVotFund();
-		    pmVotFund.setVotFundId(1L);
+			//PmVotFund pmVotFund=new PmVotFund();
+		    //pmVotFund.setVotFundId(1L);
 		   // wqwqwqwqw
 			   flItem.setItemType(pmParameter);
 			   flItem.setCmItem(cmItem);
-			   flItem.setPmVotFund(pmVotFund);
+			   //flItem.setPmVotFund(pmVotFund);
 			   flItem.setUnitPrice(unitPrice);
 			   flItem.setChargeLineSeq(1);
 			   flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
@@ -832,13 +836,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			CmItem cmItem = new CmItem();
 			cmItem.setItemId(flItem.getCmItem().getItemId());
 			//.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId()
-			PmVotFund pmVotFund=new PmVotFund();
-		    pmVotFund.setVotFundId(1L);
+			//PmVotFund pmVotFund=new PmVotFund();
+		   // pmVotFund.setVotFundId(1L);
 			FlFulfilmentItem fulfilmentItem =new FlFulfilmentItem();
 			
 		    flItem.setItemType(pmParameter);
 		    flItem.setCmItem(cmItem);
-		    flItem.setPmVotFund(pmVotFund);
+		    //flItem.setPmVotFund(pmVotFund);
 		    
 		   // preparing FlFulfilmentItem for SAVE
 			fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
@@ -846,7 +850,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentItem.setChargeLineSeq(1);
 			fulfilmentItem.setItemType(pmParameter);
 			fulfilmentItem.setCmItem(cmItem);
-			fulfilmentItem.setPmVotFund(pmVotFund);
+			//fulfilmentItem.setPmVotFund(pmVotFund);
 			//flItem.setFlFulfilmentItem(fulfilmentItem);
 			
 			
@@ -1243,7 +1247,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		 for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
 			 //System.out.println("item id "+item.getScRequestNoteDtl().getRequestNoteDtlId());
 			 FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			 reqDTO.setSupplierId(27L);
+			 reqDTO.setSupplierId(1L);
 			 reqDTO.setIssuedOrgId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 			 reqDTO.setYear(2014);
 			// getManagedBean().getFlReqNoteMap().put(item.getScRequestNoteDtl().getRequestNoteDtlId(),dtl);
@@ -1328,8 +1332,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 				for(TreeNode children:selectedNode.getChildren()){
 					//do it for others
-					setPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
-					setPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
+					getManagedBean().setSetiaId(((FlFulfilmentItemAddr)children.getData()).getPmSubSetia().getSubSetiaId());
+					getManagedBean().setPrgActivityId(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity().getPrgActivityId());
 				}
 			}
 		}else{
@@ -1343,9 +1347,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 				if(null!=selectedNode){
 					for(TreeNode children:selectedNode.getChildren()){
-						//do it for others
-						setDisPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
-						setDisPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
+						if("S".equalsIgnoreCase(((FlFulfilmentItemAddr)children.getData()).getCoaValue())){
+							//do it for others
+							getManagedBean().setSetiaId(((FlFulfilmentItemAddr)children.getData()).getPmSubSetia().getSubSetiaId());
+							getManagedBean().setPrgActivityId(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity().getPrgActivityId());
+						}else{
+							System.out.println("nothing do to ");
+							
+						}
+						
 						
 					}
 				}
@@ -1359,8 +1369,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 					for(TreeNode children:selectedNode.getChildren()){
 						//do it for others
-						setPmPrjSetia(((FlFulfilmentItemAddr)children.getData()).getPmPrjSetia());
-						setPmPrgActivity(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity());
+						getManagedBean().setPrgActivityId(((FlFulfilmentItemAddr)children.getData()).getPmSubSetia().getSubSetiaId());
+						getManagedBean().setPrgActivityId(((FlFulfilmentItemAddr)children.getData()).getPmPrgActivity().getPrgActivityId());
 					}
 				}
 			}else{
@@ -1425,6 +1435,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void chargeLineApply() {
 		getPmPrjSetia();
 		getPmPrgActivity();
+		getManagedBean().getVotFundId();
 		
 		  updateSelectedTreeNodes();
 		
@@ -1433,15 +1444,34 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				//(getManagedBean().getSelectedNodes().length >0 && null !=getManagedBean().getSelectedNodes())
 			}else{
 				
-				if(0 == getPmPrjSetia() || 0== getPmPrgActivity()){
-					throw new EpException("Please Select Setia / Sub Setia.");
+				if(null == getManagedBean().getVotFundId() || null== getManagedBean().getProjectId() || 
+						null == getManagedBean().getPrgActivityId() || null == getManagedBean().getSetiaId() ||
+						null== getManagedBean().getSubSetiaId()){
+					throw new EpException("Please Select All Dropdowns");
 				}
 				updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); 
 				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 					for(TreeNode children:selectedNode.getChildren()){
 						//do it for others
-						((FlFulfilmentItemAddr)children.getData()).setPmPrjSetia(getPmPrjSetia());
-						((FlFulfilmentItemAddr)children.getData()).setPmPrgActivity(getPmPrgActivity());
+						PmVotFund pmVotFund=new PmVotFund();
+						PmSetia pmSetia=new PmSetia();
+						PmSubSetia pmSubSetia =new PmSubSetia();
+						PmPrgActivity pmPrgActivity=new PmPrgActivity();
+						pmVotFund.setVotFundId(getManagedBean().getVotFundId());
+						pmSetia.setSetiaId(getManagedBean().getSetiaId());
+						pmSubSetia.setSubSetiaId(getManagedBean().getSetiaId());
+						pmPrgActivity.setPrgActivityId(getManagedBean().getPrgActivityId());
+						
+						FlFulfilmentItemAddr childItemAddress=(FlFulfilmentItemAddr)children.getData();
+						childItemAddress.setPmSubSetia(pmSubSetia);
+						childItemAddress.setPmPrgActivity(pmPrgActivity);
+						childItemAddress.setPmVotFund(pmVotFund);
+						
+						
+						
+						childItemAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
+						childItemAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
+						childItemAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
 					}
 				}
 			}
@@ -1496,9 +1526,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							for(TreeNode node:selectedNodes){
 								FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
 								if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+									PmPrgActivity pmPrgActivity=new PmPrgActivity();
+									
 									itemAddress.setCoaValue("Y");
-									itemAddress.setPmPrjSetia(getPmPrjSetia());
-									itemAddress.setPmPrgActivity(getPmPrgActivity());
+									//itemAddress.setPmSubSetia(getManagedBean().getSetiaId());
+									//itemAddress.setPmPrgActivity(getManagedBean().getPrgActivityId());
 								}
 								
 							}
