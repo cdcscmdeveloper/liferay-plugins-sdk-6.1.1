@@ -4,22 +4,38 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
+import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.type.sc.ApprovalCategory;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author Viswanath
@@ -222,6 +238,81 @@ public class ApprovalBackingBean extends
 			}
 		}
 		return imageFileName;
+	}
+	
+	public void preRenderView(){
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		this.getManagedBean().setTaskId(taskId);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		SCQuotationTenderDataType obj = (SCQuotationTenderDataType)res.getPojo();
+		this.getManagedBean().setQuotationTenderDataType(obj);
+		this.getManagedBean().setOutComes(res.getAction());		
+		FacesContext context= FacesContext.getCurrentInstance();
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, "/xhtml/sc/quatationtender/approval/approvalresults.xhtml");
+	}
+	
+	public String updateBpmTask(String outcome) {
+
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		qtReqDTO.setToken(ctxToken);
+		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+
+		qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
+		// TODO Need to get it from front end and set it
+
+		qtReqDTO.setOutcome(outcome);
+		try {
+			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+
+		/*	QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
+					.updateBPMAction(qtReqDTO);*/
+			QuationTenderResDTO resDTO= new QuationTenderResDTO();
+			resDTO.setSuccessful(true);
+			if (resDTO.isSuccessful()) {
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""
+
+						));
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(fc, null,
+								"/xhtml/shared/acknowledge.xhtml");
+
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process now", ""
+
+					));
+		}
+		return null;
+
 	}
 
 }
