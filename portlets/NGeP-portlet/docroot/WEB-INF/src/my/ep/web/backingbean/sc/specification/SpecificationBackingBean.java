@@ -444,9 +444,10 @@ public class SpecificationBackingBean extends
 	public void saveSpecificationCommitteeDtls() {
 		IQTDetailSO detailSO;
 		try {
-			QuationTenderReqDTO reqDTO = prepareSpecReq();
+			
+			QuationTenderReqDTO reqDTO =new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getScQt();
-			// scQt.setFulfilmentType("S");
+			scQt.setFulfilmentType("S");
 			System.out
 					.println("=======enter saveSpecificationCommitteeDtls method===");
 			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -580,6 +581,7 @@ public class SpecificationBackingBean extends
 							+ schedule.getEndYear();
 					// System.out.println("======display schedule No==="+schedule.getScheduleNo());
 					schedule.setScheduleNo(schedule.getScheduleNo());
+					schedule.setScheduleType(1);
 					schedule.setFromDate(df.parse(fromdate));
 					schedule.setToDate(df.parse(toDate));
 					schedule.setScQt(this.getManagedBean().getScQt());
@@ -976,13 +978,13 @@ public class SpecificationBackingBean extends
 					questions2.add(tpl1);
 				}
 				specMaster.setTplSpecQuestions(questions2);
-				PmParameter pmParameter= new PmParameter();
+				PmParameter pmParameter = new PmParameter();
 				pmParameter.setParameterId(125l);
 				specMaster.setSpecTypeCode(pmParameter);
 
 			} else {
 				specMaster.setTplSpecQuestions(null);
-				PmParameter pmParameter= new PmParameter();
+				PmParameter pmParameter = new PmParameter();
 				pmParameter.setParameterId(126l);
 				specMaster.setSpecTypeCode(pmParameter);
 			}
@@ -1314,6 +1316,7 @@ public class SpecificationBackingBean extends
 					checkList.setScQt(this.getManagedBean().getScQt());
 					checkList.setQtScoreWeightage(new ScQtScoreWeightage());
 					checkList.setAction(pmDoc.getChecklistActionCode());
+					checkList.setPmDocument(pmDoc);
 					PmStatus status = new PmStatus();
 					status.setStatusId(1L);
 					checkList.setPmStatus(status);
@@ -1368,6 +1371,7 @@ public class SpecificationBackingBean extends
 					checkList.setChecklistSeq(1);
 					checkList.setScQt(this.getManagedBean().getScQt());
 					checkList.setAction(pmDoc.getChecklistActionCode());
+					checkList.setPmDocument(pmDoc);
 					checkList.setQtScoreWeightage(new ScQtScoreWeightage());
 					PmStatus status = new PmStatus();
 					status.setStatusId(1L);
@@ -1467,7 +1471,7 @@ public class SpecificationBackingBean extends
 					score = (int) addScore;
 
 				}
-
+                  System.out.println("===Technical Score==="+score);
 				this.getManagedBean().setTechPoints(score);
 
 				this.getManagedBean().setTechnicalScoring(checklist);
@@ -1805,7 +1809,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			SpecificationResDTO resDTO = specSo
 					.retrieveDeliverSeriviceAddress(reqDTO);
-			if (resDTO.getSpecZoneDtls().isEmpty()) {
+			if (resDTO.getSpecZoneDtls()==null || resDTO.getSpecZoneDtls().isEmpty()) {
 				List<ScQtDeliveryLoc> deliveryLoc = this.getManagedBean()
 						.getDeliveryNonZoneList();
 				if (deliveryLoc == null) {
@@ -2543,7 +2547,7 @@ public class SpecificationBackingBean extends
 
 			if (getManagedBean().getScQt() == null) {
 				// this.getManagedBean().setApprovalList(getAppDetails());
-				// retriveSpecdetails(146L);
+				retriveSpecdetails(791L);
 
 			}
 
@@ -2872,7 +2876,10 @@ public class SpecificationBackingBean extends
 			ScQtCheckList checkList) {
 		this.getManagedBean().setIndex(index);
 		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-
+		checkList.setChangedBy(1L);
+		checkList.setCreatedBy(1L);
+		checkList
+		.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		checkListValue.setChangedBy(1L);
 		checkListValue.setCreatedBy(1L);
 		checkListValue
@@ -2880,43 +2887,30 @@ public class SpecificationBackingBean extends
 		checkListValue.setScQtCheckList(checkList);
 		checkList.setScQtCheckListValue(checkListValue);
 
-		if (checkList.getTitle().contains("Company Experience")) {
+		if ("TG".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
+			return "companyExperience.xhtml?faces-redirect=true";
+		} else if ("TN".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 
-			StringTokenizer tokenizer = new StringTokenizer(
-					checkList.getTitle(), "(,)");
-			// System.out.println("tokenizer value==="+tokenizer.nextElement());
-			String compnayName = "";
-			while (tokenizer.hasMoreTokens()) {
-				// System.out.println(tokenizer.nextToken());
-				compnayName = tokenizer.nextToken();
-				if (compnayName
-						.equalsIgnoreCase("The List of Contract based on number of contract from Federal Government")) {
-					// this.getManagedBean().setCheckListScore(null);
-					// this.getManagedBean().setScoringForYears(null);
-					// this.getManagedBean().setContractAmount(null);
-					return "companyExperience.xhtml?faces-redirect=true";
-				} else if (compnayName
-						.equalsIgnoreCase("The List of Contract based on number of contract from Federal Private")) {
-					// this.getManagedBean().setNonFederalScore(null);
-					// this.getManagedBean().setNonFederalScoreyears(null);
-					// this.getManagedBean().setNonFederalContractScore(null);
-					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
-				}
-			}
-
+			return "companyExperiencePrivate.xhtmlfaces-redirect=true";
 		}
 
-		else if (checkList.getTitle().contains("Warranty")) {
+		else if ("WR".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			// this.getManagedBean().setWarantyScore(null);
 			return "waranty.xhtml?faces-redirect=true";
 		}
 
-		else if (checkList.getTitle().contains("Training")) {
+		else if ("TR".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			// this.getManagedBean().setTrainingScore(null);
 			return "training.xhtml?faces-redirect=true";
-		} else if (checkList.getTitle().contains("Senari")) {
+		} else if ("TL".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "technicalEmployeeList.xhtml?faces-redirect=true";
-		} else if (checkList.getTitle().contains("Bilangan")) {
+		} else if ("NE".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "totalEmployees.xhtml?faces-redirect=true";
 		}
 
@@ -2928,7 +2922,10 @@ public class SpecificationBackingBean extends
 			ScQtCheckList checkList) {
 		this.getManagedBean().setIndex(index);
 		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-
+		checkList.setChangedBy(1L);
+		checkList.setCreatedBy(1L);
+		checkList
+		.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		checkListValue.setChangedBy(1L);
 		checkListValue.setCreatedBy(1L);
 		checkListValue
@@ -2936,42 +2933,38 @@ public class SpecificationBackingBean extends
 		checkListValue.setScQtCheckList(checkList);
 		checkList.setScQtCheckListValue(checkListValue);
 
-		if (checkList.getTitle().contains("Company Experience")) {
-			StringTokenizer tokenizer = new StringTokenizer(
-					checkList.getTitle(), "(,)");
+		if ("FG".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 
-			String compnayName = "";
-			while (tokenizer.hasMoreTokens()) {
+			return "financialGovernementCompany.xhtml?faces-redirect=true";
+		} else if ("FN".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 
-				compnayName = tokenizer.nextToken();
+			return "financialPrivateCompany.xhtml?faces-redirect=true";
 
-				if (compnayName.contains("of Contract from Federal Government")) {
-
-					return "financialGovernementCompany.xhtml?faces-redirect=true";
-				} else if (compnayName
-						.contains("of Contract from Federal Private")) {
-
-					return "financialPrivateCompany.xhtml?faces-redirect=true";
-				}
-			}
-
-		} else if (checkList.getTitle().contains("Kemudahan")) {
+		} else if ("CF".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "creditFacility.xhtml?faces-redirect=true";
 		}
 
-		else if (checkList.getTitle().contains("Tunai")) {
+		else if ("CH".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "cashOnhand.xhtml?faces-redirect=true";
 		}
 
-		else if (checkList.getTitle().contains("Bank")) {
+		else if ("BS".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "bankStatement.xhtml?faces-redirect=true";
 		}
 
-		else if (checkList.getTitle().contains("Assets")) {
+		else if ("AL".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "assetsLiabilities.xhtml?faces-redirect=true";
-		} else if (checkList.getTitle().contains("Maklumat")) {
+		} else if ("SD".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "supplierinfo.xhtml?faces-redirect=true";
-		} else if (checkList.getTitle().contains("Paid")) {
+		} else if ("PC".equalsIgnoreCase(checkList.getPmDocument()
+				.getDocDefinitionKey())) {
 			return "paidUpCapital.xhtml?faces-redirect=true";
 		}
 
@@ -2983,47 +2976,46 @@ public class SpecificationBackingBean extends
 
 		IQTTemplateSO qtTemplateSO;
 		try {
-			//QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			// QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 
-			//QTTemplateDocResDTO resDto = null;
+			// QTTemplateDocResDTO resDto = null;
 
 			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
 
-			//QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
+			// QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 
-			/*try {
-
-				docReqDTO.setCheckListId(checklist.getQtChecklistId());
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
-
-				resDto = qtTemplateSO
-						.retriveTemplateDocDetailsByCheckListId(docReqDTO);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
+			/*
+			 * try {
+			 * 
+			 * docReqDTO.setCheckListId(checklist.getQtChecklistId());
+			 * qtTemplateSO = BusinessDelegate.getInstance()
+			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+			 * IQTTemplateSO.class);
+			 * 
+			 * resDto = qtTemplateSO
+			 * .retriveTemplateDocDetailsByCheckListId(docReqDTO);
+			 * 
+			 * } catch (Exception e) { e.printStackTrace(); }
+			 */
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
 
-			templateSpecBean.setSpecMaster(checklist
-					.getScQtDoc().getTplSpecMaster());
+			templateSpecBean.setSpecMaster(checklist.getScQtDoc()
+					.getTplSpecMaster());
 
 			templateSpecBean
 					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 
 			specBB.retrieveTemplateSpecMaster(templateSpecBean);
 
-			/*this.getManagedBean()
-					.getScqtDoc()
-					.setTplSpecMaster(
-							resDto.getScQtCheckList().getScQtDoc()
-									.getTplSpecMaster());
-
-			this.getManagedBean().setScqtDoc(
-					resDto.getScQtCheckList().getScQtDoc());*/
+			/*
+			 * this.getManagedBean() .getScqtDoc() .setTplSpecMaster(
+			 * resDto.getScQtCheckList().getScQtDoc() .getTplSpecMaster());
+			 * 
+			 * this.getManagedBean().setScqtDoc(
+			 * resDto.getScQtCheckList().getScQtDoc());
+			 */
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4882,7 +4874,7 @@ public class SpecificationBackingBean extends
 				localList.add(scoreOfYears);
 			}
 			int localScore = scoreYear + checklistScore;
-
+            System.out.println("====local score==="+localScore);
 			checkList.getQtScoreWeightage()
 					.setScore(new BigDecimal(localScore));
 			// itemIndex = checklist.indexOf(list); // checklist.remove(list);
@@ -4904,6 +4896,9 @@ public class SpecificationBackingBean extends
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			reqDTO.setScQtCheckList(checkList);
 			// specSo.saveCheckListScore(reqDTO);
+		
+			 System.out.println("====checkListetScore==="+checkList.getQtScoreWeightage()
+					.getScore());
 			this.getManagedBean()
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
@@ -7583,7 +7578,7 @@ public class SpecificationBackingBean extends
 		try {
 
 			scqtDocDest.setTplSpecMaster(specMaster);
-			
+
 			scqtDocDest.setTplDocMaster(null);
 			ScQtCheckList checkList = new ScQtCheckList();
 			checkList.setDocCategory(docType);
