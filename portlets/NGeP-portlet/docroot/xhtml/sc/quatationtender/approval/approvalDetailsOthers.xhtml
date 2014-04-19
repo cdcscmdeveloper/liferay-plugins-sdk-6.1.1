@@ -5,50 +5,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Others Approval" toggleable="true">
-		<p:dataTable>
-			<p:column headerText="Approval Category">
-				<h:outputText value="MITI Approval" />
+	<p:spacer height="5" />
+	<p:panel>
+		<p:dataTable id="otherreqdtlsid" value="#{othersApprovalDtlsList}"
+			var="otherrequestdetails" rowIndexVar="index" editable="true"
+			rowKey="#{otherrequestdetails}">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.appcategory']}">
+				<h:outputText value="#{otherrequestdetails.approvalType}" />
 			</p:column>
-			<p:column headerText="Status">
-				<h:outputText value="Reject" />
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>
-			<p:column headerText="Document">
+			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
 			</p:column>
-			<p:column headerText="Remarks">
-				<h:inputTextarea cols="5" rows="5" />
+			<p:column headerText="#{lbl['lbl.sc.qt.remark']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 
-	<!-- <p:panel header="Remark" toggleable="true">
-		<table style="width: 50%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><h:outputLabel
-						value="Remark" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUsername}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40"
-										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel> -->
 </ui:composition>

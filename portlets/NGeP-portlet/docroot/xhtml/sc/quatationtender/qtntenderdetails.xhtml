@@ -123,15 +123,28 @@
 			</tr>
 		</table>
 
-		<p:tree id="ctSupplierZones" style="border:none;"
-			value="#{qTDetailBB.managedBean.ctZoneSuppliers}" var="ctZones"
-			selectionMode="single" dynamic="true">
-			<p:treeNode type="zone">
-				<h:outputText value="#{ctZones.name}" />
-			</p:treeNode>
-			<p:treeNode type="state">
-				<h:outputText value="#{ctZones.stateName}" />
-			</p:treeNode>
-		</p:tree>
+		<p:dataTable id="zoneGeneralDataTable"
+			value="#{qTDetailBB.managedBean.zoneGeneralTrees}" var="zoneTree"
+			style="width:65%" rowIndexVar="index">
+			<p:column headerText="Location">
+				<p:tree value="#{zoneTree}" var="location">
+
+					<p:treeNode type="zone">
+						<h:outputText value="#{location.zoneName}" />
+					</p:treeNode>
+
+					<p:treeNode type="state">
+						<h:outputText value="#{location.pmState.stateName}" />
+					</p:treeNode>
+					<p:treeNode type="division">
+						<h:outputText value="#{location.pmDivision.divisionName}" />
+					</p:treeNode>
+					<p:treeNode type="district">
+						<h:outputText value="#{location.pmDistrict.districtName}" />
+					</p:treeNode>
+				</p:tree>
+			</p:column>
+
+		</p:dataTable>
 	</p:panel>
 </ui:composition>

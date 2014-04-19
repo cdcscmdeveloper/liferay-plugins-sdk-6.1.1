@@ -11,10 +11,11 @@
 		<p:dataTable id="openPnlId" var="cateGory"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			style="width:100%" rowIndexVar="index" styleClass="openPnlId"
-			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}" rowKey="#{cateGory}">
-			
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
+			rowKey="#{cateGory}">
+
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
@@ -92,11 +93,12 @@
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-			<p:panel header="Location List"
+			<p:panel header="#{lbl['lbl.so.location.list']}"
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+						<td style="width: 94px"><p:outputLabel
+								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locLevels"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.locationLevel}"
 								style="width: 178px;margin-bottom: 5px;">
@@ -149,11 +151,14 @@
 				</div>
 			</p:panel>
 
-			<p:panel header="Location List"
+			<h:outputText
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel}" />
+			<p:panel header="#{lbl['lbl.so.location.list']}123"
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+						<td style="width: 94px"><p:outputLabel
+								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel}"
 								style="width: 178px;margin-bottom: 5px;">
@@ -166,7 +171,7 @@
 					</tr>
 				</table>
 			</p:panel>
-			
+
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
 				<h:panelGrid width="100%" style="margin-top:20px">

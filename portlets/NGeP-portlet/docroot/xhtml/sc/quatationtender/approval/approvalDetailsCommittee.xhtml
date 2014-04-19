@@ -5,17 +5,23 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Request Details" toggleable="true">
-		<p:dataTable style="width:50%">
-			<p:column headerText="Type of Approval Request" />
+	<p:spacer height="5" />
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="committeereqdtlsid" var="committeerequestdetails"
+			value="#{committeeApprovalDtlsList}" rowIndexVar="index"
+			editable="true" rowKey="#{committeerequestdetails}" style="width:50%">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText value="#{committeerequestdetails.approvalType}" />
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="  Committee Approver Setting" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.committee.appoint']}"
+		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
-			<p:pickList id="committeeapproverid"
-				value="#{commiteList}"
+			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
 				converter="approverConverter">
@@ -25,11 +31,12 @@
 		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true" id="uploadsids">
+	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+		id="uploadsids">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="Remark" /></td>
+						value="#{lbl['lbl.sc.qt.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{bpkApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
@@ -56,7 +63,7 @@
 					</p:dataGrid></td>
 
 				<td class="TableFieldLeft"><p:outputLabel
-						value="Supporting Document" /></td>
+						value="#{lbl['lbl.sc.qt.supp.doc']}" /></td>
 				<td class="TableFieldRight">
 					<table style="width: 150px;">
 						<tr>
@@ -103,16 +110,15 @@
 		</table>
 	</p:panel>
 
-	<!-- <ui:include src="/xhtml/sc/quatationtender/approvalDetailSection.xhtml" /> -->
-	<p:panel header="History" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
 		<p:dataTable>
-			<p:column headerText="Type of Approval Request">
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 			</p:column>
-			<p:column headerText="Approved By">
+			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
 			</p:column>
-			<p:column headerText="Status">
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>
-			<p:column headerText="Date">
+			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>

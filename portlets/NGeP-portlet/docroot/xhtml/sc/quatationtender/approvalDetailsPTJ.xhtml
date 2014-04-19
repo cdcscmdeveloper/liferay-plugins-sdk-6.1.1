@@ -5,61 +5,71 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Request Details" toggleable="true">
-		<p:dataTable>
-			<p:column headerText="Type of Approval Request">
+	<p:spacer height="5" />
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="ptjreqdtlsid" var="ptjrequestdetails"
+			value="#{ptjApprovalDtlsList}" rowIndexVar="index" editable="true"
+			rowKey="#{ptjrequestdetails}" style="width:50%">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText value="#{ptjrequestdetails.approvalType}" />
 			</p:column>
-			<p:column headerText="From">
+			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
+				<h:outputText value="#{ptjrequestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="To">
+			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
+				<h:outputText value="#{ptjrequestdetails.changedValue}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="  PTJ Approver Setting" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.ptj.app.setting']}" toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
-			<p:pickList id="ptjapproverid"
-				value="#{approvalBackingBean.managedBean.ptjApprovalUsers}"
-				var="approverUser" showTargetControls="true"
-				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
-				converter="approverConverter">
+			<p:pickList id="ptjapproverid" value="#{ptjList}"
+				var="ptjapproverUser" showTargetControls="true"
+				itemLabel="#{ptjapproverUser.userName}"
+				itemValue="#{ptjapproverUser}" converter="approverConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true" id="uploadfileid">
+
+	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+		id="uploadfileid">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="Remark" /></td>
+						value="#{lbl['lbl.sc.qt.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
-						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						value="#{ptjApprovalRemarkList}" var="remarkVar"
+						rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
 								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUsername)}"
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 										height="30" width="30" /></td>
 								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUsername}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
 										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 									</h:outputText></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40"
-										value="#{approvalBackingBean.managedBean.scQtApproval.approverRemark}" /></td>
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
 
 				<td class="TableFieldLeft"><p:outputLabel
-						value="Supporting Document" /></td>
-
+						value="#{lbl['lbl.sc.qt.supp.doc']}" /></td>
 				<td class="TableFieldRight">
 					<table style="width: 150px;">
 						<tr>
@@ -106,19 +116,19 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="History" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
 		<p:dataTable>
-			<p:column headerText="Type of Approval Request">
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 			</p:column>
-			<p:column headerText="From">
+			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
 			</p:column>
-			<p:column headerText="To">
+			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
 			</p:column>
-			<p:column headerText="Approved By">
+			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
 			</p:column>
-			<p:column headerText="Status">
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>
-			<p:column headerText="Date">
+			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>

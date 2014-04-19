@@ -6,102 +6,80 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" / -->
 	<p:panel header="Deduction Payment" toggleable="true">
-		<p:commandLink value="Deduction Payment"></p:commandLink>
 
-		<p:dataTable id="deductpayments" var="dpayment"
+		<p:dataTable id="deductPaymentId" var="deductpayment"
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
-			styleClass="deductiondetails"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
-			rowKey="#{dpayment}" selectionMode="single">
+			rowKey="#{deductpayment}">
 
-			<p:ajax event="rowSelect" update=":form:qtsubId:deductclause" />
+			<p:column selectionMode="multiple" style="width:2%" />
 
-			<ac:paginator for="deductpayments" />
+			<ac:paginator for="deductPaymentId" />
 
 			<p:column headerText="Deduction Type">
 				<h:outputText
-					value="#{dpayment.deductionType.pmParameterType.parameterName}"
-					rendered="#{dpayment.brandNew eq false}" />
+					value="#{deductpayment.deductionType.pmParameterType.parameterName}"
+					rendered="#{deductpayment.brandNew eq false}" />
 				<p:selectOneMenu
 					value="#{qTDeductionPaymentBackingBean.managedBean.deductionPaymentArray}"
-					rendered="#{dpayment.brandNew eq true}">
+					rendered="#{deductpayment.brandNew eq true}">
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDropdownCodeValues(ParameterTypeConst.deductionType)}" />
-					<p:ajax event="change" update="deductpayments"
+					<p:ajax event="change" update="deductPaymentId"
 						listener="#{qTDeductionPaymentBackingBean.deductionPaymentEvent}"
 						partialSubmit="true" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="Description">
-				<h:outputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq false}" />
-				<p:inputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq true}" />
+			<p:column headerText="Description"
+				rendered="#{qTDeductionPaymentBackingBean.managedBean.descriptionField}">
+				<h:outputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq false}" />
+				<p:inputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq true}" readonly="true" />
 			</p:column>
 
 			<p:column headerText="Percentage"
 				rendered="#{qTDeductionPaymentBackingBean.managedBean.percentageField}">
-				<h:outputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq false}" />
-				<p:inputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq true}" />
+				<h:outputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq false}" />
+				<p:inputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq true}" />
 			</p:column>
 
 			<p:column headerText="Amount"
 				rendered="#{qTDeductionPaymentBackingBean.managedBean.amountField}">
-				<h:outputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq false}" />
-				<p:inputText value="#{dpayment.deductionAmount}"
-					rendered="#{dpayment.brandNew eq true}" />
+				<h:outputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq false}" />
+				<p:inputText value="#{deductpayment.deductionAmount}"
+					rendered="#{deductpayment.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="Duration"
+				rendered="#{qTDeductionPaymentBackingBean.managedBean.durationField}">
+				<h:outputText value="#{deductpayment.duration}"
+					rendered="#{deductpayment.brandNew eq false}" />
+				<p:inputText value="#{deductpayment.duration}"
+					rendered="#{deductpayment.brandNew eq true}" />
 			</p:column>
 		</p:dataTable>
-		<!-- </p:panelGrid> -->
+
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-						process="@this,deductpayments" partialSubmit="true"
+						process="@this, deductPaymentId" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.addDedcutionPayment}"
-						update="deductpayments" icon="ui-icon-add" />
+						update="deductPaymentId" icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete" />
+						icon="ui-icon-delete"
+						action="#{qTDeductionPaymentBackingBean.deleteDedcutionPayment}"
+						update="deductPaymentId" />
 				</div>
 			</f:facet>
 		</p:panelGrid>
 
-		<p:commandLink value="Deduction Clause"></p:commandLink>
-
-		<p:dataTable
-			value="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
-			id="deductclause" var="dclause" rowKey="#{dclause}"
-			rowIndexVar="rowIndex" rows="10">
-
-			<!-- <p:column selectionMode="multiple" style="width:5%" /> -->
-
-			<ac:paginator for="deductclause" />
-
-			<!-- <p:column headerText="Deduction Clause">
-					<h:outputLabel value="#{dclause.deductionType}" />
-				</p:column> -->
-
-			<p:column headerText="Description">
-				<h:outputText value="desc" />
-			</p:column>
-
-		</p:dataTable>
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.so.addbtn']}" icon="ui-icon-add"></p:commandButton>
-					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete" />
-				</div>
-			</f:facet>
-		</p:panelGrid>
 	</p:panel>
 </ui:composition>

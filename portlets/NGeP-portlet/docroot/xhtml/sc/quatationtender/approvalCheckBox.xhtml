@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Workflow" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.qt.arroval']}" toggleable="true"
 		id="approvalWorkFlow">
 		<table style="width: 100%">
 			<tr>
 				<td width="20%" valign="top"><p:outputLabel
-						value="Approval Category" /></td>
+						value="#{lbl['lbl.sc.qt.appcategory']}" /></td>
 				<td width="80%"><h:panelGrid border="0" cellpadding="0"
 						cellspacing="0" columns="3" styleClass="noBorders tr,noBorders td"
 						columnClasses="columnWidth70">
@@ -45,6 +45,9 @@
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
 
+					<ui:param name="approvalDtlsList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+
 					<ui:param name="bpkApprovalRemarkList"
 						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
 
@@ -53,6 +56,9 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Committee Appointment Approval'}">
+
+					<ui:param name="committeeApprovalDtlsList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
 
 					<ui:param name="commiteList"
 						value="#{approvalCategory.budgetApprovalUsers}" />
@@ -66,18 +72,35 @@
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'PTJ Approval'}">
 
-					<!-- <ui:include src="/xhtml/sc/quatationtender/requestDetails.xhtml" /> -->
+					<ui:param name="ptjApprovalDtlsList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+
+					<ui:param name="ptjList"
+						value="#{approvalCategory.budgetApprovalUsers}" />
+
+					<ui:param name="ptjApprovalRemarkList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+
 					<ui:include
 						src="/xhtml/sc/quatationtender/approvalDetailsPTJ.xhtml" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Finalization Committee Approval'}">
 
+					<ui:param name="fcaApprovalDtlsList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+
+					<ui:param name="fcaApprovalRemarkList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsProcurement.xhtml" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'Others Approval'}">
+
+					<ui:param name="othersApprovalDtlsList"
+						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
 
 					<ui:include
 						src="/xhtml/sc/quatationtender/approval/approvalDetailsOthers.xhtml" />
