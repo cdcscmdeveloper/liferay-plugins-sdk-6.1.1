@@ -63,13 +63,13 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
-		temp.put("Purchase Review", DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.DIRECT_PURCHASE_REVIEW, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		
-
+		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+        temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		// QuationTender
 		temp.put("MITI Approval", "qtmaintanance");
 		temp.put("Budget Approval", "qtmaintanance");
