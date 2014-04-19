@@ -92,35 +92,35 @@
 		<p:panel id="listUpdate" header="#{lbl['lbl.sc.tpl.tmp.search']}" toggleable="true">
 		<p:commandLink value="#{lbl['lbl.sc.tpl.list']}"></p:commandLink>
 			<h:panelGrid style="width:100%;">
-				<p:dataTable id="createList" var="scQtDoc"
+				<p:dataTable id="createList" var="tplSpecMaster"
 					value="#{specificationBackingBean.templateSpecCreate}" 
 					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index" lazy="true">
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
                     <ac:paginator for="createList"></ac:paginator>
 					
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.title']}">
-						<h:outputText value="#{scQtDoc.tplSpecMaster.specName}"></h:outputText>
+						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}">
-						<h:outputText value="#{scQtDoc.tplSpecMaster.specTypeCode.parameterId}" />
+						<h:outputText value="#{tplSpecMaster.specTypeCode.parameterId}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}">
-						<h:outputText value="#{scQtDoc.tplSpecMaster.itemTypeCode.parameterId}" />
+						<h:outputText value="#{tplSpecMaster.itemTypeCode.parameterId}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}">
 						<h:outputText
-							value="#{scQtDoc.tplSpecMaster.procurementCategory.parameterId}" />
+							value="#{tplSpecMaster.procurementCategory.parameterId}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}">
-						<h:outputText value="#{scQtDoc.scQt.qtNo}" />
-					</p:column>
+					<!-- <p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}">
+						<h:outputText value="#{tplSpecMaster.scQtDocs.scQt.qtNo}" />
+					</p:column> -->
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
 					<ui:fragment rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
-					<p:commandButton value="Create" action="#{specificationBackingBean.cloneAction(scQtDoc)}" oncomplete="create.hide();" icon="ui-icon-add"></p:commandButton>
+					<p:commandButton value="Create" action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster)}" oncomplete="create.hide();" icon="ui-icon-add"></p:commandButton>
 					</ui:fragment>
 					<ui:fragment rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 						<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
-							action="#{specificationBackingBean.cloneAction(scQtDoc)}"
+							action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster)}"
 							oncomplete="create.hide();" icon="ui-icon-clone"></p:commandButton>
 							</ui:fragment>
 					</p:column>

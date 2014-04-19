@@ -18,10 +18,10 @@
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.backAction}" />
 			<p:commandButton value="Complete" style="float:right;"
-				action="#{specificationBackingBean.saveCompleteTemplateSpec}" />
+				action="#{specificationBackingBean.completeTemplateSpec}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
-				action="#{specificationBackingBean.saveTemplateSpec}"
+				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
 				icon="ui-icon-save" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.backAction}"></p:commandButton>
