@@ -14,7 +14,7 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -27,7 +27,7 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
 				</tr>
 			</table>

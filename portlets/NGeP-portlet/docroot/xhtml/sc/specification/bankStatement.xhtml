@@ -38,7 +38,7 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="* #{lbl['lbl.sc.spec.from.month']}"></h:outputLabel></td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu 
 							value="#{specificationBackingBean.managedBean.fromMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -54,7 +54,7 @@
 					<td style="width: 40%"><h:outputLabel
 							value="* #{lbl['lbl.sc.spec.to.month']}"></h:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
-							<p:selectOneMenu style="margin-bottom:5px;" disabled="true"
+							<p:selectOneMenu style="margin-bottom:5px;" readOnly="true"
 								value="#{specificationBackingBean.managedBean.toMonth}">
 
 								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -62,7 +62,7 @@
 									listener="#{specificationBackingBean. toChange}"></p:ajax>
 
 							</p:selectOneMenu>
-							<p:selectOneMenu disabled="true" value="#{specificationBackingBean.managedBean.endYear}">
+							<p:selectOneMenu readOnly="true" value="#{specificationBackingBean.managedBean.endYear}">
 
 								<f:selectItem itemLabel="2014" itemValue="2014">
 								</f:selectItem>
