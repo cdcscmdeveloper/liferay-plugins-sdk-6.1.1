@@ -47,13 +47,13 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
@@ -88,6 +88,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
@@ -171,7 +173,7 @@ import com.liferay.portal.util.PortalUtil;
 public class SpecificationBackingBean extends
 		SourcingBaseBackingBean<SpecificationManagedBean> {
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
-	private IPagingDataModel<ScQtDoc> templateSpecCreate = new CreateTemplateSpecPagingDataModel();
+	private IPagingDataModel<TplSpecMaster> templateSpecCreate = new CreateTemplateSpecPagingDataModel();
 	private IPagingDataModel<PmAddressType> searchDeliveryAddress = new DeliveryPagingDataModel();
 
 	// private List<SpecificationCompilanceBean> selectedCompilenceList;
@@ -763,10 +765,11 @@ public class SpecificationBackingBean extends
 			return "specificationCreation.xhtml?faces-redirect=true";
 		}
 		if (this.getManagedBean().getScQt().isPanel()
-				&&"General".equalsIgnoreCase(this.getManagedBean().getCircularType())
-						
-				||"Specific".equalsIgnoreCase(this.getManagedBean().getCircularType())
-						) {
+				&& "General".equalsIgnoreCase(this.getManagedBean()
+						.getCircularType())
+
+				|| "Specific".equalsIgnoreCase(this.getManagedBean()
+						.getCircularType())) {
 			System.out.println("==enter pcr");
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
@@ -883,227 +886,68 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void saveCompleteTemplateSpec() {
-		IQTTemplateSO qtTemplateSO = null;
-		IStatusSO statussO = null;
-		IOrgProfileSO ProfileSo = null;
-		IQTDetailSO QtDetailsSO = null;
+	public void completeTemplateSpec() {
+
 		try {
-			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
-			if (this.getManagedBean().getScqtDoc().getScQtCheckList()
-					.getQtChecklistId() == null) {
-				statussO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster().getStatus().getStatusId());
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-
-				ProfileSo = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-
-				OrgProfileReqDTO profileReq = new OrgProfileReqDTO();
-				profileReq.setOrgProfileId(1L);
-				OrgProfileResDTO profileRes = ProfileSo
-						.retrieveOrgProfileByProfileId(profileReq);
-				PmParameter parameter = this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster().getTemplateTypeCode();
-				parameter.setParameterId(146L);
-
-				ScQtDoc scQtDOc = this.getManagedBean().getScqtDoc();
-				TplSpecMaster specMaster = this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster();
-
-				ScQtCheckList checkList = this.getManagedBean().getScqtDoc()
-						.getScQtCheckList();
-				checkList.setScQtDoc(scQtDOc);
-				// specMaster.setTemplateTypeCode(parameter);
-
-				java.util.Date date = new java.util.Date(); // Right now
-				java.sql.Timestamp timestamp = new java.sql.Timestamp(
-						date.getTime());
-
-				/*
-				 * TemplateSpecBackingBean specBB = new
-				 * TemplateSpecBackingBean();
-				 * 
-				 * List<TplSpecQuestion> questions = getManagedBean()
-				 * .getTemplateSpecBean().getSpecMaster()
-				 * .getTplSpecQuestions(); ; // TplSpecQuestion queston =
-				 * questions.remove(0); List<TplSpecQuestion> questions1 = new
-				 * ArrayList<TplSpecQuestion>();
-				 * 
-				 * questions1.addAll(questions); List<TplSpecQuestion>
-				 * questions2 = new ArrayList<TplSpecQuestion>(); for
-				 * (TplSpecQuestion tpl : questions1) {
-				 * 
-				 * // TplSpecQuestion tpl2 = new TplSpecQuestion();
-				 * TplSpecQuestion tpl1 = (TplSpecQuestion) BeanUtils
-				 * .cloneBean(tpl); tpl1.setSpecQuestionId(null);
-				 * tpl1.setTplSpecMaster(specMaster);
-				 * tpl1.setTplSpecAnswers(null); tpl1.setTplSpecScorings(null);
-				 * tpl1.setTplSpecTierQties(null); tpl1.setChangedBy(2L);
-				 * tpl1.setCreatedBy(2L); tpl1.setCreatedDate(timestamp);
-				 * questions2.add(tpl1); }
-				 */
-
-				// specMaster.setTplSpecQuestions(questions2);
-				specMaster.setTemplateTypeCode(parameter);
-				specMaster.setProcessType("SC");
-				specMaster.setOrgProfile(profileRes.getPmOrgProfile());
-				// specMaster.setDurationMonth(12);
-				specMaster.setTemplateStatus("D");
-				specMaster.setScQtDocs(null);
-				specMaster.setChangedBy(2L);
-				specMaster.setCreatedBy(2L);
-				specMaster.setBrandNew(false);
-				specMaster.setRecordStatus(this.getManagedBean().getScqtDoc()
-						.isRecordStatus());
-				/*
-				 * this.getManagedBean().getScqtDoc()
-				 * .getScQtCheckList().getTitle()
-				 */
-				specMaster.setSpecName(specMaster.getSpecName());
-				specMaster.setCreatedDate(timestamp);
-
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-				tenderReqDTO.setQtTndrNo(this.getManagedBean().getScqtDoc()
-						.getScQt().getQtNo());
-
-				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-				checkList.setDocCategory("2");
-				// checkList.setDefinationType(1);
-				checkList.setChecklistSeq(1);
-				checkList.setRecordStatus(this.getManagedBean().getScqtDoc()
-						.isRecordStatus());
-				checkList.setManditory(true);
-				checkList.setTitle(specMaster.getSpecName());
-				checkList.setScQtCheckListAttachment(null);
-				checkList.setChangedBy(10l);
-				checkList.setCreatedBy(1l);
-				checkList.setScQt(this.getManagedBean().getScQt());
-				checkList.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
-				checkList.setPmStatus(statusres.getPmStatus());
-				// checkList.setScQtDoc(qtDoc);
-
-				scQtDOc.setScQt(tenderResDTO.getQtDetail());
-				scQtDOc.setChangedBy(2L);
-				scQtDOc.setCreatedBy(2L);
-				scQtDOc.setCreatedDate(timestamp);
-				scQtDOc.setTplDocMaster(null);
-				scQtDOc.setScQtCheckList(checkList);
-				scQtDOc.setTplSpecMaster(specMaster);
-				// scQtDOc.setScQtZoneCriteria(null);
-
-				// qtTemplateReqDTO.setSpecMaster(specMaster);
-				qtTemplateReqDTO.setScQtDoc(scQtDOc);
-			} else {
-
-				ScQtDoc qtDoc = this.getManagedBean().getScqtDoc();
-				ScQtCheckList checklist = this.getManagedBean().getScqtDoc()
-						.getScQtCheckList();
-				checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
-				/*
-				 * List<TplSpecQuestion> questions = getManagedBean()
-				 * .getTemplateSpecBean().getSpecMaster()
-				 * .getTplSpecQuestions();
-				 * 
-				 * for (TplSpecQuestion tplSpecQuestion : questions) {
-				 * tplSpecQuestion.setTplSpecMaster(qtDoc.getTplSpecMaster()); }
-				 */
-				qtDoc.setScQtCheckList(checklist);
-				// qtDoc.getTplSpecMaster().setTplSpecQuestions(questions);
-				qtTemplateReqDTO.setScQtDoc(qtDoc);
-
+			ScQtDoc technicalScqtDoc = this.getManagedBean().getScqtDoc();
+			if (null == technicalScqtDoc.getQtDocId()) {
+				saveTemplateSpec(technicalScqtDoc, "1");
 			}
-
-			try {
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
-
-				resDTO = qtTemplateSO.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
-				if (resDTO.isSuccessful()) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Record saved successfully.", ""
-
-							));
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			ScQtDoc finanicalScQtDoc = constructQtDocByType(
+					technicalScqtDoc.getTplSpecMaster(), "2");
+			finanicalScQtDoc.getTplSpecMaster().setSpecMasterId(null);
+			finanicalScQtDoc.getTplSpecMaster().setChangedDate(null);
+			saveTemplateSpec(finanicalScQtDoc, null);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			// throw new IllegalArgumentException();
 		} finally {
-			qtTemplateSO = null;
-			statussO = null;
-			ProfileSo = null;
-			QtDetailsSO = null;
 
 		}
 
 	}
 
-	public void saveTemplateSpec() {
+	public void saveTemplateSpec(ScQtDoc scQtDoc, String specType) {
 		IQTTemplateSO qtTemplateSO = null;
 		IStatusSO statussO = null;
 		IOrgProfileSO ProfileSo = null;
-		IQTDetailSO QtDetailsSO = null;
+		QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 		try {
-			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			if (null == scQtDoc) {
+				scQtDoc = this.getManagedBean().getScqtDoc();
+			}
+
 			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
-			if (this.getManagedBean().getScqtDoc().getScQtCheckList()
-					.getQtChecklistId() == null) {
-				statussO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster().getStatus().getStatusId());
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
+			statussO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
-				ProfileSo = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
+			StatusReqDTO statusreq = new StatusReqDTO();
+			statusreq.setStatusId(1l);
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
 
-				OrgProfileReqDTO profileReq = new OrgProfileReqDTO();
-				profileReq.setOrgProfileId(1L);
-				OrgProfileResDTO profileRes = ProfileSo
-						.retrieveOrgProfileByProfileId(profileReq);
-				PmParameter parameter = this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster().getTemplateTypeCode();
-				parameter.setParameterId(146L);
+			ProfileSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 
-				ScQtDoc scQtDOc = this.getManagedBean().getScqtDoc();
-				TplSpecMaster specMaster = this.getManagedBean().getScqtDoc()
-						.getTplSpecMaster();
+			OrgProfileReqDTO profileReq = new OrgProfileReqDTO();
+			profileReq.setOrgProfileId(1L);
+			OrgProfileResDTO profileRes = ProfileSo
+					.retrieveOrgProfileByProfileId(profileReq);
+			PmParameter parameter = scQtDoc.getTplSpecMaster()
+					.getTemplateTypeCode();
+			parameter.setParameterId(146L);
 
-				ScQtCheckList checkList = this.getManagedBean().getScqtDoc()
-						.getScQtCheckList();
-				checkList.setScQtDoc(scQtDOc);
-				// specMaster.setTemplateTypeCode(parameter);
+			ScQtDoc scQtDOc = scQtDoc;
+			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
-				java.util.Date date = new java.util.Date(); // Right now
-				java.sql.Timestamp timestamp = new java.sql.Timestamp(
-						date.getTime());
+			ScQtCheckList checkList = scQtDoc.getScQtCheckList();
+
+			java.util.Date date = new java.util.Date(); // Right now
+			java.sql.Timestamp timestamp = new java.sql.Timestamp(
+					date.getTime());
+			if ("1".equalsIgnoreCase(specType)) {
 
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 
@@ -1131,111 +975,57 @@ public class SpecificationBackingBean extends
 					tpl1.setCreatedDate(timestamp);
 					questions2.add(tpl1);
 				}
-
 				specMaster.setTplSpecQuestions(questions2);
-				specMaster.setTemplateTypeCode(parameter);
-				specMaster.setProcessType("SC");
-				specMaster.setOrgProfile(profileRes.getPmOrgProfile());
-				// specMaster.setDurationMonth(12);
-				specMaster.setTemplateStatus("D");
-				specMaster.setScQtDocs(null);
-				specMaster.setChangedBy(2L);
-				specMaster.setCreatedBy(2L);
-				specMaster.setBrandNew(false);
-				specMaster.setRecordStatus(this.getManagedBean().getScqtDoc()
-						.isRecordStatus());
-				/*
-				 * this.getManagedBean().getScqtDoc()
-				 * .getScQtCheckList().getTitle()
-				 */
-				specMaster.setSpecName(specMaster.getSpecName());
-				specMaster.setCreatedDate(timestamp);
+				PmParameter pmParameter= new PmParameter();
+				pmParameter.setParameterId(125l);
+				specMaster.setSpecTypeCode(pmParameter);
 
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-				tenderReqDTO.setQtTndrNo(this.getManagedBean().getScqtDoc()
-						.getScQt().getQtNo());
-
-				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-				checkList.setDocCategory("1");
-				// checkList.setDefinationType(1);
-				checkList.setChecklistSeq(1);
-				checkList.setRecordStatus(this.getManagedBean().getScqtDoc()
-						.isRecordStatus());
-				checkList.setManditory(true);
-				checkList.setTitle(specMaster.getSpecName());
-				checkList.setScQtCheckListAttachment(null);
-				checkList.setChangedBy(10l);
-				checkList.setCreatedBy(1l);
-				checkList.setScQt(this.getManagedBean().getScQt());
-				checkList.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
-				checkList.setPmStatus(statusres.getPmStatus());
-				// checkList.setScQtDoc(qtDoc);
-
-				scQtDOc.setScQt(tenderResDTO.getQtDetail());
-				scQtDOc.setChangedBy(2L);
-				scQtDOc.setCreatedBy(2L);
-				scQtDOc.setCreatedDate(timestamp);
-				scQtDOc.setTplDocMaster(null);
-				scQtDOc.setScQtCheckList(checkList);
-				scQtDOc.setTplSpecMaster(specMaster);
-				// scQtDOc.setScQtZoneCriteria(null);
-
-				// qtTemplateReqDTO.setSpecMaster(specMaster);
-				qtTemplateReqDTO.setScQtDoc(scQtDOc);
 			} else {
-
-				ScQtDoc qtDoc = this.getManagedBean().getScqtDoc();
-				ScQtCheckList checklist = this.getManagedBean().getScqtDoc()
-						.getScQtCheckList();
-				checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
-				List<TplSpecQuestion> questions = getManagedBean()
-						.getTemplateSpecBean().getSpecMaster()
-						.getTplSpecQuestions();
-
-				for (TplSpecQuestion tplSpecQuestion : questions) {
-					tplSpecQuestion.setTplSpecMaster(qtDoc.getTplSpecMaster());
-				}
-				qtDoc.setScQtCheckList(checklist);
-				qtDoc.getTplSpecMaster().setTplSpecQuestions(questions);
-				qtTemplateReqDTO.setScQtDoc(qtDoc);
-
+				specMaster.setTplSpecQuestions(null);
+				PmParameter pmParameter= new PmParameter();
+				pmParameter.setParameterId(126l);
+				specMaster.setSpecTypeCode(pmParameter);
 			}
 
-			try {
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
+			specMaster.setTemplateTypeCode(parameter);
+			specMaster.setProcessType("SC");
+			specMaster.setOrgProfile(profileRes.getPmOrgProfile());
+			// specMaster.setDurationMonth(12);
+			specMaster.setTemplateStatus("D");
+			specMaster.setScQtDocs(null);
+			specMaster.setChangedBy(2L);
+			specMaster.setCreatedBy(2L);
+			specMaster.setBrandNew(false);
+			specMaster.setRecordStatus(true);
 
-				resDTO = qtTemplateSO.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
-				if (resDTO.isSuccessful()) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Record saved successfully.", ""
+			specMaster.setCreatedDate(timestamp);
 
-							));
-				}
+			scQtDOc.setScQt(this.getManagedBean().getScQt());
 
-			} catch (Exception e) {
-				e.printStackTrace();
+			scQtDOc.setScQtCheckList(checkList);
+			scQtDOc.setTplSpecMaster(specMaster);
+
+			docReqDTO.setScQtDoc(scQtDOc);
+			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+
+			resDTO = qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
+			this.getManagedBean().setScqtDoc(resDTO.getScQtDoc());
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""
+
+						));
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			// throw new IllegalArgumentException();
 		} finally {
 			qtTemplateSO = null;
 			statussO = null;
 			ProfileSo = null;
-			QtDetailsSO = null;
 
 		}
 
@@ -1284,7 +1074,8 @@ public class SpecificationBackingBean extends
 		if (tabTitle.equalsIgnoreCase("General")) {
 			retriveSpecdetails(this.getManagedBean().getScQt().getQtId());
 		} else if (tabTitle.equalsIgnoreCase("Supplier Qualification Criteria")) {
-			retriveBusinessOwnerQualificationCriteri(this.getManagedBean().getScQt().getQtId());
+			retriveBusinessOwnerQualificationCriteri(this.getManagedBean()
+					.getScQt().getQtId());
 
 		} else if (tabTitle.equalsIgnoreCase("Technical Specification")) {
 			retriveTechnicalSpecification();
@@ -1652,8 +1443,7 @@ public class SpecificationBackingBean extends
 
 			}
 			this.getManagedBean().setDemoScoreSetting(new ScQtScoreSetting());
-			this.getManagedBean().getDemoScoreSetting()
-					.setSettingType(3);
+			this.getManagedBean().getDemoScoreSetting().setSettingType(3);
 			this.getManagedBean().getDemoScoreSetting().setChangedBy(1L);
 			this.getManagedBean().getDemoScoreSetting().setCreatedBy(1L);
 			this.getManagedBean().getDemoScoreSetting()
@@ -2653,8 +2443,7 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		scQt.setItemType("P");
 		PmParameter parameter = scQt.getPmProcurementCategory();
-		if(null ==parameter.getParameterId())
-		{
+		if (null == parameter.getParameterId()) {
 			scQt.setPmProcurementCategory(null);
 		}
 		List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
@@ -2754,7 +2543,7 @@ public class SpecificationBackingBean extends
 
 			if (getManagedBean().getScQt() == null) {
 				// this.getManagedBean().setApprovalList(getAppDetails());
-				//retriveSpecdetails(146L);
+				// retriveSpecdetails(146L);
 
 			}
 
@@ -2785,30 +2574,32 @@ public class SpecificationBackingBean extends
 					getManagedBean().getScQt().setPmProcurementCategory(
 							new PmParameter());
 				}
-				if(tenderResDTO.getZoneDetails() !=null){
-				for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
+				if (tenderResDTO.getZoneDetails() != null) {
+					for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
 
-					List<PmState> states = SourcingLocationHelper
-							.getStateFromZoneLocationDTOs(zone
-									.getTplSpecZoneLocs());
-					System.out.println("===stae===" + states.size());
-					List<PmDivision> divisions = SourcingLocationHelper
-							.getDivisionFromZoneLocationDTOs(zone
-									.getTplSpecZoneLocs());
-					System.out.println("===divisions===" + divisions.size());
-					List<PmDistrict> districts = SourcingLocationHelper
-							.getDistrictFromZoneLocationDTOs(zone
-									.getTplSpecZoneLocs());
-					System.out.println("===districts===" + districts.size());
-					List<PmCity> cities = SourcingLocationHelper
-							.getCityFromZoneLocationDTOs(zone
-									.getTplSpecZoneLocs());
-					getManagedBean().getZoneGeneralTrees().add(
-							LocationSingleton.getInstance()
-									.buildGeneralZoneTree(zone, states,
-											districts, divisions, cities));
+						List<PmState> states = SourcingLocationHelper
+								.getStateFromZoneLocationDTOs(zone
+										.getTplSpecZoneLocs());
+						System.out.println("===stae===" + states.size());
+						List<PmDivision> divisions = SourcingLocationHelper
+								.getDivisionFromZoneLocationDTOs(zone
+										.getTplSpecZoneLocs());
+						System.out
+								.println("===divisions===" + divisions.size());
+						List<PmDistrict> districts = SourcingLocationHelper
+								.getDistrictFromZoneLocationDTOs(zone
+										.getTplSpecZoneLocs());
+						System.out
+								.println("===districts===" + districts.size());
+						List<PmCity> cities = SourcingLocationHelper
+								.getCityFromZoneLocationDTOs(zone
+										.getTplSpecZoneLocs());
+						getManagedBean().getZoneGeneralTrees().add(
+								LocationSingleton.getInstance()
+										.buildGeneralZoneTree(zone, states,
+												districts, divisions, cities));
 
-				}
+					}
 				}
 
 			}
@@ -3192,15 +2983,15 @@ public class SpecificationBackingBean extends
 
 		IQTTemplateSO qtTemplateSO;
 		try {
-			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			//QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 
-			QTTemplateDocResDTO resDto = null;
+			//QTTemplateDocResDTO resDto = null;
 
 			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
 
-			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
+			//QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 
-			try {
+			/*try {
 
 				docReqDTO.setCheckListId(checklist.getQtChecklistId());
 				qtTemplateSO = BusinessDelegate.getInstance()
@@ -3212,12 +3003,12 @@ public class SpecificationBackingBean extends
 
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
 
-			templateSpecBean.setSpecMaster(resDto.getScQtCheckList()
+			templateSpecBean.setSpecMaster(checklist
 					.getScQtDoc().getTplSpecMaster());
 
 			templateSpecBean
@@ -3225,14 +3016,14 @@ public class SpecificationBackingBean extends
 
 			specBB.retrieveTemplateSpecMaster(templateSpecBean);
 
-			this.getManagedBean()
+			/*this.getManagedBean()
 					.getScqtDoc()
 					.setTplSpecMaster(
 							resDto.getScQtCheckList().getScQtDoc()
 									.getTplSpecMaster());
 
 			this.getManagedBean().setScqtDoc(
-					resDto.getScQtCheckList().getScQtDoc());
+					resDto.getScQtCheckList().getScQtDoc());*/
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3472,13 +3263,8 @@ public class SpecificationBackingBean extends
 					.setParameterId(
 							scqtDoc.getTplSpecMaster().getSpecTypeCode()
 									.getParameterId());
-			this.getManagedBean()
-					.getScqtDoc()
-					.getTplSpecMaster()
-					.getStatus()
-					.setStatusId(
-							scqtDoc.getTplSpecMaster().getStatus()
-									.getStatusId());
+			this.getManagedBean().getScqtDoc().getTplSpecMaster().getStatus()
+					.setStatusId(60730L);
 			this.getManagedBean().getScqtDoc().getScQt()
 					.setQtNo(scqtDoc.getScQt().getQtNo());
 
@@ -4794,7 +4580,7 @@ public class SpecificationBackingBean extends
 				ScQtSchedule schedule = new ScQtSchedule();
 				schedule.setStartYear(String.valueOf(year));
 				schedule.setEndYear(String.valueOf(year));
-				
+
 				schedule.setChangedBy(1L);
 				schedule.setCreatedBy(1L);
 				schedule.setCreatedDate(new Timestamp(System
@@ -6393,52 +6179,45 @@ public class SpecificationBackingBean extends
 		scQtChecklist.setScQtCheckListAttachment(attachment);
 	}
 
-	/*public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-
-		this.getManagedBean().setTaskId(taskId);
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
-		SCSpecificationDataType specificationDataType = (SCSpecificationDataType) obj;
-
-		this.getManagedBean().setSpecificationDataType(specificationDataType);
-
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
-				.longValue());
-		QuationTenderResDTO tenderResDTO = detailSO
-				.retriveQTDetails(tenderReqDTO);
-		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-		detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-		detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-		// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-		retriveSpecdetails(specificationDataType.getQtId().longValue());
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(
-						fc,
-						null,
-						"/xhtml/ss/specification/specificationview.xhtml"
-								+ "?faces-redirect=true");
-	}*/
+	/*
+	 * public void preRenderView() { HttpServletRequest servletRequest =
+	 * PortalUtil .getHttpServletRequest(new FacesScopes().getRequest());
+	 * HttpServletRequest originalServletRequest = PortalUtil
+	 * .getOriginalServletRequest(servletRequest); String taskId =
+	 * originalServletRequest.getParameter("taskId");
+	 * 
+	 * this.getManagedBean().setTaskId(taskId);
+	 * 
+	 * IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+	 * .getServiceObject(IBpmSO.class); // TODO FacesScopes facesScopes = new
+	 * FacesScopes(); String ctx = facesScopes.getBPMAuthenticationCtxToken();
+	 * // String ctx = bpmSO.authenticate("roslan", "welcome1"); BpmRequestDTO
+	 * reqDTO = new BpmRequestDTO(); reqDTO.setCtxToken(ctx);
+	 * reqDTO.setTaskId(taskId); BpmResponseDTO res =
+	 * bpmSO.getTaskDetails(reqDTO); Object obj = res.getPojo();
+	 * this.getManagedBean().setOutComes(res.getAction());
+	 * SCSpecificationDataType specificationDataType = (SCSpecificationDataType)
+	 * obj;
+	 * 
+	 * this.getManagedBean().setSpecificationDataType(specificationDataType);
+	 * 
+	 * IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	 * QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+	 * tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
+	 * .longValue()); QuationTenderResDTO tenderResDTO = detailSO
+	 * .retriveQTDetails(tenderReqDTO); QTDetailBackingBean detailBackingBean =
+	 * new QTDetailBackingBean();
+	 * detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
+	 * detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+	 * //
+	 * detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+	 * retriveSpecdetails(specificationDataType.getQtId().longValue());
+	 * FacesContext fc = FacesContext.getCurrentInstance(); fc.getApplication()
+	 * .getNavigationHandler() .handleNavigation( fc, null,
+	 * "/xhtml/ss/specification/specificationview.xhtml" +
+	 * "?faces-redirect=true"); }
+	 */
 
 	public String submitSpecDetails(String outCome) {
 
@@ -6511,7 +6290,7 @@ public class SpecificationBackingBean extends
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
 		IQTDetailSO specSO = getSpecSO();
-	//	QuationTenderResDTO resDTO = new QuationTenderResDTO();
+		// QuationTenderResDTO resDTO = new QuationTenderResDTO();
 		try {
 			QuationTenderResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -7481,7 +7260,7 @@ public class SpecificationBackingBean extends
 	}
 
 	private class CreateTemplateSpecPagingDataModel extends
-			PagingDataModel<ScQtDoc> {
+			PagingDataModel<TplSpecMaster> {
 		private static final long serialVersionUID = 1L;
 
 		public CreateTemplateSpecPagingDataModel() {
@@ -7490,20 +7269,20 @@ public class SpecificationBackingBean extends
 
 		}
 
-		public ISearchResultBean<ScQtDoc> pageChangeListener(
-				ISearchBean<ScQtDoc> searchBean) {
-			IQTTemplateSO qtTemplateSO;
-			QTTemplateDocResDTO resDto;
+		public ISearchResultBean<TplSpecMaster> pageChangeListener(
+				ISearchBean<TplSpecMaster> searchBean) {
+			ITemplateSpecSO qtTemplateSO;
+			TemplateSpecResDTO resDto;
 
 			try {
-				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+				TemplateSpecReqDTO qtTemplateReqDTO = new TemplateSpecReqDTO();
 
 				if (getManagedBean().getSpecName() != null
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
 
 					SearchFilterBean specSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
-					specSearchBean.setSearchField("tplSpecMaster.specName");
+					specSearchBean.setSearchField("specName");
 					specSearchBean.setSearchValue(getManagedBean()
 							.getSpecName());
 					searchBean.getDataFilterBeans().add(specSearchBean);
@@ -7516,8 +7295,7 @@ public class SpecificationBackingBean extends
 
 					SearchFilterBean standardSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
-					standardSearchBean
-							.setSearchField("tplSpecMaster.processType");
+					standardSearchBean.setSearchField("processType");
 					standardSearchBean.setSearchValue(getManagedBean()
 							.getStandardTemplate());
 					searchBean.getDataFilterBeans().add(standardSearchBean);
@@ -7526,8 +7304,7 @@ public class SpecificationBackingBean extends
 				if (getManagedBean().getSearchItemTypeId() != null) {
 					SearchFilterBean itemSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
-					itemSearchBean
-							.setSearchField("tplSpecMaster.itemTypeCode.parameterId");
+					itemSearchBean.setSearchField("itemTypeCode.parameterId");
 					itemSearchBean.setSearchValue(getManagedBean()
 							.getSearchItemTypeId());
 					searchBean.getDataFilterBeans().add(itemSearchBean);
@@ -7537,7 +7314,7 @@ public class SpecificationBackingBean extends
 					SearchFilterBean procurementSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					procurementSearchBean
-							.setSearchField("tplSpecMaster.procurementCategory.parameterId");
+							.setSearchField("procurementCategory.parameterId");
 					procurementSearchBean.setSearchValue(getManagedBean()
 							.getSearchProcurementId());
 					searchBean.getDataFilterBeans().add(procurementSearchBean);
@@ -7546,22 +7323,21 @@ public class SpecificationBackingBean extends
 						&& !"".equalsIgnoreCase(getManagedBean().getQtNum())) {
 					SearchFilterBean qtnoSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
-					qtnoSearchBean.setSearchField("scQt.qtNo");
+					qtnoSearchBean.setSearchField("scQtDocs.scQt.qtNo");
 					qtnoSearchBean.setSearchValue(getManagedBean().getQtNum());
 
 					searchBean.getDataFilterBeans().add(qtnoSearchBean);
 				}
 
-				qtTemplateReqDTO.setTemplateSpecSearchBean(searchBean);
+				qtTemplateReqDTO.setSearchBean(searchBean);
 
 				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
-				resDto = qtTemplateSO
-						.retrieveSpecTemplateByType(qtTemplateReqDTO);
+						.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+								ITemplateSpecSO.class);
+				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
 
 				if (resDto != null) {
-					return resDto.getTemplateSpecList();
+					return resDto.getSearchResultBean();
 				}
 
 			} catch (Exception e) {
@@ -7666,7 +7442,7 @@ public class SpecificationBackingBean extends
 	/**
 	 * @return the templateSpecCreate
 	 */
-	public IPagingDataModel<ScQtDoc> getTemplateSpecCreate() {
+	public IPagingDataModel<TplSpecMaster> getTemplateSpecCreate() {
 		return templateSpecCreate;
 	}
 
@@ -7675,7 +7451,7 @@ public class SpecificationBackingBean extends
 	 *            the templateSpecCreate to set
 	 */
 	public void setTemplateSpecCreate(
-			IPagingDataModel<ScQtDoc> templateSpecCreate) {
+			IPagingDataModel<TplSpecMaster> templateSpecCreate) {
 		this.templateSpecCreate = templateSpecCreate;
 	}
 
@@ -7736,7 +7512,6 @@ public class SpecificationBackingBean extends
 		String taskId = originalServletRequest.getParameter("taskId");
 		this.getManagedBean().setTaskId(taskId);
 
-		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		// TODO
@@ -7751,28 +7526,87 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setOutComes(res.getAction());
 		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
 		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
-			retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String taskName = res.getTaskName();
-		if(SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)){				
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
-		}
-		else if(SCProcessNameConst.CONSOLIDATE_SPECIFICATION.equalsIgnoreCase(taskName)){				
+		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
-			.getNavigationHandler()
-			.handleNavigation(fc, null,
-					QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
-	}
-		else{
-		fc.getApplication()
-		.getNavigationHandler()
-		.handleNavigation(fc, null,
-				QTConstants.SPECIFICICATON_PREPARATION);
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
+		} else if (SCProcessNameConst.CONSOLIDATE_SPECIFICATION
+				.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
+		} else {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SPECIFICICATON_PREPARATION);
 		}
-	
+
+	}
+
+	public String createTemplateSpec(TplSpecMaster tplSpecMaster) {
+		ScQtDoc scqtDocDest = null;
+		try {
+			scqtDocDest = constructQtDocByType(tplSpecMaster, "1");
+			this.getManagedBean().setScqtDoc(scqtDocDest);
+
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+			TplSpecMaster specMaster1 = new TplSpecMaster();
+			specMaster1.setSpecMasterId(new Long(scqtDocDest.getTplSpecMaster()
+					.getSpecMasterId()));
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			templateSpecBean.setSpecMaster(specMaster1);
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+			scqtDocDest.getTplSpecMaster().setSpecMasterId(null);
+			scqtDocDest.getTplSpecMaster().setChangedDate(null);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
+
+	}
+
+	private ScQtDoc constructQtDocByType(TplSpecMaster specMaster,
+			String docType) {
+		ScQtDoc scqtDocDest = new ScQtDoc();
+		try {
+
+			scqtDocDest.setTplSpecMaster(specMaster);
+			
+			scqtDocDest.setTplDocMaster(null);
+			ScQtCheckList checkList = new ScQtCheckList();
+			checkList.setDocCategory(docType);
+			if (scqtDocDest.getScQtCheckList() == null) {
+				checkList
+						.setTitle(scqtDocDest.getTplSpecMaster().getSpecName());
+			} else {
+				checkList.setTitle(scqtDocDest.getScQtCheckList().getTitle());
+			}
+			checkList.setChecklistSeq(1);
+			PmStatus status = new PmStatus();
+			status.setStatusId(1l);
+			checkList.setPmStatus(status);
+			checkList.setScQtDoc(scqtDocDest);
+			checkList.setScQt(this.getManagedBean().getScQt());
+			scqtDocDest.setScQtCheckList(checkList);
+			checkList.setCreatedBy(1l);
+			checkList.setChangedBy(1l);
+			checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return scqtDocDest;
 	}
 }

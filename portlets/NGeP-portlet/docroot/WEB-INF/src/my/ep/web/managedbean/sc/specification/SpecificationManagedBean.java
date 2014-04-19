@@ -218,7 +218,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String supportingDoc;
 	private String templateType;
 	private String specificationType;
-	public ScQtDoc scqtDoc;
+	private ScQtDoc scqtDoc;
 	private String ministryName;
 	public List<ScQtCheckList> supportDocList;
 	private Long searchItemTypeId;
