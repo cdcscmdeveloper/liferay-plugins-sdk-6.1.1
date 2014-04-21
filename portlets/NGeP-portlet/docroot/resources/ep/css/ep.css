@@ -576,11 +576,11 @@ no-repeat
 }
 
 .menuTable {
-	border: 1px solid #E5E5E5;
+	/* border: 1px solid #E5E5E5;
 	border-radius: 5px;
-	border-collapse: separate;
+	border-collapse: separate; */
 	background: #FCFCFC;
-	box-shadow: 0px 2px 3px #DBDCDC;
+	/* box-shadow: 0px 2px 3px #DBDCDC; */
 }
 
 .menuHeader {
@@ -613,14 +613,15 @@ no-repeat
 }
 
 .menuColumn {
-	width: 176px;
+	width: 158px;
 	display: inline-block;
-	padding-left: 15px;
+	/* padding-left: 15px; */
+	padding-right: 10px;
 	padding-bottom: 15px;
 }
 
 .menuList {
-	margin: 0em 2em;
+	/* margin: 0em 2em; */
 	color: #AAAAAA;
 }
 
@@ -630,27 +631,31 @@ no-repeat
 }
 
 a.menuItemLink {
-	font-family: Arial;
+	/* font-family: Arial;
 	font-size: 11px;
 	color: #333333;
-	font-weight: normal;
-	text-decoration: none;
+	font-weight: normal;*/
+	color: blue;
+	text-decoration: underline;
+	/* white-space: nowrap; */
 }
 
 a:hover.menuItemLink {
-	font-family: Arial;
+	/* font-family: Arial;
 	font-size: 11px;
 	color: #333333;
-	font-weight: normal;
-	text-decoration: none;
+	font-weight: normal;*/
+	color: blue;
+	text-decoration: underline;
 }
 
 a:visited.menuItemLink {
-	font-family: Arial;
+	/* font-family: Arial;
 	font-size: 11px;
 	color: #333333;
-	font-weight: normal;
-	text-decoration: none;
+	font-weight: normal;*/
+	color: blue;
+	text-decoration: underline; 
 }
 
 a.menuItemLink-selected {

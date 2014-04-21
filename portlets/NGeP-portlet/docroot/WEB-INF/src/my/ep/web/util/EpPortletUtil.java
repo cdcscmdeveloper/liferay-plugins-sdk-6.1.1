@@ -76,6 +76,10 @@ public class EpPortletUtil {
 	public static String getLoginUserId(FacesContext context) {
 		return getThemeDisplay().getUser().getScreenName();
 	}
+	
+	public static long getUserId() {
+		return getThemeDisplay().getUserId();
+	}
 
 	public static List<PortletCategoryBean> getPortletCategories() {
 		if (portletCategoryBeans == null) {
@@ -137,32 +141,36 @@ public class EpPortletUtil {
 					&& GroupPermissionUtil.contains(permissionChecker,
 							group.getGroupId(), ActionKeys.VIEW_STAGING);
 
-			for (Layout layout : layouts) {
-				if (layout.isHidden()
-						&& (isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
+			for (Layout mainLayout : layouts) {
+				if (mainLayout.getFriendlyURL().equals("/my-application")) {
+					for (Layout layout : mainLayout.getChildren()) {
+						if (/*layout.isHidden()
+								&& */(isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
 
-					menuBean = toMenuBean(permissionChecker, layout, locale);
+							menuBean = toMenuBean(permissionChecker, layout, locale);
 
-					if (log.isDebugEnabled()) {
-						log.debug(new StringBuilder().append("name:")
-								.append(menuBean.getName()).append(", title:")
-								.append(menuBean.getTitle())
-								.append(", imageId:")
-								.append(menuBean.getImageId()));
+							if (log.isDebugEnabled()) {
+								log.debug(new StringBuilder().append("name:")
+										.append(menuBean.getName()).append(", title:")
+										.append(menuBean.getTitle())
+										.append(", imageId:")
+										.append(menuBean.getImageId()));
 
-						for (MenuBean childMenuBean : menuBean.getChildren()) {
-							log.debug(new StringBuilder().append("childname:")
-									.append(childMenuBean.getName())
-									.append(", title:")
-									.append(childMenuBean.getTitle())
-									.append(", imageId:")
-									.append(childMenuBean.getImageId())
-									.append(", url:")
-									.append(childMenuBean.getUrl()));
-						}
-					}
+								for (MenuBean childMenuBean : menuBean.getChildren()) {
+									log.debug(new StringBuilder().append("childname:")
+											.append(childMenuBean.getName())
+											.append(", title:")
+											.append(childMenuBean.getTitle())
+											.append(", imageId:")
+											.append(childMenuBean.getImageId())
+											.append(", url:")
+											.append(childMenuBean.getUrl()));
+								}
+							}
 
-					menuBeans.add(menuBean);
+							menuBeans.add(menuBean);
+						}	
+					}	
 				}
 			}
 		} catch (PortalException e) {

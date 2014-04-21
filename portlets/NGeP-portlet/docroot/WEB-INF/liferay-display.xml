@@ -32,7 +32,8 @@
 			<portlet id="pmProfileManagement"></portlet>
 			<portlet id="pmUserGroupSearch"></portlet>
 			<portlet id="pmAuthrisationRole"></portlet>	
-			<portlet id="pmZone"></portlet>							
+			<portlet id="pmZone"></portlet>
+			<portlet id="quickLinks"></portlet>			
 		</category>
 		<!-- Profile Management - END -->		
 
