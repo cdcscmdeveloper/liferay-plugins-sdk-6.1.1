@@ -19,8 +19,8 @@
 	<cc:attribute name="size" />
 	<cc:attribute name="postUpdateListener" default="" />
 	<cc:attribute name="selectionMode" default="single" />
-	<cc:attribute name="buttonLabel" default="..." />
-	<cc:attribute name="buttonIcon" default="" />
+	<cc:attribute name="buttonLabel" default="" />
+	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
 </cc:interface>
 
 <cc:implementation>
@@ -38,7 +38,7 @@
 	
 	<p:commandButton
 		id="#{cc.attrs.id}lovBtn"
-		value="#{cc.attrs.buttonLabel}"
+		icon="#{cc.attrs.buttonIcon}"
 		action="#{lovBackingBean.initLov}"
 		oncomplete="updateSearchDialog(); lovPopup.show();"
 		disabled="#{cc.attrs.disabled}"
@@ -54,8 +54,8 @@
 		<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 		<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 		
-		<c:if test="#{cc.attrs.buttonIcon != ''}">
-			<f:attribute name="icon" value="#{cc.attrs.buttonIcon}" />
+		<c:if test="#{cc.attrs.buttonLabel != ''}">
+			<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
 		</c:if>
 				
 	</p:commandButton>
