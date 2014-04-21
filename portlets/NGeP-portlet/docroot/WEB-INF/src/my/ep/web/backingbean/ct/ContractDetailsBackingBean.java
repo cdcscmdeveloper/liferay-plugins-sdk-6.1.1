@@ -49,7 +49,6 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
-import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
@@ -64,9 +63,9 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -337,7 +336,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	/*Implementation of search methode*/
 	public void searchContract() {
-		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
+		ISearchBean<VCtContract> searchBean = new SearchBean<VCtContract>();
 		if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtNumber()));	
@@ -347,11 +346,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().getCtName()));	
 		
 		}if(this.getManagedBean().getCtCircularNo()!=null && this.getManagedBean().getCtCircularNo().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircularContracts.ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtCircularNo()));	
 		
 		}if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircularContracts.ctCircularVer.name",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtCircularName()));	
 		
 		}if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
@@ -359,15 +358,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().getCtSupplierId()));	
 		
 		}if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtSupplierName()));	
 		
 		}if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("currentContractVer.ctContractValue.effDate",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtDateStart()));	
 		
 		}if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("currentContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtDateEnd()));	
 		
 		}if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
@@ -377,25 +376,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtLOANo()));	
+		}if(getManagedBean().getCtContractStatus()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtContractStatus()));	
 		}	
 				
 		IContractSO contractSO = null;
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			
-			if(this.getManagedBean().getCtContractStatus() != null){
-	            if(this.getManagedBean().getCtContractStatus().equals(ContractConst.STATUS_COMPLETE)) {
-	        	   reqDTO.setContractStatus(ContractConst.STATUS_COMPLETE);
-	            } else { // Selected Incomplete
-			        reqDTO.setContractStatus(ContractConst.STATUS_INCOMPLETE);
-	            }
-			}else { // Selected nothing
-				 reqDTO.setContractStatus(null);
-			}
-			reqDTO.setContractSearchBean(searchBean);
-			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
-			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
+			reqDTO.setvCtContractSearchBean(searchBean);
+			ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
+			this.getManagedBean().setContractList(resDTO.getvCtContractResultBean().getResultList());
 			this.getManagedBean().setSelectedIndex(0);
 		} catch (Exception ex) {
 			log.error("Exception>>", ex);
@@ -772,7 +764,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
 			items = new SelectItem[3];
 			int i = 0;
-			items[i++] = new SelectItem(null,"- Select One -");
+			items[i++] = new SelectItem(0,"- Select One -");
 			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE, ContractConst.CONTRACT_STATUS_COMPLETE);
 			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE, ContractConst.CONTRACT_STATUS_INCOMPLETE);
 			
@@ -1188,14 +1180,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 getManagedBean().getApproverModel().setTarget(target);
 	}*/
 	 
-	public String chkContractStatusType(CtContract ctcontract, Long pmId){
-		
-		if(ctcontract.getCurrentAgreement() != null && ctcontract != null){
-			if(pmId == ContractStatusConst.FD_APPROVED && ctcontract.getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE)
-				return ContractConst.CONTRACT_STATUS_COMPLETE;
-			else
-				return ContractConst.CONTRACT_STATUS_INCOMPLETE;
-		}else{
+	public String chkContractStatusType(int status){
+		if(status==ContractConst.STATUS_COMPLETE) {
+			return ContractConst.CONTRACT_STATUS_COMPLETE;
+		} else {
 			return ContractConst.CONTRACT_STATUS_INCOMPLETE;
 		}
 	}

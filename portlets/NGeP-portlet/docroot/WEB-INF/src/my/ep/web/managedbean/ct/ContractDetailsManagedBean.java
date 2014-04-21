@@ -15,6 +15,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -54,7 +55,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private CtContractVer contractVer;
 	private CtContract ctContract;
-	private List<CtContract> contractList;
+	private List<VCtContract> contractList;
 	private List<CtAgency> listOfAgency;
 	private List<PmOrgProfile> pmOrgProfileList;
 
@@ -105,7 +106,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
-	private Long ctContractStatus;
+	private int ctContractStatus;
 	
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
@@ -336,21 +337,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctLOANo = ctLOANo;
 	}
 
-	public Long getCtContractStatus() {
-		return ctContractStatus;
-	}
-
-	public void setCtContractStatus(Long ctContractStatus) {
-		this.ctContractStatus = ctContractStatus;
-	}
-
-	public List<CtContract> getContractList() {
+	public List<VCtContract> getContractList() {
 		 if(contractList == null)
-			 contractList = new ArrayList<CtContract>();
+			 contractList = new ArrayList<VCtContract>();
 		return contractList;
 	}
 
-	public void setContractList(List<CtContract> contractList) {
+	public void setContractList(List<VCtContract> contractList) {
 		this.contractList = contractList;
 	}
 
@@ -735,6 +728,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSmSupplierBanks(SmSupplierBank smSupplierBanks) {
 		this.smSupplierBanks = smSupplierBanks;
+	}
+
+	public int getCtContractStatus() {
+		return ctContractStatus;
+	}
+
+	public void setCtContractStatus(int ctContractStatus) {
+		this.ctContractStatus = ctContractStatus;
 	}
 	
 }

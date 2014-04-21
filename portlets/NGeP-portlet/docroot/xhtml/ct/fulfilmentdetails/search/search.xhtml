@@ -57,18 +57,18 @@
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.clno']}"  style="width:10%;">
-						<h:outputText value="#{data.circular.latestCircularVer.circularNo}" />
+						<h:outputText value="#{data.circularNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  style="width:15%;">
-						<h:outputText value="#{data.smSupplier.companyName}" />
+						<h:outputText value="#{data.companyName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  style="width:8%;">
-						<h:outputText value="#{data.currentContractVer.ctContractValue.effDate}">
+						<h:outputText value="#{data.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cend']}"  style="width:8%;">
-						<h:outputText value="#{data.currentContractVer.ctContractValue.expDate}">
+						<h:outputText value="#{data.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
@@ -76,39 +76,39 @@
 						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.status']}"  style="width:14%;">
-						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data,data.currentContractVer.status.statusId)}" />
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:10%;">
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" 
+					   	 rendered="#{data.fdStatus == 1}" >
+						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="pause.png"
 						  value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
-					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}">
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1}" />
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}"
+					   	 rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" >
+						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="terminate.png"
 						  value="/resources/ep/images/design/terminate.png" title="Termination" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
-					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" />
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" 
-					     rendered="#{data.currentContractVer.status.statusId == CtStatusConst.fdApproved 
-					         and data.currentContractVer.status.statusId == CtStatusConst.acComplete}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					      rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" >
+						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="revise.png"
 						   value="/resources/ep/images/design/revise.png" title="Amendment" />
 					   </p:commandLink>
-					   <p:spacer width="7"/>
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}">
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" />
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}"
+					     rendered="#{data.fdStatus == 1}" >
+						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="evaluate.png"
 						   value="/resources/ep/images/design/evaluate.png" title="Update" />
 					   </p:commandLink>						
-					   <p:spacer width="7"/>
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png" title="View Contract" />
 					   </p:commandLink>
