@@ -29,14 +29,16 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmPersonnelBranch;
+import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
@@ -58,6 +60,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int tabActiveIndex;
 
 	private SmSupplierBranch selectedBranch;
+
+	private SmSupplierBranch selectedBranchPrev;
+
+	private int selectedBranchIndex;
 
 	private List<SmSupplierBranch> selectedBranches;
 
@@ -139,11 +145,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmPersonnel selectedShareHolder;
 
+	private List<SmStaffExperience> selectedShrHldrJobFunctions;
+	private List<SmAssociationBody> selectedShrHldrProfBodies;
+	private List<SmRelatedCompany> selectedShrHldrRelatedCompanies;
+	private List<SmStaffAcademic> selectedShrHldrAcademics;
+
 	private SmPersonnelAddress shareHolderPermAddr;
 
 	private SmPersonnelAddress shareHolderMailAddr;
 
-	private SmStaffAcademic shareHolderAcademics;
+	private SmPersonnelAddress shareHolderResdAddr;
+
+	private SmPersonnelAddress shareHolderOffAddr;
+
+	// private SmStaffAcademic shareHolderAcademics;
 	// Personnel Info
 	// private List<SmPersonnel> smapplAuthPersonnels;
 
@@ -151,13 +166,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmPersonnel selectedPersonnel;
 
+	private List<SmStaffExperience> selectedPersJobFunctions;
+	private List<SmAssociationBody> selectedPersProfBodies;
+	private List<SmRelatedCompany> selectedPersRelatedCompanies;
+	private List<SmStaffAcademic> selectedPersAcademics;
+
 	private SmPersonnelAddress personnelPermAddr;
 
 	private SmPersonnelAddress personnelMailAddr;
 
-	private SmStaffAcademic personnelAcademics;
+	private SmPersonnelAddress personnelOffAddr;
+
+	private SmPersonnelAddress personnelResdAddr;
+
+	// private SmStaffAcademic personnelAcademics;
 	// Bank Info
-	private List<String> chequeSingNames;
+	private Long[] chequeSingPerId;
 
 	private SmSupplierBank selectedBank;
 
@@ -241,8 +265,45 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmDistrict> storeFacilityDistricts;
 	private List<PmCity> storeFacilityCities;
 
+	private List<PmState> shrHldrPermStates;
+	private List<PmDistrict> shrHldrPermDistricts;
+	private List<PmCity> shrHldrPermCities;
+
+	private List<PmState> shrHldrOffStates;
+	private List<PmDistrict> shrHldrOffDistricts;
+	private List<PmCity> shrHldrOffCities;
+
+	private List<PmState> shrHldrMailStates;
+	private List<PmDistrict> shrHldrMailDistricts;
+	private List<PmCity> shrHldrMailCities;
+
+	private List<PmState> shrHldrResdStates;
+	private List<PmDistrict> shrHldrResdDistricts;
+	private List<PmCity> shrHldrResdCities;
+
+	private List<PmState> persnlPermStates;
+	private List<PmDistrict> persnlPermDistricts;
+	private List<PmCity> persnlPermCities;
+
+	private List<PmState> persnlOffStates;
+	private List<PmDistrict> persnlOffDistricts;
+	private List<PmCity> persnlOffCities;
+
+	private List<PmState> persnlMailStates;
+	private List<PmDistrict> persnlMailDistricts;
+	private List<PmCity> persnlMailCities;
+
+	private List<PmState> persnlResdStates;
+	private List<PmDistrict> persnlResdDistricts;
+	private List<PmCity> persnlResdCities;
+
+	private List<PmState> bankStates;
+	private List<PmDistrict> bankDistricts;
+	private List<PmCity> bankCities;
+
 	private List<PmCertBody> certBodyLs;
 	private List<PmCertBody> profBodyLs;
+	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
 
 	public SmApplicationManagedBean() {
@@ -291,6 +352,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
 		defaultAddr.setPmCountry(new PmCountry());
+		defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
@@ -315,36 +377,60 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
+		selectedShareHolder.setPmCountry(new PmCountry());
+		selectedShareHolder
+				.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		smapplShareHolders = new ArrayList<SmPersonnel>();
 		selectedShareHolders = new ArrayList<SmPersonnel>();
+		selectedShrHldrAcademics = new ArrayList<SmStaffAcademic>();
+		selectedShrHldrJobFunctions = new ArrayList<SmStaffExperience>();
+		selectedShrHldrProfBodies = new ArrayList<SmAssociationBody>();
+		selectedShrHldrRelatedCompanies = new ArrayList<SmRelatedCompany>();
 		shareHolderMailAddr = new SmPersonnelAddress();
 		shareHolderMailAddr.setSmAddress(defaultAddr);
 		shareHolderPermAddr = new SmPersonnelAddress();
 		shareHolderPermAddr.setSmAddress(defaultAddr);
+		shareHolderOffAddr = new SmPersonnelAddress();
+		shareHolderOffAddr.setSmAddress(defaultAddr);
+		shareHolderResdAddr = new SmPersonnelAddress();
+		shareHolderResdAddr.setSmAddress(defaultAddr);
 		selectedShareHolder
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		selectedShareHolder.getSmPersonnelAddresses().add(shareHolderMailAddr);
-		selectedShareHolder.getSmPersonnelAddresses().add(shareHolderPermAddr);
+		// selectedShareHolder.getSmPersonnelAddresses().add(shareHolderMailAddr);
+		// selectedShareHolder.getSmPersonnelAddresses().add(shareHolderPermAddr);
 		selectedShareHolder
 				.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
-		shareHolderAcademics = new SmStaffAcademic();
-		selectedShareHolder.getSmStaffAcademics().add(shareHolderAcademics);
+		// shareHolderAcademics = new SmStaffAcademic();
+		// selectedShareHolder.getSmStaffAcademics().add(shareHolderAcademics);
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
+		selectedPersonnel.setPmCountry(new PmCountry());
+		selectedPersonnel
+				.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
+		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
+		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
+		selectedPersProfBodies = new ArrayList<SmAssociationBody>();
+		selectedPersRelatedCompanies = new ArrayList<SmRelatedCompany>();
 		personnelMailAddr = new SmPersonnelAddress();
 		personnelMailAddr.setSmAddress(defaultAddr);
 		personnelPermAddr = new SmPersonnelAddress();
 		personnelPermAddr.setSmAddress(defaultAddr);
+		personnelResdAddr = new SmPersonnelAddress();
+		personnelResdAddr.setSmAddress(defaultAddr);
+		personnelOffAddr = new SmPersonnelAddress();
+		personnelOffAddr.setSmAddress(defaultAddr);
+
 		selectedPersonnel
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		selectedPersonnel.getSmPersonnelAddresses().add(shareHolderMailAddr);
-		selectedPersonnel.getSmPersonnelAddresses().add(shareHolderPermAddr);
-		selectedPersonnel.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
-		personnelAcademics = new SmStaffAcademic();
-		selectedPersonnel.getSmStaffAcademics().add(personnelAcademics);
+		// selectedPersonnel.getSmPersonnelAddresses().add(shareHolderMailAddr);
+		// selectedPersonnel.getSmPersonnelAddresses().add(shareHolderPermAddr);
+		// selectedPersonnel.setSmStaffAcademics(new
+		// ArrayList<SmStaffAcademic>());
+		// personnelAcademics = new SmStaffAcademic();
+		// selectedPersonnel.getSmStaffAcademics().add(personnelAcademics);
 
 		//
 		selectedFactoryFacility = new SmFacility();
@@ -373,7 +459,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedSignatoryBankAcct = new SmSupplierBank();
 		smAppl = new SmAppl();
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
-		chequeSingNames = new ArrayList<String>();
 		selectedBank = new SmSupplierBank();
 		// selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(defaultAddr);
@@ -701,21 +786,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.shareHolderMailAddr = shareHolderMailAddr;
 	}
 
-	public SmStaffAcademic getShareHolderAcademics() {
-		return shareHolderAcademics;
-	}
-
-	public void setShareHolderAcademics(SmStaffAcademic shareHolderAcademics) {
-		this.shareHolderAcademics = shareHolderAcademics;
-	}
-
-	public List<String> getChequeSingNames() {
-		return chequeSingNames;
-	}
-
-	public void setChequeSingNames(List<String> chequeSingNames) {
-		this.chequeSingNames = chequeSingNames;
-	}
+	// public SmStaffAcademic getShareHolderAcademics() {
+	// return shareHolderAcademics;
+	// }
+	//
+	// public void setShareHolderAcademics(SmStaffAcademic shareHolderAcademics)
+	// {
+	// this.shareHolderAcademics = shareHolderAcademics;
+	// }
 
 	public SmSupplierBank getSelectedSignatoryBankAcct() {
 		return selectedSignatoryBankAcct;
@@ -783,13 +861,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelMailAddr = personnelMailAddr;
 	}
 
-	public SmStaffAcademic getPersonnelAcademics() {
-		return personnelAcademics;
-	}
-
-	public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
-		this.personnelAcademics = personnelAcademics;
-	}
+	// public SmStaffAcademic getPersonnelAcademics() {
+	// return personnelAcademics;
+	// }
+	//
+	// public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
+	// this.personnelAcademics = personnelAcademics;
+	// }
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -1060,100 +1138,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	/**
 	 * dummy record for datatable
 	 */
-	private List jobFunctions = new ArrayList();
-	private List selectedJobFunctions = new ArrayList();
-	private List profBodies = new ArrayList();
-	private List selectedProfBodies = new ArrayList();
-	private List relatedCompanies = new ArrayList();
-	private List selectedRelatedCompanies = new ArrayList();
-
-	public List getJobFunctions() {
-		return jobFunctions;
-	}
-
-	public void setJobFunctions(List jobFunctions) {
-		this.jobFunctions = jobFunctions;
-	}
-
-	public void addJobFunction() {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Job Function");
-		jobFunctions.add(new Object());
-	}
-
-	private List academicQualifications = new ArrayList();
-	private List selectedAcademicQualifications = new ArrayList();
-
-	public List getAcademicQualifications() {
-		return academicQualifications;
-	}
-
-	public void setAcademicQualifications(List academicQualifications) {
-		this.academicQualifications = academicQualifications;
-	}
-
-	public void addAcademicQualification() {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Academic Qualification");
-		academicQualifications.add(new Object());
-	}
-
-	public List getSelectedJobFunctions() {
-		return selectedJobFunctions;
-	}
-
-	public void setSelectedJobFunctions(List selectedJobFunctions) {
-		this.selectedJobFunctions = selectedJobFunctions;
-	}
-
-	public List getSelectedAcademicQualifications() {
-		return selectedAcademicQualifications;
-	}
-
-	public void setSelectedAcademicQualifications(
-			List selectedAcademicQualifications) {
-		this.selectedAcademicQualifications = selectedAcademicQualifications;
-	}
-
-	public List getProfBodies() {
-		return profBodies;
-	}
-
-	public void setProfBodies(List profBodies) {
-		this.profBodies = profBodies;
-	}
-
-	public void addProfBody() {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Professional Body");
-		profBodies.add(new Object());
-	}
-
-	public List getSelectedProfBodies() {
-		return selectedProfBodies;
-	}
-
-	public void setSelectedProfBodies(List selectedProfBodies) {
-		this.selectedProfBodies = selectedProfBodies;
-	}
-
-	public List getRelatedCompanies() {
-		return relatedCompanies;
-	}
-
-	public void setRelatedCompanies(List relatedCompanies) {
-		this.relatedCompanies = relatedCompanies;
-	}
-
-	public List getSelectedRelatedCompanies() {
-		return selectedRelatedCompanies;
-	}
-
-	public void setSelectedRelatedCompanies(List selectedRelatedCompanies) {
-		this.selectedRelatedCompanies = selectedRelatedCompanies;
-	}
-
-	public void addRelatedCompany() {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Related Company Body");
-		relatedCompanies.add(new Object());
-	}
 
 	public List<PmCountry> getCountryLs() {
 		return countryLs;
@@ -1456,6 +1440,358 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setUomLs(List<PmUom> uomLs) {
 		this.uomLs = uomLs;
+	}
+
+	public List<SmRelatedCompany> getSelectedShrHldrRelatedCompanies() {
+		return selectedShrHldrRelatedCompanies;
+	}
+
+	public void setSelectedShrHldrRelatedCompanies(
+			List<SmRelatedCompany> selectedShrHldrRelatedCompanies) {
+		this.selectedShrHldrRelatedCompanies = selectedShrHldrRelatedCompanies;
+	}
+
+	public List<SmStaffAcademic> getSelectedShrHldrAcademics() {
+		return selectedShrHldrAcademics;
+	}
+
+	public void setSelectedShrHldrAcademics(
+			List<SmStaffAcademic> selectedShrHldrAcademics) {
+		this.selectedShrHldrAcademics = selectedShrHldrAcademics;
+	}
+
+	public List<SmStaffExperience> getSelectedShrHldrJobFunctions() {
+		return selectedShrHldrJobFunctions;
+	}
+
+	public void setSelectedShrHldrJobFunctions(
+			List<SmStaffExperience> selectedShrHldrJobFunctions) {
+		this.selectedShrHldrJobFunctions = selectedShrHldrJobFunctions;
+	}
+
+	public List<SmAssociationBody> getSelectedShrHldrProfBodies() {
+		return selectedShrHldrProfBodies;
+	}
+
+	public void setSelectedShrHldrProfBodies(
+			List<SmAssociationBody> selectedShrHldrProfBodies) {
+		this.selectedShrHldrProfBodies = selectedShrHldrProfBodies;
+	}
+
+	public SmPersonnelAddress getShareHolderResdAddr() {
+		return shareHolderResdAddr;
+	}
+
+	public void setShareHolderResdAddr(SmPersonnelAddress shareHolderResdAddr) {
+		this.shareHolderResdAddr = shareHolderResdAddr;
+	}
+
+	public SmPersonnelAddress getShareHolderOffAddr() {
+		return shareHolderOffAddr;
+	}
+
+	public void setShareHolderOffAddr(SmPersonnelAddress shareHolderOffAddr) {
+		this.shareHolderOffAddr = shareHolderOffAddr;
+	}
+
+	public List<PmState> getShrHldrPermStates() {
+		return shrHldrPermStates;
+	}
+
+	public void setShrHldrPermStates(List<PmState> shrHldrPermStates) {
+		this.shrHldrPermStates = shrHldrPermStates;
+	}
+
+	public List<PmDistrict> getShrHldrPermDistricts() {
+		return shrHldrPermDistricts;
+	}
+
+	public void setShrHldrPermDistricts(List<PmDistrict> shrHldrPermDistricts) {
+		this.shrHldrPermDistricts = shrHldrPermDistricts;
+	}
+
+	public List<PmCity> getShrHldrPermCities() {
+		return shrHldrPermCities;
+	}
+
+	public void setShrHldrPermCities(List<PmCity> shrHldrPermCities) {
+		this.shrHldrPermCities = shrHldrPermCities;
+	}
+
+	public List<PmState> getShrHldrOffStates() {
+		return shrHldrOffStates;
+	}
+
+	public void setShrHldrOffStates(List<PmState> shrHldrOffStates) {
+		this.shrHldrOffStates = shrHldrOffStates;
+	}
+
+	public List<PmDistrict> getShrHldrOffDistricts() {
+		return shrHldrOffDistricts;
+	}
+
+	public void setShrHldrOffDistricts(List<PmDistrict> shrHldrOffDistricts) {
+		this.shrHldrOffDistricts = shrHldrOffDistricts;
+	}
+
+	public List<PmCity> getShrHldrOffCities() {
+		return shrHldrOffCities;
+	}
+
+	public void setShrHldrOffCities(List<PmCity> shrHldrOffCities) {
+		this.shrHldrOffCities = shrHldrOffCities;
+	}
+
+	public List<PmState> getShrHldrMailStates() {
+		return shrHldrMailStates;
+	}
+
+	public void setShrHldrMailStates(List<PmState> shrHldrMailStates) {
+		this.shrHldrMailStates = shrHldrMailStates;
+	}
+
+	public List<PmDistrict> getShrHldrMailDistricts() {
+		return shrHldrMailDistricts;
+	}
+
+	public void setShrHldrMailDistricts(List<PmDistrict> shrHldrMailDistricts) {
+		this.shrHldrMailDistricts = shrHldrMailDistricts;
+	}
+
+	public List<PmCity> getShrHldrMailCities() {
+		return shrHldrMailCities;
+	}
+
+	public void setShrHldrMailCities(List<PmCity> shrHldrMailCities) {
+		this.shrHldrMailCities = shrHldrMailCities;
+	}
+
+	public List<PmState> getShrHldrResdStates() {
+		return shrHldrResdStates;
+	}
+
+	public void setShrHldrResdStates(List<PmState> shrHldrResdStates) {
+		this.shrHldrResdStates = shrHldrResdStates;
+	}
+
+	public List<PmDistrict> getShrHldrResdDistricts() {
+		return shrHldrResdDistricts;
+	}
+
+	public void setShrHldrResdDistricts(List<PmDistrict> shrHldrResdDistricts) {
+		this.shrHldrResdDistricts = shrHldrResdDistricts;
+	}
+
+	public List<PmCity> getShrHldrResdCities() {
+		return shrHldrResdCities;
+	}
+
+	public void setShrHldrResdCities(List<PmCity> shrHldrResdCities) {
+		this.shrHldrResdCities = shrHldrResdCities;
+	}
+
+	public SmSupplierBranch getSelectedBranchPrev() {
+		return selectedBranchPrev;
+	}
+
+	public void setSelectedBranchPrev(SmSupplierBranch selectedBranchPrev) {
+		this.selectedBranchPrev = selectedBranchPrev;
+	}
+
+	public int getSelectedBranchIndex() {
+		return selectedBranchIndex;
+	}
+
+	public void setSelectedBranchIndex(int selectedBranchIndex) {
+		this.selectedBranchIndex = selectedBranchIndex;
+	}
+
+	public List<PmState> getBankStates() {
+		return bankStates;
+	}
+
+	public void setBankStates(List<PmState> bankStates) {
+		this.bankStates = bankStates;
+	}
+
+	public List<PmDistrict> getBankDistricts() {
+		return bankDistricts;
+	}
+
+	public void setBankDistricts(List<PmDistrict> bankDistricts) {
+		this.bankDistricts = bankDistricts;
+	}
+
+	public List<PmCity> getBankCities() {
+		return bankCities;
+	}
+
+	public void setBankCities(List<PmCity> bankCities) {
+		this.bankCities = bankCities;
+	}
+
+	public List<PmFinancialOrg> getFinOrgLs() {
+		return finOrgLs;
+	}
+
+	public void setFinOrgLs(List<PmFinancialOrg> finOrgLs) {
+		this.finOrgLs = finOrgLs;
+	}
+
+	public Long[] getChequeSingPerId() {
+		return chequeSingPerId;
+	}
+
+	public void setChequeSingPerId(Long[] chequeSingPerId) {
+		this.chequeSingPerId = chequeSingPerId;
+	}
+
+	public List<SmStaffExperience> getSelectedPersJobFunctions() {
+		return selectedPersJobFunctions;
+	}
+
+	public void setSelectedPersJobFunctions(
+			List<SmStaffExperience> selectedPersJobFunctions) {
+		this.selectedPersJobFunctions = selectedPersJobFunctions;
+	}
+
+	public List<SmAssociationBody> getSelectedPersProfBodies() {
+		return selectedPersProfBodies;
+	}
+
+	public void setSelectedPersProfBodies(
+			List<SmAssociationBody> selectedPersProfBodies) {
+		this.selectedPersProfBodies = selectedPersProfBodies;
+	}
+
+	public List<SmRelatedCompany> getSelectedPersRelatedCompanies() {
+		return selectedPersRelatedCompanies;
+	}
+
+	public void setSelectedPersRelatedCompanies(
+			List<SmRelatedCompany> selectedPersRelatedCompanies) {
+		this.selectedPersRelatedCompanies = selectedPersRelatedCompanies;
+	}
+
+	public List<SmStaffAcademic> getSelectedPersAcademics() {
+		return selectedPersAcademics;
+	}
+
+	public void setSelectedPersAcademics(
+			List<SmStaffAcademic> selectedPersAcademics) {
+		this.selectedPersAcademics = selectedPersAcademics;
+	}
+
+	public SmPersonnelAddress getPersonnelOffAddr() {
+		return personnelOffAddr;
+	}
+
+	public void setPersonnelOffAddr(SmPersonnelAddress personnelOffAddr) {
+		this.personnelOffAddr = personnelOffAddr;
+	}
+
+	public SmPersonnelAddress getPersonnelResdAddr() {
+		return personnelResdAddr;
+	}
+
+	public void setPersonnelResdAddr(SmPersonnelAddress personnelResdAddr) {
+		this.personnelResdAddr = personnelResdAddr;
+	}
+
+	public List<PmState> getPersnlPermStates() {
+		return persnlPermStates;
+	}
+
+	public void setPersnlPermStates(List<PmState> persnlPermStates) {
+		this.persnlPermStates = persnlPermStates;
+	}
+
+	public List<PmDistrict> getPersnlPermDistricts() {
+		return persnlPermDistricts;
+	}
+
+	public void setPersnlPermDistricts(List<PmDistrict> persnlPermDistricts) {
+		this.persnlPermDistricts = persnlPermDistricts;
+	}
+
+	public List<PmCity> getPersnlPermCities() {
+		return persnlPermCities;
+	}
+
+	public void setPersnlPermCities(List<PmCity> persnlPermCities) {
+		this.persnlPermCities = persnlPermCities;
+	}
+
+	public List<PmState> getPersnlOffStates() {
+		return persnlOffStates;
+	}
+
+	public void setPersnlOffStates(List<PmState> persnlOffStates) {
+		this.persnlOffStates = persnlOffStates;
+	}
+
+	public List<PmDistrict> getPersnlOffDistricts() {
+		return persnlOffDistricts;
+	}
+
+	public void setPersnlOffDistricts(List<PmDistrict> persnlOffDistricts) {
+		this.persnlOffDistricts = persnlOffDistricts;
+	}
+
+	public List<PmCity> getPersnlOffCities() {
+		return persnlOffCities;
+	}
+
+	public void setPersnlOffCities(List<PmCity> persnlOffCities) {
+		this.persnlOffCities = persnlOffCities;
+	}
+
+	public List<PmState> getPersnlMailStates() {
+		return persnlMailStates;
+	}
+
+	public void setPersnlMailStates(List<PmState> persnlMailStates) {
+		this.persnlMailStates = persnlMailStates;
+	}
+
+	public List<PmDistrict> getPersnlMailDistricts() {
+		return persnlMailDistricts;
+	}
+
+	public void setPersnlMailDistricts(List<PmDistrict> persnlMailDistricts) {
+		this.persnlMailDistricts = persnlMailDistricts;
+	}
+
+	public List<PmCity> getPersnlMailCities() {
+		return persnlMailCities;
+	}
+
+	public void setPersnlMailCities(List<PmCity> persnlMailCities) {
+		this.persnlMailCities = persnlMailCities;
+	}
+
+	public List<PmState> getPersnlResdStates() {
+		return persnlResdStates;
+	}
+
+	public void setPersnlResdStates(List<PmState> persnlResdStates) {
+		this.persnlResdStates = persnlResdStates;
+	}
+
+	public List<PmDistrict> getPersnlResdDistricts() {
+		return persnlResdDistricts;
+	}
+
+	public void setPersnlResdDistricts(List<PmDistrict> persnlResdDistricts) {
+		this.persnlResdDistricts = persnlResdDistricts;
+	}
+
+	public List<PmCity> getPersnlResdCities() {
+		return persnlResdCities;
+	}
+
+	public void setPersnlResdCities(List<PmCity> persnlResdCities) {
+		this.persnlResdCities = persnlResdCities;
 	}
 
 }

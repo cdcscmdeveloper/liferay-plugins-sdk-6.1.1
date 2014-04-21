@@ -64,6 +64,20 @@ public class SupplierManagementConst {
 	public static final String SM_DOCKYARD_FACILITY_PANEL = "DockyardPanel";
 	public static final String SM_WORKSHOP_FACILITY_PANEL = "WorkshopPanel";
 	public static final String SM_STORE_FACILITY_PANEL = "StorePanel";
+	public static final String SM_SHRHLDR_PERM_ADDR_PANEL = "ShareHldrPermAddr";
+	public static final String SM_SHRHLDR_OFF_ADDR_PANEL = "ShareHldrOffAddr";
+	public static final String SM_SHRHLDR_MAIL_ADDR_PANEL = "ShareHldrMailAddr";
+	public static final String SM_SHRHLDR_RESD_ADDR_PANEL = "ShareHldrResdAddr";
+	public static final String SM_PERSNL_PERM_ADDR_PANEL = "PersonnelPermAddr";
+	public static final String SM_PERSNL_OFF_ADDR_PANEL = "PersonnelOffAddr";
+	public static final String SM_PERSNL_MAIL_ADDR_PANEL = "PersonnelMailAddr";
+	public static final String SM_PERSNL_RESD_ADDR_PANEL = "PersonnelResdAddr";
+	public static final String SM_BANK_INFO_PANEL = "BankInfoPanel";
+
+	public static final String SM_PERSONNEL_ADDR_TYPE_OFFICE = "O";
+	public static final String SM_PERSONNEL_ADDR_TYPE_RES = "R";
+	public static final String SM_PERSONNEL_ADDR_TYPE_PERM = "I";
+	public static final String SM_PERSONNEL_ADDR_TYPE_MAIL = "M";
 
 	// FacilityTypes
 	public static final String SM_FACILITY_TYPE_FACTORY = "F";
@@ -154,6 +168,42 @@ public class SupplierManagementConst {
 
 	public String getSM_STORE_FACILITY_PANEL() {
 		return SM_STORE_FACILITY_PANEL;
+	}
+
+	public String getSM_SHRHLDR_PERM_ADDR_PANEL() {
+		return SM_SHRHLDR_PERM_ADDR_PANEL;
+	}
+
+	public String getSM_SHRHLDR_OFF_ADDR_PANEL() {
+		return SM_SHRHLDR_OFF_ADDR_PANEL;
+	}
+
+	public String getSM_SHRHLDR_MAIL_ADDR_PANEL() {
+		return SM_SHRHLDR_MAIL_ADDR_PANEL;
+	}
+
+	public String getSM_SHRHLDR_RESD_ADDR_PANEL() {
+		return SM_SHRHLDR_RESD_ADDR_PANEL;
+	}
+
+	public String getSM_BANK_INFO_PANEL() {
+		return SM_BANK_INFO_PANEL;
+	}
+
+	public String getSM_PERSNL_PERM_ADDR_PANEL() {
+		return SM_PERSNL_PERM_ADDR_PANEL;
+	}
+
+	public String getSM_PERSNL_OFF_ADDR_PANEL() {
+		return SM_PERSNL_OFF_ADDR_PANEL;
+	}
+
+	public String getSM_PERSNL_MAIL_ADDR_PANEL() {
+		return SM_PERSNL_MAIL_ADDR_PANEL;
+	}
+
+	public String getSM_PERSNL_RESD_ADDR_PANEL() {
+		return SM_PERSNL_RESD_ADDR_PANEL;
 	}
 
 }
