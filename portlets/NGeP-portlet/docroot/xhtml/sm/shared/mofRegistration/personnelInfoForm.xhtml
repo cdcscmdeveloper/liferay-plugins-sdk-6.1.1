@@ -185,7 +185,6 @@
 				<ac:paginator for="personDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-
 				<p:column headerText="Name">
 					<h:outputText value="#{person.name}" />
 				</p:column>
@@ -198,12 +197,12 @@
 					<h:outputText value="No" rendered="#{!person.equityOwner}" />
 				</p:column>
 				<p:column headerText="Is Authorized">
-					<h:outputText value="Yes" rendered="#{person.authorized}" />
-					<h:outputText value="No" rendered="#{!person.authorized}" />
+					<h:outputText value="Yes" rendered="#{person.authorizedFlg eq '1'}" />
+					<h:outputText value="No" rendered="#{person.authorizedFlg eq '0'}" />
 				</p:column>
 				<p:column headerText="Is Cert Issued">
-					<h:outputText value="Yes" rendered="#{person.softcert}" />
-					<h:outputText value="No" rendered="#{!person.softcert}" />
+					<h:outputText value="Yes" rendered="#{person.softcertFlg eq '1'}" />
+					<h:outputText value="No" rendered="#{person.softcertFlg eq '0'}" />
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink rendered="#{!person.equityOwner}"
@@ -214,7 +213,7 @@
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 					<p:commandLink rendered="#{!person.equityOwner}"
-						action="#{backingBean.assignSelPersonnel(person)}"
+						action="#{backingBean.assignSelShareHolderAddress(person,person.equityOwner)}"
 						oncomplete="directorAddrDialog.show();"
 						update=":form:tt:directorAddrDialog" id="PerDirAddrLnk">
 						<p:graphicImage library="ep/images/design" name="register.png"
@@ -233,8 +232,8 @@
 					</p:commandLink>
 					<p:commandLink oncomplete="perShareHolderAddrDialog.show();"
 						rendered="#{person.equityOwner}" id="PerShrAddrLnk"
-						action="#{backingBean.assignSelShareHolder(person)}"
-						update=":form:tt:perShareHolderDialog">
+						action="#{backingBean.assignSelShareHolderAddress(person,person.equityOwner)}"
+						update=":form:tt:perShareHolderAddrDialog">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
 					</p:commandLink>
@@ -257,7 +256,9 @@
 						oncomplete="directorDialog.show();"
 						update=":form:tt:directorDialog" />
 				</ui:fragment>
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedPersonnel}"
+					update=":form:tt:personDt" />
 			</div>
 
 			<br />
@@ -286,6 +287,8 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
+
+
 	<p:dialog width="1050px" height="560px" header="Personnel Information"
 		widgetVar="personnelDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="personnelDialog">
@@ -299,22 +302,6 @@
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="1050px" height="560px"
-		header="Personnel Address Information"
-		widgetVar="personnelStfAddrDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="personnelStfAddrDialog">
-
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnelAddressInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
-				oncomplete="personnelStfAddrDialog.hide();"
-				update=":form:tt:personDt" />
-			<p:commandButton value="Cancel"
-				onclick="personnelStfAddrDialog.hide();" />
-		</div>
-	</p:dialog>
 	<p:dialog width="1050px" height="500px"
 		header="Higher Management/Director Information"
 		widgetVar="directorDialog" resizable="false" showEffect="fade"
@@ -323,24 +310,27 @@
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/personnelHigherMngmtInfoPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="directorDialog.hide();"
-				update=":form:tt:personDt" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
+				oncomplete="directorDialog.hide();" update=":form:tt:personDt" />
 			<p:commandButton value="Cancel" onclick="directorDialog.hide();" />
 		</div>
 	</p:dialog>
 	<p:dialog width="1050px" height="500px"
-		header="Higher Management/Director Address Information"
-		widgetVar="directorAddrDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="directorAddrDialog">
+		header="Personnel Address Information" widgetVar="directorAddrDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="directorAddrDialog">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/personnelHigherMngmtAddrInfoPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="directorAddrDialog.hide();"
-				update=":form:tt:personDt" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdatePeronnelAddress(backingBean.managedBean.selectedPersonnel)}"
+				oncomplete="directorAddrDialog.hide();" update=":form:tt:personDt" />
 			<p:commandButton value="Cancel" onclick="directorAddrDialog.hide();" />
 		</div>
 	</p:dialog>
+
 	<p:dialog width="1050px" height="500px"
 		header="Share Holder Information" widgetVar="perShareHolderDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
@@ -367,11 +357,13 @@
 			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderAddressInfoPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.selectedShareHolder)}"
 				oncomplete="perShareHolderAddrDialog.hide();"
 				update=":form:tt:personDt" />
 			<p:commandButton value="Cancel"
 				onclick="perShareHolderAddrDialog.hide();" />
 		</div>
 	</p:dialog>
+
 
 </ui:composition>

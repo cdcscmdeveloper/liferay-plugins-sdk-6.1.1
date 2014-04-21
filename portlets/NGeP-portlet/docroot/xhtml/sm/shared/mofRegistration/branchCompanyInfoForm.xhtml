@@ -63,7 +63,7 @@
 				<p:column headerText="Action">
 					<p:commandLink id="selectButton" update=":form:tt:display"
 						oncomplete="banchDialog.show();"
-						action="#{backingBean.assignSelBranch(branchBean)}">
+						action="#{backingBean.assignSelBranch(branchBean,index)}">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
 							style="margin-right:2px;" />
@@ -77,8 +77,7 @@
 					action="#{backingBean.assignNewBranchBean}"
 					oncomplete="banchDialog.show();" update=":form:tt:display" />
 				<p:commandButton value="Delete "
-					action="#{backingBean.deleteSelectedBranches}"
-					update=":form:tt:dt" />
+					action="#{backingBean.deleteSelectedBranches}" update=":form:tt:dt" />
 
 			</div>
 			<br />
@@ -109,7 +108,7 @@
 	</p:panel>
 	<p:dialog width="450px" header="Branch Information"
 		widgetVar="banchDialog" id="display" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true">
+		showEffect="fade" hideEffect="fade" modal="true" closable="false">
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
 			<ui:include src="branchDetailsTablePage.xhtml" />
@@ -173,7 +172,10 @@
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				oncomplete="banchDialog.hide();" type="submit" partialSubmit="true"
 				process="display" update=":form:tt:dt" />
-			<p:commandButton value="Cancel" onclick="banchDialog.hide();" />
+			<p:commandButton value="Cancel"
+				action="#{backingBean.assignCancelBranchBean}"
+				oncomplete="banchDialog.hide();"
+				update=":form:tt:display,:form:tt:dt" />
 		</div>
 	</p:dialog>
 </ui:composition>

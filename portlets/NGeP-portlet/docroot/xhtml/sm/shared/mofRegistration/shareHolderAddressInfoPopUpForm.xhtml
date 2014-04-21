@@ -13,9 +13,7 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td colspan="2"><u><b> <h:outputText
-											value="Permenant Address : " /></b></u></td>
-
+							<td><u><b><h:outputText value="Permenant Addr : " /></b></u></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Address" /></td>
@@ -37,11 +35,28 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Country" /></td>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryCode}"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrPermCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{shrPermCountry.countryId}"
+										itemLabel="#{shrPermCountry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="shrPermState,shrPermDist,shrPermCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -49,36 +64,50 @@
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
+									id="shrPermState">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrPermState"
+										value="#{backingBean.managedBean.shrHldrPermStates}"
+										itemValue="#{shrPermState.stateId}"
+										itemLabel="#{shrPermState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="shrPermDist,shrPermCity" />
+
 								</p:selectOneMenu></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrPermDist"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrPermDist"
+										value="#{backingBean.managedBean.shrHldrPermDistricts}"
+										itemValue="#{shrPermDist.districtId}"
+										itemLabel="#{shrPermDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="shrPermCity" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrPermCity"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrPermCity"
+										value="#{backingBean.managedBean.shrHldrPermCities}"
+										itemValue="#{shrPermCity.cityId}"
+										itemLabel="#{shrPermCity.cityName}" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
@@ -96,7 +125,6 @@
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>
-
 				</td>
 				<td valign="top">
 
@@ -106,7 +134,7 @@
 							</td>
 							<td><table style="width: 100%">
 									<tr>
-										<td><p:selectBooleanCheckbox /></td>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
 										<td><h:outputText value=" Same as permenant: " /></td>
 									</tr>
 								</table></td>
@@ -131,47 +159,79 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Country" /></td>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryCode}"
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrMailContry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{shrMailContry.countryId}"
+										itemLabel="#{shrMailContry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+										update="shrMailState,shrMailDist,shrMailCity" />
 								</p:selectOneMenu></td>
 						</tr>
+
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
+									id="shrMailState">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrMailState"
+										value="#{backingBean.managedBean.shrHldrMailStates}"
+										itemValue="#{shrMailState.stateId}"
+										itemLabel="#{shrMailState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+										update="shrMailDist,shrMailCity" />
+
 								</p:selectOneMenu></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrMailDist"
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrMailDist"
+										value="#{backingBean.managedBean.shrHldrMailDistricts}"
+										itemValue="#{shrMailDist.districtId}"
+										itemLabel="#{shrMailDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+										update="shrMailCity" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrMailCity"
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrMailCity"
+										value="#{backingBean.managedBean.shrHldrMailCities}"
+										itemValue="#{shrMailCity.cityId}"
+										itemLabel="#{shrMailCity.cityName}" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
@@ -201,11 +261,10 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText
-											value="Correspondence Addr : " /></b></u></td>
+							<td><u><b><h:outputText value="Residential Addr : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
-										<td><p:selectBooleanCheckbox /></td>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
 										<td><h:outputText value=" Same as permenant: " /></td>
 									</tr>
 								</table></td>
@@ -213,70 +272,102 @@
 						<tr>
 							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address1}"
 									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address2}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address3}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Country" /></td>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryCode}"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrResCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{shrResCountry.countryId}"
+										itemLabel="#{shrResCountry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+										update="shrResState,shrResDist,shrResCity" />
 								</p:selectOneMenu></td>
 						</tr>
+
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
+									id="shrResState">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrResState"
+										value="#{backingBean.managedBean.shrHldrResdStates}"
+										itemValue="#{shrResState.stateId}"
+										itemLabel="#{shrResState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+										update="shrResDist,shrResCity" />
+
 								</p:selectOneMenu></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrResDist"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrResDist"
+										value="#{backingBean.managedBean.shrHldrResdDistricts}"
+										itemValue="#{shrResDist.districtId}"
+										itemLabel="#{shrResDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
+								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+										update="shrResCity" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrResCity"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrResCity"
+										value="#{backingBean.managedBean.shrHldrResdCities}"
+										itemValue="#{shrResCity.cityId}"
+										itemLabel="#{shrResCity.cityName}" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
 									size="35" /></td>
 						</tr>
 						<tr>
@@ -291,14 +382,12 @@
 
 				</td>
 				<td valign="top">
-
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="Company Address : " /></b></u>
-							</td>
+							<td><u><b><h:outputText value="Office Addr : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
-										<td><p:selectBooleanCheckbox /></td>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
 										<td><h:outputText value=" Same as permenant: " /></td>
 									</tr>
 								</table></td>
@@ -306,70 +395,102 @@
 						<tr>
 							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address1}"
 									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address2}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address3}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Country" /></td>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryCode}"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="Malaysia" itemValue="1" />
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrOffCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{shrOffCountry.countryId}"
+										itemLabel="#{shrOffCountry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+										update="shrOffState,shrOffDist,shrOffCity" />
 								</p:selectOneMenu></td>
 						</tr>
+
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-									<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-										itemValue="KL" />
-									<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}"
+									id="shrOffState">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrOffState"
+										value="#{backingBean.managedBean.shrHldrOffStates}"
+										itemValue="#{shrOffState.stateId}"
+										itemLabel="#{shrOffState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+										update="shrOffDist,shrOffCity" />
+
 								</p:selectOneMenu></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-									<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-									<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrOffDist"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrOffDist"
+										value="#{backingBean.managedBean.shrHldrOffDistricts}"
+										itemValue="#{shrOffDist.districtId}"
+										itemLabel="#{shrOffDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+										update="shrOffCity" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityCode}">
-									<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-									<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-									<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-									<f:selectItem itemLabel="NILAI" itemValue="PG" />
-									<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+									style="width: 207px;margin-bottom: 5px;" id="shrOffCity"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItems var="shrOffCity"
+										value="#{backingBean.managedBean.shrHldrOffCities}"
+										itemValue="#{shrOffCity.cityId}"
+										itemLabel="#{shrOffCity.cityName}" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"
 									size="35" /></td>
 						</tr>
 						<tr>
@@ -381,6 +502,7 @@
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>
+
 
 				</td>
 			</tr>

@@ -56,12 +56,17 @@
 					<h:outputText value="#{bankBean.accountNo}" />
 				</p:column>
 				<p:column headerText="Bank Name">
-					<h:outputText value="#{bankBean.pmFinancialOrg.finOrgCode}" />
+					<h:outputText value="#{bankBean.pmFinancialOrg.finOrgName}" />
 				</p:column>
 
-				<p:column headerText="Registration Account"
+				<p:column headerText="Account Purpose"
 					style="text-align: center;width: 15%">
-					<p:selectBooleanCheckbox />
+					<h:outputText value="Payment"
+						rendered="#{bankBean.accountPurpose eq 'P'}" />
+					<h:outputText value="Registration"
+						rendered="#{bankBean.accountPurpose eq 'R'}" />
+					<h:outputText value="Both (Payment,Registration)"
+						rendered="#{bankBean.accountPurpose eq 'B'}" />
 				</p:column>
 
 				<p:column headerText="Payment Account"
@@ -150,15 +155,29 @@
 		<p:panel id="bankDetailsPanel">
 
 			<table style="width: 100%">
+
+				<tr>
+					<td><p:outputLabel value="* Account Purpose *" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
+							<f:selectItem itemLabel="Select " itemValue="O" />
+							<f:selectItem itemLabel="Registration" itemValue="R" />
+							<f:selectItem itemLabel="Payment" itemValue="P" />
+							<f:selectItem itemLabel="Both" itemValue="B" />
+							<p:ajax event="change" update="bankDetailsPanel"
+								listener="#{backingBean.retrieveBankFinOrgListByType}" />
+						</p:selectOneMenu></td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="* Bank Name" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.finOrgCode}"
+							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Maybank" itemValue="MY" />
-							<f:selectItem itemLabel="CIMB" itemValue="CIMB" />
-							<f:selectItem itemLabel="BSN" itemValue="BSN" />
+							<f:selectItems var="finOrg"
+								value="#{backingBean.managedBean.finOrgLs}"
+								itemValue="#{finOrg.financialOrgId}"
+								itemLabel="#{finOrg.finOrgName}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -187,45 +206,78 @@
 							size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Country" /></td>
+					<td></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.address4}"
+							size="35" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryCode}"
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="smBankCountry"
+								value="#{backingBean.managedBean.countryLs}"
+								itemValue="#{smBankCountry.countryId}"
+								itemLabel="#{smBankCountry.countryName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_BANK_INFO_PANEL,
+								backingBean.managedBean.selectedBank.smAddress.pmState,
+								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
+								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
+								update="smBankState,smBankDist,smBankCity" />
 						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateCode}">
-							<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-							<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
-							<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)"
-								itemValue="KL" />
-							<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateId}"
+							id="smBankState">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="smBankState"
+								value="#{backingBean.managedBean.bankStates}"
+								itemValue="#{smBankState.stateId}"
+								itemLabel="#{smBankState.stateName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBank.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_BANK_INFO_PANEL,
+								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
+								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
+								update="smBankDist,smBankCity" />
+
 						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtCode}">
-							<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-							<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
-							<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
-							<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+							id="smBankDist"
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="smBankDist"
+								value="#{backingBean.managedBean.bankDistricts}"
+								itemValue="#{smBankDist.districtId}"
+								itemLabel="#{smBankDist.districtName}" />
+							<p:ajax event="change"
+								listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_BANK_INFO_PANEL,
+								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
+								update="smBankCity" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityCode}">
-							<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
-							<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
-							<f:selectItem itemLabel="SEPANG" itemValue="KL" />
-							<f:selectItem itemLabel="NILAI" itemValue="PG" />
-							<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+							id="smBankCity"
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItems var="smBankCity"
+								value="#{backingBean.managedBean.bankCities}"
+								itemValue="#{smBankCity.cityId}"
+								itemLabel="#{smBankCity.cityName}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -233,16 +285,6 @@
 					<td><p:inputText
 							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
 							size="35" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* Account Purpose *" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
-							<f:selectItem itemLabel="Select " itemValue="0" />
-							<f:selectItem itemLabel="Registration" itemValue="R" />
-							<f:selectItem itemLabel="Payment" itemValue="P" />
-							<p:ajax event="change" update="bankDetailsPanel" />
-						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>
@@ -254,14 +296,16 @@
 					<td><p:outputLabel value="* Associated Branch"
 							id="banBranchLbl"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P'}" /></td>
-					<td><p:selectManyMenu showCheckbox="true"
+					<td><p:selectOneMenu showCheckbox="true"
 							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P'}">
+							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P'}"
+							value="#{backingBean.managedBean.selectedBank.smSupplierBranch.supplierBranchId}">
+							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 								var="supBean" itemLabel="#{supBean.branchName}"
-								itemValue="#{supBean.branchName}" />
-						</p:selectManyMenu></td>
+								itemValue="#{supBean.supplierBranchId}" />
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax NO." /></td>
@@ -271,10 +315,11 @@
 					<td><p:outputLabel value="* Cheque Signatories" /></td>
 
 					<td><p:selectManyMenu showCheckbox="true"
-							value="#{backingBean.managedBean.chequeSingNames}">
+							value="#{backingBean.managedBean.chequeSingPerId}"
+							style="height:100px;width: 200px;">
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
-								itemLabel="#{per.name}" itemValue="#{per.name}" />
+								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
 						</p:selectManyMenu></td>
 
 				</tr>

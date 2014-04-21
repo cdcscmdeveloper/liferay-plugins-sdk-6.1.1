@@ -46,7 +46,7 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
+					<td width="134px;"><p:outputLabel value="Ownership Type" /></td>
 					<td colspan="3" style="padding-bottom: 2px;"><p:selectOneRadio
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}">
 							<f:selectItem itemLabel="Own" itemValue="O" />
@@ -61,7 +61,7 @@
 				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="127px;"><p:outputLabel value="Facility Type" /></td>
+						<td width="134px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
@@ -194,7 +194,7 @@
 				rendered="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType eq 'O'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="127px;"><p:outputLabel value="Facility Type" /></td>
+						<td width="134px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
 								value="#{backingBean.managedBean.smAppl.smFacilities[0].facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
@@ -204,23 +204,27 @@
 
 					</tr>
 					<tr>
-						<td width="127px;"><p:outputLabel value="* Owner Name" /></td>
+						<td width="134px;"><p:outputLabel value="* Owner Name" /></td>
 						<td colspan="3"><p:inputText
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" /></td>
 					</tr>
 					<tr>
-						<td width="127px;"><p:outputLabel value="* Purchase Date" /></td>
-						<td colspan="3"><p:calendar showOn="button"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
-								style="margin-bottom:5px;" /></td>
+						<td width="134px;"><p:outputLabel value="* Purchase Date" /></td>
+						<td colspan="3" style="padding-bottom: 3px;"><p:calendar
+								showOn="button"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:calendar></td>
 					</tr>
 					<tr>
-						<td width="127px;"><p:outputLabel
-								value="* Purchase Price (RM.)" /></td>
+						<td width="134px;"><p:outputLabel value="* Purchase Price " /></td>
 						<td colspan="3"><p:inputText size="35"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" />
-						</td>
+								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
 
 					</tr>
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">

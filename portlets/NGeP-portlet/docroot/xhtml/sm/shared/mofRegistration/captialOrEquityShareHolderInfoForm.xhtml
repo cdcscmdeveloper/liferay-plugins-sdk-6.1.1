@@ -76,7 +76,7 @@
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 					<p:commandLink oncomplete="shareHolderAddrDialog.show();"
-						action="#{backingBean.assignSelShareHolder(shareBean)}"
+						action="#{backingBean.assignSelShareHolderAddress(shareBean,shareBean.equityOwner)}"
 						update=":form:tt:shareHolderAddrDialog" id="shrAddrLnk">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
@@ -92,7 +92,9 @@
 				<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
 					action="#{backingBean.assignNewShareHolder}"
 					update=":form:tt:shareHolderDialog" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedShareHolders}"
+					update=":form:tt:shrPerDt" />
 			</div>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -144,7 +146,8 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				oncomplete="shareHolderAddrDialog.hide();"
-				update=":form:tt:shrPerDt" />
+				update=":form:tt:shrPerDt"
+				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.selectedShareHolder)}" />
 			<p:commandButton value="Cancel"
 				onclick="shareHolderAddrDialog.hide();" />
 		</div>

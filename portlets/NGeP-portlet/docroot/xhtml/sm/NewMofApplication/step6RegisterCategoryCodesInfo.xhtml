@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
+
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
 	<table style="width: 100%">
@@ -13,8 +13,8 @@
 			<td><div align="left" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{backingBean.setTabValue('5','4')}"
-						action="#{backingBean.updateSmAppl}" update=":form"
-						icon="ui-icon-prev" />
+						action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+						update=":form" icon="ui-icon-prev" />
 				</div></td>
 			<td><div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"

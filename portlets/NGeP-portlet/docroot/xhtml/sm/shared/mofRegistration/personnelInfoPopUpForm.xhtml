@@ -15,11 +15,14 @@
 						value="#{backingBean.managedBean.selectedPersonnel.name}"
 						size="35" /></td>
 				<td><p:outputLabel value="* Nationality" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-						<f:selectItem itemLabel="Malaysian" itemValue="2" />
-						<f:selectItem itemLabel="Chinese" itemValue="3" />
-						<f:selectItem itemLabel="Indian" itemValue="4" />
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedPersonnel.pmCountry.countryId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems var="shrOffCountry"
+							value="#{backingBean.managedBean.countryLs}"
+							itemValue="#{shrOffCountry.countryId}"
+							itemLabel="#{shrOffCountry.countryName}" />
 					</p:selectOneMenu></td>
 
 			</tr>
@@ -81,21 +84,19 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.email}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Job Function" /></td>
-				<td><p:inputTextarea
-						value="#{backingBean.managedBean.selectedPersonnel.jobFunction}"
-						cols="36" /></td>
 
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedPersonnel.bumiFlg}">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
 				<td><p:outputLabel value=" Religion" title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedPersonnel.muslimFlg}">
 						<f:selectItem itemLabel="Islam" itemValue="1" />
 						<f:selectItem itemLabel="Non-Islam" itemValue="0" />
 					</p:selectOneRadio></td>
@@ -144,150 +145,154 @@
 
 	</p:panel>
 	<p:panel header="Job Function" toggleable="true">
-
 		<p:dataTable id="perStfJfdt"
-			value="#{backingBean.managedBean.jobFunctions}" var="jf"
-			selection="#{backingBean.managedBean.selectedJobFunctions}"
-			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{jf}">
+			value="#{backingBean.managedBean.selectedPersonnel.smStaffExperiences}"
+			var="jf"
+			selection="#{backingBean.managedBean.selectedShrHldrJobFunctions}"
+			rowIndexVar="rowIndex" rowKey="#{jf}">
 			<ac:paginator for="perStfJfdt" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year From" />
-				</f:facet>
-				<p:inputText />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Year To" />
-				</f:facet>
-				<p:inputText />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
 					<h:outputText value="Company" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Designation" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{jf.designation}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year From" />
+				</f:facet>
+				<p:inputText value="#{jf.fromYear}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year To" />
+				</f:facet>
+				<p:inputText value="#{jf.toYear}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addJobFunction}"
-				update="perStfJfdt">
-			</p:commandButton>
-			<p:commandButton value="Delete">
-			</p:commandButton>
+				action="#{backingBean.addShrHldrJobFunction(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfJfdt" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedShrHldrJobFunction(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfJfdt" />
 		</div>
 	</p:panel>
 	<p:panel header="Related Companies" toggleable="true">
 
 		<p:dataTable id="perStfRelCom"
-			value="#{backingBean.managedBean.relatedCompanies}" var="relCom"
-			selection="#{backingBean.managedBean.selectedRelatedCompanies}"
-			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{relCom}">
+			value="#{backingBean.managedBean.selectedPersonnel.smRelatedCompanies}"
+			var="relCom"
+			selection="#{backingBean.managedBean.selectedShrHldrRelatedCompanies}"
+			rowIndexVar="rowIndex" rowKey="#{relCom}">
 			<ac:paginator for="perStfRelCom" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Company Name" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="ROC/ROB/ROS NO." />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.regNo}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Designation" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Shareholding Total(RM.)" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.shareAmt}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Shareholding (%)" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.sharePercentage}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="MOF Reg NO." />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{relCom.mofNo}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addRelatedCompany}"
-				update="perStfRelCom">
-			</p:commandButton>
-			<p:commandButton value="Delete">
-			</p:commandButton>
+				action="#{backingBean.addShrHldrRelatedCompany(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfRelCom" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedShrHldrRelatedCompanies(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfRelCom" />
 		</div>
 	</p:panel>
 	<p:panel header="Professional Body" toggleable="true">
 		<p:dataTable var="profBean"
-			value="#{backingBean.managedBean.profBodies}"
-			selection="#{backingBean.managedBean.selectedProfBodies}"
+			value="#{backingBean.managedBean.selectedPersonnel.smAssociationBodies}"
+			selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
 			rowKey="#{profBean}" rowIndexVar="index" id="perStfProfDt">
 			<ac:paginator for="perStfProfDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 
 			<p:column headerText="Professionl Body">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
-					<f:selectItem itemLabel="prof Body1" itemValue="M" />
-					<f:selectItem itemLabel="prof Body2" itemValue="B" />
-					<f:selectItem itemLabel="prof Body3" itemValue="T" />
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{profBean.pmCertBody.certBodyId}">
+					<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+					<f:selectItems var="shrProfBody"
+						value="#{backingBean.managedBean.profBodyLs}"
+						itemValue="#{shrProfBody.certBodyId}"
+						itemLabel="#{shrProfBody.bodyName}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Registration NO.">
-				<p:inputText size="35" />
+				<p:inputText size="35" value="#{profBean.regNo}" />
 			</p:column>
 			<p:column headerText="End Date.">
-				<p:calendar showOn="button" />
+				<p:calendar showOn="button" value="#{profBean.expDate}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addProfBody}"
-				update="perStfProfDt">
-			</p:commandButton>
-			<p:commandButton value="Delete">
-			</p:commandButton>
+				action="#{backingBean.addShrHldrProfBody(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfProfDt" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedShrHldrProfBodies(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfProfDt" />
 		</div>
 	</p:panel>
 	<p:panel header="Academic Qualification" toggleable="true">
 
 		<p:dataTable id="perStfAqdt"
-			value="#{backingBean.managedBean.academicQualifications}" var="aq"
-			selection="#{backingBean.managedBean.selectedAcademicQualifications}"
-			selectionMode="multiple" rowIndexVar="rowIndex" rowKey="#{aq}">
+			value="#{backingBean.managedBean.selectedPersonnel.smStaffAcademics}"
+			var="aq"
+			selection="#{backingBean.managedBean.selectedShrHldrAcademics}"
+			rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="perStfAqdt" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Year" />
 				</f:facet>
-				<p:selectOneMenu style="margin-bottom: 5px;">
+				<p:selectOneMenu style="margin-bottom: 5px;" value="#{aq.year}">
 					<f:selectItem itemLabel="Select One" itemValue="1" />
 					<f:selectItem itemLabel="2013" itemValue="2013" />
 					<f:selectItem itemLabel="2012" itemValue="2012" />
@@ -298,16 +303,15 @@
 				<f:facet name="header">
 					<h:outputText value="Institute" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{aq.instituteName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Qualification Level" />
 				</f:facet>
-				<p:selectOneMenu style="margin-bottom: 5px;">
-					<f:selectItem itemLabel="-- Others--" itemValue="1" />
-					<f:selectItem itemLabel="Graduate" itemValue="1" />
-					<f:selectItem itemLabel="Post Graduate" itemValue="1" />
+				<p:selectOneMenu style="margin-bottom: 5px;"
+					value="#{aq.qualificationLevelId}">
+					<f:selectItems value="#{backingBean.getDropdownValues('QL')}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>
@@ -325,18 +329,19 @@
 				<f:facet name="header">
 					<h:outputText value="Major In" />
 				</f:facet>
-				<p:inputText />
+				<p:inputText value="#{aq.fieldMajor}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
-				action="#{backingBean.managedBean.addAcademicQualification}"
-				update="perStfAqdt">
-			</p:commandButton>
-			<p:commandButton value="Delete">
-			</p:commandButton>
+				action="#{backingBean.addShrHldrAcademicQualification(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfAqdt" />
+			<p:commandButton value="Delete"
+				action="#{backingBean.deleteSelectedShrHldrAcademics(backingBean.managedBean.selectedPersonnel.equityOwner)}"
+				update="perStfAqdt" />
 		</div>
 	</p:panel>
+
 
 </ui:composition>
