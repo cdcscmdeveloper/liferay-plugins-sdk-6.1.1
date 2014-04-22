@@ -74,7 +74,7 @@
 
 			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 				style="float:right;" action="#{qTDetailBB.searchQTAction}"
-				update="searchQTs" icon="ui-icon-search" process="@this, qtsearchid"/>
+				update="searchQTs" icon="ui-icon-search" process="@this, qtsearchid" />
 			<br />
 			<br />
 		</p:panel>
@@ -88,10 +88,7 @@
 					<ac:paginator for="searchQTs" />
 
 					<p:column headerText="#{lbl['lbl.so.qtnno']}" style="width:100px;">
-						<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this">
-							<h:outputText value="#{scQt.qtNo}" />
-						</p:commandLink>
+						<h:outputText value="#{scQt.qtNo}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.title']}">
@@ -106,7 +103,7 @@
 					<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:120px;">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
@@ -124,19 +121,27 @@
 						</h:outputText>
 					</p:column>
 
+					<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+						<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+					</p:column>
+
 				</p:dataTable>
 			</h:panelGroup>
 
 			<br />
 
 			<div align="right">
-				<table style="width: 50%">
+				<table style="width: 100%">
 					<tr>
-						<td style="width: 220px; margin-top: 9px;"><h:outputLabel
+						<td style="width: 495px; margin-top: 9px;"><h:outputLabel
 								value="Select PTJ" /></td>
 						<td style="width: 190px;"><p:selectOneMenu
 								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
-								style="width: 170px;">
+								style="width: 138px;">
 								<f:selectItem itemLabel="Select One" itemValue="null" />
 								<f:selectItems
 									value="#{qTDetailBB.managedBean.userDivisionList}"
@@ -146,7 +151,7 @@
 								<p:ajax event="change"
 									listener="#{qTDetailBB.handlePTJNameChanged(qTDetailBB.managedBean.qt.pmOrgProfile)}" />
 							</p:selectOneMenu></td>
-						<td style="width: 200px;"><p:commandButton
+						<td style="width: 145px;"><p:commandButton
 								value="#{lbl['lbl.so.qtmscreen']}"
 								action="#{qTDetailBB.newAction}" icon="ui-icon-add"
 								rendered="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId != 'null'}" /></td>
