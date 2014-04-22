@@ -309,6 +309,16 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
         if(time == null)
         	return str;
         return format.format(time); 
-    } 
+    }
+	
+	public void searchReset(){
+		this.getManagedBean().setProjectName(null);
+		this.getManagedBean().setCtName(null);	
+		this.getManagedBean().setProjectDescription(null);	
+		this.getManagedBean().setCtSupplierName(null);
+		this.getManagedBean().setCtProductCode(null);
+		this.getManagedBean().setCtDateStart(null);	
+		this.getManagedBean().setCtDateEnd(null);		
+	}
 	
 }

@@ -83,17 +83,17 @@
 	    </h:panelGrid>
 	</h:panelGrid>
 	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
+	 <h:panelGrid columns="2" style="width:83%;" columnClasses="columnWidth20" 
 	    rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
-		    <div style="height:80px; vertical-align:top;">
+		    <div style="height:65px; vertical-align:top;">
 			   <p:outputLabel for="justificationLbl" value="* Justification" />
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" autoResize="false" />	
+		  rows="3" cols="140" disabled="false" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

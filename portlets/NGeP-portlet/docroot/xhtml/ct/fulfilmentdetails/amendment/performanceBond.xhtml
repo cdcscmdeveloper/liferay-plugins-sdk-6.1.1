@@ -22,18 +22,16 @@
 		            <p:column headerText="Status"/> 
                </p:row>							
 	        </p:columnGroup>
-	        <p:column selectionMode="multiple" style="width:18px;" disabledSelection="true"  rendered="#{data.refNo != null}"/>
-            <p:column selectionMode="multiple" style="width:18px;" rendered="#{data.refNo == null}"/>  
-            <p:column><p:inputText value="#{data.refNo}" disabled="#{data.refNo != null ? true : false}" style="width:70px;"/> </p:column>	
-            <p:column><p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" 
-                        disabled="#{data.financialOrg.financialOrgId != null ? true : false}"  style="width:180px;">
-                      <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/></p:selectOneMenu></p:column>	
-            <p:column><p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" disabled="#{data.performanceBondId != null ? true : false}" style="width:70px;" >
+	        <p:column selectionMode="multiple" style="width:18px;"/>  
+            <p:column><p:inputText value="#{data.refNo}" style="width:70px;"/> </p:column>	
+            <p:column><p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;">
+                <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/></p:selectOneMenu></p:column>	
+            <p:column><p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;" >
                  <f:convertNumber pattern="#,###.00" /></p:inputText></p:column>	
-            <p:column> <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button"  size="10" disabled="#{data.performanceBondId != null ? true : false}"
+            <p:column> <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button"  size="10" 
                    pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> </p:column>	
             <p:column> <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button"  
-                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{data.performanceBondId != null ? true : false}" size="10"/> </p:column>	
+                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"/> </p:column>	
             <p:column styleClass="column-align-center">
                <h:panelGroup id="uploadBondPg">
 				  <p:commandButton oncomplete="uploadBondDlg.show();return false;" icon="iconAttachment" 

@@ -10,24 +10,24 @@
       <p:dataTable id="agencyDetailsTable" var="data"  
         value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}" lazy="false">
 		 <ac:paginator for="agencyDetailsTable"/>
-		   <p:column headerText="Ministry">
+		   <p:column headerText="Ministry" style="width:20%;">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>             
-             <p:column headerText="Jabatan">
+             <p:column headerText="Jabatan" style="width:20%;">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
-			 <p:column headerText="PTJ">
+			 <p:column headerText="PTJ" style="width:20%;">
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
 			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}">
+			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
 			   <p:calendar value="#{data.effDate}" size="15" id="calloc1" showOn="button"
 			     disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			 </p:column> 	
-			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}">
+			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
 			  <p:calendar value="#{data.expDate}" size="15" id="calloc2" showOn="button"
 			    disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			 </p:column> 	
-			 <p:column headerText="Status">
+			 <p:column headerText="Status" style="width:10%;">
 			  <p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />

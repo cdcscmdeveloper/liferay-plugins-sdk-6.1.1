@@ -60,16 +60,9 @@
 				</tr>
 			</table>	 
 	</p:panel>
-	 <p:tabView id="tabview" orientation="left" dynamic="true">
-     <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-            <ui:include	src="suspendDetails.xhtml" />
+	 <ui:include	src="suspendDetails.xhtml" />
             <ui:include src="suspendItem.xhtml"/>
             <ui:include src="suspendAgency.xhtml"/>
             <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
-       </p:tab> 
-        <p:tab id="sletter" title="#{lbl['lbl.ct.susp.letter']}">
-           <ui:include src="suspensionLetter.xhtml"/>
-       </p:tab> 
-	</p:tabView>
     </ui:define>
 </ui:composition>
