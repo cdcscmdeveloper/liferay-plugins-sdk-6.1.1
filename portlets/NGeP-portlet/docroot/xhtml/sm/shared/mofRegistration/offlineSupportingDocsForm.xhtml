@@ -88,17 +88,15 @@
 
 
 		<p:dataTable var="table" id="offSdList"
-			value="#{mofRegistrationBackingBean.dataList}">
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="offSdList" />
 
-			<p:column headerText="Document Name">  
-		            #{table.documentName} 
-		        </p:column>
-			<p:column headerText="Document Description">  
-		            #{table.documentdescription} 
-		        </p:column>
+			<p:column headerText="Document Description">
+				<h:outputText value="#{table.pmDocument.docName}" />
+			</p:column>
+
 			<p:column headerText="Is Sent?">
-				<p:selectBooleanCheckbox value="#{table.docSent}" />
+				<p:selectBooleanCheckbox value="#{table.sent}" />
 
 			</p:column>
 

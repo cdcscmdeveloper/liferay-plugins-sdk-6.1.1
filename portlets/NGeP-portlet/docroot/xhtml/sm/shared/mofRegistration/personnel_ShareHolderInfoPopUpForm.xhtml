@@ -15,7 +15,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						size="35" /></td>
 				<td><p:outputLabel value="* Nationality" /></td>
-			<td><p:selectOneMenu
+				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -106,7 +106,7 @@
 				</td>
 
 			</tr>
-			
+
 			<tr>
 				<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
@@ -354,11 +354,12 @@
 				<f:facet name="header">
 					<h:outputText value="Education Field" />
 				</f:facet>
-				<p:selectOneMenu style="margin-bottom: 5px;">
+				<p:selectOneMenu style="margin-bottom: 5px;"
+					value="#{aq.eduFieldId}">
 					<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-					<f:selectItem itemLabel="Computers" itemValue="1" />
-					<f:selectItem itemLabel="Mechanical" itemValue="1" />
-					<f:selectItem itemLabel="Civil" itemValue="1" />
+					<f:selectItem itemLabel="Computers" itemValue="2" />
+					<f:selectItem itemLabel="Mechanical" itemValue="3" />
+					<f:selectItem itemLabel="Civil" itemValue="4" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>

@@ -8,15 +8,15 @@
 
 	<p:panel
 		header="Composition of the Board of Directors / Management / Staff Company"
-		toggleable="true">
+		toggleable="true"
+		rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
+							.businessType eq '3' }">
 
 		<br />
 		<table style="width: 100%">
 			<tr>
 				<td colspan="4"><div align="center" style="width: 98%">
-						<p:panelGrid styleClass="tablePanel"
-							rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
-							.businessType eq '3' }">
+						<p:panelGrid styleClass="tablePanel">
 							<f:facet name="header">
 
 								<p:row>

@@ -26,118 +26,107 @@
 	</table>
 
 	<br />
-	<p:dataTable var="assocBean"
-		value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
-		selection="#{backingBean.managedBean.selectedAssocCompanies}"
-		rowKey="#{assocBean}" rowIndexVar="index"
-		id="svdHeadOff">
-		<ac:paginator for="svdHeadOff" />
-		<p:column selectionMode="multiple" width="5%" />
+	<p:panel header="Associated Companies" toggleable="true">
+		<p:dataTable var="assocBean"
+			value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
+			selection="#{backingBean.managedBean.selectedAssocCompanies}"
+			rowKey="#{assocBean}" rowIndexVar="index" id="svdHeadOff">
+			<ac:paginator for="svdHeadOff" />
+			<p:column selectionMode="multiple" width="5%" />
 
-		<p:column headerText="NO.">
-			<h:outputText value="#{index+1}" />
-		</p:column>
-		<p:column headerText="Head Office Name">
-			<h:outputText value="#{assocBean.companyName}" />
-		</p:column>
+			<p:column headerText="NO.">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column headerText="Head Office Name">
+				<h:outputText value="#{assocBean.companyName}" />
+			</p:column>
 
-		<p:column headerText="Address">
-			<h:outputText
-				value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
-		</p:column>
+			<p:column headerText="Address">
+				<h:outputText
+					value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
+			</p:column>
 
-	</p:dataTable>
+		</p:dataTable>
+	</p:panel>
 	<br />
-	<p:dataTable var="branchBean" id="svcBrDt"
-		value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-		selection="#{backingBean.managedBean.selectedBranches}"
-		rowKey="#{branchBean}" rowIndexVar="index">
-		<ac:paginator for="svcBrDt" />
-		<p:column selectionMode="multiple" width="5%" />
-		<p:column headerText="NO.">
-			<h:outputText value="#{index+1}" />
-		</p:column>
+	<p:panel header="Company Branches" toggleable="true">
+		<p:dataTable var="branchBean" id="svcBrDt"
+			value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+			selection="#{backingBean.managedBean.selectedBranches}"
+			rowKey="#{branchBean}" rowIndexVar="index">
+			<ac:paginator for="svcBrDt" />
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="NO.">
+				<h:outputText value="#{index+1}" />
+			</p:column>
 
-		<p:column headerText="Branch Name">
-			<h:outputText value="#{branchBean.branchName}" />
-		</p:column>
+			<p:column headerText="Branch Name">
+				<h:outputText value="#{branchBean.branchName}" />
+			</p:column>
 
-		<p:column headerText="Address">
-			<h:outputText
-				value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
-		</p:column>
-	</p:dataTable>
+			<p:column headerText="Address">
+				<h:outputText
+					value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
 	<br />
-	<p:dataTable var="fac"
-		value="#{backingBean.managedBean.smAppl.smFacilities}"
-		selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-		rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
-		<ac:paginator for="svcFacDt" />
-		<p:column selectionMode="multiple" width="5%" />
+	<p:panel header="Facilities" toggleable="true">
+		<p:dataTable var="fac"
+			value="#{backingBean.managedBean.smAppl.smFacilities}"
+			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
+			rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
+			<ac:paginator for="svcFacDt" />
+			<p:column selectionMode="multiple" width="5%" />
 
 
-		<p:column headerText="Factory Name">
-			<h:outputText value="#{fac.smAddress.address1}" />
-		</p:column>
+			<p:column headerText="Factory Name">
+				<h:outputText value="#{fac.smAddress.address1}" />
+			</p:column>
 
-		<p:column headerText="Factory/ Workshop/Dockyard Address">
-			<h:outputText
-				value="#{fac.smAddress.address2},#{fac.smAddress.address3},#{fac.smAddress.address4}" />
-		</p:column>
+			<p:column headerText="Factory/ Workshop/Dockyard Address">
+				<h:outputText
+					value="#{fac.smAddress.address2},#{fac.smAddress.address3},#{fac.smAddress.address4}" />
+			</p:column>
 
-	</p:dataTable>
-
+		</p:dataTable>
+	</p:panel>
 	<br />
-	<p:separator />
-	<p:dataTable var="catBean"
-		value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
-		selection="#{backingBean.managedBean.selectedCategories}"
-		rowKey="#{catBean}" rowIndexVar="index"
-		id="svcCatDt">
-		<ac:paginator for="svcCatDt" />
-		<p:columnGroup type="header">
+	<p:panel header="Categories" toggleable="true">
+		<p:dataTable var="catBean"
+			value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+			selection="#{backingBean.managedBean.selectedCategories}"
+			rowKey="#{catBean}" rowIndexVar="index" id="svcCatDt">
+			<ac:paginator for="svcCatDt" />
+			<p:columnGroup type="header">
 
 
-			<p:row>
-				<p:column selectionMode="multiple" width="5%" />
-				<p:column headerText="Main Category" />
-				<p:column headerText="Sub Category" />
-				<p:column headerText="Sub Category Division" />
-				<p:column headerText="Business Type" />
-				<p:column headerText="Category Type" />
-				<p:column headerText="PO Action" />
-			</p:row>
-		</p:columnGroup>
-		<p:column selectionMode="multiple" width="5%" />
-		<p:column>
-			<h:outputText
-				value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
-		</p:column>
-		<p:column>
-			<h:outputText
-				value="#{catBean.pmCategoryL2.cateogryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
-		</p:column>
-		<p:column>
-			<h:outputText
-				value="#{catBean.pmCategoryL3.cateogryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-		</p:column>
-		<p:column>
-			<h:outputText value=" -- TBC -- " />
-		</p:column>
-		<p:column>
-			<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
-			<h:outputText value="Normal"
-				rendered="#{catBean.categoryType eq 'N'}" />
-			<h:outputText value="Special"
-				rendered="#{catBean.categoryType eq 'S'}" />
-		</p:column>
-		<p:column>
-			<p:selectOneRadio>
-				<f:selectItem itemLabel="Approve" itemValue="1" />
-				<f:selectItem itemLabel="Reject" itemValue="2" />
-			</p:selectOneRadio>
-		</p:column>
-	</p:dataTable>
+				<p:row>
+					<p:column selectionMode="multiple" width="5%" />
+					<p:column headerText="Category" />
+					<p:column headerText="Category Type" />
+				</p:row>
+			</p:columnGroup>
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column>
+				<h:outputText
+					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+			</p:column>
+			<p:column>
+				<h:outputText value=" -- TBC -- " />
+			</p:column>
+			<p:column>
+				<h:outputText value="Normal" rendered="#{catBean.specialCategory}" />
+				<h:outputText value="Special" rendered="#{!catBean.specialCategory}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
 	<br />
 	<table style="width: 100%">
 

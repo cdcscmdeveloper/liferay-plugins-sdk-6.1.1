@@ -38,28 +38,25 @@
 		</table>
 
 		<p:dataTable var="table" id="onSdList"
-			value="#{mofRegistrationBackingBean.dataList}">
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="onSdList" />
 
-			<p:column headerText="Document Name">  
-		            #{table.documentName} 
-		        </p:column>
-			<p:column headerText="Document Description">  
-		            #{table.documentdescription} 
-		        </p:column>
+			<p:column headerText="Document Description">
+				<h:outputText value="#{table.pmDocument.docName}" />
+			</p:column>
+
 			<p:column headerText="Upload Document ">
-				<!-- <p:fileUpload mode="simple"></p:fileUpload> -->
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
-
 			</p:column>
-			<p:column headerText="Added Document Name">  
-                   #{table.addedDocumentName}  
-      		    </p:column>
+			<p:column headerText="Added Document Name">
+				<h:outputText value="#{table.smApplDocFiles[0].fileName}" />
+			</p:column>
 		</p:dataTable>
 
 	</p:panel>
+
 </ui:composition>

@@ -110,15 +110,15 @@
 		widgetVar="banchDialog" id="display" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true" closable="false">
 		<ui:fragment
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
 			<ui:include src="branchDetailsTablePage.xhtml" />
 		</ui:fragment>
 		<p:panel header="Branch Details" toggleable="true"
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}">
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 			<ui:include src="branchDetailsTablePageConsultant.xhtml" />
 		</p:panel>
 		<p:panel header="Point Of Contact"
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}"
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"
 			toggleable="true">
 			<table style="width: 100%">
 
