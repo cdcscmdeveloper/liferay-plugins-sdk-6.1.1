@@ -25,9 +25,9 @@
 	<p:panel id="ptjNameId">
 		<table style="width: 70%">
 			<tr>
-				<c:if
-					test="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}">
-
+				<!-- <c:if
+					test="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}"> -->
+                   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}">
 					<td style="width: 180px;"><p:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
 					<td><p:selectOneMenu
@@ -39,10 +39,11 @@
 								var="pmOrgProfile"
 								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 								itemValue="#{pmOrgProfile.orgProfileId}" />
-							<p:ajax event="change" update="rnHearId ,ptjNameId"
+							<p:ajax event="change" update="rnHearId"
 								process="@all" listener="#{requestNoteBackingBean.ptjNameEvent}" />
 						</p:selectOneMenu></td>
-				</c:if>
+						</ui:fragment>
+				<!-- </c:if> -->
 			</tr>
 		</table>
 	</p:panel>
@@ -118,8 +119,8 @@
 				</p:column>
 			
 			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}">
-					<p:inputText style="width:20px;" required="false"
-						value="#{requestNoteDtl.deliverPeriod}" />
+					<p:inputText style="width:20px;text-align:right;" required="false"
+						value="#{requestNoteDtl.deliverPeriod}"/>
 					<p:spacer width="2px;"></p:spacer>
 					<p:selectOneMenu id="periodMode"
 						value="#{requestNoteDtl.deliverPeriodType}">
@@ -134,7 +135,7 @@
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"></h:outputText>
 					<p:spacer width="6px;"/>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteBackingBean.managedBean.requestNoteDtl.fulfillmentType)}" disabled="true" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}" disabled="true" />
 					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>

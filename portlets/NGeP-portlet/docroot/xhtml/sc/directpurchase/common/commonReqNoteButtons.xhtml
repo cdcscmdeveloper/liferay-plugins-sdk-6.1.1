@@ -6,12 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	 <p:panel>
 	  <div align="right">
-	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
-	      
-	           <p:commandButton value="#{lbl['lbl.sc.common.back']}"
+	   <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+	      <p:commandButton value="#{lbl['lbl.sc.common.back']}"
 					icon="ui-icon-back" style="float:left;" immediate="true"
 					action="#{requestNoteBackingBean.backToPervious}" />
-
+		</c:if>		
+			
+	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
 				   	action="#{requestNoteBackingBean.saveAction}" />
 
