@@ -70,7 +70,7 @@
 										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
 								</p:commandLink> 
 								
-								<p:commandLink actionListener="#{requestNoteBackingBean.compareAddToCart(supplierItem)}" 
+								<p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId)}" 
 									 process="@this" update="@([id$=addToCartId])"
 									 oncomplete="addToCartPopup.show();return false;" partialSubmit="true" 
 									rendered="#{unspscCodeBackingBean.requisitioner}"
