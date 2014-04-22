@@ -87,19 +87,19 @@
 					   </p:commandLink>
 					   <p:spacer width="7" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}"
-					   	 rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" >
+					   	 rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="terminate.png"
 						  value="/resources/ep/images/design/terminate.png" title="Termination" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" />
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" 
-					      rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" >
+					      rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="revise.png"
 						   value="/resources/ep/images/design/revise.png" title="Amendment" />
 					   </p:commandLink>
-					   <p:spacer width="7" rendered="#{data.fdStatus == 1 and (data.agStatus == 1 or data.agStatus == 0)}" />
+					   <p:spacer width="7" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}"
 					     rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
