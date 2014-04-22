@@ -39,7 +39,7 @@
 				<h:outputText style="text-align:right" />
 				<p:commandLink oncomplete="addOfficer.show();"
 					action="#{purchaseRequestBackingBean.receivingOfficerList(address)}"
-					update=":form:prtabs:addReceivingOfficerDialog,@(.orderSummaryChange)  @(.chargeLineChange)">
+					update=":form:prtabs:addReceivingOfficerDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="register.png"
 						value="/resources/ep/images/design/register.png"
 						title="Recv Officer List" />
@@ -48,7 +48,7 @@
 			<p:column rendered="#{address.checkManualAddress}">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
-					update=":form:prtabs:addManualDelAddrDialog,@(.orderSummaryChange) @(.chargeLineChange)"
+					update=":form:prtabs:addManualDelAddrDialog,@(.orderSummaryChange)"
 					style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -59,11 +59,11 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="PTJ Address" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
-				update="delAddr,@(.orderSummaryChange) @(.chargeLineChange)" process="@this,delAddr"
+				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
 			<p:commandButton value="Manual Address" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
-				update="delAddr,@(.orderSummaryChange) @(.chargeLineChange)" process="@this,delAddr"
+				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				oncomplete="addManualDeliveryAddr.show();" />
 			<p:commandButton id="deleteAddrBtn" value="Delete"
 				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
@@ -77,7 +77,7 @@
 				<p:commandButton value="Yes" icon="ui-icon-accept"
 					partialSubmit="true"
 					action="#{purchaseRequestBackingBean.removeAddRow()}"
-					update=":form:prtabs:deleteAddrBtn,addressDataTable,@(.orderSummaryChange) @(.chargeLineChange)"
+					update=":form:prtabs:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 					oncomplete="delAddrDlg.hide();" />
 				<p:commandButton value="No" icon="ui-icon-reject"
 					onclick="delAddrDlg.hide()" type="button" />
@@ -114,7 +114,7 @@
 						style="text-align:right">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange) @(.chargeLineChange)"
+						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange) "
 							process="@this"
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
@@ -157,7 +157,7 @@
 			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();"
-				update="addressDataTable,@(.orderSummaryChange) @(.chargeLineChange)">
+				update="addressDataTable,@(.orderSummaryChange) ">
 			</p:commandButton>
 		</div>
 	</p:dialog>
@@ -295,11 +295,11 @@
 			<p:commandButton value="Ok" icon="ui-icon-accept"
 				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
 				oncomplete="addManualDeliveryAddr.show();"
-				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange) @(.chargeLineChange)">
+				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"
 				oncomplete="addManualDeliveryAddr.hide();"
-				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange) @(.chargeLineChange)">
+				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
 		</div>
 	</p:dialog>
@@ -343,7 +343,7 @@
 			<p:commandButton value="Add" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updatePurchasedItemDt}"
 				oncomplete="addItems.hide();"
-				update="itemDataTable,@(.orderSummaryChange) @(.chargeLineChange)"
+				update="itemDataTable,@(.orderSummaryChange)"
 				process="@this,purchasedItemDt">
 			</p:commandButton>
 		</div>
