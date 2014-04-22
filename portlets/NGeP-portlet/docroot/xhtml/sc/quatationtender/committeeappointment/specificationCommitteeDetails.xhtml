@@ -54,8 +54,18 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
-				<h:outputText
-					value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, specificationcommittee.memberRole)}" />
+				<ui:fragment rendered="#{specificationcommittee.PNP}">
+					<h:outputText value="Chairperson"
+						rendered="#{specificationcommittee.memberRole eq 'C'}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{!specificationcommittee.PNP}">
+					<p:selectOneMenu value="#{specificationcommittee.memberRole}"
+						style="width: 110px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
+					</p:selectOneMenu>
+				</ui:fragment>
+
 			</p:column>
 
 		</p:dataTable>

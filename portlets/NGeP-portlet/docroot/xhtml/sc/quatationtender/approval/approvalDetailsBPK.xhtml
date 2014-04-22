@@ -12,7 +12,7 @@
 			rowKey="#{requestdetails}">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-				<h:outputText value="#{requestdetails.approvalType}" />
+				<h:outputText value="#{requestdetails.approvalType.parameterCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
 				<h:outputText value="#{requestdetails.originalValue}" />
@@ -31,7 +31,7 @@
 	<p:spacer height="5" />
 
 	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
-		id="uploads">
+		id="bpkuploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -68,7 +68,7 @@
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="uploads" value="Attach Files">
+									icon="iconAttachment" update="bpkuploads" value="Attach Files">
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -118,7 +118,7 @@
 			mode="advanced" id="dialogsuploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploads" oncomplete="attachDlg.hide()">
+			update="bpkuploads" oncomplete="attachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 

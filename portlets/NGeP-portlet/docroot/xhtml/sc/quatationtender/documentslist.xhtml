@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Document List" toggleable="true">
-		<p:dataTable var="document" id="doctbl"
+		<p:dataTable var="document" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtChecklists}"
 			editable="true"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedCheckLists}"
@@ -50,9 +50,9 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
-				<p:commandLink>
+				<p:commandLink action="#{qTDocumentsBackingBean.showTemplateAction(document)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+						value="/resources/ep/images/design/edit.png" rendered="#{document.definationType.parameterId=='186'}"/>
 				</p:commandLink>
 
 				<p:commandLink
@@ -76,7 +76,9 @@
 
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,doctbl" partialSubmit="true"
-				action="#{qTDocumentsBackingBean.addDocumentList}" update="doctbl"
+				action="#{qTDocumentsBackingBean.addDocumentList}"
+				oncomplete="documentWidget.paginator.endLink.click();" 
+				update="doctbl"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"

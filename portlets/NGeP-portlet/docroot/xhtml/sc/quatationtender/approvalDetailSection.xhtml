@@ -5,11 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel id="budgetapprovalid" header="Budget Approver Setting" toggleable="true">
+	<p:panel id="budgetapprovalid" header="Budget Approver Setting"
+		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
-			<p:pickList id="budgetapprover"
-				value="#{budgetList}"
+			<p:pickList id="budgetapprover" value="#{budgetList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
 				converter="approverConverter">
@@ -19,7 +19,7 @@
 		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true" id="uploadids">
+	<p:panel header="Remark" toggleable="true" id="budgetuploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -57,16 +57,16 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="uploadids" value="Attach Files">
+									oncomplete="budgetAttachDlg.show();return false;"
+									icon="iconAttachment" value="Attach Files"
+									update="budgetuploads">
 								</p:commandButton></td>
 						</tr>
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachedIds"
-									value="#{approvalBackingBean.managedBean.attachments}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
+									value="#{approvalBackingBean.managedBean.attachments}" var="attachFile"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
@@ -92,7 +92,6 @@
 									</table>
 								</p:dataGrid></td>
 						</tr>
-
 					</table>
 				</td>
 			</tr>
@@ -107,17 +106,15 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:dialog id="attachDlgid" widgetVar="attachDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="budgetAttachDlgid" widgetVar="budgetAttachDlg"
+		width="750px" height="200" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
-			mode="advanced" id="uploadid"
+			mode="advanced" id="budgetuploadlist"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploadids" oncomplete="attachDlg.hide()">
+			update="budgetuploads" oncomplete="budgetAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 

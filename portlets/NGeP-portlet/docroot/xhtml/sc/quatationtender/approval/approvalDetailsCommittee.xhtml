@@ -32,13 +32,13 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
-		id="uploadsids">
+		id="uploadsfileids">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
-						value="#{bpkApprovalRemarkList}" var="remarkVar"
+						value="#{committeeApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
@@ -68,16 +68,16 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="attachDlg.show();return false;"
-									icon="iconAttachment" update="uploadsids" value="Attach Files">
+									oncomplete="committeeAttachDlg.show();return false;"
+									icon="iconAttachment" update="uploadsfileids"
+									value="Attach Files">
 								</p:commandButton></td>
 						</tr>
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachIds"
-									value="#{approvalBackingBean.managedBean.attachments}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
+									value="#{committeeApprovalAttachment}" var="attachFile"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
@@ -95,7 +95,7 @@
 											<td><h:commandLink value="#{attachFile.fileName}"
 													styleClass="blue_font" /> <p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachIds">
+													immediate="true" update="attachFileIds">
 													<h:graphicImage library="ep/images/design"
 														name="icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
@@ -123,7 +123,7 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:dialog id="attachDlgids" widgetVar="attachDlg" modal="true"
+	<p:dialog id="attachDlgids" widgetVar="committeeAttachDlg" modal="true"
 		dynamic="true" hideEffect="explode" resizable="false" width="700px"
 		height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.bpm.choose.file']}">
@@ -133,7 +133,7 @@
 			mode="advanced" id="dialoguploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploadsids" oncomplete="attachDlg.hide()">
+			update="uploadsfileids" oncomplete="committeeAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 

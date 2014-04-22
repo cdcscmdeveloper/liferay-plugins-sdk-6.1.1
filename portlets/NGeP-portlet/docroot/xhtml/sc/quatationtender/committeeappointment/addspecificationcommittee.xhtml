@@ -56,18 +56,19 @@
 							</tr>
 						</table>
 					</p:panel>
-					<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
-						action="#{qTCommitteBackingBean.reset}"
+					<p:commandButton value="#{lbl['lbl.so.reset']}"
+						style="float:right;" action="#{qTCommitteBackingBean.reset}"
 						update="newCommitteeProfile" icon="ui-icon-reset"
 						resetValues="true" partialSubmit="true" process="@this" />
 
-					<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
-						icon="ui-icon-search"
+					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						style="float:right;" icon="ui-icon-search"
 						action="#{qTCommitteBackingBean.existingCommitteeSearchAction}"
 						update="@(.existingCommitteeResults)" partialSubmit="true"
 						process="@parent" />
 					<br />
 					<br />
+					<p:spacer height="10" />
 					<p:panel header="Search Result" toggleable="true">
 						<p:dataTable id="existingcommitteesearch"
 							value="#{qTCommitteBackingBean.managedBean.externalUsers}"
@@ -110,7 +111,7 @@
 								</ui:fragment>
 								<ui:fragment rendered="#{existcommitteeuser.PMP == false}">
 									<p:selectOneMenu id="appaction"
-										value="#{qTCommitteBackingBean.managedBean.roleName}"
+										value="#{existcommitteeuser.memberRole}"
 										style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTCommitteBackingBean.managedBean.roleTypes}" />

@@ -8,16 +8,21 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-		<p:dataTable id="restrictedPnlId" var="cateGory"
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-			style="width:100%" rowIndexVar="index" styleClass="restrictedPnlId">
+
+		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList}"
+			style="width:100%" rowIndexVar="index" styleClass="restrictedPnlId"
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedRestrictedCategoryList}"
+			rowKey="#{restrcitedCateGory}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3"
 					headerText="Category Lov"
-					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
-					value="#{cateGory.pmCategoryL3.categoryL3Code}"
+					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
+					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:qtsubId:restrictedtendertabView:restrictedPnlId">
 				</ac:lov>
 			</p:column>
@@ -25,27 +30,28 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
+					value="#{restrcitedCateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}" />
+					value="#{restrcitedCateGory.pmCategoryL3.pmCategoryL2.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
 				style="width:20%">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
+				<h:outputText
+					value="#{restrcitedCateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:20%">
-				<h:outputText value="#{cateGory.pmCategoryL3.catType}" />
+				<h:outputText value="#{restrcitedCateGory.pmCategoryL3.categoryTypeCode.parameterId}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mandatory']}">
-				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
+				<p:selectBooleanCheckbox value="#{restrcitedCateGory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
 			</p:column>
 
@@ -54,10 +60,12 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
 				partialSubmit="true" update="restrictedPnlId" icon="ui-icon-add"
-				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
+				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="restrictedPnlId" />
+				icon="ui-icon-delete"
+				action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction}"
+				update="restrictedPnlId" />
 		</div>
 		<ac:lovPopup />
 
