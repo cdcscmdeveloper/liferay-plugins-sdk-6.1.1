@@ -22,6 +22,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -47,6 +48,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -1868,6 +1871,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
 		//resDTO.get
+		return resDTO;
+	}
+	
+	public AgOfficeResDTO getAgAccount(Long orgProfileId){
+		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject("pm",IAgOfficeSO.class);
+		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		AgOfficeResDTO resDTO = glAccountSO.retrieveAgOfficeByOrgProfileId(reqDTO);
+
 		return resDTO;
 	}
 	
