@@ -3,7 +3,16 @@
  */
 package my.ep.web.backingbean.ct.amendment;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -17,14 +26,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -34,24 +48,35 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.dtl.CtContractValue;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.LocationDTO;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.util.PortalUtil;
@@ -69,10 +94,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private String editorValue;
-	private TreeNode rootNodeAgency;
-	
+	private CtPerformanceBond[] selectedBondList;
+
 	public AmendmentBackingBean(){
-		rootNodeAgency = new DefaultTreeNode("root", null);
 		if (this.getManagedBean().getAction() == null) {
 			this.getManagedBean().setAction(new String[] {"Save","Submit"});
 		}
@@ -82,7 +106,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		if(getManagedBean().getContractVer()!=null && getManagedBean().getContractVer().getItemRemarks().size()==0) {
 			initiateRemark(getManagedBean().getContractVer().getItemRemarks());
 		}
+		
+		if(getManagedBean().getUserMap().size()==0) {
+			 initializeApproverList();
+	    }
 	}
+	
+	 private void initializeApproverList() {
+	 		if (getManagedBean().getApproverModel() == null) {
+	 			List<String> source = new ArrayList<String>();
+	 			List<String> target = new ArrayList<String>();
+	 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+	 		}
+	 	}
 	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
@@ -104,10 +140,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-		    
-			if(taskId==null) {
-				return;
-			}
+			if(taskId==null) 
+			return;
 			
 			FacesScopes face = new FacesScopes();
 			String token =face.getBPMAuthenticationCtxToken();
@@ -138,6 +172,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
+			CombineSupAddress(this.getManagedBean().getContractVer());
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
@@ -186,6 +221,44 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 
 		}
+	
+public void CombineSupAddress(CtContractVer ctContractVer){
+    	
+    	StringBuilder address = new StringBuilder();
+    	String strSpace =", ";
+    	if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4());
+    		address.append(strSpace);
+    		
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName());
+    		address.append("\n");
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode());
+    	}
+    	
+    	this.getManagedBean().setSupplierAddress(address.toString());
+    }
 	
 	 public String saveContractAmendment(String action){
 			
@@ -356,14 +429,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    public void setEditorValue(String editorValue) {
 		  this.editorValue = editorValue;
 	   }
-
-		public TreeNode getRootNodeAgency() {
-			return rootNodeAgency;
-		}
-
-		public void setRootNodeAgency(TreeNode rootNodeAgency) {
-			this.rootNodeAgency = rootNodeAgency;
-		} 
 		
 		public String convertTime(Date time){ 
 	        String str ="";
@@ -407,5 +472,208 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			remarks.add(0, remark);
 		}
 	}
-	 	 
+	
+	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
+		
+		SelectItem[] items = null; 
+		IFinancialOrgSO financialOrgSO;
+		try{
+		    int i = 1;
+			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND);
+			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
+			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    for(PmFinancialOrg pmFinancialOrg : list) 
+				  items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
+	    }catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}   	
+	   return items;
+	}
+
+	/*Implementation of Bond Details*/
+    public void addBondDetails() {
+		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
+		if(ctPerformanceBond.getFinancialOrg() == null)
+			ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
+		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
+	}
+    
+    public void delBondDetails() {
+    	for(int i = 0; i < selectedBondList.length; i++) {
+			CtPerformanceBond ctPerformanceBond = selectedBondList[i];
+			this.getManagedBean().getContractVer().getCtPerformanceBonds().remove(ctPerformanceBond);
+		}selectedBondList = null;	
+	}
+    
+	public CtPerformanceBond[] getSelectedBondList() {
+		return selectedBondList;
+	}
+
+	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
+		this.selectedBondList = selectedBondList;
+	}
+	
+	public String fileNames(String filePath){
+		String fileName = "";
+		if(filePath == null || filePath=="")
+		  return fileName;
+		
+		File file = new File(filePath);
+		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+	    return fileName;
+	}
+	
+	public void downloadFile(String filePath) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		String fileName = null;
+		
+		File file = new File(filePath);
+		fileName = file.getName();
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+	
+	public void fileUpload(FileUploadEvent event) throws Exception {
+		UploadedFile item = event.getFile();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    int i=0;
+	    for(CtPerformanceBond ctPerformanceBond : this.getManagedBean().getContractVer().getCtPerformanceBonds()){
+	      if(ctPerformanceBond.equals(this.getManagedBean().getCtPerformanceBond()))
+	    	{
+	    	  this.getManagedBean().getContractVer().getCtPerformanceBonds().get(i).setFilePath(filePath);
+	        }i++;
+	    }
+	}
+	
+	 public void chkJustificationAction(){
+		  try{
+			  if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+			     this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
+			  }else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
+			     this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);
+			     if(!this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+			    	  this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
+			     }
+			  }else{
+			    this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
+			    this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
+			  }
+		  }catch (Exception e) {
+				System.out.println(e);
+		  }
+	 }
+	 
+	 public SelectItem[] getStatusDropdown() {
+			SelectItem[] items = null;
+			try {
+				items = new SelectItem[2];
+				int i = 0;
+				items[i++] = new SelectItem(1, "Active");
+				items[i++] = new SelectItem(2, "Inactive");
+				
+			}catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+			return items;
+		}
+	
+	 public void chkBooleanVlaue(){
+		 
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+			  this.getManagedBean().setChkAmendExtendValue(true);
+		    
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || 
+				 this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()||
+				 this.getManagedBean().getContractVer().getCtAmendment().isValueChange())
+			    this.getManagedBean().setChkAmendOtherValue(true);
+		 
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange())
+			 this.getManagedBean().setChkClause(true);
+		 
+		 if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && 
+				 this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() &&
+				 this.getManagedBean().getContractVer().getCtAmendment().isValueChange() &&
+				 this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() &&
+				 this.getManagedBean().getContractVer().getCtAmendment().isClauseChange())
+			 this.getManagedBean().setChkAmendAllValue(true);
+			 
+		 } 
+	 
+	 public void retriveZonesByContractVer() {
+			
+			TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
+			TreeNode zoneNode =  null;
+			if(this.getManagedBean().getContractVer().getCtContractZones() != null) {
+			   for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
+				   if(zone.getDeliveryTermUom() == null){
+					   zone.setDeliveryTermUom(new PmParameter()); 
+					   zone.getDeliveryTermUom().setParameterId(0L);
+				   }
+				   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
+				   TreeNode stateNode = null;
+				   List<PmState> state = new ArrayList<PmState>();
+				   if(zone.getCtContractZoneDtls() != null) {
+					 for(CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
+					   if(zoneDtl.getState() != null){
+						  if(!state.contains(zoneDtl.getState())){
+							  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
+						   }state.add(zoneDtl.getState());
+					    }
+					   if(zoneDtl.getDistrict() != null){
+						   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), stateNode);
+					   }
+					 }
+				  }
+				}
+			 this.getManagedBean().setCtZoneTrees(rootLocationTree);
+		  }
+		} 
+		
+	    public void getZoneObjDetails() {
+	    	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+	    		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
+	    			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
+	    				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
+	    					if(ctContractZone.getDeliveryTermUom() == null)
+	     					   ctContractZone.setDeliveryTermUom(new PmParameter());
+	     					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
+	     					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+	     				}
+	    			}
+	    		}
+	    	}
+		}
 }

@@ -48,6 +48,7 @@ import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
@@ -341,7 +342,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 public void addTerminateReason() {
 		CtTerminationReason terminateReason = new CtTerminationReason();
 		if(terminateReason.getReasonType() == null)
-			terminateReason.setReasonType(new PmParameter());
+			terminateReason.setReasonType(new PmReason());
 		this.getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
 	 }
 

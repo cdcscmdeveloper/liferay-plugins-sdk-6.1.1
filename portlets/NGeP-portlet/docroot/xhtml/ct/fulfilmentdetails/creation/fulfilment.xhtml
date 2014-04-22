@@ -16,7 +16,8 @@
     </style> 
 		<p:panel>
 			<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
-			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+			<p:messages id="messages" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+			<p:tooltip global="true" position="left center" targetPosition="right center" forSelector=".ui-state-error"/>
 	    	<table style="width: 100%;">
 	    		<tr>
 	    			<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
@@ -24,7 +25,9 @@
 	    			  <c:if test="#{!contractDetailsBackingBean.managedBean.viewContract}">
 			  			<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.action}">
 							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
-								action="#{contractDetailsBackingBean.saveContract(action)}"/>
+								action="#{contractDetailsBackingBean.saveContract(action)}">
+								 
+								</p:commandButton>
 						</ui:repeat>	
 						</c:if>    			
 	    			</td>

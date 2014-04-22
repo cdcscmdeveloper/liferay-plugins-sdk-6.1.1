@@ -36,14 +36,14 @@
 		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:65px;" 
 		          value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                <p:spacer width="2" />
-               <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.uomId.uomId}" 
+               <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
                  style="width:100px;" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
 			</h:panelGrid>	
 			<p:outputLabel id="centralSignDate" value="Signed Date" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<p:inputText for="centralSignDate" 
-			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreementId.signedDate)}"
+			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
 			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
@@ -62,7 +62,7 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="centralContractName"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true"
+				required="false" rows="3" cols="31" disabled="true" style="margin-bottom: 5px;"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<h:outputLabel value="Agreement No" 
@@ -79,12 +79,14 @@
 	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
          <h:panelGroup>
 		    <div style="height:80px; vertical-align:top;">
-			   <p:outputLabel for="centralJustificationLbl" value="* Justification" />
+			   <p:outputLabel id="centralJustificationLbls" value="* Justification" />
 		    </div>
 	     </h:panelGroup>
-	  <h:panelGrid>
+	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" autoResize="false" />	
+		  rows="4" cols="113" validator="#{webappBean.checkSpaces}"  required="true" autoResize="false">
+		  </p:inputTextarea>	
+	     <p:message for="centralJustificationLbl"/>
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

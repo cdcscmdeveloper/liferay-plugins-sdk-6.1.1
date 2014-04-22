@@ -4,17 +4,24 @@
 package my.ep.web.managedbean.ct.amendment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -58,6 +65,17 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtContractItem selectedServiceItem;
 	
 	private List<CtContractVer> amendHistoryList;
+	private CtPerformanceBond ctPerformanceBond;
+	private String supplierAddress;
+	private boolean directPurchase;
+	private boolean chkClause;
+	private boolean chkAmendOtherValue;
+	private boolean chkAmendExtendValue;
+	private boolean chkAmendAllValue;
+	private String supplierLocation;
+	private TreeNode ctZoneTrees;
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -248,6 +266,97 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
+	}
+
+	public CtPerformanceBond getCtPerformanceBond() {
+		return ctPerformanceBond;
+	}
+
+	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
+		this.ctPerformanceBond = ctPerformanceBond;
+	}
+
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	public boolean isDirectPurchase() {
+		return directPurchase;
+	}
+
+	public void setDirectPurchase(boolean directPurchase) {
+		this.directPurchase = directPurchase;
+	}
+
+	public boolean isChkClause() {
+		return chkClause;
+	}
+
+	public void setChkClause(boolean chkClause) {
+		this.chkClause = chkClause;
+	}
+
+	public boolean isChkAmendOtherValue() {
+		return chkAmendOtherValue;
+	}
+
+	public void setChkAmendOtherValue(boolean chkAmendOtherValue) {
+		this.chkAmendOtherValue = chkAmendOtherValue;
+	}
+
+	public boolean isChkAmendExtendValue() {
+		return chkAmendExtendValue;
+	}
+
+	public void setChkAmendExtendValue(boolean chkAmendExtendValue) {
+		this.chkAmendExtendValue = chkAmendExtendValue;
+	}
+
+	public boolean isChkAmendAllValue() {
+		return chkAmendAllValue;
+	}
+
+	public void setChkAmendAllValue(boolean chkAmendAllValue) {
+		this.chkAmendAllValue = chkAmendAllValue;
+	}
+
+	public String getSupplierLocation() {
+		return supplierLocation;
+	}
+
+	public void setSupplierLocation(String supplierLocation) {
+		this.supplierLocation = supplierLocation;
+	}
+
+	public TreeNode getCtZoneTrees() {
+		return ctZoneTrees;
+	}
+
+	public void setCtZoneTrees(TreeNode ctZoneTrees) {
+		this.ctZoneTrees = ctZoneTrees;
+	}
+	
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
 	}
 
 }

@@ -42,11 +42,13 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true"
+				required="false" rows="3" cols="31" disabled="true" style="margin-bottom: 5px;"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<p:outputLabel id="astatus1" value="Agreement Status" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
-			<p:inputText for="astatus1" style="width:170px;" disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:inputText for="astatus1" style="width:170px;" disabled="true" 
+			 value="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate}" 
+			  rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
@@ -88,12 +90,15 @@
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
 		    <div style="height:80px; vertical-align:top;">
-			   <p:outputLabel for="justificationLbl" value="* Justification" />
+			   <p:outputLabel id="justificationLbls" value="* Justification" />
 		    </div>
 	     </h:panelGroup>
-	  <h:panelGrid>
+	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" autoResize="false" />	
+		  rows="4" cols="113" disabled="false" validator="#{webappBean.checkSpaces}"
+		  required="true" autoResize="false">
+		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
+		   <p:message for="justificationLbl"/>	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

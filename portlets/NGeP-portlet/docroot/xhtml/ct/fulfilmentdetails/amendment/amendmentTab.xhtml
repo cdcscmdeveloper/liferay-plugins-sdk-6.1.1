@@ -10,10 +10,9 @@
 	
 	<ui:define name="contentSection">
 		<style>
-		.column-align-center {
-			text-align: center !important;
-		}
-		
+		.column-align-center {text-align: center !important;}
+		.top-aligned-columns td{ vertical-align: top;}
+         #dlgDel .ui-dialog .ui-dialog-titlebar {display:none !important;}
 		.column-align-right {
 			text-align: right !important;
 		}
@@ -47,7 +46,7 @@
 					</td>
 					<td>
 							<p:inputText size="25" disabled="true"
-								value="#{amendmentBackingBean.managedBean.contractVer.docNo == null ? '-- System Generated --':amendmentBackingBean.managedBean.contractVer.docNo}" />
+								value="#{amendmentBackingBean.managedBean.ctContract.contractNo == null ? '-- System Generated --':amendmentBackingBean.managedBean.ctContract.contractNo}" />
 					</td>
 					 <td>
 		    			   <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
@@ -67,12 +66,21 @@
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-	     <ui:include src="contractDetails.xhtml"/>
-	      <ui:include src="amendment.xhtml"/>
-	      <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+	     <ui:include src="fulfilmentDetails.xhtml"/>
+	     <ui:include src="quotationTender.xhtml"/>
+	     <ui:include src="supplierDetails.xhtml"/>
+	     <ui:include src="performanceBond.xhtml"/>
       </p:tab>
+       <p:tab title="Amendment Details">
+          <ui:include src="amendmentDetails.xhtml"/>
+          <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+       </p:tab>
+       <p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}"
+			    rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}">
+				 <ui:include src="zone.xhtml" />
+			</p:tab>
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
-         <ui:include src="item.xhtml"/>
+	      <ui:include src="item.xhtml" />
        </p:tab>  
         <p:tab title="Approval Letter" rendered="#{amendmentBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>

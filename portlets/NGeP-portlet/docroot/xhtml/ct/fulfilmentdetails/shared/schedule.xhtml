@@ -64,11 +64,9 @@
 
 	    <p:spacer height="2" />
 		 <div class="ppRightBtn"> 
-		   <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
 		     <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
 		       action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
 		 	 <p:commandButton value="Delete" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
-		   </c:if>
 	    </div>
 	    <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" header="Delete Confirmation" styleClass="screen-title"  
           resizable="false" modal="true" width="325" height="90">  
@@ -104,7 +102,7 @@
 		       <ac:paginator for="tableProgress" />
 		       <p:column selectionMode="multiple" style="width:2%;"/> 
                <p:column style="width:7%;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
-                 <p:inputText value="#{ProgVar.phase}" style="width:95%;" />
+                 <p:inputText value="#{ProgVar.phase}" style="width:90%;" />
                </p:column>
 		       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
 		          <p:inputText style="width:95%;"/>

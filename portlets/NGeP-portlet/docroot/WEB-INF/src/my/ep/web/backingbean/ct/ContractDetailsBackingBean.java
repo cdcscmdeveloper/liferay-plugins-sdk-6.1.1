@@ -447,7 +447,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             	this.getManagedBean().getContractVer().setApprovedDate(new Date());
 			}
             
-            reqDTO.setCtContract(this.getManagedBean().getCtContract());
+            reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
             
             reqDTO.setUserRole(getUserRole());
@@ -502,8 +502,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-    			 String fromDate = String.valueOf(ctProgressivePayment.getFromProDate()) + ctProgressivePayment.getFromProYear();
-    			 String toDate = String.valueOf(ctProgressivePayment.getToProDate()) + ctProgressivePayment.getToProYears();
+    			 String fromDate = String.valueOf(ctProgressivePayment.getFromProDate())+"-"+ ctProgressivePayment.getFromProYear();
+    			 String toDate = String.valueOf(ctProgressivePayment.getToProDate())+"-"+ ctProgressivePayment.getToProYears();
     			 Date date = dateFormat.parse((fromDate));
     			 ctProgressivePayment.setFromDate(date);
     			 Date date1 = dateFormat.parse((toDate));
@@ -1087,7 +1087,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
      public void validateDate(CtSchedule ctSchedule){
     	 int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear());  
 		 int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
-		 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue > toyearValue) || startYearValue > toyearValue){
+		 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue >= toyearValue)||
+		     (ctSchedule.getFromTranDate() <= ctSchedule.getToTranDate() && startYearValue > toyearValue)){
 		     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
 		    	if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
 		    		dataList.setValidateScheduleDate(true);
@@ -1105,7 +1106,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
 		int startYearValue = Integer.valueOf((String) ctProgressivePayment.getFromProYear()); 
 		int toyearValue = Integer.valueOf((String) ctProgressivePayment.getToProYears()); 
-		if((ctProgressivePayment.getFromProDate() > ctProgressivePayment.getToProDate() && startYearValue > toyearValue) || startYearValue > toyearValue){
+		if((ctProgressivePayment.getFromProDate() > ctProgressivePayment.getToProDate()  &&  startYearValue >= toyearValue)||
+				(ctProgressivePayment.getFromProDate() <= ctProgressivePayment.getToProDate()  && startYearValue > toyearValue)){
 		   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.equals(ctProgressivePayment)){
 		    		 dataList.setValidateProgressiveDate(true);
@@ -1126,6 +1128,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    	this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
 			    }else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
 			    	this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);  
+			    	if(!this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+				    	  this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
+				     }
 			    }else{
 			    	this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
 			    	this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
@@ -1137,31 +1142,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 	public void searchAgencyDetails(){
 		getPtjCodeName();	 
-	}
-
-	private void initializeApproverGroup() {
-		IUserSO userSO = null;
-		try {
-					
-		    userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-		    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-		    reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-		    reqDTO.setOrgProfileId(1250L);
-			resDTO = userSO.retrieveUserGroupList(reqDTO);
-						
-			if(getManagedBean().getApproverModel()==null) {
-				List<String> source = new ArrayList<String>(); 
-					List<String> target = new ArrayList<String>();  
-					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-			 }			
-		 }catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		 }finally {
-				userSO = null;
-		 }
 	}
 			
 	public void onRowSelect(SelectEvent event) {}/*End*//*End Item Details*/
@@ -1308,10 +1288,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				amendBB.getManagedBean().getContractVer().getCtAmendment().setDescription(null);
 			}
 				
+			amendBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		    	amendBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		    	amendBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
+		    
+		    amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+				
 			reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
 			reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 			resDTO = contractSO.retrieveContractVerByIdDoctype(reqDTO);
 			amendBB.getManagedBean().setAmendHistoryList(resDTO.getAmendHistoryList());
+			amendBB.retriveZonesByContractVer();
 		}catch (Exception e) {
 				e.printStackTrace();
 		}finally {
@@ -1460,8 +1450,5 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setContractItemServiceList(
 			List<CtContractItem> contractItemServiceList) {
 		ContractItemServiceList = contractItemServiceList;
-	}
-	
-	
-		
+	}	
 }
