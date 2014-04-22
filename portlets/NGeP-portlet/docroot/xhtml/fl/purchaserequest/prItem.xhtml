@@ -294,7 +294,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Ok" icon="ui-icon-accept"
 				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
-				oncomplete="addManualDeliveryAddr.show();"
+				oncomplete="addManualDeliveryAddr.hide();"
 				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"

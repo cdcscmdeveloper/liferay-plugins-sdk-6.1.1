@@ -188,9 +188,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//receving officer List
 	private List<PmAddressType> receivingOffList;
 	
-	//get GL_ACCOUNT details
-	private String glAccountDesc;
-	private String glAccountId;
+	//get Ag Office details
+	private Long agOfficeId;
+	private String agOfficeName;
 	
 	
 /**
@@ -1456,33 +1456,32 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the glAccountDesc
+	 * @return the agOfficeId
 	 */
-	public String getGlAccountDesc() {
-		return glAccountDesc;
+	public Long getAgOfficeId() {
+		return agOfficeId;
 	}
 
 	/**
-	 * @param glAccountDesc the glAccountDesc to set
+	 * @param agOfficeId the agOfficeId to set
 	 */
-	public void setGlAccountDesc(String glAccountDesc) {
-		this.glAccountDesc = glAccountDesc;
+	public void setAgOfficeId(Long agOfficeId) {
+		this.agOfficeId = agOfficeId;
 	}
 
 	/**
-	 * @return the glAccountId
+	 * @return the agOfficeName
 	 */
-	public String getGlAccountId() {
-		return glAccountId;
+	public String getAgOfficeName() {
+		return agOfficeName;
 	}
 
 	/**
-	 * @param glAccountId the glAccountId to set
+	 * @param agOfficeName the agOfficeName to set
 	 */
-	public void setGlAccountId(String glAccountId) {
-		this.glAccountId = glAccountId;
+	public void setAgOfficeName(String agOfficeName) {
+		this.agOfficeName = agOfficeName;
 	}
 
 	
-
 }

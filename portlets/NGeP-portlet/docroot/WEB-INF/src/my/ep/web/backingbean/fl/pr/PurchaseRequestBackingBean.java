@@ -262,7 +262,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getVotFundList(4L);
 		
 		//get GL_ACCOUNT details
-		getGlAccount(4L);
+		//getGlAccount(4L);
+		
+		// get AG Officer details
+		//getAgAccount(4L);
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -389,6 +392,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setPmAddress(manualAddr);
 		deliveryAddr.setCheckManualAddress(true);
+		deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
+		deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
+		PmParameter pmUom=new PmParameter();
+		pmUom.setParameterId(1L);
+		deliveryAddr.setPmUom(pmUom);
+		deliveryAddr.setDeliveryTerm(10);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 	}
 	
@@ -1879,6 +1888,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		AgOfficeResDTO resDTO = glAccountSO.retrieveAgOfficeByOrgProfileId(reqDTO);
+		getManagedBean().setAgOfficeId(resDTO.getAgOffice().getAgOfficeId()) ;
+		getManagedBean().setAgOfficeName(resDTO.getAgOffice().getOfficeName());
+		getManagedBean().getFulfilmentRequest().getAgOffice().setAgOfficeId(resDTO.getAgOffice().getAgOfficeId());
 
 		return resDTO;
 	}

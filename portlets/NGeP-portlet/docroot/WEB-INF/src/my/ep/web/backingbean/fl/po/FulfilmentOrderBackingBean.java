@@ -317,7 +317,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			//flReqDTO.setSelectedApprovers(flPurchaseOrd..getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			//combineSupAddress(resDTO.getFlFulfilmentRequest());
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
 			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
