@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="resourceSection">
@@ -16,10 +17,13 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+				<td><p:commandButton value="Back" immediate="true"
+						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
+							styleClass="ui-button"
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />
 					</ui:repeat></td>
@@ -44,12 +48,12 @@
 			</tr>
 		</table>
 		<ui:include src="poReviewHeaderPage.xhtml" />
-		<p:spacer height="20px"/>
+		<p:spacer height="20px" />
 		<p:tabView id="poTabs" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="poGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item and Remarks">
+			<p:tab title="Order Summary">
 				<ui:include src="poItem.xhtml" />
 			</p:tab>
 		</p:tabView>

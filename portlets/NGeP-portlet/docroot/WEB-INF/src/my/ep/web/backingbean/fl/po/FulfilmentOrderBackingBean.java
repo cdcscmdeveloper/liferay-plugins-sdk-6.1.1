@@ -40,6 +40,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.ToggleEvent;
 
 import com.liferay.portal.util.PortalUtil;
 //import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
@@ -228,7 +229,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 
-				flReqDTO.setFlOrderId(stopFlData.getFulfillmentOrderId());
+				//flReqDTO.setFlOrderId(stopFlData.getFulfillmentOrderId());
 				FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 				getManagedBean().setTaskId(taskId);
@@ -244,13 +245,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				
 				FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
 				
-				if(coObj.getContractRequestId().intValue() == 0){
-					flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+				/*//if(coObj.getContractRequestId().intValue() == 0){
+					//flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
 				}else{
 					flReqDTO.setFlRequestId(coObj.getContractRequestId());
 				}
 
-				flReqDTO.setSelectedApprovers(coObj.getApproverList());
+				flReqDTO.setSelectedApprovers(coObj.getApproverList());*/
 
 				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
@@ -294,7 +295,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 
-			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
+			//flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
 			getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 			getManagedBean().setTaskId(taskId);
@@ -308,13 +309,15 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
-			System.out.println("req id from BPM::::::: "+flPurchaseOrd.getPurchaseRequestId());
-			System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getDocType());
-			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
-			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
+			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
+			System.out.println("req id from BPM::::::: "+flPurchaseOrd.getOrderDetails().getRequestId());
+			System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getOrderDetails().getReqDocNo());
+			//flp.getOrderDetails().setReqDocNo
+			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
+			//flReqDTO.setSelectedApprovers(flPurchaseOrd..getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			combineSupAddress(resDTO.getFlFulfilmentRequest());
+			//combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
 			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
@@ -407,5 +410,4 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				throw new EpException("Contract has been suspended/terminated");
 			}
 		}
-
 }

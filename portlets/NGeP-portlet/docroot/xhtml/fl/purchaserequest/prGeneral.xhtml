@@ -63,14 +63,15 @@
 			<tr>
 				<td rowspan="3" valign="top" style="width: 106px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="6"
+				<td rowspan="3"><p:inputTextarea cols="50" rows="6" id="title"
 						style=" margin-bottom:5px;"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
-						required="true" /></td>
+						required="true" label="Title" /> <p:message for="title" /> <h:outputText
+						value="" /></td>
 				<td style="width: 109px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
-						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId)}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -80,27 +81,39 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.created.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
 				<td><p:inputText size="12" disabled="true" /> <p:spacer
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.approvedDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
 				<td><p:calendar mode="popup" showOn="button"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}"
-						pattern="dd-MM-yyyy" /></td>
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:calendar></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
 				<td><p:calendar mode="popup" showOn="button"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}"
-						pattern="dd-MM-yyyy" /></td>
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:calendar></td>
 			</tr>
 		</table>
 	</p:panel>

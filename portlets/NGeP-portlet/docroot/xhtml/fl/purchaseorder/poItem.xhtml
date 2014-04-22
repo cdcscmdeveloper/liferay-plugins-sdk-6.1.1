@@ -5,86 +5,67 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
-
-		<p:dataTable id="addressDataTable" var="address"
-			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}"
-			selection="#{flOrderBB.managedBean.selectedDelAddr}"
-			rowKey="#{address}" lazy="true" selectionMode="single">
-			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelect" update=":form:poTabs:itemDetPanel" />
+	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+		<p:dataTable id="delAddressSummary" var="delAddressSummary"
+			styleClass="orderSummaryChange hide-column-names"
+			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
+			<p:column style="width:2%">
+				<p:rowToggler />
+			</p:column>
 			<p:column headerText="Delivery Address">
-				<h:outputText rendered="#{address.addressType != null}"
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
-				<h:outputText rendered="#{address.addressType eq null}"
-					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
+				<h:outputText rendered="#{delAddressSummary.addressType != null}"
+					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}, #{delAddressSummary.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
+					value="#{delAddressSummary.pmAddress.address1}, #{delAddressSummary.pmAddress.address2}, #{delAddressSummary.pmAddress.address3}, #{delAddressSummary.pmAddress.address4}" />
 			</p:column>
-
-			<p:column headerText="Exp. Delivery (Start)">
-				<p:calendar value="#{address.startDate}" pattern="dd/mm/yyyy"
-					id="calStartDate" showOn="button" />
+			<p:column>
+				<h:outputText value="Delivery Term" />
+				<p:spacer width="10" />
+				<p:inputText size="5" disabled="true" />
+				<p:spacer width="5" />
+				<h:inputText size="5" disabled="true" value="Days" />
 			</p:column>
-
-			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" pattern="dd/mm/yyyy"
-					id="calEndDate" showOn="button" />
+			<p:column>
+				<h:outputText value="Delivery Start" />
+				<p:spacer width="7" />
+				<p:inputText size="13" value="10/02/2014" disabled="true" />
 			</p:column>
+			<p:column>
+				<h:outputText value="Delivery End" />
+				<p:spacer width="10" />
+				<p:inputText size="13" value="22/02/2014" disabled="true" />
+			</p:column>
+			<p:rowExpansion>
 
+				<p:dataTable id="newItems" var="newItems"
+					styleClass="show-column-names"
+					value="#{delAddressSummary.flFulfilmentItemAddr}">
+					<p:column headerText="Item Type">
+						<h:outputText value="#{newItems.scRequestItem.itemType}" />
+					</p:column>
+					<p:column headerText="Item Code">
+						<h:outputText />
+					</p:column>
+					<p:column headerText="Item Name">
+						<h:outputText value="#{newItems.scRequestItem.itemName}" />
+					</p:column>
+					<p:column headerText="UOM">
+						<h:outputText />
+					</p:column>
+					<p:column headerText="Unit Price (RM)">
+						<h:outputText value="#{newItems.unitPrice}"
+							style="text-align:right">
+							<f:convertNumber pattern="#,#00.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Ordered Qty.">
+						<h:outputText value="#{newItems.orderedQty}" />
+					</p:column>
+					<p:column headerText="Ordered Amt.(RM)">
+						<h:outputText value="#{newItems.orderedAmt}" />
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
 		</p:dataTable>
-	</p:panel>
-	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
-
-		<p:dataTable id="itemDataTable" var="flItem" lazy="true"
-			value="#{flOrderBB.managedBean.selectedDelAddr.flFulfilmentItemAddr}">
-			<ac:paginator for="itemDataTable" />
-			<p:column headerText="Item Name">
-				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}" />
-			</p:column>
-			<p:column headerText="VOT/fund">
-				<h:outputText />
-			</p:column>
-			<p:column headerText="Prog./proj.">
-				<h:outputText />
-			</p:column>
-			<p:column headerText="Setia">
-				<h:outputText />
-			</p:column>
-			<p:column headerText="Sub Setia">
-				<h:outputText />
-			</p:column>
-			<p:column headerText="Asset Ind.">
-				<h:outputText />
-			</p:column>
-			<p:column headerText="Charge Code">
-				<h:outputText value="#{flItem.pmDo.doId}" style="text-align:right" >
-				</h:outputText>
-			</p:column>
-			<p:column headerText="Unit Price (MYR)">
-				<h:outputText disabled="true" value="#{flItem.unitPrice}"
-					style="text-align:right"><f:convertNumber pattern="#,###.00" /></h:outputText>
-			</p:column>
-			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{flItem.orderedQty}" style="text-align:right">
-					<p:ajax event="blur" update="subTotalTxt" process="@this"
-							listener="#{flOrderBB.retrieveOrderAmount(flItem)}" />
-				</p:inputText>
-			</p:column>
-			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{flItem.orderedAmt}"
-					style="text-align:right" disabled="true"><f:convertNumber pattern="#,###.00" /></p:inputText>
-			</p:column>
-		</p:dataTable>
-
-	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true" >
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
-			</tr>
-		</table>
 	</p:panel>
 </ui:composition>

@@ -30,7 +30,8 @@
 				<p:spacer width="7" />
 				<p:inputText size="13" value="#{delAddressSummary.startDate}"
 					disabled="true">
-					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 			</p:column>
 			<p:column>
@@ -38,7 +39,8 @@
 				<p:spacer width="10" />
 				<p:inputText size="13" value="#{delAddressSummary.endDate}"
 					disabled="true">
-					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 			</p:column>
 			<p:rowExpansion>
@@ -61,14 +63,18 @@
 					<p:column headerText="Unit Price (RM)">
 						<h:outputText value="#{newItems.unitPrice}"
 							style="text-align:right">
-							<f:convertNumber pattern="#,#00.00" />
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Ordered Qty.">
-						<h:outputText value="#{newItems.orderedQty}" />
+						<h:outputText value="#{newItems.orderedQty}" style="text-align:right">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
 					</p:column>
 					<p:column headerText="Ordered Amt.(RM)">
-						<h:outputText value="#{newItems.orderedAmt}" />
+						<h:outputText value="#{newItems.orderedAmt}" style="text-align:right">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
 					</p:column>
 				</p:dataTable>
 			</p:rowExpansion>

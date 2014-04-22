@@ -185,6 +185,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long subSetiaId;
 	private Long prgActivityId;
 	
+	//receving officer List
+	private List<PmAddressType> receivingOffList;
+	
+	//get GL_ACCOUNT details
+	private String glAccountDesc;
+	private String glAccountId;
+	
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -291,10 +298,15 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
 		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
-		if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
+		/*if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
 			itemAddress.setCoaValue("N");
-		}else{
+		}*/
+		if(null !=flFulfilmentItemAddr.getPmVotFund()){
+			if(null !=flFulfilmentItemAddr.getPmVotFund().getVotFundId()){
 			itemAddress.setCoaValue("Y");
+			}
+		}else{
+			itemAddress.setCoaValue("N");
 		}
 		
 		return itemAddress;
@@ -1427,6 +1439,48 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPrgActivityId(Long prgActivityId) {
 		this.prgActivityId = prgActivityId;
+	}
+
+	/**
+	 * @return the receivingOffList
+	 */
+	public List<PmAddressType> getReceivingOffList() {
+		return receivingOffList;
+	}
+
+	/**
+	 * @param receivingOffList the receivingOffList to set
+	 */
+	public void setReceivingOffList(List<PmAddressType> receivingOffList) {
+		this.receivingOffList = receivingOffList;
+	}
+
+	/**
+	 * @return the glAccountDesc
+	 */
+	public String getGlAccountDesc() {
+		return glAccountDesc;
+	}
+
+	/**
+	 * @param glAccountDesc the glAccountDesc to set
+	 */
+	public void setGlAccountDesc(String glAccountDesc) {
+		this.glAccountDesc = glAccountDesc;
+	}
+
+	/**
+	 * @return the glAccountId
+	 */
+	public String getGlAccountId() {
+		return glAccountId;
+	}
+
+	/**
+	 * @param glAccountId the glAccountId to set
+	 */
+	public void setGlAccountId(String glAccountId) {
+		this.glAccountId = glAccountId;
 	}
 
 	
