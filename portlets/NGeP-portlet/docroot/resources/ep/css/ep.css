@@ -4835,3 +4835,11 @@ table.rptTbl {
 	width: 10%;
 	padding-top: 51px;
 }
+
+/*------------------------------------GIRI ------------------------------*/
+.hide-column-names table thead tr {
+    display: none;
+}
+.show-column-names table thead tr {
+    display: table-row;
+}
