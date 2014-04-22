@@ -33,6 +33,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sc.helper.PIDHelper;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
@@ -148,9 +149,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
-	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue
-
-
+	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -169,7 +168,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
 
-
+	private PIDHelper pidHelper = new PIDHelper();
 
 	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
 
@@ -313,6 +312,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	public void searchCatalogue(){
+		pidHelper = new PIDHelper();
 		searchDataModel.reloadData();
 	}
 
@@ -1154,6 +1154,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setSimpleQuoteFlag(boolean simpleQuoteFlag) {
 		this.simpleQuoteFlag = simpleQuoteFlag;
+	}
+
+
+	public PIDHelper getPidHelper() {
+		return pidHelper;
+	}
+
+
+	public void setPidHelper(PIDHelper pidHelper) {
+		this.pidHelper = pidHelper;
 	}
 
 }
