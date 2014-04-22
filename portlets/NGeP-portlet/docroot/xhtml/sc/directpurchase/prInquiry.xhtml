@@ -8,7 +8,7 @@
 	<p:panel id="prInqPanel">
  
 	<p:panelGrid styleClass="noBorders tr,noBorders td,headerClass" 
-		style="background-color: #F2F2F2;" width="100%">
+		style="background-color: #F2F2F2;" width="100%"  id="prHeaderId">
 		<p:row>
 			<p:column>
 				<p:outputLabel
@@ -41,8 +41,10 @@
 			<td colspan="4" style="width: 250px;"><p:outputPanel id="ptjId">
 				<table style="width: 100%">
 				    <tr>
-					   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId == null}">
-						 <td style="width: 250px;">
+			   <!-- <c:if
+					    test="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.brandNew}"> -->	    
+ 				 <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId == null}">
+ 				 <td style="width: 250px;">
 						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
 						 <td> <p:selectOneMenu 
 						     value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
@@ -52,10 +54,11 @@
 							   var="pmOrgProfile"
 							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 							   itemValue="#{pmOrgProfile.orgProfileId}" />
-							 <p:ajax event="change" update="@([id$=prInqPanel]) " 
+							 <p:ajax event="change" update="@([id$=prHeaderId])"  immediate="true"
 							     process="@all"  listener="#{purchaseInquiryBackingBean.ptjNameEvent}"/>
 					</p:selectOneMenu></td>
 			    	</ui:fragment>
+			    	<!-- </c:if> -->
 				</tr>
 				</table>
 			   </p:outputPanel></td>
@@ -242,7 +245,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
-				<p:inputText value="#{supplierItemPrice.offerPrice}" style="text-align:right;" size="30" disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
+				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" size="30" disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 			</p:column>
 
 		</p:dataTable>
