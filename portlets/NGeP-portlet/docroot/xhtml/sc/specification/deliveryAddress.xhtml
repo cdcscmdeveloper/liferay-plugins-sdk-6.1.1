@@ -34,11 +34,12 @@
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal eq 'false'}">
             	<ui:param name="deliveryList" value="#{specificationBackingBean.managedBean.deliveryNonZoneList}"></ui:param>
 			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
+			<div align="right">
             <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this" partialSubmit="true" icon="ui-icon-add" update=":form:businessSpecId:searDelivery" oncomplete="deliveryAddress.show();" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete" />
-
+             </div>
 		</ui:fragment>
 
 	</p:panel>
