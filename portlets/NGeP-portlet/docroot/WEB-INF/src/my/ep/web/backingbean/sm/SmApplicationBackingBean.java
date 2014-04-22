@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -31,6 +33,8 @@ import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -47,14 +51,19 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
@@ -85,6 +94,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -153,7 +163,9 @@ public class SmApplicationBackingBean extends
 				System.out
 						.println("******** After clone the basic address list *******"
 								+ smAppl.getSmCompanyBasic());
-
+				// TODO Set default not null values -- End insert appl ---
+				// TODo Remove hard code later
+				smAppl.setApplCategoryType(null);
 			} else {
 				System.out
 						.println("******* This is PO or Approver from BPM ************");
@@ -162,21 +174,20 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
-			// TODO Set default not null values -- End insert appl ---
-			// TODo Remove hard code later
-			smAppl.setApplCategoryType(null);
+
 			if (getManagedBean().isApproverUser()
 					|| getManagedBean().isPoUser()) {
-				System.out.println("**** LOGIN IS PO or APPROVER *******");
-				smAppl.setSupportingDocMode("O");
-				smAppl.setSupplierType("2");
+				System.out.println("**** LOGIN IS PO or APPROVER *******"
+						+ smAppl.getApplCategoryType());
+				// smAppl.setSupportingDocMode("O");
+				// smAppl.setSupplierType("J");
 				getManagedBean().setPoSecReview(new SmApplSectionReview());
 				getManagedBean().setApprvrSecReview(new SmApplSectionReview());
 				if (smAppl.getSmCompanyBasic() == null) {
 					System.out.println(" **** COMPANY BAsic cannot be null");
 					smAppl.setSmCompanyBasic(new SmCompanyBasic());
 				}
-				smAppl.setApplCategoryType("S");
+				// smAppl.setApplCategoryType("S");
 			}
 
 			if (smAppl.getSmCompanyBasic() != null) {
@@ -203,7 +214,6 @@ public class SmApplicationBackingBean extends
 				// fac.setOwnerName("Sample");
 				// fac.setFacilityType("H");
 				SmAddress addr = setDefaultAddr();
-				addr.setAddress1("Sample");
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
 				fac.setRevNo(1);
@@ -222,30 +232,35 @@ public class SmApplicationBackingBean extends
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
 			getManagedBean().setSmAppl(smAppl);
-			getManagedBean().getSmAppl().setSmStaffTotals(
-					getStaffList(smAppl.getSupplierType()));
+			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
+				getManagedBean().getSmAppl().setSmStaffTotals(
+						getStaffList(smAppl.getSupplierType()));
+			}
 			// getManagedBean().setSmAppl(smAppl);
-			// TODO remove this hard coded data and make dynamic later
-			getManagedBean().getSmAppl().setSupportingDocMode("O");
+
 			System.out.println(" ---- Business  Type ----"
 					+ getManagedBean().getSmAppl().getSmSupplier()
 							.getSupplierId()
 					+ " -- For this id ---"
 					+ getManagedBean().getSmAppl().getSmSupplier()
 							.getBusinessType());
-			// 1-ROB,2-ROC,3-ROS
-			if (applicationType.equalsIgnoreCase("N")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("1");
-			} else if (applicationType.equalsIgnoreCase("A")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("2");
-			} else if (applicationType.equalsIgnoreCase("R")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("3");
-			} else {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("1");
+			if (!fromBpm) {
+				// TODO remove this hard coded data and make dynamic later
+				getManagedBean().getSmAppl().setSupportingDocMode("O");
+				// 1-ROB,2-ROC,3-ROS
+				if (applicationType.equalsIgnoreCase("N")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("1");
+				} else if (applicationType.equalsIgnoreCase("A")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("2");
+				} else if (applicationType.equalsIgnoreCase("R")) {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("3");
+				} else {
+					getManagedBean().getSmAppl().getSmSupplier()
+							.setBusinessType("1");
+				}
 			}
 			System.out.println(" ---- Business  Type After hard code ----"
 					+ getManagedBean().getSmAppl().getSmSupplier()
@@ -332,7 +347,7 @@ public class SmApplicationBackingBean extends
 			bpmSmAppl.setSmSupplier(smApplSupplier);
 			// mofRegAppl.setSmAddress(smAddress);
 			// 1- For Contractor, 2 - For Consultant
-			bpmSmAppl.setSupplierType("2");
+			bpmSmAppl.setSupplierType("J");
 			bpmSmAppl.setApplType(bpmApplType);
 			// TODO Set default not null values -- Start insert appl ---
 			// bpmSmAppl.getPmStatus().setStatusId(20001l);
@@ -585,10 +600,88 @@ public class SmApplicationBackingBean extends
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
 
+		case "SupportingDocs":
+			System.out.println(" ** For Suporting Docs ** ");
+			getManagedBean().getSmAppl().setSmApplSupportDocs(
+					new ArrayList<SmApplSupportDoc>());
+			DocumentReqDTO rqDto = new DocumentReqDTO();
+			rqDto.setStateCode(getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+					.getStateCode());
+			rqDto.setAppTypeCode(getManagedBean().getSmAppl().getApplType());
+			if (!getManagedBean().getSmAppl().getSmSupplierCategories()
+					.isEmpty()) {
+				List<Long> catL3Ids = new ArrayList<Long>();
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
+				}
+				rqDto.setCategoryL3Ids(catL3Ids);
+				System.out.println(" **** Total categories sent to Doc So ***"
+						+ rqDto.getCategoryL3Ids().size());
+			}
+			rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
+					.getSupplierType());
+			rqDto.setCompanyTypeCode(getManagedBean().getSmAppl()
+					.getSmSupplier().getBusinessType());
+			DocumentResDTO rsDTO = retrieveSupportingDocumentList(rqDto);
+			System.out.println("** State Code *** "
+					+ getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0).getSmAddress()
+							.getPmState().getStateCode() + " ---  ---- "
+					+ getManagedBean().getSmAppl().getApplType());
+			System.out.println("*** Doc List ****"
+					+ " ---"
+					+ getManagedBean().getSmAppl().getSupplierType()
+					+ " -- -- "
+					+ getManagedBean().getSmAppl().getSmSupplier()
+							.getBusinessType() + "---  ---"
+					+ rsDTO.getDocumentList().size());
+			if (rsDTO != null && rsDTO.getDocumentList() != null
+					&& !rsDTO.getDocumentList().isEmpty()) {
+				System.out.println("*** Not Empty list ****"
+						+ rsDTO.getDocumentList().size());
+				List<SmApplSupportDoc> docs = new ArrayList<>();
+				for (PmDocument doc : rsDTO.getDocumentList()) {
+					if (getManagedBean().getSmAppl().getSmApplSupportDocs()
+							.isEmpty()) {
+						docs.add(getDefaultSmApplSupportingDoc(doc));
+					} else {
+						for (SmApplSupportDoc smDocu : getManagedBean()
+								.getSmAppl().getSmApplSupportDocs()) {
+							if (smDocu.getPmDocument().equals(doc)) {
+								docs.add(smDocu);
+							} else {
+								docs.add(getDefaultSmApplSupportingDoc(doc));
+							}
+						}
+					}
+
+				}
+				getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+			}
+			break;
+
 		default:
 			System.out.println("****** Not a defined page ***********");
 		}
 
+	}
+
+	private SmApplSupportDoc getDefaultSmApplSupportingDoc(PmDocument doc) {
+		SmApplSupportDoc docu = new SmApplSupportDoc();
+
+		docu.setPmDocument(doc);
+		docu.setSmAppl(getManagedBean().getSmAppl());
+
+		List<SmApplDocFile> files = new ArrayList<SmApplDocFile>();
+		SmApplDocFile docFile = new SmApplDocFile();
+		docFile.setSmApplSupportDoc(docu);
+		docFile.setFileName(" ");
+		docFile.setFilePath(" ");
+		files.add(docFile);
+		docu.setSmApplDocFiles(files);
+		return docu;
 	}
 
 	public void createNewApplication() throws Exception {
@@ -1070,7 +1163,7 @@ public class SmApplicationBackingBean extends
 		exp.setRevNo(1);
 		exp.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		exp.setSmAppl(getManagedBean().getSmAppl());
-		if (getManagedBean().getSmAppl().getSupplierType().equals("2")) {
+		if (getManagedBean().getSmAppl().getSupplierType().equals("J")) {
 			exp.setProcurementModeId(new BigDecimal(0));
 		}
 		getManagedBean().setSelectedCompanyExperience(exp);
@@ -2314,7 +2407,7 @@ public class SmApplicationBackingBean extends
 					+ bpmAppl.getSupportingDocMode());
 			if (bpmAppl.getApplType().equalsIgnoreCase("N")) {
 				System.out.println(" **** BPM FROM MOF REG CALLED ******");
-				bpmAppl.setApplId((long) 111);
+				// bpmAppl.setApplId((long) 111);
 			} else if (bpmAppl.getApplType().equalsIgnoreCase("B")) {
 				System.out.println(" **** BPM FROM BUMI APPL CALLED ******");
 				bpmAppl.setApplId((long) 222);
@@ -2714,13 +2807,13 @@ public class SmApplicationBackingBean extends
 	private List<SmStaffTotal> getStaffList(String supplierType) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
 		SmAppl app = getManagedBean().getSmAppl();
-		if (supplierType.equals("1")) {
+		if (supplierType.equals("K")) {
 			SmStaffTotal stf = new SmStaffTotal();
 			stf.setRevNo(new BigDecimal(1));
 			stf.setStaffCategory("C");
 			stf.setSmAppl(app);
 			staffList.add(stf);
-		} else if (supplierType.equals("2")) {
+		} else if (supplierType.equals("J")) {
 			SmStaffTotal stf1 = new SmStaffTotal();
 			stf1.setStaffCategory("P");
 			stf1.setSmAppl(app);
@@ -2767,6 +2860,15 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCertBodyLs().size());
 	}
 
+	private DocumentResDTO retrieveSupportingDocumentList(DocumentReqDTO reqDTO) {
+		DocumentResDTO resDto = new DocumentResDTO();
+		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IDocumentSO.class);
+		resDto = reqSO.retrieveSupportingDocumentList(reqDTO);
+		return resDto;
+
+	}
+
 	public void retrieveBankFinOrgListByType() {
 		boolean runQuery = true;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
@@ -2799,6 +2901,15 @@ public class SmApplicationBackingBean extends
 		}
 		System.out.println("****** After getting the fin org list *******"
 				+ getManagedBean().getFinOrgLs().size());
+	}
+
+	public void handleSupDocFileAttachment(FileUploadEvent event) {
+		System.out.println("********handleFileAttachment********");
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			System.out.println("***** File attached *******"
+					+ event.getFile().getFileName());
+		}
 	}
 
 	private void retrieveUomList() {
@@ -2861,6 +2972,17 @@ public class SmApplicationBackingBean extends
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
+		System.out.println("** getSupplierType type ***"
+				+ getManagedBean().getSmAppl().getSupplierType());
+		System.out.println("** getApplCategoryType type ***"
+				+ getManagedBean().getSmAppl().getApplCategoryType());
+		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+		// .getSupplierType());
+		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+		// reqDTO.setIsSpecialCategory(false);
+		// } else {
+		// reqDTO.setIsSpecialCategory(true);
+		// }
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();

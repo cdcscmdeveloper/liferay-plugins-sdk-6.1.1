@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
@@ -29,7 +30,6 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmPersonnelBranch;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
@@ -227,6 +227,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String catTypeConfirm;
 
 	private SmFacility basicCompanyFacility;
+
+	private SmApplSupportDoc supportDoc;
 	// Address fields for all the forms
 	private List<PmCountry> countryLs;
 	private List<PmState> basicCompanyStates;
@@ -378,8 +380,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
 		selectedShareHolder.setPmCountry(new PmCountry());
-		selectedShareHolder
-				.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		smapplShareHolders = new ArrayList<SmPersonnel>();
 		selectedShareHolders = new ArrayList<SmPersonnel>();
 		selectedShrHldrAcademics = new ArrayList<SmStaffAcademic>();
@@ -406,8 +406,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
 		selectedPersonnel.setPmCountry(new PmCountry());
-		selectedPersonnel
-				.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
@@ -1792,6 +1790,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersnlResdCities(List<PmCity> persnlResdCities) {
 		this.persnlResdCities = persnlResdCities;
+	}
+
+	public SmApplSupportDoc getSupportDoc() {
+		return supportDoc;
+	}
+
+	public void setSupportDoc(SmApplSupportDoc supportDoc) {
+		this.supportDoc = supportDoc;
 	}
 
 }
