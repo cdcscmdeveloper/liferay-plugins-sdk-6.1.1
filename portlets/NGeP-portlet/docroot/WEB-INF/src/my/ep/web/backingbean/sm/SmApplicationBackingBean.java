@@ -191,8 +191,9 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (smAppl.getSmCompanyBasic() != null) {
-				if (!smAppl.getSmCompanyBasic().getSmCompanyAddresses()
-						.isEmpty()) {
+				if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
+						&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+								.isEmpty()) {
 					SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0);
 					SmAddress addr = comAdd.getSmAddress();
@@ -205,6 +206,13 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().setBasicCompanyCities(
 							retrievePmCityList(addr.getPmDistrict()
 									.getDistrictId()));
+				} else {
+					SmCompanyAddress comAdd = new SmCompanyAddress();
+					SmAddress addr = setDefaultAddr();
+					comAdd.setSmAddress(addr);
+					List<SmCompanyAddress> addrs = new ArrayList<SmCompanyAddress>();
+					addrs.add(comAdd);
+					smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
 				}
 			}
 
