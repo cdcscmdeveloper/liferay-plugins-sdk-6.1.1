@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -215,9 +216,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplier> selectedSupplierList;
 	private List<ScQtSupplier> qtSupplierList;
 	private List<ScQtSupplier> selectedQtSupplierList;
-	
-	//supplier Qualification Criteria List and variables
+
+	// supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
+	private List<ScQtCategory> selectedRestrictedCategoryList;
 	private List<ScQtCategory> selectedCategoryList;
 	private List<ScQtCategory> qtCategoryList;
 
@@ -363,7 +365,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// Document
 	private ScQtCheckList scQtChecklist;
-	
+
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
 	private List<ScQtDeliveryLoc> selectedDeliveryLocList;
@@ -371,6 +373,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public ScQtSupplierCriteria supplierCriteria;
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+
+	private List<ScQtApprovalRequest> scQtApprovalRequestList;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -392,8 +396,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 					node0);
 		}
 
-		getBudgetApproverNames();
-		getCommitteeApproverNames();
+		//getBudgetApproverNames();
+		//getCommitteeApproverNames();
 		getPTJApproverNames();
 		getPublicationApprovalNames();
 
@@ -415,7 +419,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				selectedApprover);
 	}
 
-	private void getCommitteeApproverNames() {
+	/*private void getCommitteeApproverNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
@@ -426,7 +430,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
 		committeeApprovalUsers = new DualListModel<PmUser>(availableApprover,
 				selectedApprover);
-	}
+	}*/
 
 	private void getPTJApproverNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
@@ -441,7 +445,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				selectedApprover);
 	}
 
-	private void getBudgetApproverNames() {
+	/*private void getBudgetApproverNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
@@ -452,7 +456,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
 		budgetApprovalUsers = new DualListModel<PmUser>(availableApprover,
 				selectedApprover);
-	}
+	}*/
 
 	public String getALPHA_NUM() {
 		return ALPHA_NUM;
@@ -2202,6 +2206,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setScQtChecklist(ScQtCheckList scQtChecklist) {
 		this.scQtChecklist = scQtChecklist;
+	}
+
+	public List<ScQtApprovalRequest> getScQtApprovalRequestList() {
+		return scQtApprovalRequestList;
+	}
+
+	public void setScQtApprovalRequestList(
+			List<ScQtApprovalRequest> scQtApprovalRequestList) {
+		this.scQtApprovalRequestList = scQtApprovalRequestList;
+	}
+
+	public List<ScQtCategory> getSelectedRestrictedCategoryList() {
+		return selectedRestrictedCategoryList;
+	}
+
+	public void setSelectedRestrictedCategoryList(
+			List<ScQtCategory> selectedRestrictedCategoryList) {
+		this.selectedRestrictedCategoryList = selectedRestrictedCategoryList;
 	}
 
 }

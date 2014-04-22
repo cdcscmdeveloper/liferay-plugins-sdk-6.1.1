@@ -114,6 +114,34 @@ public class QTSupplierQulCriteriaBackingBean extends
 		qtCategoryList.add(category);
 	}
 
+	public void addNewRestrictedCategoryAction() {
+		debugLogger("addNewRestrictedCategoryAction");
+		List<ScQtCategory> scQtCategories = this.getManagedBean().getSuppCriteriarestrictedList();
+		if(scQtCategories == null) {
+			scQtCategories = new ArrayList<ScQtCategory>();
+			this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
+		}
+		ScQtCategory category = new ScQtCategory();
+		category.setPmCategoryL1(new PmCategoryL1());
+		category.setPmCategoryL2(new PmCategoryL2());
+		category.setPmCategoryL3(new PmCategoryL3());
+		scQtCategories.add(category);
+	}
+	
+	public void deleteRestrictedCategoryAction() {
+		debugLogger("deleteRestrictedCategoryAction");
+		List<ScQtCategory> categoriesList = getManagedBean().getSuppCriteriarestrictedList();
+		List<ScQtCategory> selectedcategoriesList = getManagedBean()
+				.getSelectedRestrictedCategoryList();
+		if (categoriesList.size() == selectedcategoriesList.size()) {
+			categoriesList.clear();
+		} else {
+			for (ScQtCategory scQtCategory : selectedcategoriesList) {
+				categoriesList.remove(scQtCategory);
+			}
+		}
+	}
+	
 	/*
 	 * To remove categoryCode from data table
 	 */

@@ -208,7 +208,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void addZoneBriefingDetails(String briefingZoneName) {
 		debugLogger("addBriefingDetails");
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
-		bsvDtl.setBsvType('B');
+		bsvDtl.setBsvType("B");
 		bsvDtl.setAddress(new PmAddress());
 		bsvDtl.getAddress().setPmState(new PmState());
 		bsvDtl.getAddress().setPmCity(new PmCity());
@@ -222,22 +222,22 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void addZoneSiteDetails(String sitevisitZoneName) {
 		debugLogger("addZoneSiteDetails");
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
-		bsvDtl.setBsvType('S');
+		bsvDtl.setBsvType("S");
 		bsvDtl.setAddress(new PmAddress());
 		bsvDtl.getAddress().setPmState(new PmState());
 		bsvDtl.getAddress().setPmCity(new PmCity());
 		bsvDtl.getAddress().setPmDistrict(new PmDistrict());
 		bsvDtl.getAddress().setPmCountry(new PmCountry());
-		
+
 		getManagedBean().setQtSiteBriefing(bsvDtl);
 		getManagedBean().setBriefingZoneName(sitevisitZoneName);
 	}
 
 	public void addToBriefingListByZone() {
 		debugLogger("addToBriefingListByZone");
-		
+
 		ScQtBsvDtl selectedBriefing = this.getManagedBean().getQtBriefing();
-		
+
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		reqDTO.setUserId(2L);
 		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -268,7 +268,10 @@ public class QTBriefingSiteVisitBackingBean extends
 
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
-			if (briefingZoneBean.getTplSpecZoneDtl().getZoneName().equalsIgnoreCase(
+			if (briefingZoneBean
+					.getTplSpecZoneDtl()
+					.getZoneName()
+					.equalsIgnoreCase(
 							this.getManagedBean().getBriefingZoneName())) {
 				List<ScQtBsvDtl> briefings = briefingZoneBean.getBriefingList();
 				if (null == briefings) {
@@ -285,7 +288,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		debugLogger("addToSitevisitListByZone");
 		ScQtBsvDtl selectedSiteBriefing = this.getManagedBean()
 				.getQtSiteBriefing();
-		
+
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		reqDTO.setUserId(2L);
 		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -313,7 +316,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			statusSO = null;
 		}
 		selectedSiteBriefing.setPmStatus(status);
-		
+
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
 			if (briefingZoneBean
@@ -340,7 +343,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void addBriefingDetails() {
 		debugLogger("addBriefingDetails");
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
-		bsvDtl.setBsvType('B');
+		bsvDtl.setBsvType("B");
 		bsvDtl.setAddress(new PmAddress());
 		bsvDtl.getAddress().setPmState(new PmState());
 		bsvDtl.getAddress().setPmCity(new PmCity());
@@ -354,7 +357,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void addSiteDetails() {
 		debugLogger("addSiteDetails");
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
-		bsvDtl.setBsvType('S');
+		bsvDtl.setBsvType("S");
 		bsvDtl.setAddress(new PmAddress());
 		bsvDtl.getAddress().setPmState(new PmState());
 		bsvDtl.getAddress().setPmCity(new PmCity());
@@ -373,7 +376,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		for (ScQtBsvDtl scQtBsvDtl : getManagedBean()
 				.getSelectedBriefingDetails()) {
-			scQtBsvDtl.setBsvType('A');
+			scQtBsvDtl.setBsvType("A");
 			list.add(scQtBsvDtl);
 		}
 		getManagedBean().setSiteBriefings(list);

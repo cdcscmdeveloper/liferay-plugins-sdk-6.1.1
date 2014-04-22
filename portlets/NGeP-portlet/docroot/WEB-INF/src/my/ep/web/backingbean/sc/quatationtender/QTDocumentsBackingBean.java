@@ -47,8 +47,10 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -70,6 +72,9 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class QTDocumentsBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	private static final String NAV_TO_TEMPLATE_DOC_MAINTENANACE = "/xhtml/sc/quatationtender/templateDocument/templateDocMaintenance.xhtml";
+
 	private static final Logger log = EpLogger
 			.getLogger(QTDocumentsBackingBean.class);
 
@@ -450,5 +455,45 @@ public class QTDocumentsBackingBean extends
 		this.getManagedBean().setCreatedDtFrom(null);
 		this.getManagedBean().setCreatedDtTo(null);
 		this.getManagedBean().setStatus(null);
+	}
+
+	public String showTemplateAction(ScQtCheckList scQtCheckList) {
+		debugLogger("showTemplateAction");
+		try {
+			getManagedBean().setQtCheckList(scQtCheckList);
+			log.info("Title Name : " + getManagedBean().getQtCheckList().getTitle());
+			TemplateDocBackingBean docBB = new TemplateDocBackingBean();
+			docBB.createNewTemplate();
+
+			if (this.getManagedBean().getQtDoc() == null) {
+				this.getManagedBean().setQtDoc(new ScQtDoc());
+			}
+
+			this.getManagedBean()
+					.getQtDoc()
+					.setTplDocMaster(
+							docBB.getManagedBean().getSelectedTemplate());
+
+			if (this.getManagedBean().getQtDoc().getScQtCheckList() == null) {
+				this.getManagedBean().getQtDoc()
+						.setScQtCheckList(new ScQtCheckList());
+			}
+			this.getManagedBean().getQtDoc()
+					.setScQt(this.getManagedBean().getQt());
+			this.getManagedBean().getQtDoc().getTplDocMaster().setPmStatus(1L);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return NAV_TO_TEMPLATE_DOC_MAINTENANACE + "?faces-redirect=true";
+	}
+
+	public String documentBackAction() {
+		debugLogger("documentBackAction");
+		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
+	}
+	
+	public void saveAction() {
+		debugLogger("saveAction");
 	}
 }
