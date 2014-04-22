@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.purchaseinquiry;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -181,16 +182,16 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	public Date calcDayToResponse(ScPrInquiry scPrInquiry) {
 		Date dayToResp = null;
 		if (scPrInquiry.getDayToResponse() != null) {
-		Calendar cal = Calendar.getInstance();  
-		cal.setTime(scPrInquiry.getCreatedDate());  
-		cal.add(Calendar.DATE, scPrInquiry.getDayToResponse());
-		dayToResp = cal.getTime();
-		scPrInquiry.setDateToResponse(cal.getTime());
-		getManagedBean().setScPrInquiry(scPrInquiry);
+			Calendar cal = Calendar.getInstance();  
+			cal.setTime(scPrInquiry.getCreatedDate());  
+			cal.add(Calendar.DATE, scPrInquiry.getDayToResponse());
+			dayToResp = cal.getTime();
+			scPrInquiry.setDateToResponse(cal.getTime());
+			getManagedBean().setScPrInquiry(scPrInquiry);
 		}
 		return dayToResp;
 	}
-		
+
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
@@ -237,24 +238,30 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 /**
 	  *  submitPrEnquiryDtl  method to submit purchase inquiry details  in Purchase inquiry
 	  */	
-	  public String submitPrEnquiryDtl() {
-		  debugLogger("submitPrEnquiryDtl");
+	  public String submitPrInquiryDtl() {
+		  debugLogger("submitPrInquiryDtl");
 		    IPrInquirySO prInquirySO = null;
 		    IStatusSO iStatusSO = null;
+		    IDirectPurchaseSO directPurchaseSO = null;
 		    try {
 			     prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
                  iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+                 directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 				 PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();				 
 				 ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			     prInquiry.setDateToResponse(new Timestamp(System.currentTimeMillis()));
 			     List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 			     List<ScRequestSupplierItem> requestSupplierItems =  new  ArrayList<ScRequestSupplierItem>();
 			     ScRequestNote	requestNote	=	new ScRequestNote();
+			 	 requestNote.setPmOrgProfile(new PmOrgProfile());
+				 requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+				 requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
 			     for (ScRequestSupplierItem scRequestSupplierItem :  prInquiry.getScRequestSupplierItems()) {
 			    	 ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
-				     requestNoteDtl.setScRequestNote(new ScRequestNote());
+				     requestNoteDtl.setScRequestNote(requestNote);
 				     requestNoteDtls.add(requestNoteDtl);
 				     scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
+				     scRequestSupplierItem.setScPrInquiy(prInquiry);
 				     requestSupplierItems.add(scRequestSupplierItem);
 				 }
 			     prInquiry.setScRequestSupplierItems(requestSupplierItems);
@@ -298,6 +305,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				ex.printStackTrace();
 			} finally {
 				prInquirySO = null;
+				iStatusSO = null;
+				directPurchaseSO = null;
 			}
 			return null;
 		}
@@ -312,7 +321,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   reqDTO.setPrInquiryDetail(getManagedBean().getScPrInquiry());
 			   FacesScopes facesScopes = new FacesScopes();
-				 String token = facesScopes.getBPMAuthenticationCtxToken();
+			   String token = facesScopes.getBPMAuthenticationCtxToken();
 			   reqDTO.setToken(token);
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
 			   PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
@@ -499,12 +508,13 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
 			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 			requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
+			
 			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 			requestNoteBackingBean.initialInformation(new ScRequestNote());
 			requestNoteBackingBean.getCurrentStatus(SourcingConstants.RN_PENDING_SUBMISSION);
-			
+			requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			
 			//redirect to RequestNote screen
 			return "commonRequestNote";
@@ -594,9 +604,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	private ScSupplierItemPrice		createSupplierItemPrice(ScRequestSupplierItem	scRequestSupplierItem, CmPricing pricing){
 		ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
 		result.setScRequestSupplierItem(scRequestSupplierItem);
-		result.setItemPrice(pricing.getPrice());
+		result.setItemPrice(new BigDecimal(0.0));
 		result.setPricing(pricing);
-		result.setPriceType("");
 		return result;
 	}
 }
