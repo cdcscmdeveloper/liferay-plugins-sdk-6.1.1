@@ -52,7 +52,7 @@
 		</h:outputText>
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 			oncomplete="tierQtyPopup.show();"
-			partialSubmit="true" process="@this" update="@this"
+			partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 			rendered="#{isQuestionTypeItem and !isPriceTypeStandard}">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>

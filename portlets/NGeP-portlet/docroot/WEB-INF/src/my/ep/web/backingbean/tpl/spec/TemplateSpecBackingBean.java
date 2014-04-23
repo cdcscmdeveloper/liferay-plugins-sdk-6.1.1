@@ -501,6 +501,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		tplSpecTierQties.add(new TplSpecTierQty());
 	}
 	
+	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("tierQtyOkAction");
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
+	}
+	
 	public void addScoringAction(TplSpecQuestion tplSpecQuestion){
 		debugLogger("addScoringAction");
 		
@@ -511,6 +517,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		tplSpecScorings.add(new TplSpecScoring());
+	}
+	
+	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("scoringOkAction");
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
