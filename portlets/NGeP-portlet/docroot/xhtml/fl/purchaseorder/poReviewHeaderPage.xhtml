@@ -15,7 +15,7 @@
 			</td>
 			<td>
 				<h6>
-					<p:inputText size="25"
+					<p:inputText size="20"
 						value="#{flOrderBB.managedBean.flRequest.docNo}" disabled="true" />
 				</h6>
 
@@ -25,7 +25,7 @@
 				</h6></td>
 			<td>
 				<h6>
-					<p:inputText value="RNPTJ00142020200" disabled="true" size="25" />
+					<p:inputText value="RNPTJ00142020200" disabled="true" size="20" />
 				</h6>
 			</td>
 
@@ -36,12 +36,10 @@
 			</td>
 			<td>
 				<h6>
-					<p:inputText
-						
-						size="35" disabled="true" />
+					<p:inputText size="30" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" />
 				</h6>
 			</td>
-
 			<td>
 				<h6>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
@@ -49,7 +47,7 @@
 			</td>
 			<td>
 				<h6>
-					<p:inputText size="25"
+					<p:inputText size="20"
 						value="#{purchaseRequestBackingBean.getStatusDescById(flOrderBB.managedBean.flRequest.status.statusId)}"
 						disabled="true" />
 				</h6>

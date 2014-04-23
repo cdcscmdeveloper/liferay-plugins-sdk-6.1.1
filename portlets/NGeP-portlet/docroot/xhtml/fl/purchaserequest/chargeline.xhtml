@@ -39,7 +39,7 @@
 			</p:column>
 			<p:column headerText="Item Code">
 				<h:outputText
-					value="#{chargeLineNode.scRequestItem.requestNoteItemId}"
+					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Name">
@@ -50,21 +50,21 @@
 				<h:outputText value="Unit"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Unit Price (RM)">
+			<p:column headerText="Unit Price (RM)" style="text-align:right">
 				<h:outputText value="#{chargeLineNode.unitPrice}"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered Qty.">
+			<p:column headerText="Ordered Qty." style="text-align:right">
 				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered Amt.(RM)">
+			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
 				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
 					rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber
@@ -77,29 +77,20 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Query">
-				<p:commandLink oncomplete="addQuery.show();"
-					action="#{purchaseRequestBackingBean.showItemQuery(chargeLineNode)}"
-					update=":form:prtabs:queryDialog"
-					rendered="#{chargeLineNode.parent == 'true'}"
-					style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="exclamation.png"
-						value="/resources/ep/images/design/exclamation.png" />
-				</p:commandLink>
+				
 			</p:column>
 		</p:treeTable>
 		<br />
 		<br />
 		<br />
-		<div align="right">
-			<table style="width: 100%">
+			<table style="width: 93%">
 				<tr>
-					<td colspan="6">Grand Total:<h:outputText
+					<td  style="text-align:right; font: bold; size: 10;">Grand Total: <p:spacer width="10px"/><h:outputText
 							value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
 							<f:convertNumber pattern="#,#00.00" />
 						</h:outputText></td>
 				</tr>
 			</table>
-		</div>
 		<br />
 		<br />
 		<br />
@@ -125,16 +116,16 @@
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
-							<f:selectItem itemLabel="Low Value" itemValue="1" />
-							<f:selectItem itemLabel="High Value" itemValue="2" />
+							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+							<f:selectItem itemLabel="Value1" itemValue="1" />
+							<f:selectItem itemLabel="Value2" itemValue="2" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
-							<f:selectItem itemLabel="GOSODO1" itemValue="1" />
-							<f:selectItem itemLabel="GOSODO2" itemValue="2" />
+							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+							<f:selectItem itemLabel="Value1" itemValue="1" />
+							<f:selectItem itemLabel="Value2" itemValue="2" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -163,7 +154,7 @@
 							<p:ajax event="change"
 								listener="#{purchaseRequestBackingBean.getSetiaList}" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}"
 							style="margin-bottom:15px;" /></td>
 					<td><p:selectOneMenu id="setiaDis"
 							value="#{purchaseRequestBackingBean.managedBean.setiaId}"
@@ -189,7 +180,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 							style="margin-bottom:15px;" /></td>
 					<td><p:selectOneMenu style="margin-bottom:15px;">
-							<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
 							<f:selectItem itemLabel="Loan1" itemValue="1" />
 							<f:selectItem itemLabel="Loan2" itemValue="2" />
 						</p:selectOneMenu></td>
@@ -263,18 +254,18 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
-						<f:selectItem itemLabel="Low Value" itemValue="1" />
-						<f:selectItem itemLabel="High Value" itemValue="2" />
+						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
-						<f:selectItem itemLabel="GOSODO1" itemValue="1" />
-						<f:selectItem itemLabel="GOSODO2" itemValue="2" />
+						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -341,9 +332,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 						style="margin-bottom:15px;" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
-						<f:selectItem itemLabel="Loan1" itemValue="1" />
-						<f:selectItem itemLabel="Loan2" itemValue="2" />
+						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>
 			</tr>
 

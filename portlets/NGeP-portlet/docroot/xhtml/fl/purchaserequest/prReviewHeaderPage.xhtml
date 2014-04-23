@@ -12,10 +12,9 @@
 				</h6></td>
 			<td>
 				<h6>
-					<p:inputText value="RNPTJ00142020200" disabled="true" size="25" />
+					<p:inputText value="RNPTJ00142020200" disabled="true" size="20" />
 				</h6>
 			</td>
-
 			<td>
 				<h6>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.no']} " />
@@ -23,7 +22,7 @@
 			</td>
 			<td>
 				<h6>
-					<p:inputText size="25"
+					<p:inputText size="20"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}"
 						disabled="true" />
 				</h6>
@@ -36,19 +35,20 @@
 			</td>
 			<td>
 				<h6>
-					<p:inputText
-						size="35" disabled="true" />
+					<p:inputText size="30" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />
 				</h6>
 			</td>
-
 			<td>
 				<h6>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
+					
 				</h6>
 			</td>
 			<td>
 				<h6>
 					<p:inputText size="25"
+						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"
 						disabled="true" />
 				</h6>
 			</td>

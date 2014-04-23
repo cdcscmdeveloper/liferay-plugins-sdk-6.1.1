@@ -12,28 +12,27 @@
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="Delivery Address">
+			<p:column headerText="Delivery Address" style="width:5%">
 				<h:outputText rendered="#{delAddressSummary.addressType != null}"
 					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}, #{delAddressSummary.addressType.pmAddress.address4}" />
 				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
 					value="#{delAddressSummary.pmAddress.address1}, #{delAddressSummary.pmAddress.address2}, #{delAddressSummary.pmAddress.address3}, #{delAddressSummary.pmAddress.address4}" />
 			</p:column>
 			<p:column>
+				<p:spacer width="7" />
 				<h:outputText value="Delivery Term" />
-				<p:spacer width="10" />
-				<p:inputText size="5" disabled="true" />
-				<p:spacer width="5" />
-				<h:inputText size="5" disabled="true" value="Days" />
-			</p:column>
-			<p:column>
+				<p:spacer width="7" />
+				<p:inputText size="4" disabled="true" />
+				<p:spacer width="7" />
+				<h:inputText size="4" disabled="true" value="Days" />
+				<p:spacer width="7" />
 				<h:outputText value="Delivery Start" />
 				<p:spacer width="7" />
-				<p:inputText size="13" value="10/02/2014" disabled="true" />
-			</p:column>
-			<p:column>
+				<p:inputText size="9" value="10/02/2014" disabled="true" />
+				<p:spacer width="7" />
 				<h:outputText value="Delivery End" />
-				<p:spacer width="10" />
-				<p:inputText size="13" value="22/02/2014" disabled="true" />
+				<p:spacer width="7" />
+				<p:inputText size="9" value="22/02/2014" disabled="true" />
 			</p:column>
 			<p:rowExpansion>
 
@@ -44,7 +43,8 @@
 						<h:outputText value="#{newItems.scRequestItem.itemType}" />
 					</p:column>
 					<p:column headerText="Item Code">
-						<h:outputText />
+						<h:outputText
+							value="#{newItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
 					<p:column headerText="Item Name">
 						<h:outputText value="#{newItems.scRequestItem.itemName}" />
@@ -52,16 +52,15 @@
 					<p:column headerText="UOM">
 						<h:outputText />
 					</p:column>
-					<p:column headerText="Unit Price (RM)">
-						<h:outputText value="#{newItems.unitPrice}"
-							style="text-align:right">
+					<p:column headerText="Unit Price (RM)" style="text-align:right">
+						<h:outputText value="#{newItems.unitPrice}">
 							<f:convertNumber pattern="#,#00.00" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered Qty.">
+					<p:column headerText="Ordered Qty." style="text-align:right">
 						<h:outputText value="#{newItems.orderedQty}" />
 					</p:column>
-					<p:column headerText="Ordered Amt.(RM)">
+					<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
 						<h:outputText value="#{newItems.orderedAmt}" />
 					</p:column>
 				</p:dataTable>

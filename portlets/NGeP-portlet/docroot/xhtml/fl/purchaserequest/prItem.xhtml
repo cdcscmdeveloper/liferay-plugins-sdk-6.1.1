@@ -95,23 +95,21 @@
 					<h:outputText value="#{flItem.scRequestItem.itemType}" />
 				</p:column>
 				<p:column headerText=" Item Code">
-					<h:outputText value="#{flItem.scRequestItem.itemType}" />
+					<h:outputText value="#{flItem.scRequestItem.cmItem.extensionCode}" />
 				</p:column>
 				<p:column headerText="Item Name">
 					<h:outputText value="#{flItem.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="UOM">
 				</p:column>
-				<p:column headerText="Unit Price (RM)">
-					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}"
-						style="text-align:right">
+				<p:column headerText="Unit Price (RM)" style="text-align:right">
+					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="Ordered Qty.">
-					<p:inputText value="#{flItem.orderedQty}" size="5"
-						style="text-align:right">
+				<p:column headerText="Ordered Qty." style="text-align:right">
+					<p:inputText value="#{flItem.orderedQty}" size="5">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange) "
@@ -119,10 +117,9 @@
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
 				</p:column>
-				<p:column headerText="Ordered Amt.(RM)">
+				<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
 					<h:outputText id="subTotalTxt" size="5"
-						value="#{flItem.orderedAmt}" disabled="true"
-						style="text-align:right">
+						value="#{flItem.orderedAmt}" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -263,7 +260,9 @@
 				<td><p:outputLabel value="* Contact Person" /></td>
 				<td><p:inputText size="35" /></td>
 				<td><p:outputLabel value="* Delivery Address" /></td>
-				<td rowspan="9"><p:inputTextarea cols="30" rows="9" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Email" /></td>
@@ -350,7 +349,7 @@
 	</p:dialog>
 	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
-		modal="true" height="450" width="600" resizable="false">
+		modal="true" height="250" width="600" resizable="false">
 		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
 			value="#{purchaseRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
@@ -359,10 +358,10 @@
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="Tel. No.">
-				<h:outputText  />
+				<h:outputText />
 			</p:column>
 			<p:column headerText="Email">
-				<h:outputText  />
+				<h:outputText />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
