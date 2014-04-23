@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -103,7 +104,6 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
-import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -328,7 +328,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 		//System.out.println("Address list "+resDTO.getAddressTypeList().size());
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
+		
+		if(getManagedBean().getManualAddressMap().size() == 0){
+			setManualAddressList();
+		}
 	}
+	
 	public void flManualDeliveryAddr() {
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -1879,7 +1884,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
-		//resDTO.get
+		
 		return resDTO;
 	}
 	
@@ -1893,6 +1898,31 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getFulfilmentRequest().getAgOffice().setAgOfficeId(resDTO.getAgOffice().getAgOfficeId());
 
 		return resDTO;
+	}
+	
+	private void setManualAddressList(){
+		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
+		for(PmAddressType addressType : getManagedBean().getAddressTypesList()){
+			Long key = addressType.getPmAddress().getPmDistrict().getDistrictId();
+			if(!addressTypeMap.containsKey(key)){
+				addressTypeMap.put(key, new ArrayList<PmAddressType>());
+			}
+			addressTypeMap.get(key).add(addressType);
+		}
+		getManagedBean().setManualAddressMap(addressTypeMap);
+	}
+	
+	public List<SelectItem> getDeliveryAddressByDistrictList(Long districtId){
+		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
+		
+		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
+		manualAddrList.add(new SelectItem("", "- Select One -"));
+		List<PmAddressType> addrList = getManagedBean().getManualAddressList();
+		for (PmAddressType obj : addrList) {
+			manualAddrList.add(new SelectItem(obj.getPmAddress().getAddressId(),obj.getPmAddress().getAddressName()));
+		}
+
+		return manualAddrList;
 	}
 	
 }

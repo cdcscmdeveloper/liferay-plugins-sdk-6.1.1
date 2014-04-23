@@ -96,6 +96,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestNote> requestNoteList;
 	private boolean checkPtjFlg = true;
 	private ScRequestNote selectedRequestNote;
+	private List<PmAddressType> manualAddressList;
 	
 	private String fulfillmentReqId;
 	private String taskName;
@@ -139,6 +140,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	private HashMap<Long, ScRequestNoteDtl> flReqNoteMap;
+	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
 	// getUserGroup
 	private Map<Long, PmUserGroup> userGroupMap;
@@ -1481,6 +1483,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setAgOfficeName(String agOfficeName) {
 		this.agOfficeName = agOfficeName;
+	}
+
+	/**
+	 * @param manualAddressList the manualAddressList to set
+	 */
+	public void setManualAddressList(List<PmAddressType> manualAddressList) {
+		this.manualAddressList = manualAddressList;
+	}
+
+	/**
+	 * @return the manualAddressList
+	 */
+	public List<PmAddressType> getManualAddressList() {
+		return manualAddressList;
+	}
+
+	/**
+	 * @return the manualAddressMap
+	 */
+	public Map<Long, List<PmAddressType>> getManualAddressMap() {
+		return manualAddressMap;
+	}
+
+	/**
+	 * @param manualAddressMap the manualAddressMap to set
+	 */
+	public void setManualAddressMap(Map<Long, List<PmAddressType>> manualAddressMap) {
+		this.manualAddressMap = manualAddressMap;
 	}
 
 	
