@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -25,8 +26,10 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -37,6 +40,7 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
@@ -95,55 +99,40 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			ContractReqDTO ConIreqDTO = new ContractReqDTO();
-			ConIreqDTO.setContractItemId(vCmSupplierItem.getDocId());
-			ContractResDTO ConIresDTO = contractItemSO.getContractItem(ConIreqDTO);
-		    ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
-			scPurchaseInDefault.setContractedItem(ConIresDTO.getCtContractItem());
-		    
-			/*IContractSO contractSO	=	(IContractSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractId(1l);
-			ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
-			this.getManagedBean().setContract(resDTO.getContract());*/
+			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+			ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
+			ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
+			scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
+			//TODO check contract item or panel item
+			if(vCmSupplierItem.getCircularNo() !=null){
+				// panel item 	
+			}
 			
-			/*ICatalogueSO catalogueSO	=	(ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
-			catReqDTO.setDocId(vCmSupplierItem.getDocId());
-			CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
-			
-			if (catResDTO.getSupplierItemList() !=null) {
-			   ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-			   CmPricing cmPricing = new CmPricing();
-			   cmPricing.setCmSupplierItem(catResDTO.getSupplierItemList().get(0));
-			   requestSupplierItem.setPricing(cmPricing);
-			   requestSupplierItem.setSmSupplier(cmPricing.getCmSupplierItem().getSmSupplier());
-			   getManagedBean().setScRequestSupplierItem(requestSupplierItem);*/
-			   
-			   // initializing remarks
-			   scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
-			   scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
-			   // WorkFlow Status
-			   List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
-			   ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
-			   PmStatus status = new PmStatus();
-			   status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
-			   StatusReqDTO statusReqDTO = new StatusReqDTO();
-			   if (status != null) {
-				   statusReqDTO.setStatusId(status.getStatusId());
-				   StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-				   workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-				 }
-			   workFlowStatus.setCurrent(true);
-			   workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-			   wflowStatus.add(workFlowStatus);
-			   scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
-			   
+			// initializing remarks
+			scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
+			// WorkFlow Status
+			List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
+			ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
+			PmStatus status = new PmStatus();
+			status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			if (status != null) {
+				statusReqDTO.setStatusId(status.getStatusId());
+				StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+				workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			}
+			workFlowStatus.setCurrent(true);
+			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
+			wflowStatus.add(workFlowStatus);
+			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
+	
 			getCurrentStatus(status.getStatusId());  
-		    getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
+			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			//TODO default value to justification drop down listing
-		  	getManagedBean().setJustificationType(ParameterConst.PID_CP);
-		  	initialInformation(scPurchaseInDefault);
+			getManagedBean().setJustificationType(ParameterConst.PID_CP);
+			initialInformation(scPurchaseInDefault);
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -151,24 +140,23 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	 *  submitPurchaseInDefault  method to submit PID details 
      *  in Purchase In Default
 	*/	
-	 public String submitPurchaseInDefault() {
-		  debugLogger("submitPurchaseInDefault");
-		  IPurchaseInDefaultSO purchaseInDefaultSO = null;
-		  try {
-			    IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			    purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			    PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		public String submitPurchaseInDefault() {
+			debugLogger("submitPurchaseInDefault");
+			IPurchaseInDefaultSO purchaseInDefaultSO = null;
+			try {
+				IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+				PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-		 		scPurchaseInDefault.setReasonType("R");
-		 		scPurchaseInDefault.setRecordStatus(true);
-		 		scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
+				scPurchaseInDefault.setReasonType("R");
+				scPurchaseInDefault.setRecordStatus(true);
+				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
 				// Target Approver
-				ScPIDApprovalUser approvalUser = new ScPIDApprovalUser();
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
 				// Contract Item
 				//scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
-				
-			    // WorkFlow Status 
+
+				// WorkFlow Status 
 				List<ScPIDWorkFlowStatus> workflowStatuses = new ArrayList<ScPIDWorkFlowStatus>();
 				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
 				PmStatus status = new PmStatus();
@@ -186,29 +174,31 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				scPurchaseInDefault.setWorkFlowStatuses(workflowStatuses);
 				// remarks
 				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
-				scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
+				if(getManagedBean().getAttachments() != null){
+					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
+				}
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
-				
 				//Hoa: add token authenticate to support BPM
 				FacesScopes facesScopes = new FacesScopes();
 				String token = facesScopes.getBPMAuthenticationCtxToken();
 				reqDTO.setToken(token);
-				
+
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				if (resDTO.isSuccessful()) {
-					 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", ""));
-					 return "/xhtml/shared/acknowledge.xhtml";
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "acknowledge");
 				} 
 			} catch (Exception ex) {
-			    FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Sorry We are unable to process.", ""));
-					ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Sorry We are unable to process.", ""));
+				ex.printStackTrace();
 			} finally {
-					purchaseInDefaultSO = null;
+				purchaseInDefaultSO = null;
 			}
-		return null;
-	 }
+			return null;
+		}
 		
 	 public void updateBpmTask(String outcome) {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
