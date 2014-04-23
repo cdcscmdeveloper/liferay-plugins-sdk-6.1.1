@@ -8,7 +8,7 @@
 
 	<p:panel
 		header=" Supporting Document Online Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}"
-		toggleable="true">
+		toggleable="true" id="onSupTblPan">
 		<table style="width: 30%">
 			<tr>
 				<td><h:outputText value="#{lbl['lbl.sm.submissionType']}" /></td>
@@ -46,7 +46,8 @@
 			</p:column>
 
 			<p:column headerText="Upload Document ">
-				<p:commandLink>
+				<p:commandLink oncomplete="attachDlg1.show();return false;"
+					action="#{backingBean.assignSelectedSupportDoc(table)}">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png"
 						style="margin-right:2px;" />

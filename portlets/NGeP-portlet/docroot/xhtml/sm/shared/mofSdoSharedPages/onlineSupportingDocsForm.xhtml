@@ -7,25 +7,23 @@
 
 	<p:panel header="Online Supporting Documents List">
 
-		<p:dataTable var="table"
-			value="#{mofRegistrationBackingBean.dataList}">
+		<p:dataTable var="onTable" id="revOnSdList"
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
+			<ac:paginator for="revOnSdList" />
 
-			<p:column headerText="Document Name">  
-		            #{table.documentName} 
-		        </p:column>
-			<p:column headerText="Document Description">  
-		            #{table.documentdescription} 
-		        </p:column>
-			<p:column headerText="View/Download Document">
-				<!-- #{table.isSentBySupplier} -->
-				<p:commandButton value="Download" icon="ui-icon-arrowthichk-s"></p:commandButton>
-			</p:column>
-			<p:column headerText="Is Document Valid?">
-				<p:selectBooleanCheckbox value="#{table.documentValid}" />
+			<p:column headerText="Document Description">
+				<h:outputText value="#{onTable.pmDocument.docName}" />
 			</p:column>
 
+			<p:column headerText="Download Document ">
+				<p:commandLink value="#{onTable.smApplDocFiles[0].fileName}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Document Valid?">
+				<p:selectBooleanCheckbox value="#{table.verified}" />
+			</p:column>
 		</p:dataTable>
-
 
 	</p:panel>
 </ui:composition>

@@ -9,23 +9,17 @@
 		header="Offline Supporting Documents List For Application No. - #{backingBean.managedBean.smAppl.applNo} ">
 
 
-		<p:dataTable var="table"
-			value="#{mofRegistrationBackingBean.dataList}">
+		<p:dataTable var="offTable" id="revOffSdList"
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
+			<ac:paginator for="revOffSdList" />
 
-			<p:column headerText="Document Name">  
-		            #{table.documentName} 
-		        </p:column>
-			<p:column headerText="Document Description">  
-		            #{table.documentdescription} 
-		        </p:column>
-			<p:column headerText="Is Sent By Supplier?">
-					#{table.isSentBySupplier}
-				</p:column>
-			<p:column headerText="Is Valid?">
-				<p:selectBooleanCheckbox value="#{table.docSent}" />
+			<p:column headerText="Document Description">
+				<h:outputText value="#{offTable.pmDocument.docName}" />
 			</p:column>
 
-
+			<p:column headerText="Document Valid?">
+				<p:selectBooleanCheckbox value="#{offTable.verified}" />
+			</p:column>
 		</p:dataTable>
 		<br />
 
