@@ -27,7 +27,7 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
+		<p:spacer height="40"></p:spacer>
 		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
 		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
 			style="width:1000px;">
@@ -43,11 +43,11 @@
 				<tr>
 					<td><h:outputLabel value="Item Type" /></td>
 					<td><p:inputText
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}"
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}"
 							disabled="true" size="30" /></td>
 					<td><h:outputLabel value="Specification Type" /></td>
 					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode.parameterId}" /></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
 				<tr>
