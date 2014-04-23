@@ -442,28 +442,7 @@ public class SmApplicationBackingBean extends
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
-			// TODO Un comment during iteration2
-			// boolean isNewAppln = true;
-			// for (int i = 0; i < getManagedBean().getSmSupplier().getSmAppls()
-			// .size(); i++) {
-			// SmAppl app = getManagedBean().getSmSupplier().getSmAppls()
-			// .get(i);
-			// if (getManagedBean().getSmAppl().getApplId() == app.getApplId())
-			// {
-			// System.out.println("****** Update Application******** ");
-			// isNewAppln = false;
-			// getManagedBean().getSmSupplier().getSmAppls()
-			// .set(i, getManagedBean().getSmAppl());
-			// break;
-			// }
-			// }
-			// if (isNewAppln) {
-			// System.out
-			// .println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
-			// getManagedBean().getSmSupplier().getSmAppls()
-			// .add(getManagedBean().getSmAppl());
-			// }
-			// TODO to be confirmed whether reqd to save the appln as draft
+
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 			} else {
@@ -480,8 +459,8 @@ public class SmApplicationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sample error message",
-							"PrimeFaces makes no mistakes"));
+							"Unknown problem occurred.Invalid or missing data",
+							"Please contact administrator"));
 			getManagedBean().setTabActiveIndex(currentTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 		}
@@ -499,26 +478,31 @@ public class SmApplicationBackingBean extends
 			} else {
 				System.out.println(" ****** REMAIN PREV VALUE ********");
 			}
-			validateBeforeSave(applType, pageType);
-			// Save or update to DB
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			if (validateBeforeSave(applType, pageType)) {
+				// Save or update to DB
 
-			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+						.getInstance().getServiceObject("sm",
+								IMofRegistrationSO.class);
+				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.updateApplication(reqDto);
-			getManagedBean().setTabActiveIndex(outputTab);
+				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+
+				MofRegistrationResDTO resDTO = mofRegistrationSO
+						.updateApplication(reqDto);
+				getManagedBean().setTabActiveIndex(outputTab);
+			} else {
+				getManagedBean().setTabActiveIndex(currentTab);
+			}
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sample error message",
-							"PrimeFaces makes no mistakes"));
+							"Unknown problem occurred.Invalid or missing data",
+							"Please contact administrator"));
+
 			getManagedBean().setTabActiveIndex(currentTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 		} finally {
@@ -568,7 +552,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void validateBeforeSave(String applType, String pageType) {
+	private Boolean validateBeforeSave(String applType, String pageType) {
 		switch (pageType) {
 		case "BasicInfo":
 			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
@@ -610,6 +594,19 @@ public class SmApplicationBackingBean extends
 
 		case "SupportingDocs":
 			System.out.println(" ** For Suporting Docs ** ");
+			if (getManagedBean().getSmAppl().getSmSupplierCategories() == null
+					|| getManagedBean().getSmAppl().getSmSupplierCategories()
+							.isEmpty()) {
+				System.out.println("****** Empty Category List *******");
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"Category is required : ",
+										"Please add atleast one category to proceed futher"));
+				return false;
+			}
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
 					new ArrayList<SmApplSupportDoc>());
 			DocumentReqDTO rqDto = new DocumentReqDTO();
@@ -650,30 +647,39 @@ public class SmApplicationBackingBean extends
 				System.out.println("*** Not Empty list ****"
 						+ rsDTO.getDocumentList().size());
 				List<SmApplSupportDoc> docs = new ArrayList<>();
-				for (PmDocument doc : rsDTO.getDocumentList()) {
-					if (getManagedBean().getSmAppl().getSmApplSupportDocs()
-							.isEmpty()) {
+
+				if (getManagedBean().getSmAppl().getSmApplSupportDocs()
+						.isEmpty()) {
+					System.out.println(" ******* Empty Doc List *****");
+					for (PmDocument doc : rsDTO.getDocumentList()) {
 						docs.add(getDefaultSmApplSupportingDoc(doc));
-					} else {
+					}
+				} else {
+					for (PmDocument doc : rsDTO.getDocumentList()) {
 						for (SmApplSupportDoc smDocu : getManagedBean()
 								.getSmAppl().getSmApplSupportDocs()) {
 							if (smDocu.getPmDocument().equals(doc)) {
-								docs.add(smDocu);
+								// docs.add(smDocu);
+								System.out
+										.println("******* Document already exists *****");
 							} else {
+								System.out
+										.println("******* This is a new Document ********");
 								docs.add(getDefaultSmApplSupportingDoc(doc));
 							}
 						}
 					}
-
 				}
+
 				getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
 			}
 			break;
 
 		default:
 			System.out.println("****** Not a defined page ***********");
-		}
 
+		}
+		return true;
 	}
 
 	private SmApplSupportDoc getDefaultSmApplSupportingDoc(PmDocument doc) {
@@ -2911,13 +2917,38 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getFinOrgLs().size());
 	}
 
+	public void assignSelectedSupportDoc(SmApplSupportDoc doc) {
+		System.out.println("****** Assign Supporting Doc *******");
+		getManagedBean().setSupportDoc(doc);
+	}
+
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		System.out.println("********handleFileAttachment********");
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
 			System.out.println("***** File attached *******"
 					+ event.getFile().getFileName());
+			if (getManagedBean().getSmAppl().getSmApplSupportDocs()
+					.contains(getManagedBean().getSupportDoc())) {
+				System.out.println("******* Contains selected file ****");
+				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
+				doc.getSmApplDocFiles().get(0)
+						.setFileName(event.getFile().getFileName());
+				getManagedBean()
+						.getSmAppl()
+						.getSmApplSupportDocs()
+						.set(getManagedBean().getSmAppl()
+								.getSmApplSupportDocs()
+								.indexOf(getManagedBean().getSupportDoc()),
+								getManagedBean().getSupportDoc());
+				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					System.out.println(" *** The name is ****"
+							+ docs.getSmApplDocFiles().get(0).getFileName());
+				}
+			}
 		}
+
 	}
 
 	private void retrieveUomList() {
