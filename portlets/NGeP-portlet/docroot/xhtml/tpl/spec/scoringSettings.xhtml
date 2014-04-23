@@ -30,7 +30,7 @@
 			<p:selectBooleanCheckbox id="isWeightage" value="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
 				<p:ajax partialSubmit="true" process="@this" update="weightage" />
 			</p:selectBooleanCheckbox>
-			<p:inputText id="weightage" value="#{templateSpecBean.selectedSpecQuestion.weightage}">
+			<p:inputText id="weightage" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.weightage}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 			</p:inputText>
 			#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.percentage']}
