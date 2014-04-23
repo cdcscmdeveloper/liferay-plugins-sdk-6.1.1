@@ -76,6 +76,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private TreeNode ctZoneTrees;
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
+	private List<CtContractItem> ctItemList;
+	private CtItemPrice ctItemPrices;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -357,6 +359,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public List<CtContractItem> getCtItemList() {
+		return ctItemList;
+	}
+
+	public void setCtItemList(List<CtContractItem> ctItemList) {
+		this.ctItemList = ctItemList;
+	}
+
+	public CtItemPrice getCtItemPrices() {
+		return ctItemPrices;
+	}
+
+	public void setCtItemPrices(CtItemPrice ctItemPrices) {
+		this.ctItemPrices = ctItemPrices;
 	}
 
 }

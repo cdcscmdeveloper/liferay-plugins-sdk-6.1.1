@@ -1184,11 +1184,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			if(resDTO.getCtContractVer().getCtTermination()==null) {
 				resDTO.getCtContractVer().setCtTermination(new CtTermination());
+			    if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
+				    resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
 			}
-			if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
-				resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
-			
-	    	trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+	    	
+			trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
 			
 			trBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
@@ -1273,13 +1273,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		AmendmentBackingBean amendBB = null;
 		try {
             reqDTO = new ContractReqDTO();
+            amendBB = new AmendmentBackingBean();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
-			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			amendBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			
+			if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
+			     if(amendBB.getManagedBean().getCtItemList() == null)
+			    	 amendBB.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+			     else
+			    	 amendBB.getManagedBean().getCtItemList().clear();
+			              
+			        for(CtContractItem item : amendBB.getManagedBean().getContractVer().getCtContractItems()) {
+					    if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
+					    	amendBB.getManagedBean().getCtItemList().add(item);
+				     }
+			 }
+			
 			if(amendBB.getManagedBean().getContractVer().getCtAmendment() ==null) {
 				amendBB.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 			} else {
@@ -1296,6 +1309,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    
 		    amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		    
+		    
 				
 			reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
 			reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);

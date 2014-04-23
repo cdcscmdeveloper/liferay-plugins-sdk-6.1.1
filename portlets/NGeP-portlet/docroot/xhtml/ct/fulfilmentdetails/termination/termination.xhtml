@@ -130,9 +130,9 @@
 			 lazy="false" dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			 <ac:paginator for="terminationReason" />
 			     <p:column selectionMode="multiple" style="width:1%;"/>  
-		         <p:column style="width:24%;" headerText="#{lbl['lbl.ct.tr.table.reason']}" >
-		             <p:selectOneMenu style="width:22%;">
-                       <f:selectItems value="#{terminationBackingBean.getTerminationReasonDesc()}" />
+		         <p:column style="width:24%;"  headerText="#{lbl['lbl.ct.tr.table.reason']}" >
+		             <p:selectOneMenu value="#{data.reasonType.reasonId}" style="width:100%;">
+                         <f:selectItems value="#{terminationBackingBean.getTerminationReasonDesc()}" />
                	     </p:selectOneMenu>
                  </p:column>
 		        <p:column style="width:75%;" headerText="#{lbl['lbl.ct.tr.table.descp']}">

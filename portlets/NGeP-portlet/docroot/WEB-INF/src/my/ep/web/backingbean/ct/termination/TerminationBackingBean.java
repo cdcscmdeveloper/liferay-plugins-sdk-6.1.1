@@ -19,7 +19,6 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -33,8 +32,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -45,12 +42,10 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -142,7 +137,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
 			
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
@@ -205,7 +200,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		   
 		    reqDTO.setToken(token);
 		    reqDTO.setOutcome(action);
@@ -271,7 +266,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterCode(parameterCode);
 			reqDTO.setParameterType("TDT");
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			return resDTO.getPmParameter().getParameterId().intValue();
 		}catch(Exception e) {
@@ -292,7 +287,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			this.getManagedBean().getContractVer().getCtTermination().setDecisionType(resDTO.getPmParameter());
 			return resDTO.getPmParameter().getParameterCode();
@@ -438,7 +433,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 		    ReasonReqDTO reqDTO = new ReasonReqDTO();
 		    reqDTO.setReasonCategory(ReasonCategory.CONTRACT_TERMINATION.value());
-		    reqDTO.setLanguage("EN");
+		    reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 		    ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 		    List<PmReasonDesc> list = resDTO.getReasonDescList();
 		    items = new SelectItem[list.size()+1];

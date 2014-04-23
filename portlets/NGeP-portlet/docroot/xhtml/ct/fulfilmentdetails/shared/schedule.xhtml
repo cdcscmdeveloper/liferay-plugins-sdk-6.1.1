@@ -61,7 +61,7 @@
 		           </p:commandLink>
 		       </p:column>
 		  </p:dataTable>  
-
+         </h:panelGrid> 
 	    <p:spacer height="2" />
 		 <div class="ppRightBtn"> 
 		     <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
@@ -95,7 +95,6 @@
 		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
 		   </div>
          </p:dialog>    
-		</h:panelGrid> 
 		 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
