@@ -190,7 +190,7 @@
 								rendered="#{unspscCodeBackingBean.requisitioner}">
 								<table>
 									<tr>
-										<td><p:commandLink
+										 <td><p:commandLink
 												action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
 												process="@this" update="@([id$=addToCartId])"
 												oncomplete="addToCartPopup.show();return false;"
@@ -201,18 +201,16 @@
 											</p:commandLink> <p:tooltip for="addToCartId"
 												value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
 												hideEffect="fade" /></td>
-										<td><p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
+						                  <td><p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
 												action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-												disabled="#{!catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId, purchaseInDefaultBackingBean.managedBean.ptjId, false)}"
-										<td><p:commandLink
-												action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-												disabled="#{catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId, 16717,false)}"
+												disabled="#{!catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId, purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId,false)}"
 												rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
 											</p:commandButton></td>
 											
-								         <td> <p:commandButton  value="#{lbl['lbl.sc.simple.quote']}"
+								         <td><p:commandButton  value="#{lbl['lbl.sc.simple.quote']}"
 									             action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
-											     rendered="#{unspscCodeBackingBean.requisitioner}">
+											     rendered="#{unspscCodeBackingBean.requisitioner}"
+											     disabled="#{supplierItem.circularNo ne null }">
 											</p:commandButton> </td>
 
 										 <td><p:commandButton value="CR" update="@form"
