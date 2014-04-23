@@ -10,7 +10,9 @@
 	<p:panel header="Technical Specification" toggleable="true">
 
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
-			style="width:100%" rowIndexVar="index" value="#{specificationBackingBean.managedBean.technicalSpecList}" rowKey="#{technicalSpec}">
+			style="width:100%" rowIndexVar="index"
+			value="#{specificationBackingBean.managedBean.technicalSpecList}"
+			rowKey="#{technicalSpec}">
 			<ac:paginator for="templateTechSpecification" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
@@ -21,13 +23,14 @@
 			<p:column headerText="Status" style="width:20%">
 			</p:column>
 			<p:column headerText="Created By" style="width:20%">
-			<h:outputText value="#{technicalSpec.createdBy}" size="50"></h:outputText>
+				<h:outputText value="#{technicalSpec.createdBy}" size="50"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink ajax="false"  action="#{specificationBackingBean.technicalSpecEditAction(technicalSpec)}">
-				<p:graphicImage library="ep/images/design" name="edit.png"
-					value="/resources/ep/images/design/edit.png" />
+				<p:commandLink ajax="false"
+					action="#{specificationBackingBean.technicalSpecEditAction(technicalSpec)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
 
 				</p:commandLink>
 			</p:column>
@@ -36,13 +39,12 @@
 
 		<div align="right">
 			<p:commandButton value="Create Specification" process="@this"
-				partialSubmit="true" oncomplete="create.show();"
-				action="#{specificationBackingBean.businessOwnerTemplateSpec}" />
+				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
 
 		</div>
 
-
+		<ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include>
 	</p:panel>
 
 </ui:composition>

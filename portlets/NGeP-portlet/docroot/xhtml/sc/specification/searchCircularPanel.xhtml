@@ -17,7 +17,7 @@
 			<tr>
 				<td style="width: 40%"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.circular.name']}"></h:outputLabel></td>
-				<td><h:inputText
+				<td><h:inputText style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.circularName}" /></td>
 			</tr>
 			<tr>
@@ -32,7 +32,7 @@
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 			action="#{specificationBackingBean.searchCircularList}"
 			update="circularList" icon="ui-icon-search" />
-		<p:commandButton value="#{lbl['lbl.reset']}"
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 			action="#{specificationBackingBean.resetCircular}" update="circular"
 			icon="ui-icon-reset" resetValues="true" partialSubmit="true"
 			process="@this" />
@@ -54,62 +54,61 @@
 					<p:row>
 
 						<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
-							style="width:350px;">
+							style="width:15%">
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
-							style="width:600px;">
+							style="width:20%">
 						</p:column>
 
-						<p:column headerText="Circular Type" style="width:600px;">
-
-						</p:column>
-
-						<p:column headerText="Panel Type" style="width:600px;">
-
-						</p:column>
-						
-						<p:column headerText="Effective Date" style="width:600px;">
-
-						</p:column>
-						
-						<p:column headerText="Expiry Date" style="width:600px;">
+						<p:column headerText="Circular Type" style="width:15%">
 
 						</p:column>
 
-						<p:column>
+						<p:column headerText="Panel Type" style="width:15%">
+
+						</p:column>
+
+						<p:column headerText="Effective Date" style="width:15%">
+
+						</p:column>
+
+						<p:column headerText="Expiry Date" style="width:15%">
+
+						</p:column>
+
+						<p:column style="width:5%">
 
 						</p:column>
 
 					</p:row>
 				</p:columnGroup>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
-					style="width:350px;">
+				<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}" style="width:15%">
 					<h:outputText value="#{circular.circularNo}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
-					style="width:600px;">
+				<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}" style="width:20%">
 					<h:outputText value="#{circular.name}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Circular Type" style="width:600px;">
+				<p:column headerText="Circular Type" style="width:15%">
 					<h:outputText value="#{circular.ctCircular.circularType}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Panel Type" style="width:600px;">
-                 <h:outputText value="#{circular.itemCategory.pmParameterDescs[0].codeName}"></h:outputText>
+				<p:column headerText="Panel Type" style="width:15%">
+					<h:outputText
+						value="#{circular.itemCategory.pmParameterDescs[0].codeName}"></h:outputText>
 				</p:column>
-				<p:column headerText="Effective Date" style="width:600px;">
-                 <h:outputText value="#{circular.updateEffDate}"></h:outputText>
+				<p:column headerText="Effective Date" style="width:15%">
+					<h:outputText value="#{circular.updateEffDate}"></h:outputText>
 				</p:column>
-				<p:column headerText="Expiry Date" style="width:600px;">
-                 <h:outputText value="#{circular.endDate}">
-                  <f:convertDateTime pattern="dd/MM/yyyy" />
-                 </h:outputText>
+				<p:column headerText="Expiry Date" style="width:15%">
+					<h:outputText value="#{circular.endDate}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
 				</p:column>
-				<p:column headerText="Selection" selectionMode="single"></p:column>
+				<p:column headerText="Selection" selectionMode="single" style="width:5%"></p:column>
 			</p:dataTable>
 		</h:panelGrid>
 	</p:panel>

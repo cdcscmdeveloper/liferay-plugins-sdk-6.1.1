@@ -21,15 +21,16 @@
 			</p:column>
 
 			<p:column headerText="Status" style="width:20%">
-			<h:outputText value="#{financialSpec.createdBy}" size="50"></h:outputText>
+				<h:outputText value="#{financialSpec.createdBy}" size="50"></h:outputText>
 			</p:column>
-			
+
 			<p:column headerText="Created By" style="width:20%">
-			<h:outputText value="#{financialSpec.createdBy}" size="50"></h:outputText>
+				<h:outputText value="#{financialSpec.createdBy}" size="50"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink  action="#{specificationBackingBean.committeeSpecEditAction(financialSpec)}">
+				<p:commandLink
+					action="#{specificationBackingBean.committeeSpecEditAction(financialSpec)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
@@ -38,16 +39,15 @@
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
 
-		 <div align="right">
+		<div align="right">
 			<div align="right">
-			<p:commandButton value="Create Specification" process="@this"
-				partialSubmit="true" 
-				action="#{specificationBackingBean.retriveTemplatespec}" />
+				<p:commandButton value="Create Specification" process="@this"
+					partialSubmit="true" oncomplete="createCommitteeSpec.show();" />
 
+
+			</div>
 
 		</div>
-
-		</div> 
 
 
 	</p:panel>

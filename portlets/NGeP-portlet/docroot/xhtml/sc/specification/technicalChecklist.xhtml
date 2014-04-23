@@ -85,7 +85,8 @@
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
-						<p:ajax event="change" process="@this" update=":form:businessSpecId:stageTwotechProposal"
+						<p:ajax event="change" process="@this"
+							update=":form:businessSpecId:stageTwotechProposal"
 							listener="#{specificationBackingBean.checklistActionChange}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
@@ -113,13 +114,14 @@
 			</p:column>
 
 			<p:column headerText="Scoring" style="width:10%">
-				<p:selectBooleanCheckbox styleClass="action#{index}" value="#{stageTwoTechnical.scoringReq}"
-					disabled="true"
+				<p:selectBooleanCheckbox styleClass="action#{index}"
+					value="#{stageTwoTechnical.scoringReq}" disabled="true"
 					rendered="#{stageTwoTechnical.action.parameterId  ne '9'}">
 
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox styleClass="action#{index}" value="#{stageTwoTechnical.scoringReq}"
+				<p:selectBooleanCheckbox styleClass="action#{index}"
+					value="#{stageTwoTechnical.scoringReq}"
 					rendered="#{stageTwoTechnical.action.parameterId eq '9'}">
 
 				</p:selectBooleanCheckbox>
@@ -151,10 +153,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-<!-- rendered="#{stageTwoTechnical.definationType.parameterId eq '184' or stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}" -->
+				<!-- rendered="#{stageTwoTechnical.definationType.parameterId eq '184' or stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}" -->
 				<p:commandLink
-					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}"
-					>
+					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -173,8 +174,7 @@
 				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="Create Specification" process="@this"
-				partialSubmit="true"
-				action="#{specificationBackingBean.retriveTemplatespec}"
+				partialSubmit="true" oncomplete="createCommitteeSpec.show();"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
