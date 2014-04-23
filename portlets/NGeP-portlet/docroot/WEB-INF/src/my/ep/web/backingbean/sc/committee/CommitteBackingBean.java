@@ -565,7 +565,7 @@ public class CommitteBackingBean extends
 				"pp", IUserSO.class);
 		if (getManagedBean().getExternalUsers() == null) {
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setOrgType(OrganizationType.EXTERNAL.value());
+			reqDTO.setOrgType(OrganizationType.OTHERS.value());
 			UserResDTO resDTO = userSO.retrieveUserListByOrgType(reqDTO);
 			List<PmUser> externalUsers = resDTO.getUserList();
 

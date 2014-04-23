@@ -474,7 +474,7 @@ public class QTBusinessOwnerBackingBean extends
 			pmUserPreference.setNotifyRemovalDay(30);
 			user.setPmUserPreference(pmUserPreference);
 
-			userReqDTO.setOrgType(OrganizationType.EXTERNAL.value());
+			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = iUserSO.saveUser(userReqDTO);
