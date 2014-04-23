@@ -31,7 +31,10 @@ import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -101,6 +104,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.type.sc.CommitteType;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -108,6 +112,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.BPMOutComeTypes;
@@ -327,19 +332,20 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
+				ScQt scQt = quationTenderResDTO.getQtDetail();
 
-				FacesContext.getCurrentInstance().addMessage(
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
+						MessageUtils.getMessage(MessageConst.INFO_700005, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), scQt.getQtNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+				
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
-						));
-
-				return "/xhtml/shared/acknowledge.xhtml";
-
-			} else {
-				throw new EpException("Failed.");
 			}
+			
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -553,7 +559,7 @@ public class QTDetailBackingBean extends
 
 		PmUser user = new FacesScopes().getUserSessionBean();
 
-		if (user != null) {
+		if (user != null && user.getUserId() != null) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
 			reqDTO.setUserId(user.getUserId());
