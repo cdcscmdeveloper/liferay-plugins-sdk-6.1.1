@@ -12,11 +12,11 @@
 
 		<p:panel style="margin-left:5%"
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
-			<p:panel id="package" header="Recommendation(By Package)">
+			<p:panel id="package" header="By Package">
 				<table>
 					<tr>
 						<td><h:outputLabel value="Technical(%)"></h:outputLabel></td>
-						<td><p:inputText
+						<td><p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
 								<p:ajax event="blur" update="totalrecommendation"
 									process="@this,package" partialSubmit="true"
@@ -25,7 +25,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel value="Financial(%)"></h:outputLabel></td>
-						<td><p:inputText
+						<td><p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 								<p:ajax event="blur" update="totalrecommendation"
 									process="@this,package" partialSubmit="true"
@@ -36,13 +36,13 @@
 						<td><h:outputLabel value="Total"></h:outputLabel></td>
 						<td><p:inputText id="totalrecommendation"
 								value="#{specificationBackingBean.managedBean.recommendationPackageTotal}"
-								disabled="true" /> <h:outputLabel value="/100%"></h:outputLabel>
+								disabled="true" /><p:spacer width="5"/> <h:outputLabel value="/100%"></h:outputLabel>
 						</td>
 					</tr>
 					<tr>
 						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
-						<td><p:inputText
-								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}" />
+						<td><p:inputText style="text-align:right"
+								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}" /><p:spacer width="5"/>
 							<h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
@@ -50,7 +50,15 @@
 
 
 
-			<p:panel id="item" header="Recommendation(By Item)">
+			<p:panel id="item" header="By Item">
+				<table>
+					<tr>
+						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><p:inputText style="text-align:right"
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" /><p:spacer width="5"/>
+							<h:outputLabel value="/100%"></h:outputLabel></td>
+					</tr>
+				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
 					<f:facet name="header">
 
@@ -64,7 +72,7 @@
 					<p:row>
 						<p:column style="font-weight: bold;">Technical(%)</p:column>
 						<p:column style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
 								<p:ajax event="blur" update="technicalrecommendation"
 									process="@this,item" partialSubmit="true"
@@ -73,7 +81,7 @@
 						</p:column>
 
 						<p:column colspan="1" style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherTechnical}">
 								<p:ajax event="blur" update="technicalrecommendation"
 									process="@this,item" partialSubmit="true"
@@ -88,7 +96,7 @@
 					<p:row>
 						<p:column style="font-weight: bold;">Financial(%)</p:column>
 						<p:column style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
 								<p:ajax event="blur" update="financialrecommendation"
 									process="@this,item" partialSubmit="true"
@@ -97,7 +105,7 @@
 						</p:column>
 
 						<p:column colspan="1" style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
 								<p:ajax event="blur" update="financialrecommendation"
 									process="@this,item" partialSubmit="true"
@@ -111,33 +119,35 @@
 					</p:row>
 
 				</p:panelGrid>
-				<table>
-					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
-						<td><p:inputText
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
-							<h:outputLabel value="/100%"></h:outputLabel></td>
-					</tr>
-				</table>
+
 
 			</p:panel>
 		</p:panel>
 
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
-			<p:panel id="recommendTechnicalItem"
-				header="Recommendation(By Package)">
+			<p:panel id="recommendTechnicalItem" header="By Package">
 				<table>
 
 					<tr>
 						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
-						<td><p:inputText value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"/> <h:outputLabel value="/100%"></h:outputLabel>
+						<td><p:inputText
+								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
+								style="text-align:right" /><p:spacer width="5"/> <h:outputLabel value="/100%"></h:outputLabel>
 						</td>
 					</tr>
 				</table>
 			</p:panel>
 
-			<p:panel header="Recommendation(By Item)">
+			<p:panel header="By Item">
+				<table>
+					<tr>
+						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><p:inputText style="text-align:right"
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" /><p:spacer width="5"/>
+							<h:outputLabel value="/100%"></h:outputLabel></td>
+					</tr>
+				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
 					<f:facet name="header">
 
@@ -152,7 +162,7 @@
 					<p:row>
 						<p:column style="font-weight: bold;">Financial(%)</p:column>
 						<p:column style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
 								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
@@ -161,7 +171,7 @@
 						</p:column>
 
 						<p:column colspan="1" style="font-weight: bold;">
-							<p:inputText
+							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
 								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
@@ -175,14 +185,7 @@
 					</p:row>
 
 				</p:panelGrid>
-				<table>
-					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
-						<td><p:inputText
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
-							<h:outputLabel value="/100%"></h:outputLabel></td>
-					</tr>
-				</table>
+
 
 			</p:panel>
 		</p:panel>

@@ -36,11 +36,11 @@
 			<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
 		</p:tab>
 
-		<p:tab title="Prepare Specification">
+		<p:tab title="Prepare Specification" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
 			<ui:include src="prepareSpecification.xhtml"></ui:include>
 		</p:tab>
 
-		<p:tab title="#{lbl['lbl.sc.spec.tech.check.list']}">
+		<p:tab title="#{lbl['lbl.sc.spec.tech.check.list']}" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
 			<ui:include src="technicalChecklist.xhtml"></ui:include>
 			<ui:include src="stageTwoTechnical.xhtml" />
 			<!-- <ui:include src="/xhtml/sc/specification/technicalEmployeeList.xhtml" /> -->
@@ -57,7 +57,7 @@
 
 		</p:tab>
 
-		<p:tab title="Technical Scoring">
+		<p:tab title="Technical Scoring" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
 			<ui:include src="weightageGroup.xhtml" />
 		</p:tab>
 

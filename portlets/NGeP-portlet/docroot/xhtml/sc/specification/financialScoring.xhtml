@@ -148,13 +148,15 @@
 							</p:panel>
 						</h:panelGroup> <p:panel header="Passing Score">
 
-							<h:panelGrid columns="4">
-								<h:outputText value="Financial(%)" />
-								<p:spacer width="10"></p:spacer>
-								<p:inputText value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}"></p:inputText>
+						<table>
+						<tr><td style="width:100px;">
+								<h:outputText value="Financial(%)" /></td>
+								<td>
+								<p:inputText style="text-align:right" value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}"></p:inputText><p:spacer width="5"></p:spacer>
 								<h:outputText value="/100 " />
-
-							</h:panelGrid>
+                                     </td>
+                                     </tr>
+							</table>
 
 						</p:panel> <!-- 
 	<p:panel header="Scoring For Offered Price(Package)">

@@ -9,13 +9,14 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
-	
+
 		<p:dataTable id="openPnlId" var="cateGory"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
 			style="width:100%" rowIndexVar="index" styleClass="openPnlId"
-			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}" rowKey="#{cateGory}">
+			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
+			rowKey="#{cateGory}">
 
-            <p:column selectionMode="multiple" style="width:2%"></p:column>
+			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
@@ -47,7 +48,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:20%">
-				<h:outputText value="#{specificationBackingBean.getDropdownValues(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
+				<h:outputText
+					value="#{specificationBackingBean.getDropdownValues(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
@@ -85,7 +87,8 @@
 								style="width : 80px" />
 							<p:selectBooleanCheckbox disabled="true"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.allState}">
-								<f:selectItem itemValue="#{specificationBackingBean.managedBean.supplierCriteria.allState}"></f:selectItem>
+								<f:selectItem
+									itemValue="#{specificationBackingBean.managedBean.supplierCriteria.allState}"></f:selectItem>
 								<p:ajax update="supplierallStae"
 									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
@@ -116,8 +119,8 @@
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-	
-	
+
+
 			<p:panel header="Location List"
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 				<table style="width: 100%">
@@ -175,8 +178,8 @@
 						oncomplete="ZoneLocation.show();"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" />
+					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						icon="ui-icon-delete" />
 				</div>
 			</p:panel>
 
@@ -213,15 +216,15 @@
 									<h:outputText value="#{location.zoneName}" />
 								</p:treeNode>
 
-							<p:treeNode type="state">
-							<h:outputText value="#{location.pmState.stateName}"/>
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.pmDivision.divisionName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.pmDistrict.districtName}" />
-							</p:treeNode>
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
 
 
 
@@ -242,7 +245,7 @@
 				<p:panel id="zonePopupPanel" header="ADD LOCATION">
 					<table styleClass="noBorders tr,noBorders td">
 						<TR>
-							
+
 							<TD width="80%"><p:panel></p:panel> <p:tree
 									id="treeZoneLocationPopup"
 									value="#{specificationBackingBean.managedBean.rootLocationTree}"
@@ -268,16 +271,18 @@
 				</p:panel>
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneLocation.hide();" icon="ui-icon-cancel"/>
+					style="float:right;" onclick="ZoneLocation.hide();"
+					icon="ui-icon-cancel" />
 					&#160;&#160;
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
 					update="@this, zoneLocationDataTable,zonePopupPanel"
-					action="#{specificationBackingBean.updateZoneLocation}" icon="ui-icon-accept" >
+					action="#{specificationBackingBean.updateZoneLocation}"
+					icon="ui-icon-accept">
 				</p:commandButton>
-				
-		
+
+
 			</p:dialog>
 		</h:panelGroup>
 	</p:panel>
@@ -287,7 +292,7 @@
 		<tr>
 			<td style="width: 150px"><p:outputLabel
 					value="#{lbl['lbl.so.paidup']}" /></td>
-			<td><p:inputText style="text-align:right"
+			<td><p:inputText
 					value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
 					style="margin-right:5px;" /></td>
 		</tr>

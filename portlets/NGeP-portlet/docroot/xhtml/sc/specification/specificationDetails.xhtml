@@ -13,13 +13,13 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td rowspan="3" valign="top"><h:outputLabel value="Title" /></td>
-				<td rowspan="3"><p:inputTextarea readonly="true" rows="5"
+				<td rowspan="3" valign="top" style="width:145px;"><h:outputLabel value="Title" /></td>
+				<td rowspan="3" style="width:100px;"><p:inputTextarea readonly="true" rows="5"
 						cols="30"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
 			
-				<td><h:outputLabel value="Quotation/Tender Type" /></td>
+				<td style="width:200px;"><h:outputLabel value="Quotation/Tender Type" /></td>
 				<td><p:inputText readonly="true" value="Open"
 						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
 						disabled="true"></p:inputText> <p:inputText readonly="true"
@@ -138,10 +138,11 @@
 
 
 				<td><h:outputLabel
-						value="*Contract Period/&lt;br /&gt;Completion Period(month)"
+						value="Completion Period"
 						escape="false" /></td>
 				<td><p:inputText
-						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" /></td>
+						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" />
+						<h:outputText value="(Month)"/></td>
 
 			</tr>
 
