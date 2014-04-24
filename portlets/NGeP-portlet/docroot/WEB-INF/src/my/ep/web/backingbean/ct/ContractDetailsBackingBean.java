@@ -47,6 +47,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
@@ -86,11 +87,13 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -460,10 +463,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"","Record saved successfully. Contract No : "+this.getManagedBean().getCtContract().getContractNo()));
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			    initializeRemarks();
 			  }else {
@@ -472,7 +478,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }catch (Exception e) {
 			log.error("Exception>>", e);
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			if(e instanceof EpException) {
+				EpException ep = (EpException) e;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
 		  }finally {
 			contractSO = null;
 		  }

@@ -22,9 +22,11 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -36,9 +38,11 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -156,9 +160,9 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		    	this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}  
 			
-			String decoded = new String(this.getManagedBean().getContractVer().getCtContractValue().getSuspendActiveLetter(), "UTF-8");
+			/*String decoded = new String(this.getManagedBean().getContractVer().getCtContractValue().getSuspendActiveLetter(), "UTF-8");
 			this.getManagedBean().setEditorValue(decoded);
-			
+			*/
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_SUSPENSION);
 		      
@@ -189,7 +193,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		       
 		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		      //this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
-		      this.getManagedBean().getContractVer().getCtContractValue().setSuspendActiveLetter(this.getManagedBean().getEditorValue().getBytes());
+		     // this.getManagedBean().getContractVer().getCtContractValue().setSuspendActiveLetter(this.getManagedBean().getEditorValue().getBytes());
 		      
 		      if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
 			    for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
@@ -221,25 +225,30 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		         
 			  ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			  if(resDTO.isSuccessful()) {
-						
-				   log.info("Record saved successfully");
-				   FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ 
-				   this.getManagedBean().getContractVer().getContractVerId()));
-				   if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
-					  (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 						renewSesionObject();
-					    return "/xhtml/shared/acknowledge.xhtml";
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
 					}
-				 } else{
-					throw new EpException("Failed.");
-				 }
-			 } catch (Exception e) {
-				 log.error("Exception>>", e);
-				 e.printStackTrace();
-				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			 } finally {
+		   	     }else {
+						throw new EpException("Failed.");
+				  }
+			  }catch (Exception e) {
+				log.error("Exception>>", e);
+				e.printStackTrace();
+				if(e instanceof EpException) {
+					EpException ep = (EpException) e;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				}
+			  }finally {
 				contractSO = null;
-			 }
+			  }
 		   return null;
 	 } 
 	 

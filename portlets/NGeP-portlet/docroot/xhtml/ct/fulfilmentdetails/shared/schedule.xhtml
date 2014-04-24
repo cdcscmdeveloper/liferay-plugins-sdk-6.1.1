@@ -17,7 +17,7 @@
             </p:selectOneRadio> 
          </h:panelGrid>  
          <p:outputPanel id="paymentSchedule">   
-         <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">    
+         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">    
 	          <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />
@@ -40,7 +40,8 @@
                       <p:ajax event="change" update="toMonth,toYear" />
                    </p:selectOneMenu> 
 		       </p:column> 	
-		       <p:column style="width:260px;" headerText="End Period">
+		       <p:column style="width:300px;" headerText="End Period">
+		       <h:panelGroup>
 		            <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:100px;" >
 		              <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
@@ -52,17 +53,16 @@
                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
                       <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu>
-		       </p:column> 
-		       <p:column style="width:50px;" headerText="Action" >
-		           <p:commandLink id="validateAction" process="@this"  onclick="dlgDateValidation.show(); return false;" 
+                   <p:spacer width="5"/>
+                    <p:commandLink id="validateAction" process="@this"  onclick="dlgDateValidation.show(); return false;" 
 		               styleClass="column-align-center" rendered="#{schedVar.validateScheduleDate}">
 		               <p:graphicImage library="ep/images/design" name="exclamation.png"
-			          value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 		           </p:commandLink>
-		       </p:column>
+		          </h:panelGroup>
+		       </p:column> 
 		  </p:dataTable>  
-         </h:panelGrid> 
-	    <p:spacer height="2" />
+	    <p:spacer height="2"  />
 		 <div class="ppRightBtn"> 
 		     <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
 		       action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
@@ -95,6 +95,7 @@
 		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
 		   </div>
          </p:dialog>    
+         </h:panelGroup>
 		 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
@@ -119,30 +120,31 @@
                      <p:ajax event="change" update="toProMonth,toProYear" />
                  </p:selectOneMenu> 
 		       </p:column> 	
-		      <p:column style="width:23%;" headerText="End Period">
-		        <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:50%;" >
+		      <p:column style="width:27%;" headerText="End Period">
+		        <h:panelGroup columns="5">
+		        <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:45%;" >
 		            <f:selectItem itemLabel="-Select One-" itemValue=""/>
                    <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                        <p:ajax event="change" update="toProYear" />
                  </p:selectOneMenu>
                  <p:spacer width="1"/>
-                  <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:50%;" >
+                  <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:45%;" >
             	    <f:selectItem itemLabel="-Select One-" itemValue=""/>
                    <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
                    <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
                  </p:selectOneMenu>
-		      </p:column>       
-               <p:column style="width:10%;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
-                  <p:inputText value="#{ProgVar.percentage}" style="width:90%;" styleClass="ppRightBtn">
-                     <f:convertNumber pattern="#,###.00" /></p:inputText>
-               </p:column>
-               <p:column style="width:50px;" headerText="Action">
-		        <p:commandLink id="validateProAction" process="@this"  onclick="dlgProValidation.show(); return false;" 
+                 <p:spacer width="5"/>
+                  <p:commandLink id="validateProAction" process="@this"  onclick="dlgProValidation.show(); return false;" 
 		           styleClass="column-align-center" rendered="#{ProgVar.validateProgressiveDate}">
 		           <p:graphicImage library="ep/images/design" name="exclamation.png"
 			       value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 		         </p:commandLink>
-		       </p:column> 
+		        </h:panelGroup>
+		      </p:column>       
+               <p:column style="width:10%;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
+                  <p:inputText value="#{ProgVar.percentage}" style="width:90%;" styleClass="ppRightBtn">
+                     <f:convertNumber pattern="#,###.00" /></p:inputText> 
+               </p:column>
 		     </p:dataTable>  
 			 <p:spacer height="2" />
 		        <div class="ppRightBtn"> 
