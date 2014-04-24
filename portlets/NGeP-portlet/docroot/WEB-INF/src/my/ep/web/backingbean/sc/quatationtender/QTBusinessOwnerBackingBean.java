@@ -43,6 +43,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserOrgRole;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -491,8 +492,14 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setMemberName(user.getUserName());
 				committeeMember.setIcPassport(user.getIdentificationNo());
 				committeeMember.setDesignation(user.getDesignation());
-				committeeMember.setEmail(user.getPmAddressTypes().get(0)
-						.getPmAddress().getEmail());
+				if(null!=user.getPmAddressTypes()){
+					for(PmAddressType address:user.getPmAddressTypes()){
+						if(null!=address.getPmAddress()){
+							committeeMember.setEmail(address.getPmAddress().getEmail());
+							break;
+						}
+					}
+				}
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
 				committeeMember.setPmUser(user);
