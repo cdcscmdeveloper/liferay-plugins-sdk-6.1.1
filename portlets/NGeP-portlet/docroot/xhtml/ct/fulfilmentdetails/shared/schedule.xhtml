@@ -21,8 +21,8 @@
 	          <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}"  rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />
-	              <p:column selectionMode="multiple" style="width:18px;"/>
-		       <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
+	            <p:column selectionMode="multiple" style="width:18px;"/>
+		         <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
 		           <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		       </p:column> 
 		       <p:column style="width:260px;" headerText="Start Period">

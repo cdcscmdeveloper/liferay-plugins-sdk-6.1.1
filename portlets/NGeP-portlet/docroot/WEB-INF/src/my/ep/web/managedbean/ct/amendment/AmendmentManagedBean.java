@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -78,6 +79,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Map<String, PmUser> userMap;
 	private List<CtContractItem> ctItemList;
 	private CtItemPrice ctItemPrices;
+	private CtItemCeilingQty ctItemCeilingQtys;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -377,4 +379,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.ctItemPrices = ctItemPrices;
 	}
 
+	public CtItemCeilingQty getCtItemCeilingQtys() {
+		return ctItemCeilingQtys;
+	}
+
+	public void setCtItemCeilingQtys(CtItemCeilingQty ctItemCeilingQtys) {
+		this.ctItemCeilingQtys = ctItemCeilingQtys;
+	}
 }
