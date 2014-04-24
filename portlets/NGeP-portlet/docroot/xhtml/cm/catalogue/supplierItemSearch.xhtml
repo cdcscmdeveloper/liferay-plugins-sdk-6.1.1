@@ -201,17 +201,19 @@
 											</p:commandLink> <p:tooltip for="addToCartId"
 												value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
 												hideEffect="fade" /></td>
-						                  <td><p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
+						                  <td><p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}" id="pidId"
 												action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-												disabled="#{!catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId, purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId,false)}"
-												rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
-											</p:commandButton></td>
+												disabled="#{!catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId,16717,false)}"
+												rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }" >
+											</p:commandButton>
+											<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}" showEffect="fade" hideEffect="fade" /></td>
 											
-								         <td><p:commandButton  value="#{lbl['lbl.sc.simple.quote']}"
+								         <td><p:commandButton  value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
 									             action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
 											     rendered="#{unspscCodeBackingBean.requisitioner}"
 											     disabled="#{supplierItem.circularNo ne null }">
-											</p:commandButton> </td>
+											</p:commandButton> 
+										     <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}" showEffect="fade" hideEffect="fade" /> </td>	
 
 										 <td><p:commandButton value="CR" update="@form"
 												action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
