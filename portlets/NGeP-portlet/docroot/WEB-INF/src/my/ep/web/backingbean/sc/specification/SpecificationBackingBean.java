@@ -424,16 +424,18 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
 
-			/*
-			 * //SpecificationResDTO resDTO = specSO.saveQTDtl(reqDTO); if
-			 * (resDTO.isSuccessful()) {
-			 * FacesContext.getCurrentInstance().addMessage( null, new
-			 * FacesMessage(FacesMessage.SEVERITY_INFO,
-			 * "Record saved successfully.", ""
-			 * 
-			 * )); }
-			 */
+			if (resDTo.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""));
+			}
+
 		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Please Contact Administrator.", ""));
 			e.printStackTrace();
 		} finally {
 			detailSO = null;
@@ -1022,6 +1024,12 @@ public class SpecificationBackingBean extends
 			}
 
 		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Please Contact Administrator.", ""
+
+					));
 			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
@@ -2476,6 +2484,7 @@ public class SpecificationBackingBean extends
 				zoneLocal.add(tplSpecZoneDtl);
 			}
 			zoneCriteria.setTplSpecZoneDtls(zoneLocal);
+			zoneCriteria.setScQt(this.getManagedBean().getScQt());
 			zoneCriteria.setChangedBy(1L);
 			zoneCriteria.setCreatedBy(1L);
 			zoneCriteria.setCreatedDate(new Timestamp(System
@@ -7583,7 +7592,6 @@ public class SpecificationBackingBean extends
 		ScQtDoc scqtDocDest = null;
 		try {
 			scqtDocDest = constructQtDocByType(tplSpecMaster, "1");
-			this.getManagedBean().setScqtDoc(scqtDocDest);
 
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
@@ -7597,7 +7605,7 @@ public class SpecificationBackingBean extends
 			specBB.retrieveTemplateSpecMaster(templateSpecBean);
 			scqtDocDest.getTplSpecMaster().setSpecMasterId(null);
 			scqtDocDest.getTplSpecMaster().setChangedDate(null);
-
+			this.getManagedBean().setScqtDoc(scqtDocDest);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -7609,6 +7617,11 @@ public class SpecificationBackingBean extends
 	private ScQtDoc constructQtDocByType(TplSpecMaster specMaster,
 			String docType) {
 		ScQtDoc scqtDocDest = new ScQtDoc();
+		scqtDocDest.setCreatedBy(1L);
+
+		scqtDocDest.setChangedBy(1l);
+
+		scqtDocDest.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		try {
 
 			scqtDocDest.setTplSpecMaster(specMaster);
@@ -7622,7 +7635,7 @@ public class SpecificationBackingBean extends
 			} else {
 				checkList.setTitle(scqtDocDest.getScQtCheckList().getTitle());
 			}
-			PmParameter parameter=new PmParameter();
+			PmParameter parameter = new PmParameter();
 			parameter.setParameterId(185L);
 			checkList.setChecklistSeq(1);
 			PmStatus status = new PmStatus();
@@ -7634,7 +7647,7 @@ public class SpecificationBackingBean extends
 			scqtDocDest.setScQtCheckList(checkList);
 			checkList.setCreatedBy(1l);
 			checkList.setChangedBy(1l);
-			
+
 			checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 		} catch (Exception ex) {

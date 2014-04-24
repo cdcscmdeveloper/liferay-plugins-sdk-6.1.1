@@ -11,7 +11,7 @@
 		<table style="width: 100%" border="1">
 			<tr>
 				<td><h:outputLabel value="Title" /></td>
-				<td colspan="3"><p:inputTextarea readonly="true" rows="2" cols="100"
+				<td colspan="3"><p:inputTextarea readonly="true" rows="2" cols="120" style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
 			</tr>
@@ -56,7 +56,7 @@
 								</ui:fragment></td>
 							<ui:fragment
 								rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-								<td style="width: 7%"><h:outputLabel value="Open For" /></td>
+								<td><h:outputLabel value="Open For" /></td>
 								<td><p:selectOneRadio
 										value="#{specificationBackingBean.managedBean.scQt.openFor}">
 
@@ -186,8 +186,8 @@
 			</div>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="800" position="top"
-		height="800">
+	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="600" position="top"
+		height="400">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 
@@ -202,7 +202,9 @@
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel
 							value="Zone Location" /></TD>
-					<TD width="80%"><p:panel></p:panel> <p:tree
+					<TD width="80%"><p:panel></p:panel> 
+					<div style="height: 300px; overflow-y: scroll;">
+					<p:tree 
 							id="treeZoneGeneralPopup"
 							value="#{specificationBackingBean.managedBean.rootZoanlTree}"
 							var="location"
@@ -220,7 +222,9 @@
 							<p:treeNode type="city">
 								<h:outputText value="#{pmCity.cityName}" />
 							</p:treeNode>
-						</p:tree></TD>
+						</p:tree>
+						</div>
+						</TD>
 				</TR>
 
 			</table>
