@@ -2570,6 +2570,7 @@ public class SpecificationBackingBean extends
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
 				getManagedBean().getScQt().setPanel(true);
+				getManagedBean().getScQt().setOpenFor("A");
 				if (tenderResDTO.getQtDetail().getScQtZoneCriteria() == null) {
 					getManagedBean().getScQt().setScQtZoneCriteria(
 							new ScQtZoneCriteria());
