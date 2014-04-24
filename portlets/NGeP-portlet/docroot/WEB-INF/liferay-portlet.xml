@@ -1237,7 +1237,7 @@
 		</css-class-wrapper>
 	</portlet>
 	
-		<portlet>
+	<portlet>
 		<portlet-name>Evaluation Meeting</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -1249,18 +1249,29 @@
 			evaluationMeeting-portlet
 		</css-class-wrapper>
 	</portlet>
-
-		<portlet>
-			<portlet-name>quickLinks</portlet-name>
-			<icon>/icon.png</icon>
-			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
-			<footer-portlet-javascript>
-				/js/main.js
-			</footer-portlet-javascript>
-			<css-class-wrapper>quicklinks-portlet</css-class-wrapper>
-		</portlet>
-		<role-mapper>
+	<portlet>
+		<portlet-name>pmNotifications</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			pmNotifications-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>quickLinks</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>quicklinks-portlet</css-class-wrapper>
+	</portlet>
+	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
 	</role-mapper>
