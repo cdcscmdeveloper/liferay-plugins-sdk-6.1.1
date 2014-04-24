@@ -104,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -333,7 +334,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			setManualAddressList();
 		}
 	}
-	
 	public void flManualDeliveryAddr() {
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -359,6 +359,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
+		int i = 0;
 		for (PmAddressType addrType : getManagedBean().getSelectedPmDelAddrList()) {
 			//Validate to eliminate duplicate address. 
 			boolean isAddressContains = isDeliveryAddressContains(addrType,
@@ -377,7 +378,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				pmUom.setParameterId(1L);
 				deliveryAddr.setPmUom(pmUom);
 				deliveryAddr.setDeliveryTerm(10);
-				
+				if(i==0) {
+					getManagedBean().setSelectedDelAddr(deliveryAddr);
+				}
+				i++;
 				if (null == getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
@@ -403,6 +407,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		pmUom.setParameterId(1L);
 		deliveryAddr.setPmUom(pmUom);
 		deliveryAddr.setDeliveryTerm(10);
+		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 	}
 	
@@ -1010,7 +1015,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//flReqDTO.setFlWorkflowDocType(flPurchaseOrd.getDocType());
 			//resDTO = fulfilmentSO.getStatusDesc(flReqDTO);
 			
-			//combineSupAddress(resDTO.getFlFulfilmentRequest());
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
@@ -1184,7 +1189,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.checkFlg = checkFlg;
 	}
 // get Doc type Description	
-	public String getParameterDesc(String parameterType, String parameterCode){
+	/*public String getParameterDesc(String parameterType, String parameterCode){
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
 		String desc="";
 		ParameterReqDTO reqDTO=new ParameterReqDTO();
@@ -1198,7 +1203,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//System.out.println("Parameters Description is Empty");
 		}
 		return desc;
-	}
+	}*/
 	
 	public List<SelectItem> getReceivedPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
@@ -1224,39 +1229,46 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    		address.append(strSpace);
+	    	if(null != fulfilmentRequest.getSupplierBranch()){
+	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
+	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    	    		address.append(strSpace);
+	    	    		
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    	    		address.append("\n");
+	    	    	}if(null !=fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	    	}
+	    	    	if(null != address.toString()){
+	    	    		//System.out.println("addresss     "+address.toString());
+	    	    	}
+	    			
+	    		}
 	    		
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    		address.append("\n");
-	    	}if(null !=fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
 	    	}
-	    	if(null != address.toString()){
-	    		//System.out.println("addresss     "+address.toString());
-	    	}
+	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
 	 
@@ -1884,7 +1896,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
-		
+		//resDTO.get
 		return resDTO;
 	}
 	

@@ -21,7 +21,7 @@
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
 			<p:column headerText="Delivery Term (Days)">
-				<h:outputText style="text-align:right" />
+				<h:outputText style="text-align:right" value="#{address.deliveryTerm}"/>
 			</p:column>
 			<p:column headerText="Delivery Start">
 				<h:outputText value="#{address.startDate}" style="text-align:right">

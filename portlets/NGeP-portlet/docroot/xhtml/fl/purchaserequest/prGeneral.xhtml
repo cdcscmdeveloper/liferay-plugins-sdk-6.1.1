@@ -22,7 +22,8 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 111px;"><p:outputLabel value="* #{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td style="width: 111px;"><p:outputLabel
+						value="* #{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="5" id="preparedOrgProfileId"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
@@ -72,7 +73,8 @@
 						value="" /></td>
 				<td style="width: 109px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="NORMAL" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
@@ -90,7 +92,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10"/> <p:spacer
+				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"

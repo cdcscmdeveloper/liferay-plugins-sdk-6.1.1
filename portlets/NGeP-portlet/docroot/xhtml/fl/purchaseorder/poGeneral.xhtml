@@ -73,27 +73,38 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.flRequest.createdDate}">
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" /> <p:spacer
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
+				<td><p:inputText size="12" disabled="true" value="10"/> <p:spacer
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:inputText size="25" disabled="true"  value="#{flOrderBB.managedBean.flRequest.approvedDate}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financing']} " /></td>
-				<td><p:selectOneRadio >
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.startDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
+				<td><p:selectOneRadio>
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.endDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

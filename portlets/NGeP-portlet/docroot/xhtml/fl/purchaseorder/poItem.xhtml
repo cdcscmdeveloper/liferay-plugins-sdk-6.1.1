@@ -22,17 +22,28 @@
 				<p:spacer width="7" />
 				<h:outputText value="Delivery Term" />
 				<p:spacer width="7" />
-				<p:inputText size="4" disabled="true" />
+				<p:inputText size="4" disabled="true"
+					value="#{delAddressSummary.deliveryTerm}" />
 				<p:spacer width="7" />
-				<h:inputText size="4" disabled="true" value="Days" />
+				<h:inputText size="4" disabled="true"
+					value="#{flOrderBB.managedBean.termDays}" />
 				<p:spacer width="7" />
 				<h:outputText value="Delivery Start" />
 				<p:spacer width="7" />
-				<p:inputText size="9" value="10/02/2014" disabled="true" />
+				<p:inputText size="9"
+					value="#{flOrderBB.managedBean.flRequest.startDate}"
+					disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 				<p:spacer width="7" />
 				<h:outputText value="Delivery End" />
 				<p:spacer width="7" />
-				<p:inputText size="9" value="22/02/2014" disabled="true" />
+				<p:inputText size="9"
+					value="#{flOrderBB.managedBean.flRequest.endDate}" disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</p:column>
 			<p:rowExpansion>
 
