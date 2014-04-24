@@ -19,11 +19,9 @@
          <p:outputPanel id="paymentSchedule">   
          <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">    
 	          <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
-	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
+	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}"  rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />
-	           <c:if test ="#{contractDetailsBackingBean.managedBean.contractVer.brandNew}">
-		            <p:column selectionMode="multiple" style="width:18px;"/>
-		       </c:if>  
+	              <p:column selectionMode="multiple" style="width:18px;"/>
 		       <p:column style="width:260px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
 		           <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		       </p:column> 
