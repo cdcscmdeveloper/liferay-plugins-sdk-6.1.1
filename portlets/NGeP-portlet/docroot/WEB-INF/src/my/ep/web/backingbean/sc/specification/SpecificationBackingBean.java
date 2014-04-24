@@ -7621,15 +7621,19 @@ public class SpecificationBackingBean extends
 			} else {
 				checkList.setTitle(scqtDocDest.getScQtCheckList().getTitle());
 			}
+			PmParameter parameter=new PmParameter();
+			parameter.setParameterId(185L);
 			checkList.setChecklistSeq(1);
 			PmStatus status = new PmStatus();
 			status.setStatusId(1l);
 			checkList.setPmStatus(status);
 			checkList.setScQtDoc(scqtDocDest);
 			checkList.setScQt(this.getManagedBean().getScQt());
+			checkList.setDefinationType(parameter);
 			scqtDocDest.setScQtCheckList(checkList);
 			checkList.setCreatedBy(1l);
 			checkList.setChangedBy(1l);
+			
 			checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 		} catch (Exception ex) {
