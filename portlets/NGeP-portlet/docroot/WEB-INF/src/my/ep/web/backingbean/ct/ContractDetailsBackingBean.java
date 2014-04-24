@@ -984,7 +984,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 }
     
     public boolean isApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
+		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
 
 	private String getUserRole() {		
