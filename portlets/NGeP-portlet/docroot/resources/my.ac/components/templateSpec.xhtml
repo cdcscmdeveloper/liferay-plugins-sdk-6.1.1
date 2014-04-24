@@ -14,7 +14,9 @@
 
 	<cc:implementation>
 		
+		<ui:param name="title" value="#{cc.attrs.title}" />
 		<ui:param name="templateSpecBean" value="#{cc.attrs.templateSpecBean}" />
+		<ui:param name="scrollWidth" value="#{cc.attrs.scrollWidth}" />
 		<ui:param name="isEstCostReq" value="#{cc.attrs.isEstCostReq}" />
 		
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
