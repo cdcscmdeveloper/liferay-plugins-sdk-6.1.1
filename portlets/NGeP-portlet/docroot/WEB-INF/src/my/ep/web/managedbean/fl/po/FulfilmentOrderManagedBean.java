@@ -63,6 +63,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	//getSuplier address details
 	private String supplierAddress;
 	
+	//for termdays
+	
+	private String termDays;
+	
+	
 
 	public String getTaskName() {
 		return taskName;
@@ -429,6 +434,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the termDays
+	 */
+	public String getTermDays() {
+		return termDays;
+	}
+
+	/**
+	 * @param termDays the termDays to set
+	 */
+	public void setTermDays(String termDays) {
+		this.termDays = termDays;
 	}
 
 }

@@ -275,7 +275,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
 		//		System.out.println("loginId:" + loginId);
-
+// temp for delivery term days
+		getManagedBean().setTermDays("Days");
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
