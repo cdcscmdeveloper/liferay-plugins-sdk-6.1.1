@@ -261,22 +261,27 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    } 
 	 
 	 public void chkJustificationAction(){
-		  try{
-			  if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
-			     this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
-			  }else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
-			     this.getManagedBean().getContractVer().getCtContractValue().setConcession(true); 
-			     if(!this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
-			    	  this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
-			     }
-			  }else{
-			    this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
-			    this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
-			  }
-		  }catch (Exception e) {
+		  try {
+			    if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && !this.getManagedBean().isChkConceValue()){
+			    	this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
+			    }else if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
+			    	this.getManagedBean().getContractVer().getCtContractValue().setConcession(true);  
+			    	if(!this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && !this.getManagedBean().isChkConceValue()){
+				    	  this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(true);
+				    	  this.getManagedBean().setChkConceValue(true);
+				     }
+			    }else if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && this.getManagedBean().isChkConceValue()){
+			    	this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
+			    	this.getManagedBean().setChkConceValue(false);
+			    }else{
+			    	this.getManagedBean().getContractVer().getCtContractValue().setAp201Exempt(false);
+			    	this.getManagedBean().getContractVer().getCtContractValue().setConcession(false); 
+			    	this.getManagedBean().setChkConceValue(false);
+			    }
+		   } catch (Exception e) {
 				System.out.println(e);
-		  }
-	 }
+		   }
+	}
 	 
 	 private List<String> getAvailableApproverList() {
 			IUserSO userSO = null;

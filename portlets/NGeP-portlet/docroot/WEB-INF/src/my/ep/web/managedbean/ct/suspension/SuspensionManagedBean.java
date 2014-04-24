@@ -43,6 +43,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
+	private boolean chkConceValue;
 
 	public String getEditorValue() {
 		return editorValue;
@@ -129,6 +130,14 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
 	}
 	
 }

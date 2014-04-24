@@ -53,6 +53,7 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private List<CtTerminationReason> ctTerminationReason;
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
+	private boolean chkConceValue;
 	
 	public String getTaskName() {
 		return taskName;
@@ -188,6 +189,14 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
 	}
 
 }

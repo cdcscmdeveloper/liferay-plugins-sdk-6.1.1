@@ -131,6 +131,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private Map<String, PmUser> userMap;
 	private SmSupplierBank smSupplierBanks;
+	private boolean chkConceValue;
 	 
 	public String[] getAction() {
 		return action;
@@ -737,5 +738,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setCtContractStatus(int ctContractStatus) {
 		this.ctContractStatus = ctContractStatus;
 	}
+
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
+	}
+	
+	
 	
 }
