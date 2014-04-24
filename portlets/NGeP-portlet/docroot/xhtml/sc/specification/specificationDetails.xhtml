@@ -13,11 +13,21 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td rowspan="3"><h:outputLabel value="Title"  /></td>
-				<td rowspan="3"><p:inputTextarea readonly="true"  rows="3" cols="3"
+				<td rowspan="3" valign="top"><h:outputLabel value="Title" /></td>
+				<td rowspan="3"><p:inputTextarea readonly="true" rows="5"
+						cols="30"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
+			
+				<td><h:outputLabel value="Quotation/Tender Type" /></td>
+				<td><p:inputText readonly="true" value="Open"
+						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
+						disabled="true"></p:inputText> <p:inputText readonly="true"
+						value="Restricted"
+						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'R'}"
+						disabled="true"></p:inputText></td>
 			</tr>
+
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
 				<td><p:inputText
@@ -25,23 +35,17 @@
 						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 
+
 			<tr>
-				<td><h:outputLabel value="Quotation/Tender Type" /></td>
-				<td><p:inputText readonly="true"
-						value="Open" rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
-						disabled="true"></p:inputText>
-						<p:inputText readonly="true"
-						value="Restricted" rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'R'}"
-						disabled="true"></p:inputText>
-						</td>
 				<td><h:outputLabel value="Open For" /></td>
-				<td><p:inputText readonly="true"
-						value="Bumiputra" rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'B'}"
-						disabled="true"></p:inputText>
-						<p:inputText readonly="true"
-						value="All" rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'A'}"
-						disabled="true"></p:inputText>
-						</td>
+
+
+				<td><p:inputText readonly="true" value="Bumiputra"
+						rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'B'}"
+						disabled="true"></p:inputText> <p:inputText readonly="true"
+						value="All"
+						rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'A'}"
+						disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
@@ -60,13 +64,12 @@
 			<tr>
 				<td><h:outputLabel
 						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
-				<td><p:inputText
-						value="One Tier" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}"
-						readonly="true" disabled="true"></p:inputText>
-						<p:inputText
-						value="Two Tier" rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}"
-						readonly="true" disabled="true"></p:inputText>
-						</td>
+				<td><p:inputText value="One Tier"
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}"
+						readonly="true" disabled="true"></p:inputText> <p:inputText
+						value="Two Tier"
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}"
+						readonly="true" disabled="true"></p:inputText></td>
 				<td><h:outputLabel value="Required Technical Evaluation" /></td>
 				<!-- update=":form:businessSpecId:recommendationid" -->
 				<td><p:selectOneRadio
@@ -86,6 +89,9 @@
 						disabled="true"></p:inputText></td>
 
 
+
+			</tr>
+			<tr>
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
 				<td><p:inputTextarea rows="3" cols="50"
 						style="margin-bottom:5px;"
