@@ -33,7 +33,7 @@
 				<h:outputText value="#{specificationcommittee.memberName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}" style="width: 10%">
 				<h:outputText value="#{specificationcommittee.icPassport}" />
 			</p:column>
 
@@ -45,15 +45,16 @@
 				<h:outputText value="#{specificationcommittee.email}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width: 10%">
 				<h:outputText value="#{specificationcommittee.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
 				<h:outputText value="#{specificationcommittee.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
+			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}"
+				style="width: 15%">
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
 					<h:outputText value="Chairperson"
 						rendered="#{specificationcommittee.memberRole eq 'C'}" />
@@ -65,7 +66,6 @@
 							value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
 					</p:selectOneMenu>
 				</ui:fragment>
-
 			</p:column>
 
 		</p:dataTable>

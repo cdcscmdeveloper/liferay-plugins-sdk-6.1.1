@@ -2039,8 +2039,10 @@ public class QTDetailBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 
 				SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-				specReqDTO.setQtId(getManagedBean().getQt().getQtId());
-				specReqDTO.setSpecType(null);
+				//specReqDTO.setQtId(scQt.getQtId());
+				//specReqDTO.setSpecType(null);
+				specReqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
+				specReqDTO.setProcurementCatCode(this.getManagedBean().getQt().getPmProcurementCategory().getParameterCode());
 				SpecificationResDTO specResDTO = iqtSpecSO
 						.retrieveCheckLists(specReqDTO);
 

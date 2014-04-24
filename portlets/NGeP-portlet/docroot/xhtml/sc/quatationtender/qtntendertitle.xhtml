@@ -9,10 +9,10 @@
 	<p:panel header="#{lbl['lbl.so.general.info']}" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 154px;" valign="top"><p:outputLabel
+				<td style="width: 155px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.so.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
-						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="120" rows="2"
+						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2"
 						disabled="#{!qTDetailBB.managedBean.editable}"
 						style=" margin-bottom:5px;" /></td>
 			</tr>
@@ -59,7 +59,7 @@
 		<p:dataTable id="gosodoList"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
 			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
-			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 65%">
+			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 100%">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -113,8 +113,8 @@
 
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="15" />
-		<div align="right" style="width: 65%;">
+		<p:spacer height="10" />
+		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
 				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">

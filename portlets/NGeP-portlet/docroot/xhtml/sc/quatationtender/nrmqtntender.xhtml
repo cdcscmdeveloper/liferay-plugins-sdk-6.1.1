@@ -45,7 +45,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:20%">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryTypeCode.parameterId}" />
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mandatory']}">
@@ -93,9 +94,17 @@
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-			<p:panel header="#{lbl['lbl.so.location.list']}"
+			<p:panel
+				header="#{lbl['lbl.so.location.list']} / #{lbl['lbl.so.paidup.capital']}"
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'))}">
 				<table style="width: 100%">
+					<tr>
+						<td style="width: 160px"><p:outputLabel
+								value="#{lbl['lbl.so.paidup']}" /></td>
+						<td><p:inputText
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;" size="30" /></td>
+					</tr>
 					<tr>
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.so.location.level']}" /></td>
@@ -115,7 +124,7 @@
 				<h:panelGrid width="100%" style="margin-top:20px">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
-						var="zoneTree" style="width:65%" rowIndexVar="index">
+						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location">
 							<p:tree value="#{zoneTree}" var="location">
 								<p:treeNode type="state">
@@ -140,7 +149,7 @@
 						</p:column>
 					</p:dataTable>
 				</h:panelGrid>
-				<div align="right" style="width: 65%">
+				<div align="right" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 						process="@this" update="@([id$=zonePopupPanel])"
 						oncomplete="ZoneLocation.show();"
@@ -151,11 +160,17 @@
 				</div>
 			</p:panel>
 
-			<h:outputText
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel}" />
-			<p:panel header="#{lbl['lbl.so.location.list']}123"
+			<p:panel
+				header="#{lbl['lbl.so.location.list']} / #{lbl['lbl.so.paidup.capital']}"
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
 				<table style="width: 100%">
+					<tr>
+						<td style="width: 160px"><p:outputLabel
+								value="#{lbl['lbl.so.paidup']}" /></td>
+						<td><p:inputText
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;" size="30" /></td>
+					</tr>
 					<tr>
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.so.location.level']}" /></td>
@@ -171,13 +186,12 @@
 					</tr>
 				</table>
 			</p:panel>
-
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
 				<h:panelGrid width="100%" style="margin-top:20px">
 					<p:dataTable id="zoneyesDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
-						var="zoneTree" style="width:65%" rowIndexVar="index">
+						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location">
 							<p:tree value="#{zoneTree}" var="location">
 
@@ -201,7 +215,7 @@
 			</p:panel>
 
 			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="800"
-				height="500">
+				position="top" height="500">
 				<p:panel id="zonePopupPanel" header="ADD LOCATION">
 					<table styleClass="noBorders tr,noBorders td">
 						<tr>
@@ -240,16 +254,6 @@
 			</p:dialog>
 		</h:panelGroup>
 	</p:panel>
-	<table style="width: 100%">
-		<tr>
-			<td style="width: 160px"><p:outputLabel
-					value="#{lbl['lbl.so.paidup']}" /></td>
-			<td><p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-					style="margin-right:5px;" /></td>
-		</tr>
-	</table>
-	<p:spacer height="10" />
 	<p:panel header="Qualified Supplier" toggleable="true">
 		<table style="width: 100%">
 			<tr>

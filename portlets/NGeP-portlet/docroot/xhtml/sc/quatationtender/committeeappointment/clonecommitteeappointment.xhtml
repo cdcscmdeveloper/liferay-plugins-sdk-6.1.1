@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
-		modal="true">
+		modal="true" position="top">
 		<p:panel id="clonesearchpnlid" header="Search" toggleable="true">
 			<table>
 				<tr>
@@ -70,7 +70,7 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
 					action="#{qTCommitteBackingBean.resetClone}"
 					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />

@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -238,15 +239,17 @@ public class QTDocumentsBackingBean extends
 	}
 
 	public void onRowCloneAction(SelectEvent event) {
-		ScQt scQt = (ScQt) event.getObject();
+		//ScQt scQt = (ScQt) event.getObject();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		SpecificationResDTO specResDTO = null;
 		try {
 			IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSpecSO.class);
-			specReqDTO.setQtId(scQt.getQtId());
-			specReqDTO.setSpecType(null);
+			//specReqDTO.setQtId(scQt.getQtId());
+			//specReqDTO.setSpecType(null);
+			specReqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
+			specReqDTO.setProcurementCatCode(this.getManagedBean().getQt().getPmProcurementCategory().getParameterCode());
 			specResDTO = iqtSpecSO.retrieveCheckLists(specReqDTO);
 			if (specResDTO.getSpecResultBean() == null) {
 				List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();

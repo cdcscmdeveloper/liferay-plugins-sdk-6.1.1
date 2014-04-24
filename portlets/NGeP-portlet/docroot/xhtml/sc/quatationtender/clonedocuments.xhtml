@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -124,7 +125,7 @@
 		<p:spacer height="3" />
 		<p:panel id="cloneDocumentList" header="Document List"
 			toggleable="true">
-			<p:dataTable id="documentlistid"
+			<p:dataTable id="documentlistid" 
 				value="#{qTDocumentsBackingBean.managedBean.qtCheckLists}"
 				var="doclist" rowKey="#{doclist.qtChecklistId}"
 				selection="#{qTDocumentsBackingBean.managedBean.selectedQtCheckLists}"
@@ -142,7 +143,8 @@
 					onclick="screen2.hide();" />
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
 					action="#{qTDocumentsBackingBean.addDocumentCloneAction}"
-					oncomplete="screen2.hide();" update="doctbl" icon="ui-icon-check" />
+					onclick="screen2.hide();"
+					oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-check" />
 
 			</div>
 		</p:panel>
