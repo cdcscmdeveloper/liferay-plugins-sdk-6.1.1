@@ -17,14 +17,15 @@
 		<div>
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.backAction}" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+				style="float:right;" icon="ui-icon-cancel"
+				action="#{specificationBackingBean.backAction}"></p:commandButton>
 			<p:commandButton value="Complete" style="float:right;"
 				action="#{specificationBackingBean.completeTemplateSpec}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
 				icon="ui-icon-save" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.backAction}"></p:commandButton>
 
 		</div>
 		<p:spacer height="40"></p:spacer>
@@ -37,7 +38,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td><p:inputText size="50"
+					<td><p:inputTextarea rows="2" cols="100"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
@@ -46,7 +47,7 @@
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" /></td>
 					<td><h:outputLabel value="Specification Type" /></td>
-					<td><p:inputText  disabled="true" size="30"
+					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
@@ -60,7 +61,7 @@
 
 						</p:selectOneRadio></td>
 				</tr>
-				
+
 				<tr>
 
 					<td><h:outputLabel value="Status" /></td>

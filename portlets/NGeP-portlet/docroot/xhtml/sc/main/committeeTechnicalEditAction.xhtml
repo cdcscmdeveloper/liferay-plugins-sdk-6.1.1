@@ -18,12 +18,13 @@
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 		
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
 				icon="ui-icon-save" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
 
 		</div>
 		<p:spacer height="40"></p:spacer>
@@ -36,7 +37,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td><p:inputText size="50"
+					<td><p:inputTextarea rows="2" cols="100"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 

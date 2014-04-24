@@ -83,6 +83,10 @@
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
 					update="createList" icon="ui-icon-search" />
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+		
+			icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+			process="@this" />
 			</div>
 
 		</p:panel>

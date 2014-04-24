@@ -7,16 +7,16 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	
-		<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
+
+	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
 		height="700">
 
 		<p:panel header="#{lbl['lbl.sc.tpl.search']}">
-			
+
 			<table>
 				<tr>
-					<td style="width: 150px;">
-					<h:outputLabel value="Standard Template" /></td>
+					<td style="width: 150px;"><h:outputLabel
+							value="Standard Template" /></td>
 					<td><p:selectOneRadio
 							value="#{specificationBackingBean.managedBean.standardTemplate}">
 							<f:selectItem itemLabel="Yes" itemValue="ST"></f:selectItem>
@@ -83,6 +83,9 @@
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
 					update="createList" icon="ui-icon-search" />
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+					process="@this" />
 			</div>
 
 		</p:panel>
@@ -101,10 +104,12 @@
 						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}">
-						<h:outputText value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.specTypeCode)}" />
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.specTypeCode)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}">
-						<h:outputText value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.itemTypeCode)}"/>
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.itemTypeCode)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}">
 						<h:outputText
