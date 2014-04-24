@@ -14,8 +14,8 @@
 			disabled="true" />
 		<p:panel id="supplierlist" header="Supplier List" toggleable="true">
 			<c:if
-				test="#{specificationBackingBeann.managedBean.qtCriteria.multiLocality 
-					or specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypePanel}">
+				test="#{
+					 specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypePanel}">
 				<p:treeTable id="suppliersTbl" var="supplierNode"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppliersNode}">
 
@@ -42,8 +42,8 @@
 				</p:treeTable>
 			</c:if>
 			<c:if
-				test="#{!specificationBackingBean.managedBean.qtCriteria.multiLocality 
-					and specificationBackingBean.managedBean.scQt.qtType != PmCodeConst.quotationTenderTypePanel}">
+				test="#{
+					specificationBackingBean.managedBean.scQt.qtType != PmCodeConst.quotationTenderTypePanel}">
 
 
 
@@ -60,30 +60,28 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.mofno']}">
 						<h:outputText
-							value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}"
-							 />
+							value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.mofexp']}">
 						<h:outputText
-							value="#{qtSupplier.supplier.smMofAccounts[0].expDate}"
-							 />
+							value="#{qtSupplier.supplier.smMofAccounts[0].expDate}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.status']}">
 						<h:outputText value="Active" />
 					</p:column>
 				</p:dataTable>
-	
-	</c:if>
 
-	<br />
+			</c:if>
+
+			<br />
 
 
-	<div align="right">
-		<p:commandButton value="Search" oncomplete="ctZone.show();"
-			update="ctZonedetails"
-			actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"></p:commandButton>
-	</div>
-	</p:panel>
+			<div align="right">
+				<p:commandButton value="Search" oncomplete="ctZone.show();"
+					update="ctZonedetails"
+					actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"></p:commandButton>
+			</div>
+		</p:panel>
 	</h:panelGroup>
 	<ui:include src="ctZone.xhtml"></ui:include>
 </ui:composition>

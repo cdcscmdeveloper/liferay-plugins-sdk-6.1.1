@@ -11,9 +11,9 @@
 		<table style="width: 100%" border="1">
 			<tr>
 				<td><h:outputLabel value="Title" /></td>
-				<td colspan="3"><p:inputText readonly="true"
+				<td colspan="3"><p:inputTextarea readonly="true" rows="2" cols="100"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
-						disabled="true"></p:inputText></td>
+						disabled="true"></p:inputTextarea></td>
 			</tr>
 
 			<tr>
@@ -43,7 +43,7 @@
 								</ui:fragment> <ui:fragment
 									rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 
-									<p:selectOneRadio
+									<p:selectOneRadio layout="pageDirection"
 										value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
 										<f:selectItems
@@ -139,8 +139,8 @@
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="zoneGeneralDataTable"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-					var="zoneTree" style="width:65%" rowIndexVar="index">
-					<p:column headerText="Location">
+					var="zoneTree" style="width:100%" rowIndexVar="index">
+					<p:column headerText="Location" style="width:90%">
 						<p:tree value="#{zoneTree}" var="location">
 
 							<p:treeNode type="zone">
@@ -163,7 +163,7 @@
 						</p:tree>
 					</p:column>
 
-					<p:column headerText="Action">
+					<p:column headerText="Action" style="width:10%">
 						<p:commandLink
 							actionListener="#{specificationBackingBean.editBusinessOwnerZoneLocation(zoneTree,index)}"
 							process="@this" update="@([id$=zonePopupGeneral])"
@@ -186,14 +186,14 @@
 			</div>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog header="" widgetVar="ZoneGeneral" modal="true" width="800"
+	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="800"
 		height="500">
-		<p:panel id="zonePopupGeneral" header="ADD LOCATION">
+		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></TD>
-					<TD width="80%"><p:inputText
+					<TD width="80%"><p:inputText size="70"
 							value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
 					</TD>
 				</TR>
@@ -225,15 +225,17 @@
 
 			</table>
 		</p:panel>
+		
+		<p:commandButton
+			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+			style="float:right;" onclick="ZoneGeneral.hide();" icon="ui-icon-cancel"/>
+			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
 			update="@this, zoneGeneralDataTable,zonePopupGeneral" icon="ui-icon-accept"
 			action="#{specificationBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
-				&#160;&#160;
-		<p:commandButton
-			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();" icon="ui-icon-cancel"/>
+				
 	</p:dialog>
 
 

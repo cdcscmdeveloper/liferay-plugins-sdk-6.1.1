@@ -40,7 +40,7 @@
 										<h:outputText value="#{finance.qtScoreWeightage.score}" />
 									</ui:fragment>
 									<ui:fragment rendered="#{finance.qtScoreWeightage.score=='0'}">
-										<p:inputText value="#{finance.qtScoreWeightage.score}" >
+										<p:inputText value="#{finance.qtScoreWeightage.score}" style="text-align:right">
 										<p:ajax event="blur" process="@this"
 											listener="#{specificationBackingBean.finScoreSum}"
 											update=":form:businessSpecId:finaddpoints"/>
@@ -49,7 +49,7 @@
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
 									style="width:20%;">
-									<p:inputText value="#{finance.qtScoreWeightage.weightage}"
+									<p:inputText value="#{finance.qtScoreWeightage.weightage}" style="text-align:right"
 										rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 										<p:ajax event="blur" process="@this"
 											listener="#{specificationBackingBean.finWeightageSum}"

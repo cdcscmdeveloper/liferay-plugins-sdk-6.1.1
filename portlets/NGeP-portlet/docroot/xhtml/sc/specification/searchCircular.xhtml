@@ -11,20 +11,23 @@
 	<ui:include
 		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
 	<p:panel>
-		<h:panelGrid columns="2" style="width:50%;"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputLabel value="Title" />
-			<p:inputText readonly="true" size="100" value="#{specificationBackingBean.managedBean.scQt.qtTitle}" disabled="true"></p:inputText>
-
-			<h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" />
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQt.panel}">
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-				<p:ajax event="change" update="panelupdate"></p:ajax>
-			</p:selectOneRadio>
-
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td style="width: 100px;"><h:outputLabel value="Title" /></td>
+				<td><p:inputTextarea readonly="true" rows="2" cols="100"
+						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
+						disabled="true"></p:inputTextarea></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
+				<td><p:selectOneRadio
+						value="#{specificationBackingBean.managedBean.scQt.panel}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax event="change" update="panelupdate"></p:ajax>
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
 
 	</p:panel>
 	<h:panelGroup id="panelupdate">
@@ -40,9 +43,10 @@
 		</p:panel>
 	</h:panelGroup>
 
-	<div align="right" style="width: 70%;">
+	<div align="right" style="width: 100%;">
 
 		<p:commandButton value="Proceed" process="@this" partialSubmit="true"
+			style="float-right;"
 			action="#{specificationBackingBean.newProceedAction}" />
 	</div>
 
