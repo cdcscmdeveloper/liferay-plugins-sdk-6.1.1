@@ -23,7 +23,7 @@
 				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
-				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
+				action="#{specificationBackingBean.saveEditTemplateSpec}"
 				icon="ui-icon-save" />
 
 		</div>
@@ -37,7 +37,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95"
+					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
