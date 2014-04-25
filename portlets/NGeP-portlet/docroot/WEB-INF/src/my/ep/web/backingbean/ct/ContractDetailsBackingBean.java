@@ -1317,17 +1317,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				amendBB.getManagedBean().getContractVer().getCtAmendment().setDescription(null);
 			}
 				
-			amendBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    	amendBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    	amendBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-		    
 		    amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		    
-		    
-				
+		    amendBB.initializeRemarks();	
 			reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
 			reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 			resDTO = contractSO.retrieveContractVerByIdDoctype(reqDTO);

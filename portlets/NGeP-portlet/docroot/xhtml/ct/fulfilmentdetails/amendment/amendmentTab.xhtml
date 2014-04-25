@@ -17,10 +17,9 @@
 			text-align: right !important;
 		}
 		</style>
-
+         <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<p:panel>
 			<f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<table style="width: 100%;">
 				<tr>
 					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>

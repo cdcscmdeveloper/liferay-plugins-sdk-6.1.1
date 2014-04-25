@@ -80,6 +80,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtContractItem> ctItemList;
 	private CtItemPrice ctItemPrices;
 	private CtItemCeilingQty ctItemCeilingQtys;
+	private boolean chkConceValue;
+	private CtItemPrice selectedIndexOfPrice;
+	private CtItemCeilingQty selectedIndexOfCeilingQty;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -386,4 +389,31 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setCtItemCeilingQtys(CtItemCeilingQty ctItemCeilingQtys) {
 		this.ctItemCeilingQtys = ctItemCeilingQtys;
 	}
+
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
+	}
+
+	public CtItemPrice getSelectedIndexOfPrice() {
+		return selectedIndexOfPrice;
+	}
+
+	public void setSelectedIndexOfPrice(CtItemPrice selectedIndexOfPrice) {
+		this.selectedIndexOfPrice = selectedIndexOfPrice;
+	}
+
+	public CtItemCeilingQty getSelectedIndexOfCeilingQty() {
+		return selectedIndexOfCeilingQty;
+	}
+
+	public void setSelectedIndexOfCeilingQty(
+			CtItemCeilingQty selectedIndexOfCeilingQty) {
+		this.selectedIndexOfCeilingQty = selectedIndexOfCeilingQty;
+	}
+	
+	
 }

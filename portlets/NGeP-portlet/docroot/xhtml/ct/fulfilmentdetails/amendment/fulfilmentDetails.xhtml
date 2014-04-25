@@ -74,7 +74,8 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"
+			   disabled="#{contractDetailsBackingBean.managedBean.chkConceValue}" style="text-align:top;">
 			     <p:ajax event="change" update="justificationPanel" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -93,7 +94,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" autoResize="false" />	
+		  rows="4" cols="113" disabled="false" autoResize="false"/>	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

@@ -21,7 +21,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" >
-					 <p:ajax event="change" update=":form" process="@this" listener="#{amendmentBackingBean.chkContractValue}"/> 
+					 <p:ajax event="change" update=":form" process="@this" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change item price" />
@@ -76,16 +76,16 @@
 	    <h:panelGrid columns="6" style="width:75%" columnClasses="columnWidth20">
 	          <h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}"
 	             rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/>
-	          <h:panelGrid columns="3">
+	          <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 			    <p:selectOneMenu id="ceperiod" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" 
-			      rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" style="width:20px;">
+			       style="width:20px;">
                   <f:selectItem itemLabel="3" itemValue="3"/>
                   <f:selectItem itemLabel="6" itemValue="6"/>
                   <f:selectItem itemLabel="9" itemValue="9"/>
                   <f:selectItem itemLabel="12" itemValue="12"/>
                </p:selectOneMenu>  
-				<p:spacer width="1" />
-				<p:outputLabel value="Months" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+				<p:spacer width="1"/>
+				<p:outputLabel value="Months"/>
 			 </h:panelGrid> 
 			 <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}" 
 			  rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/>	
@@ -118,7 +118,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
 		          <f:convertNumber pattern="#,###.00" /></p:inputText>	
-	         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" style="float:left;" 
+	             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" style="float:left;" 
 	              rendered="#{(amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange) or 
@@ -129,7 +129,6 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange) or 
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}"/>
-		          <p:spacer width="1"/> <p:spacer width="1"/> <p:spacer width="1"/> <p:spacer width="1"/>
 	     </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth15" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
