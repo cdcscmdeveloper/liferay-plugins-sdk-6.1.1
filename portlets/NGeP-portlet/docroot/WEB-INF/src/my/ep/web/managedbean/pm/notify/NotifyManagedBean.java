@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.pm.notify;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -64,6 +65,9 @@ public class NotifyManagedBean extends BaseManagedBean {
 	}
 
 	public List<PmNotifyUser> getNotifyLists() {
+		if (notifyLists == null) {
+			notifyLists = new ArrayList<PmNotifyUser>();
+		}
 		return notifyLists;
 	}
 

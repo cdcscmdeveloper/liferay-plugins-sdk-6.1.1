@@ -41,19 +41,20 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 		debugLogger("== retrieveNotifyList, userId[" + user.getUserId() + "]");
 
-		NotifyReqDTO reqDTO = new NotifyReqDTO();
-		reqDTO.setNotificationMode("A");
-		reqDTO.setUserId(user.getUserId());
+		if (user.getUserId() != null) {
+			NotifyReqDTO reqDTO = new NotifyReqDTO();
+			reqDTO.setNotificationMode("A");
+			reqDTO.setUserId(user.getUserId());
 
-		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", INotifySO.class);
-		NotifyResDTO resDTO = reqSO.retrieveNotifyActiveList(reqDTO);
+			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+			NotifyResDTO resDTO = reqSO.retrieveNotifyActiveList(reqDTO);
 
-		debugLogger("retrieveNotifyActiveList["
-				+ resDTO.getPmNotifyUserList().size() + "]");
+			debugLogger("retrieveNotifyActiveList["
+					+ resDTO.getPmNotifyUserList().size() + "]");
 
-		this.getManagedBean().setNotifyLists(resDTO.getPmNotifyUserList());
-
+			this.getManagedBean().setNotifyLists(resDTO.getPmNotifyUserList());
+		}
 		resetSelectedNotify();
 	}
 
@@ -80,10 +81,10 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		}
 	}
 
-	public void onRowSelect(SelectEvent event){
+	public void onRowSelect(SelectEvent event) {
 		debugLogger("onRowSelect");
-//		PmNotifyUser notifyUser = ((PmNotifyUser) event.getObject());
-//		this.getManagedBean().setSelectedNotify(notifyUser);
+		// PmNotifyUser notifyUser = ((PmNotifyUser) event.getObject());
+		// this.getManagedBean().setSelectedNotify(notifyUser);
 	}
 
 	private void resetSelectedNotify() {
