@@ -117,6 +117,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -2701,7 +2702,13 @@ public class SpecificationBackingBean extends
 		List<ScQtRemark> remarksList = this.getManagedBean()
 				.getScQtRemarksList();
 		if (remarksList != null && !remarksList.isEmpty()) {
+			for (ScQtRemark remarks : remarksList) {
+			if (remarks.getRemark() == null) {
+				remarksList.remove(remarks);
+			}
 			scQt.setScQtRemarks(remarksList);
+			}
+			
 		}
 
 		reqDTO.setQtdetail(scQt);
@@ -3048,18 +3055,36 @@ public class SpecificationBackingBean extends
 	public String technicalChecklistEditAction(int index,
 			ScQtCheckList checkList) {
 		this.getManagedBean().setIndex(index);
-		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-		checkList.setChangedBy(1L);
-		checkList.setCreatedBy(1L);
-		checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		checkListValue.setChangedBy(1L);
-		checkListValue.setCreatedBy(1L);
-		checkListValue
-				.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		checkListValue.setScQtCheckList(checkList);
-		checkList.setScQtCheckListValue(checkListValue);
+		 if (185 == checkList.getDefinationType().getParameterId()) {
+			 checkList.setScQtCheckListScores(null);
+			 checkList.setQtScoreWeightage(null);
+			this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
 
-		if ("TG".equalsIgnoreCase(checkList.getPmDocument()
+			templateSpecBean.setSpecMaster(checkList.getScQtDoc()
+					.getTplSpecMaster());
+
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+			return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
+		}
+		 else{
+			 ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+				checkList.setChangedBy(1L);
+				checkList.setCreatedBy(1L);
+				checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				checkListValue.setChangedBy(1L);
+				checkListValue.setCreatedBy(1L);
+				checkListValue
+						.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				checkListValue.setScQtCheckList(checkList);
+				checkList.setScQtCheckListValue(checkListValue);
+
+		 	if ("TG".equalsIgnoreCase(checkList.getPmDocument()
 				.getDocDefinitionKey())) {
 			return "companyExperience.xhtml?faces-redirect=true";
 		} else if ("TN".equalsIgnoreCase(checkList.getPmDocument()
@@ -3086,6 +3111,9 @@ public class SpecificationBackingBean extends
 			return "totalEmployees.xhtml?faces-redirect=true";
 		}
 
+		
+		 }
+
 		return null;
 
 	}
@@ -3093,6 +3121,25 @@ public class SpecificationBackingBean extends
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList) {
 		this.getManagedBean().setIndex(index);
+		
+		 if (185 == checkList.getDefinationType().getParameterId()) {
+			 checkList.setScQtCheckListScores(null);
+			 checkList.setQtScoreWeightage(null);
+			this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+
+			templateSpecBean.setSpecMaster(checkList.getScQtDoc()
+					.getTplSpecMaster());
+
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+			return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
+		}
+		 else{
 		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 		checkList.setChangedBy(1L);
 		checkList.setCreatedBy(1L);
@@ -3138,6 +3185,7 @@ public class SpecificationBackingBean extends
 				.getDocDefinitionKey())) {
 			return "paidUpCapital.xhtml?faces-redirect=true";
 		}
+		 }
 
 		return null;
 
@@ -4550,6 +4598,7 @@ public class SpecificationBackingBean extends
 
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalContractScore(checkListScore);
+		
 
 		} catch (Exception e) {
 			// e.printStackTrace();
