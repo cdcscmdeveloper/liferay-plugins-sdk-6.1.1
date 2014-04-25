@@ -98,6 +98,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private CtPerformanceBond[] selectedBondList;
 	private String editorValue;
+	private double secondValue =0.0;
 
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
@@ -351,9 +352,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  
 		 double firstVaue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue();
 		 double contractValue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
-		 contractValue = contractValue + firstVaue - this.getManagedBean().getSecondValue();
-		
-		 this.getManagedBean().setSecondValue(firstVaue);
+		 contractValue = contractValue + firstVaue - this.getManagedBean().getContractVer().getCtAmendment().getSecondValue();
+		 
+		 this.getManagedBean().getContractVer().getCtAmendment().setSecondValue(firstVaue);
 		 this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
 	 
@@ -718,5 +719,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 
 		public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
 			this.selectedBondList = selectedBondList;
+		}
+		
+		public double getSecondValue() {
+			return secondValue;
+		}
+
+		public void setSecondValue(double secondValue) {
+			this.secondValue = secondValue;
 		}
 }
