@@ -888,6 +888,45 @@ public class SpecificationBackingBean extends
 		qtCategoryList.add(category);
 
 	}
+	
+	
+	public void saveEditTemplateSpec(){
+		IQTTemplateSO qtTemplateSO=null;
+		try{
+			QTTemplateDocReqDTO qtTemplateReqDTO=new QTTemplateDocReqDTO();
+			ScQtDoc qtDoc = this.getManagedBean().getScqtDoc();
+			ScQtCheckList checklist = this.getManagedBean().getScqtDoc()
+					.getScQtCheckList();
+			checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
+			List<TplSpecQuestion> questions = getManagedBean()
+					.getTemplateSpecBean().getSpecMaster()
+					.getTplSpecQuestions();
+
+			for (TplSpecQuestion tplSpecQuestion : questions) {
+				tplSpecQuestion.setTplSpecMaster(qtDoc.getTplSpecMaster());
+			}
+			qtDoc.setScQtCheckList(checklist);
+			qtDoc.getTplSpecMaster().setTplSpecQuestions(questions);
+			qtTemplateReqDTO.setScQtDoc(qtDoc);
+
+			qtTemplateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTTemplateSO.class);
+
+			QTTemplateDocResDTO	resDTO = qtTemplateSO.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""
+
+						));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
 
 	public void completeTemplateSpec() {
 
