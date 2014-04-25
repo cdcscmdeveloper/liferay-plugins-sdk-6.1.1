@@ -25,8 +25,9 @@
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#,###.00"/>
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="Signed Date" />
-			<p:inputText for="signBy" disabled="true" style="width:170px;"/>
+			<p:outputLabel id="signBy" value="Signed Date"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
+			<p:inputText for="signBy" value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
+			   rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
@@ -34,9 +35,13 @@
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
-			 <p:outputLabel id="astatus" value="Agreement Status" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
-			 <p:inputText for="astatus" style="width:170px;" disabled="true" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
-			<h:panelGroup>
+			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
+			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
+			 <p:outputLabel id="astatus" value="Agreement Status" rendered="#{terminationBackingBean.managedBean.ctContract.agreement and 
+			    !terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+			 <p:inputText for="astatus" style="width:170px;" disabled="true"
+			   value="#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"
+			    rendered="#{terminationBackingBean.managedBean.ctContract.agreement and !terminationBackingBean.managedBean.ctContract.zonalPricing}"/>	<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="Contract Title" />
 			</div>
@@ -47,8 +52,11 @@
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="Agreement Status" rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing}" />
-			<p:inputText for="astatus1" style="width:170px;" disabled="true" rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="astatus1" value="Agreement Status" rendered="#{terminationBackingBean.managedBean.ctContract.agreement and 
+			   terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:inputText for="astatus1" style="width:170px;" disabled="true" 
+			  value="#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"
+			 rendered="#{terminationBackingBean.managedBean.ctContract.agreement and terminationBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
@@ -76,7 +84,8 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
+			     disabled="#{contractDetailsBackingBean.managedBean.chkConceValue}" style="text-align:top;">
 			     <p:ajax event="change" update="justificationPanel" listener="#{terminationBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
