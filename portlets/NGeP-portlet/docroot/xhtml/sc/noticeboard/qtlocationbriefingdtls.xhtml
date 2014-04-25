@@ -30,43 +30,6 @@
 						</p:dataTable>
 	</p:panel>
 
-
-	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.sameBsv}">
-		<p:panel header="Briefing And Site Visit Details">
-
-			<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
-			<p:dataTable  var="brfsitdtl"
-				value="#{noticeBoardBackingBean.managedBean.briefingDtls}">
-
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="#{brfsitdtl.briefingDesc}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:100px;">
-					<h:outputText value="#{brfsitdtl.briefingDate}"/>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.qt.nb.location']}"
-					style="width:120px;">
-					<p:commandLink style="margin-right:20px;" actionListener="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
-						 oncomplete="popupLoc.show()" update="@(.locationdtls)">
-						<h:outputText value="#{brfsitdtl.location}" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:120px;">
-					<h:outputText value="#{brfsitdtl.maxNoAttendance}" />
-				</p:column>
-
-			</p:dataTable>
-
-		</p:panel>
-	</c:if>
-	<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.sameBsv}">
-
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
 
 			<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
@@ -132,7 +95,7 @@
 			</p:dataTable>
 
 		</p:panel>
-	</c:if>
+	
 
 	<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}">
 
