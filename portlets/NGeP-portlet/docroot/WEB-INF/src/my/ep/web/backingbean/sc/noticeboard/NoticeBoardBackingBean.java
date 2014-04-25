@@ -43,6 +43,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -319,23 +320,23 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setSiteVisitDtls(
 						resDTO.getSiteVisitResultBean().getResultList());
 			} else {
-				if (scQt.isSameBsv()) {
-					List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+				/*if (scQt.isSameBsv()) {
+					List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 							scQt.getQtId(), resDTO.getZones().get(0)
 									.getSpecZoneId(), scQt.getAttendenceType());
 					this.getManagedBean().setBriefingDtls(briefings);
-				} else {
-					List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+				} else {*/
+					List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 							scQt.getQtId(), resDTO.getZones().get(0)
 									.getSpecZoneId(), "B");
 					this.getManagedBean().setBriefingDtls(briefings);
-					List<ScQtBriefing> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+					List<ScQtBsvDtl> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 							scQt.getQtId(), resDTO.getZones().get(0)
 									.getSpecZoneId(), "S");
 					this.getManagedBean().setBriefingDtls(briefings);
 					this.getManagedBean().setSiteVisitDtls(siteVisit);
 
-				}
+				//}
 				// constructLocationTree(resDTO.getLocCriteria());
 			}
 			// constructBrifingSiteVisitDtls(resDTO);
@@ -911,17 +912,17 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	private void constructBriefingDtls(List<ScQtBriefing> qtBriefingDtls,
+	private void constructBriefingDtls(List<ScQtBsvDtl> qtBriefingDtls,
 			boolean sameAsBsv) {
 		if (sameAsBsv) {
 			this.getManagedBean().setBriefingDtls(qtBriefingDtls);
 
 		} else {
 			if (qtBriefingDtls != null) {
-				List<ScQtBriefing> briefingDtls = new ArrayList<ScQtBriefing>();
-				List<ScQtBriefing> siteVisitDtls = new ArrayList<ScQtBriefing>();
-				for (ScQtBriefing briefing : qtBriefingDtls) {
-					if ("B".equalsIgnoreCase(briefing.getBriefingType())) {
+				List<ScQtBsvDtl> briefingDtls = new ArrayList<ScQtBsvDtl>();
+				List<ScQtBsvDtl> siteVisitDtls = new ArrayList<ScQtBsvDtl>();
+				for (ScQtBsvDtl briefing : qtBriefingDtls) {
+					if ("B".equalsIgnoreCase(briefing.getBsvType())) {
 						briefingDtls.add(briefing);
 					} else {
 						siteVisitDtls.add(briefing);
@@ -974,23 +975,23 @@ public class NoticeBoardBackingBean extends
 
 		ScQt scQt = getManagedBean().getScQt();
 
-		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) changeEvent.getData();
+		/*TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) changeEvent.getData();
 
-		if (scQt.isSameBsv()) {
-			List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
+		
+			List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), specZoneDtl.getSpecZoneId(),
 					scQt.getAttendenceType());
 			this.getManagedBean().setBriefingDtls(briefings);
-		} else {
+		
 			List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), specZoneDtl.getSpecZoneId(), "B");
 			this.getManagedBean().setBriefingDtls(briefings);
 			List<ScQtBriefing> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
 					scQt.getQtId(), specZoneDtl.getSpecZoneId(), "S");
 
-			this.getManagedBean().setSiteVisitDtls(siteVisit);
+			this.getManagedBean().setSiteVisitDtls(siteVisit);*/
 
-		}
+		
 
 	}
 
@@ -1051,7 +1052,7 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
-	private List<ScQtBriefing> retrieveBriefingSiteVisitDtlsByZoneNQtId(
+	private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId(
 			Long qtId, Long zoneId, String bsvType) {
 		IQTBriefingSO qTBriefingSO;
 
