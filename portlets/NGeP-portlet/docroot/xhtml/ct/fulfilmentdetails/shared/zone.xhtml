@@ -9,12 +9,10 @@
 		<table style="width: 100%">
 		  <tr>
 			  <td style="width: 94px"><p:outputLabel value="Location Level" /></td>
-			  <td><p:selectOneMenu id="locLevels" style="width: 178px;margin-bottom: 5px;" disabled="true"
-			        value="#{contractDetailsBackingBean.managedBean.supplierLocation}">
-                    <f:selectItems
-						value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
-					    <p:ajax event="change" listener="#{contractDetailsBackingBean.selectLocation}"></p:ajax>
-				  </p:selectOneMenu></td>
+				  <td>
+				  		<p:inputText id="locLevels2" disabled="true" 
+				  			value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.contractVer.ctContract.locationLevel)}" />
+				  </td>
 			  </tr>
 		  </table>
  		 <h:panelGrid width="100%" style="margin-top:20px">
