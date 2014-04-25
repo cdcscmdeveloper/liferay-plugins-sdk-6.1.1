@@ -45,7 +45,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<CmUnspsc> familyList;
 	private List<CmUnspsc> classList;
 	private List<CmUnspsc> commodityList;
-
+	
+	private CmUnspsc selectedLovUnspscSegment;
+	private CmUnspsc selectedLovUnspscFamily;
+	private CmUnspsc selectedLovUnspscClass;
+	
+	private String extensionCodeTemp;
 
 	private List<SelectItem> segmentCriteria;
 	private List<SelectItem> familyCriteria;
@@ -474,6 +479,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedUNSPSCObj(CmUnspsc selectedUNSPSCObj) {
 		this.selectedUNSPSCObj = selectedUNSPSCObj;
+        System.out.println(">>>>>>>>>>>>>>>>>> seting commidity - selectedUNSPSCObj= "+selectedUNSPSCObj);
 	}
 
 
@@ -516,6 +522,51 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setCommodityTitle(String commodityTitle) {
 		this.commodityTitle = commodityTitle;
 	}
+
+	public CmUnspsc getSelectedLovUnspscSegment() {
+		if(selectedLovUnspscSegment == null)
+			selectedLovUnspscSegment = new CmUnspsc();
+	
+		return selectedLovUnspscSegment;
+	}
+
+	public void setSelectedLovUnspscSegment(CmUnspsc selectedLovUnspscSegment) {
+
+		this.selectedLovUnspscSegment = selectedLovUnspscSegment;
+		System.out.println(">>>>>>>>>>seting unspscSegment="+selectedLovUnspscSegment);
+	}
+
+	public CmUnspsc getSelectedLovUnspscFamily() {
+		if(selectedLovUnspscFamily == null)
+			selectedLovUnspscFamily = new CmUnspsc();
+		return selectedLovUnspscFamily;
+	}
+
+	public void setSelectedLovUnspscFamily(CmUnspsc selectedLovUnspscFamily) {
+		this.selectedLovUnspscFamily = selectedLovUnspscFamily;
+		System.out.println(">>>>>>>>>>seting selectedLovUnspscFamily="+selectedLovUnspscFamily);
+	}
+
+	public CmUnspsc getSelectedLovUnspscClass() {
+		if(selectedLovUnspscClass == null)
+			selectedLovUnspscClass = new CmUnspsc();
+		return selectedLovUnspscClass;
+	}
+
+	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
+		this.selectedLovUnspscClass = selectedLovUnspscClass;
+		System.out.println(">>>>>>>>>>seting selectedLovUnspscClass="+selectedLovUnspscClass);
+	}
+
+	public String getExtensionCodeTemp() {
+		return extensionCodeTemp;
+	}
+
+	public void setExtensionCodeTemp(String extensionCodeTemp) {
+		this.extensionCodeTemp = extensionCodeTemp;
+	}
+
+	
 
 
 	

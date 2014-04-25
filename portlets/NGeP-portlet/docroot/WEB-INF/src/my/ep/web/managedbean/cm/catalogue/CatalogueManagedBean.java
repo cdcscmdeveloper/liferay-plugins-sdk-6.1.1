@@ -65,7 +65,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<PricingVO> districtPricingList;
 	private PricingVO selectedPricing;
 	private boolean districtIND = false;
-
+	private boolean renderTableView = true;
+	private boolean renderGridView = false;
+	
 	private CmUnspsc unspsc;
 
 	private List<CmSupplierItem> maintainItemList;
@@ -116,7 +118,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private List<PmStatusDesc> statusDescList;
 
-	private VCmSupplierItem[] selectViewItems;
+	private List<VCmSupplierItem> selectViewItems;
+	
+	private Map<Long, Boolean> selectedIds = new HashMap<Long, Boolean>();
 
 	private List<VCmSupplierItem> viewSupplierItemList;
 	private boolean contractedExist = false;
@@ -337,15 +341,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 
-
-
-	public VCmSupplierItem[] getSelectViewItems() {
+	public List<VCmSupplierItem> getSelectViewItems() {
+		if(selectViewItems == null){
+			selectViewItems = new ArrayList<VCmSupplierItem>();
+		}
 		return selectViewItems;
 	}
 
-	public void setSelectViewItems(VCmSupplierItem[] selectViewItems) {
+
+	public void setSelectViewItems(List<VCmSupplierItem> selectViewItems) {
 		this.selectViewItems = selectViewItems;
 	}
+
 
 	public String getContractNo() {
 		return contractNo;
@@ -1143,6 +1150,36 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isSimpleQuoteFlag() {
 		return simpleQuoteFlag;
 	}
+
+	public boolean isRenderTableView() {
+		return renderTableView;
+	}
+
+
+	public void setRenderTableView(boolean renderTableView) {
+		this.renderTableView = renderTableView;
+	}
+
+
+	public boolean isRenderGridView() {
+		return renderGridView;
+	}
+
+
+	public void setRenderGridView(boolean renderGridView) {
+		this.renderGridView = renderGridView;
+	}
+
+
+	public Map<Long, Boolean> getSelectedIds() {
+		return selectedIds;
+	}
+
+
+	public void setSelectedIds(Map<Long, Boolean> selectedIds) {
+		this.selectedIds = selectedIds;
+	}
+
 
 
 	/**

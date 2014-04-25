@@ -1,0 +1,97 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+
+		<h:panelGroup id="contractedItemID">
+				
+        <p:panel header="REQUEST DETAIL" toggleable="true">
+			<table width="100%;" >
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
+					<td><p:inputText readonly="true" value="QT8100000101"/></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.type']}"></p:outputLabel></td>
+					<td><p:inputText readonly="true"></p:inputText></td>
+				</tr>
+				<tr>
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
+					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="title..."/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.ptj']}"></p:outputLabel></td>
+					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="Jahabatan.."/></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.createdDate']}"></p:outputLabel></td>
+					<td><p:inputText readonly="true" value="v01-april-2014"/></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}"></p:outputLabel></td>
+					<td><p:inputText readonly="true" value="pending assigning product code"/></td>
+				</tr>
+			</table>
+    </p:panel>
+		
+	<p:panel header="ITEM LIST" toggleable="true">
+			<p:dataTable value="" var="" 
+				 id="contractedTableId">
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.item.name']}
+						</f:facet>
+						test
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.item.description']}
+						</f:facet>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.system.code']}
+						</f:facet>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.unspsc.code']}
+						</f:facet>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.extension.code']}
+						</f:facet>
+					#{codificationBackingBean.managedBean.extensionCodeTemp}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+					<p:commandButton value="#{lbl['lbl.cm.assign']}"
+						action="#{codificationBackingBean.assignProductCode}"
+						onclick="contractedItemPopUp.show()"
+						update=":form:contractedItemPopUpId"></p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog id="contractedItemDialog" widgetVar="contractedItemPopUp" header="Assign Product Code"
+				width="600" height="500">
+
+				<ui:include src="assignContractedCodePopUp.xhtml" />
+
+			</p:dialog>
+
+</p:panel>
+		</h:panelGroup>
+
+<ac:lovPopup />
+	</ui:define>
+</ui:composition>

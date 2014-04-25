@@ -9,79 +9,63 @@
 
 	<ui:define name="contentSection">
 
-		
+		<p:panel>
 
-			<h:panelGroup id="contractedItemID">
-				<h:outputLabel styleClass="screen-title"
-					value="#{lbl['lbl.cm.assign.contracted.product.code']}"></h:outputLabel>
+			<p:dataTable id="documentTableID" lazy="true"
+			value="" var="" width="100%">
 
-				<h:panelGrid columns="2">
+				<p:column width="15%">
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.no']}
+				</f:facet>
 
-					<p:outputLabel value="#{lbl['lbl.cm.loa.number']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:commandLink
+						action="#{codificationBackingBean.goToAssignUnspsc()}">
+							QT1400000000101
+							</p:commandLink>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.type']}
+				   </f:facet>
+				Quotation/Tender
+			   </p:column>
 
-					<p:outputLabel value="#{lbl['lbl.cm.mof.number']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+               <p:column>
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.title']}
+				   </f:facet>
+				doc title
+			   </p:column>
 
-					<p:outputLabel value="#{lbl['lbl.cm.company.name']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+			   <p:column>
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.ptj']}
+				   </f:facet>
+				perjabat ...
+			   </p:column>
+			   
+			    <p:column>
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.createdDate']}
+				   </f:facet>
+				01-april-2014
+			   </p:column>
+			   
+			    <p:column>
+					<f:facet name="header">
+					#{lbl['lbl.cm.doc.status']}
+				   </f:facet>
+				pending assign unspsc
+			   </p:column>
+			   
 
-					<p:outputLabel value="#{lbl['lbl.cm.uom']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+			</p:dataTable>
 
-					<p:outputLabel value="#{lbl['lbl.cm.unit.price']}"></p:outputLabel>
-					<p:inputText></p:inputText>
-
-				</h:panelGrid>
-
-				<p:dataTable
-					value="#{codificationBackingBean.managedBean.contractedItem}"
-					var="contract" id="contractedId">
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.item.name']}
-						</f:facet>
-						#{contract.unspscTitle}
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.item.description']}
-						</f:facet>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.system.code']}
-						</f:facet>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.unspsc.code']}
-						</f:facet>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.extension.code']}
-						</f:facet>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.action']}
-						</f:facet>
-						<p:commandButton value="#{lbl['lbl.cm.assign']}" action="#{codificationBackingBean.assignProductCode}"
-							onclick="contractedItemPopUp.show()" update=":form:contractedItemPopUpId"></p:commandButton>
-					</p:column>
-				</p:dataTable>
-
-				<p:dialog id="contractedItemDialog" widgetVar="contractedItemPopUp"
-					width="600" height="500">
-
-					<ui:include src="assignContractedCodePopUp.xhtml" />
-
-				</p:dialog>
+		</p:panel>
 
 
-			</h:panelGroup>
-	
 
 	</ui:define>
 </ui:composition>

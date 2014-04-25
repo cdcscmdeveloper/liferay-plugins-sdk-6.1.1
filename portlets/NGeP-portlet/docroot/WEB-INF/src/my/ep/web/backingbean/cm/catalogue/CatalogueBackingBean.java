@@ -3038,6 +3038,41 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	}
+	
+	public void showTableView(){
+    
+		this.getManagedBean().setRenderTableView(true);
+		this.getManagedBean().setRenderGridView(false);
+		//clear list of selectedSupplierItem and ctRequestList
+		this.getManagedBean().setSelectViewItems(null);
+		this.getManagedBean().setCtRequestList(null);
+	}
+	
+	public void showGridView(){
+		
+		this.getManagedBean().setRenderGridView(true);
+		this.getManagedBean().setRenderTableView(false);
+		//clear list of selectedSupplierItem 
+	   this.getManagedBean().setSelectViewItems(null);
+	   this.getManagedBean().setCtRequestList(null);
+	}
+	
+	public void setAsSelectedItem(VCmSupplierItem supplierItem){
+		if(this.getManagedBean().getSelectedIds().get(supplierItem.getDocId())){
+			this.getManagedBean().getSelectViewItems().add(supplierItem);
+		}else{
+			this.getManagedBean().getSelectViewItems().remove(supplierItem);
+		}
+	}
+	
+//	public void checkboxChanged(AjaxBehaviorEvent event){
+//		if(((SelectBooleanCheckbox)event.getSource()).isSelected()){
+//			add obj to list
+//		}else{
+//	       remove from list
+//      }
+//		
+//	}
 
 
 
