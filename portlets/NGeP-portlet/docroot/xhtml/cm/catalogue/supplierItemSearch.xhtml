@@ -203,7 +203,7 @@
 												hideEffect="fade" /></td>
 						                  <td><p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}" id="pidId"
 												action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}" 
-												disabled="#{!catalogueBackingBean.managedBean.pidHelper.isPIDRequired(supplierItem.docId,16717,false)}"
+												disabled="#{!supplierItem.pidRequired}"
 												rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }" >
 											</p:commandButton>
 											<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}" showEffect="fade" hideEffect="fade" /></td>

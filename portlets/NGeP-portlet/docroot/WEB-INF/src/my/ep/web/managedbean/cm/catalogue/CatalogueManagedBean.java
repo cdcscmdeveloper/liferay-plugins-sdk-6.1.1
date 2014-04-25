@@ -32,8 +32,8 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.PIDHelper;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
@@ -167,9 +167,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
-
-	private PIDHelper pidHelper = new PIDHelper();
-
+	
 	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
 
 		private static final long serialVersionUID = 1L;
@@ -283,12 +281,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				System.out.println("stateLs"+stateLs);
 
-
-
-
-
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
+				FacesScopes facesScopes = new FacesScopes();
+				Long userId = facesScopes.getUserSessionBean().getUserId();
+				reqDTO.setUserId(userId);
 				System.out.println("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSupplierItemList());
@@ -312,7 +309,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	public void searchCatalogue(){
-		pidHelper = new PIDHelper();
 		searchDataModel.reloadData();
 	}
 
@@ -1154,16 +1150,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setSimpleQuoteFlag(boolean simpleQuoteFlag) {
 		this.simpleQuoteFlag = simpleQuoteFlag;
-	}
-
-
-	public PIDHelper getPidHelper() {
-		return pidHelper;
-	}
-
-
-	public void setPidHelper(PIDHelper pidHelper) {
-		this.pidHelper = pidHelper;
 	}
 
 }
