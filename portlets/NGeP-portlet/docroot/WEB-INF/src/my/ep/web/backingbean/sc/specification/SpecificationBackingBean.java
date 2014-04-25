@@ -1351,7 +1351,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST);
 
 			// this.getManagedBean().getProcuremntCategory();
-			reqDTO.setProcurementCatCode("ICT");
+			reqDTO.setProcurementCatCode(this.getManagedBean().getProcuremntCategory());
 			List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
 			if (this.getManagedBean().getScQtCheckSt2techProposal() == null) {
 				resDTO = specSo.retrieveCheckLists(reqDTO);
@@ -1416,7 +1416,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
 			List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
 			// this.getManagedBean().getProcuremntCategory();
-			reqDTO.setProcurementCatCode("MED");
+			reqDTO.setProcurementCatCode(this.getManagedBean().getProcuremntCategory());
 			if (this.getManagedBean().getScQtCheckSt2financeProposalList() == null) {
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				if (resDTO.getDocumentResultBean() != null
@@ -2909,6 +2909,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
 				}
+			
 
 			}
 		} catch (Exception e) {
@@ -4146,22 +4147,20 @@ public class SpecificationBackingBean extends
 			documentSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
-			reqDTO.setProcurementCatCode("FNB");
+			reqDTO.setProcurementCatCode(this.getManagedBean().getProcuremntCategory());
 			reqDTO.setIsMandatory(false);
 			reqDTO.setDocCategoryCode("T");
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
-			System.out.println("======document list size==="
-					+ resDTO.getDocumentList().size());
-
+			
 			this.getManagedBean().setStageTwoTechComplianceSelect(
 					new ArrayList<PmDocument>());
 
 			this.getManagedBean().setStageTwoTechComplianceList(
 					resDTO.getDocumentList());
 		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+			 e.printStackTrace();
+			//throw new IllegalArgumentException();
 		} finally {
 			documentSo = null;
 		}
@@ -4184,6 +4183,19 @@ public class SpecificationBackingBean extends
 	public void zoneDeliveryChange(TabChangeEvent event) {
 		System.out.println("==========delivery tab change name==="
 				+ event.getTab().getTitle());
+	}
+	
+	public void deliveryAddressReset(){
+		try{
+		getManagedBean().setStateCode(null);
+		getManagedBean().setDistrictId(null);
+		getManagedBean().setMinistryId(null);
+		getManagedBean().setDepartmentId(null);
+		getManagedBean().setPtjId(null);
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}
 	}
 
 	public void deliveryAccept() {
@@ -4366,14 +4378,11 @@ public class SpecificationBackingBean extends
 			documentSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
-			reqDTO.setProcurementCatCode("SEC");
+			reqDTO.setProcurementCatCode(this.getManagedBean().getProcuremntCategory());
 			reqDTO.setIsMandatory(false);
 			reqDTO.setDocCategoryCode("F");
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
-			System.out.println("======document list size==="
-					+ resDTO.getDocumentList().size());
-
 			this.getManagedBean().setStageTwoFinComplianceSelect(
 					new ArrayList<PmDocument>());
 
@@ -7596,7 +7605,7 @@ public class SpecificationBackingBean extends
 						&& !getManagedBean().getStateCode().endsWith("")) {
 					SearchFilterBean stateSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
-					stateSearchBean.setSearchField("pmAddress.pmState.stateId");
+					stateSearchBean.setSearchField("pmAddress.pmState.stateCode");
 					stateSearchBean.setSearchValue(getManagedBean()
 							.getStateCode());
 					searchBean.getDataFilterBeans().add(stateSearchBean);

@@ -123,7 +123,7 @@
 					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
 					<td><p:selectOneMenu id="locationLevels"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel}"
-							style="width: 178px;margin-bottom: 5px;">
+							style="width: 178px;">
 
 							<f:selectItems
 								value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
@@ -136,7 +136,7 @@
 
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
-			<h:panelGrid width="100%" style="margin-top:20px">
+			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index">

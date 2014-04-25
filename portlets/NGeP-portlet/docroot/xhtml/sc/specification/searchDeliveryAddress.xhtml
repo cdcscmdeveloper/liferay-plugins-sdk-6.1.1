@@ -24,7 +24,7 @@
 								update="districtId"
 								listener="#{specificationBackingBean.districtBystate}"></p:ajax>
 						</p:selectOneMenu></td>
-					<td style="width:200px;"><h:outputLabel value="District" /></td>
+					<td style="width: 200px;"><h:outputLabel value="District" /></td>
 					<td><p:selectOneMenu id="districtId" style="width:200px;"
 							value="#{specificationBackingBean.managedBean.districtId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
@@ -36,7 +36,8 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel value="*Ministry" /></td>
-					<td colspan="3"><p:selectOneMenu style="width:400px;margin-bottom:5px;"
+					<td colspan="3"><p:selectOneMenu
+							style="width:400px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ministryId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
@@ -76,16 +77,16 @@
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
-			<div align="right" style="width: 70%;">
+			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchDeliveryAddress}"
 					update="deliveryAddress" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-					process="@this" />
+					process="@this" action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
-			</p:panel>
-			<p:panel header="PTJ Delivery Address List">
+		</p:panel>
+		<p:panel header="PTJ Delivery Address List">
 
 			<p:dataTable id="deliveryAddress" var="deliveryLoc"
 				rowKey="#{deliveryLoc}" rowIndexVar="index"
@@ -105,15 +106,17 @@
 			</p:dataTable>
 
 		</p:panel>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" onclick="deliveryAddress.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
-			style="float:right;" process="@all" partialSubmit="true"
-			onclick="deliveryAddress.hide();" icon="ui-icon-accept"
-			update="@(.deliveryUpdate)" oncomplete="deliveryService.paginator.endLink.click();"
-			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
-
+		
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+				style="float:right;" onclick="deliveryAddress.hide();"
+				icon="ui-icon-cancel"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+				style="float:right;" process="@all" partialSubmit="true"
+				onclick="deliveryAddress.hide();" icon="ui-icon-accept"
+				update="@(.deliveryUpdate)"
+				oncomplete="deliveryService.paginator.endLink.click();"
+				actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
+		
 
 	</p:dialog>
 </ui:composition>
