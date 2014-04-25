@@ -8,10 +8,10 @@
 
 
 	<p:dialog widgetVar="stageTwoFinance" modal="true" width="800"
-		height="400">
-		<p:panel
-			header="#{lbl['lbl.sc.spec.btn.standard.financial.check.list']}"
-			toggleable="true">
+		position="top"
+		header="#{lbl['lbl.sc.spec.btn.standard.financial.check.list']}"
+		height="500">
+		<p:panel>
 
 			<p:dataTable id="stageTwoFinPopup" var="compilance"
 				value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}"
@@ -21,7 +21,7 @@
 				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
 				<p:column selectionMode="multiple"
 					style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.spec.check.list']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
 					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
@@ -32,8 +32,9 @@
 			icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
+			oncomplete="financialChecklist.paginator.endLink.click();"
 			action="#{specificationBackingBean.stageTwoFinanceCheckList}"
-			oncomplete="stageTwoFinance.hide();" update="financeProposaltwo"
+			onclick="stageTwoFinance.hide();" update="financeProposaltwo"
 			icon="ui-icon-accept"></p:commandButton>
 
 

@@ -28,7 +28,7 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="Title"></h:outputLabel></td>
-					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" ></p:inputText></td>
+					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150" ></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -123,6 +123,7 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
 							actionListener="#{specificationBackingBean.addPrivateScoring}"
 							update="#{scoringPnlId}" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
@@ -177,6 +178,7 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
 							actionListener="#{specificationBackingBean.addPrivateScoringyears}"
 							update="#{scoringPnlId}" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

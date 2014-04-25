@@ -8,7 +8,7 @@
 
 
 	<p:dialog header="Search Delivery/Service Address" position="top"
-		widgetVar="deliveryAddress" modal="true" width="800" height="650">
+		widgetVar="deliveryAddress" modal="true" width="800" height="500">
 		<p:panel id="searDelivery" header="Search " toggleable="true">
 			<table>
 				<tr>
@@ -110,8 +110,8 @@
 			icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			oncomplete="deliveryAddress.hide();" icon="ui-icon-accept"
-			update="@(.deliveryUpdate)"
+			onclick="deliveryAddress.hide();" icon="ui-icon-accept"
+			update="@(.deliveryUpdate)" oncomplete="deliveryService.paginator.endLink.click();"
 			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
 
 

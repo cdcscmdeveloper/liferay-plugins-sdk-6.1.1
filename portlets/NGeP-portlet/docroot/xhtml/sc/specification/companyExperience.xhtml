@@ -28,7 +28,7 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
+					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -120,6 +120,7 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
 							actionListener="#{specificationBackingBean.addScoring}"
 							update="#{scoringPnlId}" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
@@ -174,6 +175,7 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
 							actionListener="#{specificationBackingBean.addScoringyears}"
 							update="#{scoringPnlId}" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

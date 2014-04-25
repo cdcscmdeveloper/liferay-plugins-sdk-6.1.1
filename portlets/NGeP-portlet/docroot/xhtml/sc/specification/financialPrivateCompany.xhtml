@@ -28,13 +28,13 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="Title"></h:outputLabel></td>
-					<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText></td>
+					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
 
 		<p:panel header="Company Experience(For Federal Private)"
-			toggleable="true" collapsed="true">
+			toggleable="true" >
 			<h:panelGrid columns="2">
 				<h:outputLabel
 					value="* For company experience on the product/service which has participated since  year "></h:outputLabel>
@@ -115,20 +115,21 @@
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 
-				<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+				<ui:param name="finContractGroupId" value="fincontractorGroupId" />
 				<h:panelGroup id="contractAmountGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.nonFederalContractScore}" />
-						<ui:param name="scoringList"
+						<ui:param name="selectionList"
 						value="#{specificationBackingBean.managedBean.finPrivateContractSelectList}" />
-					<ui:param name="componentName" value="ContractAmount" />
-					<ui:param name="scoringPnlId" value="contractAmountId" />
+					<ui:param name="componentName" value="finContractAmount" />
+					<ui:param name="scoringPnlId" value="fincontractAmountId" />
 					<ui:param name="scoringPnlName"
 						value="#{lbl['lbl.sc.spec.score.total.contract.amount']}"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
 							actionListener="#{specificationBackingBean.addPrivateContratAmount}"
 							update="#{scoringPnlId}" icon="ui-icon-add" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

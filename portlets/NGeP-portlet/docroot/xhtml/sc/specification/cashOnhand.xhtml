@@ -31,7 +31,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<tr>
 	<td><h:outputLabel value="Title"></h:outputLabel>
 	</td>
-		<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText>
+		<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea>
 	</td>
 	</tr>
 	</table>
@@ -95,6 +95,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 					process="@this,#{scoringPnlId}" partialSubmit="true"
+					oncomplete="scoreWidget.paginator.endLink.click();"
 					actionListener="#{specificationBackingBean.scoringCash}"
 					update="#{scoringPnlId}" icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

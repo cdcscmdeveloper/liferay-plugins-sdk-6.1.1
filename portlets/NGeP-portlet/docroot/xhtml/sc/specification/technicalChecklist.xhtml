@@ -9,7 +9,7 @@
 	<p:panel id="techCommitteeChecklist"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
-		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
+		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical" widgetVar="technicalChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
@@ -178,7 +178,7 @@
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this,stageTwotechProposal"
+				process="@this,stageTwotechProposal" oncomplete="technicalChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
 				update="stageTwotechProposal" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

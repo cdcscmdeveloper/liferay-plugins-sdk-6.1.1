@@ -8,9 +8,10 @@
 
 
 	<p:dialog widgetVar="stageTwoTech" modal="true" width="800"
-		height="400">
-		<p:panel header="#{lbl['lbl.sc.spec.btn.standard.tech.check.list']} "
-			toggleable="true">
+		position="top"
+		header="#{lbl['lbl.sc.spec.btn.standard.tech.check.list']} "
+		height="500">
+		<p:panel>
 
 			<p:dataTable id="compilencestageTwo" var="compilance"
 				value="#{specificationBackingBean.managedBean.stageTwoTechComplianceList}"
@@ -20,7 +21,7 @@
 				<ac:paginator for="compilencestageTwo"></ac:paginator>
 				<p:column selectionMode="multiple"
 					style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.spec.check.list']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
 					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
@@ -31,8 +32,9 @@
 			icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
+			oncomplete="technicalChecklist.paginator.endLink.click();"
 			action="#{specificationBackingBean.stageTwoTechProposal}"
-			oncomplete="stageTwoTech.hide();" update="stageTwotechProposal"
+			onclick="stageTwoTech.hide();" update="stageTwotechProposal"
 			icon="ui-icon-accept"></p:commandButton>
 
 

@@ -10,7 +10,7 @@
 	<p:panel header="#{lbl['lbl.sc.spec.finance.check.list']}"
 		toggleable="true">
 
-		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
+		<p:dataTable id="financeProposaltwo" var="stageTwofunctional" widgetVar="financialChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
@@ -134,6 +134,7 @@
 				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,financeProposaltwo" partialSubmit="true"
+				oncomplete="financialChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
 				update="financeProposaltwo" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"

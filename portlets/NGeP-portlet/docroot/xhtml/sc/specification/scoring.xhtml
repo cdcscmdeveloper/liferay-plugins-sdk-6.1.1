@@ -9,7 +9,7 @@
 		<p:panel header="#{scoringPnlName}"
 			toggleable="true">
 
-			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
+			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" widgetVar="scoreWidget"
 			value="#{scoringList}" selection="#{selectionList}"
 			var="checkListScoring" rowKey="#{checkListScoring}" >
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
