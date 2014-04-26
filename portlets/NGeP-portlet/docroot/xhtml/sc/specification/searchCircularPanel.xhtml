@@ -42,8 +42,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.circular.list']}" toggleable="true">
 
-		<h:panelGrid style="width:950px;">
-			<p:dataTable id="circularList" var="circular"
+		<h:panelGrid >
+			<p:dataTable id="circularList" var="circular" style="width:100%"
 				value="#{specificationBackingBean.searchCircular}"
 				rowKey="#{circular}" rowIndexVar="index" lazy="true">
 				<ac:paginator for="circularList"></ac:paginator>
@@ -98,10 +98,12 @@
 
 				<p:column headerText="Panel Type" style="width:15%">
 					<h:outputText
-						value="#{circular.itemCategory.pmParameterDescs[0].codeName}"></h:outputText>
+						value="#{specificationBackingBean.getParameterDesc(circular.ctPanelItems[0].itemCategoryId)}"></h:outputText>
 				</p:column>
 				<p:column headerText="Effective Date" style="width:15%">
-					<h:outputText value="#{circular.updateEffDate}"></h:outputText>
+					<h:outputText value="#{circular.startDate}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="Expiry Date" style="width:15%">
 					<h:outputText value="#{circular.endDate}">
@@ -118,9 +120,9 @@
 			<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
 				toggleable="true">
 
-				<h:panelGrid id="panel" style="width:950px;">
+				<h:panelGrid id="panel" >
 					<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
-						lazy="true"
+						lazy="true" style="width:100%"
 						value="#{specificationBackingBean.managedBean.panelItemList}"
 						rowKey="#{panelItem}">
 

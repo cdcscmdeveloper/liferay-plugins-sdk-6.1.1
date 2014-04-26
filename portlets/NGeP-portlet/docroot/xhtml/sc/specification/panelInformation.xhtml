@@ -40,7 +40,9 @@
 			<h:column>
 				<p:inputText
 					value="#{specificationBackingBean.managedBean.circularExpDate}"
-					disabled="true" />
+					disabled="true" >
+					<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+					</p:inputText>
 			</h:column>
 
 			<h:column>
@@ -49,7 +51,7 @@
 
 			<h:column>
 				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.latestCircularVer.name}"
+					value="#{specificationBackingBean.managedBean.circularType}"
 					disabled="true" />
 			</h:column>
 		</h:panelGrid>
