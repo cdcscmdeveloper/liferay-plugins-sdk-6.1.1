@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,14 +100,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctName;
 	private String ctLOANo;
 	private String ctNumber;
-	private String ctDateEnd;
-	private String ctDateStart;
 	private String ctCircularNo;
 	private String ctSupplierId;
 	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
 	private int ctContractStatus;
+	private Date ctDateStart;
+	private Date ctDateEnd;
 	
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
@@ -312,22 +313,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtSupplierName(String ctSupplierName) {
 		this.ctSupplierName = ctSupplierName;
-	}
-
-	public String getCtDateStart() {
-		return ctDateStart;
-	}
-
-	public void setCtDateStart(String ctDateStart) {
-		this.ctDateStart = ctDateStart;
-	}
-
-	public String getCtDateEnd() {
-		return ctDateEnd;
-	}
-
-	public void setCtDateEnd(String ctDateEnd) {
-		this.ctDateEnd = ctDateEnd;
 	}
 
 	public String getCtLOANo() {
@@ -745,6 +730,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setChkConceValue(boolean chkConceValue) {
 		this.chkConceValue = chkConceValue;
+	}
+
+	public Date getCtDateStart() {
+		return ctDateStart;
+	}
+
+	public void setCtDateStart(Date ctDateStart) {
+		this.ctDateStart = ctDateStart;
+	}
+
+	public Date getCtDateEnd() {
+		return ctDateEnd;
+	}
+
+	public void setCtDateEnd(Date ctDateEnd) {
+		this.ctDateEnd = ctDateEnd;
 	}
 	
 	

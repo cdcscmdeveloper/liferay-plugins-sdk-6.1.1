@@ -345,7 +345,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void searchContract() {
 		ISearchBean<VCtContract> searchBean = new SearchBean<VCtContract>();
 		if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtNumber()));	
 		
 		}if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
@@ -357,25 +357,21 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().getCtCircularNo()));	
 		
 		}if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtCircularName()));	
 		
 		}if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtSupplierId()));	
 		
 		}if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtSupplierName()));	
 		
-		}if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LIKE.value(),
-			getManagedBean().getCtDateStart()));	
-		
-		}if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(),
-			getManagedBean().getCtDateEnd()));	
-		
+		}if(this.getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
+			
 		}if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtPhysicalNo()));	
@@ -384,7 +380,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtLOANo()));	
 		}if(getManagedBean().getCtContractStatus()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtContractStatus()));	
 		}	
 				
