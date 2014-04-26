@@ -32,21 +32,22 @@
                 <p:inputText value="#{varBond.refNo}" disabled="#{varBond.performanceBondId != null}" style="width:70px;"/>
              </p:column>	
              <p:column>
-                <p:selectOneMenu id="orgName" disabled="#{varBond.performanceBondId != null}"  style="width:120px;">
-                  <f:selectItem itemLabel="-Select One-" itemValue="-Select One-"/>
-               </p:selectOneMenu>         
+				<p:selectOneMenu id="orgName" value="#{varBond.financialOrg.financialOrgId}" style="width:180px;" disabled="#{varBond.performanceBondId != null}" >
+                	<f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}"/>
+                </p:selectOneMenu>               
               </p:column>	
               <p:column>  
                   <p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" disabled="#{varBond.performanceBondId != null}" style="width:60px;" >
-                 <f:convertNumber pattern="#,###.00" /></p:inputText>
+                 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
                </p:column>	
                <p:column>
                     <p:calendar value="#{varBond.effDate}" id="popupButtonCal4" showOn="button"  size="12" disabled="#{varBond.performanceBondId != null}"
-                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
                 </p:column>	
                 <p:column>
                    <p:calendar value="#{varBond.expDate}" id="popupButtonCal5" showOn="button"  
-                     pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{varBond.performanceBondId != null}" size="12"/>
+                     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+                     disabled="#{varBond.performanceBondId != null}" size="12"/>
                  </p:column>	
                  <p:column styleClass="column-align-center">
                     <h:panelGroup id="uploadBondPg">
@@ -58,9 +59,9 @@
 			        </h:panelGroup>
               </p:column>
                <p:column>
-                <p:selectOneMenu id="rStatus" disabled="#{varBond.performanceBondId != null}"  style="width:80px;">
-                    <f:selectItem itemLabel="Inactive" itemValue="Inactive"/>
-                    <f:selectItem itemLabel="Active" itemValue="Active"/>
+                <p:selectOneMenu id="rStatus" value="#{varBond.recordStatus}" disabled="#{varBond.performanceBondId != null}"  style="width:80px;">
+                    <f:selectItem itemLabel="Inactive" itemValue="false"/>
+                    <f:selectItem itemLabel="Active" itemValue="true"/>
                </p:selectOneMenu>   
                </p:column>
 	    </p:dataTable>

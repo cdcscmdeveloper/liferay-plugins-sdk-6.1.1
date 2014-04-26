@@ -42,6 +42,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -59,6 +60,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
@@ -82,6 +85,7 @@ import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.aut.SearchOperator;
@@ -243,7 +247,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		    setValidateContactField(resDTO);
+		    setValidateContractField(resDTO);
 		    
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -255,7 +259,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	 }
 	}
 	
-	public void setValidateContactField(ContractResDTO resDTO){
+	public void setValidateContractField(ContractResDTO resDTO){
 		
 		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
@@ -463,15 +467,24 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
+				String messageId = MessageConst.INFO_700005;
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_700009;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+				}
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					setValidateContractField(resDTO);
 				}
-			    initializeRemarks();
 			  }else {
 					throw new EpException("Failed.");
 			  }
@@ -480,7 +493,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			e.printStackTrace();
 			if(e instanceof EpException) {
 				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
@@ -569,6 +582,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     			}
     		}
     	}
+	}
+    
+	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
+		SelectItem[] items = null; 
+		IFinancialOrgSO financialOrgSO;
+		try{
+		    int i = 1;
+			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND);
+			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
+			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    for(PmFinancialOrg pmFinancialOrg : list) 
+				  items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
+	    } catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			financialOrgSO = null;
+		}
+	   return items;
 	}
     
     public void CombineSupAddress(CtContractVer ctContractVer){
@@ -1346,7 +1382,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-	    setValidateContactField(resDTO);  
+	    setValidateContractField(resDTO);  
 	    this.getManagedBean().setViewContract(true);
 		return PROCESS_VIEW_PAGE;
 	}
@@ -1358,7 +1394,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-	    setValidateContactField(resDTO);
+	    setValidateContractField(resDTO);
 	    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);
 	    
 	    this.getManagedBean().setUpdateContract(true);

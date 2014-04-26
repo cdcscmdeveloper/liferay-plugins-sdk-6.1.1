@@ -15,14 +15,10 @@
 	        	     <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 	              </p:column> 
 		          <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:150px;text-align:right;">
-		              <p:inputText id="amtInput" value="#{datas.amount}"  style="width:70%;" styleClass="ppRightBtn"
-		                 rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeFixedDeposit
+	                 <h:outputText value="#{datas.amount}" rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeFixedDeposit
 		                   or datas.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}">
-	            	      <f:convertNumber pattern="#,##0.00" />
-	                 </p:inputText> 
-	                 <h:outputLabel value="#{datas.amount}" rendered="#{datas.deductionType.parameterCode ne ParameterConst.deductionTypeFixedDeposit
-		                and datas.deductionType.parameterCode ne ParameterConst.deductionTypeAdvancePayment}">
-		             </h:outputLabel>
+		                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		             </h:outputText>
 		         </p:column>  
 		    </p:dataTable>
 	 </p:panel>        
