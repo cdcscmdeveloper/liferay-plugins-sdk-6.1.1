@@ -923,6 +923,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		int count = this.getManagedBean().getContractVer().getCtSchedules().size()-1;
 		count = count+1;
 		ctSchedules.setScheduleNo("S"+count);
+		if(ctSchedules.getScheduleType() == null)
+			ctSchedules.setScheduleType(new PmParameter());
 		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
 	
