@@ -174,10 +174,10 @@
 
 	<p:panel
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
-		<h:panelGrid width="100%" style="margin-top:20px">
+		<h:panelGrid width="100%">
 			<p:dataTable id="zoneGeneralDataTable"
 				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-				var="zoneTree" style="width:65%" rowIndexVar="index">
+				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="Location">
 					<p:tree value="#{zoneTree}" var="location">
 
