@@ -14,12 +14,15 @@ public class SupplierManagementConst {
 	// public static final String PROCEED_BUMI_APPLN =
 	// "applyBumiSmUser_BaseWizardPage";
 	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofDetailsBasePage";
+	public static final String PROCEED_UPDATE_APPLN_SIDEMENU = "smUpdateMofSideMenu_BasePage";
 	// public static final String PROCEED_UPDATE_MOF_APPLN =
 	// "updateMofSmUser_BaseWizardPage";
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
+	public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "smAddtnlCatApplnSideMenu_BasePage";
 	// public static final String PROCEED_ADDTNLCAT_MOF_APPLN =
 	// "addAdditionalCategorySmUser_BaseWizardPage";
 	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
+	public static final String PROCEED_RENEW_APPLN_SIDEMENU = "smRenewRegSideMenu_BasePage";
 	// public static final String PROCEED_RENEW_MOF_APPLN =
 	// "renewMofSmUser_BaseWizardPage";
 	public static final String PROCEED_CANCEL_MOF_APPLN = "cancelRegistrationWithMof";
@@ -103,6 +106,8 @@ public class SupplierManagementConst {
 	public static final int REG_SOFTCERT = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
 
+	public static final String SECTION_REV_ROLE_PO = "P";
+	public static final String SECTION_REV_ROLE_APP = "A";
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";

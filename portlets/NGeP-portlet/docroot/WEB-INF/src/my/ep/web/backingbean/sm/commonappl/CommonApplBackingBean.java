@@ -203,7 +203,8 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
+							"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review New Mof Registration Applicatoin - ");
 			break;
@@ -211,7 +212,8 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
+							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Additional Category Code(s) Applicatoin - ");
 			break;
@@ -228,7 +230,8 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
+							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Update Mof Details Applicatoin - ");
 			break;
@@ -236,7 +239,8 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Renew Mof Registration Applicatoin - ");
 			break;
