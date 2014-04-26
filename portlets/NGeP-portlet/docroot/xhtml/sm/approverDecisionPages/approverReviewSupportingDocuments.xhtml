@@ -8,11 +8,32 @@
 	<table style="width: 100%">
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;"><c:if
-					test="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 					<ui:include
 						src="/xhtml/sm/bumiPuteraApplication/smBumiApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
-			<td><p:panel>
+			<td><p:outputPanel>
+					<div align="right" style="width: 99%" class="button-wrapper">
+						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+							icon="ui-icon-save" style="margin-bottom:5px;" />
+					</div>
+				</p:outputPanel> <br /> <p:panel>
 					<p>NOTE : The supplier has submitted the documents</p>
 					<p>
 						<b>Online</b> - You may download and review the documents

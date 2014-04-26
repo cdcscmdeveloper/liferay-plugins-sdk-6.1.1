@@ -35,32 +35,59 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
 				<ui:include src="step3BumiAppln_BankInfo.xhtml" />
 			</c:if>
-			<c:if
-				test="#{backingBean.managedBean.tabActiveIndex eq 4 and backingBean.managedBean.supplierUser}">
-				<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
-			</c:if>
+			<c:choose>
+				<c:when test="#{backingBean.managedBean.supplierUser}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
+					</c:if>
+				</c:when>
+				<c:when test="#{backingBean.managedBean.poUser}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include
+							src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
+					</c:if>
+					<c:choose>
+						<c:when test="#{backingBean.managedBean.smAppl.recordStatus}">
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+								<ui:include
+									src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+								<ui:include
+									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+							</c:if>
+						</c:when>
+						<c:otherwise>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+								<ui:include
+									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+							</c:if>
+						</c:otherwise>
+					</c:choose>
 
-			<c:if
-				test="#{backingBean.managedBean.tabActiveIndex eq 4 and backingBean.managedBean.poUser}">
-				<ui:include
-					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
-			</c:if>
-			<c:if
-				test="#{backingBean.managedBean.tabActiveIndex eq 5 and backingBean.managedBean.poUser}">
-				<ui:include
-					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
-			</c:if>
+				</c:when>
+				<c:when test="#{backingBean.managedBean.approverUser}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include
+							src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include
+							src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+					</c:if>
+				</c:when>
+				<c:otherwise>
+				</c:otherwise>
+			</c:choose>
 
-			<c:if
-				test="#{backingBean.managedBean.tabActiveIndex eq 4 and backingBean.managedBean.approverUser}">
-				<ui:include
-					src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
-			</c:if>
-			<c:if
-				test="#{backingBean.managedBean.tabActiveIndex eq 5 and backingBean.managedBean.approverUser}">
-				<ui:include
-					src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-			</c:if>
+
+			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
+				dynamic="true" resizable="false" width="700px" height="200"
+				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+				<p:fileUpload
+					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
+					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
+			</p:dialog>
 		</ac:smPanel>
 
 	</ui:define>

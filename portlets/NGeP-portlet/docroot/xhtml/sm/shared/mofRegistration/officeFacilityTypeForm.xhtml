@@ -47,13 +47,17 @@
 
 				<tr>
 					<td width="134px;"><p:outputLabel value="Ownership Type" /></td>
-					<td colspan="3" style="padding-bottom: 2px;"><p:selectOneRadio
-							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}">
+					<td style="width: 100px; padding-bottom: 2px;"><p:selectOneRadio
+							id="ownTypeId" label="OwnerShip Type"
+							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
+							required="true">
 							<f:selectItem itemLabel="Own" itemValue="O" />
 							<f:selectItem itemLabel="Rent" itemValue="R" />
 							<p:ajax update="ofp" event="change"
 								listener="#{backingBean.officeFacilitySelected}" />
 						</p:selectOneRadio></td>
+					<td><p:message for="ownTypeId" showDetail="false"
+							showSummary="true" display="icon" /></td>
 
 				</tr>
 			</table>
@@ -191,12 +195,12 @@
 				</table>
 			</ui:fragment>
 			<ui:fragment
-				rendered="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType eq 'O'}">
+				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 				<table style="width: 100%">
 					<tr>
 						<td width="134px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								value="#{backingBean.managedBean.smAppl.smFacilities[0].facilityType}">
+								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 

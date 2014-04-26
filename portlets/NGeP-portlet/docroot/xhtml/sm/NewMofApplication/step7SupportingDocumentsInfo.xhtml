@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -15,45 +16,48 @@
 			<c:choose>
 				<c:when
 					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev']}"
+											actionListener="#{backingBean.setTabValue('8','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" icon="ui-icon-prev" />
+									</div></td>
 
-					<table style="width: 100%">
-						<tr>
-							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev']}"
-										actionListener="#{backingBean.setTabValue('8','7')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" icon="ui-icon-prev" />
-								</div></td>
-
-							<td><div align="right" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.next']}"
-										icon="ui-icon-next"
-										actionListener="#{backingBean.setTabValue('8','9')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" />
-								</div></td>
-						</tr>
-					</table>
+								<td><div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next']}"
+											icon="ui-icon-next"
+											actionListener="#{backingBean.setTabValue('8','9')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" />
+									</div></td>
+							</tr>
+						</table>
+					</div>
 				</c:when>
 				<c:otherwise>
-					<table style="width: 100%">
-						<tr>
-							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev']}"
-										actionListener="#{backingBean.setTabValue('6','5')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" icon="ui-icon-prev" />
-								</div></td>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev']}"
+											actionListener="#{backingBean.setTabValue('6','5')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" icon="ui-icon-prev" />
+									</div></td>
 
-							<td><div align="right" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.next']}"
-										icon="ui-icon-next"
-										actionListener="#{backingBean.setTabValue('6','7')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" />
-								</div></td>
-						</tr>
-					</table>
+								<td><div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next']}"
+											icon="ui-icon-next" iconPos="right"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" />
+									</div></td>
+							</tr>
+						</table>
+					</div>
 				</c:otherwise>
 			</c:choose>
 		</h:panelGroup>
@@ -64,47 +68,50 @@
 			<c:choose>
 				<c:when
 					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
-
-					<table style="width: 100%">
-						<tr>
-							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev']}"
-										actionListener="#{backingBean.setTabValue('8','7')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" icon="ui-icon-prev" />
-								</div></td>
-							<td><div align="right" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.next']}"
-										icon="ui-icon-next"
-										actionListener="#{backingBean.setTabValue('8','9')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" />
-								</div></td>
-						</tr>
-					</table>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev']}"
+											actionListener="#{backingBean.setTabValue('8','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" icon="ui-icon-prev" />
+									</div></td>
+								<td><div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next']}"
+											icon="ui-icon-next" iconPos="right"
+											actionListener="#{backingBean.setTabValue('8','9')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" />
+									</div></td>
+							</tr>
+						</table>
+					</div>
 				</c:when>
 				<c:otherwise>
-					<table style="width: 100%">
-						<tr>
-							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev']}"
-										actionListener="#{backingBean.setTabValue('6','5')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" icon="ui-icon-prev" />
-								</div></td>
-							<td><div align="right" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.next']}"
-										icon="ui-icon-next"
-										actionListener="#{backingBean.setTabValue('6','7')}"
-										action="#{backingBean.updateSmAppl('N','BasicInfo')}"
-										update=":form" />
-								</div></td>
-						</tr>
-					</table>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev']}"
+											actionListener="#{backingBean.setTabValue('6','5')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" icon="ui-icon-prev" />
+									</div></td>
+								<td><div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next']}"
+											icon="ui-icon-next"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											update=":form" />
+									</div></td>
+							</tr>
+						</table>
+					</div>
 				</c:otherwise>
 			</c:choose>
 		</h:panelGroup>
 
 	</p:outputPanel>
-	
+
 </ui:composition>

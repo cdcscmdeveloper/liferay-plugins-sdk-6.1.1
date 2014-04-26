@@ -7,9 +7,25 @@
 	<table style="width: 100%">
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;"><c:if
-					test="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 					<ui:include
 						src="/xhtml/sm/bumiPuteraApplication/smBumiApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
@@ -21,10 +37,10 @@
 						onclick="submitApprvrDialog.show();" />
 					<p:commandButton value="Recommend To Reject"
 						onclick="submitApprvrDialog.show();" />
-					
-						<p:commandButton value="Recommend Site Visit"
-							onclick="svcDialog.show();" />
-					
+
+					<p:commandButton value="Recommend Site Visit"
+						onclick="svcDialog.show();" />
+
 					<p:commandButton value="Send Enquiry" />
 				</div> <p:panel header="PO Decision">
 					<table>

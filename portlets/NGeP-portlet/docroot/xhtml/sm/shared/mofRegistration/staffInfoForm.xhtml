@@ -46,9 +46,9 @@
 			<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
 				var="staff" columns="1" rowIndexVar="index" id="dtfGrd">
 
-				<table style="width: 800px;">
+				<table style="width: 1000px;">
 					<tr>
-						<td width="160px"><p:outputLabel
+						<td width="200px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.totalStaff']} "
 								rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
 								value="#{lbl['lbl.sm.staff.profStaff']}"
@@ -59,20 +59,26 @@
 								rendered="#{staff.staffCategory eq 'L'}" /></td>
 						<td width="50px"><p:outputLabel
 								value="* #{lbl['lbl.sm.staff.bumi']}" /></td>
-						<td width="60px"><p:inputText size="4" id="bumi"
+						<td width="55px"><p:inputText size="4" id="bumiStf"
 								value="#{staff.totalBumi}" maxlength="4"
 								style="min-width: 0px !important;" label="Bumi Staff"
-								required="true" /> </td>
+								required="true" /></td>
+						<td width="95px"><p:message for="bumiStf" showDetail="false"
+								showSummary="true" display="icon" /></td>
 						<td width="80px"><p:outputLabel
 								value="* #{lbl['lbl.sm.staff.nonBumi']}" /></td>
-						<td width="60px"><p:inputText size="4"
+						<td width="55px"><p:inputText size="4" id="nonBumStf"
 								style="min-width: 0px !important;" label="Non Bumi Staff"
 								value="#{staff.totalNonBumi}" maxlength="4" required="true" /></td>
+						<td width="95px"><p:message for="nonBumStf"
+								showDetail="false" showSummary="true" display="icon" /></td>
 						<td width="80px"><p:outputLabel
 								value="* #{lbl['lbl.sm.staff.frgnr']}" /></td>
-						<td width="60px" style="padding-right: 20px;"><p:inputText
-								size="4" value="#{staff.totalForeigner}" label="Foriegn Staff"
+						<td width="55px"><p:inputText id="frgStf" size="4"
+								value="#{staff.totalForeigner}" label="Foriegn Staff"
 								maxlength="4" style="min-width: 0px !important;" required="true" /></td>
+						<td width="95px"><p:message for="frgStf" showDetail="false"
+								showSummary="true" display="icon" /></td>
 					</tr>
 
 				</table>
@@ -83,7 +89,8 @@
 					<tr>
 						<td style="padding-left: 38px;"><p:outputLabel
 								value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.staffRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -93,10 +100,12 @@
 						<td style="padding-left: 38px;"><p:outputLabel
 								value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41" /></td>
+								disabled="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.staffRemark}" /></td>
 						<td style="padding-left: 22px;"><p:outputLabel
 								value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.apprvrSecReview.staffRemark}" /></td>
 
 					</tr>
 				</table>

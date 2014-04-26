@@ -7,9 +7,25 @@
 	<table style="width: 100%">
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;"><c:if
-					test="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 					<ui:include
 						src="/xhtml/sm/bumiPuteraApplication/smBumiApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
@@ -51,8 +67,8 @@
 						<tr>
 							<td><p:outputLabel value="PO Recommendation" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" value="Approve"
-									disabled="true" /></td>
+							<td><p:inputTextarea cols="70"
+									value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
 
 						</tr>
 					</table>
