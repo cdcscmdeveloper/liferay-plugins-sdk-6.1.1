@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel styleClass="scmemberdtls">
+		<p:spacer height="2" />
+
+		<p:dataTable id="committeeapprovalId" value="#{membersList}"
+			var="committeeapprover" rowIndexVar="index" editable="true"
+			rowKey="#{committeeapprover}" selection="#{selectedMembersList}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:column headerText="#{lbl['lbl.so.bo.name']}">
+				<h:outputText value="#{committeeapprover.memberName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+				style="width: 10%">
+				<h:outputText value="#{committeeapprover.icPassport}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+				<h:outputText value="#{committeeapprover.designation}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.bo.email']}">
+				<h:outputText value="#{committeeapprover.email}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width: 10%">
+				<h:outputText value="#{committeeapprover.grade}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
+				<h:outputText value="#{committeeapprover.PNP ? 'Yes' : 'No'}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}"
+				style="width: 15%">
+				<ui:fragment rendered="#{committeeapprover.PNP}">
+					<h:outputText value="Chairperson"
+						rendered="#{committeeapprover.memberRole eq 'C'}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{!committeeapprover.PNP}">
+					<p:selectOneMenu value="#{committeeapprover.memberRole}"
+						style="width: 110px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{approvalBackingBean.managedBean.roleTypes}" />
+					</p:selectOneMenu>
+				</ui:fragment>
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

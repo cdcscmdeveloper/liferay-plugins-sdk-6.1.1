@@ -65,7 +65,7 @@
 		</div>
 		<ac:lovPopup />
 	</p:panel>
-	<p:spacer height="10" />
+	<p:spacer height="1" />
 
 	<p:panel>
 		<table style="width: 100%">
@@ -76,7 +76,7 @@
 							style="margin-left: 26px;"
 							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
-								style="width : 80px" />
+								style="width: 80px" />
 
 							<p:selectBooleanCheckbox disabled="true"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState}">
@@ -110,7 +110,7 @@
 								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locLevels"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.locationLevel}"
-								style="width: 178px;margin-bottom: 5px;">
+								style="width: 178px;">
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
 								<p:ajax event="change"
@@ -121,7 +121,7 @@
 			</p:panel>
 			<p:panel
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'))}">
-				<h:panelGrid width="100%" style="margin-top:20px">
+				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
@@ -176,7 +176,7 @@
 								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel}"
-								style="width: 178px;margin-bottom: 5px;">
+								style="width: 178px;">
 
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
@@ -188,7 +188,7 @@
 			</p:panel>
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
-				<h:panelGrid width="100%" style="margin-top:20px">
+				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">

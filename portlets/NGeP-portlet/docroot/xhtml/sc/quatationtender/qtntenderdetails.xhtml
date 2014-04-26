@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="qtdetailsid" header="Details" toggleable="true">
-		<table style="width: 100%" border="1">
+		<table>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
+				<td style="width: 155px;"><p:outputLabel
 						value="#{lbl['lbl.so.qttentype']}" /></td>
 				<td colspan="3"><c:if
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -34,7 +34,7 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 150px;"><p:outputLabel
+								<td style="width: 155px;"><p:outputLabel
 										value="#{lbl['lbl.so.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
@@ -43,7 +43,7 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 220px"><p:outputLabel
+									<td style="width: 200px"><p:outputLabel
 											value="#{lbl['lbl.so.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
@@ -67,16 +67,16 @@
 				<td colspan="3"><ac:lov id="contractLovId" lovId="CT_CONTRACT"
 						headerText="Contract Lov" update=":form:qtsubId:qtdetailsid"
 						saveObject="qTDetailBB.managedBean.ctContract"
-						value="#{qTDetailBB.managedBean.ctContract.contractNo}">
+						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30">
 					</ac:lov> <ac:lovPopup /></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.publishPeriod}" readonly="true"
 						size="30" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.so.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}"
 						readonly="true" size="30" /></td>
@@ -99,7 +99,7 @@
 				<td />
 			</tr> -->
 			<tr>
-				<td><p:outputLabel value="Zone/Location" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.zone.location']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.zonal ? 'Yes' : 'No'}"
 						disabled="true" size="30" /></td>
@@ -108,27 +108,22 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:spacer height="5" />
-
-	<p:panel header="Zone/Location Info" toggleable="true"
+	<p:panel header="#{lbl['lbl.so.zone.location.info']}" toggleable="true"
 		rendered="#{qTDetailBB.managedBean.qt.zonal}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 150px"><p:outputLabel value="Location Level" /></td>
-				<td><p:inputText
+				<td style="width: 155px"><p:outputLabel
+						value="#{lbl['lbl.so.location.level']}" /></td>
+				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.zoneLocationLevel, qTDetailBB.managedBean.qt.zoneLocationLevel)}"
 						disabled="true" size="30" /></td>
-				<td />
-				<td />
 			</tr>
 		</table>
-
 		<p:dataTable id="zoneGeneralDataTable"
 			value="#{qTDetailBB.managedBean.zoneGeneralTrees}" var="zoneTree"
-			style="width:65%" rowIndexVar="index">
+			style="width:100%" rowIndexVar="index">
 			<p:column headerText="Location">
 				<p:tree value="#{zoneTree}" var="location">
-
 					<p:treeNode type="zone">
 						<h:outputText value="#{location.zoneName}" />
 					</p:treeNode>
@@ -144,7 +139,6 @@
 					</p:treeNode>
 				</p:tree>
 			</p:column>
-
 		</p:dataTable>
 	</p:panel>
 </ui:composition>

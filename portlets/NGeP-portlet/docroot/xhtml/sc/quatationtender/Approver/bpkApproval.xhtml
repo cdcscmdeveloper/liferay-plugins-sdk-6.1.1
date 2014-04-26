@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Request Details" toggleable="true">
+		<p:dataTable id="requestdtlid">
+			<p:column headerText="Type of Approval Request"></p:column>
+			<p:column headerText="From"></p:column>
+			<p:column headerText="To"></p:column>
+			<p:column headerText="Decision"></p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:panel header="Supplier List" toggleable="true">
+		<p:dataTable id="supplierlistid">
+			<p:column headerText="Supplier Name"></p:column>
+			<p:column headerText="MOF No"></p:column>
+			<p:column headerText="MOF Expiry Date"></p:column>
+			<p:column headerText="Status"></p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>
