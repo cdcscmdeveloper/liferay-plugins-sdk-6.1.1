@@ -6,7 +6,6 @@ package my.ep.web.backingbean.fl.deliveryorder;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -14,14 +13,16 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
-import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -87,7 +88,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				System.out.println("--CR calculateDelAmt--");
 				calculateDelAmt(flDeliveryOrder);
 			}
-			
 			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
 			reqDTO.setStatusId(statusId);
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
@@ -163,17 +163,17 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
 			//flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType
 						
-			if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){
-				itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
-				for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
-					if(null==item.getDeliveredAmt()){
-						item.setDeliveredAmt(itemAddr.getOrderedAmt());
-					}
-					if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
-						item.setDeliveredQty(new BigDecimal(1L));
-					}
-				}
-			}
+//			if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){//TODO change the code
+//				itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
+//				for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
+//					if(null==item.getDeliveredAmt()){
+//						item.setDeliveredAmt(itemAddr.getOrderedAmt());
+//					}
+//					if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
+//						item.setDeliveredQty(new BigDecimal(1L));
+//					}
+//				}
+//			}
 		}
 		
 	}

@@ -15,13 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.dofullfillmentdata.FLDOFullfillmentDataType;
+import my.ep.jaxb.fl.dodata.FLDeliveryOrderDataType;
+import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
@@ -55,7 +59,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
+	
 	public String submitAction(String action) {
 		IReceivedNoteSO receivedNoteSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -65,6 +69,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
 			System.out.println("getReceivedQty: "+getManagedBean().getFulfilmentNoteItem().getReceivedQty());
+			getUserProfiles(reqDTO);
 			reqDTO.setFulfilmentNote(fulfilmentNote);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
@@ -125,17 +130,17 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType)obj;
-			flReqDTO.setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
+			FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
+//			flReqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());//TODO ask bpm provide doId
 			delOrderResDTO = deliveryOrderSO.retrieveDeliveryOrderById(flReqDTO);
-			flReqDTO.setFlRequestId(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			flReqDTO.setFlRequestId(fulFillmentRecievedNoteDataType.getFlRequestId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
-			getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
+//			getManagedBean().setDeliveryOrderId(deliveryOrderDataType.getDoId());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			System.out.println("Doc type in FRN::: "+resDTO.getFlFulfilmentRequest().getDocType());
@@ -162,5 +167,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 
 		}
+	}
+	
+	public void getUserProfiles(FulfilmentReqDTO reqDTO){
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
+		reqDTO.setPmUser(userResDTO.getPmUser());
 	}
 }
