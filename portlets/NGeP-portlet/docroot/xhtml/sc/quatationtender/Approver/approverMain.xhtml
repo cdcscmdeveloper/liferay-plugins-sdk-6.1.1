@@ -40,8 +40,7 @@
 					</c:forEach></td>
 			</tr>
 		</table>
-		
-	
+
 		<ui:fragment
 			rendered="#{approvalBackingBean.managedBean.approvalType eq 'Budget Approval'}">
 			<ui:include src="requestPTJdetails.xhtml" />
@@ -57,7 +56,7 @@
 			<ui:include src="ptjApprovalTab.xhtml" />
 		</ui:fragment>
 		<ui:fragment
-			rendered="#{'Committee Appointment Approval' == approvalBackingBean.managedBean.approvalType}">
+			rendered="#{approvalBackingBean.managedBean.approvalType eq 'Committee Appointment Approval'}">
 			<ui:include src="committeeApprovalTab.xhtml" />
 		</ui:fragment>
 	</ui:define>
