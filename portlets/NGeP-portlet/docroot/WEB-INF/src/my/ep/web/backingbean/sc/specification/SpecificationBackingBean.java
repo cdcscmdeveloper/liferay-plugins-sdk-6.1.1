@@ -7194,16 +7194,13 @@ public class SpecificationBackingBean extends
 					(circular.getEndDate().toString()));
 			this.getManagedBean().setCirCularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			/*
-			 * this.getManagedBean().setCircularType(
-			 * circular.getItemCategory().getPmParameterDescs().get(0)
-			 * .getCodeName());
-			 */
+			
+			  this.getManagedBean().setCircularType(getParameterDesc(circular.getCtPanelItems().get(0).getItemCategoryId()));
+			  System.out.println("=======circular type==="+ this.getManagedBean().getCircularType());
+			 
+			
 			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
-			/*
-			 * this.getManagedBean().setCircularType(
-			 * circular.getCtCircular().getCircularType());
-			 */
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
