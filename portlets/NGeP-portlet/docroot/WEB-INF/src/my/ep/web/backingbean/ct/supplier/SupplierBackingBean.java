@@ -351,7 +351,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			
-			reqDTO.setSupplierUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			PmUser pmUser = new PmUser();
+			pmUser.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+			reqDTO.setSupplierPmUser(pmUser);
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
@@ -398,7 +400,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 reqDTO.setOutcome(outcome);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			 reqDTO.setFromSupplier(true);
-			 reqDTO.setSupplierUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			 PmUser pmUser = new PmUser();
+			 pmUser.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+			 reqDTO.setSupplierPmUser(pmUser);
 			 reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			 reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			 

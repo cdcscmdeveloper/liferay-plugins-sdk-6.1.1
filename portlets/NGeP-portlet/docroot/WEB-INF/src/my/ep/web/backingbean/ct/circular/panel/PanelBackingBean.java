@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -67,8 +66,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -299,7 +296,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			PmUser pmUSer = new PmUser();
+			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
+			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
 				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
@@ -393,7 +392,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			PmUser pmUSer = new PmUser();
+			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
+			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
 				reqDTO.getCancelCircularReq().setApprover(getFacesScopes().getUserSessionBean());
@@ -915,7 +916,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			Object obj = res.getPojo();			
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			
-			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
+			getManagedBean().setCircularAdmin(dataType.getContractAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
 			outcome[0] = "Save";
@@ -986,7 +987,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			Object obj = res.getPojo();			
 			CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
 			
-			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
+			getManagedBean().setCircularAdmin(dataType.getContractAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
 			outcome[0] = "Save";
