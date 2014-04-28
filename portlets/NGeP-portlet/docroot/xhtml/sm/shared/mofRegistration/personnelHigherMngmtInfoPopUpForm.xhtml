@@ -44,18 +44,64 @@
 				<td><p:outputLabel value="* DOB" /></td>
 				<td><p:calendar showOn="button"
 						value="#{backingBean.managedBean.selectedPersonnel.birthDate}" /></td>
-				<td><p:outputLabel value="* Role : " /></td>
-				<td>
-					<table>
-						<tr>
-							<td><p:selectBooleanCheckbox /></td>
-							<td><p:outputLabel value="Director" /></td>
-							<td><p:selectBooleanCheckbox /></td>
-							<td><p:outputLabel value="Higher Management" /></td>
-						</tr>
+				<c:choose>
+					<c:when
+						test="#{backingBean.managedBean.selectedPersonnel.dirOrHghrMngmt or backingBean.managedBean.selectedPersonnel.director or backingBean.managedBean.selectedPersonnel.higherManagement}">
+						<td><p:outputLabel value="* Role : " /></td>
+						<td>
+							<table>
+								<tr>
+									<td><p:selectBooleanCheckbox
+											value="#{backingBean.managedBean.selectedPersonnel.director}" /></td>
+									<td><p:outputLabel value="Director" /></td>
+									<td><p:selectBooleanCheckbox
+											value="#{backingBean.managedBean.selectedPersonnel.higherManagement}" /></td>
+									<td><p:outputLabel value="Higher Management" /></td>
+								</tr>
 
-					</table>
-				</td>
+							</table>
+						</td>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when
+								test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+								<td><p:outputLabel value="*Role" /></td>
+								<td>
+									<table>
+										<tr>
+											<td><p:selectOneMenu
+													value="#{backingBean.managedBean.selectedPersonnel.staffRoleFlg}">
+													<f:selectItems
+														value="#{backingBean.getDropdownValues('KPT')}" />
+												</p:selectOneMenu></td>
+										</tr>
+
+									</table>
+								</td>
+							</c:when>
+							<c:otherwise>
+								<td><p:outputLabel value="*Role" /></td>
+								<td>
+									<table>
+										<tr>
+											<td><p:selectOneMenu
+													value="#{backingBean.managedBean.selectedPersonnel.staffRoleFlg}">
+													<f:selectItems
+														value="#{backingBean.getDropdownValues('JPT')}" />
+												</p:selectOneMenu></td>
+										</tr>
+
+									</table>
+								</td>
+							</c:otherwise>
+
+						</c:choose>
+
+					</c:otherwise>
+				</c:choose>
+
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Designation" /></td>
@@ -88,11 +134,6 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.email}"
 						size="35" /></td>
-				<td><p:outputLabel value=" Job Function" /></td>
-				<td><p:inputTextarea
-						value="#{backingBean.managedBean.selectedPersonnel.jobFunction}"
-						cols="36" /></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>

@@ -207,21 +207,12 @@
 				<p:column headerText="Action">
 					<p:commandLink rendered="#{!person.equityOwner}"
 						action="#{backingBean.assignSelPersonnel(person)}"
-						oncomplete="personnelDialog.show();" style="padding-right:5px;"
-						update=":form:tt:personnelDialog">
+						oncomplete="directorDialog.show();" style="padding-right:5px;"
+						update=":form:tt:directorDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-					<p:commandLink rendered="#{!person.equityOwner}"
-						action="#{backingBean.assignSelShareHolderAddress(person,person.equityOwner)}"
-						oncomplete="directorAddrDialog.show();"
-						update=":form:tt:directorAddrDialog" id="PerDirAddrLnk">
-						<p:graphicImage library="ep/images/design" name="register.png"
-							value="/resources/ep/images/design/register.png" />
-					</p:commandLink>
-					<p:tooltip for="PerDirAddrLnk">
-						<h:outputText value="Address Details" />
-					</p:tooltip>
+
 
 					<p:commandLink oncomplete="perShareHolderDialog.show();"
 						rendered="#{person.equityOwner}"
@@ -231,8 +222,8 @@
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 					<p:commandLink oncomplete="perShareHolderAddrDialog.show();"
-						rendered="#{person.equityOwner}" id="PerShrAddrLnk"
-						action="#{backingBean.assignSelShareHolderAddress(person,person.equityOwner)}"
+						id="PerShrAddrLnk"
+						action="#{backingBean.assignSelShareHolderAddress(person)}"
 						update=":form:tt:perShareHolderAddrDialog">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
@@ -246,13 +237,13 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add Management / Staff"
-					action="#{backingBean.assignNewPersonnel}"
-					oncomplete="personnelDialog.show();"
-					update=":form:tt:personnelDialog" />
+					action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
+					oncomplete="directorDialog.show();"
+					update=":form:tt:directorDialog" />
 				<ui:fragment
 					rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier.businessType eq '3'}">
 					<p:commandButton value="Add Director/Higher Management"
-						action="#{backingBean.assignNewPersonnel}"
+						action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
 						oncomplete="directorDialog.show();"
 						update=":form:tt:directorDialog" />
 				</ui:fragment>
@@ -289,19 +280,7 @@
 	</p:panel>
 
 
-	<p:dialog width="1050px" height="560px" header="Personnel Information"
-		widgetVar="personnelDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="personnelDialog">
 
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnelInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
-				oncomplete="personnelDialog.hide();" update=":form:tt:personDt" />
-			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
-		</div>
-	</p:dialog>
 	<p:dialog width="1050px" height="500px"
 		header="Higher Management/Director Information"
 		widgetVar="directorDialog" resizable="false" showEffect="fade"
@@ -316,20 +295,7 @@
 			<p:commandButton value="Cancel" onclick="directorDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="1050px" height="500px"
-		header="Personnel Address Information" widgetVar="directorAddrDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="directorAddrDialog">
 
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnelHigherMngmtAddrInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdatePeronnelAddress(backingBean.managedBean.selectedPersonnel)}"
-				oncomplete="directorAddrDialog.hide();" update=":form:tt:personDt" />
-			<p:commandButton value="Cancel" onclick="directorAddrDialog.hide();" />
-		</div>
-	</p:dialog>
 
 	<p:dialog width="1050px" height="500px"
 		header="Share Holder Information" widgetVar="perShareHolderDialog"
@@ -347,6 +313,7 @@
 				onclick="perShareHolderDialog.hide();" />
 		</div>
 	</p:dialog>
+
 	<p:dialog width="1050px" height="500px"
 		header="Share Holder Address Information"
 		widgetVar="perShareHolderAddrDialog" resizable="false"
