@@ -35,30 +35,55 @@
 			disabled="#{cc.attrs.disabled}">
 		</p:inputText>
 	</h:panelGroup>
+	&#160;
+	<h:panelGroup id="linkpg" rendered="#{cc.attrs.selectionMode eq 'single'}">
+		<p:commandLink
+			id="#{cc.attrs.id}lovLink"
+			action="#{lovBackingBean.initLov}"
+			oncomplete="updateSearchDialog(); lovPopup.show();"
+			disabled="#{cc.attrs.disabled}"
+			readonly="#{cc.attrs.readonly}">
+			
+			<f:param name="lovId" 			value="#{cc.attrs.lovId}" />
+			<f:param name="componentId" 	value="#{cc.attrs.id}" />
+			<f:param name="headerText" 		value="#{cc.attrs.headerText}" />
+			<f:param name="saveObject" 		value="#{cc.attrs.saveObject}" />
+			<f:param name="conditionField" 	value="#{cc.attrs.conditionField}" />
+			<f:param name="clientId" 		value="#{p:component(cc.attrs.id)}" />
+			<f:param name="update" 			value="#{cc.attrs.update}" />
+			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
+			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			
+			<p:graphicImage library="ep/images/design" name="magnifier_zoom_in.png" />
+					
+		</p:commandLink>
+	</h:panelGroup>
 	
-	<p:commandButton
-		id="#{cc.attrs.id}lovBtn"
-		icon="#{cc.attrs.buttonIcon}"
-		action="#{lovBackingBean.initLov}"
-		oncomplete="updateSearchDialog(); lovPopup.show();"
-		disabled="#{cc.attrs.disabled}"
-		readonly="#{cc.attrs.readonly}">
-		
-		<f:param name="lovId" 			value="#{cc.attrs.lovId}" />
-		<f:param name="componentId" 	value="#{cc.attrs.id}" />
-		<f:param name="headerText" 		value="#{cc.attrs.headerText}" />
-		<f:param name="saveObject" 		value="#{cc.attrs.saveObject}" />
-		<f:param name="conditionField" 	value="#{cc.attrs.conditionField}" />
-		<f:param name="clientId" 		value="#{p:component(cc.attrs.id)}" />
-		<f:param name="update" 			value="#{cc.attrs.update}" />
-		<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
-		<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
-		
-		<c:if test="#{cc.attrs.buttonLabel != ''}">
-			<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
-		</c:if>
-				
-	</p:commandButton>
+	<h:panelGroup id="btnpg" rendered="#{cc.attrs.selectionMode eq 'multiple'}">
+		<p:commandButton
+			id="#{cc.attrs.id}lovBtn"
+			icon="#{cc.attrs.buttonIcon}"
+			action="#{lovBackingBean.initLov}"
+			oncomplete="updateSearchDialog(); lovPopup.show();"
+			disabled="#{cc.attrs.disabled}"
+			readonly="#{cc.attrs.readonly}">
+			
+			<f:param name="lovId" 			value="#{cc.attrs.lovId}" />
+			<f:param name="componentId" 	value="#{cc.attrs.id}" />
+			<f:param name="headerText" 		value="#{cc.attrs.headerText}" />
+			<f:param name="saveObject" 		value="#{cc.attrs.saveObject}" />
+			<f:param name="conditionField" 	value="#{cc.attrs.conditionField}" />
+			<f:param name="clientId" 		value="#{p:component(cc.attrs.id)}" />
+			<f:param name="update" 			value="#{cc.attrs.update}" />
+			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
+			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			
+			<c:if test="#{cc.attrs.buttonLabel != ''}">
+				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
+			</c:if>
+					
+		</p:commandButton>
+	</h:panelGroup>
 	
 </h:panelGroup>
 
