@@ -151,6 +151,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private int tierRowIndex;
 	
+	private boolean error1 = false;
+	private boolean error2 = false;
+	private boolean error3 = false;
+	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
 	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
@@ -1118,6 +1122,36 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setTierRowIndex(int tierRowIndex) {
 		this.tierRowIndex = tierRowIndex;
+	}
+
+
+	public boolean isError3() {
+		return error3;
+	}
+
+
+	public void setError3(boolean error3) {
+		this.error3 = error3;
+	}
+
+
+	public boolean isError2() {
+		return error2;
+	}
+
+
+	public void setError2(boolean error2) {
+		this.error2 = error2;
+	}
+
+
+	public boolean isError1() {
+		return error1;
+	}
+
+
+	public void setError1(boolean error1) {
+		this.error1 = error1;
 	}
 
 
