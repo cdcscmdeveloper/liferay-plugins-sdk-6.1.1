@@ -71,6 +71,7 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -593,7 +594,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			PmUser pmUSer = new PmUser();
+			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
+			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
 				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
@@ -802,7 +805,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			Object obj = res.getPojo();			
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			
-			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
+			getManagedBean().setCircularAdmin(dataType.getContractAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
 			outcome[0] = "Save";
