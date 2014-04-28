@@ -62,7 +62,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private double secondValue =0.0;
-	private String userLoginId;
+	private PmUser userLogin;
 	private CtContractItem selectedServiceItem;
 	
 	private List<CtContractVer> amendHistoryList;
@@ -243,12 +243,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.secondValue = secondValue;
 	}
 
-	public String getUserLoginId() {
-		return userLoginId;
+	public PmUser getUserLogin() {
+		return userLogin;
 	}
 
-	public void setUserLoginId(String userLoginId) {
-		this.userLoginId = userLoginId;
+	public void setUserLogin(PmUser userLogin) {
+		this.userLogin = userLogin;
 	}
 
 	public List<CtContractVer> getAmendHistoryList() {

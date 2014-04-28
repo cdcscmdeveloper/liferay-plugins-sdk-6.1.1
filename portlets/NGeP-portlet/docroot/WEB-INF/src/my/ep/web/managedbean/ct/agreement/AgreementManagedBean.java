@@ -16,6 +16,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.ct.AgreementDetails;
@@ -56,7 +57,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	List<AgreementDetails> agreementList;
 	
 	private Long parameterId;
-	private String userLoginId;
+	private PmUser userLogin;
 	private Long ministryProfileId;
 	private Long departmentProfileId;
 
@@ -226,12 +227,12 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	public String getUserLoginId() {
-		return userLoginId;
+	public PmUser getUserLogin() {
+		return userLogin;
 	}
 
-	public void setUserLoginId(String userLoginId) {
-		this.userLoginId = userLoginId;
+	public void setUserLogin(PmUser userLogin) {
+		this.userLogin = userLogin;
 	}
 
 	public Map<Long, PmUserGroup> getUserGroupMap() {

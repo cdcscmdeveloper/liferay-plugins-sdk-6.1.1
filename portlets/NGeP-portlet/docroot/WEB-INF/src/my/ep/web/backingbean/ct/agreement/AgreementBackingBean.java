@@ -59,6 +59,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.pm.OrganizationType;
@@ -207,7 +208,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
-			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
+			PmUser pmUSer = new PmUser();
+			pmUSer.setLoginId(dataType.getContractAdmin().getUserName());
+			this.getManagedBean().setUserLogin(pmUSer);
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
 			
 			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
@@ -327,10 +330,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			 reqDTO.setUserRole(getUserRole());
 			 
-			 if(this.getManagedBean().getUserLoginId() == null)
-			    reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+			 if(this.getManagedBean().getUserLogin() == null)
+			    reqDTO.setUserLogin(getFacesScopes().getUserSessionBean());
 			 else
-			    reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
+			    reqDTO.setUserLogin(this.getManagedBean().getUserLogin());
 			
 			reqDTO.setAgreement(this.getManagedBean().getCtAgreement());
 			

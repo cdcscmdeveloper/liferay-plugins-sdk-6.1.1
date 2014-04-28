@@ -62,6 +62,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -146,7 +147,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getAmendmentId()));
-			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
+			PmUser pmuser = new PmUser();
+			pmuser.setLoginId(dataType.getContractAdmin().getUserName());
+			this.getManagedBean().setUserLogin(pmuser);
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
@@ -271,10 +274,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 	   
-	        if(this.getManagedBean().getUserLoginId() == null)
-	             reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-	        else
-	        	reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
+	        if(this.getManagedBean().getUserLogin() == null)
+	             reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+	        else {
+	        	PmUser pmUser = new PmUser();
+	        	pmUser.setLoginId(this.getManagedBean().getUserLogin().getUserName());
+	        	pmUser.setUserId(this.getManagedBean().getUserLogin().getUserId().longValue());
+	        	reqDTO.setPmUser(pmUser);
+	        }
 	       
 	        if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0)
 				this.getManagedBean().getContractVer().getCtContractItems().clear();
