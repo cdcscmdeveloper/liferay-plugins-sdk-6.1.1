@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,8 +57,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
@@ -137,9 +134,7 @@ public class SmApplicationBackingBean extends
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
-			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
-				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
-			}
+
 			if (!fromBpm) {
 
 				resDto = cloneSmApplicationDraft((long) 27, applicationType,
@@ -155,8 +150,12 @@ public class SmApplicationBackingBean extends
 				if (resDto.isErrorCaued()) {
 					return setExceptionNavigationForAppl(applicationType);
 				}
-				
+
 				smAppl = resDto.getSmAppl();
+				if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
+					smAppl.setSupplierType(getManagedBean()
+							.getNewSupplierType());
+				}
 				System.out.println("Retrieved Value ==="
 						+ smAppl.getSmCompanyBasic().getIncomeTaxNo()
 						+ " === EST DATE ==== "
@@ -250,7 +249,7 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().setSmAppl(smAppl);
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
-				System.out.println("***8 Emty list of staff *****"
+				System.out.println("*** Empty list of staff *****"
 						+ smAppl.getSupplierType());
 				getManagedBean().getSmAppl().setSmStaffTotals(
 						getStaffList(smAppl.getSupplierType()));
@@ -1856,16 +1855,20 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmapplShareHolders().add(
 					getManagedBean().getSelectedShareHolder());
 		}
+
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 	}
 
-	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean) {
+	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean)
+			throws ParseException {
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
 			System.out.println("******** Empty list ********"
-					+ shareHolderBean.getName());
+					+ shareHolderBean.getName() + " *** Id ***"
+					+ shareHolderBean.getPersonnelId() + " ** Is Equity ****"
+					+ shareHolderBean.isEquityOwner());
 			shareHolderBean.getSmPersonnelAddresses().add(
 					getManagedBean().getShareHolderResdAddr());
 			shareHolderBean.getSmPersonnelAddresses().add(
@@ -1911,32 +1914,17 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			getManagedBean().setSelectedShareHolder(shareHolderBean);
-			System.out.println("*** After set addr value ***"
-					+ getManagedBean().getSelectedShareHolder().getName());
-		}
-		if (getManagedBean().getSmAppl().getSmPersonnels()
-				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			System.out
-					.println(" **** THIS IS AN UPDATE Personnel Address******");
-			getManagedBean()
-					.getSmAppl()
-					.getSmPersonnels()
-					.set(getManagedBean().getSmAppl().getSmPersonnels()
-							.indexOf(getManagedBean().getSelectedShareHolder()),
-							getManagedBean().getSelectedShareHolder());
-			getManagedBean().getSmapplShareHolders().set(
-					getManagedBean().getSmapplShareHolders().indexOf(
-							getManagedBean().getSelectedShareHolder()),
-					getManagedBean().getSelectedShareHolder());
+		}
+		System.out.println("*** After set addr value ***"
+				+ getManagedBean().getSelectedShareHolder().getName()
+				+ "** Id ***"
+				+ getManagedBean().getSelectedShareHolder().getPersonnelId());
+		if (shareHolderBean.isEquityOwner()) {
+			addOrUpdateShareHolderToSmAppl();
 		} else {
-
-			getManagedBean().getSmAppl().getSmPersonnels()
-					.add(getManagedBean().getSelectedShareHolder());
-			getManagedBean().getSmapplShareHolders().add(
-					getManagedBean().getSelectedShareHolder());
+			addOrUpdatePersonnelToSmAppl();
 		}
-
 	}
 
 	public void assignNewShareHolder() {
@@ -2119,8 +2107,7 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean,
-			Boolean isShrHldr) {
+	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
 			System.out.println("******** New Address fields ********"
 					+ shareHolderBean.getName());
@@ -2148,41 +2135,24 @@ public class SmApplicationBackingBean extends
 			res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
 			res.setSmAddress(setDefaultAddr());
 			res.setSmPersonnel(shareHolderBean);
-			if (isShrHldr) {
-				getManagedBean().setShareHolderPermAddr(perm);
-				getManagedBean().setShareHolderMailAddr(mail);
-				getManagedBean().setShareHolderOffAddr(off);
-				getManagedBean().setShareHolderResdAddr(res);
-				getManagedBean().setShrHldrPermStates(defStates);
-				getManagedBean().setShrHldrMailStates(defStates);
-				getManagedBean().setShrHldrResdStates(defStates);
-				getManagedBean().setShrHldrOffStates(defStates);
-				// Reset Personnel
-				getManagedBean().setPersonnelPermAddr(new SmPersonnelAddress());
-				getManagedBean().setPersonnelMailAddr(new SmPersonnelAddress());
-				getManagedBean().setPersonnelOffAddr(new SmPersonnelAddress());
-				getManagedBean().setPersonnelResdAddr(new SmPersonnelAddress());
 
-			} else {
-				getManagedBean().setPersonnelPermAddr(perm);
-				getManagedBean().setPersonnelMailAddr(mail);
-				getManagedBean().setPersonnelOffAddr(off);
-				getManagedBean().setPersonnelResdAddr(res);
-				getManagedBean().setPersnlPermStates(defStates);
-				getManagedBean().setPersnlMailStates(defStates);
-				getManagedBean().setPersnlResdStates(defStates);
-				getManagedBean().setPersnlOffStates(defStates);
-				// Reset share holder values
-				getManagedBean().setShareHolderPermAddr(
-						new SmPersonnelAddress());
-				getManagedBean().setShareHolderMailAddr(
-						new SmPersonnelAddress());
-				getManagedBean()
-						.setShareHolderOffAddr(new SmPersonnelAddress());
-				getManagedBean().setShareHolderResdAddr(
-						new SmPersonnelAddress());
+			getManagedBean().setShareHolderPermAddr(perm);
+			getManagedBean().setShareHolderMailAddr(mail);
+			getManagedBean().setShareHolderOffAddr(off);
+			getManagedBean().setShareHolderResdAddr(res);
+			getManagedBean().setShrHldrPermStates(defStates);
+			getManagedBean().setShrHldrMailStates(defStates);
+			getManagedBean().setShrHldrResdStates(defStates);
+			getManagedBean().setShrHldrOffStates(defStates);
 
-			}
+			// getManagedBean().setPersonnelPermAddr(perm);
+			// getManagedBean().setPersonnelMailAddr(mail);
+			// getManagedBean().setPersonnelOffAddr(off);
+			// getManagedBean().setPersonnelResdAddr(res);
+			// getManagedBean().setPersnlPermStates(defStates);
+			// getManagedBean().setPersnlMailStates(defStates);
+			// getManagedBean().setPersnlResdStates(defStates);
+			// getManagedBean().setPersnlOffStates(defStates);
 
 		} else {
 			System.out.println("******* Already contains address ***********");
@@ -2190,37 +2160,46 @@ public class SmApplicationBackingBean extends
 					.getSmPersonnelAddresses()) {
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-					if (isShrHldr) {
-						getManagedBean().setShareHolderPermAddr(addr);
-					} else {
-						getManagedBean().setPersonnelPermAddr(addr);
-					}
+					getManagedBean().setShareHolderPermAddr(addr);
+					// if (isShrHldr) {
+					//
+					// } else {
+					// getManagedBean().setPersonnelPermAddr(addr);
+					// }
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-					if (isShrHldr) {
-						getManagedBean().setShareHolderMailAddr(addr);
-					} else {
-						getManagedBean().setPersonnelMailAddr(addr);
-					}
+					getManagedBean().setShareHolderMailAddr(addr);
+					// if (isShrHldr) {
+					//
+					// } else {
+					// getManagedBean().setPersonnelMailAddr(addr);
+					// }
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-					if (isShrHldr) {
-						getManagedBean().setShareHolderResdAddr(addr);
-					} else {
-						getManagedBean().setPersonnelResdAddr(addr);
-					}
+					getManagedBean().setShareHolderResdAddr(addr);
+					// if (isShrHldr) {
+					//
+					// } else {
+					// getManagedBean().setPersonnelResdAddr(addr);
+					// }
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-					if (isShrHldr) {
-						getManagedBean().setShareHolderOffAddr(addr);
-					} else {
-						getManagedBean().setPersonnelOffAddr(addr);
-					}
+					getManagedBean().setShareHolderOffAddr(addr);
+					// if (isShrHldr) {
+					//
+					// } else {
+					// getManagedBean().setPersonnelOffAddr(addr);
+					// }
 				}
 			}
+		}
+		if (shareHolderBean.isEquityOwner()) {
+			getManagedBean().setSelectedShareHolder(shareHolderBean);
+		} else {
+			getManagedBean().setSelectedPersonnel(shareHolderBean);
 		}
 
 	}
@@ -2252,81 +2231,222 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedPersonnel(shareHolderBean);
 	}
 
-	public void assignNewPersonnel() {
-		System.out.println("******* ADD NEW Personnel *************");
+	public void assignNewPersonnel(String personelType) {
+		System.out.println("******* ADD NEW Personnel *************"
+				+ personelType);
 
 		SmPersonnel personnel = new SmPersonnel();
 		personnel.setEquityOwner(false);
+		if (personelType
+				.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)) {
+			personnel.setDirOrHghrMngmt(true);
+		} else {
+			personnel.setDirOrHghrMngmt(false);
+		}
 		setDefaultPersonnelValues(personnel);
 		System.out.println("*** Bumi Flage **** " + personnel.getBumiFlg());
 		getManagedBean().setSelectedPersonnel(personnel);
 
 	}
 
-	public void addOrUpdatePeronnelAddress(SmPersonnel persBean) {
-		if (persBean.getSmPersonnelAddresses().isEmpty()) {
-			System.out.println("******** Empty list ********"
-					+ persBean.getName());
-			persBean.getSmPersonnelAddresses().add(
-					getManagedBean().getPersonnelResdAddr());
-			persBean.getSmPersonnelAddresses().add(
-					getManagedBean().getPersonnelPermAddr());
-			persBean.getSmPersonnelAddresses().add(
-					getManagedBean().getPersonnelOffAddr());
-			persBean.getSmPersonnelAddresses().add(
-					getManagedBean().getPersonnelMailAddr());
-			getManagedBean().setSelectedPersonnel(persBean);
-		} else {
-			System.out
-					.println("******** Exisiting Share holders address **********"
-							+ persBean.getName());
-			for (SmPersonnelAddress addr : persBean.getSmPersonnelAddresses()) {
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-					persBean.getSmPersonnelAddresses().set(
-							persBean.getSmPersonnelAddresses().indexOf(addr),
-							getManagedBean().getPersonnelMailAddr());
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-					persBean.getSmPersonnelAddresses().set(
-							persBean.getSmPersonnelAddresses().indexOf(addr),
-							getManagedBean().getPersonnelOffAddr());
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-					persBean.getSmPersonnelAddresses().set(
-							persBean.getSmPersonnelAddresses().indexOf(addr),
-							getManagedBean().getPersonnelResdAddr());
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-					persBean.getSmPersonnelAddresses().set(
-							persBean.getSmPersonnelAddresses().indexOf(addr),
-							getManagedBean().getPersonnelPermAddr());
-				}
-			}
-			getManagedBean().setSelectedPersonnel(persBean);
-			System.out.println("*** After set addr value ***"
-					+ getManagedBean().getSelectedPersonnel().getName());
-		}
-		if (getManagedBean().getSmAppl().getSmPersonnels()
-				.contains(getManagedBean().getSelectedPersonnel())) {
-
-			System.out
-					.println(" **** THIS IS AN UPDATE Personnel Address******");
-			getManagedBean()
-					.getSmAppl()
-					.getSmPersonnels()
-					.set(getManagedBean().getSmAppl().getSmPersonnels()
-							.indexOf(getManagedBean().getSelectedPersonnel()),
-							getManagedBean().getSelectedPersonnel());
-		} else {
-
-			getManagedBean().getSmAppl().getSmPersonnels()
-					.add(getManagedBean().getSelectedPersonnel());
-		}
-
+	public void addOrUpdatePeronnelAddress(SmPersonnel persBean) {/*
+																 * if (persBean.
+																 * getSmPersonnelAddresses
+																 * ().isEmpty())
+																 * { System.out.
+																 * println(
+																 * "******** Empty list ********"
+																 * +
+																 * persBean.getName
+																 * ());
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().add(
+																 * getManagedBean
+																 * ().
+																 * getPersonnelResdAddr
+																 * ());
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().add(
+																 * getManagedBean
+																 * ().
+																 * getPersonnelPermAddr
+																 * ());
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().add(
+																 * getManagedBean
+																 * ().
+																 * getPersonnelOffAddr
+																 * ());
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().add(
+																 * getManagedBean
+																 * ().
+																 * getPersonnelMailAddr
+																 * ());
+																 * getManagedBean
+																 * ().
+																 * setSelectedPersonnel
+																 * (persBean); }
+																 * else {
+																 * System.out
+																 * .println(
+																 * "******** Exisiting Share holders address **********"
+																 * +
+																 * persBean.getName
+																 * ()); for (
+																 * SmPersonnelAddress
+																 * addr :
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ()) { if
+																 * (addr
+																 * .getAddressType
+																 * ().
+																 * equalsIgnoreCase
+																 * (
+																 * SupplierManagementConst
+																 * .
+																 * SM_PERSONNEL_ADDR_TYPE_MAIL
+																 * )) {
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().set(
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * (
+																 * ).indexOf(addr
+																 * ),
+																 * getManagedBean
+																 * ().
+																 * getPersonnelMailAddr
+																 * ()); } if
+																 * (addr
+																 * .getAddressType
+																 * ().
+																 * equalsIgnoreCase
+																 * (
+																 * SupplierManagementConst
+																 * .
+																 * SM_PERSONNEL_ADDR_TYPE_OFFICE
+																 * )) {
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().set(
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * (
+																 * ).indexOf(addr
+																 * ),
+																 * getManagedBean
+																 * ().
+																 * getPersonnelOffAddr
+																 * ()); } if
+																 * (addr
+																 * .getAddressType
+																 * ().
+																 * equalsIgnoreCase
+																 * (
+																 * SupplierManagementConst
+																 * .
+																 * SM_PERSONNEL_ADDR_TYPE_RES
+																 * )) {
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().set(
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * (
+																 * ).indexOf(addr
+																 * ),
+																 * getManagedBean
+																 * ().
+																 * getPersonnelResdAddr
+																 * ()); } if
+																 * (addr
+																 * .getAddressType
+																 * ().
+																 * equalsIgnoreCase
+																 * (
+																 * SupplierManagementConst
+																 * .
+																 * SM_PERSONNEL_ADDR_TYPE_PERM
+																 * )) {
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * ().set(
+																 * persBean.
+																 * getSmPersonnelAddresses
+																 * (
+																 * ).indexOf(addr
+																 * ),
+																 * getManagedBean
+																 * ().
+																 * getPersonnelPermAddr
+																 * ()); } }
+																 * getManagedBean
+																 * ().
+																 * setSelectedPersonnel
+																 * (persBean);
+																 * System
+																 * .out.println(
+																 * "*** After set addr value ***"
+																 * +
+																 * getManagedBean
+																 * ().
+																 * getSelectedPersonnel
+																 * (
+																 * ).getName());
+																 * } if
+																 * (getManagedBean
+																 * (
+																 * ).getSmAppl()
+																 * .
+																 * getSmPersonnels
+																 * () .contains(
+																 * getManagedBean
+																 * ().
+																 * getSelectedPersonnel
+																 * ())) {
+																 * 
+																 * System.out
+																 * .println(
+																 * " **** THIS IS AN UPDATE Personnel Address******"
+																 * );
+																 * getManagedBean
+																 * ()
+																 * .getSmAppl()
+																 * .
+																 * getSmPersonnels
+																 * () .set(
+																 * getManagedBean
+																 * (
+																 * ).getSmAppl()
+																 * .
+																 * getSmPersonnels
+																 * () .indexOf(
+																 * getManagedBean
+																 * ().
+																 * getSelectedPersonnel
+																 * ()),
+																 * getManagedBean
+																 * ().
+																 * getSelectedPersonnel
+																 * ()); } else {
+																 * 
+																 * getManagedBean(
+																 * )
+																 * .getSmAppl().
+																 * getSmPersonnels
+																 * () .add(
+																 * getManagedBean
+																 * ().
+																 * getSelectedPersonnel
+																 * ()); }
+																 */
 	}
 
 	public void deleteSelectedPersonnel() {
@@ -3796,6 +3916,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmapplShareHolders().add(per);
 			}
 		}
+		System.out.println("*** After reset *****"
+				+ getManagedBean().getSmapplShareHolders().size());
 
 	}
 

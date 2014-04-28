@@ -171,13 +171,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmRelatedCompany> selectedPersRelatedCompanies;
 	private List<SmStaffAcademic> selectedPersAcademics;
 
-	private SmPersonnelAddress personnelPermAddr;
-
-	private SmPersonnelAddress personnelMailAddr;
-
-	private SmPersonnelAddress personnelOffAddr;
-
-	private SmPersonnelAddress personnelResdAddr;
+//	private SmPersonnelAddress personnelPermAddr;
+//
+//	private SmPersonnelAddress personnelMailAddr;
+//
+//	private SmPersonnelAddress personnelOffAddr;
+//
+//	private SmPersonnelAddress personnelResdAddr;
 
 	// private SmStaffAcademic personnelAcademics;
 	// Bank Info
@@ -412,14 +412,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
 		selectedPersProfBodies = new ArrayList<SmAssociationBody>();
 		selectedPersRelatedCompanies = new ArrayList<SmRelatedCompany>();
-		personnelMailAddr = new SmPersonnelAddress();
-		personnelMailAddr.setSmAddress(defaultAddr);
-		personnelPermAddr = new SmPersonnelAddress();
-		personnelPermAddr.setSmAddress(defaultAddr);
-		personnelResdAddr = new SmPersonnelAddress();
-		personnelResdAddr.setSmAddress(defaultAddr);
-		personnelOffAddr = new SmPersonnelAddress();
-		personnelOffAddr.setSmAddress(defaultAddr);
+//		personnelMailAddr = new SmPersonnelAddress();
+//		personnelMailAddr.setSmAddress(defaultAddr);
+//		personnelPermAddr = new SmPersonnelAddress();
+//		personnelPermAddr.setSmAddress(defaultAddr);
+//		personnelResdAddr = new SmPersonnelAddress();
+//		personnelResdAddr.setSmAddress(defaultAddr);
+//		personnelOffAddr = new SmPersonnelAddress();
+//		personnelOffAddr.setSmAddress(defaultAddr);
 
 		selectedPersonnel
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
@@ -843,21 +843,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedPersonnel = selectedPersonnel;
 	}
 
-	public SmPersonnelAddress getPersonnelPermAddr() {
-		return personnelPermAddr;
-	}
-
-	public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
-		this.personnelPermAddr = personnelPermAddr;
-	}
-
-	public SmPersonnelAddress getPersonnelMailAddr() {
-		return personnelMailAddr;
-	}
-
-	public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
-		this.personnelMailAddr = personnelMailAddr;
-	}
+//	public SmPersonnelAddress getPersonnelPermAddr() {
+//		return personnelPermAddr;
+//	}
+//
+//	public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
+//		this.personnelPermAddr = personnelPermAddr;
+//	}
+//
+//	public SmPersonnelAddress getPersonnelMailAddr() {
+//		return personnelMailAddr;
+//	}
+//
+//	public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
+//		this.personnelMailAddr = personnelMailAddr;
+//	}
 
 	// public SmStaffAcademic getPersonnelAcademics() {
 	// return personnelAcademics;
@@ -1680,21 +1680,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedPersAcademics = selectedPersAcademics;
 	}
 
-	public SmPersonnelAddress getPersonnelOffAddr() {
-		return personnelOffAddr;
-	}
-
-	public void setPersonnelOffAddr(SmPersonnelAddress personnelOffAddr) {
-		this.personnelOffAddr = personnelOffAddr;
-	}
-
-	public SmPersonnelAddress getPersonnelResdAddr() {
-		return personnelResdAddr;
-	}
-
-	public void setPersonnelResdAddr(SmPersonnelAddress personnelResdAddr) {
-		this.personnelResdAddr = personnelResdAddr;
-	}
+	// public SmPersonnelAddress getPersonnelOffAddr() {
+	// return personnelOffAddr;
+	// }
+	//
+	// public void setPersonnelOffAddr(SmPersonnelAddress personnelOffAddr) {
+	// this.personnelOffAddr = personnelOffAddr;
+	// }
+	//
+	// public SmPersonnelAddress getPersonnelResdAddr() {
+	// return personnelResdAddr;
+	// }
+	//
+	// public void setPersonnelResdAddr(SmPersonnelAddress personnelResdAddr) {
+	// this.personnelResdAddr = personnelResdAddr;
+	// }
 
 	public List<PmState> getPersnlPermStates() {
 		return persnlPermStates;

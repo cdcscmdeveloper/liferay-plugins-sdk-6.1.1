@@ -90,6 +90,9 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
 
+	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
+	public static final String PERSONNEL_TYPE_STAFF = "STF";
+
 	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "13";
 	public static final String STYPE_CONSULTANT = "J";
@@ -209,6 +212,14 @@ public class SupplierManagementConst {
 
 	public String getSM_PERSNL_RESD_ADDR_PANEL() {
 		return SM_PERSNL_RESD_ADDR_PANEL;
+	}
+
+	public String getPERSONNEL_TYPE_DIRECTOR() {
+		return PERSONNEL_TYPE_DIRECTOR;
+	}
+
+	public String getPERSONNEL_TYPE_STAFF() {
+		return PERSONNEL_TYPE_STAFF;
 	}
 
 }
