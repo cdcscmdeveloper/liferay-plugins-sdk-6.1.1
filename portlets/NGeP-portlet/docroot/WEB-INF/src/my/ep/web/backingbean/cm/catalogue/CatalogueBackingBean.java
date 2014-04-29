@@ -2788,13 +2788,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}else{
 				this.getManagedBean().setError6(false);
 			}
+		}else{
+			this.getManagedBean().setError2(false);
+			this.getManagedBean().setError5(false);
+			this.getManagedBean().setError6(false);
 		}
 
-
-		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null 
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
+			this.getManagedBean().setError3(false);
+			
+		}else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null 
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
-			this.getManagedBean().setError3(false);
+			this.getManagedBean().setError3(true);
 		}else{
 			this.getManagedBean().setError3(true);
 		}
