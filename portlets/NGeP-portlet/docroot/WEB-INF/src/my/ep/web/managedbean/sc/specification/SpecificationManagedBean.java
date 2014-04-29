@@ -313,8 +313,9 @@ private	List<PmAddressType> deliveryAddressSelect;
 private	List<TplSpecZoneDtl> deliveryZones;
 private TplSpecZoneDtl tplSpecZoneDtl;;
 private List<BriefingZoneBean> addressZoneBean;
+private String panelItemCategory;
 	
-	
+	private List<ScQtCheckList> finSpecList;
 	
 	
 	
@@ -3574,6 +3575,42 @@ private List<BriefingZoneBean> addressZoneBean;
 	 */
 	public void setAddressZoneBean(List<BriefingZoneBean> addressZoneBean) {
 		this.addressZoneBean = addressZoneBean;
+	}
+
+
+
+	/**
+	 * @return the panelItemCategory
+	 */
+	public String getPanelItemCategory() {
+		return panelItemCategory;
+	}
+
+
+
+	/**
+	 * @param panelItemCategory the panelItemCategory to set
+	 */
+	public void setPanelItemCategory(String panelItemCategory) {
+		this.panelItemCategory = panelItemCategory;
+	}
+
+
+
+	/**
+	 * @return the finSpecList
+	 */
+	public List<ScQtCheckList> getFinSpecList() {
+		return finSpecList;
+	}
+
+
+
+	/**
+	 * @param finSpecList the finSpecList to set
+	 */
+	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
+		this.finSpecList = finSpecList;
 	}
 
 
