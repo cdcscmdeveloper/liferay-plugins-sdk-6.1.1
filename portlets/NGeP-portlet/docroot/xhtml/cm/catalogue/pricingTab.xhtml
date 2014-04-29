@@ -44,14 +44,13 @@
 			</p:column>
 			<p:column>
 				<p:inputText
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
-					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}">
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}">
 					<p:ajax event="keyup" update="standardErrorLink" />
 				</p:inputText>
 			</p:column>
 			<p:column>
 				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" 
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="standardErrorLink" />
 					<p:ajax event="keyup" update="standardErrorLink" />
@@ -60,7 +59,7 @@
 			</p:column>
 			<p:column>
 				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="standardErrorLink" />
 					<p:ajax event="keyup" update="standardErrorLink" />

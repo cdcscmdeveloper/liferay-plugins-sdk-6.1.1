@@ -2698,11 +2698,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 	public void validateDateOverlap(int index){
-		
+
 		List<CmTierPricing> previousList = new ArrayList<CmTierPricing>();
 		for(int i = 0; i < index; i++)
 			previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(i));
-		
+
 		CmTierPricing tier = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
 		if(tier.getStartDate() != null && tier.getEndDate() != null){
 			for(CmTierPricing cmPricing : previousList){
@@ -2717,7 +2717,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 		}
 	}
-	
+
 	public void updateErrorDialog(int index){
 		CmTierPricing cmTierPricing = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
 		if(cmTierPricing.getFromQty()!=null && cmTierPricing.getToQty()!=null && cmTierPricing.getFromQty() >= cmTierPricing.getToQty()){
@@ -2756,8 +2756,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void updatePromotionErrorDialog(){
 
 		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
-				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
-				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
 
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
 				this.getManagedBean().setError2(true);
@@ -2770,7 +2770,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate())>0 
 					|| this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
-				
+
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(1);
 				this.getManagedBean().setError5(true);
@@ -2787,7 +2787,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().setError6(false);
 			}
 		}
-		
+
+
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null 
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
+			this.getManagedBean().setError3(false);
+		}else{
+			this.getManagedBean().setError3(true);
+		}
+
+
 		/*if((this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null &&
 				(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
 				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null))
