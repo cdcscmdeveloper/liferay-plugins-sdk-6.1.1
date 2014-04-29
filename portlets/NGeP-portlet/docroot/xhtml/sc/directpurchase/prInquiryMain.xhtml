@@ -41,15 +41,11 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						<c:forEach items="#{purchaseInquiryBackingBean.managedBean.outComes}"
 						var="action">
 
-						<c:if test="${action == 'REJECT'}">
-							<ui:param name="iconVar" value="ui-icon-reject" />
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
 
 						</c:if>
-						
-						<c:if test="${action == 'APPROVE'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
 
-						</c:if>
 						
 						<p:commandButton value="#{action}" process="@all" rendered="#{!unspscCodeBackingBean.requisitioner}"
 								styleClass="ui-button" icon="#{iconVar}"
