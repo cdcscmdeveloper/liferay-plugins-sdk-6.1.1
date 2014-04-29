@@ -12,11 +12,6 @@ import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -44,18 +39,12 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
-import my.ep.persistence.entity.sc.quationtender.ScCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
-
-import com.octetstring.vde.EntrySet;
 
 /**
  * Managed Bean for Create Purchase Order
