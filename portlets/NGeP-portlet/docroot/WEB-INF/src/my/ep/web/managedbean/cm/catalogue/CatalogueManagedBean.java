@@ -155,6 +155,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean error2 = false;
 	private boolean error3 = false;
 	private boolean error4 = false;
+	private boolean error5 = false;
+	private boolean error6 = false;
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
@@ -1233,5 +1235,27 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSimpleQuoteFlag(boolean simpleQuoteFlag) {
 		this.simpleQuoteFlag = simpleQuoteFlag;
 	}
+
+
+	public boolean isError5() {
+		return error5;
+	}
+
+
+	public void setError5(boolean error5) {
+		this.error5 = error5;
+	}
+
+
+	public boolean isError6() {
+		return error6;
+	}
+
+
+	public void setError6(boolean error6) {
+		this.error6 = error6;
+	}
+	
+	
 
 }
