@@ -390,7 +390,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
  			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
  			 String token = getFacesScopes().getBPMAuthenticationCtxToken();
  			 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-  			
+ 			 reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
  			 reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 			 reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			 resDTO = contractSO.objCloneSupplierTerminationReq(reqDTO);
