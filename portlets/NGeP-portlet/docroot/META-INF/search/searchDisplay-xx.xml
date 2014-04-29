@@ -350,4 +350,30 @@
 	</property>
 </bean>
 
+<bean id="CT_PANEL_SUPPLIER" class="my.ep.web.bean.LovBean">
+	 <property name="pk" value="panelSupplierId" />
+
+	<property name="daoClass" value="my.ep.persistence.dao.ct.circular.panel.CtPanelSupplierDAO" />
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="supplier.companyName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.supp.name" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="supplier.epNo" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.ep.no" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="supplier.smMofAccounts.mofNo" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.mof.no" />
+			</bean>
+			
+		</list>
+	</property>
+</bean>
+
 </beans>
