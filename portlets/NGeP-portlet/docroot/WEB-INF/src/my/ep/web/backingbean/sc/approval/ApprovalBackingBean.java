@@ -12,22 +12,43 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
+import my.ep.type.sc.CommitteType;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTCommitteBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -102,12 +123,13 @@ public class ApprovalBackingBean extends
 		List<Long> appCatList = new ArrayList<Long>();
 
 		for (TabBean tabBean : this.getManagedBean().getTabList()) {
-			appCatList.add(tabBean.getScQtApproval().getApprovalCategory().getParameterId());
+			appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
+					.getParameterId());
 		}
 
 		return appCatList;
 	}
-	
+
 	public SelectItem[] getApprovalCategories() {
 		SelectItem[] selectItems = new SelectItem[6];
 
@@ -239,8 +261,8 @@ public class ApprovalBackingBean extends
 		}
 		return imageFileName;
 	}
-	
-	public void preRenderView(){
+
+	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -249,7 +271,6 @@ public class ApprovalBackingBean extends
 		this.getManagedBean().setTaskId(taskId);
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		// TODO
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		// String ctx = bpmSO.authenticate("roslan", "welcome1");
@@ -257,13 +278,67 @@ public class ApprovalBackingBean extends
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		SCQuotationTenderDataType obj = (SCQuotationTenderDataType)res.getPojo();
+		SCQuotationTenderDataType obj = (SCQuotationTenderDataType) res
+				.getPojo();
 		this.getManagedBean().setQuotationTenderDataType(obj);
-		this.getManagedBean().setOutComes(res.getAction());		
-		FacesContext context= FacesContext.getCurrentInstance();
-		context.getApplication().getNavigationHandler().handleNavigation(context, null, "/xhtml/sc/quatationtender/approval/approvalresults.xhtml");
+		this.getManagedBean().setOutComes(res.getAction());
+		String taskName = res.getTaskName();
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+		QuationTenderReqDTO qtReqDto = new QuationTenderReqDTO();
+		Long qtId = obj.getQtId().longValue();
+		qtReqDto.setQtId(qtId);
+		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
+		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+		this.getManagedBean().setQt(tenderResDTO.getQtDetail());
+		if (SCProcessNameConst.BDG_APPROVAL.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.BUDGET_APPROVAL.dispalyName());
+
+			ScQtApproval approval = getApproval(qtId, "BUD");
+			
+		} else if (SCProcessNameConst.BPK_APPROVAL.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.BPK_APPROVAL.dispalyName());
+			ScQtApproval approval = getApproval(qtId, "BPK");
+		} else if (SCProcessNameConst.REVISE_BPK_APPROVAL
+				.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.BPK_APPROVAL.dispalyName());
+			ScQtApproval approval = getApproval(qtId, "BPK");
+
+		} else if (SCProcessNameConst.APPROVE_COMMITTE
+				.equalsIgnoreCase(taskName)) {
+			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.COMMITTEE_APPROVAL.dispalyName());
+			ICommitteSO committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			ISearchBean<ScQtCommittee> commSearchBean = new SearchBean<ScQtCommittee>();
+			commSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scQt.qtId",
+							SearchOperator.OPERATOR_EQUALS.value(), qtId));
+			committeReqDTO.setCommSearchBean(commSearchBean);
+			CommitteResDTO resDTO = committeSO
+					.retriveQtCommitteDtls(committeReqDTO);
+			ISearchResultBean<ScQtCommittee> qtcomSearchBean = resDTO
+					.getQtCommitteResultBean();
+			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
+					.getResultList());
+			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
+
+		}
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(context, null,
+						"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
 	}
-	
+
 	public String updateBpmTask(String outcome) {
 
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -280,39 +355,93 @@ public class ApprovalBackingBean extends
 			IQTDetailSO detailSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
+			ScQt qt = this.getManagedBean().getQt();
+			qtReqDTO.setQtdetail(qt);
+			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
+					.updateBPMAction(qtReqDTO);
 
-		/*	QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
-					.updateBPMAction(qtReqDTO);*/
-			QuationTenderResDTO resDTO= new QuationTenderResDTO();
 			resDTO.setSuccessful(true);
 			if (resDTO.isSuccessful()) {
-
+				ScQt scQt = resDTO.getQtDetail();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700005, new String[] {
+												"Specs Prepared For", "" },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
-						));
-
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/shared/acknowledge.xhtml");
-
-			} else {
-				throw new EpException("Failed.");
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process now", ""
-
-					));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			ex.printStackTrace();
 		}
 		return null;
 
+	}
+
+	public List<TabBean> constructCommitteTabBean(
+			List<ScQtCommittee> qtCommittees) {
+		List<TabBean> committeTabs = new ArrayList<TabBean>();
+		for (ScQtCommittee scQtCommittee : qtCommittees) {
+			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee()
+					.getCommitteeType())) {
+				TabBean bean = new TabBean(CommitteType.getValue(scQtCommittee
+						.getScCommittee().getCommitteeType()),
+						getCommitteeTypeDtl(scQtCommittee.getScCommittee()
+								.getCommitteeType(), scQtCommittee.getScQt()
+								.getQtId()));
+				committeTabs.add(bean);
+			}
+		}
+		return committeTabs;
+	}
+
+	private ScCommittee getCommitteeTypeDtl(String type, Long id) {
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		ScCommittee committee = null;
+		reqDTO.setCommitteeType(type);
+		reqDTO.setQtId(id);
+		CommitteResDTO resDTO = null;
+
+		try {
+			ICommitteSO committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			resDTO = committeSO
+					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			List<ScCommitteeMember> commMembers = resDTO
+					.getCommMemberResultBean().getResultList();
+
+			if (!commMembers.isEmpty()) {
+				committee = commMembers.get(0).getScCommittee();
+				committee.setScCommitteeMembers(commMembers);
+				getManagedBean().setScCommittee(committee);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return committee;
+	}
+
+	private ScQtApproval getApproval(Long qtId, String approvalType) {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		tenderReqDTO.setApprovalType(approvalType);
+		tenderReqDTO.setQtId(qtId);
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO
+				.retriveQTApprovalDetails(tenderReqDTO);
+		ScQtApproval approval = resDTO.getQtApproval();
+		return approval;
 	}
 
 }
