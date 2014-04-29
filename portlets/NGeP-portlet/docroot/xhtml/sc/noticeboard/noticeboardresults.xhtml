@@ -11,7 +11,7 @@
 		value="#{noticeBoardBackingBean.retrieveParameterDescByType('NBT')}"
 		dynamic="true" cache="true">
 		<p:ajax event="tabChange"
-			listener="#{noticeBoardBackingBean.onTabChange}" update="@(.test)" />
+			listener="#{noticeBoardBackingBean.onTabChange}" update="@(.nbsrhresultsStyleClass)" />
 		<p:tab id="nbresultTabs" title="#{noticeboardresulttype.codeName}">
 
 			<ui:include src="/xhtml/sc/noticeboard/resultdetails.xhtml"/>

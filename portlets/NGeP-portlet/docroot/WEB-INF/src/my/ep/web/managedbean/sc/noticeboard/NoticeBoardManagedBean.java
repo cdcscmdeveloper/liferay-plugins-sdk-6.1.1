@@ -6,10 +6,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -47,8 +48,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private PmOrgProfile ministryProfile= new PmOrgProfile();
 	private PmOrgProfile ptjProfile = new PmOrgProfile();
 	private PmCategoryL3 categoryL3 =  new PmCategoryL3();
-
-	private List<ScQt> scQtSearchlist;
 
 	// Fields for hide and show in noticeboard screen
 	private boolean isPubToday = false;
@@ -97,8 +96,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private NoticeBoardSearchDataBean clsDataBean;
 
 	private List<ScQtContactPerson> contactPersons;
-	private List<ScQtBriefing> briefingDtls;
-	private List<ScQtBriefing> siteVisitDtls;
+	private List<ScQtBsvDtl> briefingDtls;
+	private List<ScQtBsvDtl> siteVisitDtls;
 
 	private List<TreeNode> locationNodes;
 
@@ -110,17 +109,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private SmMofAccount mofAccount;
 
 	private SmSupplier smSupplier;
-	private String tabTitle = "Publish";
+	private String selectedTab = ParameterConst.NOTICE_BOARD_STATUS_PUBLISH;
 
-	private ScQtBriefing[] selectedBriefingDtls;
-	private ScQtBriefing[] selectedsiteVisitDtls;
+	private ScQtBsvDtl[] selectedBriefingDtls;
+	private ScQtBsvDtl[] selectedsiteVisitDtls;
 	private List<TplSpecZoneDtl> zones;
 
 	private List<PmOrgProfile>ptjList;
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
-
+		publishSearchDataBean = new NoticeBoardSearchDataBean();
+		briefSearchDataBean = new NoticeBoardSearchDataBean();
+		siteVisitDataBean = new NoticeBoardSearchDataBean();
+		clsDataBean = new NoticeBoardSearchDataBean();
 	}
 
 	/**
@@ -137,21 +139,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setScQt(ScQt scQt) {
 
 		this.scQt = scQt;
-	}
-
-	/**
-	 * @return the scQtSearchlist
-	 */
-	public List<ScQt> getScQtSearchlist() {
-		return scQtSearchlist;
-	}
-
-	/**
-	 * @param scQtSearchlist
-	 *            the scQtSearchlist to set
-	 */
-	public void setScQtSearchlist(List<ScQt> scQtSearchlist) {
-		this.scQtSearchlist = scQtSearchlist;
 	}
 
 	/**
@@ -416,19 +403,19 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.contactPersons = contactPersons;
 	}
 
-	public List<ScQtBriefing> getBriefingDtls() {
+	public List<ScQtBsvDtl> getBriefingDtls() {
 		return briefingDtls;
 	}
 
-	public void setBriefingDtls(List<ScQtBriefing> briefingDtls) {
+	public void setBriefingDtls(List<ScQtBsvDtl> briefingDtls) {
 		this.briefingDtls = briefingDtls;
 	}
 
-	public List<ScQtBriefing> getSiteVisitDtls() {
+	public List<ScQtBsvDtl> getSiteVisitDtls() {
 		return siteVisitDtls;
 	}
 
-	public void setSiteVisitDtls(List<ScQtBriefing> siteVisitDtls) {
+	public void setSiteVisitDtls(List<ScQtBsvDtl> siteVisitDtls) {
 		this.siteVisitDtls = siteVisitDtls;
 	}
 
@@ -480,27 +467,33 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.smSupplier = smSupplier;
 	}
 
-	public String getTabTitle() {
-		return tabTitle;
+	/**
+	 * @return the selectedTab
+	 */
+	public String getSelectedTab() {
+		return selectedTab;
 	}
 
-	public void setTabTitle(String tabTitle) {
-		this.tabTitle = tabTitle;
+	/**
+	 * @param selectedTab the selectedTab to set
+	 */
+	public void setSelectedTab(String selectedTab) {
+		this.selectedTab = selectedTab;
 	}
 
-	public ScQtBriefing[] getSelectedBriefingDtls() {
+	public ScQtBsvDtl[] getSelectedBriefingDtls() {
 		return selectedBriefingDtls;
 	}
 
-	public void setSelectedBriefingDtls(ScQtBriefing[] selectedBriefingDtls) {
+	public void setSelectedBriefingDtls(ScQtBsvDtl[] selectedBriefingDtls) {
 		this.selectedBriefingDtls = selectedBriefingDtls;
 	}
 
-	public ScQtBriefing[] getSelectedsiteVisitDtls() {
+	public ScQtBsvDtl[] getSelectedsiteVisitDtls() {
 		return selectedsiteVisitDtls;
 	}
 
-	public void setSelectedsiteVisitDtls(ScQtBriefing[] selectedsiteVisitDtls) {
+	public void setSelectedsiteVisitDtls(ScQtBsvDtl[] selectedsiteVisitDtls) {
 		this.selectedsiteVisitDtls = selectedsiteVisitDtls;
 	}
 

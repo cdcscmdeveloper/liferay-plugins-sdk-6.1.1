@@ -7,40 +7,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}"
-		style="width:350px;" id="nbpanel">
-
-		<div style="height: 550px; overflow-y: scroll;">
-
-		<table>
+	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}" id="nbpanel">
+		
+		<div style="height: 500px; overflow-y: scroll;"> 
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		  <tr>
-			<td style="width:119px;"><h:outputLabel value="Quatation/TenderNo"></h:outputLabel></td>
-			<td><p:inputText value="#{noticeBoardBackingBean.managedBean.qtNo}"></p:inputText></td>
+			<td style="width:123px;"><p:outputLabel value="#{lbl['lbl.so.qtnno']}" /></td>
+			<td><p:inputText value="#{noticeBoardBackingBean.managedBean.qtNo}" size="33" /></td>
 		  </tr>	
 		  <tr>
-			<td><h:outputLabel value="Title"></h:outputLabel></td>
-			<td><p:inputTextarea value="#{noticeBoardBackingBean.managedBean.title}"
-					size="46" rows="2" cols="20"></p:inputTextarea></td>
+			<td><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
+			<td><p:inputText value="#{noticeBoardBackingBean.managedBean.title}" size="33" /></td>
 		  </tr>			
-		</table>	
-		<table>
-		    <tr>
-			<td style="width:100px;"><h:outputLabel value="&#160;&#160;&#160;&#160;&#160;
-			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;CategoryCode"></h:outputLabel></td>
+		  <tr>
+			<td><p:outputLabel value="#{lbl['lbl.sc.spec.category.code']}" /></td>
 			<td><ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
 					headerText="Category Lov"
 					saveObject="noticeBoardBackingBean.managedBean.categoryL3"
-					value="#{noticeBoardBackingBean.managedBean.categoryL3.categoryName}">
-				</ac:lov></td>
-			<td><ac:lovPopup /></td>
+					value="#{noticeBoardBackingBean.managedBean.categoryL3.categoryName}"
+					size="25" /><ac:lovPopup /></td>
 			</tr>
-         </table>
-         <table>
-			<tr>
-			 <td style="width:119px;"><p:outputLabel value="Ministry"></p:outputLabel></td>
+         	<tr>
+			 <td><p:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}" /></td>
 			 <td><p:selectOneMenu 
 					value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgProfileId}" 
-					style="width:170px;margin-bottom:5px;">
+					style="width:195px;margin-bottom:5px;">
 					<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
 					<f:selectItems
 						value="#{noticeBoardBackingBean.retriveOrgProfilesForMinistryLevel()}"
@@ -53,9 +44,9 @@
 				</p:selectOneMenu></td>
 			</tr>	
 			<tr>	
-			<td><h:outputLabel value="PTJ"></h:outputLabel></td>
+			<td><p:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
 			<td><p:selectOneMenu id="ptjlist"
-					value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgProfileId}" style="width:170px;">
+					value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgProfileId}" style="width:195px;">
 					<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.ptjList}"
@@ -67,15 +58,14 @@
 
 			<p:panel header="#{lbl['lbl.sc.notice.board.pdate']}" id="publishdtl"
 				toggleable="true">
-
+				<h:panelGroup id="recentPubDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-					width="100%" columnClasses="columnHeight20">
-					<h:panelGroup id="publishDates">
-						<p:column>
+					width="100%" columnClasses="nbColumnHeight"
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+						<p:column rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday}">
 
 							<p:commandLink update="publishdtl"
 								actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday and ! noticeBoardBackingBean.managedBean.showPubDate }"
 								process="@this">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 									style="padding-right:15px;padding-bottom:10px; font-size:12px" />
@@ -83,81 +73,65 @@
 
 							<p:commandLink update="publishdtl"
 								actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday and noticeBoardBackingBean.managedBean.pubToday}">
+								rendered="#{noticeBoardBackingBean.managedBean.pubToday}">
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
 
 						</p:column>
-					</h:panelGroup>
-					<h:panelGroup id="publishYesterDates">
-						<p:column>
+						<p:column rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
 							<p:commandLink update="publishdtl"
-								actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.pubToday and ! noticeBoardBackingBean.managedBean.showPubDate }">
+								actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 									style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 							</p:commandLink>
 
 							<p:commandLink update="publishdtl"
 								actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.pubToday and noticeBoardBackingBean.managedBean.pubYesterday}">
+								rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}">
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
 						</p:column>
-					</h:panelGroup>
 				</h:panelGrid>
+				</h:panelGroup>
 
-				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+				<h:panelGrid id="rangePubDatePG" columns="2" border="0" cellpadding="0" cellspacing="0"
 					width="100%"
+					columnClasses="nbColumnHeight"
 					rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
 
 					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
-						style="padding-right:5px;">
-					</h:outputText>
+						style="padding-right:5px;" />
 
 
 					<p:column>
 
-						<p:inputText size="5"
+						<p:inputText size="5" dir="rtl"
 							value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
-								update="pbdate,publishDates,publishYesterDates" process="@this" />
+								update="rangePubDatePG,recentPubDatePG" process="@this" />
 						</p:inputText>
 
 						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
 							style="padding-left:5px;"></h:outputText>
 					</p:column>
 
-					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}"></h:outputText>
-					<p:column>
-						<h:panelGroup id="pbdate">
-							<c:if test="#{! noticeBoardBackingBean.managedBean.showPubDate}">
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+						<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}" />
+					</p:column>
+					
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
 								<p:calendar showOn="button"
 									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
-									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10">
-
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10">
 								</p:calendar>
 
 								<p:calendar showOn="button"
-									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"
 									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}">
-
 								</p:calendar>
-							</c:if>
-							<c:if test="#{noticeBoardBackingBean.managedBean.showPubDate}">
-								<p:calendar showOn="button"
-									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
-									readonly="true"></p:calendar>
-
-								<p:calendar showOn="button"
-									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"
-									readonly="true"></p:calendar>
-							</c:if>
-
-						</h:panelGroup>
 					</p:column>
 
 				</h:panelGrid>
@@ -169,7 +143,7 @@
 					update="locations"></p:ajax>
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
 					<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
-						<p:commandButton value="#{lbl['lbl.reset']}"
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							style="float:right;width:25px"
 							rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 							icon="ui-icon-reset" update="locations,@(.resetBtnCLS)"
@@ -231,58 +205,54 @@
 
 			<p:panel header="#{lbl['lbl.qt.nb.briefingDate']}" id="briefingdtls"
 				toggleable="true">
-
+				<h:panelGroup id="recentBriefDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-					width="100%" columnClasses="columnHeight20">
-					<p:column>
-						<h:panelGroup id="brieftdateDtls">
+					width="100%" columnClasses="nbColumnHeight"
+					rendered="#{! noticeBoardBackingBean.managedBean.showBriDate}">
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
 							<p:commandLink update="briefingdtls"
-								actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday and ! noticeBoardBackingBean.managedBean.showBriDate }">
+								actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 									style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 							</p:commandLink>
 
 							<p:commandLink update="briefingdtls"
 								actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday and noticeBoardBackingBean.managedBean.breifToday}">
+								rendered="#{noticeBoardBackingBean.managedBean.breifToday}">
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
-						</h:panelGroup>
 					</p:column>
 
-					<p:column>
-						<h:panelGroup id="briefydateDtls">
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.breifToday}">
 							<p:commandLink update="briefingdtls"
-								actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.breifToday and ! noticeBoardBackingBean.managedBean.showBriDate}">
+								actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 									style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 							</p:commandLink>
 
 							<p:commandLink update="briefingdtls"
 								actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.breifToday and noticeBoardBackingBean.managedBean.breifYesterday}">
+								rendered="#{noticeBoardBackingBean.managedBean.breifYesterday}">
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
-						</h:panelGroup>
 					</p:column>
 				</h:panelGrid>
+				</h:panelGroup>
 
 				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
 					width="100%"
+					columnClasses="nbColumnHeight"
 					rendered="#{!noticeBoardBackingBean.managedBean.breifShow}">
 					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
-						style="padding-right:5px;">
-					</h:outputText>
+						style="padding-right:5px;" />
 					<p:column>
-						<p:inputText size="5"
+						<p:inputText size="5" dir="rtl"
 							value="#{noticeBoardBackingBean.managedBean.briefSearchDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('Brief')}"
-								update="brieftdateDtls,briefydateDtls" process="@this" />
+								update="recentBriefDatePG" process="@this" />
 						</p:inputText>
 						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
 							style="padding-left:5px;"></h:outputText>
@@ -294,34 +264,30 @@
 
 			<p:panel header="#{lbl['lbl.qt.nb.sitevisitdate']}"
 				id="sitevisitdtls" toggleable="true">
-
+				<h:panelGroup id="recentSiteVisitDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-					width="100%" columnClasses="columnHeight20">
+					width="100%" columnClasses="nbColumnHeight"
+					rendered="#{! noticeBoardBackingBean.managedBean.showSiteDate}">
 
-					<p:column>
-						<h:panelGroup id="sitevisittDtls">
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.svYesterday}">
 							<p:commandLink update="sitevisitdtls"
-								actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.svYesterday and ! noticeBoardBackingBean.managedBean.showSiteDate}">
+								actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 									style="padding-right:15px;margin-bottom:20px;font-size:12px" />
 							</p:commandLink>
 
 							<p:commandLink update="sitevisitdtls"
 								actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.svYesterday and noticeBoardBackingBean.managedBean.svToday}">
+								rendered="#{noticeBoardBackingBean.managedBean.svToday}">
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
-						</h:panelGroup>
 					</p:column>
 
 
-					<p:column>
-						<h:panelGroup id="sitevisitydateDtls">
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.svToday}">
 							<p:commandLink update="sitevisitdtls"
-								actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}"
-								rendered="#{!noticeBoardBackingBean.managedBean.svToday and ! noticeBoardBackingBean.managedBean.showSiteDate}">
+								actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}">
 								<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 									style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 							</p:commandLink>
@@ -332,23 +298,23 @@
 								<p:graphicImage library="ep/images/design" name="reset.png"
 									value="/resources/ep/images/design/reset.png" />
 							</p:commandLink>
-						</h:panelGroup>
 					</p:column>
 
 				</h:panelGrid>
+				</h:panelGroup>
 
 				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
 					width="100%"
+					columnClasses="nbColumnHeight"
 					rendered="#{!noticeBoardBackingBean.managedBean.svShow}">
 					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
-						style="padding-right:5px;">
-					</h:outputText>
+						style="padding-right:5px;" />
 					<p:column>
-						<p:inputText size="5"
+						<p:inputText size="5" dir="rtl"
 							value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"
-								update="sitevisittDtls,sitevisitydateDtls" process="@this" />
+								update="recentSiteVisitDatePG" process="@this" />
 
 						</p:inputText>
 						<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
@@ -362,37 +328,33 @@
 
 			<p:panel header="#{lbl['lbl.so.clsdt']}" toggleable="true">
 
-				<h:panelGrid columns="2" width="100%">
-					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}"></h:outputText>
+				<h:panelGrid columns="2" width="100%" columnClasses="nbColumnHeight">
+					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}" />
 					<p:column>
 						<p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"></p:calendar>
 						<p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"></p:calendar>
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"></p:calendar>
 					</p:column>
 				</h:panelGrid>
 
 
 			</p:panel>
 		</div>
-
-		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
-			width="100%">
-			<p:column>
-				<div style="float: right;">
-					<p:commandButton value="#{lbl['lbl.search']}" icon="ui-icon-search"
-						action="#{noticeBoardBackingBean.searchNoticeBoard}"
-						update="@(.test)">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		  <tr>
+		  	<td colspan="2" class="ppRightBtn">
+		  		<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search"
+					action="#{noticeBoardBackingBean.searchNoticeBoard}"
+					update="@(.nbsrhresultsStyleClass)">
 					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.reset']}" icon="ui-icon-reset"
-						update="nbpanel" process="@this"
-						actionListener="#{noticeBoardBackingBean.reset}">
-					</p:commandButton>
-				</div>
-			</p:column>
-
-		</h:panelGrid>
-
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+					update="nbpanel" process="@this"
+					actionListener="#{noticeBoardBackingBean.reset}">
+				</p:commandButton>
+		  	</td>
+		  </tr>
+		</table>
 	</p:panel>
 
 </ui:composition>

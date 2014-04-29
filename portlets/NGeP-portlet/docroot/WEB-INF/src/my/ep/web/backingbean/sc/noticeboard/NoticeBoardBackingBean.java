@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -20,6 +22,8 @@ import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -36,6 +40,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -46,19 +51,22 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.event.NodeCollapseEvent;
@@ -73,27 +81,15 @@ import org.primefaces.model.TreeNode;
  * @author sri Notice Board Backing Bean
  */
 @ManagedBean(name = "noticeBoardBackingBean")
-@RequestScoped
+@ViewScoped
 public class NoticeBoardBackingBean extends
 		BaseBackingBean<NoticeBoardManagedBean> {
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 	private static final String NAV_TO_NOTICE_BOARD_SEARCH_PAGE = "noticeboardmain.xhtml?faces-redirect=true";
 
+	private IPagingDataModel<ScQt> qtDataModel = new QTPagingDataModel();
 	private String mofNo;
-
-	public NoticeBoardBackingBean() {
-		if (this.getManagedBean().getPublishSearchDataBean() == null) {
-			this.getManagedBean().setPublishSearchDataBean(
-					new NoticeBoardSearchDataBean());
-		}
-		this.getManagedBean().setSiteVisitDataBean(
-				new NoticeBoardSearchDataBean());
-		this.getManagedBean().setBriefSearchDataBean(
-				new NoticeBoardSearchDataBean());
-		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
-
-	}
 
 	/**
 	 * Main Filtration For Notice Board
@@ -101,92 +97,7 @@ public class NoticeBoardBackingBean extends
 	public void searchNoticeBoard() {
 		log.info("*** searchNoticeBoard **** ");
 
-		IQTDetailSO detailSO = null;
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO qtResDTO = null;
-		ISearchBean<ScQt> searchBean = new SearchBean<ScQt>();
-		log.info("@@@@@@@@@@@@@@@@@@@@"
-				+ this.getManagedBean().getPublishSearchDataBean().isToday());
-		// TODO Need to write one helper method to check whether string is empty
-		// or null...
-		if (null != this.getManagedBean().getTitle()
-				&& !"".equals(this.getManagedBean().getTitle())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("qtTitle",
-							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getTitle()));
-
-		}
-		/*
-		 * if
-		 * (getManagedBean().getScQt().getMinistryOrgProfile().getOrgProfileId()
-		 * != null &&
-		 * !"".equals(getManagedBean().getScQt().getMinistryOrgProfile
-		 * ().getOrgProfileId())) { searchBean.getDataFilterBeans().add(new
-		 * SearchFilterBean( "ministryOrgProfile.orgProfileId",
-		 * SearchOperator.OPERATOR_EQUALS.value(),
-		 * getManagedBean().getScQt().getMinistryOrgProfile
-		 * ().getOrgProfileId())); }
-		 * 
-		 * if
-		 * (getManagedBean().getScQt().getDepartmentOrgProfile().getOrgProfileId
-		 * () != null &&
-		 * !"".equals(getManagedBean().getScQt().getDepartmentOrgProfile
-		 * ().getOrgProfileId())) { searchBean.getDataFilterBeans().add(new
-		 * SearchFilterBean( "departmentOrgProfile.orgProfileId",
-		 * SearchOperator.OPERATOR_EQUALS.value(),
-		 * getManagedBean().getScQt().getDepartmentOrgProfile
-		 * ().getOrgProfileId())); }
-		 * 
-		 * if (getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId() !=
-		 * null &&
-		 * !"".equals(getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId
-		 * ())) { searchBean.getDataFilterBeans().add(new SearchFilterBean(
-		 * "pmOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(),
-		 * getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId())); }
-		 * 
-		 * if (getManagedBean().getScQt().getQtTitle() != null &&
-		 * !"".equalsIgnoreCase(getManagedBean().getScQt().getQtTitle())) {
-		 * searchBean.getDataFilterBeans().add(new SearchFilterBean( "qtTitle",
-		 * SearchOperator.OPERATOR_STARTS_WITH.value(),
-		 * getManagedBean().getScQt().getQtTitle())); }
-		 * 
-		 * 
-		 * if (getManagedBean().getScQt().getPublishDate() != null &&
-		 * !"".equals(getManagedBean().getScQt().getPublishDate())) {
-		 * searchBean.getDataFilterBeans().add(new SearchFilterBean(
-		 * "publishDate", SearchOperator.OPERATOR_EQUALS.value(),
-		 * getManagedBean().getScQt().getPublishDate()));
-		 * 
-		 * }
-		 * 
-		 * if (getManagedBean().getScQt().getClosingDate() != null &&
-		 * !"".equals(getManagedBean().getScQt().getClosingDate())) {
-		 * searchBean.getDataFilterBeans().add(new SearchFilterBean(
-		 * "closingDate", SearchOperator.OPERATOR_EQUALS.value(),
-		 * getManagedBean().getScQt().getClosingDate()));
-		 * 
-		 * }
-		 */
-
-		qtReqDTO.setQtSearchBean(searchBean);
-		// this.getManagedBean().setSearchBean(searchBean);
-		try {
-
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
-			log.info("result list for noticeboard "
-					+ qtResDTO.getQtResultBean().getResultList().size());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			detailSO = null;
-		}
-
-		this.getManagedBean().setScQtSearchlist(
-				qtResDTO.getQtResultBean().getResultList());
-		// return qtResDTO.getQtResultBean().getResultList();
+		qtDataModel.reloadData();
 	}
 
 	/**
@@ -199,95 +110,7 @@ public class NoticeBoardBackingBean extends
 		log.info("*** TabChange Event **** ");
 
 		PmParameterDesc desc = (PmParameterDesc) event.getData();
-		this.getManagedBean().setTabTitle(desc.getCodeName());
-		/*
-		 * IQTDetailSO detailSO = null; QuationTenderReqDTO qtReqDTO = new
-		 * QuationTenderReqDTO(); QuationTenderResDTO qtResDTO = null; Long
-		 * statusFilter = null; System.out.println("tab index :  " +
-		 * this.getManagedBean().getActiveTabIndex()); ISearchBean<ScQt>
-		 * searchTabBean = new SearchBean<ScQt>();
-		 * 
-		 * if (getManagedBean().getActiveTabIndex().equals(
-		 * QTConstants.NB_PUBLISH_STATUS)) { statusFilter =
-		 * QTStatusConst.QT_PUBLISH;
-		 * 
-		 * } else if (getManagedBean().getActiveTabIndex().equals(
-		 * QTConstants.NB_CHANGES_STATUS)) {
-		 * 
-		 * } else if (getManagedBean().getActiveTabIndex().equals(
-		 * QTConstants.NB_CLOSED_STATUS)) {
-		 * 
-		 * } else if (getManagedBean().getActiveTabIndex().equals(
-		 * QTConstants.NB_PRICE_SCHEDULE_STATUS)) {
-		 * 
-		 * } else if (getManagedBean().getActiveTabIndex().equals(
-		 * QTConstants.NB_AWARDED_STATUS)) { statusFilter =
-		 * QTStatusConst.QT_AWARDED; }
-		 * 
-		 * // status Tab Filtering if (statusFilter != null &&
-		 * !"".equals(statusFilter)) { searchTabBean.getDataFilterBeans().add(
-		 * new SearchFilterBean("pmStatus.statusId",
-		 * SearchOperator.OPERATOR_EQUALS.value(), statusFilter)); }
-		 * 
-		 * 
-		 * for (SearchFilterBean searchFilter : this.getManagedBean()
-		 * .getSearchBean().getDataFilterBeans()) {
-		 * searchTabBean.getDataFilterBeans().add( new
-		 * SearchFilterBean(searchFilter.getSearchField(),
-		 * searchFilter.getSearchOperator(), searchFilter .getSearchValue())); }
-		 * 
-		 * 
-		 * qtReqDTO.setQtSearchBean(searchTabBean);
-		 * this.getManagedBean().setSearchBean(searchTabBean);
-		 * 
-		 * try {
-		 * 
-		 * detailSO = BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class); qtResDTO =
-		 * detailSO.getQuationTenders(qtReqDTO);
-		 * 
-		 * } catch (Exception ex) { ex.printStackTrace();
-		 * 
-		 * } finally { detailSO = null; }
-		 * searchTabBean.getDataFilterBeans().clear(); // to clear all previous
-		 * // Objects this.getManagedBean().setScQtSearchlist(
-		 * qtResDTO.getQtResultBean().getResultList());
-		 */
-	}
-
-	/**
-	 * Sub Filtration for Today , YesterDay, Past days
-	 */
-	public void subFilter() {
-		log.info("*** TabChange Event **** ");
-		IQTDetailSO detailSO = null;
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO qtResDTO = null;
-		ISearchBean<ScQt> searchBean = this.getManagedBean().getSearchBean();
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("publishDate",
-						SearchOperator.OPERATOR_EQUALS.value(), new Date()));
-
-		qtReqDTO.setQtSearchBean(searchBean);
-
-		this.getManagedBean().setSearchBean(searchBean);
-
-		try {
-
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			qtResDTO = detailSO.getQuationTenders(qtReqDTO);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		} finally {
-			detailSO = null;
-		}
-
-		this.getManagedBean().setScQtSearchlist(
-				qtResDTO.getQtResultBean().getResultList());
+		this.getManagedBean().setSelectedTab(desc.getPmParameter().getParameterCode());
 	}
 
 	/**
@@ -869,25 +692,19 @@ public class NoticeBoardBackingBean extends
 
 	public void hideAndShowDates(String dateType) {
 		if (dateType.equalsIgnoreCase("PbDate")) {
-			if (this.getManagedBean().getPublishSearchDataBean().getPassDays() != null
-					&& this.getManagedBean().getPublishSearchDataBean()
-							.getPassDays() != "") {
+			if (this.getManagedBean().getPublishSearchDataBean().getPassDays() != null) {
 				this.getManagedBean().setShowPubDate(true);
 			} else {
 				this.getManagedBean().setShowPubDate(false);
 			}
 		} else if (dateType.equalsIgnoreCase("SiteVisit")) {
-			if (this.getManagedBean().getSiteVisitDataBean().getPassDays() != null
-					&& this.getManagedBean().getSiteVisitDataBean()
-							.getPassDays() != "") {
+			if (this.getManagedBean().getSiteVisitDataBean().getPassDays() != null) {
 				this.getManagedBean().setShowSiteDate(true);
 			} else {
 				this.getManagedBean().setShowSiteDate(false);
 			}
 		} else if (dateType.equalsIgnoreCase("Brief")) {
-			if (this.getManagedBean().getBriefSearchDataBean().getPassDays() != null
-					&& this.getManagedBean().getBriefSearchDataBean()
-							.getPassDays() != "") {
+			if (this.getManagedBean().getBriefSearchDataBean().getPassDays() != null) {
 				this.getManagedBean().setShowBriDate(true);
 			} else {
 				this.getManagedBean().setShowBriDate(false);
@@ -1117,4 +934,276 @@ public class NoticeBoardBackingBean extends
 				.setOrgProfileId(null);
 
 	}
+	
+	public Long getClosingDays(Date closingDate) {
+		if (log.isDebugEnabled()) {
+			log.debug("getClosingDays");
+		}
+		
+		Long closingDays = null;
+		Date currentDate = new Date();
+		
+		if (closingDate != null && closingDate.after(currentDate)) {
+			closingDays = DateUtils.getDaysDifference(currentDate, closingDate);	
+		}
+		
+		return closingDays;
+	}
+	
+	/**
+	 * notice board quotation/tender list paging class
+	 */
+	private class QTPagingDataModel extends PagingDataModel<ScQt> {
+
+		private static final long serialVersionUID = 1L;
+
+		public QTPagingDataModel() {
+			super("nbsearchresults");
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+
+			IQTDetailSO detailSO = null;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+				// Filter By - Status				
+				List<Long> statusIds = new ArrayList<Long>();
+				String selectedTab = getManagedBean().getSelectedTab();
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
+					//TODO filter by changes flag.
+				} else {
+					if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED.equals(selectedTab)) {
+						statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
+						statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
+						statusIds.add(QTStatusConst.QT_LOI_LOA);
+					} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED.equals(selectedTab)) {
+						statusIds.add(QTStatusConst.QT_AWARDED);
+					} else {
+						statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+						statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					}
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtStatus.current",
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									true));
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtStatus.pmStatus.statusId",
+									SearchOperator.OPERATOR_IN.value(), 
+									statusIds));
+				}
+				
+				
+				// Filter By - QT No
+				if (StringUtils.isNotBlank(getManagedBean().getQtNo())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("qtNo",
+									SearchOperator.OPERATOR_LIKE.value(), 
+									getManagedBean().getQtNo()));
+
+				}
+
+				// Filter By - Title
+				if (StringUtils.isNotBlank(getManagedBean().getTitle())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("qtTitle",
+									SearchOperator.OPERATOR_LIKE.value(), 
+									getManagedBean().getTitle(),
+									true));
+
+				}
+
+				// Filter By - Category Code
+				PmCategoryL3 pmCategoryL3 = getManagedBean().getCategoryL3();
+				if (pmCategoryL3 != null && pmCategoryL3.getCategoryL3Id() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtCategorys.pmCategoryL3.categoryL3Id",
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									pmCategoryL3.getCategoryL3Id()));
+
+				}
+
+				// Filter By - Ministry
+				PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
+				if (ministryProfile != null && ministryProfile.getOrgProfileId() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									ministryProfile.getOrgProfileId()));
+
+				}
+				
+				// Filter By - PTJ
+				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
+				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									ptjProfile.getOrgProfileId()));
+
+				}
+				
+				// Filter By - Publish Date
+				NoticeBoardSearchDataBean publishSearchDataBean = getManagedBean().getPublishSearchDataBean();
+				if (publishSearchDataBean != null) {
+					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean("publishDate", publishSearchDataBean);
+					
+					if (searchFilterBean != null) {
+						searchBean.getDataFilterBeans().add(searchFilterBean);	
+					}
+				}
+
+				// Filter By - Briefing & Site Visit Date
+				//TODO cannot search for both.
+				NoticeBoardSearchDataBean briefSearchDataBean = getManagedBean().getBriefSearchDataBean();
+				NoticeBoardSearchDataBean siteVisitDataBean = getManagedBean().getSiteVisitDataBean();
+				if (briefSearchDataBean != null || siteVisitDataBean != null) {
+					String searchField = "scQtBriefings.scQtBsvDtls.bsvDate";
+					SearchFilterBean briefSearchFilterBean = getSearchFilterBeanByDataBean(searchField, briefSearchDataBean);
+					SearchFilterBean siteVisitSearchFilterBean = getSearchFilterBeanByDataBean(searchField, siteVisitDataBean);
+					
+					if (briefSearchFilterBean != null || siteVisitSearchFilterBean != null) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("isBsvRequired",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										true));
+						
+						List<String> bsvTypes = new ArrayList<String>();
+						bsvTypes.add("A");
+						
+						if (briefSearchFilterBean != null) {
+							bsvTypes.add("B");
+							
+							searchBean.getDataFilterBeans().add(briefSearchFilterBean);
+						}
+						
+						if (siteVisitSearchFilterBean != null) {
+							bsvTypes.add("S");
+							
+							searchBean.getDataFilterBeans().add(siteVisitSearchFilterBean);
+						}
+						
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("scQtBriefings.scQtBsvDtls.bsvType",
+										SearchOperator.OPERATOR_IN.value(), 
+										bsvTypes));
+					}
+				}
+
+				// Filter By - Closing Date
+				NoticeBoardSearchDataBean clsDataBean = getManagedBean().getClsDataBean();
+				if (clsDataBean != null) {
+					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean("closingDate", clsDataBean);
+					
+					if (searchFilterBean != null) {
+						searchBean.getDataFilterBeans().add(searchFilterBean);	
+					}
+				}
+				
+				// Filter By - Location
+				TreeNode locationRootNode = getManagedBean().getLocationRootNode();
+				if (locationRootNode != null) {
+					TreeNode treeNode = locationRootNode;
+					
+					// Get the last child node.
+					while (treeNode != null && treeNode.getChildren().size() > 0) {
+						treeNode = treeNode.getChildren().iterator().next();
+					}
+					
+					if (treeNode != null) {
+						if (treeNode.getType().equals("state")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmState.stateId",
+											SearchOperator.OPERATOR_EQUALS.value(), 
+											((PmState)treeNode.getData()).getStateId()));	
+						} else if (treeNode.getType().equals("division")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDivision.divisionId",
+											SearchOperator.OPERATOR_EQUALS.value(), 
+											((PmDivision)treeNode.getData()).getDivisionId()));	
+						} else if (treeNode.getType().equals("district")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDistrict.districtId",
+											SearchOperator.OPERATOR_EQUALS.value(), 
+											((PmDistrict)treeNode.getData()).getDistrictId()));	
+						} else if (treeNode.getType().equals("city")) {
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDistrict.pmCities.cityId",
+											SearchOperator.OPERATOR_EQUALS.value(), 
+											((PmCity)treeNode.getData()).getCityId()));	
+						}
+							
+					}
+				}
+
+				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+				qtReqDTO.setQtSearchBean(searchBean);
+				
+				QuationTenderResDTO qtResDTO = detailSO.getQuationTenders(qtReqDTO);
+				
+				System.out.println("qtResDTO:" + qtResDTO.getQtResultBean().getTotalRecord());
+				return qtResDTO.getQtResultBean();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				detailSO = null;
+			}
+
+			return null;
+		}
+	}
+	
+	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField, NoticeBoardSearchDataBean searchDataBean) {
+		SearchFilterBean searchFilterBean = new SearchFilterBean();
+		
+		if (searchDataBean.isToday()) {
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			searchFilterBean.setSearchValue(new Date());
+		} else if (searchDataBean.isYesterday()) {
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), 1));
+		} else if (searchDataBean.getPassDays() != null) {
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), searchDataBean.getPassDays()));
+		} else if (searchDataBean.getFromDate() != null && searchDataBean.getToDate() != null) {
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
+					searchDataBean.getFromDate(), searchDataBean.getToDate()));
+		}
+		
+		if (searchFilterBean.getSearchValue() == null) {
+			return null;
+		}
+		
+		searchFilterBean.setSearchField(searchField);
+		
+		return searchFilterBean;
+	}
+
+	/**
+	 * @return the qtDataModel
+	 */
+	public IPagingDataModel<ScQt> getQtDataModel() {
+		return qtDataModel;
+	}
+
+	/**
+	 * @param qtDataModel the qtDataModel to set
+	 */
+	public void setQtDataModel(IPagingDataModel<ScQt> qtDataModel) {
+		this.qtDataModel = qtDataModel;
+	}
+	
 }

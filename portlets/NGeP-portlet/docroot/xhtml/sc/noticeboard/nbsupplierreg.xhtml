@@ -5,18 +5,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	<p:panel>
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
+			<ac:title value="#{lbl['lbl.sc.notice.board.self.registration']}" />
+			
+			<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
 							action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
-					</p:column>
-				</p:row>
-			</p:panelGrid>
+			<br />
 			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
@@ -26,6 +22,5 @@
 			<ui:include src="/xhtml/sc/noticeboard/nbsupplierregbyzone.xhtml"></ui:include>
 			<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 			</c:if>
-		</p:panel>
 		</ui:define>
 		</ui:composition>
