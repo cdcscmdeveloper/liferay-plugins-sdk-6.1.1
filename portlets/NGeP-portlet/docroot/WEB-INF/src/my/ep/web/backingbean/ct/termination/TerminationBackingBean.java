@@ -209,12 +209,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    reqDTO.setToken(token);
 		    reqDTO.setOutcome(action);
 		    reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		        
-		    if(this.getManagedBean().getUserLoginId() == null)
-		        reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-		    else
-		        reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
-		    
+		    reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		  
 		    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
 		    
@@ -240,13 +235,42 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
+				String messageId = MessageConst.INFO_700005;
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_700009;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+				}
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					getManagedBean().setContractVer(resDTO.getCtContractVer());
+					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+					ContractBackingBean ctBB = new ContractBackingBean();
+					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+					
+					flush();
+					String decoded ="";
+					String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId());
+					
+					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+						this.getManagedBean().setTerminateWarningLetter(true);
+						decoded = new String(this.getManagedBean().getContractVer().getCtTermination().getRemedyNotice(), "UTF-8");
+					}if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE) || parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)){
+						this.getManagedBean().setTerminateNotice(true);
+						if(this.getManagedBean().getContractVer().getCtTermination().getTerminationNotice() == null)
+							decoded =" ";
+						else
+						  decoded = new String(this.getManagedBean().getContractVer().getCtTermination().getTerminationNotice(), "UTF-8"); 
+						}
+					getManagedBean().setEditorValue(decoded);					
 				}
 			  }else {
 					throw new EpException("Failed.");
