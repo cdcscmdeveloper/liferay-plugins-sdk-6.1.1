@@ -49,16 +49,18 @@
 			</c:if>
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'BPK Approval'}">
-
+				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="bpkApproval.xhtml" />
+				<ui:include src="approveremarksdetails.xhtml" />
 			</c:if>
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'PTJ Approval'}">
+				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="ptjApprovalTab.xhtml" />
 			</c:if>
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'Committee Appointment Approval'}">
-			<ui:include src="requestPTJdetails.xhtml" />
+				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="committeeApprovalTab.xhtml" />
 			</c:if>
 		</p:panel>

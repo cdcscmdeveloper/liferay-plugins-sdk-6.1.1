@@ -214,43 +214,48 @@
 				</h:panelGrid>
 			</p:panel>
 
-			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="800"
-				position="top" height="500">
+			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="600"
+				position="top" height="400">
 				<p:panel id="zonePopupPanel" header="ADD LOCATION">
 					<table styleClass="noBorders tr,noBorders td">
 						<tr>
-							<td width="80%"><p:panel></p:panel> <p:tree
-									id="treeZoneLocationPopup"
-									value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
-									var="location"
-									selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedNodes}"
-									selectionMode="checkbox">
-									<p:treeNode type="state">
-										<h:outputText value="#{location.pmState.stateName}" />
-									</p:treeNode>
-									<p:treeNode type="division">
-										<h:outputText value="#{location.pmDivision.divisionName}" />
-									</p:treeNode>
-									<p:treeNode type="district">
-										<h:outputText value="#{location.pmDistrict.districtName}" />
-									</p:treeNode>
-									<p:treeNode type="city">
-										<h:outputText value="#{pmCity.cityName}" />
-									</p:treeNode>
-								</p:tree></td>
+							<td width="80%"><p:panel></p:panel>
+								<div style="height: 300px; overflow-y: scroll;">
+									<p:tree id="treeZoneLocationPopup"
+										value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
+										var="location"
+										selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedNodes}"
+										selectionMode="checkbox">
+										<p:treeNode type="state">
+											<h:outputText value="#{location.pmState.stateName}" />
+										</p:treeNode>
+										<p:treeNode type="division">
+											<h:outputText value="#{location.pmDivision.divisionName}" />
+										</p:treeNode>
+										<p:treeNode type="district">
+											<h:outputText value="#{location.pmDistrict.districtName}" />
+										</p:treeNode>
+										<p:treeNode type="city">
+											<h:outputText value="#{pmCity.cityName}" />
+										</p:treeNode>
+									</p:tree>
+								</div></td>
 						</tr>
 					</table>
 				</p:panel>
 				<p:commandButton
+					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+					style="float:right;" onclick="ZoneLocation.hide();"
+					icon="ui-icon-cancel" />
+					&#160;&#160;
+				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
 					update="@this, zoneLocationDataTable,zonePopupPanel"
-					action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
+					action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
+					icon="ui-icon-accept">
 				</p:commandButton>
-				&#160;&#160;
-		<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneLocation.hide();" />
+
 			</p:dialog>
 		</h:panelGroup>
 	</p:panel>

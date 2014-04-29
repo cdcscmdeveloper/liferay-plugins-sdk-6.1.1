@@ -657,7 +657,7 @@ public class QTDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
-		return QTConstants.MAINTANANCE_PAGE;
+		return QTConstants.MAINTANANCE_PAGE + "?faces-redirect=true";
 	}
 
 	/**
@@ -673,6 +673,9 @@ public class QTDetailBackingBean extends
 		if (scQt.isBrandNew()) {
 			scQt.setQtNo(getManagedBean().getQt().getQtNo());
 		}
+		scQt.setPanel(true);
+		scQt.setOpenFor("A");
+		
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
 		scQt.setCreatedBy(users.getUserId());
@@ -1332,7 +1335,6 @@ retrieveApprovalTabDtl();
 	 * 
 	 */
 	private void retrieveCommitteeAppointmentTabDtl() {
-
 		if (getManagedBean().getQt().getQtId() != null) {
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			tabBeans.add(new TabBean("Business Owner", getCommitteeTypeDtl(
@@ -2335,4 +2337,9 @@ retrieveApprovalTabDtl();
 		this.getManagedBean().getQt().setScQtCommittees(qtCommittees);
 	}
 
+	public String searchQtBackAction() {
+		debugLogger("searchQtBackAction");
+		return "/xhtml/sc/quatationtender/qtntendermain.xhtml?faces-redirect=true";
+		
+	}
 }

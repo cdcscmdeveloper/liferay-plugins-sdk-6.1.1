@@ -8,34 +8,42 @@
 	<p:panel header="Requesting PTJ" style="width: 100%" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.qt.nb.ministry']}" /></td>
+				<td style="width: 150px;"><p:outputLabel
+						value="#{lbl['lbl.qt.nb.ministry']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.ministryOrgProfile.orgCode} - #{approvalBackingBean.managedBean.qt.ministryOrgProfile.orgName}"
-						disabled="true" readonly="true" size="35" /></td>
+						value="#{approvalBackingBean.managedBean.qt.ministryOrgProfile.orgName}"
+						disabled="true" readonly="true" size="80" /></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.qt.nb.jabatan']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.departmentOrgProfile.orgCode} - #{approvalBackingBean.managedBean.qt.departmentOrgProfile.orgName}"
-						disabled="true" readonly="true" size="35" /></td>
+						value="#{approvalBackingBean.managedBean.qt.departmentOrgProfile.orgName}"
+						disabled="true" readonly="true" size="80" /></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.qt.nb.ptj']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.orgCode} - #{approvalBackingBean.managedBean.qt.pmOrgProfile.orgName}"
-						disabled="true" readonly="true" size="30" /></td>
+						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.orgName}"
+						disabled="true" readonly="true" size="80" /></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
-				<td style="width: 190px;"><p:outputLabel value="Request Date" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText
+						value="#{approvalBackingBean.managedBean.scQtApproval.createdBy}"
+						disabled="true" readonly="true" size="80" /></td>
+				<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
+				<td><p:inputText
+						value="#{approvalBackingBean.managedBean.scQtApproval.createdDate}"
+						disabled="true" readonly="true" size="30">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.qtnno']}" /></td>
@@ -50,7 +58,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
-						value="#{approvalBackingBean.managedBean.qt.qtTitle}" cols="113"
+						value="#{approvalBackingBean.managedBean.qt.qtTitle}" cols="170"
 						rows="2" style=" margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 		</table>

@@ -9,22 +9,25 @@
 		<div align="left" class="header-info">
 			<table>
 				<tr>
-					<td style="width: 245px"><h:outputLabel
+					<td style="width: 275px"><h:outputLabel
 							value="#{lbl['lbl.so.qtnno']}" /></td>
 					<td><p:inputText value="#{qTDetailBB.managedBean.qt.qtNo}"
-							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.so.planno']}" /></td>
+							disabled="true" size="17" /></td>
+					<td style="width: 350px"><h:outputLabel
+							value="#{lbl['lbl.so.planno']}" /></td>
 					<td><p:inputText
 							value="#{qTDetailBB.managedBean.qt.ppPlan.planNo}"
-							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
+							disabled="true" size="17" /></td>
+					<td style="width: 400px"><h:outputLabel
+							value="#{lbl['lbl.so.ptj.name']}" /></td>
 					<td><p:inputText
-							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}"
-							disabled="true" size="30" /></td>
-					<td style="width: 198px"><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
+							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}"
+							disabled="true" size="60" /></td>
+					<td style="width: 200px"><h:outputLabel
+							value="#{lbl['lbl.so.status']}" /></td>
 					<td><p:inputText
 							value="#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qt.qtStatus.statusId)}"
-							disabled="true" size="30" /></td>
+							disabled="true" size="40" /></td>
 				</tr>
 			</table>
 		</div>

@@ -136,11 +136,11 @@
 			<div align="right">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 495px; margin-top: 9px;"><h:outputLabel
+						<td style="width: 690px; margin-top: 9px;"><h:outputLabel
 								value="Select PTJ" /></td>
-						<td style="width: 140px;"><p:selectOneMenu
+						<td style="width: 20px;"><p:selectOneMenu
 								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
-								style="width: 138px;">
+								style="width: 250px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="Select One" itemValue="null" />
 								<f:selectItems
 									value="#{qTDetailBB.managedBean.userDivisionList}"
@@ -150,7 +150,7 @@
 								<p:ajax event="change"
 									listener="#{qTDetailBB.handlePTJNameChanged(qTDetailBB.managedBean.qt.pmOrgProfile)}" />
 							</p:selectOneMenu></td>
-						<td style="width: 135px;"><p:commandButton
+						<td style="width: 185px;"><p:commandButton
 								value="#{lbl['lbl.so.qtmscreen']}"
 								action="#{qTDetailBB.newAction}" icon="ui-icon-add"
 								rendered="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId != 'null'}" /></td>

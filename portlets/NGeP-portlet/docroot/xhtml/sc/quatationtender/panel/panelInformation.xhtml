@@ -38,16 +38,10 @@
 			<h:column>
 				<p:inputText
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.endDate}"
-					disabled="true" size="30" />
-			</h:column>
-
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.type']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.ctPanelItem.ctCircularVer.name}"
-					disabled="true" size="30" />
+					disabled="true" size="30">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</h:column>
 		</h:panelGrid>
 	</p:panel>
@@ -60,9 +54,34 @@
 			<ac:paginator for="panelDataItemList"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-				style="width:400px;">
+				style="width:15%;">
 				<h:outputText value="#{panelItem.itemName}" />
 			</p:column>
+
+			<p:column headerText="Specification" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="Item Category" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="Panel Coverage" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="UOM" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="Min. Order Qty" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="Had Pembelian Luar Kontrak" style="width:10%;">
+				<h:outputText value="#{panelItem.itemName}" />
+			</p:column>
+
 		</p:dataTable>
 
 	</p:panel>
