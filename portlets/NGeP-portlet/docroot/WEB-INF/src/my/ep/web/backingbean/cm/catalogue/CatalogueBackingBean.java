@@ -2697,6 +2697,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().add(index+1 , tier);
 	}
 
+	public void validateDateOverlap(int index){
+		
+		List<CmTierPricing> previousList = new ArrayList<CmTierPricing>();
+		for(int i = 0; i < index; i++)
+			previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(i));
+		
+		CmTierPricing tier = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
+		if(tier.getStartDate() != null && tier.getEndDate() != null){
+			for(CmTierPricing cmPricing : previousList){
+				if((tier.getStartDate().compareTo(cmPricing.getStartDate()) >= 0 && tier.getStartDate().compareTo(cmPricing.getEndDate()) <= 0) || (tier.getEndDate().compareTo(cmPricing.getStartDate()) >= 0 && tier.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)){
+					tier.setDisplayAction(false);
+					this.getManagedBean().setError4(true);
+					break;
+				} else {
+					tier.setDisplayAction(true);
+					this.getManagedBean().setError4(false);
+				}
+			}
+		}
+	}
+	
 	public void updateErrorDialog(int index){
 		CmTierPricing cmTierPricing = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
 		if(cmTierPricing.getFromQty()!=null && cmTierPricing.getToQty()!=null && cmTierPricing.getFromQty() >= cmTierPricing.getToQty()){
@@ -2709,7 +2730,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		} else {
 			this.getManagedBean().setError2(false);
 		}
-		if(cmTierPricing.getFromQty()==null || cmTierPricing.getToQty()==null || cmTierPricing.getStartDate()==null || cmTierPricing.getEndDate()==null){
+		if(cmTierPricing.getPrice() == null || cmTierPricing.getFromQty()==null || cmTierPricing.getToQty()==null || cmTierPricing.getStartDate()==null || cmTierPricing.getEndDate()==null){
 			this.getManagedBean().setError3(true);
 		} else {
 			this.getManagedBean().setError3(false);

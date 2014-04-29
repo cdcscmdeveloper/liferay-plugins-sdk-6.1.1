@@ -49,8 +49,8 @@
 				<p:calendar value="#{price.startDate}" showOn="button"
 					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				 <p:ajax event="dateSelect" update="promoLink, cloneLink, errorLink" />
-				 <p:ajax event="keyup" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
                 </p:calendar>
 
 			</p:column>
@@ -61,8 +61,8 @@
 				<p:calendar value="#{price.endDate}" showOn="button"
 					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				 <p:ajax event="dateSelect" update="promoLink, cloneLink, errorLink" />
-				 <p:ajax event="keyup" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
                 </p:calendar>
 			</p:column>
 
@@ -73,14 +73,14 @@
 				<table width="5%" styleClass="noBorders tr,noBorders td" >
 					<tr>
 						<td><p:commandLink id="promoLink" title="Promotion"
-								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate}" 
+								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
 								update="@form, deleteLink, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td><p:commandLink id="cloneLink" title="Clone" rendered="#{price.showFlag}"
-								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate}" 
+								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								action="#{catalogueBackingBean.cloneTierPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
@@ -94,7 +94,7 @@
 						<td style="text-align: right;">
 							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
 								oncomplete="errorDialog.show();" 
-								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate)}" >
+								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction)}" >
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
