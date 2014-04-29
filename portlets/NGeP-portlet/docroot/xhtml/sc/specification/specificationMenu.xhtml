@@ -11,7 +11,7 @@
 
 	<ac:lovPopup />
 	
-	<p:tabView dynamic="true"  orientation="left"
+	<p:tabView dynamic="true"  orientation="left" activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
 		id="businessSpecId">
 		<p:ajax event="tabChange"
 			listener="#{specificationBackingBean.businessOwnerTabChange}" />
