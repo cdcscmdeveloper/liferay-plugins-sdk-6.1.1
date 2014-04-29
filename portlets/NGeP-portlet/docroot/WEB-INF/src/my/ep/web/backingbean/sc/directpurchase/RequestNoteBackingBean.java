@@ -506,7 +506,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
-								MessageUtils.getMessage(MessageConst.INFO_700005, 
+								MessageUtils.getMessage(MessageConst.INFO_700011, 
 										new String[]{getManagedBean().getRequestNote().getSourceMethod(),getManagedBean().getRequestNote().getRequestNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
