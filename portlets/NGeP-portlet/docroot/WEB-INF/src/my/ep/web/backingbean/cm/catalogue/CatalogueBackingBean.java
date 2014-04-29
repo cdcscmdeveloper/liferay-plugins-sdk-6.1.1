@@ -332,8 +332,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		List<CmPromotionTierPricing> cmList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
 		if(cmList != null && cmList.size() > 0){
 			for(CmPromotionTierPricing cmPricing : cmList){
-				if(cmPricing.getParentPrice() != null)
+				if(cmPricing.getParentPrice() != null){
 					cmPricing.getParentPrice().setStandardDisabled(true);
+					cmPricing.setStandardDisabled(true);
+				}	
 			}
 		}
 
