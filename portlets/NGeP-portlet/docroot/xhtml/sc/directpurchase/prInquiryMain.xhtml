@@ -4,12 +4,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
    <ui:define name="contentSection">
    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-  
+   <ac:title value="#{lbl['lbl.sc.pr.inquiry']}"/>
    <p:panel id="mainPanel">
-	  <div align="right">
+   <p:spacer height="5px" />
+   <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
@@ -23,8 +25,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					icon="ui-icon-cancel" />
 					 
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}"
-				    style="float:right;"
+					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"/>
 	    </c:if>
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId ne null and unspscCodeBackingBean.requisitioner}">

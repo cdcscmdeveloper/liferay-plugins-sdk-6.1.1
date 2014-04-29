@@ -10,23 +10,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DualListModel;
 /**
@@ -58,6 +52,10 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private String pidStatus;
 	private boolean requisitionerFlag;
 	private boolean approverFlag;
+	
+	private List<PmOrgProfile> ptjDropdown;
+	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
+	
     
 	public PurchaseInDefaultManagedBean() {
 		List<ScPIDRemark> remarks = new ArrayList<ScPIDRemark>();
@@ -278,6 +276,34 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setApproverFlag(boolean approverFlag) {
 		this.approverFlag = approverFlag;
+	}
+
+	/**
+	 * @return the ptjDropdown
+	 */
+	public List<PmOrgProfile> getPtjDropdown() {
+		return ptjDropdown;
+	}
+
+	/**
+	 * @param ptjDropdown the ptjDropdown to set
+	 */
+	public void setPtjDropdown(List<PmOrgProfile> ptjDropdown) {
+		this.ptjDropdown = ptjDropdown;
+	}
+
+	/**
+	 * @return the pmOrgProfile
+	 */
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	/**
+	 * @param pmOrgProfile the pmOrgProfile to set
+	 */
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
 	}
 
 }

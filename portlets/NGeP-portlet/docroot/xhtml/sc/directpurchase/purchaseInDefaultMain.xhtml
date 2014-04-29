@@ -5,10 +5,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	<ac:title value="#{lbl['lbl.sc.pid']}"/>
     <p:panel id="mailPanel">
+      <p:spacer height="5px" />
 	  <div align="right">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	      

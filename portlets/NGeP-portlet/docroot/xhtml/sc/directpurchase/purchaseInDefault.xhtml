@@ -14,7 +14,7 @@
 		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}" disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
-		<p:inputText disabled="true" />
+		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}" disabled="true" />
 
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
 		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.managedBean.pidStatus}"/>
@@ -24,6 +24,28 @@
 	<p:panel header="CONTRACT DETAIL" toggleable="true">
 	<p:spacer height="4px" />
 	 <table>
+	        <tr>
+			     <td colspan="4" style="width: 250px;"><p:outputPanel>
+				 <table style="width: 100%">
+				  <tr>
+ 				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.brandNew}">
+ 				     <td style="width: 250px;">
+						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
+					 <td> <p:selectOneMenu 
+						     value="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId}"
+						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
+						  <f:selectItems 
+							   value="#{purchaseInDefaultBackingBean.managedBean.ptjDropdown}"
+							   var="pmOrgProfile"
+							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+							   itemValue="#{pmOrgProfile.orgProfileId}" />
+					</p:selectOneMenu></td>
+			    	</ui:fragment>
+				</tr>
+				</table>
+			   </p:outputPanel></td>
+			</tr>
+	 
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
@@ -91,7 +113,7 @@
 			   <td style="width: 250px;"><p:outputLabel
 								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
 				<td><p:selectOneMenu disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
-					value="#{purchaseInDefaultBackingBean.managedBean.justificationType}" style="margin-bottom: 5px;">
+					value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}" style="margin-bottom: 5px;">
 					<f:selectItems
 							value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
 					<p:ajax event="change" update="mainform"
@@ -121,7 +143,7 @@
 	 <h:panelGroup id="rmkId" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleRemarkAttach}">   
 		   <table style="width: 90%">
 			 <tr>
-			    <td class="TableFieldLeft" width="23.4%"><h:outputLabel value="Remark"/></td>
+			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="Remark"/></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -131,7 +153,7 @@
 					 </td>
 					 <td width="6"></td>
 					 <td><h:outputText value="#{remarkVar.user.userName}"/>,
-					     <h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+					     <h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 						 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</h:outputText>
 					</td>
@@ -150,9 +172,10 @@
 	  </h:panelGroup>
 	  
 	 <h:panelGroup id="attachmentId" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleRemarkAttach}">
-	   <table style="width: 91%">
+	   <table style="width: 90%">
 		<tr>
-			<td class="TableFieldLeft" width="24%"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/></td>
+			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
+			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
 				 disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}" value="Attach file(s)" />

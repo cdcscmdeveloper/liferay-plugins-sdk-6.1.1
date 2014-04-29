@@ -9,12 +9,10 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -28,28 +26,22 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
-import my.ep.persistence.entity.sc.directpurchase.ScGovEPNoCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.model.TreeNode;
 /**
  * 
@@ -72,123 +64,125 @@ public class simpleQuoteManagedBean extends BaseManagedBean{
 	private String durationDropdown;
 	private String createdBy;
 	private String processName;
-	
+
 	private List<PmOrgProfile> userDivisionList;
 	private CmSupplierItem cmSupplierItem;
-    private List<PmUser> userList = new ArrayList<PmUser>();
-    private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
-    private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
-    private List<ScBusinessNatureQuoteCriteria> businessNatureCriterias;
-    private List<ScBusinessNatureQuoteCriteria> selectedBusinessNature;
-    private List<ScSupplierMofNoCriteria>	supplierMofNoCriterias;
-    private List<ScSupplierMofNoCriteria>	selectedSuppMofNoCriterias;
-    private List<ScGovEPNoCriteria>	govEPNoCriterias;
-    private List<ScGovEPNoCriteria>	selectedGovEPNoCriterias = new ArrayList<ScGovEPNoCriteria>();
-    private List<ScQuoteSupplier>	panelItemSuppliers;
-    private List<ScQuoteSupplier>	selectedPanelItemSuppliers;
-    private List<SmSupplier> smSuppliers;
-    private PmOrgProfile pmOrgProfile = new PmOrgProfile();
-    
-    private String priceTypeCode;
-    private boolean justTypeOption;
-    private boolean procTypeOption;
-    private SelectItem[] justDropdown; // justification drop down
-    private SelectItem[] LocLevelDropdown; // Location Level drop down
-    private Integer locationLevel;
-    private boolean byLocality = true;
-    private boolean byBusinessNature;
-    private boolean suppListFlag = true;
-    private boolean locAndBusinessFlag;
-    private boolean g2GFlag;
-    private String simpleQuoteStatus;
-    
-    private	String	zoneName;
+	private List<PmUser> userList = new ArrayList<PmUser>();
+	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
+
+	private List<SmSupplier> smSuppliers;
+	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
+
+	private String priceTypeCode;
+	private boolean justTypeOption;
+	private boolean procTypeOption;
+	private SelectItem[] justDropdown; // justification drop down
+	private SelectItem[] LocLevelDropdown; // Location Level drop down
+	private Integer locationLevel;
+	private boolean byLocality = true;
+	private boolean byBusinessNature;
+	private boolean suppListFlag = true;
+	private boolean locAndBusinessFlag;
+	private boolean g2GFlag;
+	private String simpleQuoteStatus;
+
+	private	String	zoneName;
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	private	TreeNode	rootZoneTree;
 	private TreeNode[] selectedNodes;
 	private int zoneIndex = -1;
-	
+
 	private	String	locZoneName;
 	private	List<TreeNode>	selectedLocationTree	=	new ArrayList<TreeNode>();
 	private	TreeNode	rootLocationTree;
 	private TreeNode[] selectedLocNodes;
 	private	List<TreeNode>	locationTrees	=	new ArrayList<TreeNode>();
 	private int locIndex = -1;
-    
-   	private List<ScLocationStateCriteria>	stateCriterias = new ArrayList<ScLocationStateCriteria>();
+
+	private List<ScLocationStateCriteria>	stateCriterias = new ArrayList<ScLocationStateCriteria>();
 	private List<ScLocationDivisionCriteria> divistionCriterias = new ArrayList<ScLocationDivisionCriteria>();
 	private List<ScLocationDistrictCriteria>	districtsCriterias = new ArrayList<ScLocationDistrictCriteria>();
-    private int activeIndex = 0;
-    
-    private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
-    private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
-    
-    private IPagingDataModel<ScQuote> searchQuoteDataModel;
+	private int activeIndex = 0;
+
+	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
+	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+
+	private IPagingDataModel<ScQuote> searchQuoteDataModel;
 	private	String	procurementType;
 	private	Integer	isPanel;
-	
+
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
 	private String searchProcType;
 	private String searchTitle;
 	private Date searchFromCreatedDate;
 	private Date searchToCreatedDate;
-	
-	
+    
+	// clone item spec
 	private ScQuote selectedQuote =  new ScQuote();
 	private List<ScQuote> quotes = new ArrayList<ScQuote>();
 	private String productOrService;
-	
-	
-	 //TODO TEMP 
-	 private List<PmBusinessNature>	businessNatures;
-	 private List<PmBusinessNature> selectedBusiNatures;
-	 private List<CtPanelSupplier>	ctPanelSuppliers;
-	 private List<CtPanelSupplier>	selectedCtPanelSuppliers;
-	 private List<PmOrgProfile> orgProfiles;
-	 private List<ScQuoteSupplier> supplierList; // quoteSuppliers for  supplier list
-	 private List<ScQuoteSupplier> govtSellers; // govtSellers for govt seller 
-	 
-	
-    public simpleQuoteManagedBean() {
+   
+	// business nature criteria	
+	private List<PmBusinessNature>	businessNatures;
+	private List<ScBusinessNatureQuoteCriteria> businessNatureCriterias;
+	private List<ScBusinessNatureQuoteCriteria> selectedBusinessNature;
+
+	// panelSupplier for panel item
+	private List<CtPanelSupplier>	ctPanelSuppliers;
+	private List<ScQuoteSupplier> panelSuppliers;
+	private List<ScQuoteSupplier> selectedPanelSuppliers;
+
+	// quoteSuppliers for  supplier list
+	private List<ScQuoteSupplier> supplierList; 
+	private List<ScQuoteSupplier> selectedSupplierList;
+
+	//govtSellers for govt seller 
+	private List<PmOrgProfile> orgProfiles; 
+	private List<ScQuoteSupplier> govtSellers; // 
+	private List<ScQuoteSupplier> selectedGovtSellers;
+
+
+	public simpleQuoteManagedBean() {
 		super();
 	}
-    
-    
-private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel();
-	
+
+
+	private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel();
+
 	public void searchCloneItemSpec(){
 		scQuoteDataModel.reloadData();
 	}
-	
+
 	private class ScQuotePagingDataModel extends PagingDataModel<ScQuote> {
 		private static final long serialVersionUID = 1L;
 
 		public ScQuotePagingDataModel() {
 			super("scQuoteDataModel");
-        }
-		
+		}
+
 		@Override
 		public ISearchResultBean<ScQuote> pageChangeListener(ISearchBean<ScQuote> searchBean) {
-			   // debugLogger("pageChangeListener");
+			// debugLogger("pageChangeListener");
 			try {
-				
+
 				if(getSearchQuoteNo() !=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteNo",SearchOperator.OPERATOR_LIKE.value(),getSearchQuoteNo()));
 				}
-				
+
 				if(getSearchTitle() !=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getSearchTitle()));
 				}
-				
+
 				if(getSearchProcType() !=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcType()));
 				}
-				
+
 				if (getSearchFromCreatedDate() != null
 						&& getSearchToCreatedDate() != null) {
-					
+
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField("createdDate");
 					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
@@ -196,15 +190,14 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 					bean.setSearchValue(betweenVal);
 					searchBean.getDataFilterBeans().add(bean);
 				}
-				
-			
+
 				if(getProductOrService() !=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.specMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
 				}
-				
+
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
 				reqDTO.setSearchQuoteBean(searchBean);
-				
+
 				IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 				QuoteResDTO resDTO = quoteSO.searchQuote(reqDTO);
 
@@ -218,7 +211,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 		}
 	}
 
-	
+
 
 	/**
 	 * @return the fulfillmentType
@@ -292,7 +285,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
 		this.userDivisionList = userDivisionList;
 	}
-	
+
 	/**
 	 * @return the justTypeOption
 	 */
@@ -434,7 +427,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	}
 
 
-	
+
 
 	/**
 	 * @return the selectedBusinessNature
@@ -449,21 +442,6 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setSelectedBusinessNature(
 			List<ScBusinessNatureQuoteCriteria> selectedBusinessNature) {
 		this.selectedBusinessNature = selectedBusinessNature;
-	}
-
-	/**
-	 * @return the selectedSuppMofNoCriterias
-	 */
-	public List<ScSupplierMofNoCriteria> getSelectedSuppMofNoCriterias() {
-		return selectedSuppMofNoCriterias;
-	}
-
-	/**
-	 * @param selectedSuppMofNoCriterias the selectedSuppMofNoCriterias to set
-	 */
-	public void setSelectedSuppMofNoCriterias(
-			List<ScSupplierMofNoCriteria> selectedSuppMofNoCriterias) {
-		this.selectedSuppMofNoCriterias = selectedSuppMofNoCriterias;
 	}
 
 	/**
@@ -733,21 +711,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 			List<ScLocationDistrictCriteria> districtsCriterias) {
 		this.districtsCriterias = districtsCriterias;
 	}
-
-	/**
-	 * @return the selectedGovEPNoCriterias
-	 */
-	public List<ScGovEPNoCriteria> getSelectedGovEPNoCriterias() {
-		return selectedGovEPNoCriterias;
-	}
-
-	/**
-	 * @param selectedGovEPNoCriterias the selectedGovEPNoCriterias to set
-	 */
-	public void setSelectedGovEPNoCriterias(
-			List<ScGovEPNoCriteria> selectedGovEPNoCriterias) {
-		this.selectedGovEPNoCriterias = selectedGovEPNoCriterias;
-	}
+	
 
 	/**
 	 * @return the byLocality
@@ -877,66 +841,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias) {
 		this.businessNatureCriterias = businessNatureCriterias;
 	}
-
-	/**
-	 * @return the supplierMofNoCriterias
-	 */
-	public List<ScSupplierMofNoCriteria> getSupplierMofNoCriterias() {
-		return supplierMofNoCriterias;
-	}
-
-	/**
-	 * @param supplierMofNoCriterias the supplierMofNoCriterias to set
-	 */
-	public void setSupplierMofNoCriterias(
-			List<ScSupplierMofNoCriteria> supplierMofNoCriterias) {
-		this.supplierMofNoCriterias = supplierMofNoCriterias;
-	}
-
-	/**
-	 * @return the govEPNoCriterias
-	 */
-	public List<ScGovEPNoCriteria> getGovEPNoCriterias() {
-		return govEPNoCriterias;
-	}
-
-	/**
-	 * @param govEPNoCriterias the govEPNoCriterias to set
-	 */
-	public void setGovEPNoCriterias(List<ScGovEPNoCriteria> govEPNoCriterias) {
-		this.govEPNoCriterias = govEPNoCriterias;
-	}
-
-	/**
-	 * @return the panelItemSuppliers
-	 */
-	public List<ScQuoteSupplier> getPanelItemSuppliers() {
-		return panelItemSuppliers;
-	}
-
-	/**
-	 * @param panelItemSuppliers the panelItemSuppliers to set
-	 */
-	public void setPanelItemSuppliers(List<ScQuoteSupplier> panelItemSuppliers) {
-		this.panelItemSuppliers = panelItemSuppliers;
-	}
-
-	/**
-	 * @return the selectedPanelItemSuppliers
-	 */
-	public List<ScQuoteSupplier> getSelectedPanelItemSuppliers() {
-		return selectedPanelItemSuppliers;
-	}
-
-	/**
-	 * @param selectedPanelItemSuppliers the selectedPanelItemSuppliers to set
-	 */
-	public void setSelectedPanelItemSuppliers(
-			List<ScQuoteSupplier> selectedPanelItemSuppliers) {
-		this.selectedPanelItemSuppliers = selectedPanelItemSuppliers;
-	}
-
-
+	
 	/**
 	 * @return the locAndBusinessFlag
 	 */
@@ -978,7 +883,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setSimpleQuoteStatus(String simpleQuoteStatus) {
 		this.simpleQuoteStatus = simpleQuoteStatus;
 	}
-	
+
 	/**
 	 * @return the productTemplateSpecBean
 	 */
@@ -1162,21 +1067,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setBusinessNatures(List<PmBusinessNature> businessNatures) {
 		this.businessNatures = businessNatures;
 	}
-
-
-
-	/**
-	 * @return the selectedBusiNatures
-	 */
-	public List<PmBusinessNature> getSelectedBusiNatures() {
-		return selectedBusiNatures;
-	}
-	/**
-	 * @param selectedBusiNatures the selectedBusiNatures to set
-	 */
-	public void setSelectedBusiNatures(List<PmBusinessNature> selectedBusiNatures) {
-		this.selectedBusiNatures = selectedBusiNatures;
-	}
+	
 	/**
 	 * @return the serialversionuid
 	 */
@@ -1196,21 +1087,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setCtPanelSuppliers(List<CtPanelSupplier> ctPanelSuppliers) {
 		this.ctPanelSuppliers = ctPanelSuppliers;
 	}
-
-	/**
-	 * @return the selectedCtPanelSuppliers
-	 */
-	public List<CtPanelSupplier> getSelectedCtPanelSuppliers() {
-		return selectedCtPanelSuppliers;
-	}
-
-	/**
-	 * @param selectedCtPanelSuppliers the selectedCtPanelSuppliers to set
-	 */
-	public void setSelectedCtPanelSuppliers(
-			List<CtPanelSupplier> selectedCtPanelSuppliers) {
-		this.selectedCtPanelSuppliers = selectedCtPanelSuppliers;
-	}
+	
 	/**
 	 * @return the scQuoteDataModel
 	 */
@@ -1247,7 +1124,7 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 	public void setProductOrService(String productOrService) {
 		this.productOrService = productOrService;
 	}
-	
+
 	/**
 	 * @return the govtSellers
 	 */
@@ -1273,5 +1150,54 @@ private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel(
 		this.supplierList = supplierList;
 	}
 
-	
+	/**
+	 * @return the selectedSupplierList
+	 */
+	public List<ScQuoteSupplier> getSelectedSupplierList() {
+		return selectedSupplierList;
+	}
+	/**
+	 * @param selectedSupplierList the selectedSupplierList to set
+	 */
+	public void setSelectedSupplierList(List<ScQuoteSupplier> selectedSupplierList) {
+		this.selectedSupplierList = selectedSupplierList;
+	}
+	/**
+	 * @return the selectedGovtSellers
+	 */
+	public List<ScQuoteSupplier> getSelectedGovtSellers() {
+		return selectedGovtSellers;
+	}
+	/**
+	 * @param selectedGovtSellers the selectedGovtSellers to set
+	 */
+	public void setSelectedGovtSellers(List<ScQuoteSupplier> selectedGovtSellers) {
+		this.selectedGovtSellers = selectedGovtSellers;
+	}
+	/**
+	 * @return the panelSuppliers
+	 */
+	public List<ScQuoteSupplier> getPanelSuppliers() {
+		return panelSuppliers;
+	}
+	/**
+	 * @param panelSuppliers the panelSuppliers to set
+	 */
+	public void setPanelSuppliers(List<ScQuoteSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
+	}
+	/**
+	 * @return the selectedPanelSuppliers
+	 */
+	public List<ScQuoteSupplier> getSelectedPanelSuppliers() {
+		return selectedPanelSuppliers;
+	}
+	/**
+	 * @param selectedPanelSuppliers the selectedPanelSuppliers to set
+	 */
+	public void setSelectedPanelSuppliers(
+			List<ScQuoteSupplier> selectedPanelSuppliers) {
+		this.selectedPanelSuppliers = selectedPanelSuppliers;
+	}
+
 }
