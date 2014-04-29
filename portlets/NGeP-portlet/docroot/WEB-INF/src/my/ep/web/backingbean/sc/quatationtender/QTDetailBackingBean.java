@@ -673,6 +673,9 @@ public class QTDetailBackingBean extends
 		if (scQt.isBrandNew()) {
 			scQt.setQtNo(getManagedBean().getQt().getQtNo());
 		}
+		scQt.setPanel(true);
+		scQt.setOpenFor("A");
+		
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
 		scQt.setCreatedBy(users.getUserId());
