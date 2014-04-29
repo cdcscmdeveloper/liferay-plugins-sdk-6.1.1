@@ -2838,8 +2838,9 @@ public class SpecificationBackingBean extends
 			zoneCriteria.setCreatedDate(new Timestamp(System
 					.currentTimeMillis()));
 			scQt.setScQtZoneCriteria(zoneCriteria);
-
 		}
+		
+		scQt.setScQtCommittees(null);
 
 		System.out.println("============businessOwnerZone size====="
 				+ businessOwnerZone.size());
@@ -2910,7 +2911,7 @@ public class SpecificationBackingBean extends
 
 			if (getManagedBean().getScQt() == null) {
 				// this.getManagedBean().setApprovalList(getAppDetails());
-				retriveSpecdetails(791L);
+				//retriveSpecdetails(791L);
 
 			}
 
