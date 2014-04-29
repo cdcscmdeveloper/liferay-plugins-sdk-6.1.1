@@ -208,7 +208,7 @@
 
 									<p:column headerText="Action" width="2%"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
-										<p:commandLink disabled="#{supplierItem.atcRequired}"
+										<p:commandLink disabled="#{!supplierItem.atcRequired}"
 														action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
 														process="@this" update="@([id$=addToCartId])"
 														oncomplete="addToCartPopup.show();return false;"
@@ -230,8 +230,8 @@
 												<p:commandButton
 														value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
 														action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
-														rendered="#{unspscCodeBackingBean.requisitioner}"
-														disabled="#{supplierItem.circularNo ne null }">
+														rendered="#{supplierItem.circularNo ne null}"
+														disabled="#{supplierItem.circularNo eq null }">
 													</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
 														showEffect="fade" hideEffect="fade" />
 
@@ -305,7 +305,7 @@
 																		showEffect="fade" hideEffect="fade" /> <p:commandButton
 																		value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
 																		action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
-																		rendered="#{unspscCodeBackingBean.requisitioner}"
+																		rendered="#{supplierItem.circularNo ne null}"
 																		disabled="#{supplierItem.circularNo ne null }">
 																	</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
 																		showEffect="fade" hideEffect="fade" /> <p:commandButton
