@@ -375,6 +375,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 
 	private List<ScQtApprovalRequest> scQtApprovalRequestList;
+	private String approvalType;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2224,6 +2225,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedRestrictedCategoryList(
 			List<ScQtCategory> selectedRestrictedCategoryList) {
 		this.selectedRestrictedCategoryList = selectedRestrictedCategoryList;
+	}
+
+	public String getApprovalType() {
+		return approvalType;
+	}
+
+	public void setApprovalType(String approvalType) {
+		this.approvalType = approvalType;
 	}
 
 }
