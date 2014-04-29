@@ -1228,6 +1228,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			trBB = new TerminationBackingBean();
@@ -1270,6 +1271,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			if(resDTO.getCtContractVer().getCtContractItems().size() > 0){
@@ -1326,6 +1328,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             amendBB = new AmendmentBackingBean();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
