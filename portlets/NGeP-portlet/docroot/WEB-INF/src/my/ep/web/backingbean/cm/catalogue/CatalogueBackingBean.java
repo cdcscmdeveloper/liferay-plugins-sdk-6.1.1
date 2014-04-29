@@ -2714,6 +2714,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		} else {
 			this.getManagedBean().setError3(false);
 		}
+		
+		this.getManagedBean().setPricingTabIndex(1);
+		this.getManagedBean().setTierPricingIndex(0);
 	}
 
 	public boolean validateBeforeAddToPromotion(List<CmTierPricing> cmPricings){

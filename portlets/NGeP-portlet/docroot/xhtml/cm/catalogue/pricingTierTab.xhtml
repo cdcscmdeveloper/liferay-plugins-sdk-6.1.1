@@ -92,7 +92,7 @@
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 						<td style="text-align: right;">
-							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:errorDialog" 
+							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
 								oncomplete="errorDialog.show();" 
 								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate)}" >
 								<f:param name="index" value="#{rowIndex}"></f:param>
@@ -127,33 +127,6 @@
 		</p:confirmDialog>
 
 	</p:outputPanel>
-		<p:dialog id="errorDialog" header="Error List" widgetVar="errorDialog" modal="true"
-			width="400" height="125">
-				<h:panelGroup id="errorPopupPanel">
-					<table>
-						<tr>
-							<td>
-							<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-							</td>
-							<td style="white-space:nowrap; float:left;">
-								<p:panel>
-									<p:outputLabel value="To quantity greater than from quantity." rendered="#{catalogueBackingBean.managedBean.error1}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="End date cannot be less than start date." rendered="#{catalogueBackingBean.managedBean.error2}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="Please fill all columns." rendered="#{catalogueBackingBean.managedBean.error3}"></p:outputLabel>
-								</p:panel>	
-							</td>
-						</tr>
-						<tr>	
-							<td>
-							<p:panel>
-								<p:commandButton value="#{lbl['lbl.cm.zm.btn.ok']}"	style="float:right;" onclick="errorDialog.hide();"/>
-							</p:panel>	
-							</td>
-						</tr>
-					</table>
-				</h:panelGroup>
-		</p:dialog>			
+		
 
 </ui:composition>
