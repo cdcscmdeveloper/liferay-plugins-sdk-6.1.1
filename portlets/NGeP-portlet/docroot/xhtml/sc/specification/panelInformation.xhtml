@@ -14,11 +14,11 @@
 				<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
 			</h:column>
 			<h:column>
-				<p:inputText
+				<p:inputText size="30"
 					value="#{specificationBackingBean.managedBean.cirCularNo}"
 					disabled="true" />
 				<p:spacer width="5" />
-				
+
 				<p:commandLink style="margin-right:20px;">
 					<h:outputText value="#{lbl['lbl.so.cirattach']}" />
 				</p:commandLink>
@@ -29,7 +29,7 @@
 			</h:column>
 
 			<h:column>
-				<p:inputText
+				<p:inputText size="30"
 					value="#{specificationBackingBean.managedBean.circularName}"
 					disabled="true" />
 			</h:column>
@@ -38,43 +38,59 @@
 				<h:outputLabel value="#{lbl['lbl.so.circularexp']}" />
 			</h:column>
 			<h:column>
-				<p:inputText
+				<p:inputText size="30"
 					value="#{specificationBackingBean.managedBean.circularExpDate}"
-					disabled="true" >
-					<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-					</p:inputText>
+					disabled="true">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</p:inputText>
 			</h:column>
 
-			<h:column>
-				<h:outputLabel value="Circular Type" />
-			</h:column>
 
-			<h:column>
-				<p:inputText
-					value="#{specificationBackingBean.managedBean.circularType}"
-					disabled="true" />
-			</h:column>
 		</h:panelGrid>
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
+	<p:panel header="Circular Item Details"
 		toggleable="true">
 
 
-		<p:dataTable id="panelDataItemList" var="panelItem" rowIndexVar="index"
-			lazy="true"
+		<p:dataTable id="panelDataItemList" var="panelItem"
+			rowIndexVar="index" lazy="true"
 			value="#{specificationBackingBean.managedBean.selectpanelItem}"
-			
 			rowKey="#{panelItem}">
 
 			<ac:paginator for="panelDataItemList"></ac:paginator>
-		
+
 			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-				style="width:400px;">
+				style="width:20%">
 				<h:outputText value="#{panelItem.itemName}" />
 			</p:column>
 
+			<p:column headerText="Specification" style="width:15%">
+				<h:outputText value="#{panelItem.specification}" />
+
+			</p:column>
+			<p:column headerText="Item Category" style="width:10%">
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
+			</p:column>
+
+			<p:column headerText="Panel Coverage" style="width:5%">
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
+			</p:column>
+
+			<p:column headerText="UOM" style="width:15%">
+				<h:outputText value="#{panelItem.pmUom.uomId}" />
+			</p:column>
+
+			<p:column headerText="Min.Order Qty" style="width:15%">
+				<h:outputText value="#{panelItem.minimumOrderQty}" />
+			</p:column>
+
+			<p:column headerText="Had Pembelian Luar Kontrak" style="width:20%">
+
+			</p:column>
 
 
 		</p:dataTable>
@@ -94,6 +110,6 @@
 				oncomplete="technicalEmployeeList.show();"/>
 
 		</div> -->
-<ui:include src="/xhtml/sc/specification/panelItem.xhtml"></ui:include>
+		<ui:include src="/xhtml/sc/specification/panelItem.xhtml"></ui:include>
 	</p:panel>
 </ui:composition>

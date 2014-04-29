@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 <p:panel header="#{lbl['lbl.sc.spec.financial.scoring']}"
 							toggleable="true">
@@ -31,7 +32,7 @@
 
 								<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 									style="width:50%;">
-									<h:outputText value="#{finance.title}" size="50" />
+									<h:outputText value="#{fn:replace(finance.title,',','&lt;/br&gt;')}" size="50"  escape="false"/>
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
