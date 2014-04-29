@@ -208,9 +208,7 @@
 
 									<p:column headerText="Action" width="2%"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
-										<table>
-											<tr>
-												<td><p:commandLink
+										<p:commandLink disabled="#{supplierItem.atcRequired}"
 														action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
 														process="@this" update="@([id$=addToCartId])"
 														oncomplete="addToCartPopup.show();return false;"
@@ -220,30 +218,28 @@
 															name="cart_full.png" id="addToCartId" />
 													</p:commandLink> <p:tooltip for="addToCartId"
 														value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
-														hideEffect="fade" /></td>
-												<td><p:commandButton
+														hideEffect="fade" />
+												<p:commandButton
 														value="#{lbl['lbl.sc.purchase.in.default']}" id="pidId"
 														action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 														disabled="#{!supplierItem.pidRequired}"
 														rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
 													</p:commandButton> <p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
-														showEffect="fade" hideEffect="fade" /></td>
+														showEffect="fade" hideEffect="fade" />
 
-												<td><p:commandButton
+												<p:commandButton
 														value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
 														action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
 														rendered="#{unspscCodeBackingBean.requisitioner}"
 														disabled="#{supplierItem.circularNo ne null }">
 													</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
-														showEffect="fade" hideEffect="fade" /></td>
+														showEffect="fade" hideEffect="fade" />
 
-												<td><p:commandButton value="CR" update="@form"
+												<p:commandButton value="CR" update="@form" id="crId"
 														action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
 														rendered="#{supplierItem.contractNo ne null}">
-													</p:commandButton></td>
-											</tr>
-
-										</table>
+													</p:commandButton>
+										<p:tooltip for="crId" value="Contract Request" showEffect="fade" hideEffect="fade" /> 
 									</p:column>
 
 								</p:dataTable>
