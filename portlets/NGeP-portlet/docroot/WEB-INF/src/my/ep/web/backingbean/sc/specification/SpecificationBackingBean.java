@@ -2939,8 +2939,8 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-				getManagedBean().getScQt().setPanel(true);
-				getManagedBean().getScQt().setOpenFor("A");
+				//getManagedBean().getScQt().setPanel(true);
+				//getManagedBean().getScQt().setOpenFor("A");
 				if (tenderResDTO.getQtDetail().getScQtZoneCriteria() == null) {
 					getManagedBean().getScQt().setScQtZoneCriteria(
 							new ScQtZoneCriteria());
@@ -7402,7 +7402,7 @@ public class SpecificationBackingBean extends
 
 					));
 		}
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		return CommonUIConst.ACKNOWLEDGE_PAGE+"?faces-redirect=true";
 
 	}
 
