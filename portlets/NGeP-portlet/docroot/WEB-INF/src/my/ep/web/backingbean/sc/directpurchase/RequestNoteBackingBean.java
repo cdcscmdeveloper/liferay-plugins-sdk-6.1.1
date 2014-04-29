@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.directpurchase;
 
@@ -168,8 +168,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 		if (requestNoteResDTO.isSuccessful()) {
-			 FacesContext fc = FacesContext.getCurrentInstance();
-			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
+			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, 
+					null,
+					MessageUtils.getMessage(MessageConst.INFO_700025, 
+							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, 
+							new FacesScopes().getUserLocale())));
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
 		}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(

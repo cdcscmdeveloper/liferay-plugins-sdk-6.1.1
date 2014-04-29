@@ -300,7 +300,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 							 FacesMessage.SEVERITY_INFO, 
 							 null,
 							 MessageUtils.getMessage(MessageConst.INFO_700026, 
-									 new String[]{"Purchase Inquiry",scPrInquiry.getPrInquiryNo()}, 
+									 new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
 									 MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									 new FacesScopes().getUserLocale())));
 					 FacesContext fc = FacesContext.getCurrentInstance();
@@ -341,7 +341,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						 FacesMessage.SEVERITY_INFO, null,
 						 MessageUtils.getMessage(MessageConst.INFO_700026, 
-							new String[]{"Purchase Inquiry",scPrInquiry.getPrInquiryNo()}, 
+							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
 						    MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							new FacesScopes().getUserLocale())));
 				 FacesContext fc = FacesContext.getCurrentInstance();

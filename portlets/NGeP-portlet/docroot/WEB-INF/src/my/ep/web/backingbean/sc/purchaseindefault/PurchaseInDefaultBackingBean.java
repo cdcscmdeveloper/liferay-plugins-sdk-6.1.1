@@ -28,6 +28,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
@@ -208,7 +209,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							FacesMessage.SEVERITY_INFO, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700005, 
-									new String[]{"Purchase In default",purchaseInDefault.getPurchaseInDefaultNo()}, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),purchaseInDefault.getPurchaseInDefaultNo()},  
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
