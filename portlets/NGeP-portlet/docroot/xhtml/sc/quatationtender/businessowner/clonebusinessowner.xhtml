@@ -61,12 +61,12 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.reset']}" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" style="float:right;"
 					action="#{qTBusinessOwnerBackingBean.resetClone}"
 					update="searchpnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />
 
-				<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					style="float:right;" icon="ui-icon-search"
 					action="#{qTBusinessOwnerBackingBean.cloneSearchCommitteAction}"
 					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
