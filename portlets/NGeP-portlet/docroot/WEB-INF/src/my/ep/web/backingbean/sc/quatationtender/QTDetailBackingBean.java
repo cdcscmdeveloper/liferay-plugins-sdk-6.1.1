@@ -673,9 +673,6 @@ public class QTDetailBackingBean extends
 		if (scQt.isBrandNew()) {
 			scQt.setQtNo(getManagedBean().getQt().getQtNo());
 		}
-		scQt.setPanel(true);
-		scQt.setOpenFor("A");
-		
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
 		scQt.setCreatedBy(users.getUserId());
@@ -1335,6 +1332,7 @@ retrieveApprovalTabDtl();
 	 * 
 	 */
 	private void retrieveCommitteeAppointmentTabDtl() {
+
 		if (getManagedBean().getQt().getQtId() != null) {
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			tabBeans.add(new TabBean("Business Owner", getCommitteeTypeDtl(
@@ -1652,21 +1650,17 @@ retrieveApprovalTabDtl();
 					.updateBPMAction(qtReqDTO);
 			if (resDTO.isSuccessful()) {
 
-				FacesContext.getCurrentInstance().addMessage(
+				ScQt scQt = resDTO.getQtDetail();
+
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
-
-						));
-
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/shared/acknowledge.xhtml");
-
-			} else {
-				throw new EpException("Failed.");
+						MessageUtils.getMessage(MessageConst.INFO_700005, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), scQt.getQtNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+				
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(

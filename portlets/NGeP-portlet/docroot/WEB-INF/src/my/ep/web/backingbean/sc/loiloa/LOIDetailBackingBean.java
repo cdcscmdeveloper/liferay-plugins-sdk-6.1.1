@@ -370,8 +370,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 				System.out.println(" Qtn/Tender No : "
 						+ getManagedBean().getQt().getQtNo());
-				System.out.println("Status : "
-						+ getManagedBean().getQt().getPmStatus().getStatusId());
+				
 				System.out.println("Status : "
 						+ getManagedBean().getScLoi().getPmStatus()
 								.getPmStatusDescs().get(0).getStatusName());

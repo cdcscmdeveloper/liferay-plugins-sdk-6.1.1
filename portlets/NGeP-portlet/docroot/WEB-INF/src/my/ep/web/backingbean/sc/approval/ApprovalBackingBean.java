@@ -356,6 +356,7 @@ public class ApprovalBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 			ScQt qt = this.getManagedBean().getQt();
+			qt.setScQtCommittees(null);
 			qtReqDTO.setQtdetail(qt);
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
@@ -383,7 +384,7 @@ public class ApprovalBackingBean extends
 									new FacesScopes().getUserLocale())));
 			ex.printStackTrace();
 		}
-		return null;
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 	}
 

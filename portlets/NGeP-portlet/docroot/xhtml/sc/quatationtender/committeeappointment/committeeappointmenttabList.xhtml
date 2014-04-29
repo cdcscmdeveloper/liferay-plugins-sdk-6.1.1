@@ -18,8 +18,8 @@
 				<ui:fragment
 					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
 
-					<ui:param name="membersList"
-						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					<ui:param name="committe"
+						value="#{committeeApproval.scCommittee}" />
 
 					<ui:include src="businessOwnerCommittee.xhtml" />
 
@@ -28,8 +28,8 @@
 				<ui:fragment
 					rendered="#{committeeApproval.titleName ne 'Finalization Secretary' and committeeApproval.titleName ne 'Business Owner'}">
 
-					<ui:param name="membersList"
-						value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+					<ui:param name="committe"
+						value="#{committeeApproval.scCommittee}" />
 
 					<ui:param name="selectedMembersList"
 						value="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}" />

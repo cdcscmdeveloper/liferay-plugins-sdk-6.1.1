@@ -9,10 +9,12 @@
 
 	<ui:define name="contentSection">
 		<p:panel>
-			<table>
-				<tr>
-					<td align="right"><c:forEach
-							items="#{approvalBackingBean.managedBean.outComes}" var="action">
+			<p:panelGrid style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:right">
+						<c:forEach items="#{approvalBackingBean.managedBean.outComes}"
+							var="action">
 
 							<c:if test="${action == 'SUBMIT'}">
 								<ui:param name="iconVar" value="ui-icon-submit" />
@@ -38,9 +40,11 @@
 							<p:commandButton value="#{action}" process="@all"
 								styleClass="ui-button" icon="#{iconVar}"
 								actionListener="#{approvalBackingBean.updateBpmTask(action)}" />
-						</c:forEach></td>
-				</tr>
-			</table>
+						</c:forEach>
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
 
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'Budget Approval'}">

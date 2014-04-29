@@ -12,14 +12,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
-						value="#{qTCommitteBackingBean.managedBean.title}" size="30"
+						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}" size="30"
 						disabled="true" readonly="true" /></td>
 				<td />
 				<td />
 			</tr>
 		</table>
 		<p:spacer height="2" />
-		<p:dataTable id="businessownercommitteeId" value="#{membersList}"
+		<p:dataTable id="businessownercommitteeId" value="#{committe.scCommitteeMembers}"
 			var="specificationcommittee" rowIndexVar="index" editable="true"
 			rowKey="#{specificationcommittee}" selection="#{selectedMembersList}">
 

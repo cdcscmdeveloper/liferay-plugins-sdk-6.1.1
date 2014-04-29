@@ -22,6 +22,7 @@
 		</p:tab>
 
 		<p:tab title="#{lbl['lbl.qt.supplierqulificationcriteria']}">
+		
 			<ui:include
 				src="/xhtml/sc/quatationtender/qtsupplierqualfcriteria.xhtml" />
 		</p:tab>
@@ -31,6 +32,7 @@
 				src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
 		</p:tab>
 
+<c:if test="#{'60002'.equals(qTDetailBB.managedBean.qt.qtStatus.statusId)}">
 		<p:tab title="#{lbl['lbl.qt.bsv.sample']}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
@@ -47,17 +49,17 @@
 		<p:tab title="#{lbl['lbl.qt.documents']}">
 			<ui:include src="/xhtml/sc/quatationtender/documents.xhtml" />
 		</p:tab>
-
+</c:if>
 		<p:tab title="#{lbl['lbl.qt.activities']}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/qtactivitiestracking.xhtml" />
 		</p:tab>
-
+<c:if test="#{'60002'.equals(qTDetailBB.managedBean.qt.qtStatus.statusId)}">
 		<p:tab title="#{lbl['lbl.qt.public.approval']}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
 		</p:tab>
-
+</c:if>
 	</p:tabView>
 
 </ui:composition>

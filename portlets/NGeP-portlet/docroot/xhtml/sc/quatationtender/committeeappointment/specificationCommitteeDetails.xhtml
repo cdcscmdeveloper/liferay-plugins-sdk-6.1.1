@@ -12,16 +12,16 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
-						value="#{qTCommitteBackingBean.managedBean.title}"
-						style="margin-right:5px;" disabled="true" readonly="true" /></td>
+						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}" size="30"
+						disabled="true" readonly="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{qTCommitteBackingBean.managedBean.ecType}" /></td>
+						value="#{committe.approvalReq}" /></td>
 				<td style="width: 110px"><p:outputLabel
 						value="#{lbl['lbl.so.send.for.approval']}" /></td>
 			</tr>
 		</table>
 		<p:spacer height="2" />
-		<p:dataTable id="specificationcommitteeid" value="#{membersList}"
+		<p:dataTable id="specificationcommitteeid" value="#{committe.scCommitteeMembers}"
 			var="specificationcommittee" rowIndexVar="index" editable="true"
 			rowKey="#{specificationcommittee}" selection="#{selectedMembersList}">
 
