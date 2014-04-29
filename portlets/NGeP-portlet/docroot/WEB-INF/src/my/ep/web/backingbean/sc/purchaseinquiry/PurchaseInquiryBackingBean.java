@@ -299,7 +299,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							 FacesMessage.SEVERITY_INFO, 
 							 null,
-							 MessageUtils.getMessage(MessageConst.INFO_700005, 
+							 MessageUtils.getMessage(MessageConst.INFO_700026, 
 									 new String[]{"Purchase Inquiry",scPrInquiry.getPrInquiryNo()}, 
 									 MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									 new FacesScopes().getUserLocale())));
