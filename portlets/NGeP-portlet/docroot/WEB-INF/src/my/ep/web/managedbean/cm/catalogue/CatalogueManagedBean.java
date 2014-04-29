@@ -154,6 +154,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean error1 = false;
 	private boolean error2 = false;
 	private boolean error3 = false;
+	private boolean error4 = false;
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
@@ -1122,6 +1123,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setTierRowIndex(int tierRowIndex) {
 		this.tierRowIndex = tierRowIndex;
+	}
+
+
+	public boolean isError4() {
+		return error4;
+	}
+
+
+	public void setError4(boolean error4) {
+		this.error4 = error4;
 	}
 
 
