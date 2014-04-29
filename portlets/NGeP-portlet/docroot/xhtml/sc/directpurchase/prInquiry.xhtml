@@ -48,6 +48,7 @@
 						 <td> <p:selectOneMenu 
 						     value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
 						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
+						  <f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
 						  <f:selectItems 
 							   value="#{purchaseInquiryBackingBean.managedBean.userDivisionList}"
 							   var="pmOrgProfile"

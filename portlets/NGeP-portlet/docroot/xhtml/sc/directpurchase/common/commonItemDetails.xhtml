@@ -34,6 +34,7 @@
 							value="#{requestNoteBackingBean.managedBean.orgProfileId}"
 							styleClass="divisionclass"
 							style="width: 250px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
 							<f:selectItems
 								value="#{requestNoteBackingBean.managedBean.userDivisionList}"
 								var="pmOrgProfile"
@@ -104,7 +105,7 @@
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" disabled="true" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" disabled="true" size="8" />
 					
 				</p:column>
 				
