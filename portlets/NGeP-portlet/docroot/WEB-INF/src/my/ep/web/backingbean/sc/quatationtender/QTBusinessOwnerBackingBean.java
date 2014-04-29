@@ -197,7 +197,7 @@ public class QTBusinessOwnerBackingBean extends
 						+ committeeMember.getScCommittee().getCommitteeType()
 						+ " consolidate : "
 						+ committeeMember.getConsolidateValue() + " P&P : "
-						+ committeeMember.isPNP()+ " Email : " 
+						+ committeeMember.isPNP() + " Email : "
 						+ committeeMember.getEmail());
 			}
 			this.getManagedBean().setCloneCommitteMemebers(commMembers);
@@ -492,10 +492,11 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setMemberName(user.getUserName());
 				committeeMember.setIcPassport(user.getIdentificationNo());
 				committeeMember.setDesignation(user.getDesignation());
-				if(null!=user.getPmAddressTypes()){
-					for(PmAddressType address:user.getPmAddressTypes()){
-						if(null!=address.getPmAddress()){
-							committeeMember.setEmail(address.getPmAddress().getEmail());
+				if (null != user.getPmAddressTypes()) {
+					for (PmAddressType address : user.getPmAddressTypes()) {
+						if (null != address.getPmAddress()) {
+							committeeMember.setEmail(address.getPmAddress()
+									.getEmail());
 							break;
 						}
 					}
@@ -515,6 +516,9 @@ public class QTBusinessOwnerBackingBean extends
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
 		scCommittee.setScCommitteeMembers(memberList);
+		PmStatus committeStatus = new PmStatus();
+		committeStatus.setStatusId(60202l);
+		scCommittee.setCommitteStatus(committeStatus);
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
 		}
