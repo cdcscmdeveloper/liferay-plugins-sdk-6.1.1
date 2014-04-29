@@ -1255,17 +1255,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
+			/*if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
 
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(0);
 				return "addCatalogView";
-			}
+			}*/
 
 
-			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
+			/*if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
 					||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
 					||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
 
@@ -1296,7 +1296,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					return "addCatalogView";
 
 				}
-			}
+			}*/
 
 
 
@@ -2735,11 +2735,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		} else {
 			this.getManagedBean().setError3(false);
 		}
-		
+
 		this.getManagedBean().setPricingTabIndex(1);
 		this.getManagedBean().setTierPricingIndex(0);
 	}
-	
+
 	public void updateStandardErrorDialog(CmStandardPricing standardPricing){
 		if(standardPricing.getStartDate()!=null && standardPricing.getEndDate()!=null && standardPricing.getStartDate().compareTo(standardPricing.getEndDate()) >= 0){
 			this.getManagedBean().setError2(true);
@@ -2752,6 +2752,55 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().setError3(false);
 		}
 	}
+
+	public void updatePromotionErrorDialog(){
+
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
+				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
+				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
+
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
+				this.getManagedBean().setError2(true);
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+			}else{
+				this.getManagedBean().setError2(false);
+			}
+
+
+			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate())>0 
+					|| this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
+				
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+				this.getManagedBean().setError5(true);
+			}else{
+				this.getManagedBean().setError5(false);
+			}
+
+
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice())>0){
+				this.getManagedBean().setPricingTabIndex(0);
+				this.getManagedBean().setNormalPricingIndex(1);
+				this.getManagedBean().setError6(true);
+			}else{
+				this.getManagedBean().setError6(false);
+			}
+		}
+		
+		/*if((this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null &&
+				(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
+				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null))
+				|| (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null && 
+				(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
+						||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null))){
+			this.getManagedBean().setError3(true);
+		}else{
+			this.getManagedBean().setError3(false);
+		}*/
+
+	}
+
 
 	public boolean validateBeforeAddToPromotion(List<CmTierPricing> cmPricings){
 
