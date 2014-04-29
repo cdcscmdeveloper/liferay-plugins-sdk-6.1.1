@@ -62,7 +62,7 @@
 				<td style="width: 109px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
-						value="#{flOrderBB.managedBean.flRequest.procurementType.codeId}"
+						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

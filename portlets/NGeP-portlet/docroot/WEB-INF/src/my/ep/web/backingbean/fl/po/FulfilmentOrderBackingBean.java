@@ -17,6 +17,8 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -30,11 +32,13 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -102,23 +106,35 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
+				/*log.info("Record saved successfully");
 				String message = "Fulfilment Request No. : "+flRequest.getFulfilmentReqId();
 				if(flRequest.getDocNo()!=null) {
 					message = message + ". Doc No. : "+flRequest.getDocNo();
-				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
-				}
-			} else {
+				}*/
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_700011, 
+								new String[]{getParameterDesc(flRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flRequest.getDocNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+			}
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				//return "/xhtml/shared/acknowledge.xhtml";
+			}	
+			else {
 				throw new EpException("Failed.");
 			}
 
-		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error: ",e.getMessage()));
-			log.error("Exception>>", e);
+		}catch(Exception ex){
+			log.error("Exception>>", ex);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sorry We are unable to process.", ""));
+			ex.printStackTrace();
 		}finally {
 			fulfilmentOrderSO = null;
 		}
@@ -180,6 +196,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 		doMB.getManagedBean().setStatusDesc(statusDesc);
 		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
+		combineSupAddress(resDTO.getFlFulfilmentRequest());
 
 		return NAV_TO_CREATE_DO;
 
@@ -304,7 +321,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
-			//combineSupAddress(resDTO.getFlFulfilmentRequest());
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 		}else {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -349,39 +366,44 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    		address.append(strSpace);
+	    	if(null != fulfilmentRequest.getSupplierBranch()){
+	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
+	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    	    		address.append(strSpace);
+	    	    		
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    	    		address.append("\n");
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	    	}
+	    	    	if(null != address.toString()){
+	    	    		System.out.println("addresss     "+address.toString());
+	    	    	}
+	    		}
+	    	}	
 	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    		address.append(strSpace);
-	    		
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    		address.append("\n");
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	}
-	    	if(null != address.toString()){
-	    		System.out.println("addresss     "+address.toString());
-	    	}
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
 	 public void retrieveOrderAmount(FlFulfilmentItemAddr fulfilmentItemAddr){

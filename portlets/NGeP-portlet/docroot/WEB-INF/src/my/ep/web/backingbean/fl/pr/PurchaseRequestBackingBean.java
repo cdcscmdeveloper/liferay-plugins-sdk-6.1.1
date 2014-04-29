@@ -19,6 +19,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -30,6 +31,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -39,7 +41,10 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -61,6 +66,8 @@ import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
@@ -101,18 +108,22 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -239,6 +250,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
 			initializeApproverGroup();
 		}
+		
+		//ge
+		getManagedBean().setTermDays("Days");
 	
 		//retrieveRequestNoteList();
 		addPurchsedItems();
@@ -263,6 +277,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		// get AG Officer details
 		//getAgAccount(4L);
+		
+		getManagedBean().setDeleteButtonHide(true);
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -298,18 +314,41 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if (flFulfilmentRequest.getDocNo() != null) {
 					message = message + ". Doc No. : "+ flFulfilmentRequest.getDocNo();
 				}
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.", message));
+				//FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.", message));
+				if(isFlFulfilmentRequisitioner()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, 
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_700005, 
+									new String[]{getParameterDesc(flFulfilmentRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+					
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, 
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_700007, 
+									new String[]{getParameterDesc(flFulfilmentRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}
+				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+					//return "/xhtml/shared/acknowledge.xhtml";
 				}
 			} else {
 				throw new EpException("Failed.");
 			}
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
+		} catch (Exception ex) {
+			log.error("Exception>>", ex);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sorry We are unable to process.", ""));
+			ex.printStackTrace();
 		} finally {
 			fulfilmentRequestSO = null;
 		}
@@ -325,10 +364,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 		//System.out.println("Address list "+resDTO.getAddressTypeList().size());
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
-		
 		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
 			setManualAddressList();
 		}
+		
 	}
 	public void flManualDeliveryAddr() {
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
@@ -475,8 +514,40 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		return null;
 	}*/
+	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
+		
+		//System.out.println("we are in select allllllllllllllll");
+		//boolean checkValue=(boolean)e.getComponent().getAttributes().get("value")
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setDeleteButtonHide(false);
+		}else{
+			getManagedBean().setDeleteButtonHide(true);
+		}
+		
+	}
+	/*public void onAddressUnSelect(){
+		getManagedBean().setDeleteSelectedAddress(true);
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(null!=deliveryAddress){
+				deliveryAddress.setSelectedAddressRowDelete(true);
+			}
+		}	
+	}*/
+	
 	public void removeAddRow(){
 		try {
+			//deliveryAddress.setSelectedAddressRowDelete(false);
+			/*for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(null!=deliveryAddress){
+					if(deliveryAddress.isSelectedAddressRowDelete()){
+						getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().remove(deliveryAddress);
+						getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().clear();
+						
+					}
+					
+				}
+			}*/
+			
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedDelAddr());
 			getManagedBean().setSelectedAddrRow(null);
 			getManagedBean().setSelectedItemsRows(null);
@@ -496,6 +567,32 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		clearItemsForSelectedAddress();
 		populateItemsForSelectedAddress(getManagedBean().getShowAllItemsRows());
 	}
+	/*if (getManagedBean().getSelectedCategories().size() != 0) {
+		for (int i = 0; i < getManagedBean().getSmAppl()
+				.getSmSupplierCategories().size(); i++) {
+			SmSupplierCategory sdbTemp = getManagedBean().getSmAppl()
+					.getSmSupplierCategories().get(i);
+			for (SmSupplierCategory sdb : getManagedBean()
+					.getSelectedCategories()) {
+				if (sdbTemp.equals(sdb)) {
+					sdbTemp.setSelected(Boolean.TRUE);
+					System.out.println("*** ENTER *****");
+					break;
+				} else {
+					// sdbTemp.setRemarks("");
+					sdbTemp.setSelected(Boolean.FALSE);
+				}
+			}
+			getManagedBean().getSmAppl().getSmSupplierCategories()
+					.set(i, sdbTemp);
+			System.out.println("Data List For Index = "
+					+ i
+					+ "  is "
+					+ getManagedBean().getSmAppl()
+							.getSmSupplierCategories().get(i).isSelected());
+		}
+
+	} */
 
 	private void populateItemsForSelectedAddress(
 			List<FlFulfilmentItemAddr> showAllItemsRows) {
@@ -1302,9 +1399,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
-		System.out.println("Address ID :: "+flDelAddress.getPmAddress().getAddressId());
+		//System.out.println("Address ID :: "+flDelAddress.getPmAddress().getAddressId());
 		//System.out.println("Address TYPE:: "+flDelAddress.getPmAddress().getPmAddressTypes().get(0).getAddressType());
 		String addressType="R";
+		if(null== flDelAddress.getPmAddress().getAddressId()){
+			flDelAddress.getPmAddress().setAddressId(1L);
+			
+		}
 		AddressResDTO resDTO=getReceivingOfficerList(flDelAddress.getPmAddress().getAddressId(),addressType);
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
@@ -1484,18 +1585,61 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
 		
 		//System.out.println("we are in select allllllllllllllll");
-		//e.getComponent().getAttributes().get("value");
-		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-				for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-					if(null !=itemAddress){
-						itemAddress.setSelectedChargeItem(true);
-					}
+		//boolean checkValue=(boolean)e.getComponent().getAttributes().get("value")
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(null!=deliveryAddress){
+					deliveryAddress.setSelectedAddressRowDelete(true);
 				}
+			}
+			getManagedBean().setDeleteButtonHide(false);
+			
+		}else{
+			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(null!=deliveryAddress){
+					deliveryAddress.setSelectedAddressRowDelete(false);
+				}
+			}
+			getManagedBean().setDeleteButtonHide(true);
+			
+		}
+		
+		//.setd.isDeleteSelectedAddress()
+		/*if(getManagedBean().isDeleteSelectedAddress()){
+			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(null!=deliveryAddress){
+					deliveryAddress.setSelectedAddressRowDelete(false);
+				}
+			}	
+			
+		}else{
+			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(null!=deliveryAddress){
+					deliveryAddress.setSelectedAddressRowDelete(true);
+				}
+			}	
+			
+		}*/
+		/*getManagedBean().setDeleteSelectedAddress(false);
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(null!=deliveryAddress){
+				deliveryAddress.setSelectedAddressRowDelete(true);
+			}
+		}	*/
+					
+	}
+	/*public void selectAllCheckboxUnSelect(AjaxBehaviorEvent e){
+		
+		//System.out.println("we are in select allllllllllllllll");
+		//e.getComponent().getAttributes().get("value");
+		getManagedBean().setDeleteSelectedAddress(true);
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(null!=deliveryAddress){
+				deliveryAddress.setSelectedAddressRowDelete(false);
 			}
 		}	
 					
-	}
+	}*/
 	
 	/*public void chargeLineApply() {
 		if(null != getManagedBean().getSelectedNodes() && getManagedBean().getSelectedNodes().length ==1){

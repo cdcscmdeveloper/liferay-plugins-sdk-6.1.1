@@ -12,6 +12,11 @@ import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -39,12 +44,18 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
+
+import com.octetstring.vde.EntrySet;
 
 /**
  * Managed Bean for Create Purchase Order
@@ -65,7 +76,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
 	//private List<FlFulfilmentItem> selectedItemsRows;
-	//private List<FlDeliveryAddress> selectedAddressRows;
+	private List<FlDeliveryAddress> selectedAddressRowsList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private List <FlFulfilmentItemAddr>  showAllItemsRows;
 	
@@ -183,6 +194,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//get Ag Office details
 	private Long agOfficeId;
 	private String agOfficeName;
+	
+	//temp
+	private String termDays;
+	
+	private boolean deleteButtonHide;
 	
 	
 /**
@@ -1503,5 +1519,46 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.manualAddressMap = manualAddressMap;
 	}
 
-	
+	/**
+	 * @return the termDays
+	 */
+	public String getTermDays() {
+		return termDays;
+	}
+
+	/**
+	 * @param termDays the termDays to set
+	 */
+	public void setTermDays(String termDays) {
+		this.termDays = termDays;
+	}
+
+	/**
+	 * @return the selectedAddressRowsList
+	 */
+	public List<FlDeliveryAddress> getSelectedAddressRowsList() {
+		return selectedAddressRowsList;
+	}
+
+	/**
+	 * @param selectedAddressRowsList the selectedAddressRowsList to set
+	 */
+	public void setSelectedAddressRowsList(
+			List<FlDeliveryAddress> selectedAddressRowsList) {
+		this.selectedAddressRowsList = selectedAddressRowsList;
+	}
+
+	/**
+	 * @return the deleteButtonHide
+	 */
+	public boolean isDeleteButtonHide() {
+		return deleteButtonHide;
+	}
+
+	/**
+	 * @param deleteButtonHide the deleteButtonHide to set
+	 */
+	public void setDeleteButtonHide(boolean deleteButtonHide) {
+		this.deleteButtonHide = deleteButtonHide;
+	}
 }

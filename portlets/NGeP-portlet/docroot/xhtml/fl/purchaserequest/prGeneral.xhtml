@@ -74,7 +74,7 @@
 				<td style="width: 109px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25" disabled="true"
-						value="NORMAL" /></td>
+						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
@@ -143,7 +143,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:selectOneMenu style="width: 350px; margin-bottom:5px;">
+				<td><p:selectOneMenu style="width: 360px; margin-bottom:5px;">
 
 					</p:selectOneMenu></td>
 			</tr>

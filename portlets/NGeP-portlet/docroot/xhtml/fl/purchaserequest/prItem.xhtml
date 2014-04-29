@@ -21,7 +21,8 @@
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
 			<p:column headerText="Delivery Term (Days)">
-				<h:outputText style="text-align:right" value="#{address.deliveryTerm}"/>
+				<h:outputText style="text-align:right"
+					value="#{address.deliveryTerm}" />
 			</p:column>
 			<p:column headerText="Delivery Start">
 				<h:outputText value="#{address.startDate}" style="text-align:right">
@@ -67,6 +68,7 @@
 				oncomplete="addManualDeliveryAddr.show();" />
 			<p:commandButton id="deleteAddrBtn" value="Delete"
 				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
+				update=":form:prtabs:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
 			</p:commandButton>
 		</div>
@@ -228,6 +230,9 @@
 						<p:ajax event="change"
 							listener="#{purchaseRequestBackingBean.retrieveCityList}"
 							update="manCity" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.retrieveCityList}"
+							update="manAddress" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -260,8 +265,20 @@
 				<td><p:outputLabel value="* Contact Person" /></td>
 				<td><p:inputText size="35" /></td>
 				<td><p:outputLabel value="* Delivery Address" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="0" />
+				<td><p:selectOneMenu id="manAddress"
+						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="districtList"
+							value="#{purchaseRequestBackingBean.managedBean.districtList}"
+							itemValue="#{districtList.districtId}"
+							itemLabel="#{districtList.districtName}" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.retrieveCityList}"
+							update="manCity" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.retrieveCityList}"
+							update="manAddress" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
