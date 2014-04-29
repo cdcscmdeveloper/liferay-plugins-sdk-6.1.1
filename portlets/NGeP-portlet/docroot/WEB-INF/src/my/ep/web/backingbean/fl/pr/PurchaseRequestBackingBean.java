@@ -320,7 +320,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							FacesMessage.SEVERITY_INFO, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700005, 
-									new String[]{getParameterDesc(flFulfilmentRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 					
@@ -329,7 +329,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							FacesMessage.SEVERITY_INFO, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700007, 
-									new String[]{getParameterDesc(flFulfilmentRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 				}
