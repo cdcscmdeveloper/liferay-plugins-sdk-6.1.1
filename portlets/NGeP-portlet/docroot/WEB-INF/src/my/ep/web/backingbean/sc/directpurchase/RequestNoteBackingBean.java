@@ -240,7 +240,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					FacesMessage.SEVERITY_INFO, 
 					null,
 					MessageUtils.getMessage(MessageConst.INFO_700005, 
-							new String[]{scRequestNote.getSourceMethod(),scRequestNote.getRequestNoteNo()}, 
+							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							new FacesScopes().getUserLocale())));
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -500,7 +500,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700009, 
-										new String[]{getManagedBean().getRequestNote().getSourceMethod(),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
@@ -509,7 +509,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700011, 
-										new String[]{getManagedBean().getRequestNote().getSourceMethod(),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
@@ -518,7 +518,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700008, 
-										new String[]{getManagedBean().getRequestNote().getSourceMethod(),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
