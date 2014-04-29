@@ -28,12 +28,13 @@
 			     <td colspan="4" style="width: 250px;"><p:outputPanel>
 				 <table style="width: 100%">
 				  <tr>
- 				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.brandNew}">
+ 				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.selectedPmOrgProfile.brandNew}">
  				     <td style="width: 250px;">
 						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
 					 <td> <p:selectOneMenu 
 						     value="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId}"
 						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
+						     <f:selectItem itemLabel="- Select One -"> </f:selectItem>
 						  <f:selectItems 
 							   value="#{purchaseInDefaultBackingBean.managedBean.ptjDropdown}"
 							   var="pmOrgProfile"

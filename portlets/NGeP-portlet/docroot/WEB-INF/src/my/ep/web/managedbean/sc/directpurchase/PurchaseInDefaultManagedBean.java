@@ -55,7 +55,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	
 	private List<PmOrgProfile> ptjDropdown;
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	
+	private PmOrgProfile selectedPmOrgProfile = new PmOrgProfile();
     
 	public PurchaseInDefaultManagedBean() {
 		List<ScPIDRemark> remarks = new ArrayList<ScPIDRemark>();
@@ -306,4 +306,19 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 		this.pmOrgProfile = pmOrgProfile;
 	}
 
+	/**
+	 * @return the selectedPmOrgProfile
+	 */
+	public PmOrgProfile getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	/**
+	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
+	 */
+	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+
+	
 }

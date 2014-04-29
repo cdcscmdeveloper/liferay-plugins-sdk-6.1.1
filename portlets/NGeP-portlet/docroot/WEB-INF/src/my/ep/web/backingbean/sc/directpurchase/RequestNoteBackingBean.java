@@ -415,8 +415,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.getManagedBean().setProcessName(res.getProcessName());
 				purchaseInDefaultBackingBean.getManagedBean().setOutComes(res.getAction());
 				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
+				purchaseInDefaultBackingBean.getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
 				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
 				purchaseInDefaultBackingBean.getCurrentStatus(res.getDocStatus().longValue()); 
+				
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
 				purchaseInDefaultBackingBean.justificationTypeEvent();
