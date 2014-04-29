@@ -1541,14 +1541,47 @@
 	</portlet>
 
 
+<portlet>
+		<portlet-name>BusinessOwner</portlet-name>
+		<display-name>BusinessOwner</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+		<value>/xhtml/sc/bpmscreen/prerenderbusinessowner.xhtml</value>
+		
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>BusinessOwner</title>
+			<short-title>BusinessOwner</short-title>
 
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<portlet>
 		<portlet-name>scSpecification BusinessOwner</portlet-name>
 		<display-name>Specification BusinessOwner</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/specification/specificationview.xhtml</value>
+		<value>/xhtml/sc/specification/specificationview.xhtml</value>
+			
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1558,7 +1591,7 @@
 		<portlet-info>
 			<title>Specification BusinessOwner</title>
 			<short-title>Specification BusinessOwner</short-title>
-
+	
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -3095,7 +3128,7 @@
 	 </portlet>
 	  <portlet>
 	 	<portlet-name>scQTReview</portlet-name>
-	 	<display-name>scQTReview</display-name>
+	 	<display-name>QT Details</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -4172,9 +4205,71 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
 	<portlet>
+		<portlet-name>SpecCommitteMaintanance</portlet-name>
+		<display-name>Specification Committee</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/specification/prerenderQtSpecPreparation.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>SpecCommitteMaintanance</title>
+			<short-title>Specification Committee</short-title>
+
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>QTApproval</portlet-name>
+		<display-name>QTApproval</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/approval/prerenderapprovaldtls.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>QTApproval</title>
+			<short-title>QTApproval</short-title>
+
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+		<portlet>
 		<portlet-name>Evaluation Meeting</portlet-name>
 		<display-name>EvaluationMeeting</display-name>
 		<portlet-class>
@@ -4244,7 +4339,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>	
-	<portlet>
+		<portlet>
 		<portlet-name>quickLinks</portlet-name>
 		<display-name>Quick Links</display-name>
 		<portlet-class>
@@ -4277,4 +4372,5 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
 </portlet-app>

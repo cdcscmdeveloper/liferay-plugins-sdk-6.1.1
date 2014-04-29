@@ -90,7 +90,9 @@
             <portlet id="PurchaseInquiry"/>
             <portlet id="Simple Quote"></portlet>
             <portlet id="Supplier View"></portlet>
-           
+           <portlet id="SpecCommitteMaintanance"></portlet>
+           <portlet id="QTApproval"></portlet>
+            <portlet id="BusinessOwner"></portlet>
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
