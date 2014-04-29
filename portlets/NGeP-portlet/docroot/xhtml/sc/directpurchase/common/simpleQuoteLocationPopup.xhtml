@@ -5,21 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog header="ZoneLocation" widgetVar="locationPopup" modal="true"
-		width="800" height="500">
+		width="520" height="480">
 		<p:panel id="locPopupPanel" header="DELIVERY LOCATION">
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
-					</TD>
-					<TD width="80%"><p:inputText id="locNameId"
-							value="#{simpleQuoteBackingBean.managedBean.locZoneName}" ></p:inputText>
-					</TD>
-				</TR>
-				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Location"></p:outputLabel>
-					</TD>
 					<TD width="80%">
-					
+					<div style="height: 300px; overflow-y: scroll;">
 						<p:tree id="treeZoneLocationPopup"
 							value="#{simpleQuoteBackingBean.managedBean.rootLocationTree}"
 							var="location"
@@ -34,17 +25,16 @@
 							<p:treeNode type="district">
 								<h:outputText value="#{location.locationName}" />
 							</p:treeNode>
-							<p:treeNode type="city">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode> 
+							
 						</p:tree>
+						</div>
 					</TD>
 				</TR>
 			</table>
 		</p:panel>
 		<p:commandButton
 				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="locationPopup.hide();" process="@all,locNameId"
+				style="float:right;" onclick="locationPopup.hide();" process="@all"
 				update="@this, locationDataTable,locPopupPanel" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateLocation}">
 	   </p:commandButton>
