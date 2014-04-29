@@ -14,8 +14,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -23,13 +24,17 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -38,9 +43,12 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.ntf.dto.NtfRequestDTO;
+import my.ep.ntf.dto.NtfResponseDTO;
+import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
@@ -49,10 +57,14 @@ import my.ep.persistence.entity.sc.directpurchase.ScPIDWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -99,16 +111,26 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
-			ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
+			IPanelSupplierSO panelSupplierSO	=	(IPanelSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 			ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
-			scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
 			//TODO check contract item or panel item
-			if(vCmSupplierItem.getCircularNo() !=null){
-				// panel item 	
+			if(vCmSupplierItem.getContractNo() !=null){
+				// contract item
+				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+				contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
+				if(contractItemResDTO.getCtContractItem()!=null) {
+					scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
+				}
+			}else if(vCmSupplierItem.getCircularNo() !=null){
+				// panel item 
+				PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+				reqDTO.setItemId(vCmSupplierItem.getDocId());
+				PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
+				if(resDTO.getCtPanelItem()!=null) {
+					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
+				}
 			}
-			
 			// initializing remarks
 			scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
@@ -116,7 +138,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
 			ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
 			PmStatus status = new PmStatus();
-			status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+			status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			if (status != null) {
 				statusReqDTO.setStatusId(status.getStatusId());
@@ -130,9 +152,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	
 			getCurrentStatus(status.getStatusId());  
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-			//TODO default value to justification drop down listing
-			getManagedBean().setJustificationType(ParameterConst.PID_CP);
 			initialInformation(scPurchaseInDefault);
+			populatePtjDropDownList();
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -148,19 +169,17 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 				PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-				scPurchaseInDefault.setReasonType("R");
 				scPurchaseInDefault.setRecordStatus(true);
 				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
+				// PmOrgProfile - pjt id
+				scPurchaseInDefault.setPmOrgProfile(getManagedBean().getPmOrgProfile());
 				// Target Approver
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
-				// Contract Item
-				//scPurchaseInDefault.setContractedItem(getManagedBean().getCtContractItem());
-
 				// WorkFlow Status 
 				List<ScPIDWorkFlowStatus> workflowStatuses = new ArrayList<ScPIDWorkFlowStatus>();
 				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
 				PmStatus status = new PmStatus();
-				status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+				status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				if (status != null) {
 					statusReqDTO.setStatusId(status.getStatusId());
@@ -182,13 +201,18 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				FacesScopes facesScopes = new FacesScopes();
 				String token = facesScopes.getBPMAuthenticationCtxToken();
 				reqDTO.setToken(token);
-
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				if (resDTO.isSuccessful()) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "acknowledge");
-				} 
+					ScPurchaseInDefault purchaseInDefault = resDTO.getPurchaseInDefaultDtl();
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, 
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_700005, 
+									new String[]{"Purchase In default",purchaseInDefault.getPurchaseInDefaultNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}
 			} catch (Exception ex) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -200,7 +224,45 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			return null;
 		}
 		
-	 public void updateBpmTask(String outcome) {
+		
+		public void sendNotificationEmail(){
+			debugLogger("sendNotificationEmail");
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getManagedBean().getPurchaseInDefault().getCreatedBy());
+			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			
+			INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			NtfRequestDTO reqDTO = new NtfRequestDTO();
+			reqDTO.setTemplateId("400000");
+			reqDTO.setSenderId(userResDTO.getPmUser().getUserId().toString());
+			
+			List<String> userIdLst = new ArrayList<String>();
+			userIdLst.add(getManagedBean().getPurchaseInDefault().getCreatedBy().toString());
+			//userIdLst.add("1");
+			reqDTO.setEmailToArr(userIdLst.toArray(new String[userIdLst.size()]));
+			List<String> subParaLst = new ArrayList<String>();
+			subParaLst.add(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+			reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
+			// Template variables
+			List<String> cntParaLst = new ArrayList<String>();
+			cntParaLst.add(userResDTO.getPmUser().getUserName());
+			cntParaLst.add(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+			cntParaLst.add(facesScopes.getUserSessionBean().getUserName());
+			reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
+			try {
+				NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
+				debugLogger(resDTO.getStatusCode());
+				debugLogger(resDTO.getSeverity());
+				debugLogger(resDTO.getStatusDesc());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			debugLogger("END");
+		}
+
+		public void updateBpmTask(String outcome) {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			BpmRequestDTO reqBpm = new BpmRequestDTO();
@@ -213,9 +275,27 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					reqBpm.setCtxToken(ctxToken);
 					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
 					boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if(resBpm.isSuccessful()){
-					  FacesContext fc = FacesContext.getCurrentInstance();
-					  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
+					if(result){
+						if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+							// notification mail
+							this.sendNotificationEmail();
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(MessageConst.INFO_700005, 
+											new String[]{"Purchase In Default",getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							FacesContext fc = FacesContext.getCurrentInstance();
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+
+						} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(MessageConst.INFO_700008, 
+											new String[]{"Purchase In Default",getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							FacesContext fc = FacesContext.getCurrentInstance();
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+						}
 					}
 				}
 			} catch (Exception ex) {
@@ -247,7 +327,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
 				} 
 				PmStatus status = new PmStatus();
-				status.setStatusId(SourcingConstants.PID_PENDING_SUBMISSION);
+				status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
 			    StatusReqDTO statusReqDTO = new StatusReqDTO();
 			    if (status != null) {
 			     statusReqDTO.setStatusId(status.getStatusId());
@@ -295,19 +375,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 */
 		public void justificationTypeEvent() {
 			log.info("justificationTypeEvent"); 
-			
-			// TODO  have to change justification type values 
-			if (getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_SS)) {
+			if(getManagedBean().getPurchaseInDefault().getReasonType() !=null){
+			if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_SS)) {
 				getManagedBean().setVisibleOrderQty(false);
 				getManagedBean().setVisibleRemarkAttach(true);
 				
-			} else if (getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getJustificationType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
+			} else if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
 				getManagedBean().setVisibleOrderQty(true);
 				getManagedBean().setVisibleRemarkAttach(true);
 				
 			} else {
 				getManagedBean().setVisibleOrderQty(false);
 				getManagedBean().setVisibleRemarkAttach(true);
+			}
 			}
 		}
 		
@@ -369,7 +449,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			return imageFileName;
 		}
 		
-	   public void retrieveReasonDescListByCategory () {
+		public void retrieveReasonDescListByCategory () {
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
 			reqDTO.setLanguage("en");
@@ -377,18 +457,18 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 			getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
 		}
-		
+
 		public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
 			SelectItem[] items = null;
 			try {
-			    items = new SelectItem[list.size()+1];
-			    items[0] = new SelectItem(null, "- Select One -");
-			    int i = 1;
-			    for(PmReasonDesc reasonDesc : list) {
-			    	items[i++] = new SelectItem(
-			    			reasonDesc.getPmReason().getReasonCode(),
-			    			reasonDesc.getReasonDesc());
-			    }
+				items = new SelectItem[list.size()+1];
+				items[0] = new SelectItem(null, "- Select One -");
+				int i = 1;
+				for(PmReasonDesc reasonDesc : list) {
+					items[i++] = new SelectItem(
+							reasonDesc.getPmReason().getReasonCode(),
+							reasonDesc.getReasonDesc());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(
@@ -398,7 +478,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 								e.toString(), 
 								e.getMessage()));
 			}
-		    return items;
+			return items;
 		}
 		
 	 public void initialInformation(ScPurchaseInDefault purchaseInDefault){
@@ -428,27 +508,50 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
 				getManagedBean().setApprovalUsers(approvalUsers);
 			}
-	   }		
+	   }
+	 
+	 /**
+	  * to get Ptj drop down Listing in purchase in default
+	  */
+	 private void populatePtjDropDownList() {
+		 debugLogger("populatePtjDropDownList");
+		 PmUser user = new FacesScopes().getUserSessionBean();
+		 if (user != null) {
+			 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			 reqDTO.setUserId(user.getUserId());
+			 reqDTO.setOrgType(OrganizationType.DIVISION.value());
+
+			 IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					 .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							 IOrgProfileSO.class);
+			 OrgProfileResDTO resDTO = orgProfileSO
+					 .retrieveOrgProfileListByOrgType(reqDTO);
+
+			 List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
+			 System.out.println("userDivisionList" + ptjList.size());
+			 getManagedBean().setPtjDropdown(ptjList);
+		 }
+	 }
 		
-	   /**
-		*  deleteUploadFile method for deleting upload fine in pid
-	    */
-		public void deleteUploadFile() {
-			debugLogger("deleteUploadFile");
-			getManagedBean().getAttachments().clear();
-		}
-	  
-	  /**
-		* Page navigation to catalogue search page in Purchase in default
-	   */
-		public String backToPervious() {
-			log.info("backToPervious");
-			return "catalogueSearch";
-		}		
-		private void debugLogger(Object message) {
-			if (log.isDebugEnabled()) {
-				log.debug(message);
-			}
-			log.info(message);
-		}
+	 /**
+	  *  deleteUploadFile method for deleting upload fine in pid
+	  */
+	 public void deleteUploadFile() {
+		 debugLogger("deleteUploadFile");
+		 getManagedBean().getAttachments().clear();
+	 }
+
+	 /**
+	  * Page navigation to catalogue search page in Purchase in default
+	  */
+	 public String backToPervious() {
+		 log.info("backToPervious");
+		 return "catalogueSearch";
+	 }		
+	 private void debugLogger(Object message) {
+		 if (log.isDebugEnabled()) {
+			 log.debug(message);
+		 }
+		 log.info(message);
+	 }
 }

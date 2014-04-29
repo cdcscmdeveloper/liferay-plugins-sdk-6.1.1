@@ -26,10 +26,10 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -53,10 +53,13 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
+import my.ep.web.sc.directpurchase.common.DPStatusConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -89,7 +92,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				}
 			}
 		}
-	       populateUserDivisionList();
 	  }
     
 	/**
@@ -118,7 +120,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus();
 			  workFlowStatus.setPrInquiry(scPrInquiry);
 			  PmStatus status = new PmStatus();
-			  status.setStatusId(SourcingConstants.PRI_PENDING_SUBMISSION);
+			  status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
 			  StatusReqDTO statusReqDTO = new StatusReqDTO();
 			  if (status != null) {
 			      statusReqDTO.setStatusId(status.getStatusId());
@@ -176,6 +178,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  }
 		 //TODO default value to  price type drop down listing
 		 getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
+		 populateUserDivisionList();
          return "prInquiryMain";		 
 	 }
 	  
@@ -273,7 +276,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus();
 				  workFlowStatus.setPrInquiry(prInquiry);
 				  PmStatus status = new PmStatus();
-				  status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
+				  status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
 				  StatusReqDTO statusReqDTO = new StatusReqDTO();
 				  if (status != null) {
 				      statusReqDTO.setStatusId(status.getStatusId());
@@ -291,12 +294,18 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			     reqDTO.setRequestNote(requestNote);
 				 PrInquiryResDTO prInquiryResDTO = prInquirySO.submitPrInquiry(reqDTO);
-				
 				 if (prInquiryResDTO.isSuccessful()) {
+					 ScPrInquiry scPrInquiry = prInquiryResDTO.getPrInquiryDetail();
+					 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							 FacesMessage.SEVERITY_INFO, 
+							 null,
+							 MessageUtils.getMessage(MessageConst.INFO_700005, 
+									 new String[]{"Purchase Inquiry",scPrInquiry.getPrInquiryNo()}, 
+									 MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									 new FacesScopes().getUserLocale())));
 					 FacesContext fc = FacesContext.getCurrentInstance();
-					 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
-				} 
-				
+					 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+				 } 
 			} catch (Exception ex) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -311,7 +320,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			return null;
 		}
 		
-	  
+		 /**
+		  *  submitPrInquiryPrice  method to submit purchase inquiry price  details by supplier  in Purchase inquiry
+		  */	
 	  public String submitPrInquiryPrice(String outcome){
 		   IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -326,8 +337,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
 			   PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
 			   if(resDTO.isSuccessful()){
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
+				 ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
+				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						 FacesMessage.SEVERITY_INFO, null,
+						 MessageUtils.getMessage(MessageConst.INFO_700026, 
+							new String[]{"Purchase Inquiry",scPrInquiry.getPrInquiryNo()}, 
+						    MessageUtils.BUNDLE_COMMON_MESSAGES, 
+							new FacesScopes().getUserLocale())));
+				 FacesContext fc = FacesContext.getCurrentInstance();
+				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
 			   }else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -345,10 +363,16 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						reqBpm.setCtxToken(ctxToken);
 						BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
 						boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if (resBpm.isSuccessful()) {
+					if (result) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, 
+								null,
+								MessageUtils.getMessage(MessageConst.INFO_700010, 
+										new String[]{"Purchase Inquiry",getManagedBean().getScPrInquiry().getPrInquiryNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, "acknowledge");
+						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
 					}
 					}
 				} catch (Exception ex) {
@@ -384,7 +408,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						.get(0).getRemark());
 			}
 			PmStatus status = new PmStatus();
-			status.setStatusId(SourcingConstants.PRI_PENDING_SUBMISSION);
+			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
 		    StatusReqDTO statusReqDTO = new StatusReqDTO();
 		    if (status != null) {
 		     statusReqDTO.setStatusId(status.getStatusId());
@@ -465,7 +489,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 	}
 	
-	
 	public	String	requisitionerAction(String action){
 		if(StringUtils.equalsIgnoreCase("PROCESSED",action)){
 			//redirect to requestNote screen
@@ -505,7 +528,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	        requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
 			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
-			requestNoteBackingBean.getManagedBean().setSourceMethod(getManagedBean().getMethod());
+		    requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 			requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
 			
@@ -513,7 +536,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 			requestNoteBackingBean.initialInformation(new ScRequestNote());
-			requestNoteBackingBean.getCurrentStatus(SourcingConstants.RN_PENDING_SUBMISSION);
+			requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 			requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			
 			//redirect to RequestNote screen
@@ -562,8 +585,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		log.info(message);
 	}
 	
-	
-	
 	 public void  getCurrentStatus(Long statusId) {
 		if (statusId != null) {
 			 getManagedBean().setPriStatus(getStatusDescById(statusId));
@@ -580,7 +601,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 	  }
 	
-	
 	public void ptjNameEvent() {
 		if (getManagedBean().getOrgProfileId() != null) {
 			for (PmOrgProfile orgProfile : getManagedBean()
@@ -592,7 +612,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			}
 		}
 	}
-	
 	
 	private	List<ScSupplierItemPrice>	createScSupplierItemPrices(ScRequestSupplierItem	scRequestSupplierItem, List<CmPricing> pricings){
 		List<ScSupplierItemPrice> results	=	new ArrayList<>();

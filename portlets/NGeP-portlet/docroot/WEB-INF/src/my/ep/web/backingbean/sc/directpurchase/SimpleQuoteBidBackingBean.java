@@ -12,7 +12,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
@@ -65,7 +65,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
 		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
-		obj.setPtj("Asdqwe");
+		//obj.setPtj("Asdqwe");
 		reqDTO.setOutcome("SUBMIT");
 		if(getManagedBean().getTaskId() != null){
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -177,12 +177,12 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
 		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
-		obj.setPtj("Asdqwe");
+		//obj.setPtj("Asdqwe");
 		if(submit){
 			obj.getSuppliers().clear();
 			//TODO hardcode supplier user to test BPM flow
 			obj.getSuppliers().add("user011");
-			if(SourcingConstants.CREATE_SIMPLE_QUOTE.equalsIgnoreCase(getManagedBean().getAction())){
+			if(DPStatusConstants.CREATE_SIMPLE_QUOTE.equalsIgnoreCase(getManagedBean().getAction())){
 				obj.setDpMode("SQ");
 			}else{
 				obj.setDpMode("SB");

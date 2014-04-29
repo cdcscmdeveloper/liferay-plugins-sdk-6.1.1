@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -21,10 +20,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -32,9 +28,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.entity.cm.catalog.CmPricing;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -57,6 +50,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
+import my.ep.web.sc.directpurchase.common.DPStatusConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -143,11 +137,13 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		}
 		
 		// WorkFlow Status
-		List<ScRNWorkFlowStatus> wflowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-		ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus(SourcingConstants.RN_PENDING_SUBMISSION);
-		workFlowStatus.setRequestNote(requestNote);
-		wflowStatuses.add(workFlowStatus);
-		requestNote.setWorkFlowStatuses(wflowStatuses);
+		List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+		ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
+		requestNote.setWorkFlowStatuses(workFlowStatuses);
+		PmStatus status = new PmStatus();
+		status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+		workFlowStatuses.add(workFlowStatus);
+		requestNote.setWorkFlowStatuses(workFlowStatuses);
 		
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(requestNote));
@@ -420,11 +416,11 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	}
 
 	public void simpleQuoteAction() {
-		getManagedBean().setAction(SourcingConstants.CREATE_SIMPLE_QUOTE);
+		getManagedBean().setAction(DPStatusConstants.CREATE_SIMPLE_QUOTE);
 	}
 
 	public void simpleBidAction() {
-		getManagedBean().setAction(SourcingConstants.CREATE_SIMPLE_BID);
+		getManagedBean().setAction(DPStatusConstants.CREATE_SIMPLE_BID);
 	}
 
 	public void applyForRequestNote() {
@@ -447,7 +443,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
 		obj.setDpId(requestListResDTO.getRequestNoteDetail().getRequestNoteId().intValue());
-		obj.setPtj("Asdqwe");
+		//obj.setPtj("Asdqwe");
 		if (submit) {
 			String approvaUserId = "";
 			if (getManagedBean().getRequestNote().getApprovalUsers() != null) {
@@ -535,7 +531,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
 			} 
 			PmStatus status = new PmStatus();
-			status.setStatusId(SourcingConstants.RN_PENDING_SUBMISSION);
+			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
 			remark.setPmStatus(status);
 			remark.setRequestNote(scRequestNote);
 			results.add(0, remark);

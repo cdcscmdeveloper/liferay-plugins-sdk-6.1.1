@@ -98,10 +98,10 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 			scQt.setProcurementMode(ppPlan.getProcurementModeParam().getParameterCode());
 			scQt.setQtType(ppPlan.getQtTypeParam().getParameterCode());
 			scQt.setQtType("o");
-			scQt.setQtAmount(new BigDecimal(10000));
+			//scQt.setQtAmount(new BigDecimal(10000));
 			//scQt.setResponseRule("A");
 			scQt.setBsvRequired(false);
-			scQt.setSameBsv(false);
+			//scQt.setSameBsv(false);
 			
 					
 			scQt.setPmOrgProfile(ppPlan.getPtjOrgProfile());
@@ -110,7 +110,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 			IStatusSO iStatusSO=BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusResDTO pmStatus = iStatusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			scQt.setPmStatus(status);
+			//scQt.setPmStatus(status);
 			QTDetailBackingBean backingBean= new QTDetailBackingBean();
 			backingBean.getManagedBean().setQt(scQt);
 			QuationTenderReqDTO tenderReqDTO = backingBean.prepareQTInfo();
