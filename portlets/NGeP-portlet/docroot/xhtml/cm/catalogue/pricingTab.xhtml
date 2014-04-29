@@ -31,6 +31,9 @@
 				<p:column>
 							End Date
 						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.action']}
+						</p:column>
 			</p:row>
 
 		</f:facet>
@@ -41,19 +44,36 @@
 			</p:column>
 			<p:column>
 				<p:inputText
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"></p:inputText>
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
+					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}">
+					<p:ajax event="keyup" update="standardErrorLink" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}"
-					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="dateSelect" update="standardErrorLink" />
+					<p:ajax event="keyup" update="standardErrorLink" />
+				</p:calendar>
 
 			</p:column>
 			<p:column>
 				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}"
-					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.standardDisabled}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="dateSelect" update="standardErrorLink" />
+					<p:ajax event="keyup" update="standardErrorLink" />
+				</p:calendar>
 
+			</p:column>
+			<p:column>
+				<p:commandLink id="standardErrorLink" title="Error" update=":form"
+					oncomplete="errorDialog.show();"
+					actionListener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"
+					disabled="#{!(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate >= catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}">
+					<p:graphicImage value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+				</p:commandLink>
 			</p:column>
 		</p:row>
 

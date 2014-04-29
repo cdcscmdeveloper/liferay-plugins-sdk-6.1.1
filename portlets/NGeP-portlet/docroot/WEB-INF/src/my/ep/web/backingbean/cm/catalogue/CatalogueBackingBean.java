@@ -2718,6 +2718,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setPricingTabIndex(1);
 		this.getManagedBean().setTierPricingIndex(0);
 	}
+	
+	public void updateStandardErrorDialog(CmStandardPricing standardPricing){
+		if(standardPricing.getStartDate()!=null && standardPricing.getEndDate()!=null && standardPricing.getStartDate().compareTo(standardPricing.getEndDate()) >= 0){
+			this.getManagedBean().setError2(true);
+		} else {
+			this.getManagedBean().setError2(false);
+		}
+		if(standardPricing.getPrice()== null || standardPricing.getStartDate()==null || standardPricing.getEndDate()==null){
+			this.getManagedBean().setError3(true);
+		} else {
+			this.getManagedBean().setError3(false);
+		}
+	}
 
 	public boolean validateBeforeAddToPromotion(List<CmTierPricing> cmPricings){
 
