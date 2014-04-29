@@ -128,6 +128,23 @@ public class BPMTaskListBackingBean extends
 		temp.put("Service QuotationTender Creation", "supplierpp");
 		temp.put("Committee Approval", "committeMaintance");
 		
+		//Added for qt..
+		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.PREPARE_SPECIFICATION , "businessowner");
+		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.CONSOLIDATE_SPECIFICATION , "businessowner");
+		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.SPECIFICATION_APPROVAL , "businessowner");
+		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.PREPARE_QT_DETAILS , "qtdetails");
+		temp.put(SCProcessNameConst.SOURCING_APPROVAL +SCProcessNameConst.BDG_APPROVAL , "qtapprovals");
+		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS +SCProcessNameConst.BPK_APPROVAL , "qtapprovals");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.PREPARE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.FINALISE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.ENDORSE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.SIGN_OFF_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
+		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BPK_APPROVAL , "qtapprovals");
+		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.QT_PREPARE_SCHEDULE , "qtdetails");
+		temp.put(SCProcessNameConst.SOURCING_APPROVAL +SCProcessNameConst.APPROVE_COMMITTE , "qtapprovals");
+		
+
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");
