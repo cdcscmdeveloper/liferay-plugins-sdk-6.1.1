@@ -316,6 +316,8 @@ private List<BriefingZoneBean> addressZoneBean;
 private String panelItemCategory;
 	
 	private List<ScQtCheckList> finSpecList;
+	private Long panelItemId;
+	private int activeIndex;
 	
 	
 	
@@ -3611,6 +3613,42 @@ private String panelItemCategory;
 	 */
 	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
 		this.finSpecList = finSpecList;
+	}
+
+
+
+	/**
+	 * @return the panelItemId
+	 */
+	public Long getPanelItemId() {
+		return panelItemId;
+	}
+
+
+
+	/**
+	 * @param panelItemId the panelItemId to set
+	 */
+	public void setPanelItemId(Long panelItemId) {
+		this.panelItemId = panelItemId;
+	}
+
+
+
+	/**
+	 * @return the activeIndex
+	 */
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+
+
+	/**
+	 * @param activeIndex the activeIndex to set
+	 */
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
 	}
 
 
