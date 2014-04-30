@@ -6,73 +6,53 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="ITEM DETAIL" toggleable="true">
+	<p:panel header="ITEMS" toggleable="true" id="itemPnl">
 		<br />
 		<p:dataTable id="frnItemDt" var="item" width="100%"
-			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}">
+			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"
+			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
+			rowIndexVar="index"
+			selectionMode="single" rowKey="#{item}" lazy="true">
+			<p:ajax event="rowSelect"
+				update=":form:tt:selectedItemSection"
+				/>
 			<ac:paginator for="itemDataTable" />
-			<p:column headerText="Type">
-				<h:outputText
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType}"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
-				<h:outputText
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
-			</p:column>
 			<p:column headerText="Item Code">
-				<h:outputText
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.requestNoteItemId}"
+				<h:outputText value="#{item.flItem.cmItem.extensionCode}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
 				<h:outputText
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
 			</p:column>
 			<p:column headerText="Item Name">
-				<p:outputLabel
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}"
+				<p:outputLabel value="#{item.flDelOrderItem.flItem.cmItem.itemName}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
-				<p:outputLabel
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.qtItem.itemName}"
+				<p:outputLabel value="#{item.flItem.qtItem.itemName}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
+			</p:column>
+			<p:column headerText="UOM">
+				<h:outputText
+					value="">
+				</h:outputText>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
 				<h:outputText
 					value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
-					<f:convertNumber pattern="#,###.00" />
+					<f:convertNumber pattern="#,##0.00" />
 				</h:outputText>
-			</p:column>
-			<p:column headerText="Ordered Qty.">
-				<h:outputText
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
 			<p:column headerText="Delivered Qty.">
 				<h:outputText value="#{item.flDelOrderItem.deliveredQty}" />
 			</p:column>
-			<p:column headerText="Received Qty.">
-				<p:inputText value="#{item.receivedQty}"
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
-				</p:inputText>
-				<h:outputText
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}"
-					value="#{item.receivedQty}" />
-				<p:inputText value="#{item.receivedQty}"
-				rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}"/>
-					
-			</p:column>
-			<p:column headerText="Ordered Amt.(RM)">
-				<h:outputText
-					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
-					<f:convertNumber pattern="#,###.00" />
-				</h:outputText>
-			</p:column>
 			<p:column headerText="Delivered Amt.(RM)">
 				<h:panelGroup id="delAmountTxt">
-					<p:inputText value="#{item.flDelOrderItem.deliveredAmt}"
-						rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
-						<f:convertNumber pattern="#,###.00" />
-					</p:inputText>
+					<h:outputText value="#{item.flDelOrderItem.deliveredAmt}"
+						rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
+						<f:convertNumber pattern="#,#00.00" />
+					</h:outputText>
 					<h:outputText
-						rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}"
+						rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
 						value="#{item.flDelOrderItem.deliveredAmt}">
-						<f:convertNumber pattern="#,###.00" />
+						<f:convertNumber pattern="#,#00.00" />
 					</h:outputText>
 					<p:inputText value="#{item.flDelOrderItem.deliveredAmt}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
@@ -80,16 +60,27 @@
 					</p:inputText>
 				</h:panelGroup>
 			</p:column>
+			<p:column headerText="Received Qty." >
+				<p:inputText value="#{item.receivedQty}" 
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
+					<p:ajax update="receivedAmt" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
+					</p:inputText>
+				<h:outputText
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
+					value="#{item.receivedQty}" />
+				<p:inputText value="#{item.receivedQty}"
+				rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}"/>
+			</p:column>
 			<p:column headerText="Received Amt.(RM)">
 				<p:inputText
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}"
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
 					value="#{item.receivedAmt}">
-					<f:convertNumber pattern="#,###.00" />
+					<f:convertNumber pattern="#,#00.00" />
 				</p:inputText>
-				<h:outputText
+				<h:outputText id="receivedAmt"
 					value="#{item.receivedAmt}"
-					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
-					<f:convertNumber pattern="#,###.00" />
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
+					<f:convertNumber pattern="#,##0.00" />
 				</h:outputText>
 				<h:outputText
 					value="#{item.receivedAmt}"
@@ -97,7 +88,27 @@
 					<f:convertNumber pattern="#,#00.00" />
 				</h:outputText>
 			</p:column>
+						<p:column headerText="Ordered Qty.">
+				<h:outputText
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" />
+			</p:column>
+			<p:column headerText="Ordered Amt.(RM)">
+				<h:outputText
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
+					<f:convertNumber pattern="#,#00.00" />
+				</h:outputText>
+			</p:column>
 		</p:dataTable>
+		
+		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.txt.remarks']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputTextarea cols="40" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" /> </td>
+				</tr>
+			</table>
+		</h:panelGroup>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">

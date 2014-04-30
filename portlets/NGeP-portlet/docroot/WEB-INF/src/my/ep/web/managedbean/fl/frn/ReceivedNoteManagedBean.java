@@ -36,6 +36,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
 	private FlFulfilmentNoteItem fulfilmentNoteItem = new FlFulfilmentNoteItem();
 	private FlFulfilmentRequest fulfilmentRequest;
+	private FlFulfilmentNoteItem selectedItem;
 
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
@@ -52,6 +53,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private long deliveryOrderId;
 	
 	private String docType;
+	private String supplierAddress;
 	
 	/**
 	 * @return the flRemark
@@ -251,6 +253,34 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	/**
+	 * @return the selectedItem
+	 */
+	public FlFulfilmentNoteItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	/**
+	 * @param selectedItem the selectedItem to set
+	 */
+	public void setSelectedItem(FlFulfilmentNoteItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
 	}
 
 

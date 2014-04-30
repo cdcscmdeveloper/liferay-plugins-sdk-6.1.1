@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.frn;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -24,11 +24,11 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.dodata.FLDeliveryOrderDataType;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -116,49 +116,46 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			BpmRequestDTO bpmRequestDTO = new BpmRequestDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			bpmRequestDTO.setCtxToken(ctx);
+			bpmRequestDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(bpmRequestDTO);
 			Object obj = res.getPojo();
 
-			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO delOrderResDTO = new FulfilmentResDTO();
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
-//			flReqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());//TODO ask bpm provide doId
-			delOrderResDTO = deliveryOrderSO.retrieveDeliveryOrderById(flReqDTO);
-			flReqDTO.setFlRequestId(fulFillmentRecievedNoteDataType.getFlRequestId());
-			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+			resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			
-			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
-//			getManagedBean().setDeliveryOrderId(deliveryOrderDataType.getDoId());
+			getManagedBean().setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-			System.out.println("Doc type in FRN::: "+resDTO.getFlFulfilmentRequest().getDocType());
-			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+			getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 			
-			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(delOrderResDTO.getFlDeliveryOrder());
+			combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
+			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
-			for (FlDelOrderItem delOrderItem : delOrderResDTO.getFlDeliveryOrder().getFlDelOrderItem()){
+			for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
 				FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
 				noteItem.setFlDelOrderItem(delOrderItem);
 				noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+				noteItem.setFlItem(delOrderItem.getFlItem());
 				noteItemList.add(noteItem);
 				//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
 				//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 			}
 			//Add noteItemList to Managed Bean List.
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
-			
 			getManagedBean().getFulfilmentNoteItem();
 			/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
 				
@@ -176,4 +173,52 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
 		reqDTO.setPmUser(userResDTO.getPmUser());
 	}
+	
+	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	    	
+	    	StringBuilder address = new StringBuilder();
+	    	String strSpace = " ";
+	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    		address.append(strSpace);
+	    	
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    		address.append(strSpace);
+	    	
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    		address.append(strSpace);
+	    	
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    		address.append(strSpace);
+	    		
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    		address.append(strSpace);
+	    	
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    		address.append(strSpace);
+	    	
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    		address.append("\n");
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	}
+	    	if(null != address.toString()){
+	    		System.out.println("addresss     "+address.toString());
+	    	}
+	    	this.getManagedBean().setSupplierAddress(address.toString());
+	    }
+	 
+	 public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
+			BigDecimal receivedAmt = new BigDecimal(0);
+			if(null != item.getReceivedQty()){
+				receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+			}
+			item.setReceivedAmt(receivedAmt);
+		}
 }

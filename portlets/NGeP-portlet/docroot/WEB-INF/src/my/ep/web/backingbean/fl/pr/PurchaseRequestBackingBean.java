@@ -639,7 +639,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		 PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
 		//PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
 		 purResDTO.getPurchaseRequest().getRequestNoteDtls().size();
-		System.out.println("Item name::: "+purResDTO.getPurchaseRequest().getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
+//		System.out.println("Item name::: "+purResDTO.getPurchaseRequest().getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
 		List<ScRequestNoteDtl> noteDtlList=new ArrayList<ScRequestNoteDtl>();
 		noteDtlList.addAll( purResDTO.getPurchaseRequest().getRequestNoteDtls());
 		
