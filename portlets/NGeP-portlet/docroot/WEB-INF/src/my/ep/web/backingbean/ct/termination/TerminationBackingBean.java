@@ -61,7 +61,6 @@ import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.axis.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 
@@ -352,7 +351,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				this.getManagedBean().setTerminateNotice(true);
 				if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 					this.getManagedBean().setTermination(true);
-					if(StringUtils.isEmpty(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency())) {
+					if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()==null || getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()==0) {
 						getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
 					}
  				}
