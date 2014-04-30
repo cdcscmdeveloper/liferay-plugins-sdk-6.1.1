@@ -338,11 +338,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}	
 			}
 		}
-		
-		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing()!=null 
-				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null){
-			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
-		}
+
+
+		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
+
+
 
 		return "addCatalogItem";
 
@@ -2767,8 +2767,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
 
 			this.getManagedBean().setError3(false);
-			
-			
+
+
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
 				this.getManagedBean().setError2(true);
@@ -2811,17 +2811,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().setError5(false);
 			this.getManagedBean().setError6(false);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
-			
+
 		}else{
 			this.getManagedBean().setError3(true);
 			this.getManagedBean().setError2(false);
 			this.getManagedBean().setError5(false);
 			this.getManagedBean().setError6(false);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(false);
-			
+
 		}
 
-	
+
 	}
 
 
