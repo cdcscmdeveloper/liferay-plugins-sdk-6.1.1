@@ -23,15 +23,12 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -45,7 +42,6 @@ import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.quatationtender.QTCommitteBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
@@ -445,4 +441,25 @@ public class ApprovalBackingBean extends
 		return approval;
 	}
 
+	public String viewApprovalAction() {
+		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
+	}
+
+	public void handleFileAttachment(FileUploadEvent event) {
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			ScQtApprovalAttachment attachment = getManagedBean()
+					.getScQtApproval().getScQtApprovalAttachment();
+			if (null == attachment) {
+				attachment = new ScQtApprovalAttachment();
+				attachment.setScQtApproval(scQtApproval);
+			}
+			attachment.setUser(facesScopes.getUserSessionBean());
+			attachment
+					.setChangedDate(new Timestamp(System.currentTimeMillis()));
+			uploadAttachment(event.getFile(), attachment);
+			scQtApproval.setScQtApprovalAttachment(attachment);
+		}
+	}
 }
