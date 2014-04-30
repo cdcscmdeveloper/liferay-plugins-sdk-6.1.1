@@ -61,6 +61,7 @@ import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.axis.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 
@@ -349,7 +350,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE) ||
 					parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 				this.getManagedBean().setTerminateNotice(true);
-
+				if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
+					this.getManagedBean().setTermination(true);
+					if(StringUtils.isEmpty(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency())) {
+						getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
+					}
+ 				}
 			}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_NO_ACTION)) {
 				this.getManagedBean().setTerminateRejectLetter(true);
 			}
@@ -360,7 +366,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 }
 	  
 	 private void flush() {
-	    
+	     this.getManagedBean().setTermination(false);
 		 this.getManagedBean().setTerminateNotice(false);
 		 this.getManagedBean().setTerminateRejectLetter(false);
 		 this.getManagedBean().setTerminateWarningLetter(false);

@@ -47,6 +47,7 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private boolean disciplinaryValue;
 	private boolean terminateRejectLetter;
 	private boolean terminateWarningLetter;
+	private boolean termination;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -197,6 +198,14 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setChkConceValue(boolean chkConceValue) {
 		this.chkConceValue = chkConceValue;
+	}
+
+	public boolean isTermination() {
+		return termination;
+	}
+
+	public void setTermination(boolean termination) {
+		this.termination = termination;
 	}
 
 }

@@ -110,7 +110,7 @@
   </p:outputPanel>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth25,columnWidth40">
+       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth16,columnWidth20,columnWidth25,columnWidth40">
           <p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" />
           <p:selectOneMenu style="width:180px;"
 			 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
@@ -121,20 +121,34 @@
           <p:outputLabel value="Decision Date" />
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" 
                id="calItem1" size="25" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		  <p:outputLabel value="* Last Remedy File No." rendered="#{terminationBackingBean.managedBean.terminateNotice}"/>
-		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}"
-               rendered="#{terminationBackingBean.managedBean.terminateNotice}"/>
-		  <p:outputLabel value="* Last Remedy Date" rendered="#{terminationBackingBean.managedBean.terminateNotice}"/>
-          <p:calendar id="calItem2" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
-              showOn="button" rendered="#{terminationBackingBean.managedBean.terminateNotice}" 
-              pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		   <p:outputLabel value="*Remedy Period" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
-           <h:panelGrid columns="3">
-             <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyPeriod}"
-               rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+		   <p:outputLabel value="* Remedy Period" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+           <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}">
+             <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyPeriod}" />
              <p:spacer width="2"/>
              <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
-		   </h:panelGrid>
+		   </h:panelGrid>               
+		  <p:outputLabel value="* Last Remedy File No." rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" style="width:170px;"
+               rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:outputLabel value="* Last Remedy Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+          <p:calendar id="calItem2" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
+              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" 
+              pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+		   <p:outputLabel value="* Last Remedy Period" rendered="#{terminationBackingBean.managedBean.termination}"/>
+           <h:panelGrid columns="3">
+             <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyPeriod}"
+               rendered="#{terminationBackingBean.managedBean.termination}"/>
+             <p:spacer width="2"/>
+             <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		   </h:panelGrid>          
+		   <f:verbatim/><f:verbatim />
+		  <p:outputLabel value="* Recommended Agency" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}" style="width:170px;"
+               rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:outputLabel value="* Recommended Agency Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+          <p:calendar id="calItem3" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
+              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" 
+              pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		  
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
