@@ -124,9 +124,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			CTContractSuspensionDataType dataType = (CTContractSuspensionDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-			this.getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
+			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
