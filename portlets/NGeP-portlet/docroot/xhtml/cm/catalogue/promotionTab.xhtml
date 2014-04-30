@@ -46,15 +46,15 @@
 			<p:column>
 				<p:inputText
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}">
-					<p:ajax event="keyup" update="promotionErrorLink" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" update="promotionErrorLink" />
 					</p:inputText>
 			</p:column>
 			<p:column>
 				<p:calendar
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="promotionErrorLink" />
-					<p:ajax event="keyup" update="promotionErrorLink" />
+					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
+					<p:ajax event="keyup" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
 					</p:calendar>
 
 			</p:column>
@@ -62,8 +62,8 @@
 				<p:calendar
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="promotionErrorLink" />
-					<p:ajax event="keyup" update="promotionErrorLink" />
+					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
+					<p:ajax event="keyup" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
 					</p:calendar>
 
 			</p:column>
@@ -71,13 +71,7 @@
 				<p:commandLink id="promotionErrorLink" title="Error" update=":form"
 					oncomplete="errorDialog.show();"
 					actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
-					disabled="#{!(catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate >= catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate 
-					or catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price > catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price 
-					or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate > catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate 
-					or catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate > catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
-					|| (catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price eq null 
-					and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate eq null 
-					and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate eq null)}">
+					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">
 					
 				
 					

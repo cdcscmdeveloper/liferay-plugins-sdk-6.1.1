@@ -338,6 +338,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}	
 			}
 		}
+		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing()!=null 
+				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null){
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
+		}
 
 		return "addCatalogItem";
 
@@ -2761,12 +2766,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
 
+			this.getManagedBean().setError3(false);
+			
+			
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
 				this.getManagedBean().setError2(true);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(false);
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(1);
 			}else{
 				this.getManagedBean().setError2(false);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 			}
 
 
@@ -2776,8 +2787,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(1);
 				this.getManagedBean().setError5(true);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(false);
 			}else{
 				this.getManagedBean().setError5(false);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 			}
 
 
@@ -2785,40 +2798,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(1);
 				this.getManagedBean().setError6(true);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(false);
 			}else{
 				this.getManagedBean().setError6(false);
+				this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 			}
-		}else{
-			this.getManagedBean().setError2(false);
-			this.getManagedBean().setError5(false);
-			this.getManagedBean().setError6(false);
-		}
-
-		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
-				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
-				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
-			this.getManagedBean().setError3(false);
-			
 		}else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null 
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
 				&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
-			this.getManagedBean().setError3(true);
+			this.getManagedBean().setError2(false);
+			this.getManagedBean().setError3(false);
+			this.getManagedBean().setError5(false);
+			this.getManagedBean().setError6(false);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
+			
 		}else{
 			this.getManagedBean().setError3(true);
+			this.getManagedBean().setError2(false);
+			this.getManagedBean().setError5(false);
+			this.getManagedBean().setError6(false);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(false);
+			
 		}
 
-
-		/*if((this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null &&
-				(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null
-				||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null))
-				|| (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null && 
-				(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
-						||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null))){
-			this.getManagedBean().setError3(true);
-		}else{
-			this.getManagedBean().setError3(false);
-		}*/
-
+	
 	}
 
 
