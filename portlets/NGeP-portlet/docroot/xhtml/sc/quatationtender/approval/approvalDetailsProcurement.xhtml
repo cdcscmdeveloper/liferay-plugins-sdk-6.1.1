@@ -12,7 +12,7 @@
 			rowKey="#{fcarequestdetails}" style="width:50%">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-				<h:outputText value="#{fcarequestdetails.approvalType}" />
+				<h:outputText value="#{fcarequestdetails.approvalType.parameterCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
 				<h:outputText value="#{fcarequestdetails.originalValue}" />
