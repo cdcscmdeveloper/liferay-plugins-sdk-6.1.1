@@ -325,6 +325,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			   getManagedBean().setRequestNote(requestNote);
 			   getManagedBean().setOutComes(res.getAction());
 			   getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+			   getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
 			   initialInformation(requestNote);
 			   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 			   // For status 
@@ -503,8 +504,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
 				boolean result = resBpm != null ? resBpm.isSuccessful() : false;
 				if (result) {
-					// TODO have to change revise status code  and also accept status in BpmOutcomeConst
-					if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+					if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null, 
+								MessageUtils.getMessage(MessageConst.INFO_700026, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+					} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700009, 
