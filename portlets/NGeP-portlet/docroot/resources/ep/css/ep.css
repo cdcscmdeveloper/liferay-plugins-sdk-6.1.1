@@ -466,6 +466,12 @@ a:hover.linkButton {
 	text-align: right;
 }
 
+.columnWidth16 {
+	width: 16%;
+	vertical-align: top;
+	text-align: right;
+}
+
 .TableFieldLeft {
 	vertical-align: top;
 	padding-top: 6px;
