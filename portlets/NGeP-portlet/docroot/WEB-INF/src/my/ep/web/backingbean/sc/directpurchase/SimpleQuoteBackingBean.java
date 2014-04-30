@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.directpurchase;
 
@@ -82,7 +82,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.managedbean.sc.directpurchase.simpleQuoteManagedBean;
+import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
 import my.ep.web.sc.directpurchase.common.DPStatusConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -106,7 +106,7 @@ import com.liferay.portal.model.User;
 @ManagedBean(name = "simpleQuoteBackingBean")
 @RequestScoped
 public class SimpleQuoteBackingBean extends
-		BaseBackingBean<simpleQuoteManagedBean> {
+		BaseBackingBean<SimpleQuoteManagedBean> {
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
 
 	public SimpleQuoteBackingBean() {
@@ -123,7 +123,6 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
-		
 		populateUserDivisionList();
 	}
 	

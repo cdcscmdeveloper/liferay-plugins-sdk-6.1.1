@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:spacer height="10px" />
 		<h:panelGrid border="0"  width="100%"
-			columns="8" id="rnHearId">
+			columns="8" id="rnHeaderId">
 			<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}"/>
 																		
@@ -25,9 +25,7 @@
 	<p:panel id="ptjNameId">
 		<table style="width: 70%">
 			<tr>
-				<!-- <c:if
-					test="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}"> -->
-                   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.brandNew}">
+                   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
 					<td style="width: 180px;"><p:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
 					<td><p:selectOneMenu
@@ -40,11 +38,10 @@
 								var="pmOrgProfile"
 								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 								itemValue="#{pmOrgProfile.orgProfileId}" />
-							<p:ajax event="change" update="rnHearId"
+							<p:ajax event="change" update="rnHeaderId ,ptjNameId"
 								process="@all" listener="#{requestNoteBackingBean.ptjNameEvent}" />
 						</p:selectOneMenu></td>
 						</ui:fragment>
-				<!-- </c:if> -->
 			</tr>
 		</table>
 	</p:panel>
@@ -123,7 +120,7 @@
 					<p:inputText style="width:20px;text-align:right;" required="false"
 						value="#{requestNoteDtl.deliverPeriod}"/>
 					<p:spacer width="2px;"></p:spacer>
-					<p:selectOneMenu id="periodMode"
+					<p:selectOneMenu id="periodMode"  style="width: 100px;"
 						value="#{requestNoteDtl.deliverPeriodType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
@@ -157,7 +154,7 @@
 					<p:inputText id="periodId" style="width:20px;" required="false"
 						value="#{requestNoteBackingBean.managedBean.periodValue}" />
 					<p:spacer width="4px;"/>
-					<p:selectOneMenu id="periodMode" style="width: auto; min-width: 100px;" required="false"
+					<p:selectOneMenu id="periodMode" style="width: 100px;"
 						value="#{requestNoteBackingBean.managedBean.periodType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
