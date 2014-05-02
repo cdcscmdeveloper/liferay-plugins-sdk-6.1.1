@@ -25,13 +25,14 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}" style="width: 128px;">
+				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}"
+					style="width: 128px;">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
-
+					<p:ajax event="change" update="zonalStanErrorLink" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -41,7 +42,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{standard.price}" size="10"></h:inputText>
+				<p:inputText value="#{standard.price}" size="10">
+					<p:ajax event="keyup" update="zonalStanErrorLink" />
+				</p:inputText>
 			</p:column>
 
 
@@ -50,7 +53,10 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{standard.startDate}" showOn="button" size="10"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
+				</p:calendar>
 
 			</p:column>
 			<p:column>
@@ -58,7 +64,10 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{standard.endDate}" showOn="button" size="10"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
+				</p:calendar>
 
 			</p:column>
 
@@ -75,7 +84,18 @@
 								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
+
+						<td style="text-align: right;"><p:commandLink
+								id="zonalStanErrorLink" title="Error" process="@this"
+								actionListener="#{catalogueBackingBean.updateZonalStandardErrorDialog(rowIndex)}"
+								update=":form" oncomplete="errorDialog.show();"
+								disabled="#{!(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">
+								<p:graphicImage
+									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+							</p:commandLink></td>
 					</tr>
+
+
 				</table>
 
 

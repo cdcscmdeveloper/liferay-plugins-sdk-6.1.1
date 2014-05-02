@@ -1236,7 +1236,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-			List<CmZonalStandardPricing> zStandardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getzStdPrices());
+/*			List<CmZonalStandardPricing> zStandardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getzStdPrices());
 
 			CmZonalStandardPricing previousZStandardObj = null;
 			for(int i =0; i<zStandardPricing.size(); i++){
@@ -1258,7 +1258,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					return "addCatalogView";
 				}
 				previousZStandardObj = standard;
-			}
+			}*/
 
 
 
@@ -2724,6 +2724,32 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 		}
 	}
+	
+	
+	public void validateZonalStandardDateOverlap(int index){
+
+		List<CmZonalStandardPricing> previousList = new ArrayList<CmZonalStandardPricing>();
+		for(int i = 0; i < index; i++)
+			previousList.add(this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i));
+
+		CmZonalStandardPricing zonalStandard = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index);
+		if(zonalStandard.getStartDate() != null && zonalStandard.getEndDate() != null){
+			for(CmZonalStandardPricing cmPricing : previousList){
+				if((zonalStandard.getStartDate().compareTo(cmPricing.getStartDate()) >= 0 && zonalStandard.getStartDate().compareTo(cmPricing.getEndDate()) <= 0) || (zonalStandard.getEndDate().compareTo(cmPricing.getStartDate()) >= 0 && zonalStandard.getEndDate().compareTo(cmPricing.getEndDate()) <= 0) 
+						|| cmPricing.getStartDate().compareTo(zonalStandard.getStartDate())>=0){		
+					zonalStandard.setDisplayAction(false);
+					this.getManagedBean().setError4(true);
+					break;
+				} else {
+					zonalStandard.setDisplayAction(true);
+					this.getManagedBean().setError4(false);
+				}
+			}
+		}
+	}
+	
+	
+	
 
 	public void updateErrorDialog(int index){
 		CmTierPricing cmTierPricing = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -2746,6 +2772,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setPricingTabIndex(1);
 		this.getManagedBean().setTierPricingIndex(0);
 	}
+	
+	
+	public void updateZonalStandardErrorDialog(int index){
+		CmZonalStandardPricing cmTierPricing = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index);
+		
+		if(cmTierPricing.getStartDate()!=null && cmTierPricing.getEndDate()!=null && cmTierPricing.getStartDate().compareTo(cmTierPricing.getEndDate()) >= 0){
+			this.getManagedBean().setError2(true);
+		} else {
+			this.getManagedBean().setError2(false);
+		}
+		if(cmTierPricing.getPrice() == null || cmTierPricing.getStartDate()==null || cmTierPricing.getEndDate()==null || cmTierPricing.getCmSupplierZone().getSuppZoneId() == 0){
+			this.getManagedBean().setError3(true);
+		} else {
+			this.getManagedBean().setError3(false);
+		}
+
+	
+		this.getManagedBean().setPricingTabIndex(2);
+		this.getManagedBean().setZonalPricingIndex(0);
+	}
 
 	public void updateStandardErrorDialog(CmStandardPricing standardPricing){
 		if(standardPricing.getStartDate()!=null && standardPricing.getEndDate()!=null && standardPricing.getStartDate().compareTo(standardPricing.getEndDate()) >= 0){
@@ -2759,6 +2805,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().setError3(false);
 		}
 	}
+	
 
 	public void updatePromotionErrorDialog(){
 
