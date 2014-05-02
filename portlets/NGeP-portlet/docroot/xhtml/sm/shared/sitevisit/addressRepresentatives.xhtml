@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- 	<p:panel header="Address" id="pnlSiteAddr"> -->
+<!-- 			<table> -->
+<!-- 				<tr> -->
+<!-- 					<td><p:outputLabel value="Site Address" /></td> -->
+<!-- 					<td><p:selectOneMenu> -->
+<!-- 							<f:selectItem itemLabel="Select" itemValue="" /> -->
+<!-- 							<f:selectItems -->
+<!-- 							value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}" -->
+<!-- 							var="svAdd" itemValue="#{svAdd.svAddressId}" -->
+<!-- 							itemLabel="#{svAdd.smAddress.address1} -->
+<!-- 							&lt;br /&gt;#{svAdd.smAddress.address2} -->
+<!-- 							&lt;br /&gt;#{svAdd.smAddress.address3} -->
+<!-- 							&lt;br /&gt;#{svAdd.smAddress.address4}" -->
+<!-- 						 /> -->
+<!-- 						</p:selectOneMenu></td> -->
+<!-- 				</tr> -->
+<!-- 			</table> -->
+<!-- 	</p:panel> -->
+
+	<p:panel header="Site Visit Address">
+		<p:dataTable var="svAdd"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}"
+			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAddress}"  rowKey="#{svAdd}">
+			<p:column selectionMode="single" style="width:2%" />
+			
+			<p:column headerText="Address">
+					#{svAdd.smAddress.address1}<br />
+					#{svAdd.smAddress.address2}<br />
+					#{svAdd.smAddress.address3}<br />
+					#{svAdd.smAddress.address4}
+				</p:column>
+
+			<p:column headerText="Post Code">
+				#{svAdd.smAddress.postcode}
+				</p:column>
+
+			<p:column headerText="City">
+				#{svAdd.smAddress.pmCity.cityName}
+				</p:column>
+				
+			<p:column headerText="District">
+				#{svAdd.smAddress.pmDistrict.districtName}
+				</p:column>
+
+			<p:column headerText="State">
+				#{svAdd.smAddress.pmState.stateName}
+				</p:column>
+
+			<p:column headerText="Country">
+				#{svAdd.smAddress.pmCountry.countryName}
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:panel header="Interviewed Representatives">
+		<p:dataTable id="intRepTbl" var="interviewee" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAddress.smSvInterviewees}">
+			<p:column headerText="Name">
+				<p:inputText value="#{interviewee.name}" id="intName"></p:inputText>
+			</p:column>
+
+			<p:column headerText="Designation">
+				<p:inputText value="#{interviewee.designation}" id="intDesignation"></p:inputText>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="Add" update="intRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
+			<p:commandButton value="Remove" />
+		</div>
+	</p:panel>
+</ui:composition>
