@@ -13,7 +13,7 @@
 			  <p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		 	  <p:inputText for="physicalNo" value="#{terminationBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" />				
+		 	  <p:inputText for="physicalNo" value="#{terminationBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
@@ -60,8 +60,7 @@
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
-			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
-			    <p:ajax event="change" update="justificationPanel,exemptId" listener="#{terminationBackingBean.chkJustificationAction}" process="@this"/> 
+			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <p:outputLabel value="Concession" />
@@ -85,53 +84,45 @@
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			     disabled="#{contractDetailsBackingBean.managedBean.chkConceValue}" style="text-align:top;">
-			     <p:ajax event="change" update="justificationPanel" listener="#{terminationBackingBean.chkJustificationAction}" process="@this"/> 
+			     disabled="true" style="text-align:top;">
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	</h:panelGrid>
-	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
-	    rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
-	       terminationBackingBean.managedBean.contractVer.ctContractValue.concession}">
-         <h:panelGroup>
-		    <div style="height:80px; vertical-align:top;">
-			   <p:outputLabel for="justificationLbl" value="* Justification" />
-		    </div>
-	     </h:panelGroup>
-	  <h:panelGrid>
-	    <p:inputTextarea id="justificationLbl" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" autoResize="false" />	
-	  </h:panelGrid>		
-    </h:panelGrid> 
-  </p:outputPanel>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth16,columnWidth20,columnWidth25,columnWidth40">
+       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth30,columnWidth25,columnWidth40">
           <p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" />
-          <p:selectOneMenu style="width:180px;"
-			 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
-			 <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
-			 <p:ajax event="change" update=":form:tabview" process="@this"
-					listener="#{terminationBackingBean.changeField}" />
-		  </p:selectOneMenu>
+          <h:panelGrid columns="3">
+	          <p:selectOneMenu style="width:180px;"
+	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}"
+				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
+				 <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
+				 <p:ajax event="change" update=":form:terminateContract" process="@this"
+						listener="#{terminationBackingBean.changeField}" />
+			  </p:selectOneMenu>
+			  <p:spacer width="2" />
+			  <p:commandLink value="View Notice" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}" />
+		  </h:panelGrid>
           <p:outputLabel value="Decision Date" />
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" 
-               id="calItem1" size="25" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		   <p:outputLabel value="* Remedy Period" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
-           <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}">
+               id="calItem1" size="24" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		  <p:outputLabel value="* File Ref. No." rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
+		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" style="width:170px;"
+               rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>               
+		   <p:outputLabel value="* Remedy Period" rendered="#{terminationBackingBean.managedBean.remedy}"/>
+           <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.remedy}">
              <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyPeriod}" />
              <p:spacer width="2"/>
-             <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}"/>
+             <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.remedy}"/>
 		   </h:panelGrid>               
 		  <p:outputLabel value="* Last Remedy File No." rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" style="width:170px;"
                rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:outputLabel value="* Last Remedy Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
-          <p:calendar id="calItem2" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
+          <p:calendar id="calItem2" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
               showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" 
               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 		   <p:outputLabel value="* Last Remedy Period" rendered="#{terminationBackingBean.managedBean.termination}"/>
@@ -141,12 +132,11 @@
              <p:spacer width="2"/>
              <p:outputLabel value="days" rendered="#{terminationBackingBean.managedBean.termination}"/>
 		   </h:panelGrid>          
-		   <f:verbatim/><f:verbatim />
 		  <p:outputLabel value="* Recommended Agency" rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}" style="width:170px;"
                rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:outputLabel value="* Recommended Agency Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
-          <p:calendar id="calItem3" size="25"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
+          <p:calendar id="calItem3" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
               showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" 
               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		  
 		 </h:panelGrid>

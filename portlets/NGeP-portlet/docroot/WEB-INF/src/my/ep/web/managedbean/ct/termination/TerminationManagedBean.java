@@ -4,21 +4,15 @@
 package my.ep.web.managedbean.ct.termination;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.primefaces.model.DualListModel;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -43,18 +37,13 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
-	private boolean terminateNotice;
 	private boolean disciplinaryValue;
-	private boolean terminateRejectLetter;
-	private boolean terminateWarningLetter;
 	private boolean termination;
+	private boolean mutualTermination;
+	private boolean remedy;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	private List<CtTerminationReason> ctTerminationReason;
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
-	private boolean chkConceValue;
 	
 	public String getTaskName() {
 		return taskName;
@@ -123,36 +112,12 @@ public class TerminationManagedBean extends BaseManagedBean{
 		this.attachmentList = attachmentList;
 	}
 
-	public boolean isTerminateNotice() {
-		return terminateNotice;
-	}
-
-	public void setTerminateNotice(boolean terminateNotice) {
-		this.terminateNotice = terminateNotice;
-	}
-
 	public boolean isDisciplinaryValue() {
 		return disciplinaryValue;
 	}
 
 	public void setDisciplinaryValue(boolean disciplinaryValue) {
 		this.disciplinaryValue = disciplinaryValue;
-	}
-
-	public boolean isTerminateRejectLetter() {
-		return terminateRejectLetter;
-	}
-
-	public void setTerminateRejectLetter(boolean terminateRejectLetter) {
-		this.terminateRejectLetter = terminateRejectLetter;
-	}
-
-	public boolean isTerminateWarningLetter() {
-		return terminateWarningLetter;
-	}
-
-	public void setTerminateWarningLetter(boolean terminateWarningLetter) {
-		this.terminateWarningLetter = terminateWarningLetter;
 	}
 
 	public String getComplaintCategory() {
@@ -163,49 +128,28 @@ public class TerminationManagedBean extends BaseManagedBean{
 		this.complaintCategory = complaintCategory;
 	}
 
-	public List<CtTerminationReason> getCtTerminationReason() {
-		if(ctTerminationReason == null)
-			ctTerminationReason = new ArrayList<CtTerminationReason>();
-		return ctTerminationReason;
-	}
-
-	public void setCtTerminationReason(List<CtTerminationReason> ctTerminationReason) {
-		this.ctTerminationReason = ctTerminationReason;
-	}
-
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-	
-	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
-			userMap = new HashMap<String, PmUser>();
-		}
-		return userMap;
-	}
-
-	public void setUserMap(Map<String, PmUser> userMap) {
-		this.userMap = userMap;
-	}
-
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
-	}
-
 	public boolean isTermination() {
 		return termination;
 	}
 
 	public void setTermination(boolean termination) {
 		this.termination = termination;
+	}
+
+	public boolean isMutualTermination() {
+		return mutualTermination;
+	}
+
+	public void setMutualTermination(boolean mutualTermination) {
+		this.mutualTermination = mutualTermination;
+	}
+
+	public boolean isRemedy() {
+		return remedy;
+	}
+
+	public void setRemedy(boolean remedy) {
+		this.remedy = remedy;
 	}
 
 }

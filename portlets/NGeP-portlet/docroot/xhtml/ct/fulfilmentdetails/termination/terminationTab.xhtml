@@ -22,6 +22,9 @@
     </style> 
 	 <p:panel>
 	   <f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
+			<div align="left" class="screen-title" style="border-bottom: 0px">
+			Contract Termination
+			</div>	   
 	   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	   <table style="width: 100%;">
 	     <tr>
@@ -66,18 +69,8 @@
 				</tr>
 			</table>	 
 	</p:panel>
-	<p:tabView id="tabview" value="Termination" orientation="left" dynamic="true" cache="false" >
-	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-         <ui:include src="termination.xhtml"/>
-          <ui:include src="terminationRecord.xhtml"/>
-         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
-       </p:tab> 
-	   <p:tab title="#{lbl['lbl.ct.menu.remedy.notice']}" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}" >
-         <ui:include src="remedyNotice.xhtml"/>
-       </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.tnotice']}" rendered="#{terminationBackingBean.managedBean.terminateNotice}" >
-         <ui:include src="terminationNotice.xhtml" />  
-       </p:tab>   
-	</p:tabView>
-   </ui:define>  
+		<ui:include src="termination.xhtml" />
+		<ui:include src="terminationRecord.xhtml" />
+		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+	</ui:define>  
 </ui:composition>

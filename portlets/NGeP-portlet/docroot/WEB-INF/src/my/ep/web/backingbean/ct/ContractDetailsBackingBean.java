@@ -1242,12 +1242,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
 			
-			trBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    	trBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    	trBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-		    
 		    trBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		}catch(Exception e) {
