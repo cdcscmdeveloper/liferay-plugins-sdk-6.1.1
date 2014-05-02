@@ -5,7 +5,31 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:decorate template="specColumnQuestionView.xhtml" />
+	<ui:decorate template="specColumnQuestionView.xhtml">
+		<ui:define name="qtySection">
+			<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+				<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+				</h:outputText>
+				<h:outputText value=" - " rendered="#{isQuestionTypeItem}">
+				</h:outputText> 
+				<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+				</h:outputText>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{(!isPriceTypeTier and isSpecTypeFinancial) or !isSpecTypeFinancial}">
+				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+				</h:outputText>
+			</h:panelGroup>
+		</ui:define>
+	</ui:decorate>
+	
+	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.sub.sequence']}" rendered="#{isSpecTypeFinancial}">
+		<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.subSequence}" rendered="#{isQuestionTypeItem and isPriceTypeTariff}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+		</h:outputText>
+	</p:column>
 	
 	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
 		<f:facet name="footer">
@@ -33,7 +57,7 @@
 		
 		<h:panelGroup id="ansPG">
 			<p:inputText style="width:96%;" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
-			<p:inputText style="width:96%;" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}">
+			<p:inputText style="width:96%;" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<h:selectOneMenu style="width:100%;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">

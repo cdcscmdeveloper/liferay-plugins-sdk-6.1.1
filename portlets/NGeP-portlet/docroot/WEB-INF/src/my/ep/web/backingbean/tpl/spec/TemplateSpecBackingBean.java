@@ -85,7 +85,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		if (getManagedBean().getTemplateSpecBean().getSupplier() == null) {
 			IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 			RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
-			registrationReqDTO.setSupplierId(1L);
+			registrationReqDTO.setSupplierId(2L);
 			RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
 			getManagedBean().getTemplateSpecBean().setSupplier(registrationResDTO.getSmSupp());	
 		}
@@ -156,12 +156,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
 
 			TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-			List<TplSpecAnswer> answerList = new ArrayList<TplSpecAnswer>();
-			for(TplSpecQuestion question : specMaster.getTplSpecQuestions()) {
-				if(question.getTplSpecAnswers() != null) {
-					answerList.addAll(question.getTplSpecAnswers());
-				}
-			}
+			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
+			
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setAnswerList(answerList);
 
@@ -453,40 +449,42 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
 		BigDecimal quantity = specQuestion.getClQuantity();
 		BigDecimal ratePerUom = specAnswer.getRatePerUom();
-		
 		BigDecimal totalPrice = quantity;
+		boolean isPriceTypeTier = isPriceTypeTier(specQuestion.getClPriceTypeCode().getParameterCode());
 		
-		if (ratePerUom != null) {
-			totalPrice = totalPrice.multiply(ratePerUom);	
+		if (!isPriceTypeTier) {
+			if (ratePerUom != null) {
+				totalPrice = totalPrice.multiply(ratePerUom);	
+			}
+			
+			if (isItemTypeService) {
+				BigDecimal uomFrequency = specQuestion.getClUomFrequency();
+				BigDecimal uomPerDay = specQuestion.getClUomPerDay();
+				BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
+				BigDecimal durationMonth = specMaster.getDurationMonth();
+				
+				if (uomFrequency != null) {
+					totalPrice = totalPrice.multiply(uomFrequency);
+				}
+				
+				if (uomPerDay != null) {
+					totalPrice = totalPrice.multiply(uomPerDay);
+				}
+				
+				if (uomPerMonth != null) {
+					totalPrice = totalPrice.multiply(uomPerMonth);
+				}
+				
+				specAnswer.setAmountPerYear(totalPrice);
+				
+				if (durationMonth != null) {
+					totalPrice = totalPrice.multiply(durationMonth);
+				}
+			}
+			specAnswer.setAnswerNumeric(totalPrice);
+			
+			calcGrandTotalAmount(templateSpecBean);	
 		}
-		
-		if (isItemTypeService) {
-			BigDecimal uomFrequency = specQuestion.getClUomFrequency();
-			BigDecimal uomPerDay = specQuestion.getClUomPerDay();
-			BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
-			BigDecimal durationMonth = specMaster.getDurationMonth();
-			
-			if (uomFrequency != null) {
-				totalPrice = totalPrice.multiply(uomFrequency);
-			}
-			
-			if (uomPerDay != null) {
-				totalPrice = totalPrice.multiply(uomPerDay);
-			}
-			
-			if (uomPerMonth != null) {
-				totalPrice = totalPrice.multiply(uomPerMonth);
-			}
-			
-			specAnswer.setAmountPerYear(totalPrice);
-			
-			if (durationMonth != null) {
-				totalPrice = totalPrice.multiply(durationMonth);
-			}
-		}
-		specAnswer.setAnswerNumeric(totalPrice);
-		
-		calcGrandTotalAmount(templateSpecBean);
 	}
 	
 	public void addTierQtyAction(TplSpecQuestion tplSpecQuestion) {
@@ -530,12 +528,23 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
 		
 		for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
-			specTotal.add(tplSpecAnswer.getAnswerNumeric());
+			if (tplSpecAnswer.getAnswerNumeric() != null) {
+				specTotal.add(tplSpecAnswer.getAnswerNumeric());	
+			}
 		}
 		
 		System.out.println("specTotal: " + specTotal);
 		
 		templateSpecBean.getSpecMaster().setSpecTotal(specTotal);
+	}
+	
+	private boolean isPriceTypeTier(String priceType) {
+		return ParameterConst.PRICE_TYPE_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_PROMOTION_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_TARIFF.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(priceType);
 	}
 	
 	/**
