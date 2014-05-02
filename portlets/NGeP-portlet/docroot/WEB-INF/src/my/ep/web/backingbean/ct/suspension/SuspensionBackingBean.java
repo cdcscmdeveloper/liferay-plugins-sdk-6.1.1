@@ -124,7 +124,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			CTContractSuspensionDataType dataType = (CTContractSuspensionDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
+			PmUser pmUser = new PmUser();
+			pmUser.setUserId(dataType.getContractAdmin().getUserId().longValue());
+			pmUser.setUserName(dataType.getContractAdmin().getUserName());
+			this.getManagedBean().setUserLogin(pmUser);
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 			ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
@@ -187,10 +190,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      reqDTO.setOutcome(action);
 		      reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		        
-		      if(this.getManagedBean().getUserLoginId() == null)
-		          reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-		      else
-		          reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
+		      if(this.getManagedBean().getUserLogin() == null) {
+		          reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		      } else {
+		    	  reqDTO.setPmUser(this.getManagedBean().getUserLogin());
+		      }
 		       
 		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		      //this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
