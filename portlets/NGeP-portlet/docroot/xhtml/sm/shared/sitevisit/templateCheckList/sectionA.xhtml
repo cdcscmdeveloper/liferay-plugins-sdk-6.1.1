@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Capital/Equity Details" toggleable="true">
-		<table class="rptTbl">
+	<p:panel header="Capital/Equity Details" toggleable="true" id="pnlCapital">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Authorized Capital (RM)" /></td>
 				<td><p:inputText /></td>
@@ -20,8 +20,8 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Equity" toggleable="true">
-		<table class="rptTbl">
+	<p:panel header="Equity" toggleable="true" id="pnlEquity">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Total Owner" /></td>
 				<td><p:inputText />person(s)</td>
@@ -61,7 +61,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Gov Agency Equity" /> <p:outputLabel
+				<td><p:outputLabel value="Gov Agency Equity" /><br /><p:outputLabel
 						value="Unit Trust Agency (RM)" /></td>
 				<td><p:inputText /></td>
 				<td><p:inputText />%</td>
@@ -87,8 +87,8 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Board of Directors" toggleable="true">
-		<table class="rptTbl">
+	<p:panel header="Board of Directors" toggleable="true" id="pnlBOD">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Total" /></td>
 				<td><p:inputText />person(s)</td>
@@ -120,8 +120,8 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Management" toggleable="true">
-		<table class="rptTbl">
+	<p:panel header="Management" toggleable="true" id="pnlMgmt">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Total" /></td>
 				<td><p:inputText />person(s)</td>
@@ -157,8 +157,8 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Workers" toggleable="true">
-		<table class="rptTbl">
+	<p:panel header="Workers" toggleable="true" id="pnlWorker">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Total" /></td>
 				<td><p:inputText />person(s)</td>

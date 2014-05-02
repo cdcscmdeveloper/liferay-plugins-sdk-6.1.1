@@ -15,75 +15,71 @@
 					</p:selectOneRadio>
 				</td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="Company Name"/></td>
-				<td><p:inputText  size="40"/></td>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="Company Name"/></td> -->
+<!-- 				<td><p:inputText  size="40"/></td> -->
 
-				<td><p:outputLabel value="MOF Registration No." /></td>
-				<td><p:inputText size="40" /></td>
-			</tr>
+<!-- 				<td><p:outputLabel value="MOF Registration No." /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td><p:outputLabel value="Application Reference" /></td>
-				<td><p:inputText size="40" /></td>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="Application Reference" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
 
-				<td><p:outputLabel value="Processing Officer" /></td>
-				<td><p:inputText size="40" /></td>
-			</tr>
+<!-- 				<td><p:outputLabel value="Processing Officer" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td><p:outputLabel value="Site Address" /></td>
-				<td colspan="3"><p:inputText size="50" /></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="Site Address" /></td> -->
+<!-- 				<td colspan="3"><p:inputText size="50" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td></td>
-				<td colspan="3"><p:inputText size="50" /></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<td></td> -->
+<!-- 				<td colspan="3"><p:inputText size="50" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td></td>
-				<td colspan="3"><p:inputText size="50" /></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<td></td> -->
+<!-- 				<td colspan="3"><p:inputText size="50" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td><p:outputLabel value="Post Code" /></td>
-				<td><p:inputText size="40" /></td>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="Post Code" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
 
-				<td><p:outputLabel value="Town/City" /></td>
-				<td><p:inputText  size="40" /></td>
-			</tr>
+<!-- 				<td><p:outputLabel value="Town/City" /></td> -->
+<!-- 				<td><p:inputText  size="40" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td><p:outputLabel value="State" /></td>
-				<td><p:inputText  size="40" /></td>
-				<td><p:outputLabel value="District" /></td>
-				<td><p:inputText size="40" /></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="State" /></td> -->
+<!-- 				<td><p:inputText  size="40" /></td> -->
+<!-- 				<td><p:outputLabel value="District" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
+<!-- 			</tr> -->
 
-			<tr>
-				<td><p:outputLabel value="Application Type" /></td>
-				<td><p:inputText size="40" /></td>
+<!-- 			<tr> -->
+<!-- 				<td><p:outputLabel value="Application Type" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
 
-				<td><p:outputLabel value="Site Visit No" /></td>
-				<td><p:inputText size="40" /></td>
-			</tr>
-		</table>
+<!-- 				<td><p:outputLabel value="Site Visit No" /></td> -->
+<!-- 				<td><p:inputText size="40" /></td> -->
+<!-- 			</tr> -->
+<!-- 		</table> -->
 	</p:panel>
 
 	<p:panel header="Site Visit Check List" toggleable="true">
-		<p:dataTable var="clist"
-			value="#{svoSiteVisitBackingBean.managedBean.svCheckList}">
+		<p:dataTable>
 			<p:column headerText="Description">
-				<p:outputLabel value="#{clist.checkDesc}" />
 			</p:column>
 
 			<p:column headerText="Date(if applicable)">
-				<p:calendar id="popupButtonCal" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</p:column>
 
 			<p:column headerText="Remarks">
-				<p:inputText />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
