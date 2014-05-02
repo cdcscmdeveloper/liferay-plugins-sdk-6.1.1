@@ -111,10 +111,17 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
 	public static final String SVO_SK = "UPS_SVO_SK";
+	public static final String SVO = "UPS_SVO";
+	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
+	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
+	//Site Visit 
+	public static final String SVO_FIN_CHECKLIST = "FCL";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
