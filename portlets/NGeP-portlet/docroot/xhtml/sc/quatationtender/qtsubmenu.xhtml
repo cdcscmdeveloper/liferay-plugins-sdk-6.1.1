@@ -32,34 +32,34 @@
 				src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
 		</p:tab>
 
-<c:if test="#{'60002'.equals(qTDetailBB.managedBean.qt.qtStatus.statusId)}">
-		<p:tab title="#{lbl['lbl.qt.bsv.sample']}">
+
+		<p:tab title="#{lbl['lbl.qt.bsv.sample']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
 		</p:tab>
 
-		<p:tab title="#{lbl['lbl.qt.schedule.contact']}">
+		<p:tab title="#{lbl['lbl.qt.schedule.contact']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include src="/xhtml/sc/quatationtender/qtschedule.xhtml" />
 		</p:tab>
 
-		<p:tab title="#{lbl['lbl.qt.deduction.payment']}">
+		<p:tab title="#{lbl['lbl.qt.deduction.payment']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include src="/xhtml/sc/quatationtender/deduction.xhtml" />
 		</p:tab>
 
-		<p:tab title="#{lbl['lbl.qt.documents']}">
+		<p:tab title="#{lbl['lbl.qt.documents']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include src="/xhtml/sc/quatationtender/documents.xhtml" />
 		</p:tab>
-</c:if>
+
 		<p:tab title="#{lbl['lbl.qt.activities']}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/qtactivitiestracking.xhtml" />
 		</p:tab>
-<c:if test="#{'60002'.equals(qTDetailBB.managedBean.qt.qtStatus.statusId)}">
-		<p:tab title="#{lbl['lbl.qt.public.approval']}">
+
+		<p:tab title="#{lbl['lbl.qt.public.approval']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
 		</p:tab>
-</c:if>
+
 	</p:tabView>
 
 </ui:composition>
