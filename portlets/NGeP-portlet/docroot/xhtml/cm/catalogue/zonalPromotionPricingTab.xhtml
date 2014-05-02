@@ -22,12 +22,15 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}" style="width: 128px;">
+				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}"
+					style="width: 128px;">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
+
+					<p:ajax event="change" update="zonalPromoErrorLink" />
 
 				</p:selectOneMenu>
 
@@ -38,7 +41,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{zPromotion.price}" size="10"></h:inputText>
+				<p:inputText value="#{zPromotion.price}" size="10">
+					<p:ajax event="keyup" update="zonalPromoErrorLink" />
+				</p:inputText>
 			</p:column>
 
 			<p:column>
@@ -46,7 +51,10 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{zPromotion.startDate}" showOn="button"
-					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
+				</p:calendar>
 
 			</p:column>
 			<p:column>
@@ -54,7 +62,10 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
+					</p:calendar>
 
 			</p:column>
 
@@ -62,11 +73,25 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+				<table>
+					<tr>
+						<td style="float: right;"><p:commandLink
+								style="margin-left: 10px;" title="Delete"
+								action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+
+						<td style="text-align: right;"><p:commandLink
+								id="zonalPromoErrorLink" title="Error" process="@this"
+								actionListener="#{catalogueBackingBean.updateZonalPromoErrorDialog(rowIndex)}"
+								update=":form" oncomplete="errorDialog.show();"
+								disabled="#{!(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">
+								<p:graphicImage
+									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
 
 			</p:column>
 

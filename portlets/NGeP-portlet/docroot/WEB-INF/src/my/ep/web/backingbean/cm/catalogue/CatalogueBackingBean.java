@@ -2749,6 +2749,31 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 	
 	
+	public void validateZonalPromoDateOverlap(int index){
+
+		List<CmZonalPromotionPricing> previousList = new ArrayList<CmZonalPromotionPricing>();
+		for(int i = 0; i < index; i++)
+			previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(i));
+
+		CmZonalPromotionPricing zonalPromo = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index);
+		if(zonalPromo.getStartDate() != null && zonalPromo.getEndDate() != null){
+			for(CmZonalPromotionPricing cmPricing : previousList){
+				if((zonalPromo.getStartDate().compareTo(cmPricing.getStartDate()) >= 0 && zonalPromo.getStartDate().compareTo(cmPricing.getEndDate()) <= 0) || (zonalPromo.getEndDate().compareTo(cmPricing.getStartDate()) >= 0 && zonalPromo.getEndDate().compareTo(cmPricing.getEndDate()) <= 0) 
+						|| cmPricing.getStartDate().compareTo(zonalPromo.getStartDate())>=0){		
+					zonalPromo.setDisplayAction(false);
+					this.getManagedBean().setError4(true);
+					break;
+				} else {
+					zonalPromo.setDisplayAction(true);
+					this.getManagedBean().setError4(false);
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 	
 
 	public void updateErrorDialog(int index){
@@ -2792,6 +2817,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setPricingTabIndex(2);
 		this.getManagedBean().setZonalPricingIndex(0);
 	}
+	
+	public void updateZonalPromoErrorDialog(int index){
+		CmZonalPromotionPricing promo = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index);
+		
+		if(promo.getStartDate()!=null && promo.getEndDate()!=null && promo.getStartDate().compareTo(promo.getEndDate()) >= 0){
+			this.getManagedBean().setError2(true);
+		} else {
+			this.getManagedBean().setError2(false);
+		}
+		if(promo.getPrice() == null || promo.getStartDate()==null || promo.getEndDate()==null || promo.getCmSupplierZone().getSuppZoneId() == 0){
+			this.getManagedBean().setError3(true);
+		} else {
+			this.getManagedBean().setError3(false);
+		}
+
+	
+		this.getManagedBean().setPricingTabIndex(2);
+		this.getManagedBean().setZonalPricingIndex(1);
+	}
+	
+	
 
 	public void updateStandardErrorDialog(CmStandardPricing standardPricing){
 		if(standardPricing.getStartDate()!=null && standardPricing.getEndDate()!=null && standardPricing.getStartDate().compareTo(standardPricing.getEndDate()) >= 0){
