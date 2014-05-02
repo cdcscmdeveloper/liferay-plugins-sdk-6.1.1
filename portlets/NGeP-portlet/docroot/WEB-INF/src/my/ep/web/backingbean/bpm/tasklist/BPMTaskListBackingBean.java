@@ -70,17 +70,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
         temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		// QuationTender
-		temp.put("MITI Approval", "qtmaintanance");
-		temp.put("Budget Approval", "qtmaintanance");
-		temp.put("ICT Approval", "qtmaintanance");
-		temp.put("BPK Approval", "qtmaintanance");
-		temp.put("QuotationTender Creation", "qtreview");
-
-		temp.put("Specification Preparation", "qtspecprepartaion");
-		temp.put("View Preparation", "qtspecprepartaion");
-		temp.put("Site Visit", "sitevisit");
-		temp.put("Proposal Preparation","supplierproposal");
+		
 
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");

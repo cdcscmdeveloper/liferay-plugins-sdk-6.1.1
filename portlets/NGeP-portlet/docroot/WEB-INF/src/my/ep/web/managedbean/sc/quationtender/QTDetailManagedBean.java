@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -376,6 +377,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQtApprovalRequest> scQtApprovalRequestList;
 	private String approvalType;
+	private ISearchResultBean<ScQtCommittee> qtCommittes;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2233,6 +2235,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setApprovalType(String approvalType) {
 		this.approvalType = approvalType;
+	}
+
+	public ISearchResultBean<ScQtCommittee> getQtCommittes() {
+		return qtCommittes;
+	}
+
+	public void setQtCommittes(ISearchResultBean<ScQtCommittee> qtCommittes) {
+		this.qtCommittes = qtCommittes;
 	}
 
 }

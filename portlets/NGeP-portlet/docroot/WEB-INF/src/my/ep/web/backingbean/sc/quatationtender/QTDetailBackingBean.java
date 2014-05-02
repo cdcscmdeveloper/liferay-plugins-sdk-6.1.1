@@ -673,8 +673,7 @@ public class QTDetailBackingBean extends
 		if (scQt.isBrandNew()) {
 			scQt.setQtNo(getManagedBean().getQt().getQtNo());
 		}
-		scQt.setPanel(true);
-		scQt.setOpenFor("A");
+		
 		
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
@@ -689,26 +688,29 @@ public class QTDetailBackingBean extends
 		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
 		scQt.setScQtCommittees(qtCommittees);
-		scQt.setMinistrySpecSecrataryId(users);
+		//scQt.setMinistrySpecSecrataryId(users);
 
 		// Setting the Committee Appointment details to Qtdetails
-		List<TabBean> tabBeanList = getManagedBean()
-				.getScCommitteeMemberTabList();
-		List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
-		if (tabBeanList != null && !tabBeanList.isEmpty()) {
-			for (TabBean tabBean : tabBeanList) {
-				committeeMembersList.addAll(tabBean.getScCommittee()
-						.getScCommitteeMembers());
+		List<TabBean> committeTabs= getManagedBean().getScCommitteeMemberTabList();
+		List<ScQtCommittee> qtCommitteList= null;
+		if(null != committeTabs){
+			for (TabBean tabBean : committeTabs) {
+				List<ScCommitteeMember> committeMembers=tabBean.getScCommittee().getScCommitteeMembers();
+				if(!"BO".equals(tabBean.getScCommittee().getCommitteeType())){
+				if(null != committeMembers && !committeMembers.isEmpty()){
+					qtCommitteList= new ArrayList<ScQtCommittee>();
+					ScQtCommittee qtCommittee= new ScQtCommittee();
+					qtCommittee.setScQt(this.getManagedBean().getQt());
+					qtCommittee.setScCommittee(tabBean.getScCommittee());
+					setUserDetails(qtCommittee);
+					qtCommittees.add(qtCommittee);
+					qtCommitteList.add(qtCommittee);
+				}
+				}
 			}
-			getManagedBean().getScCommittee().setScCommitteeMembers(
-					committeeMembersList);
-			this.getManagedBean().getScQtCommittee()
-					.setScCommittee(getManagedBean().getScCommittee());
-			List<ScQtCommittee> scQtCommitteeList = new ArrayList<ScQtCommittee>();
-			scQtCommitteeList.add(this.getManagedBean().getScQtCommittee());
-			scQt.setScQtCommittees(scQtCommitteeList);
+			scQt.setScQtCommittees(qtCommitteList);
 		}
-
+		
 		// Setting the Supplier Qualification Criteria details to Qtdetails.
 		List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 				this.getManagedBean().getZoneTrees(), null);
@@ -1358,7 +1360,7 @@ retrieveApprovalTabDtl();
 								.getQtId())));
 			}
 			// tabBeans.add(new TabBean("Finalization Secretary", committee));
-			if (getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
+			if (null !=getManagedBean().getQt().getEstimatedAmount()&& getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
 
 				SelectItem[] selectItems = new SelectItem[2];
 				selectItems[0] = new SelectItem("PBB", "PBB");
@@ -1575,7 +1577,7 @@ retrieveApprovalTabDtl();
 		QuationTenderResDTO tenderResDTO = detailSO
 				.retriveQTDetails(tenderReqDTO);
 		this.getManagedBean().setQt(tenderResDTO.getQtDetail());
-		System.out.println(tenderResDTO.getQtDetail().getQtStatus().getStatusId());
+		System.out.println(tenderResDTO.getQtDetail().getQtStatus().getStatusId().intValue());
 		this.getManagedBean().setQuotationTenderDataType(
 				quotationTenderDataType);
 		this.getManagedBean().setProcessName(res.getProcessName());

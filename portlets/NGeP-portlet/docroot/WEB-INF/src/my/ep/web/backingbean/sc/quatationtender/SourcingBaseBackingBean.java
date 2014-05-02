@@ -28,6 +28,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
@@ -60,7 +61,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public List<PmOrgProfile> retriveOrgProfiles(OrgProfileReqDTO profileReqDTO) {
 
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByOrgType(profileReqDTO);
 		return resDTO.getOrgProfileList();
@@ -145,26 +147,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 
-		IQTDetailSO detailSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 
 		if ("Proposal Preparation".equalsIgnoreCase(res.getProcessName())) {
 
 			SCSiteVisitProposalDataType proposalDateType = (SCSiteVisitProposalDataType) obj;
-			/*tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
-					.longValue());
-			QuationTenderResDTO tenderResDTO = detailSO
-					.retriveQTDetails(tenderReqDTO);
-			
-			detailBackingBean.getManagedBean()
-					.setQt(tenderResDTO.getQtDetail());*/
+			/*
+			 * tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
+			 * .longValue()); QuationTenderResDTO tenderResDTO = detailSO
+			 * .retriveQTDetails(tenderReqDTO);
+			 * 
+			 * detailBackingBean.getManagedBean()
+			 * .setQt(tenderResDTO.getQtDetail());
+			 */
 
 			SPDetailBackingBean backingBean = new SPDetailBackingBean();
 			backingBean.getManagedBean().setProposalData(proposalDateType);
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-			backingBean.retrieveTechnicalProposalList(proposalDateType.getQtId().longValue());
+			backingBean.retrieveTechnicalProposalList(proposalDateType
+					.getQtId().longValue());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -173,33 +177,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							null,
 							"/xhtml/ss/supplierproposal/supplierProposalMain.xhtml"
 									+ "?faces-redirect=true");
-		}else if ("Service QuotationTender Creation".equalsIgnoreCase(res.getProcessName())) {
+		} else if ("Service QuotationTender Creation".equalsIgnoreCase(res
+				.getProcessName())) {
 
-			 SCQuotationTenderDataType datatype = (SCQuotationTenderDataType) obj;
-			tenderReqDTO.setQtId(new Long(datatype.getQtId())
-					.longValue());
+			SCQuotationTenderDataType datatype = (SCQuotationTenderDataType) obj;
+			tenderReqDTO.setQtId(new Long(datatype.getQtId()).longValue());
 			QuationTenderResDTO tenderResDTO = detailSO
 					.retriveQTDetails(tenderReqDTO);
-			
+
 			detailBackingBean.getManagedBean()
 					.setQt(tenderResDTO.getQtDetail());
-			detailBackingBean.getManagedBean().setTaskId(taskId);			
-			detailBackingBean.getManagedBean().setQuotationTenderDataType(datatype);
+			detailBackingBean.getManagedBean().setTaskId(taskId);
+			detailBackingBean.getManagedBean().setQuotationTenderDataType(
+					datatype);
 			populateParentOrgProfile(tenderResDTO.getQtDetail());
 			detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
 			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
-			
+
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-			
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/ss/quatationtender/quatationtendercreation.xhtml" + "?faces-redirect=true");
+					.handleNavigation(
+							fc,
+							null,
+							"/xhtml/ss/quatationtender/quatationtendercreation.xhtml"
+									+ "?faces-redirect=true");
 		}
 	}
-	
+
 	/**
 	 * Method to populate parent orgprofiles for scqt.
 	 */
@@ -221,5 +229,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
 		}
+	}
+
+	public boolean isNotNullOREmpty(List<? extends Object> testObject) {
+		if (null != testObject && !testObject.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	public void setUserDetails(BaseEntity baseObject) {
+		PmUser user = new FacesScopes().getUserSessionBean();
+		baseObject.setChangedBy(user.getUserId());
+		baseObject.setCreatedBy(user.getUserId());
+		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	}
 }
