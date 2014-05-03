@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
+		toggleable="true">
+
+		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
+			editable="true" rowIndexVar="index" style="width:100%"
+			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
+			rowKey="#{complianceTech}">
+			<ac:paginator for="complianceTechnicalProposal" />
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
+				style="width:70%">
+
+				<h:outputText value="#{complianceTech.title}"></h:outputText>
+
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
+				style="width:20%">
+
+
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+				style="width:10%">
+               
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}" icon="" rendered="#{complianceTech.definationType.parameterId eq '184'}"
+					process="@this" partialSubmit="true" action="#{evaluationBackingBean.technicalComplianceAction(complianceTech)}"/>
+
+
+			</p:column>
+
+		</p:dataTable>
+
+
+	</p:panel>
+
+
+
+</ui:composition>

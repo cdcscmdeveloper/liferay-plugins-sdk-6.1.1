@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+
+	<p:tabView dynamic="true" orientation="left" id="evaluationMeetingId">
+       <p:ajax event="tabChange"
+			listener="#{evaluationBackingBean.preparationTabChange}" />
+
+
+		<p:tab title="#{lbl['lbl.sc.eva.prepare.mtng.dtls']}">
+			<ui:include src="meetingDetails.xhtml"></ui:include>
+
+		</p:tab>
+
+		<p:tab title="#{lbl['lbl.sc.eva.mtng.opn.committee']}">
+			<ui:include src="openCommittee.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="#{lbl['lbl.sc.eva.prepare.turut.hadir']}">
+			<ui:include src="turuthadir.xhtml"></ui:include>
+		</p:tab>
+
+
+
+
+
+
+
+	</p:tabView>
+
+</ui:composition>

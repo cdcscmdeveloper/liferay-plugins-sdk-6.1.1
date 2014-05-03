@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back" />
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save" />
+		</div>
+
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
+			toggleable="true">
+
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
+			toggleable="true">
+
+
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

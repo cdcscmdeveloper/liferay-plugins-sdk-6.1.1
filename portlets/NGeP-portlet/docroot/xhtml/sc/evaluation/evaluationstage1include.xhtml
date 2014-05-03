@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
 	</ui:define>
-<!--  <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
-				closable="true" />  -->
+  <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
+				closable="true" /> 
 	<ui:include src="/xhtml/sc/evaluation/evaluationButtons.xhtml" />
 	  <ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml" />
 
@@ -17,47 +17,47 @@
 					<ul class="menu-text" style="float: center">
 						<li><!-- <h:outputText value="Preparation"
 								rendered="#{evaluationBackingBean.managedBean.tempTab eq 0}" /> -->
-							<p:commandLink value="Preparation"
+							<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.prepare']}"
 								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 0}" 
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}"/></li>
 
-						<li><h:outputText value="Stage1"
+						<li><h:outputText value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
-							<p:commandLink value="Stage1"
+							<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
 								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}" 
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}"/></li>
 					
 					
-							<li><h:outputText value="Summary "
-									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
-								<p:commandLink value="Summary"
-									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+							<li><h:outputText value="#{lbl['lbl.sc.eva.main.menu.eva.stg']} "
+									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
+								<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.eva.stg']}"
+									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}" 
-									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}"/></li>
+									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}" 
+									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}"/></li>
 					
 						
 
-						<li><h:outputText value="Report"
+						<li><h:outputText value="#{lbl['lbl.sc.eva.main.menu.report.stg']}"
+								rendered="#{evaluationBackingBean.managedBean.tempTab lt 4}" />
+							<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.report.stg']}"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tempTab ge 4}" 
+								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}"/></li>
+
+						<li>
+						<h:outputText value="#{lbl['lbl.sc.eva.main.menu.endors.stg']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
-							<p:commandLink value="Report"
+							<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.endors.stg']}"
 								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}" 
-								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}"/></li>
-
-						<li>
-						<h:outputText value="Sign-Off"
-								rendered="#{evaluationBackingBean.managedBean.tempTab lt 6}" />
-							<p:commandLink value="Sign-Off"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'6')}"
-								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-								rendered="#{evaluationBackingBean.managedBean.tempTab ge 6}" 
-									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" />
+									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" />
 						</li>
 
 
@@ -73,41 +73,44 @@
 								
 								
 								<li
-									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
+									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 2 ? 'space green-dot':'space black-dot')}" />
 								
 								<li
-									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 5 ? 'space green-dot':'space black-dot')}" />
+									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 4 ? 'space green-dot':'space black-dot')}" />
 								
 								<li
-									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 6 ? 'red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 6 ? 'green-dot':'black-dot')}" />
+									class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 5 ? 'green-dot':'black-dot')}" />
 					</ul>
 				</div></td>
 			<td></td>
 		</tr>
 	</table>
  <ui:param name="scQt" value="#{specificationBackingBean.managedBean.qt}" />
-            <ui:include src="/xhtml/sc/common/commonHeader.xhtml" />
+           <ui:include src="/xhtml/sc/confirmMeeting/evaluationMeetingHeader.xhtml" /> 
 
 	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
-		<ui:include src="/xhtml/sc/evaluation/prepare.xhtml" />
+		<ui:include src="prepare.xhtml" />
 		<!--  <ui:include src="/xhtml/sc/evaluation/sendEmail.xhtml" /> -->
 	</c:if>
 	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1}">
-		<ui:include src="/xhtml/sc/evaluation/stage1.xhtml" />
+		<!-- <ui:include src="/xhtml/sc/evaluation/stage1.xhtml" />
 		<ui:include src="/xhtml/sc/evaluation/manualsubmission.xhtml" />
-		<ui:include src="/xhtml/sc/evaluation/evaluationpopup.xhtml" />
+		<ui:include src="/xhtml/sc/evaluation/evaluationpopup.xhtml" /> -->
+		
+		<ui:include src="complianceStage.xhtml" />
 	</c:if>
 	
-		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
-			<ui:include src="/xhtml/sc/evaluation/summary.xhtml" />
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
+			<!-- <ui:include src="/xhtml/sc/evaluation/summary.xhtml" /> -->
+			<ui:include src="evaluationStage.xhtml" /> 
 		</c:if>
 		
 	
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
-		<ui:include src="/xhtml/sc/evaluation/report.xhtml" />
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
+		<ui:include src="report.xhtml" />
 	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 6}">
-		<ui:include src="/xhtml/sc/evaluation/signoff.xhtml" />
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
+		<ui:include src="signoff.xhtml" />
 	</c:if>
 
 </ui:composition>

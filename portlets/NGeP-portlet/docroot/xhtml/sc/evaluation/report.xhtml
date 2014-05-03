@@ -9,7 +9,7 @@
 	<!--  <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" />  -->
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.report.head']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.eva.report.contents']}" toggleable="true">
 		<p:dataTable id="evaluationreport" width="100%" cellpadding="1"
 			rowIndexVar="rowIndex"
 			value="#{evaluationBackingBean.managedBean.evaluationReportListItems}"
@@ -21,9 +21,13 @@
 						style="text-align:left; vertical-align:top;"
 						headerText="#{lbl['lbl.sc.eva.report.content']}">
 					</p:column>
-					 <p:column colspan="1"  rendered="true" 
-						style="text-align:left; vertical-align:top;" headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"> 
-					 </p:column>
+					<p:column colspan="1" rendered="true"
+						style="text-align:left; vertical-align:top;" headerText="#{lbl['lbl.sc.eva.report.type']}">
+					</p:column>
+					<p:column colspan="1" rendered="true"
+						style="text-align:left; vertical-align:top;"
+						headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
+					</p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:subTable id="supplierItemTable1#{rowIndex}" var="supplierItem1"
@@ -36,72 +40,76 @@
 				                #{supplierItem1.remarks}  
 				            </p:column>
 				<p:column>
-					<p:commandLink ajax="false" value="Download" actionListener="#{evaluationBackingBean.reportDownLoad}">
-					
+					<h:outputText value="Appendix"></h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink ajax="false" value="#{lbl['lbl.sc.eva.report.download']}"
+						actionListener="#{evaluationBackingBean.reportDownLoad}">
+
 					</p:commandLink>
 				</p:column>
 
 			</p:subTable>
 		</p:dataTable>
-<div align="right" style="width: 80%">
-	<p:commandButton ajax="false" value="Download All" actionListener="#{evaluationBackingBean.reportDownLoadZipFile}"/>
-					
-</div>
+		<div align="right" style="width: 80%">
+			<p:commandButton ajax="false" value="#{lbl['lbl.sc.eva.report.download.all']}"
+				actionListener="#{evaluationBackingBean.reportDownLoadZipFile}" />
+
+		</div>
 
 
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.eva.report.final.head']}" >
+	<p:panel header="#{lbl['lbl.sc.eva.report.eva.report']}">
 		<h:panelGrid columns="2">
 
 			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
 
 			<h:panelGroup>
-				
-			
+
+
 				<p:commandButton oncomplete="reportDlg.show();"
-                    icon="iconAttachment" 
-                              update="report" value="Attach file(s)" />
-				
+					icon="iconAttachment" update="report" value="Attach file(s)" />
+
 			</h:panelGroup>
 		</h:panelGrid>
-		
+
 		<h:panelGrid columns="3" id="report">
 
 			<p:spacer width="40"></p:spacer>
-           <p:outputLabel id="reportfile" value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
-           	<p:commandLink actionListener="#{evaluationBackingBean.removeFile}" process="@this,report" update="reportfile" partialSubmit="true" style="width:40%;">
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
+			<p:outputLabel id="reportfile"
+				value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
+			<p:commandLink actionListener="#{evaluationBackingBean.removeFile}"
+				process="@this,report" update="reportfile" partialSubmit="true"
+				style="width:40%;">
+				<p:graphicImage library="ep/images/design" name="delete.png"
+					value="/resources/ep/images/design/delete.png" />
 
-				</p:commandLink>
-			
+			</p:commandLink>
+
 		</h:panelGrid>
 
 	</p:panel>
-	
+
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+
+
+
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{evaluationBackingBean.setTabValue('5','3')}"
+						actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
-						update=":form" /></c:if>
-						<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
-						update=":form" /></c:if>
+						update=":form" />
 				</div></td>
 			<td><div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{evaluationBackingBean.setTabValue('5','6')}"
+						actionListener="#{evaluationBackingBean.setTabValue('4','5')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
 						iconPos="right" update=":form" />
 				</div></td>
 		</tr>
 	</table>
-	
-	
+
+
 </ui:composition>
