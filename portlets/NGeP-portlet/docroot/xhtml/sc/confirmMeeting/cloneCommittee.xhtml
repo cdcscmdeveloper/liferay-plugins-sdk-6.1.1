@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
+		modal="true" width="800" height="800" position="top">
+		<p:panel id="clonesearchpnlid" header="Search" toggleable="true">
+			<table>
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+							size="92" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+					<td><p:inputText
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+							size="30" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+					<td><p:selectOneMenu
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
+					<td><p:calendar
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							size="30" showOn="button" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
+					<td><p:calendar
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
+							size="30" showOn="button" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Active" itemValue="1" />
+							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}" style="float:right;"
+					action="#{evaluationMeetingBackingBean.resetClone}"
+					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
+					partialSubmit="true" process="@this" />
+				<p:commandButton value="Search" style="float:right;"
+					icon="ui-icon-search"
+					action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
+					update="clonesearchCommitteid" partialSubmit="true"
+					process="@parent" />
+			</div>
+			<br />
+			<br />
+		</p:panel>
+		<p:spacer height="3" />
+		<p:panel header="Quotation/Tender List" toggleable="true">
+			<p:dataTable id="clonesearchCommitteid"
+				value="#{evaluationMeetingBackingBean.managedBean.cloneTenderList}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				styleClass="cloneResults">
+
+				<ac:paginator for="clonesearchCommitteid" />
+
+				<p:ajax event="rowSelect" update=":form:cloneCommittee"
+					listener="#{evaluationMeetingBackingBean.onRowCloneAction}" />
+
+				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+					<h:outputText value="#{scQt.qtNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.title']}">
+					<h:outputText value="#{scQt.qtTitle}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<h:outputText
+						value="#{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<h:outputText value="#{scQt.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.status']}">
+					<h:outputText
+						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+
+
+		<p:panel id="committeedtlsid" header="#{lbl['lbl.sc.eva.committee.details']}"
+			toggleable="true">
+
+			<p:dataTable id="cloneCommittee" var="committeeMember"
+				value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
+				selection="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
+				rowKey="#{committeeMember.committeeMemberId}">
+				<ac:paginator for="cloneCommittee" />
+
+
+				<p:column selectionMode="multiple" style="width:2%"></p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
+					<h:outputText value="#{committeeMember.designation}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+					<h:outputText value="#{committeeMember.email}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+					<h:outputText value="#{committeeMember.grade}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+					<h:outputText value="#{committeeMember.PNP}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
+					<h:outputText value="#{committeeMember.memberRole}"></h:outputText>
+
+				</p:column>
+
+			</p:dataTable>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					style="float:right;" icon="ui-icon-cancel"
+					onclick="screen2.hide();" />
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" process="@this,committeedtlsid"
+				partialSubmit="true"	actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
+					onclick="screen2.hide();" oncomplete="prepareCommittee.paginator.endLink.click();" icon="ui-icon-check"
+					update="evaluationpreparecommittee" />
+		
+		</div>
+		</p:panel>
+	</p:dialog>
+</ui:composition>

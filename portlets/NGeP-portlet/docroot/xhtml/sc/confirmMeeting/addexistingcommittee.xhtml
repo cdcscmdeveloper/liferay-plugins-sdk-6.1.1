@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog id="newspecificationcommitteeid" position="top" 
+		header="New #{evaluationMeetingBackingBean.managedBean.tabTitle}"
+		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
+		styleClass="scAddMember">
+		<p:panel>
+			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
+				<p:selectOneRadio
+					value="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection}">
+					<f:selectItems
+						value="#{evaluationMeetingBackingBean.managedBean.selections}" />
+					<p:ajax event="click"
+						listener="#{evaluationMeetingBackingBean.userSelcetionAction}"
+						update="newCommitteeProfile" process="@this"></p:ajax>
+				</p:selectOneRadio>
+			</h:panelGrid>
+
+			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
+				<c:if
+					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
+					<p:panel header="Search" toggleable="true">
+						<table>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
+								<td colspan="3"><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.name}" size="64" /></td>
+							</tr>
+							<tr>
+								<td style="width: 110px;"><p:outputLabel
+										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
+								<td><p:selectOneMenu
+										value="#{evaluationMeetingBackingBean.managedBean.identificationType}"
+										style="width: 178px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+									</p:selectOneMenu></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
+								<td><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.identificationNo}"
+										size="30" /></td>
+								<td />
+								<td />
+							</tr>
+						</table>
+					</p:panel>
+					<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
+						action="#{evaluationMeetingBackingBean.reset}"
+						update="newCommitteeProfile" icon="ui-icon-reset"
+						resetValues="true" partialSubmit="true" process="@this" />
+
+					<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
+						icon="ui-icon-search"
+						action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
+						update="@(.existingCommitteeResults)" partialSubmit="true"
+						process="@parent" />
+					<br />
+					<br />
+					<p:panel header="Search Result" toggleable="true">
+						<p:dataTable id="existingcommitteesearch" widgetVar="existingCommittee"
+							value="#{evaluationMeetingBackingBean.managedBean.externalUsers}"
+							selection="#{evaluationMeetingBackingBean.managedBean.selectedPmUser}"
+							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
+							styleClass="existingCommitteeResults" style="width : 900px;">
+
+							<ac:paginator for="existingcommitteesearch" />
+
+							<p:column selectionMode="multiple" style="width:2%" />
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+								<h:outputText value="#{existcommitteeuser.userName}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+								<h:outputText value="#{existcommitteeuser.identificationNo}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
+								<h:outputText value="#{existcommitteeuser.designation}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+								<h:outputText
+									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+								<h:outputText value="#{existcommitteeuser.grade}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+								<h:outputText value="#{existcommitteeuser.PMP ? 'Yes' : 'No'}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
+								 <ui:fragment rendered="#{existcommitteeuser.PMP}">
+									<h:outputText value="Chairperson" rendered="#{existcommitteeuser.memberRole eq 'C'}"/>
+								</ui:fragment>
+								<ui:fragment rendered="#{!existcommitteeuser.PMP}">
+									<p:selectOneMenu id="appaction"
+										value="#{existcommitteeuser.memberRole}"
+										style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+									</p:selectOneMenu>
+								</ui:fragment> 
+
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</c:if>
+				<c:if
+					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'N'}">
+					<p:panel header="New user" toggleable="true">
+						<table>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.name']}" /></td>
+								<td colspan="3"><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.memberName}"
+										size="30" /></td>
+							</tr>
+							<tr>
+								<td style="width: 125px;"><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /></td>
+								<td><p:selectOneMenu
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.idType}"
+										style="width: 178px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+									</p:selectOneMenu></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /></td>
+								<td><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.icPassport}"
+										size="30" /></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /></td>
+								<td><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.grade}"
+										size="30" /></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}" /></td>
+								<td><p:selectOneRadio
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.PNP}">
+										<f:selectItem itemLabel="Yes" itemValue="true" />
+										<f:selectItem itemLabel="No" itemValue="false" />
+									</p:selectOneRadio></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /></td>
+								<td><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.designation}"
+										size="30" /></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Email" /></td>
+								<td><p:inputText
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.email}"
+										size="30" /></td>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.addscreen.role']}" /></td>
+								<td><p:selectOneMenu
+										value="#{evaluationMeetingBackingBean.managedBean.committeMember.memberRole}"
+										style="width: 178px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.committeeRole)}" />
+									</p:selectOneMenu></td>
+								<td />
+								<td />
+							</tr>
+						</table>
+					</p:panel>
+				</c:if>
+			</p:panel>
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				styleClass="apply_button" style="float:right;" process="@this"
+				oncomplete="newspecificationcommittee.hide();" icon="ui-icon-cancel" />
+
+			<p:commandButton value="Ok" style="float:right;" oncomplete="prepareCommittee.paginator.endLink.click();"
+				onclick="newspecificationcommittee.hide();" update="evaluationpreparecommittee"
+				process="@this, newCommitteeProfile" icon="ui-icon-check"
+				actionListener="#{evaluationMeetingBackingBean.okCommitteeAction}" />
+
+		</p:panel>
+
+	</p:dialog>
+</ui:composition>
