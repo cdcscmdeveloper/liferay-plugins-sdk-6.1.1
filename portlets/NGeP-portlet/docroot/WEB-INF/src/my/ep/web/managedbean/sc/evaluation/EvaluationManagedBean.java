@@ -8,14 +8,16 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtChecklistEvaluation;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtManualEvaluation;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalLabel;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -33,7 +35,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> committeeMemberList;
 	private ScQtChecklistEvaluation checklistEvaluation;
 	private List<ScQtChecklistEvaluation> manuals1EvaluationList;
-	private List<ScQtManualEvaluation> manualMultiSelect;
+	//private List<ScQtManualEvaluation> manualMultiSelect;
 	private List<ScQtEvaluationResult> s1TechEvalList;
 	private List<ScQtEvaluationResult> s1FinEvalList;
 	private List<ScQtEvaluationResult> s2TechSupplier;
@@ -57,8 +59,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// OC,EC,TEC,FEC
 	private String committeeType = "TEC";
 	private List<ScQtEvaluationResult> manuals1SupplierList;
-	private List<ScQtProposalLabel> manualProposalLabel;
-	private List<ScQtManualEvaluation> manualEvaluateList;
+	//private List<ScQtProposalLabel> manualProposalLabel;
+	//private List<ScQtManualEvaluation> manualEvaluateList;
 	private boolean isEvaluateStatus;
 	private Long evaluationResultId;
 	private int tempTab;
@@ -70,6 +72,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String viewBy = "P";
 	private List<ScQtEvaluationResult> requestDemoSelect;
 	private String fileName;
+	private List<ScQtMeetingAttendance> meetingAttendanceList;
+	private List<ScQtMeetingAttendance> meetingAttendanceSelectList;
+	private List<ScQtCheckList> complianceTechnicalCheckList;
+	private List<ScQtCheckList> compliancefinancialCheckList;
+	private ScQtCheckList scQtChecklist;
+	private ScQt scQt;
+	private int countDays;
+	private List<ScQtProposalChecklist> complianceTechnicalProposalCheckList;
+	private List<ScQtProposalChecklist> complianceFinancialProposalCheckList;
+	private ScQtCommittee scQtCommittee;
+	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
+	private int complianceActiveIndex;
+
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
@@ -488,53 +503,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.isEvaluateStatus = isEvaluateStatus;
 	}
 
-	/**
-	 * @return the manualProposalLabel
-	 */
-	public List<ScQtProposalLabel> getManualProposalLabel() {
-		return manualProposalLabel;
-	}
-
-	/**
-	 * @param manualProposalLabel
-	 *            the manualProposalLabel to set
-	 */
-	public void setManualProposalLabel(
-			List<ScQtProposalLabel> manualProposalLabel) {
-		this.manualProposalLabel = manualProposalLabel;
-	}
-
-	/**
-	 * @return the manualEvaluateList
-	 */
-	public List<ScQtManualEvaluation> getManualEvaluateList() {
-		return manualEvaluateList;
-	}
-
-	/**
-	 * @param manualEvaluateList
-	 *            the manualEvaluateList to set
-	 */
-	public void setManualEvaluateList(
-			List<ScQtManualEvaluation> manualEvaluateList) {
-		this.manualEvaluateList = manualEvaluateList;
-	}
-
-	/**
-	 * @return the manualMultiSelect
-	 */
-	public List<ScQtManualEvaluation> getManualMultiSelect() {
-		return manualMultiSelect;
-	}
-
-	/**
-	 * @param manualMultiSelect
-	 *            the manualMultiSelect to set
-	 */
-	public void setManualMultiSelect(
-			List<ScQtManualEvaluation> manualMultiSelect) {
-		this.manualMultiSelect = manualMultiSelect;
-	}
+	
 
 	/**
 	 * @return the tempTab
@@ -774,6 +743,180 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
+	}
+
+	/**
+	 * @return the meetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
+		return meetingAttendanceList;
+	}
+
+	/**
+	 * @param meetingAttendanceList the meetingAttendanceList to set
+	 */
+	public void setMeetingAttendanceList(
+			List<ScQtMeetingAttendance> meetingAttendanceList) {
+		this.meetingAttendanceList = meetingAttendanceList;
+	}
+
+	/**
+	 * @return the meetingAttendanceSelectList
+	 */
+	public List<ScQtMeetingAttendance> getMeetingAttendanceSelectList() {
+		return meetingAttendanceSelectList;
+	}
+
+	/**
+	 * @param meetingAttendanceSelectList the meetingAttendanceSelectList to set
+	 */
+	public void setMeetingAttendanceSelectList(
+			List<ScQtMeetingAttendance> meetingAttendanceSelectList) {
+		this.meetingAttendanceSelectList = meetingAttendanceSelectList;
+	}
+
+	/**
+	 * @return the complianceTechnicalCheckList
+	 */
+	public List<ScQtCheckList> getComplianceTechnicalCheckList() {
+		return complianceTechnicalCheckList;
+	}
+
+	/**
+	 * @param complianceTechnicalCheckList the complianceTechnicalCheckList to set
+	 */
+	public void setComplianceTechnicalCheckList(
+			List<ScQtCheckList> complianceTechnicalCheckList) {
+		this.complianceTechnicalCheckList = complianceTechnicalCheckList;
+	}
+
+	/**
+	 * @return the compliancefinancialCheckList
+	 */
+	public List<ScQtCheckList> getCompliancefinancialCheckList() {
+		return compliancefinancialCheckList;
+	}
+
+	/**
+	 * @param compliancefinancialCheckList the compliancefinancialCheckList to set
+	 */
+	public void setCompliancefinancialCheckList(
+			List<ScQtCheckList> compliancefinancialCheckList) {
+		this.compliancefinancialCheckList = compliancefinancialCheckList;
+	}
+
+	/**
+	 * @return the scQtChecklist
+	 */
+	public ScQtCheckList getScQtChecklist() {
+		return scQtChecklist;
+	}
+
+	/**
+	 * @param scQtChecklist the scQtChecklist to set
+	 */
+	public void setScQtChecklist(ScQtCheckList scQtChecklist) {
+		this.scQtChecklist = scQtChecklist;
+	}
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	/**
+	 * @return the countDays
+	 */
+	public int getCountDays() {
+		return countDays;
+	}
+
+	/**
+	 * @param countDays the countDays to set
+	 */
+	public void setCountDays(int countDays) {
+		this.countDays = countDays;
+	}
+
+	/**
+	 * @return the complianceTechnicalProposalCheckList
+	 */
+	public List<ScQtProposalChecklist> getComplianceTechnicalProposalCheckList() {
+		return complianceTechnicalProposalCheckList;
+	}
+
+	/**
+	 * @param complianceTechnicalProposalCheckList the complianceTechnicalProposalCheckList to set
+	 */
+	public void setComplianceTechnicalProposalCheckList(
+			List<ScQtProposalChecklist> complianceTechnicalProposalCheckList) {
+		this.complianceTechnicalProposalCheckList = complianceTechnicalProposalCheckList;
+	}
+
+	/**
+	 * @return the complianceFinancialProposalCheckList
+	 */
+	public List<ScQtProposalChecklist> getComplianceFinancialProposalCheckList() {
+		return complianceFinancialProposalCheckList;
+	}
+
+	/**
+	 * @param complianceFinancialProposalCheckList the complianceFinancialProposalCheckList to set
+	 */
+	public void setComplianceFinancialProposalCheckList(
+			List<ScQtProposalChecklist> complianceFinancialProposalCheckList) {
+		this.complianceFinancialProposalCheckList = complianceFinancialProposalCheckList;
+	}
+
+	/**
+	 * @return the scQtCommittee
+	 */
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
+	}
+
+	/**
+	 * @param scQtCommittee the scQtCommittee to set
+	 */
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
+	}
+
+	/**
+	 * @return the qtCommitteeRemarks
+	 */
+	public List<ScQtCommitteRemarks> getQtCommitteeRemarks() {
+		return qtCommitteeRemarks;
+	}
+
+	/**
+	 * @param qtCommitteeRemarks the qtCommitteeRemarks to set
+	 */
+	public void setQtCommitteeRemarks(List<ScQtCommitteRemarks> qtCommitteeRemarks) {
+		this.qtCommitteeRemarks = qtCommitteeRemarks;
+	}
+
+	/**
+	 * @return the complianceActiveIndex
+	 */
+	public int getComplianceActiveIndex() {
+		return complianceActiveIndex;
+	}
+
+	/**
+	 * @param complianceActiveIndex the complianceActiveIndex to set
+	 */
+	public void setComplianceActiveIndex(int complianceActiveIndex) {
+		this.complianceActiveIndex = complianceActiveIndex;
 	}
 
 	
