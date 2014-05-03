@@ -104,7 +104,9 @@
 						listener="#{terminationBackingBean.changeField}" />
 			  </p:selectOneMenu>
 			  <p:spacer width="2" />
-			  <p:commandLink value="View Notice" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}" />
+			  <p:commandLink value="View Notice" update="editorDisplay" action="#{terminationBackingBean.previewNoticeAction}"
+			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}" 
+			  	oncomplete="noticeDlg.show()"/>
 		  </h:panelGrid>
           <p:outputLabel value="Decision Date" />
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" 
@@ -179,5 +181,8 @@
 			    <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgTerminationReason.hide();" type="button" />
 		    </div>
          </p:dialog>
-     </p:panel>      
+     </p:panel>
+	<p:dialog header="Notice" widgetVar="noticeDlg" modal="true" height="450" width="820" resizable="true">
+		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
+	</p:dialog>
 </ui:composition>

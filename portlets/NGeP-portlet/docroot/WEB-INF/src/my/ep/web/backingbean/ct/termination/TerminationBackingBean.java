@@ -6,7 +6,9 @@ package my.ep.web.backingbean.ct.termination;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -36,6 +39,9 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
+import my.ep.dto.ct.tpl.ContractTemplateResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -44,9 +50,12 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -59,6 +68,7 @@ import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.search.ParseException;
@@ -75,6 +85,7 @@ import com.liferay.portal.util.PortalUtil;
 public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBean> {
 
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
+	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	
 	public TerminationBackingBean(){
@@ -304,16 +315,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 } 
 	 
 	 public void changeField() {
-
 		try {
-			IContractTemplateSO contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			flush();
 			
 		    String parameterCode = retrieveParameterById(new Long(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
 			if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 				this.getManagedBean().setRemedy(true);
-				ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-				reqDTO.setTemplateId(1L);
 			}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 				this.getManagedBean().setTermination(true);
 				if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()==null || getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()==0) {
@@ -333,6 +340,115 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 this.getManagedBean().setRemedy(false);
 		 this.getManagedBean().setMutualTermination(false);
 	 }
+	 
+	public void previewNoticeAction() {
+		IContractTemplateSO contractTemplateSO = null;
+		IAddressSO addressSO =  null;
+		try {
+			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			if(getManagedBean().isTermination()) {
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_TERMINATION_NOTICE);	
+			} else if(getManagedBean().isRemedy()) {
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_REMEDY_NOTICE);
+			}
+			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			getManagedBean().setEditorValue("");
+			if(resDTO.getCtTemplate()!=null) {
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+				
+				AddressReqDTO addressReqDTO = new AddressReqDTO();
+				addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+				addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+				PmAddressType pmAddressType = null;
+				if(addressResDTO.getAddressTypeList().size()>0) {
+					pmAddressType = addressResDTO.getAddressTypeList().get(0);
+				}
+				
+				Map<String, String> valuesMap = new HashMap<String, String>();
+				valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				valuesMap.put("JABATAN_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
+				if(pmAddressType!=null) {
+					valuesMap.put("PTJ_ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+					valuesMap.put("TEL_NO", pmAddressType.getPmAddress().getPhoneNo());
+					valuesMap.put("FAX_NO", pmAddressType.getPmAddress().getFaxNo());
+				}
+				if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
+					valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
+				}
+				if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
+					valuesMap.put("NOTICE_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
+				}			
+				valuesMap.put("SUPPLIER_NAME",getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+				SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
+				valuesMap.put("SUPPLIER_ADDRESS",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
+				valuesMap.put("CONTRACT_TITLE",getManagedBean().getCtContract().getContractName());
+				if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
+					valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractNo());
+				} else {
+					valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractPhysicalNo());
+				}
+				valuesMap.put("CONTRACT_NO",getManagedBean().getCtContract().getContractNo());
+				StringBuffer terminationReason = new StringBuffer();
+				for(CtTerminationReason ctTerminationReason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()) {
+					terminationReason.append(reasonDescMap.get(ctTerminationReason.getReasonType().getReasonId()));
+					terminationReason.append(" - ");
+					terminationReason.append(ctTerminationReason.getDescription());
+					terminationReason.append("<BR/>");
+				}
+				valuesMap.put("REASON_LIST", terminationReason.toString());
+				valuesMap.put("REMEDY_PERIOD",Integer.toString(getManagedBean().getContractVer().getCtTermination().getRemedyPeriod()));
+				if(getManagedBean().getContractVer().getApprover()!=null) {
+					valuesMap.put("APPROVER_NAME", getManagedBean().getContractVer().getApprover().getUserName());
+					valuesMap.put("APPROVER_DESIGNATION", getManagedBean().getContractVer().getApprover().getDesignation());
+				}
+				// Extra For Termination Notice
+				valuesMap.put("CONTRACT_AMOUNT", getManagedBean().getContractVer().getCtContractValue().getContractAmount().toString());
+				valuesMap.put("EFF_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+				valuesMap.put("EXP_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+				if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
+					valuesMap.put("LAST_REMEDY_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()));
+				}
+				if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo()!=null && getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().length()>0) {
+					valuesMap.put("LAST_REMEDY_FILE_NO", getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo());
+				}
+				if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()!=null && getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()>0) {
+					valuesMap.put("RECOMMEDED_AGENCY", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
+				}		
+				if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
+					valuesMap.put("RECOMMEDED_AGENCY_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
+				}			
+				// End of Extra For Termination Notice
+				StrSubstitutor sub = new StrSubstitutor(valuesMap);
+				getManagedBean().setEditorValue(sub.replace(content));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			contractTemplateSO = null;
+		}
+	}
+	
+	private String formAddress(String address1, String address2, String address3, String address4) {
+		StringBuffer address = new StringBuffer();
+		if(address1!=null && address1.length()>0) {
+			address.append(address1).append(" ");
+		}
+		if(address2!=null && address2.length()>0) {
+			address.append(address2).append(" ");
+		}
+		if(address3!=null && address3.length()>0) {
+			address.append("<BR/>").append(address3).append(" ");
+		}
+		if(address4!=null && address4.length()>0) {
+			address.append(address4).append(" ");
+		}
+		return address.toString();
+	}
 	 
 	 public boolean isContractAdmin() {
 			return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -397,8 +513,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    items = new SelectItem[list.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		      
-			for(PmReasonDesc reasonDesc : list) 
-			  items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());   
+			for(PmReasonDesc reasonDesc : list) {
+			  items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
+			  reasonDescMap.put(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
+			}
 		 }catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
