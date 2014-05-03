@@ -351,9 +351,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			
-			PmUser pmUser = new PmUser();
-			pmUser.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-			reqDTO.setSupplierPmUser(pmUser);
+			reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
@@ -400,9 +398,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 reqDTO.setOutcome(outcome);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			 reqDTO.setFromSupplier(true);
-			 PmUser pmUser = new PmUser();
-			 pmUser.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-			 reqDTO.setSupplierPmUser(pmUser);
+			 reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 			 reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			 reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			 
@@ -445,7 +441,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			 reqDTO.setOutcome(action);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 reqDTO.setSupplierUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			 reqDTO.setSupplierUser(getFacesScopes().getUserSessionBean());
 			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
@@ -483,7 +479,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setParameterType("BS");
 			reqDTO.setParameterCode("FC");
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			Long value = resDTO.getPmParameter().getParameterId();
+			resDTO.getPmParameter().getParameterId();
 		
 		} catch (Exception e) {
 			e.printStackTrace();
