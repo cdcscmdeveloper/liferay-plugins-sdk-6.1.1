@@ -367,7 +367,7 @@
       			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.ep.no" />
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
-		        <property name="columnName" 	value="supplier.smMofAccounts.mofNo" />
+		        <property name="columnName" 	value="supplier.regNo" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sc.sq.supp.criteria.mof.no" />
 			</bean>
