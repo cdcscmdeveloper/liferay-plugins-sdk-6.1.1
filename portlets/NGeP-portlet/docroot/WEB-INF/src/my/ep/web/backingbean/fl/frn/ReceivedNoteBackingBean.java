@@ -77,6 +77,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			FulfilmentResDTO resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
