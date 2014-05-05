@@ -29,6 +29,7 @@ import my.ep.persistence.entity.cm.catalog.CmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -67,7 +68,6 @@ public class CodificationBackingBean extends
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
-	
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
@@ -615,43 +615,10 @@ public class CodificationBackingBean extends
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 
-	public String goToAssignUnspsc() {
+	public String goToAssignUnspsc(VCmPendingCodifiedItem item) {
 		System.out.println("**********goToAssignUnspsc************");
-		//add some PendingCodifiedItem 
-		IPendingCodifiedItemSO codifiedItemSO = (IPendingCodifiedItemSO) BusinessDelegate.getInstance().getServiceObject("cm", IPendingCodifiedItemSO.class);
-		PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
-		System.out.println(">>>>>>>>>>>>>>>>>codifiedItemSO="+codifiedItemSO);
-		
-		CmPendingCodifiedItem cmPendingCodifiedItem = new CmPendingCodifiedItem();
-		cmPendingCodifiedItem.setDocId(123456968469L);
-		cmPendingCodifiedItem.setDocType("QT");
-		cmPendingCodifiedItem.setStatusId(12L);
-		cmPendingCodifiedItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		cmPendingCodifiedItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		cmPendingCodifiedItem.setChangedBy(cmPendingCodifiedItem.getCreatedBy());
-		cmPendingCodifiedItem.setChangedDate(cmPendingCodifiedItem.getCreatedDate());
-		
-		System.out.println(">>>>>>>>>>>>>>>>>cmPendingCodifiedItem="+cmPendingCodifiedItem);
-		
-		CmPendingCodifiedItem cmPendingCodifiedItem2 = new CmPendingCodifiedItem();
-		cmPendingCodifiedItem2.setDocId(1234560004040L);
-		cmPendingCodifiedItem2.setDocType("SQ");
-		cmPendingCodifiedItem2.setStatusId(121L);
-		cmPendingCodifiedItem2.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		cmPendingCodifiedItem2.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		cmPendingCodifiedItem2.setChangedBy(cmPendingCodifiedItem2.getCreatedBy());
-		cmPendingCodifiedItem2.setChangedDate(cmPendingCodifiedItem2.getCreatedDate());
-		//////
-		reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-		reqDTO.setPendingCodifiedItem(cmPendingCodifiedItem);
-		codifiedItemSO.addPendingCodifiedItem(reqDTO);
-		///////
-		reqDTO.setPendingCodifiedItem(cmPendingCodifiedItem2);
-		codifiedItemSO.addPendingCodifiedItem(reqDTO);
-		
-
-
-   this.getManagedBean().setExtensionCodeTemp(null);
+		this.getManagedBean().setSelectedVPendingCodifiedItem(item);
+		this.getManagedBean().setExtensionCodeTemp(null);
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
 	}
 
@@ -780,8 +747,19 @@ public class CodificationBackingBean extends
 		return NAV_TO_DELETE_EXTENSION;
 	}
 
+	public void searchVPendingCodifiedItems() {
+		this.getManagedBean().getvPendingCodifiedItemSearchDataModel()
+				.reloadData();
+	}
+
 	public String AssignContractedItem() {
-			return NAV_TO_CONTRACTED_ITEM;
+		searchVPendingCodifiedItems();
+		return NAV_TO_CONTRACTED_ITEM;
+	}
+
+	public String backToContractedItem() {
+
+		return AssignContractedItem();
 	}
 
 	public SearchFilterBean getColorFilterBean() {
@@ -817,28 +795,29 @@ public class CodificationBackingBean extends
 	}
 
 	public void assignProductCode() {
-	
-		clearContractedCodePopUp();
-		
 
-//		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-//				.getInstance().getServiceObject("cm", ICodificationSO.class);
-//
-//		CodificationReqDTO reqDTO = new CodificationReqDTO();
-//
-//		CodificationResDTO resDTO = codificationSO.searchSegment(reqDTO);
-//
-//		log.info("resDTO.getSegmentList():" + resDTO.getSegmentList().size());
-//		for (CmUnspsc segment : resDTO.getSegmentList()) {
-//
-//			this.getManagedBean()
-//					.getSegmentCriteria()
-//					.add(new SelectItem(segment.getUnspscCode(), segment
-//							.getUnspscTitle()));
-//		}
+		clearContractedCodePopUp();
+
+		// ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+		// .getInstance().getServiceObject("cm", ICodificationSO.class);
+		//
+		// CodificationReqDTO reqDTO = new CodificationReqDTO();
+		//
+		// CodificationResDTO resDTO = codificationSO.searchSegment(reqDTO);
+		//
+		// log.info("resDTO.getSegmentList():" +
+		// resDTO.getSegmentList().size());
+		// for (CmUnspsc segment : resDTO.getSegmentList()) {
+		//
+		// this.getManagedBean()
+		// .getSegmentCriteria()
+		// .add(new SelectItem(segment.getUnspscCode(), segment
+		// .getUnspscTitle()));
+		// }
 
 	}
-	public void clearContractedCodePopUp(){
+
+	public void clearContractedCodePopUp() {
 		this.getManagedBean().setSelectedLovUnspscSegment(null);
 		this.getManagedBean().setSelectedLovUnspscFamily(null);
 		this.getManagedBean().setSelectedLovUnspscClass(null);
@@ -953,22 +932,25 @@ public class CodificationBackingBean extends
 
 	public String insertContractedItemCode() {
 		System.out.println("**********insertContractedItemCode************");
-		if(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode() != null &&
-				!this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode().isEmpty() && 
-				!this.getManagedBean().getTypeCode().isEmpty() &&
-				!this.getManagedBean().getBrandCode().isEmpty() &&
-				!this.getManagedBean().getMeasurementCode().isEmpty() &&
-				!this.getManagedBean().getColorCode().isEmpty()){
-	
-			this.getManagedBean().setExtensionCodeTemp(this.getManagedBean().getSelectedUNSPSCObj()
-				.getUnspscCode()
-				+ this.getManagedBean().getTypeCode()
-				+ this.getManagedBean().getBrandCode()
-				+ this.getManagedBean().getMeasurementCode()
-				+ this.getManagedBean().getColorCode());
-			System.out.println(">>>>>>>>>>>>>>>> extensionCodeTemp="+this.getManagedBean().getExtensionCodeTemp());
-		
-		return NAV_TO_ASSIGN_PRODUCT_CODE;
+		if (this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode() != null
+				&& !this.getManagedBean().getSelectedUNSPSCObj()
+						.getUnspscCode().isEmpty()
+				&& !this.getManagedBean().getTypeCode().isEmpty()
+				&& !this.getManagedBean().getBrandCode().isEmpty()
+				&& !this.getManagedBean().getMeasurementCode().isEmpty()
+				&& !this.getManagedBean().getColorCode().isEmpty()) {
+
+			this.getManagedBean().setExtensionCodeTemp(
+					this.getManagedBean().getSelectedUNSPSCObj()
+							.getUnspscCode()
+							+ this.getManagedBean().getTypeCode()
+							+ this.getManagedBean().getBrandCode()
+							+ this.getManagedBean().getMeasurementCode()
+							+ this.getManagedBean().getColorCode());
+			System.out.println(">>>>>>>>>>>>>>>> extensionCodeTemp="
+					+ this.getManagedBean().getExtensionCodeTemp());
+
+			return NAV_TO_ASSIGN_PRODUCT_CODE;
 		}
 		return "";
 	}
@@ -1650,10 +1632,10 @@ public class CodificationBackingBean extends
 	public void fillExtensionLists() {
 
 		System.out.println("**********fillExtensionLists************");
-		if (this.getManagedBean().getSelectedUNSPSCObj()
-						.getUnspscCode() != null && !this.getManagedBean().getSelectedUNSPSCObj()
-								.getUnspscCode().isEmpty()) {
-			
+		if (this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode() != null
+				&& !this.getManagedBean().getSelectedUNSPSCObj()
+						.getUnspscCode().isEmpty()) {
+
 			this.getManagedBean().setMeasurementCriteria(null);
 			this.getManagedBean().setColorCriteria(null);
 			this.getManagedBean().setBrandCriteria(null);
@@ -1712,5 +1694,5 @@ public class CodificationBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 }

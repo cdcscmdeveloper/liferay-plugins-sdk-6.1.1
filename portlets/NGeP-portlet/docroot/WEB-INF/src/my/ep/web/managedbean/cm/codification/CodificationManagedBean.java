@@ -9,16 +9,34 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
+import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.vo.ExtensionCodeVO;
 
 @ManagedBean(name = "codificationMB")
 @SessionScoped
 public class CodificationManagedBean extends BaseManagedBean {
-
 
 	private String cmNavigationURL;
 
@@ -33,75 +51,67 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> brandCriteria;
 	private List<SelectItem> measurementCriteria;
 	private List<SelectItem> colorCriteria;
-	
-	private List<CmUnspsc> contractedItem;
 
-	
+	private List<CmUnspsc> contractedItem;
 
 	private CmItem selectedItem;
 	private CmItem[] selectedItems;
-	
+
 	private List<CmUnspsc> segmentList;
 	private List<CmUnspsc> familyList;
 	private List<CmUnspsc> classList;
 	private List<CmUnspsc> commodityList;
-	
+
 	private CmUnspsc selectedLovUnspscSegment;
 	private CmUnspsc selectedLovUnspscFamily;
 	private CmUnspsc selectedLovUnspscClass;
-	
+
 	private String extensionCodeTemp;
 
 	private List<SelectItem> segmentCriteria;
 	private List<SelectItem> familyCriteria;
 	private List<SelectItem> classCriteria;
 	private List<SelectItem> commodityCriteria;
-	
-	
+
 	private String segmentCode;
 	private String familyCode;
 	private String classCode;
 	private String commodityCode;
-	
+
 	private String segmentTitle;
 	private String familyTitle;
 	private String classTitle;
 	private String commodityTitle;
-	
-	
-	
-	
+
 	private String brandCode;
 	private String typeCode;
 	private String colorCode;
 	private String measurementCode;
-	
+
 	private CmItem editItem;
 	private CmItem deleteItem;
-	
+
 	private String editTypeName;
 	private String editColorName;
 	private String editMeasurementName;
 	private String editBrandName;
-	
+
 	private List<CmUnspsc> unspscPopUpList;
-	
+
 	private String popUpUnspscCode;
 	private String popUpUnspscTitle;
-	
+
 	private List<CmUnspsc> recommendUnspscList;
-	
+
 	private CmUnspsc autoCompleteUnspscCode;
-	
+
 	private List<ExtensionCodeVO> extensionVoList;
 	private ExtensionCodeVO[] selectedExtensionVO;
-	
+
 	private Object[] selectedObject;
-	
-	
-	
-	
-	
+	private List<VCmPendingCodifiedItem> viewPendingCodifiedItemList;
+	private VCmPendingCodifiedItem selectedVPendingCodifiedItem;
+
 	public Object[] getSelectedObject() {
 		return selectedObject;
 	}
@@ -119,7 +129,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<ExtensionCodeVO> getExtensionVoList() {
-		if(extensionVoList==null)
+		if (extensionVoList == null)
 			extensionVoList = new ArrayList<ExtensionCodeVO>();
 		return extensionVoList;
 	}
@@ -129,7 +139,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getAutoCompleteUnspscCode() {
-		if(autoCompleteUnspscCode==null)
+		if (autoCompleteUnspscCode == null)
 			autoCompleteUnspscCode = new CmUnspsc();
 		return autoCompleteUnspscCode;
 	}
@@ -137,10 +147,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setAutoCompleteUnspscCode(CmUnspsc autoCompleteUnspscCode) {
 		this.autoCompleteUnspscCode = autoCompleteUnspscCode;
 	}
-	
 
 	public List<CmUnspsc> getRecommendUnspscList() {
-		if(recommendUnspscList==null)
+		if (recommendUnspscList == null)
 			recommendUnspscList = new ArrayList<CmUnspsc>();
 		return recommendUnspscList;
 	}
@@ -166,7 +175,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getUnspscPopUpList() {
-		if(unspscPopUpList==null)
+		if (unspscPopUpList == null)
 			unspscPopUpList = new ArrayList<CmUnspsc>();
 		return unspscPopUpList;
 	}
@@ -287,10 +296,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityCode = commodityCode;
 	}
 
-	
-
 	public List<SelectItem> getSegmentCriteria() {
-		if(segmentCriteria==null)
+		if (segmentCriteria == null)
 			segmentCriteria = new ArrayList<SelectItem>();
 		return segmentCriteria;
 	}
@@ -300,7 +307,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getFamilyCriteria() {
-		if(familyCriteria==null)
+		if (familyCriteria == null)
 			familyCriteria = new ArrayList<SelectItem>();
 		return familyCriteria;
 	}
@@ -310,7 +317,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getClassCriteria() {
-		if(classCriteria==null)
+		if (classCriteria == null)
 			classCriteria = new ArrayList<SelectItem>();
 		return classCriteria;
 	}
@@ -320,7 +327,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getCommodityCriteria() {
-		if(commodityCriteria==null)
+		if (commodityCriteria == null)
 			commodityCriteria = new ArrayList<SelectItem>();
 		return commodityCriteria;
 	}
@@ -330,8 +337,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getSegmentList() {
-		if(segmentList==null)
-			segmentList= new ArrayList<CmUnspsc>();
+		if (segmentList == null)
+			segmentList = new ArrayList<CmUnspsc>();
 		return segmentList;
 	}
 
@@ -340,8 +347,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getFamilyList() {
-		if(familyList==null)
-			familyList= new ArrayList<CmUnspsc>();
+		if (familyList == null)
+			familyList = new ArrayList<CmUnspsc>();
 		return familyList;
 	}
 
@@ -350,7 +357,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getClassList() {
-		if(classList==null)
+		if (classList == null)
 			classList = new ArrayList<CmUnspsc>();
 		return classList;
 	}
@@ -360,8 +367,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getCommodityList() {
-		if(commodityList==null)
-			commodityList= new ArrayList<CmUnspsc>();
+		if (commodityList == null)
+			commodityList = new ArrayList<CmUnspsc>();
 		return commodityList;
 	}
 
@@ -370,7 +377,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmUnspsc> getContractedItem() {
-		if(contractedItem==null)
+		if (contractedItem == null)
 			contractedItem = new ArrayList<CmUnspsc>();
 		return contractedItem;
 	}
@@ -387,7 +394,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.selectedItems = selectedItems;
 	}
 
-
 	public CmItem getSelectedItem() {
 		return selectedItem;
 	}
@@ -397,7 +403,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getColorCriteria() {
-		if(colorCriteria==null)
+		if (colorCriteria == null)
 			colorCriteria = new ArrayList<SelectItem>();
 		return colorCriteria;
 	}
@@ -407,7 +413,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getBrandCriteria() {
-		if(brandCriteria==null)
+		if (brandCriteria == null)
 			brandCriteria = new ArrayList<SelectItem>();
 		return brandCriteria;
 	}
@@ -418,7 +424,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getMeasurementCriteria() {
-		if(measurementCriteria==null)
+		if (measurementCriteria == null)
 			measurementCriteria = new ArrayList<SelectItem>();
 		return measurementCriteria;
 	}
@@ -428,7 +434,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getTypeCriteria() {
-		if(typeCriteria==null)
+		if (typeCriteria == null)
 			typeCriteria = new ArrayList<SelectItem>();
 		return typeCriteria;
 	}
@@ -436,8 +442,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTypeCriteria(List<SelectItem> typeCriteria) {
 		this.typeCriteria = typeCriteria;
 	}
-
-
 
 	public String getUnspscCode() {
 		return unspscCode;
@@ -472,16 +476,17 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedUNSPSCObj() {
-		if(selectedUNSPSCObj==null)
+		if (selectedUNSPSCObj == null)
 			selectedUNSPSCObj = new CmUnspsc();
 		return selectedUNSPSCObj;
 	}
 
 	public void setSelectedUNSPSCObj(CmUnspsc selectedUNSPSCObj) {
 		this.selectedUNSPSCObj = selectedUNSPSCObj;
-        System.out.println(">>>>>>>>>>>>>>>>>> seting commidity - selectedUNSPSCObj= "+selectedUNSPSCObj);
+		System.out
+				.println(">>>>>>>>>>>>>>>>>> seting commidity - selectedUNSPSCObj= "
+						+ selectedUNSPSCObj);
 	}
-
 
 	public List<CmItem> getItemList() {
 		return itemList;
@@ -524,38 +529,41 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedLovUnspscSegment() {
-		if(selectedLovUnspscSegment == null)
+		if (selectedLovUnspscSegment == null)
 			selectedLovUnspscSegment = new CmUnspsc();
-	
+
 		return selectedLovUnspscSegment;
 	}
 
 	public void setSelectedLovUnspscSegment(CmUnspsc selectedLovUnspscSegment) {
 
 		this.selectedLovUnspscSegment = selectedLovUnspscSegment;
-		System.out.println(">>>>>>>>>>seting unspscSegment="+selectedLovUnspscSegment);
+		System.out.println(">>>>>>>>>>seting unspscSegment="
+				+ selectedLovUnspscSegment);
 	}
 
 	public CmUnspsc getSelectedLovUnspscFamily() {
-		if(selectedLovUnspscFamily == null)
+		if (selectedLovUnspscFamily == null)
 			selectedLovUnspscFamily = new CmUnspsc();
 		return selectedLovUnspscFamily;
 	}
 
 	public void setSelectedLovUnspscFamily(CmUnspsc selectedLovUnspscFamily) {
 		this.selectedLovUnspscFamily = selectedLovUnspscFamily;
-		System.out.println(">>>>>>>>>>seting selectedLovUnspscFamily="+selectedLovUnspscFamily);
+		System.out.println(">>>>>>>>>>seting selectedLovUnspscFamily="
+				+ selectedLovUnspscFamily);
 	}
 
 	public CmUnspsc getSelectedLovUnspscClass() {
-		if(selectedLovUnspscClass == null)
+		if (selectedLovUnspscClass == null)
 			selectedLovUnspscClass = new CmUnspsc();
 		return selectedLovUnspscClass;
 	}
 
 	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
 		this.selectedLovUnspscClass = selectedLovUnspscClass;
-		System.out.println(">>>>>>>>>>seting selectedLovUnspscClass="+selectedLovUnspscClass);
+		System.out.println(">>>>>>>>>>seting selectedLovUnspscClass="
+				+ selectedLovUnspscClass);
 	}
 
 	public String getExtensionCodeTemp() {
@@ -566,12 +574,192 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.extensionCodeTemp = extensionCodeTemp;
 	}
 
-	
+	public VCmPendingCodifiedItem getSelectedVPendingCodifiedItem() {
+		return selectedVPendingCodifiedItem;
+	}
 
+	public void setSelectedVPendingCodifiedItem(
+			VCmPendingCodifiedItem selectedVPendingCodifiedItem) {
+		this.selectedVPendingCodifiedItem = selectedVPendingCodifiedItem;
+	}
 
-	
+	public List<VCmPendingCodifiedItem> getViewPendingCodifiedItemList() {
+		return viewPendingCodifiedItemList;
+	}
 
+	public void setViewPendingCodifiedItemList(
+			List<VCmPendingCodifiedItem> viewPendingCodifiedItemList) {
+		this.viewPendingCodifiedItemList = viewPendingCodifiedItemList;
+	}
 
+	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new SearchPagingDataModel();
 
+	public IPagingDataModel<VCmPendingCodifiedItem> getvPendingCodifiedItemSearchDataModel() {
+		return vPendingCodifiedItemSearchDataModel;
+	}
+
+	public void setvPendingCodifiedItemSearchDataModel(
+			IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel) {
+		this.vPendingCodifiedItemSearchDataModel = vPendingCodifiedItemSearchDataModel;
+	}
+
+	private class SearchPagingDataModel extends
+			PagingDataModel<VCmPendingCodifiedItem> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchPagingDataModel() {
+			super("PendingCodifiedItemID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<VCmPendingCodifiedItem> pageChangeListener(
+				ISearchBean<VCmPendingCodifiedItem> searchBean) {
+
+			// if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)contractNoFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
+			// &&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
+			// &&districtId == null) {
+			// System.out.println("******SearchResultBean******");
+			// return new SearchResultBean();
+			// }
+
+			IPendingCodifiedItemSO viewSO = null;
+
+			try {
+
+				viewSO = (IPendingCodifiedItemSO) BusinessDelegate
+						.getInstance().getServiceObject("cm",
+								IPendingCodifiedItemSO.class);
+
+				// if
+				// (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue()))
+				// {
+				// itemNameFilterBean.setSearchField("itemName");
+				// searchBean.getDataFilterBeans().add(itemNameFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue()))
+				// {
+				// itemCodeFilterBean.setSearchField("itemCode");
+				// searchBean.getDataFilterBeans().add(itemCodeFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue()))
+				// {
+				// supplierNameFilterBean.setSearchField("companyName");
+				// searchBean.getDataFilterBeans().add(supplierNameFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue()))
+				// {
+				// contractNoFilterBean.setSearchField("contractNo");
+				// searchBean.getDataFilterBeans().add(contractNoFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue()))
+				// {
+				// circularNoFilterBean.setSearchField("circularNo");
+				// searchBean.getDataFilterBeans().add(circularNoFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue()))
+				// {
+				// epNoFilterBean.setSearchField("epNo");
+				// searchBean.getDataFilterBeans().add(epNoFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue()))
+				// {
+				// mofNoFilterBean.setSearchField("mofNo");
+				// searchBean.getDataFilterBeans().add(mofNoFilterBean);
+				// }
+				//
+				// if
+				// (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue()))
+				// {
+				// bizRegNoFilterBean.setSearchField("bizRegNo");
+				// searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
+				// }
+				//
+				// UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+				// System.out.println("bb.isRequisitioner()"+bb.isRequisitioner());
+				// if(!bb.isRequisitioner()){
+				// catTypeFilterBean.setSearchField("catType");
+				// catTypeFilterBean.setSearchValue("XC");
+				// searchBean.getDataFilterBeans().add(catTypeFilterBean);
+				// }
+				//
+				//
+				// setDistrictLs(new ArrayList<Long>());
+				// System.out.println("districtId:"+districtId);
+				// for(Long district : districtId){
+				// System.out.println("district:"+district);
+				// districtLs.add(district);
+				// }
+				//
+				// System.out.println("districtLs.size():"+districtLs.size());
+				// if(districtLs != null && districtLs.size()>0){
+				// districtFilterBean.setSearchField("districtId");
+				// districtFilterBean.setSearchValue(districtLs);
+				// searchBean.getDataFilterBeans().add(districtFilterBean);
+				// }
+				//
+				// setStateLs(new ArrayList<Long>());
+				// for(Long state : stateId){
+				// System.out.println("state:"+state);
+				// stateLs.add(state);
+				// }
+				// System.out.println("districtLs"+districtLs);
+				// if(districtLs.isEmpty()){
+				// if(stateLs!=null && stateLs.size()>0){
+				// stateFilterBean.setSearchField("stateId");
+				// stateFilterBean.setSearchValue(stateLs);
+				// searchBean.getDataFilterBeans().add(stateFilterBean);
+				//
+				// }
+				//
+				// }
+				// System.out.println("stateLs"+stateLs);
+
+				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
+				reqDTO.setViewSearchBean(searchBean);
+				FacesScopes facesScopes = new FacesScopes();
+				Long userId = facesScopes.getUserSessionBean().getUserId();
+				reqDTO.setUserId(userId);
+				PendingCodifiedItemResDTO resDTO = viewSO
+						.searchViewPendingCodifiedItems(reqDTO);
+				for (VCmPendingCodifiedItem vCmPendingItem : resDTO
+						.getViewPendingCodifiedItemList()) {
+					if (vCmPendingItem.getOrgProfileId() != null) {
+						vCmPendingItem.setPmOrgProfile(CommonMethod
+								.retrieveOrgProfile(vCmPendingItem
+										.getOrgProfileId()));
+					}
+				}
+				setViewPendingCodifiedItemList(resDTO
+						.getViewPendingCodifiedItemList());
+				System.out.println("*********after***********");
+
+				return resDTO.getViewPendingItemResultBean();
+
+			} finally {
+				viewSO = null;
+			}
+		}
+
+	}
 
 }

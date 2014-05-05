@@ -5,66 +5,69 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 
-		<p:panel>
+
+		<p:panel header="PENDING CODIFIED ITEMS" style="width: 100%;">
 
 			<p:dataTable id="documentTableID" lazy="true"
-			value="" var="" width="100%">
-
+				value="#{codificationBackingBean.managedBean.vPendingCodifiedItemSearchDataModel}"
+				rowKey="#{vPendingCodifiedItem}" var="vPendingCodifiedItem" width="100%" rowIndexVar="rowIndex">
+		     	<ac:paginator for="documentTableID"></ac:paginator>		
+		
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.no']}
 				</f:facet>
 
 					<p:commandLink
-						action="#{codificationBackingBean.goToAssignUnspsc()}">
-							QT1400000000101
+						action="#{codificationBackingBean.goToAssignUnspsc(vPendingCodifiedItem)}">
+							#{vPendingCodifiedItem.docNo}
 							</p:commandLink>
 				</p:column>
-				
+
 				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.type']}
 				   </f:facet>
-				Quotation/Tender
+					#{vPendingCodifiedItem.docType}
 			   </p:column>
 
-               <p:column>
+				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.title']}
 				   </f:facet>
-				doc title
+					#{vPendingCodifiedItem.title}
 			   </p:column>
 
-			   <p:column>
+				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.ptj']}
 				   </f:facet>
-				perjabat ...
+					#{vPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}
 			   </p:column>
-			   
-			    <p:column>
+
+				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.createdDate']}
 				   </f:facet>
-				01-april-2014
+					#{vPendingCodifiedItem.createdDate}
 			   </p:column>
-			   
-			    <p:column>
+
+				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.status']}
 				   </f:facet>
-				pending assign unspsc
+					#{codificationBackingBean.getStatusDescById(vPendingCodifiedItem.statusId)}
 			   </p:column>
-			   
+
 
 			</p:dataTable>
 
 		</p:panel>
-
 
 
 	</ui:define>

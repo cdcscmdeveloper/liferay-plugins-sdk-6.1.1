@@ -11,32 +11,38 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="contractedItemID">
+            
+            <div style="text-align: left;">
+				<p:commandButton value="Back" icon="ui-icon-prev"
+					action="#{codificationBackingBean.backToContractedItem}" />
+
+			</div>
 				
         <p:panel header="REQUEST DETAIL" toggleable="true">
 			<table width="100%;" >
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="QT8100000101"/></td>
+					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}"/></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.type']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true"></p:inputText></td>
+					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"></p:inputText></td>
 				</tr>
 				<tr>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
-					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="title..."/></td>
+					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.ptj']}"></p:outputLabel></td>
-					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="Jahabatan.."/></td>
+					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"/></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.createdDate']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="v01-april-2014"/></td>
+					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="pending assigning product code"/></td>
+					<td><p:inputText readonly="true" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
 				</tr>
 			</table>
     </p:panel>
