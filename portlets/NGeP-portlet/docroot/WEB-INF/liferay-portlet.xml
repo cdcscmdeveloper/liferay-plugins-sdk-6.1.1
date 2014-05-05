@@ -1305,8 +1305,44 @@
 			</footer-portlet-javascript>
 			<css-class-wrapper>BusinessOwner-portlet</css-class-wrapper>
 		</portlet>
-		
-	<role-mapper>
+
+		<portlet>
+			<portlet-name>Review Purchase Inquiry</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				review purchase inquiry-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
+			<portlet-name>Review Purchase In Default</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				review purchase in default-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
+			<portlet-name>Review Simple Quote</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				review simple quote-portlet
+			</css-class-wrapper>
+		</portlet>
+		<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
 	</role-mapper>

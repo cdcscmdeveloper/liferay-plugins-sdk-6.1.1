@@ -90,9 +90,12 @@
             <portlet id="PurchaseInquiry"/>
             <portlet id="Simple Quote"></portlet>
             <portlet id="Supplier View"></portlet>
-           <portlet id="SpecCommitteMaintanance"></portlet>
-           <portlet id="QTApproval"></portlet>
+            <portlet id="SpecCommitteMaintanance"></portlet>
+            <portlet id="QTApproval"></portlet>
             <portlet id="BusinessOwner"></portlet>
+            <portlet id="Review Purchase Inquiry"></portlet>
+		    <portlet id="Review Purchase In Default"></portlet>
+		    <portlet id="Review Simple Quote"></portlet>
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -139,6 +142,7 @@
 		<portlet id="supplierUserActivation"></portlet>
 
 		<portlet id="UserProfileMaintenance"></portlet>
+		
 	</category>
 
 	<category name="Template">
