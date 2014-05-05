@@ -18,13 +18,13 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
 	</p:column>
-	<p:column style="width:160px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
 		<f:facet name="footer">
 			<p:inputText style="width:80%;" value="#{templateSpecBean.specMaster.specTotal}" dir="rtl" disabled="true" rendered="#{isSpecTypeFinancial}" />
 			<p:spacer width="16%" />
 		</f:facet>
 		
-		<p:inputText style="min-width:0px !important;width:80%;" rendered="#{isQuestionTypeItem}" disabled="true" />
+		<p:inputText style="min-width:0px !important;width:75%;" rendered="#{isQuestionTypeItem}" disabled="true" />
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
 			oncomplete="scoringSetPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
@@ -32,8 +32,14 @@
 		</p:commandButton>
 	</p:column>
 	<p:column style="width:80px;" rendered="#{isEstCostReq}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clEstimatedCost}" required="true">
+		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.tplSpecEstimations[0].estimatedCost}" required="true" rendered="#{isPriceTypeStandard}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+			oncomplete="estimationPopup.show();"
+			partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
+			rendered="#{!isPriceTypeStandard}">
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+		</p:commandButton>
 	</p:column>
 </ui:composition>

@@ -9,7 +9,6 @@
 		<cc:attribute name="title" default="#{lbl['lbl.tpl.spec.maintenance.content']}" />
 		<cc:attribute name="templateSpecBean" />
 		<cc:attribute name="scrollWidth" default="1215" />
-		<cc:attribute name="isEstCostReq" type="java.lang.Boolean" default="true" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -17,7 +16,6 @@
 		<ui:param name="title" value="#{cc.attrs.title}" />
 		<ui:param name="templateSpecBean" value="#{cc.attrs.templateSpecBean}" />
 		<ui:param name="scrollWidth" value="#{cc.attrs.scrollWidth}" />
-		<ui:param name="isEstCostReq" value="#{cc.attrs.isEstCostReq}" />
 		
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		

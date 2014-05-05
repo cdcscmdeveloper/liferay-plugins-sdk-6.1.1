@@ -32,11 +32,16 @@
 			<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
 			<ui:param name="isSpecTypeTechnical" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeTechnical}" />
 			<ui:param name="isSpecTypeFinancial" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeFinancial}" />
+			<ui:param name="isEstCostReq" value="#{templateSpecBean.specMaster.estCostReq}" />
+			<ui:param name="isFulfilmentTypeReq" value="#{templateSpecBean.specMaster.fulfilTypeReq}" />
+			<ui:param name="isDeliveryTermReq" value="#{templateSpecBean.specMaster.deliveryTermReq}" />
+			<ui:param name="isSpecificationReq" value="#{templateSpecBean.specMaster.specificationReq}" />
+			<ui:param name="isScoringReq" value="#{templateSpecBean.specMaster.scoringReq}" />
 			<ui:param name="isDurationByItem" value="#{templateSpecBean.specMaster.durationByItem}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
-				<c:if test="#{isContentTypeQuestion and isSpecTypeTechnical}">
+				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
 					<ac:lovPopup />
 				</c:if>
 				
@@ -45,15 +50,18 @@
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
-					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
+					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
+					<ui:param name="isPriceTypeAllStandard" value="#{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
 					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+					<ui:param name="isUOMHours" value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
+					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
 					
-					<c:if test="#{isContentTypeQuestion and isSpecTypeTechnical}">
+					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
-					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial}">
+					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 						<ui:decorate template="specColumnQuestionFinancial.xhtml" />
 					</c:if>
@@ -81,7 +89,7 @@
 					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
-					<ui:param name="isScoring" value="#{question.scoring}" />
+					<ui:param name="isScoring" value="#{question.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}" />
 					
 					<c:if test="#{isContentTypeAnswer}">
 						<ui:decorate template="specColumnAnswer.xhtml" />
@@ -94,18 +102,19 @@
 			</c:if>
 		</p:panel>
 
-		<p:dialog header="Delete Confirmation" widgetVar="pp2" showEffect="fade" hideEffect="fade"
-			 modal="true" height="100" width="350" resizable="false" >
-			<f:facet name="header">
-				<h:outputLabel value="Delete Confirmation" />
-			</f:facet>
+		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.tpl.spec.content.delete.confirmation.title']}" widgetVar="delConfirmPopup" modal="true" height="100" width="350" resizable="false" >
+			 
 			<h:outputText value="Confirm to delete?" />
 			<br />
 			<h:outputText value="All child nodes belong to this node will be deleted as well" />
 			<br />
-			<p:commandButton value="Ok" oncomplete="pp2.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
-				partialSubmit="true" pprocess="@this,spg" update="spg" />
-			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
+			<br />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept" 
+					oncomplete="delConfirmPopup.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
+					partialSubmit="true" pprocess="@this,spg" update="spg" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" oncomplete="delConfirmPopup.hide();return false" />
+			</div>
 		</p:dialog>
 		
 		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="tierQtyPopup" modal="true" width="450" height="350">
@@ -119,17 +128,20 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 						icon="ui-icon-accept"
-						action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="tierQtyPnl"
 						update="tierQtyTbl"  
-						oncomplete="tierQtyPopup.hide()"  />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()" />
+						oncomplete="tierQtyPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
 				</div>			
 			</c:if>
 		</p:dialog>
 
-		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="scoringSetPopup" modal="true" width="550" height="410">
+		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="scoringSetPopup" modal="true" width="550" height="410" rendered="#{isScoringReq}">
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:370px;">
 					<h:panelGroup id="scoreSettPnl">
@@ -140,12 +152,39 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 						icon="ui-icon-accept"
-						action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="scoreSettPnl" 
-						oncomplete="scoringSetPopup.hide()"  />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()" />
+						oncomplete="scoringSetPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
 				</div>
+			</c:if>
+		</p:dialog>
+		
+		<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="estimationPopup" modal="true" width="450" height="290">
+			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+				<div style="height:250px;">
+					<h:panelGroup id="estimationPnl">
+						<ui:include src="estimationCost.xhtml" />
+					</h:panelGroup>
+				</div>
+				
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+						icon="ui-icon-accept"
+						partialSubmit="true"
+						process="estimationPnl"
+						update="estimationTbl"  
+						oncomplete="estimationPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="estimationPopup.hide()">
+						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+					</p:commandButton>
+				</div>			
 			</c:if>
 		</p:dialog>
 

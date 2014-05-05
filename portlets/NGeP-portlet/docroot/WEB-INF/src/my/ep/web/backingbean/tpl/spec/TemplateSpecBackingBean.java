@@ -23,8 +23,10 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -35,18 +37,24 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -245,25 +253,34 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			newQuestion.setAnswerTypeCode(resDTO.getPmParameter());
 			
 			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-			reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
-			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			newQuestion.setClFulfilmentTypeCode(resDTO.getPmParameter());
-			
-			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-			reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
-			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
-			
-			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
 			reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
 			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			newQuestion.setScoreTypeCode(resDTO.getPmParameter());
 			
-			PmUom uom = new PmUom();
-			newQuestion.setClUom(uom);
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
+				reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				newQuestion.setClFulfilmentTypeCode(resDTO.getPmParameter());
+				
+				reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+				reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
+				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+				
+				reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
+				reqDTO.setParameterCode(ParameterConst.DELIVERY_TERM_DAYS);
+				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				newQuestion.setClDeliveryTermTypeCode(resDTO.getPmParameter());
+				
+				PmUom uom = new PmUom();
+				newQuestion.setClUom(uom);	
+			}
+			
 			questionList.add(row + 1, newQuestion);
 			for(int i = row + 1; i < questionList.size(); i++) {
 				TplSpecQuestion question = questionList.get(i);
@@ -389,6 +406,19 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+			
+			List<TplSpecEstimation> specEstimations = null;
+			if (isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+				specEstimations = new ArrayList<TplSpecEstimation>();
+				
+				TplSpecEstimation specEstimation = new TplSpecEstimation();
+				specEstimation.setTplSpecQuestion(specQuestion);
+				
+				specEstimations.add(specEstimation);
+			}
+			
+			specQuestion.setTplSpecTierQties(null);
+			specQuestion.setTplSpecEstimations(specEstimations);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -444,6 +474,25 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
+	public void deliveryTermChange(TplSpecQuestion specQuestion) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = specQuestion.getClDeliveryTermTypeCode().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specQuestion.setClDeliveryTermTypeCode(resDTO.getPmParameter());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			parameterSO = null;
+		}
+		
+	}
+	
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean, TplSpecAnswer specAnswer, boolean isItemTypeService) {
 		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
 		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
@@ -487,6 +536,63 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 	
+	public void estimationPopupAction(TplSpecQuestion tplSpecQuestion) {
+		debugLogger("estimationPopupAction");
+		
+		List<TplSpecEstimation> specEstimations = tplSpecQuestion.getTplSpecEstimations();
+		if (specEstimations == null || specEstimations.size() == 0) {
+			List<TplSpecZoneDtl> specZoneDtls = null;
+			TplSpecZone specZone = tplSpecQuestion.getTplSpecMaster().getTplSpecZone();
+			
+			specEstimations = new ArrayList<TplSpecEstimation>();
+			
+			if (specZone != null) {
+				ISpecZoneLocSO specZoneLocSO;
+				try {
+					specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
+					
+					SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+					reqDTO.setDocType(specZone.getDocType());
+					reqDTO.setDocId(specZone.getDocId());
+					
+					// Get zone details list from db.
+					SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlsByDocIdNType(reqDTO);
+					
+					specZoneDtls = resDTO.getZonesList();
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new EpException(e.getMessage());
+				} finally {
+					specZoneLocSO = null;
+				}	
+			}
+			
+			for (int zoneRow = 0; zoneRow < (specZoneDtls == null || specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
+				if (isPriceTypeTier(tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {		
+					for (TplSpecTierQty specTierQty : tplSpecQuestion.getTplSpecTierQties()) {
+						TplSpecEstimation specEstimation = new TplSpecEstimation();
+						
+						if (specZoneDtls != null && specZoneDtls.size() > 0) {
+							specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));	
+						}
+						specEstimation.setTplSpecQuestion(tplSpecQuestion);
+						specEstimation.setTplSpecTierQty(specTierQty);
+						specEstimations.add(specEstimation);
+					}
+				} else {
+					if (specZoneDtls != null && specZoneDtls.size() > 0) {
+						TplSpecEstimation specEstimation = new TplSpecEstimation();
+						specEstimation.setTplSpecQuestion(tplSpecQuestion);
+						specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
+						
+						specEstimations.add(specEstimation);
+					}
+				}
+			}
+			tplSpecQuestion.setTplSpecEstimations(specEstimations);
+		}
+	}
+	
 	public void addTierQtyAction(TplSpecQuestion tplSpecQuestion) {
 		debugLogger("addTierQtyAction");
 		
@@ -497,12 +603,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		tplSpecTierQties.add(new TplSpecTierQty());
-	}
-	
-	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
-		debugLogger("tierQtyOkAction");
 		
-		templateSpecBean.setSelectedSpecQuestion(null);
+		tplSpecQuestion.setTplSpecEstimations(null);
 	}
 	
 	public void addScoringAction(TplSpecQuestion tplSpecQuestion){
@@ -515,12 +617,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		tplSpecScorings.add(new TplSpecScoring());
-	}
-	
-	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
-		debugLogger("scoringOkAction");
-		
-		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
@@ -536,6 +632,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		System.out.println("specTotal: " + specTotal);
 		
 		templateSpecBean.getSpecMaster().setSpecTotal(specTotal);
+	}
+	
+	private boolean isPriceTypeStandard(String priceType) {
+		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION.equals(priceType);
 	}
 	
 	private boolean isPriceTypeTier(String priceType) {

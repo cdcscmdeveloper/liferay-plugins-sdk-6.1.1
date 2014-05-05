@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 	<p:column style="width:70px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-		<h:outputText value="#{question.clEstimatedCost}">
+		<h:outputText value="#{question.tplSpecEstimations[0].estimatedCost}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
