@@ -22,7 +22,7 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" >
-				 <p:ajax event="keyup" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:inputText>
 			</p:column>
 			<p:column>
@@ -30,7 +30,7 @@
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
 				<p:inputText id="fromQty" value="#{price.fromQty}" size="5" disabled="#{!price.showFlag || price.standardDisabled}">
-				 <p:ajax event="keyup" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:inputText>
 
 			</p:column>
@@ -39,7 +39,7 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{price.toQty}" size="5" disabled="#{price.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, errorLink" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, deleteLink, errorLink" />
                 </p:inputText>
             </p:column>
 			<p:column>
@@ -49,8 +49,8 @@
 				<p:calendar value="#{price.startDate}" showOn="button"
 					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
-				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 
 			</p:column>
@@ -61,8 +61,8 @@
 				<p:calendar value="#{price.endDate}" showOn="button"
 					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
-				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 			</p:column>
 
