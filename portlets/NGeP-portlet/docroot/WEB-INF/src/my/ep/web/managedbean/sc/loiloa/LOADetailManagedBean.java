@@ -10,8 +10,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCurrency;
-import my.ep.persistence.entity.sc.quationtender.ScBondDtl;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -50,9 +50,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String status;
 
 
-	private ScBondDtl scBondDtl;
-	private List<ScBondDtl> scBondDtlList;
-	private List<ScBondDtl> selectScBondDtlList;
+	private ScPerformanceBond scBondDtl;
+	private List<ScPerformanceBond> scBondDtlList;
+	private List<ScPerformanceBond> selectScBondDtlList;
 	
 	private List<ScQtItem> scQtItemList;
 	private PmCurrency pmCurrency;
@@ -93,14 +93,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scBondDtl
 	 */
-	public ScBondDtl getScBondDtl() {
+	public ScPerformanceBond getScBondDtl() {
 		return scBondDtl;
 	}
 
 	/**
 	 * @param scBondDtl the scBondDtl to set
 	 */
-	public void setScBondDtl(ScBondDtl scBondDtl) {
+	public void setScBondDtl(ScPerformanceBond scBondDtl) {
 		this.scBondDtl = scBondDtl;
 	}
 
@@ -277,14 +277,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectScBondDtlList
 	 */
-	public List<ScBondDtl> getSelectScBondDtlList() {
+	public List<ScPerformanceBond> getSelectScBondDtlList() {
 		return selectScBondDtlList;
 	}
 
 	/**
 	 * @param selectScBondDtlList the selectScBondDtlList to set
 	 */
-	public void setSelectScBondDtlList(List<ScBondDtl> selectScBondDtlList) {
+	public void setSelectScBondDtlList(List<ScPerformanceBond> selectScBondDtlList) {
 		this.selectScBondDtlList = selectScBondDtlList;
 	}
 
@@ -376,7 +376,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scBondDtlList
 	 */
-	public List<ScBondDtl> getScBondDtlList() {
+	public List<ScPerformanceBond> getScBondDtlList() {
 		return scBondDtlList;
 	}
 
@@ -384,7 +384,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 * @param scBondDtlList
 	 *            the scBondDtlList to set
 	 */
-	public void setScBondDtlList(List<ScBondDtl> scBondDtlList) {
+	public void setScBondDtlList(List<ScPerformanceBond> scBondDtlList) {
 		this.scBondDtlList = scBondDtlList;
 	}
 

@@ -8,14 +8,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.quationtender.ScLoi;
-import my.ep.persistence.entity.sc.quationtender.ScNegoLocation;
-import my.ep.persistence.entity.sc.quationtender.ScNegoTerm;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
+import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
+import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
-import my.ep.persistence.entity.sc.quationtender.ScTermDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -40,12 +40,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private SmMofAccount smMofAccount;
 
 	
-	private ScNegoLocation scNegoLocation;
-	private List<ScNegoLocation> negoLocationList;
-	private List<ScNegoLocation> selectedNegoLocationList;
-	private ScNegoTerm scNegoTerm;
-	private List<ScNegoTerm> negoTermsList;
-	private List<ScNegoTerm> selectedNegoTermsList;
+	private ScLoiNegoLocation scNegoLocation;
+	private List<ScLoiNegoLocation> negoLocationList;
+	private List<ScLoiNegoLocation> selectedNegoLocationList;
+	private ScLoiTerm scNegoTerm;
+	private List<ScLoiTerm> negoTermsList;
+	private List<ScLoiTerm> selectedNegoTermsList;
 	private ScTermDesc scTermDesc;
 	private List<ScTermDesc> scTermDescList;
 	private List<ScTermDesc> selectedCheckDetails;
@@ -116,21 +116,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectedNegoTermsList
 	 */
-	public List<ScNegoTerm> getSelectedNegoTermsList() {
+	public List<ScLoiTerm> getSelectedNegoTermsList() {
 		return selectedNegoTermsList;
 	}
 
 	/**
 	 * @param selectedNegoTermsList the selectedNegoTermsList to set
 	 */
-	public void setSelectedNegoTermsList(List<ScNegoTerm> selectedNegoTermsList) {
+	public void setSelectedNegoTermsList(List<ScLoiTerm> selectedNegoTermsList) {
 		this.selectedNegoTermsList = selectedNegoTermsList;
 	}
 
 	/**
 	 * @return the selectedNegoLocationList
 	 */
-	public List<ScNegoLocation> getSelectedNegoLocationList() {
+	public List<ScLoiNegoLocation> getSelectedNegoLocationList() {
 		return selectedNegoLocationList;
 	}
 
@@ -138,7 +138,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param selectedNegoLocationList the selectedNegoLocationList to set
 	 */
 	public void setSelectedNegoLocationList(
-			List<ScNegoLocation> selectedNegoLocationList) {
+			List<ScLoiNegoLocation> selectedNegoLocationList) {
 		this.selectedNegoLocationList = selectedNegoLocationList;
 	}
 
@@ -348,7 +348,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scNegoTerm
 	 */
-	public ScNegoTerm getScNegoTerm() {
+	public ScLoiTerm getScNegoTerm() {
 		return scNegoTerm;
 	}
 
@@ -356,14 +356,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param scNegoTerm
 	 *            the scNegoTerm to set
 	 */
-	public void setScNegoTerm(ScNegoTerm scNegoTerm) {
+	public void setScNegoTerm(ScLoiTerm scNegoTerm) {
 		this.scNegoTerm = scNegoTerm;
 	}
 
 	/**
 	 * @return the negoTermsList
 	 */
-	public List<ScNegoTerm> getNegoTermsList() {
+	public List<ScLoiTerm> getNegoTermsList() {
 		return negoTermsList;
 	}
 
@@ -371,14 +371,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param negoTermsList
 	 *            the negoTermsList to set
 	 */
-	public void setNegoTermsList(List<ScNegoTerm> negoTermsList) {
+	public void setNegoTermsList(List<ScLoiTerm> negoTermsList) {
 		this.negoTermsList = negoTermsList;
 	}
 
 	/**
 	 * @return the negoLocationList
 	 */
-	public List<ScNegoLocation> getNegoLocationList() {
+	public List<ScLoiNegoLocation> getNegoLocationList() {
 		return negoLocationList;
 	}
 
@@ -386,14 +386,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param negoLocationList
 	 *            the negoLocationList to set
 	 */
-	public void setNegoLocationList(List<ScNegoLocation> negoLocationList) {
+	public void setNegoLocationList(List<ScLoiNegoLocation> negoLocationList) {
 		this.negoLocationList = negoLocationList;
 	}
 
 	/**
 	 * @return the scNegoLocation
 	 */
-	public ScNegoLocation getScNegoLocation() {
+	public ScLoiNegoLocation getScNegoLocation() {
 		return scNegoLocation;
 	}
 
@@ -401,7 +401,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param scNegoLocation
 	 *            the scNegoLocation to set
 	 */
-	public void setScNegoLocation(ScNegoLocation scNegoLocation) {
+	public void setScNegoLocation(ScLoiNegoLocation scNegoLocation) {
 		this.scNegoLocation = scNegoLocation;
 	}
 

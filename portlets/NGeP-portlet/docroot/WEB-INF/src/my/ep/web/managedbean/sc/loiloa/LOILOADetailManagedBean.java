@@ -6,8 +6,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -115,35 +115,9 @@ public class LOILOADetailManagedBean extends BaseManagedBean {
 		this.pmUser = pmUser;
 	}
 
-	/**
-	 * @return the scLoi
-	 */
-	public ScLoi getScLoi() {
-		return scLoi;
-	}
+	
 
-	/**
-	 * @param scLoi
-	 *            the scLoi to set
-	 */
-	public void setScLoi(ScLoi scLoi) {
-		this.scLoi = scLoi;
-	}
-
-	/**
-	 * @return the scLoa
-	 */
-	public ScLoa getScLoa() {
-		return scLoa;
-	}
-
-	/**
-	 * @param scLoa
-	 *            the scLoa to set
-	 */
-	public void setScLoa(ScLoa scLoa) {
-		this.scLoa = scLoa;
-	}
+	
 
 	/**
 	 * @return the smMofAccount
