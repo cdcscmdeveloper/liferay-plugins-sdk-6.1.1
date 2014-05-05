@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
@@ -74,6 +73,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private List<SmSupplier> smSuppliers;
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
+	private String ptjName;
 
 	private String priceTypeCode;
 	private boolean justTypeOption;
@@ -113,6 +113,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private IPagingDataModel<ScQuote> searchQuoteDataModel;
 	private	String	procurementType;
 	private	Integer	isPanel;
+	private Integer isZonal;
 
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
@@ -152,8 +153,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 
 	private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel();
-   
-	@PostConstruct
+
 	public void searchCloneItemSpec(){
 		scQuoteDataModel.reloadData();
 	}
@@ -162,7 +162,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		private static final long serialVersionUID = 1L;
 
 		public ScQuotePagingDataModel() {
-			super("scQuoteDataModel");
+			super("");
 		}
 
 		@Override
@@ -1200,6 +1200,30 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSelectedPanelSuppliers(
 			List<ScQuoteSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
+	}
+	/**
+	 * @return the ptjName
+	 */
+	public String getPtjName() {
+		return ptjName;
+	}
+	/**
+	 * @param ptjName the ptjName to set
+	 */
+	public void setPtjName(String ptjName) {
+		this.ptjName = ptjName;
+	}
+	/**
+	 * @return the isZonal
+	 */
+	public Integer getIsZonal() {
+		return isZonal;
+	}
+	/**
+	 * @param isZonal the isZonal to set
+	 */
+	public void setIsZonal(Integer isZonal) {
+		this.isZonal = isZonal;
 	}
 
 }
