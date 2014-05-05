@@ -32,14 +32,14 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.quationtender.ScLoi;
-import my.ep.persistence.entity.sc.quationtender.ScNegoLocation;
-import my.ep.persistence.entity.sc.quationtender.ScNegoTerm;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
+import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
+import my.ep.persistence.entity.sc.loaloi.ScTerm;
+import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtItem;
-import my.ep.persistence.entity.sc.quationtender.ScTerm;
-import my.ep.persistence.entity.sc.quationtender.ScTermDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
@@ -137,12 +137,12 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 	public void addNegotiationLocation() {
 		debugLogger("addNegotiationLocation");
-		ScNegoLocation negoLocation = new ScNegoLocation();
+		ScLoiNegoLocation negoLocation = new ScLoiNegoLocation();
 		try {
-			List<ScNegoLocation> negoLocationList = getManagedBean()
+			List<ScLoiNegoLocation> negoLocationList = getManagedBean()
 					.getNegoLocationList();
 			if (null == negoLocationList) {
-				negoLocationList = new ArrayList<ScNegoLocation>();
+				negoLocationList = new ArrayList<ScLoiNegoLocation>();
 			}
 			negoLocation.setScLoi(getManagedBean().getScLoi());
 			negoLocationList.add(negoLocation);
@@ -155,13 +155,13 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 	public void addNegotiationTerm() {
 		debugLogger("addNegotiationTerm");
-		ScNegoTerm negoTerm = new ScNegoTerm();
+		ScLoiTerm negoTerm = new ScLoiTerm();
 		ScTerm scTerm = new ScTerm();
 		try {
-			List<ScNegoTerm> negoTermsList = getManagedBean()
+			List<ScLoiTerm> negoTermsList = getManagedBean()
 					.getNegoTermsList();
 			if (null == negoTermsList) {
-				negoTermsList = new ArrayList<ScNegoTerm>();
+				negoTermsList = new ArrayList<ScLoiTerm>();
 			}
 			List<ScTermDesc> scTermDescList = getManagedBean()
 					.getSelectedCheckDetails();
@@ -206,12 +206,12 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 	public void addPredefinedTerms() {
 		debugLogger("addPredefinedTerms");
 
-		ScNegoTerm scNegoTerm = new ScNegoTerm();
+		ScLoiTerm scNegoTerm = new ScLoiTerm();
 		ScTerm scTerm = new ScTerm();
-		List<ScNegoTerm> list = getManagedBean().getNegoTermsList();
+		List<ScLoiTerm> list = getManagedBean().getNegoTermsList();
 
 		if (list == null) {
-			list = new ArrayList<ScNegoTerm>();
+			list = new ArrayList<ScLoiTerm>();
 		}
 		List<ScTermDesc> scTermDescList = getManagedBean()
 				.getSelectedCheckDetails();
@@ -360,21 +360,13 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
 
-				System.out.println("LOI Status : "
-						+ getManagedBean().getScLoi().getPmStatus()
-								.getStatusId());
+				
 
 				getManagedBean().setQt(scQt);
 				getManagedBean().getScLoi().setBrandNew(false);
 				populateParentOrgProfile(getManagedBean().getQt());
 
-				System.out.println(" Qtn/Tender No : "
-						+ getManagedBean().getQt().getQtNo());
 				
-				System.out.println("Status : "
-						+ getManagedBean().getScLoi().getPmStatus()
-								.getPmStatusDescs().get(0).getStatusName());
-
 				/*List<ScQtZoneCriteria> zonelist = scQt.getScQtCriterias()
 						.getScQtZoneCriterias();*/
 				
@@ -387,11 +379,11 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 				//getManagedBean().setZonelist(zonelist);
 
-				List<ScNegoLocation> negoLocationList = resDTO
+				List<ScLoiNegoLocation> negoLocationList = resDTO
 						.getNegoLocResultBean().getResultList();
 				System.out.println("list: " + negoLocationList.size());
 
-				List<ScNegoTerm> negoTermList = resDTO.getNegoTermResultBean()
+				List<ScLoiTerm> negoTermList = resDTO.getNegoTermResultBean()
 						.getResultList();
 				System.out.println("negoTermlist: " + negoTermList.size());
 
@@ -399,10 +391,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				getManagedBean().setNegoTermsList(negoTermList);
 
 				getManagedBean().setApproverNames(getApproverNames());
-				System.out.println("Approver User Id : "
-						+ getManagedBean().getScLoi().getApproverUser()
-								.getUserId());
-
+				
 			} else {
 
 				Calendar c = Calendar.getInstance();
@@ -432,10 +421,10 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				
 				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
-				getManagedBean().getScLoi().setSmSupplier(
+				/*getManagedBean().getScLoi().setSmSupplier(
 						getManagedBean().getScQtEvaluationResult()
 								.getScQtProposal()
-								.getScQtSupplier().getSmSupplier());
+								.getScQtSupplier().getSmSupplier());*/
 
 				/*getManagedBean().getScLoi().setSupplierName(
 						getManagedBean().getScQtProposalRanking()
@@ -443,10 +432,10 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 								.getScQtSupplier().getSmSupplier()
 								.getSupplierName());*/
 
-				getManagedBean().getScLoi().setDocType(
+				/*getManagedBean().getScLoi().setDocType(
 						LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 				getManagedBean().getScLoi().setDocId(id);
-				getManagedBean().getScLoi().setLoiDuration(14);
+				getManagedBean().getScLoi().setLoiDuration(14);*/
 				getManagedBean().getScLoi().setLoiNo("12345");
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
@@ -455,12 +444,9 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				showOfficerDetails();
 
 				PmUser pmUser = new PmUser();
-				getManagedBean().getScLoi().setApproverUser(pmUser);
+				//getManagedBean().getScLoi().setApproverUser(pmUser);
 				getManagedBean().setApproverNames(getApproverNames());
-				System.out.println("Approver User Id : "
-						+ getManagedBean().getScLoi().getApproverUser()
-								.getUserId());
-
+			
 				/*
 				 * getManagedBean().setScQtItemList(null);
 				 * getManagedBean().setZonelist(null);
@@ -500,9 +486,9 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		try {
 			PmUser user = new FacesScopes().getUserSessionBean();
 			getManagedBean().setPmUser(user);
-			getManagedBean().getScLoi().setOfficierName(user.getUserName());
-			getManagedBean().getScLoi().setOfficerDesignation(
-					user.getDesignation());
+			//getManagedBean().getScLoi().setOfficierName(user.getUserName());
+			/*getManagedBean().getScLoi().setOfficerDesignation(
+					user.getDesignation());*/
 
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
@@ -515,14 +501,14 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 			List<PmAddressType> addList = addResDTO.getAddressTypeList();
 
-			getManagedBean().getScLoi().setOfficerAddress(
-					addList.get(0).getPmAddress().getAddress1());
+		/*	getManagedBean().getScLoi().setOfficerAddress(
+					addList.get(0).getPmAddress().getAddress1());*/
 			/*getManagedBean().getScLoi().setOfficerFaxNo(
 					addList.get(0).getPmAddress().getFaxNo());
 			getManagedBean().getScLoi().setOfficerPhoneNo(
 					addList.get(0).getPmAddress().getPhoneNo());*/
-			getManagedBean().getScLoi().setOfficerEmail(
-					addList.get(0).getPmAddress().getEmail());
+		/*	getManagedBean().getScLoi().setOfficerEmail(
+					addList.get(0).getPmAddress().getEmail());*/
 
 			// getManagedBean().getScLoi().setApproverUser(user);
 
@@ -535,7 +521,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 	public void handleBranchDetailsChanged() {
 		log.info("handleBranchDetailsChanged");
 		String name = this.getManagedBean().getBranchName();
-		if (name.equalsIgnoreCase("HQ")) {
+		/*if (name.equalsIgnoreCase("HQ")) {
 			getManagedBean().getScLoi().setSupplierAddress("abcd");
 			getManagedBean().getScLoi().setSupplierPhoneNo(7324797l);
 			getManagedBean().getScLoi().setSupplierFaxNo(1234L);
@@ -558,7 +544,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 			getManagedBean().getScLoi().setSupplierContactMobil(732111l);
 			getManagedBean().getScLoi().setSupplierContactEmail(
 					"sara@gmail.com");
-		}
+		}*/
 
 	}
 
@@ -597,36 +583,33 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 			System.out.println("LOI Response Due Date : "
 					+ scLoi.getAckDueDate());
 
-			System.out
-					.println("Approver User Id : "
-							+ getManagedBean().getScLoi().getApproverUser()
-									.getUserId());
+			
 			// Setting the pm user id for LOI details
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
+			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
-
+*/
 			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
 			System.out.println("User id and Name" + user.getUserId() + "|"
 					+ user.getUserName());
-			scLoi.setApproverUser(user);
+			//scLoi.setApproverUser(user);
 
 			// Setting the pm status for LOI details
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(60000l);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			scLoi.setPmStatus(status);
+			
 
-			List<ScNegoLocation> negoLocations = this.getManagedBean()
+			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
 					.getNegoLocationList();
 			scLoi.setScNegoLocations(negoLocations);
 
-			List<ScNegoTerm> negoTerms = this.getManagedBean()
+			List<ScLoiTerm> negoTerms = this.getManagedBean()
 					.getNegoTermsList();
-			for (ScNegoTerm scNegoTerm : negoTerms) {
+			for (ScLoiTerm scNegoTerm : negoTerms) {
 				scNegoTerm.getScTerm().setTermType("I");
 				//scNegoTerm.getScTerm().getScTermDescs().get(0).setScTerm(scNegoTerm.getScTerm());
 			}

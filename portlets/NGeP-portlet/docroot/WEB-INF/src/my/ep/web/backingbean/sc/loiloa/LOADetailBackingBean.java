@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.loiloa;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,9 +34,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.quationtender.ScBondDtl;
-import my.ep.persistence.entity.sc.quationtender.ScBondDtlAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -84,12 +82,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 	public void addPerformanceBond() {
 		debugLogger("addPerformanceBond");
-		ScBondDtl scBondDtl = new ScBondDtl();
+		ScPerformanceBond scBondDtl = new ScPerformanceBond();
 		try {
 
-			List<ScBondDtl> bondDtlList = getManagedBean().getScBondDtlList();
+			List<ScPerformanceBond> bondDtlList = getManagedBean().getScBondDtlList();
 			if (null == bondDtlList) {
-				bondDtlList = new ArrayList<ScBondDtl>();
+				bondDtlList = new ArrayList<ScPerformanceBond>();
 			}
 			scBondDtl.setScLoa(getManagedBean().getScLoa());
 			bondDtlList.add(scBondDtl);
@@ -275,10 +273,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 				populateParentOrgProfile(getManagedBean().getQt());
 
-				System.out.println("Status : " +
-						getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
-				System.out.println("Award Type : " +
-						getManagedBean().getQt().getAwardType());
 				
 				PmUser user = new FacesScopes().getUserSessionBean();
 				getManagedBean().getScLoa().setCreatedBy(user.getUserId());
@@ -301,14 +295,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				getManagedBean().setScQtDeductionList(deductionList);
 
 				getManagedBean().setApproverName(getApproverNames());
-				System.out.println("Approver User Id : "
-						+ getManagedBean().getScLoa().getApproverUser()
-								.getUserId());
+				
 				getManagedBean().setContractSignerList(getContractSigners());
 
-				System.out.println("LOA Offered Price : "
-						+ getManagedBean().getScLoa().getLoaAmount());
-				if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
+				
+				/*if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
 					getManagedBean().setBondPercentage("5%");
 					getManagedBean().setPercentageBond(0.05);
 					System.out.println("Bond Percentage : "
@@ -322,7 +313,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 					System.out.println("Bond Percentage : "
 							+ getManagedBean().getPercentageBond());
 				}
-
+*/
 				
 			/*	int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
 						.intValue() / getManagedBean().getQt().getScQtSpec()
@@ -345,12 +336,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
 				PmOrgProfile orgProfile = new PmOrgProfile();
-				getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
+				//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
 
-				getManagedBean().getScLoa().setSmSupplier(
+				/*getManagedBean().getScLoa().setSmSupplier(
 						getManagedBean().getScQtEvaluationResult()
 								.getScQtProposal()
-								.getScQtSupplier().getSmSupplier());
+								.getScQtSupplier().getSmSupplier());*/
 
 				/*getManagedBean().getScLoa().setSupplierName(
 						getManagedBean().getScQtProposalRanking()
@@ -358,16 +349,16 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 								.getScQtSupplier().getSmSupplier()
 								.getSupplierName());*/
 
-				getManagedBean().getScLoa().setDocType(
+			/*	getManagedBean().getScLoa().setDocType(
 						LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-				getManagedBean().getScLoa().setDocId(id);
+				getManagedBean().getScLoa().setDocId(id);*/
 
-				getManagedBean().getScLoa().setLoaType("Standard");
+				/*getManagedBean().getScLoa().setLoaType("Standard");
 				getManagedBean().getScLoa().setLoaDuration(14);
 				getManagedBean().getScLoa().setBondDuration(30);
 				getManagedBean().getScLoa().setLoaNo("12345");
 				getManagedBean().getScLoa().setLoaAmount(
-						new BigDecimal(1000000));
+						new BigDecimal(1000000));*/
 				//getManagedBean().getScLoa().setMtoDuration(14);
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
@@ -376,13 +367,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				showOfficerDetails();
 
 				PmUser pmUser = new PmUser();
-				getManagedBean().getScLoa().setApproverUser(pmUser);
+			//	getManagedBean().getScLoa().setApproverUser(pmUser);
 				getManagedBean().setApproverName(getApproverNames());
-				System.out.println("Approver User Id : "
-						+ getManagedBean().getScLoa().getApproverUser()
-								.getUserId());
+				
 
-				getManagedBean().getScLoa().setContractSignerUser(pmUser);
+				//getManagedBean().getScLoa().setContractSignerUser(pmUser);
 				getManagedBean().setContractSignerList(getContractSigners());
 
 				getManagedBean().setScQtDeductionList(null);
@@ -402,16 +391,15 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 						.getScQtProposalEvaluate().getScQtProposal()
 						.getScQtSupplier().getSmSupplier().getSmAppl());
 
-				System.out.println("LOA Offered Price : "
-						+ getManagedBean().getScLoa().getLoaAmount());
-				if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
+				
+				if (getManagedBean().getScLoa().getLoaAmt().intValue() > 500000) {
 					getManagedBean().setBondPercentage("5%");
 					getManagedBean().setPercentageBond(0.05);
 					System.out.println("Bond Percentage : "
 							+ getManagedBean().getPercentageBond());
-				} else if (getManagedBean().getScLoa().getLoaAmount()
+				} else if (getManagedBean().getScLoa().getLoaAmt()
 						.intValue() > 200000
-						&& getManagedBean().getScLoa().getLoaAmount()
+						&& getManagedBean().getScLoa().getLoaAmt()
 								.intValue() < 500000) {
 					getManagedBean().setBondPercentage("2.5%");
 					getManagedBean().setPercentageBond(0.025);
@@ -451,13 +439,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			reqDTO.setScLoa(loa);
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveBondDtls(reqDTO);
 
-			List<ScBondDtl> bondDtl = resDTO.getBondDtls();
+			List<ScPerformanceBond> bondDtl = resDTO.getBondDtls();
 			System.out.println("Bond Details : " + bondDtl.size());
 
-			for (ScBondDtl dtl : bondDtl) {
-				System.out.println("Ref No : " + dtl.getBondRefNo());
-				System.out.println("Institution Name : "
-						+ dtl.getInstitutionName());
+			for (ScPerformanceBond dtl : bondDtl) {
+				
 			}
 
 			getManagedBean().setScBondDtlList(bondDtl);
@@ -475,9 +461,9 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		try {
 			PmUser user = new FacesScopes().getUserSessionBean();
 			getManagedBean().setPmUser(user);
-			getManagedBean().getScLoa().setOfficierName(user.getUserName());
-			getManagedBean().getScLoa().setOfficerDesignation(
-					user.getDesignation());
+		//	getManagedBean().getScLoa().setOfficierName(user.getUserName());
+		//	getManagedBean().getScLoa().setOfficerDesignation(
+				//	user.getDesignation());
 
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
@@ -490,14 +476,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 			List<PmAddressType> addList = addResDTO.getAddressTypeList();
 
-			getManagedBean().getScLoa().setOfficerAddress(
-					addList.get(0).getPmAddress().getAddress1());
+			/*getManagedBean().getScLoa().setOfficerAddress(
+					addList.get(0).getPmAddress().getAddress1());*/
 			/*getManagedBean().getScLoa().setOfficerFaxNo(
 					addList.get(0).getPmAddress().getFaxNo());
 			getManagedBean().getScLoa().setOfficerPhoneNo(
 					addList.get(0).getPmAddress().getPhoneNo());*/
-			getManagedBean().getScLoa().setOfficerEmail(
-					addList.get(0).getPmAddress().getEmail());
+			/*getManagedBean().getScLoa().setOfficerEmail(
+					addList.get(0).getPmAddress().getEmail());*/
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -508,7 +494,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
 		String name = this.getManagedBean().getBranchName();
-		if (name.equalsIgnoreCase("HQ")) {
+		/*if (name.equalsIgnoreCase("HQ")) {
 			getManagedBean().getScLoa().setSupplierAddress("abcd");
 			getManagedBean().getScLoa().setSupplierPhoneNo(7324797l);
 			getManagedBean().getScLoa().setSupplierFaxNo(1234L);
@@ -531,7 +517,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			getManagedBean().getScLoa().setSupplierContactMobil(732111l);
 			getManagedBean().getScLoa().setSupplierContactEmail(
 					"sara@gmail.com");
-		}
+		}*/
 
 	}
 
@@ -569,32 +555,29 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			System.out.println("LOA Response Due Date : "
 					+ scLoa.getAckDueDate());
 
-			System.out
-					.println("Approver User Id : "
-							+ getManagedBean().getScLoa().getApproverUser()
-									.getUserId());
+		
 			// Setting the pm user id for LOI details
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getScLoa().getApproverUser()
-					.getUserId());
+			/*userReqDTO.setUserId(getManagedBean().getScLoa().getApproverUser()
+					.getUserId());*/
 
 			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
 			System.out.println("User id and Name" + user.getUserId() + "|"
 					+ user.getUserName());
-			scLoa.setApproverUser(user);
-			scLoa.setContractSignerUser(user);
+			//scLoa.setApproverUser(user);
+			//scLoa.setContractSignerUser(user);
 
 			// Setting the pm status for LOI details
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(1l);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			scLoa.setPmStatus(status);
+			//scLoa.setPmStatus(status);
 
-			List<ScBondDtl> bondDtls = this.getManagedBean().getScBondDtlList();
-			scLoa.setScBondDtls(bondDtls);
+			List<ScPerformanceBond> bondDtls = this.getManagedBean().getScBondDtlList();
+			//scLoa.setScBondDtls(bondDtls);
 			
 			awardSupplierReqDTO.setScLoa(scLoa);
 
@@ -626,7 +609,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setOrgProfileId(1l);
-			reqDTO.setOrgType(getManagedBean().getScLoa().getContractType());
+			//reqDTO.setOrgType(getManagedBean().getScLoa().getContractType());
 			UserResDTO dto = userSO
 					.retrieveUserListByOrgProfileAndContractType(reqDTO);
 			List<PmUser> userList = dto.getUserList();
@@ -709,16 +692,16 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
-		ScBondDtl bondDtl = getManagedBean().getScBondDtl();
-		ScBondDtlAttachment attachment = bondDtl.getScBondDtlAttachment();
-		if (null == attachment) {
+		ScPerformanceBond bondDtl = getManagedBean().getScBondDtl();
+	//	ScBondDtlAttachment attachment = bondDtl.getScBondDtlAttachment();
+		/*if (null == attachment) {
 			attachment = new ScBondDtlAttachment();
 			attachment.setScBondDtl(bondDtl);
-		}
+		}*/
 
-		uploadAttachment(event.getFile(), attachment);
+		//uploadAttachment(event.getFile(), attachment);
 
-		bondDtl.setScBondDtlAttachment(attachment);
+		//bondDtl.setScBondDtlAttachment(attachment);
 
 	}
 }
