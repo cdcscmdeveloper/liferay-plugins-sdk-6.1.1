@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="docroot/WEB-INF/src"/>
 	<classpathentry kind="src" path="docroot/WEB-INF/config"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-jpa"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -26,6 +25,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmBaseClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmRemoteClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpm-schema"/>
-	<classpathentry kind="lib" path="D:/s1/NGeP-ntf.jar"/>
+	<classpathentry kind="lib" path="/NGeP-ear/EarContent/NGeP-ntf.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
