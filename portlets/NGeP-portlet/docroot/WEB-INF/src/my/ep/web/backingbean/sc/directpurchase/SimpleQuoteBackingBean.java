@@ -16,6 +16,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -27,6 +28,7 @@ import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -45,6 +47,7 @@ import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -91,12 +94,14 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
+import com.liferay.portal.util.PortalUtil;
 /**
  * 
  * @author sri
@@ -165,23 +170,19 @@ public class SimpleQuoteBackingBean extends
 		}
 		// TODO check flag for panel item or non contract item
 		if(itemPanelFlag){
-			//scQuote.setIsPanel(1);
 			getManagedBean().setIsPanel(1);
-			scQuote.setIsZonal(1);
-			scQuote.setMultipleQuote(true);
-			//getManagedBean().setScQuote(scQuote);
+			getManagedBean().setIsZonal(1);
+			scQuote.setMultipleQuote(Boolean.TRUE);
 		} else {
-			//scQuote.setIsPanel(0);
 			getManagedBean().setIsPanel(0);
-			scQuote.setIsZonal(0);
-			scQuote.setMultipleQuote(true);
-			//().setScQuote(scQuote);
+			getManagedBean().setIsZonal(0);
+			scQuote.setMultipleQuote(Boolean.TRUE);
 		}
 		// WorkFlow Status
 		List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 		ScSQWorkFlowStatus workFlowStatus = new ScSQWorkFlowStatus();
 		workFlowStatus.setQuote(scQuote);
-		PmStatus status = new PmStatus();
+		/*PmStatus status = new PmStatus();
 		status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		if (status != null) {
@@ -189,10 +190,10 @@ public class SimpleQuoteBackingBean extends
 			StatusResDTO statusResDTO = iStatusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-		}
-		workFlowStatus.setCurrent(true);
+		}*/
+		workFlowStatus.setCurrent(Boolean.TRUE);
 		workFlowStatuses.add(workFlowStatus);
-		getCurrentStatus(status.getStatusId());
+		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		scQuote.setWorkflowStatuses(workFlowStatuses);
 		scQuote.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		// Initializing Remarks
@@ -237,8 +238,6 @@ public class SimpleQuoteBackingBean extends
 						states, districts, divisions, null));*/
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
-		// TODO default value to Procurement type and duration drop down listing
-		getManagedBean().setDurationDropdown(ParameterConst.SQ_DURATION_DAY);
 		// location level by default - district 
 		getManagedBean().setLocationLevel(3);
 
@@ -278,11 +277,9 @@ public class SimpleQuoteBackingBean extends
 			quoteSupplier.setQuote(quote);
 			suppliers.add(quoteSupplier);
 			quote.setScQuoteSuppliers(suppliers);
-			
-			//TODO hard code isZonal
 			quote.setProcurementType(getManagedBean().getProcurementType());
 			quote.setIsPanel(getManagedBean().getIsPanel());
-			quote.setIsZonal(1);
+			quote.setIsZonal(getManagedBean().getIsZonal());
 			
 			//zone
 			quote.setScZones(getQuoteZones(getManagedBean().getZoneTrees(),quote));
@@ -315,6 +312,7 @@ public class SimpleQuoteBackingBean extends
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
 				quoteDoc.setSpecMaster((getManagedBean().getProductTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
 			}
@@ -324,6 +322,7 @@ public class SimpleQuoteBackingBean extends
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
 				quoteDoc.setSpecMaster((getManagedBean().getServiceTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
 			}
@@ -331,14 +330,21 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
-			reqDTO.setSubmit(false);
+			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
+				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_700025, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
 				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, "acknowledge");
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
 			}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -363,18 +369,17 @@ public class SimpleQuoteBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
-			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
-			ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 			ScQuote quote = getManagedBean().getScQuote();
+			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
+			/*ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 			quoteSupplier.setSmSupplier(getManagedBean().getCmSupplierItem().getSmSupplier());
 			quoteSupplier.setQuote(quote);
 			suppliers.add(quoteSupplier);
-			quote.setScQuoteSuppliers(suppliers);
+			quote.setScQuoteSuppliers(suppliers);*/
 			
-			//TODO TEMP
 			quote.setProcurementType(getManagedBean().getProcurementType());
 			quote.setIsPanel(getManagedBean().getIsPanel());
-			quote.setIsZonal(1);
+			quote.setIsZonal(getManagedBean().getIsZonal());
 			
 			quote.setQuoteNo(quoteSO.generateQuoteNo());
 			ScRequestItem requestItem = new ScRequestItem();
@@ -388,7 +393,7 @@ public class SimpleQuoteBackingBean extends
 			quote.setRequestNote(requestNote);
 			quote.setCreatedDate(DateUtils.getCurrentDate());
 			//zone
-			quote.setScZones(getQuoteZones(getManagedBean().getZoneTrees(),quote));
+			quote.setScZones(getQuoteZones(getManagedBean().getZoneTrees(), quote));
 			//by location
 			quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));
 			quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
@@ -420,6 +425,7 @@ public class SimpleQuoteBackingBean extends
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
 				quoteDoc.setSpecMaster((getManagedBean().getProductTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
 			}
@@ -429,6 +435,7 @@ public class SimpleQuoteBackingBean extends
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
 				quoteDoc.setSpecMaster((getManagedBean().getServiceTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
 			}
@@ -436,7 +443,7 @@ public class SimpleQuoteBackingBean extends
 			 FacesScopes facesScopes = new FacesScopes();
 			 String token = facesScopes.getBPMAuthenticationCtxToken();
 			 reqDTO.setToken(token);
-			 reqDTO.setSubmit(true);
+			 reqDTO.setSubmit(Boolean.TRUE);
 			 reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			 reqDTO.setQuoteBidDtl(quote);
 			 QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
@@ -446,10 +453,11 @@ public class SimpleQuoteBackingBean extends
 						FacesMessage.SEVERITY_INFO, 
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_700005, 
-								new String[]{"Purchase In default",scQuote.getQuoteNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
 			}
          
 		} catch (Exception ex) {
@@ -476,10 +484,35 @@ public class SimpleQuoteBackingBean extends
 				if (null != ctxToken) {
 					reqBpm.setCtxToken(ctxToken);
 					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-					boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if(resBpm.isSuccessful()){
-					  FacesContext fc = FacesContext.getCurrentInstance();
-					  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "acknowledge");
+					boolean result = resBpm != null ? resBpm.isSuccessful() : Boolean.FALSE;
+					if (result) {
+						 if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(MessageConst.INFO_700009, 
+											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							FacesContext fc = FacesContext.getCurrentInstance();
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+						} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(MessageConst.INFO_700011, 
+											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							FacesContext fc = FacesContext.getCurrentInstance();
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+
+						} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(MessageConst.INFO_700008, 
+											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							FacesContext fc = FacesContext.getCurrentInstance();
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+						}
 					}
 				}
 			} catch (Exception ex) {
@@ -497,11 +530,12 @@ public class SimpleQuoteBackingBean extends
 		 debugLogger("byBusinessEvent");
 		 if (getManagedBean().isByLocality()) {
 			 getManagedBean().setActiveIndex(0);
-			 getManagedBean().setSuppListFlag(true);
+			 getManagedBean().setSuppListFlag(Boolean.TRUE);
+			
 		 } 
 		 if (getManagedBean().isByBusinessNature()) {
 			 getManagedBean().setActiveIndex(1);
-			 getManagedBean().setSuppListFlag(false);
+			 getManagedBean().setSuppListFlag(Boolean.FALSE);
 		 }
 	 }
 
@@ -550,36 +584,36 @@ public class SimpleQuoteBackingBean extends
 		// for the panel item enable and disable
 
 		if(getManagedBean().getIsPanel().equals(1)){
-			getManagedBean().setLocAndBusinessFlag(false);
-			getManagedBean().setG2GFlag(false);
-			getManagedBean().setByBusinessNature(false);
+			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
 
 		}else {
-			getManagedBean().setLocAndBusinessFlag(true);
-			getManagedBean().setG2GFlag(false);
-			getManagedBean().setByBusinessNature(false);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
 		}
 
 		if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-			getManagedBean().setProcTypeOption(true);
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
 
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-			getManagedBean().setProcTypeOption(true);
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
@@ -608,6 +642,10 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 
+	
+	/**
+	 * deleteBusinessNature method for deleting business nature
+	 */	
 	public void deleteBusinessNature() {
 		debugLogger("deleteBusinessNature");
 		if (getManagedBean().getSelectedBusinessNature() != null) {
@@ -622,47 +660,56 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 	
-	/*public void deleteSupplier() {
+	/**
+	 * deleteSupplier method for deleting supplier in supplier list
+	 */	
+	public void deleteSupplier() {
 		debugLogger("deleteSupplier");
-		if (getManagedBean().getSelectedSuppMofNoCriterias() != null) {
-			for (ScSupplierMofNoCriteria supplierMofNoCriteria : getManagedBean()
-					.getSelectedSuppMofNoCriterias()) {
-				if(getManagedBean().getSupplierMofNoCriterias().contains(supplierMofNoCriteria)){
-					List<ScSupplierMofNoCriteria>  supplierMofNoCriterias = getManagedBean().getSupplierMofNoCriterias();
-					supplierMofNoCriterias.remove(supplierMofNoCriteria);
-					getManagedBean().setSupplierMofNoCriterias(supplierMofNoCriterias);
+		if (getManagedBean().getSelectedSupplierList() != null) {
+			for (ScQuoteSupplier supplier : getManagedBean()
+					.getSelectedSupplierList()) {
+				if(getManagedBean().getSupplierList().contains(supplier)){
+					List<ScQuoteSupplier>  supplierList = getManagedBean().getSupplierList();
+					supplierList.remove(supplier);
+					getManagedBean().setSupplierList(supplierList);
 				}
 			}
 		}
-	}*/
+	}
 	
-/*	public void deleteGovtSeller() {
+	/**
+	 * deleteGovtSeller method for deleting govt seller
+	 */	
+	public void deleteGovtSeller() {
 		debugLogger("deleteGovtSeller");
-		if (getManagedBean().getSelectedGovEPNoCriterias() != null) {
-			for (ScGovEPNoCriteria govEPNoCriteria : getManagedBean()
-					.getSelectedGovEPNoCriterias()) {
-				if(getManagedBean().getGovEPNoCriterias().contains(govEPNoCriteria)){
-					List<ScGovEPNoCriteria>  govEPNoCriterias = getManagedBean().getGovEPNoCriterias();
-					govEPNoCriterias.remove(govEPNoCriteria);
-					getManagedBean().setGovEPNoCriterias(govEPNoCriterias);
+		if (getManagedBean().getSelectedGovtSellers() != null) {
+			for (ScQuoteSupplier govtSeller : getManagedBean()
+					.getSelectedGovtSellers()) {
+				if(getManagedBean().getGovtSellers().contains(govtSeller)){
+					List<ScQuoteSupplier>  govtSuppliers = getManagedBean().getGovtSellers();
+					govtSuppliers.remove(govtSeller);
+					getManagedBean().setGovtSellers(govtSuppliers);
 				}
 			}
 		}
-	}*/
+	}
 	
-	/*public void deletePanelSupplier() {
+	/**
+	 * deletePanelSupplier method for deleting panel item 
+	 */
+	public void deletePanelSupplier() {
 		debugLogger("deletePanelSupplier");
-		if (getManagedBean().getSelectedPanelItemSuppliers() != null) {
+		if (getManagedBean().getSelectedPanelSuppliers() != null) {
 			for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
-					.getSelectedPanelItemSuppliers()) {
-				if(getManagedBean().getPanelItemSuppliers().contains(scQuoteSupplier)){
-					List<ScQuoteSupplier>  suppliers = getManagedBean().getPanelItemSuppliers();
+					.getSelectedPanelSuppliers()) {
+				if(getManagedBean().getPanelSuppliers().contains(scQuoteSupplier)){
+					List<ScQuoteSupplier>  suppliers = getManagedBean().getPanelSuppliers();
 					suppliers.remove(scQuoteSupplier);
-					getManagedBean().setPanelItemSuppliers(suppliers);
+					getManagedBean().setPanelSuppliers(suppliers);
 				}
 			}
 		}
-	}	*/
+	}	
 	
    /**
     * showZonePopup method for zone popup in simple quote
@@ -1110,14 +1157,14 @@ public class SimpleQuoteBackingBean extends
 		    debugLogger("deleteTreeNodes");
 			if (getManagedBean().getSelectedNodes().length >= 0 && getManagedBean().getSelectedNodes() != null ) {
 				for (TreeNode selectedNode : getManagedBean().getSelectedNodes()) {
-					/*
+					
 					for (TreeNode treeNode : getManagedBean().getZoneTrees()) {
 						if(treeNode.equals(selectedNode)){
 							 List<TreeNode>	treeNodes =	getManagedBean().getZoneTrees();
 							 treeNodes.remove(selectedNode);
 							 getManagedBean().setZoneTrees(treeNodes);
 						}
-					}*/
+					}
 				}
 			}
 		  }	
@@ -1169,9 +1216,9 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("justificationTypeEvent");
 		if (getManagedBean().getScQuote().getJustificationType()
 				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-			getManagedBean().setJustTypeOption(true);
+			getManagedBean().setJustTypeOption(Boolean.TRUE);
 		} else {
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 		}
 	}
 
@@ -1199,31 +1246,20 @@ public class SimpleQuoteBackingBean extends
 		return selectItems;
 	}
 	
-   public void durationEvent(){
-	   try {
-		   if(getManagedBean().getDuration() != null && getManagedBean().getScQuote().getStartDate() != null && 
-				  getManagedBean().getScQuote().getEndDate() != null){
-			String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getStartDate());
-			String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getEndDate());
-			
-			if(getManagedBean().getDurationDropdown().equals(ParameterConst.SQ_DURATION_DAY)){
-			     getManagedBean().setDuration(daysBetween(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
-				
-			} else if(getManagedBean().getDurationDropdown().equals(ParameterConst.SQ_DURATION_HOURS)){
-				getManagedBean().setDuration(hoursDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
-				
-			} else if(getManagedBean().getDurationDropdown().equals(ParameterConst.SQ_DURATION_MINUTES)){
-				getManagedBean().setDuration(minsDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
-			} else {
-				 getManagedBean().setDuration(0);
+	public void durationEvent(){
+		try {
+			if(getManagedBean().getScQuote().getStartDate() != null && 
+					getManagedBean().getScQuote().getEndDate() != null){
+				String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getStartDate());
+				String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getEndDate());
+				getManagedBean().setDuration(
+						hoursDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(
+								CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
 			}
-		 } else {
-			  getManagedBean().setDuration(0);
-		 }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-     } 
+	} 
 	
 	   private static int minsDifference(Date toDate, Date fromDate) {
 			final int MILLI_TO_MINS = 1000 * 60;
@@ -1262,19 +1298,19 @@ public class SimpleQuoteBackingBean extends
 	
 		if(getManagedBean().getProcurementType() != null){
 		   if(getManagedBean().getIsPanel().equals(1)){
-			  getManagedBean().setLocAndBusinessFlag(false);
-			  getManagedBean().setG2GFlag(false);
+			  getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			  getManagedBean().setG2GFlag(Boolean.FALSE);
 		   } else {
 			   if (getManagedBean().getProcurementType()
 							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-				   getManagedBean().setLocAndBusinessFlag(false);
-				   getManagedBean().setG2GFlag(true);
+				   getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+				   getManagedBean().setG2GFlag(Boolean.TRUE);
 			    } else if (getManagedBean().getProcurementType()
 					 .equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)|| (getManagedBean().getProcurementType()
 					 .equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC) || (getManagedBean().getProcurementType()
 					 .equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)))) {
-					 getManagedBean().setLocAndBusinessFlag(true);
-					 getManagedBean().setG2GFlag(false);
+					 getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+					 getManagedBean().setG2GFlag(Boolean.FALSE);
 					}
 				}
 			}
@@ -1337,56 +1373,63 @@ public class SimpleQuoteBackingBean extends
 	public void supplierListListener(List<SmSupplier> suppliers){
 		debugLogger("supplierListListener");
 		List<ScQuoteSupplier> supplierList = new ArrayList<ScQuoteSupplier>();
-		ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
+		
 		if (suppliers != null){
 		   for (SmSupplier supplier : suppliers) {
+			   ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
 				quoteSupplier.setQuote(getManagedBean().getScQuote());
 				supplierList.add(quoteSupplier);
-				getManagedBean().setSupplierList(supplierList);
 			}
+			getManagedBean().setSupplierList(supplierList);
 		}
 	}
 	
 	public void businessNatureListener(List<PmBusinessNature> businessNatures){
 		debugLogger("businessNatureListener");
 		List<ScBusinessNatureQuoteCriteria> natureQuoteCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
-		ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
 		if (businessNatures != null){
 		   for (PmBusinessNature busiNature : businessNatures) {
+			   ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
 			   natureQuoteCriteria.setBusinessNature(busiNature);
 			   natureQuoteCriterias.add(natureQuoteCriteria);
-			   getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 			}
+		   getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 		}
 	}
 	
 	public void govtSellerListener(List<PmOrgProfile> orgProfiles){
 		debugLogger("govtSellerListener");
 		List<ScQuoteSupplier> scQuoteSuppliers = new ArrayList<ScQuoteSupplier>();
-		ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 		if (orgProfiles != null){
 		   for (PmOrgProfile orgProfile : orgProfiles) {
+			   ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 			   scQuoteSupplier.setSmSupplier(orgProfile.getSmSupplier());
 			   scQuoteSupplier.setQuote(getManagedBean().getScQuote());
 			   scQuoteSuppliers.add(scQuoteSupplier);
-			   getManagedBean().setGovtSellers(scQuoteSuppliers);
 			}
+		   getManagedBean().setGovtSellers(scQuoteSuppliers);
 		}
 	}
 
 	public void panelItemListener(List<CtPanelSupplier>	ctPanelSuppliers){
 		debugLogger("panelItemListener");
 		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
-		ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
+		
 		if (ctPanelSuppliers != null){
 			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {
+				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
 				panelSuppliers.add(scQuoteSupplier);
 			}
 			getManagedBean().setPanelSuppliers(panelSuppliers);
 		}
 	}
+	
+	
+
+	
+	
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -1401,23 +1444,155 @@ public class SimpleQuoteBackingBean extends
 					.getUserDivisionList()) {
 				if (orgProfile.getOrgProfileId().equals(
 						getManagedBean().getOrgProfileId())) {
-					getManagedBean().setPmOrgProfile(orgProfile);
+					getManagedBean().setPtjName(orgProfile.getOrgName());
+					return orgProfile;
 				}
 			}
 		}
-		return this.getManagedBean().getPmOrgProfile();
+		return null;
 	}
 
 	public String getSupplierListCriteria(){
 		StringBuilder  criteria = new StringBuilder();
-		//criteria.append("supplierId") .append("^").append("27,31,99").append("^").append(SearchOperator.OPERATOR_IN.value())
-		//.append("|")
-		criteria.append("smSupplierBusinesses.pmBusinessNature.businessNatureId").append("11,12").append("^").append(SearchOperator.OPERATOR_IN.value())
-		.append("|")
-		.append("recordStatus^1");
+		StringBuilder  busiNatureCriteria = new StringBuilder();
+		StringBuilder  stateCriteria = new StringBuilder();
+		StringBuilder  divCriteria = new StringBuilder();
+		StringBuilder  distCriteria = new StringBuilder();
+		
+		// Business Nature Criteria
+		if(getManagedBean().getBusinessNatureCriterias() != null){
+			for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
+				busiNatureCriteria.append(natureQuoteCriteria.getBusinessNature().getBusinessNatureId())
+				.append(",");
+			}
+		}
+		
+		if(busiNatureCriteria != null && busiNatureCriteria.length() > 0){
+			busiNatureCriteria.deleteCharAt(busiNatureCriteria.lastIndexOf(","));
+			busiNatureCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+			criteria.append("smSupplierBusinesses.pmBusinessNature.businessNatureId").append("^").append(busiNatureCriteria.toString())
+			.append("|");
+		} 
+		
+		// Locality Criteria
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
+			List<LocationDTO> locations  = getAllLocations(treeNode);
+			locationDTOs.addAll(locations);
+		}
+
+		if(locationDTOs != null && !locationDTOs.isEmpty() ){
+			for (LocationDTO locationDTO : locationDTOs) {
+
+				if(locationDTO.getState() != null){
+					stateCriteria.append(locationDTO.getState().getStateId())
+					.append(",");
+				}
+				if(locationDTO.getDivision() != null){
+					divCriteria.append(locationDTO.getDivision().getDivisionId())
+					.append(",");
+				}
+				if(locationDTO.getDistrict() != null){
+					distCriteria.append(locationDTO.getDistrict().getDistrictId())
+					.append(",");
+				}
+			}
+			
+			if(stateCriteria !=null && stateCriteria.length() > 0){
+				stateCriteria.deleteCharAt(stateCriteria.lastIndexOf(","));
+				stateCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+				criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.stateId").append("^").append(stateCriteria.toString())
+				.append("|");
+			} 
+			
+			if(divCriteria !=null && divCriteria.length() > 0){
+				divCriteria.deleteCharAt(divCriteria.lastIndexOf(","));
+				divCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+			} else{
+				divCriteria.append("");
+			}
+			if(distCriteria !=null && distCriteria.length() > 0){
+				distCriteria.deleteCharAt(distCriteria.lastIndexOf(","));
+				distCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+				criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmDistrict.districtId").append("^").append(distCriteria.toString())
+				.append("|");
+			} 
+		}
+		
+		criteria.append("recordStatus^1");
 
 		System.out.println("criteria :"+criteria.toString());
 		return criteria.toString();
 	}
+	
+	
+	/**
+	 * render the view base on the task id
+	 */
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		if (StringUtils.isNotBlank(taskId)) {
+			this.getManagedBean().setTaskId(taskId);
+			log.info("taskId : " + taskId);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			this.getManagedBean().setOutComes(res.getAction());
+			this.getManagedBean().setProcessName(res.getProcessName());
+			Object obj = res.getPojo();
+			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
+			String	dpMode	=	directPurchaseDataType.getDpMode();
 
+			if(ParameterConst.REQUEST_NOTE_SQ.equalsIgnoreCase(dpMode)){ 
+				// Simple Quote
+			
+				// TODO based on status pending submission or supplier resp
+				if(((Long)(long)res.getDocStatus()).equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+					getManagedBean().setTaskId(null);
+				}else{
+					getManagedBean().setTaskId(taskId);
+				}
+
+				IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
+				quoteReqDTO.setQuoteId(quoteId);
+				quoteReqDTO.setFetchSubEntity(true);
+				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtl((quoteReqDTO));
+
+				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				scQuote.setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+				List<ScSQRemark> results= new ArrayList<ScSQRemark>();
+				if(scQuote.getRemarks() != null){
+					for (ScSQRemark remark : scQuote.getRemarks()) {
+						remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+						remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+						remark.setChangedBy(remark.getCreatedBy());
+						remark.setUser(facesScopes.getUserSessionBean());
+						results.add(remark);
+					}
+				}
+				scQuote.setRemarks(results);
+				getManagedBean().setProcessName(res.getProcessName());
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setScQuote(scQuote);
+				getManagedBean().setDurationDropdown(ParameterConst.SQ_DURATION_DAY);
+				getManagedBean().setIsPanel(scQuote.getIsPanel());
+				getManagedBean().setIsZonal(scQuote.getIsZonal());
+				getManagedBean().setProcurementType(scQuote.getProcurementType());
+				getManagedBean().setDuration(0);
+				durationEvent();
+				getCurrentStatus(res.getDocStatus().longValue()); 
+				getManagedBean().setPmOrgProfile(null);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
+			}
+		}
+	}
 }
