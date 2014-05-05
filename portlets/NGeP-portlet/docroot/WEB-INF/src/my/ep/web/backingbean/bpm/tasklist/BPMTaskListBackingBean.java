@@ -65,11 +65,12 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_REVIEW, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-        temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, "review-purchase-inq");
+		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, "review-purchase-in-default");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
+		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
+        
 		
 
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
