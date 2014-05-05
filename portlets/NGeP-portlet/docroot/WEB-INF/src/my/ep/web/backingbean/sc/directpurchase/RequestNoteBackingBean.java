@@ -150,8 +150,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     		 workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
     	  }
     	 workFlowStatus.setRequestNote(requestNote);
-	     workFlowStatus.setCurrent(true);
-	     workFlowStatuses.add(workFlowStatus);
+	     workFlowStatus.setCurrent(Boolean.TRUE);
+	     //workFlowStatuses.add(workFlowStatus);
 	     requestNote.setWorkFlowStatuses(workFlowStatuses);
 	     
 		// Remarks
@@ -360,6 +360,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 					requestSupplierItem.setSupplierItemPrice(itemPrice);
 					inquiryBackingBean.getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+					inquiryBackingBean.getManagedBean().setSelectedPtj(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 					inquiryBackingBean.getManagedBean().setRequestNoteDtl(requestNoteDtl);
 					prInquiry.setRequestSupplierItem(requestSupplierItem);
 					prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
@@ -573,7 +574,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 	}
 	
-	private void populateUserDivisionList() {
+	public void populateUserDivisionList() {
 		log.info("populateUserMinistryList");
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
@@ -756,18 +757,25 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 
 		} else {
-			// purchase in default
+			// purchase in default & add to cart
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
 			ScRequestItem scRequestItem = new ScRequestItem();
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			
 		    purchaseInDefaultReqDTO.setItemId(requestSupplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId());
-		    purchaseInDefaultReqDTO.setOrgProfileId(requestSupplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getSmSupplier().getPmOrgProfile().getOrgProfileId());
+		    purchaseInDefaultReqDTO.setOrgProfileId(16717L);
 		    PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
-		    ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
-		    scRequestItem.setPurchaseInDefault(purchaseInDefault);
+		    
+		    // pid to request note
+		    if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+		    	ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
+		    	scRequestItem.setPurchaseInDefault(purchaseInDefault);
+		    }
+		  
 		    requestNoteItems.add(scRequestItem);
 		    requestNote.setRequestNoteItems(requestNoteItems);
+		    
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		}
 
@@ -786,7 +794,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
 			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
 		}
-		workFlowStatuses.add(workFlowStatus);
+		//workFlowStatuses.add(workFlowStatus);
 
 		if(requestNote.getWorkFlowStatuses() != null){
 			requestNote.getWorkFlowStatuses().addAll(workFlowStatuses);
@@ -845,22 +853,22 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		log.info("procurementTypeEvent"); 
 		if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			
 		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 		
 		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-			getManagedBean().setProcTypeOption(true);
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
 			
 		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-            getManagedBean().setProcTypeOption(true);
+            getManagedBean().setProcTypeOption(Boolean.TRUE);
             getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
 		}
 	}
@@ -897,17 +905,21 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+		requestNoteDtls.add(scRequestNoteDtl);
 		if(scRequestNoteDtl != null){
-		  ScRequestSupplierItem supplierItem = 	getManagedBean().getRequestSupplierItem();
+		  ScRequestSupplierItem supplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 		  supplierItem.setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice());
 		  String ItemCode = supplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getExtensionCode();
+		  supplierItem.setScRequestNoteDtl(requestNoteDtls);
+		  
 		  CharSequence charSeq = ItemCode.subSequence(0, 2);
 		  Integer icode = Integer.valueOf(charSeq.toString());
 		  // TODO checking first two digits in itemCode  whether service or product
 		  if (icode > ParameterConst.PRODUCT_OR_SERVICE) { // for service
-			  getManagedBean().setItemCheck(true);
+			  getManagedBean().setItemCheck(Boolean.TRUE);
 		  } else if (icode < ParameterConst.PRODUCT_OR_SERVICE) { // product
-			 getManagedBean().setItemCheck(false);
+			 getManagedBean().setItemCheck(Boolean.FALSE);
 		  }
 		 getManagedBean().setRequestSupplierItem(supplierItem);
 		}
