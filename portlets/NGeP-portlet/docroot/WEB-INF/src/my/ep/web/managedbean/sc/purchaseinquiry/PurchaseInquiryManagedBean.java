@@ -36,7 +36,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private String procurementType;
 	private String justificationType;
 	private String priceType;
-	private PmOrgProfile pmOrgProfile;
+	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
+	private PmOrgProfile selectedPtj = new PmOrgProfile();
 	
 	private ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
 	private ScPrInquiry scPrInquiry = new ScPrInquiry();
@@ -362,6 +363,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setSupplierFlag(boolean supplierFlag) {
 		this.supplierFlag = supplierFlag;
+	}
+
+	/**
+	 * @return the selectedPtj
+	 */
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	/**
+	 * @param selectedPtj the selectedPtj to set
+	 */
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
 	}
 
 	
