@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -18,6 +19,8 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
+import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
@@ -43,9 +46,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String[] action;
 	private String processName;
 	
-	private boolean amendAckw;
-	private boolean amendDisable;
+	private boolean pbConfirmMeeting;
+	private boolean memberSignOff;
 	private boolean approvrLetter;
+	private boolean bpkSaSkApprover;
+	private boolean prepareLOA;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -83,6 +88,17 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean chkConceValue;
 	private CtItemPrice selectedIndexOfPrice;
 	private CtItemCeilingQty selectedIndexOfCeilingQty;
+	
+	private CtCommitteeMember ctCommitteeMember;
+	private boolean existingUsers = true;
+	private boolean newUsers;
+	private String selectedRadioButton="1";
+	private String name = null;
+	private String identificationNo = null;
+	private String identificationType;
+	private List<PmUser> externalUsers;
+	private SelectItem[] roleTypes; // Role type drop down
+	private List<CtCommitteeMember> ctCommitteeMembers;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -124,20 +140,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.ctContract = ctContract;
 	}
 
-	public boolean isAmendDisable() {
-		return amendDisable;
+	public boolean isMemberSignOff() {
+		return memberSignOff;
 	}
 
-	public void setAmendDisable(boolean amendDisable) {
-		this.amendDisable = amendDisable;
-	}
-
-	public boolean isAmendAckw() {
-		return amendAckw;
-	}
-
-	public void setAmendAckw(boolean amendAckw) {
-		this.amendAckw = amendAckw;
+	public void setMemberSignOff(boolean memberSignOff) {
+		this.memberSignOff = memberSignOff;
 	}
 
 	public boolean isApprovrLetter() {
@@ -367,6 +375,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtContractItem> getCtItemList() {
+		if(ctItemList == null)
+			ctItemList = new ArrayList<CtContractItem>();
 		return ctItemList;
 	}
 
@@ -414,6 +424,111 @@ public class AmendmentManagedBean extends BaseManagedBean {
 			CtItemCeilingQty selectedIndexOfCeilingQty) {
 		this.selectedIndexOfCeilingQty = selectedIndexOfCeilingQty;
 	}
-	
-	
+
+	public boolean isBpkSaSkApprover() {
+		return bpkSaSkApprover;
+	}
+
+	public void setBpkSaSkApprover(boolean bpkSaSkApprover) {
+		this.bpkSaSkApprover = bpkSaSkApprover;
+	}
+
+	public boolean isPrepareLOA() {
+		return prepareLOA;
+	}
+
+	public void setPrepareLOA(boolean prepareLOA) {
+		this.prepareLOA = prepareLOA;
+	}
+
+	public boolean isExistingUsers() {
+		return existingUsers;
+	}
+
+	public void setExistingUsers(boolean existingUsers) {
+		this.existingUsers = existingUsers;
+	}
+
+	public boolean isNewUsers() {
+		return newUsers;
+	}
+
+	public void setNewUsers(boolean newUsers) {
+		this.newUsers = newUsers;
+	}
+
+	public String getSelectedRadioButton() {
+		return selectedRadioButton;
+	}
+
+	public void setSelectedRadioButton(String selectedRadioButton) {
+		this.selectedRadioButton = selectedRadioButton;
+	}
+
+	public CtCommitteeMember getCtCommitteeMember() {
+		return ctCommitteeMember;
+	}
+
+	public void setCtCommitteeMember(CtCommitteeMember ctCommitteeMember) {
+		this.ctCommitteeMember = ctCommitteeMember;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
+	}
+
+	public String getIdentificationType() {
+		return identificationType;
+	}
+
+	public void setIdentificationType(String identificationType) {
+		this.identificationType = identificationType;
+	}
+
+	public List<PmUser> getExternalUsers() {
+		return externalUsers;
+	}
+
+	public void setExternalUsers(List<PmUser> externalUsers) {
+		this.externalUsers = externalUsers;
+	}
+
+	public SelectItem[] getRoleTypes() {
+		return roleTypes;
+	}
+
+	public void setRoleTypes(SelectItem[] roleTypes) {
+		this.roleTypes = roleTypes;
+	}
+
+	public List<CtCommitteeMember> getCtCommitteeMembers() {
+		if(ctCommitteeMembers==null) {
+			ctCommitteeMembers = new ArrayList<CtCommitteeMember>();
+		}
+		return ctCommitteeMembers;
+	}
+
+	public void setCtCommitteeMembers(List<CtCommitteeMember> ctCommitteeMembers) {
+		this.ctCommitteeMembers = ctCommitteeMembers;
+	}
+
+	public boolean isPbConfirmMeeting() {
+		return pbConfirmMeeting;
+	}
+
+	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
+		this.pbConfirmMeeting = pbConfirmMeeting;
+	}
 }

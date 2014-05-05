@@ -41,7 +41,7 @@
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:40px;" />
                 <p:spacer width="2" />
-                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:100px;" >
+                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:80px;" >
 			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			    </p:selectOneMenu>
              </p:treeNode>

@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	 <p:panel id="panelSupplier" header="   SUPPLIER DETAILS" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
+			<p:outputLabel value="MOF No"/>
+			<p:inputText style="width:170px;"
+			   value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
+			<p:outputLabel value="Supplier Name"/>
+			<p:inputText style="width:170px;"
+			 value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}"/>
+			<p:outputLabel value="Branch"/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;" >
+			   <f:selectItem itemLabel="--" itemValue=""/>
+			</p:selectOneMenu>
+			 <h:panelGroup>
+            <div style="height: 90px; vertical-align:top;">
+                <p:outputLabel for="address" value="Address " />
+            </div>
+           </h:panelGroup>
+           <h:panelGrid>
+             <p:inputTextarea id="address" disabled="true"  value="#{amendmentBackingBean.managedBean.supplierAddress}"
+                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
+           </h:panelGrid>
+			<p:outputLabel value="Contact Person"/>
+			<p:inputText style="width:170px;"/>  
+		    <p:outputLabel value="Tel No"/>
+			<p:inputText style="width:170px;"/> 
+			<p:outputLabel value="Mobile No"/>
+			 <h:panelGrid columns="3" columnClasses="columnWidth30,columnWidth30">
+			   <p:inputText style="width:170px;"/>  
+		       <p:outputLabel value="Fax No"/>
+			 <p:inputText style="width:140px;"
+			 value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.faxNo}"/> 
+			</h:panelGrid>
+			<p:outputLabel value="Email Id"/>
+			 <p:inputText style="width:95%;"/>  
+		 </h:panelGrid>
+	</p:panel>	
+    <p:panel id="panelLOA" header="LOA DETAILS" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
+		   <p:outputLabel value="File No"/>
+		   <h:panelGrid columns="3">
+		      <p:inputText style="width:170px;"/>
+		      <p:spacer width="2"/>
+		      <p:inputText style="width:10px;"/>
+		   </h:panelGrid>
+		   <p:outputLabel value="Required Insurance / Warranty"/>
+		    <h:panelGrid columns="4">
+		     <p:selectOneRadio id="radiOptions" value="1" required="true">  
+                  <f:selectItem itemLabel="Yes" itemValue="1"/>  
+                  <f:selectItem itemLabel="No" itemValue="2" /> 
+            </p:selectOneRadio> 
+	    </h:panelGrid>
+	    <p:outputLabel value="Contract Type"/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
+			   <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
+			</p:selectOneMenu>
+		<p:outputLabel value="Agency"/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
+			   <f:selectItem itemLabel="--" itemValue=""/>
+			</p:selectOneMenu>
+		<p:outputLabel value="Contract Adminstrator"/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
+			   <f:selectItem itemLabel="--" itemValue=""/>
+			</p:selectOneMenu>
+        <p:outputLabel value="Completion/Contract Period"/>
+		         <h:panelGrid columns="3">
+		            <p:inputText style="width:70px;" 
+		              value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}"/>
+		            <p:spacer width="2"/>
+		            <p:outputLabel value="months"/>
+		         </h:panelGrid>
+		 
+		 <p:outputLabel value="Completion/Contract Effective Date"/>
+		      
+		         <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+		           id="popupButtonCal1" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		           
+		            <p:outputLabel value="Completion/Contract Expiry Date"/>
+		               <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+		           id="popupButtonCal2" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		       
+		          <p:outputLabel value="Amendment Effective Date"/>    
+		            <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}" 
+		           id="popupButtonCal3" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		         
+		          <p:outputLabel value="Extension Period"/>    
+		         <h:panelGrid columns="3">
+		            <p:inputText style="width:70px;" 
+		              value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}"/>
+		            <p:spacer width="2"/>
+		            <p:outputLabel value="months"/>
+		         </h:panelGrid>
+		        
+		         <p:outputLabel value="Extension Effective Date"/>
+		         <h:panelGrid columns="3" style="width:100%" columnClasses="columnWidth20,columnWidth30,columnWidth30">
+		             <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
+		           id="popupButtonCal4" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		            <h:outputLabel value="Extension Expiry Date"/>
+		            <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
+		             id="popupButtonCal5" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		         </h:panelGrid>
+		   </h:panelGrid>
+     </p:panel>	
+     <p:panel id="contractSigner" header="Contract Signer" toggleable="true" toggleSpeed="500">
+		  <h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
+		     <p:outputLabel value="Contract Signer"/>
+		      <p:selectOneMenu id="signer"
+            	    style="width:200px" >
+            		<f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}"/>
+            	</p:selectOneMenu>
+		   </h:panelGrid> 
+     </p:panel>
+	 <p:panel id="agencyWitness" header="AGENCY WITNESS DETAILS" toggleable="true" toggleSpeed="500">
+       <h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
+			<p:outputLabel value="*Full Name"/>
+			<p:inputText style="width:170px;"/>
+			<p:outputLabel value="*IC No."/>
+			<p:inputText style="width:170px;"/>
+			<p:outputLabel value="*Designation"/>
+			<p:inputText style="width:170px;"/>
+			<h:panelGroup>
+              <div style="height: 75px; vertical-align:top;">
+                <p:outputLabel for="agencyAddress" value="Address " />
+            </div>
+           </h:panelGroup>
+           <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
+             <p:inputTextarea id="agencyAddress" disabled="true"  
+                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
+             <h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">
+               <p:outputLabel value="*Tell No"/>
+			<p:inputText style="width:170px;"/>
+			<p:outputLabel value="*Fax No."/>
+			<p:inputText style="width:170px;"/>
+			<p:outputLabel value="*Mobile No"/>
+			<p:inputText style="width:170px;"/>
+           </h:panelGrid>
+          </h:panelGrid>
+          <p:outputLabel value="*Email"/>
+		  <p:inputText style="width:170px;"/>
+	     </h:panelGrid>  
+     </p:panel>	    
+</ui:composition>
+
+
+
+
+

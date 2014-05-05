@@ -22,7 +22,7 @@
 			<f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();"/></td>
 					<td class="ppRightBtn">
 						<ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
@@ -80,8 +80,24 @@
 			</p:tab>
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
 	      <ui:include src="item.xhtml" />
+       </p:tab>
+       
+        <p:tab title="Meeting Details">
+	      <ui:include src="pbqcc/meeting.xhtml"/>
+       </p:tab>
+       
+       <p:tab title="Loa Details" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
+	      <ui:include src=" loaDetails.xhtml " />
+       </p:tab>
+       <p:tab title="Performance Bond" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
+	      <ui:include src="loaBondDetails.xhtml" />
+       </p:tab>
+     
+       <p:tab title="Special Approval of AP201" rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}">
+         <ui:include src="bpk/approvalOfAP201.xhtml"/>
        </p:tab>  
-        <p:tab title="Approval Letter" rendered="#{amendmentBackingBean.managedBean.approvrLetter}">
+       
+        <p:tab title="Letter Of Acceptance" rendered="#{amendmentBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
 	</p:tabView>

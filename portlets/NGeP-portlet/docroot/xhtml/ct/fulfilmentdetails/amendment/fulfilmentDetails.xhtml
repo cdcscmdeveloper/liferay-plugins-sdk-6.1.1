@@ -11,7 +11,7 @@
 			  <p:inputText for="cno" value="#{amendmentBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		 	  <p:inputText for="physicalNo" value="#{amendmentBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" />				
+		 	  <p:inputText for="physicalNo" value="#{amendmentBackingBean.managedBean.ctContract.contractPhysicalNo}" disabled="true" style="width:170px;" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{amendmentBackingBean.convertTime(amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
@@ -50,7 +50,7 @@
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
-			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
+			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			    <p:ajax event="change" update="justificationPanel,exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -72,10 +72,10 @@
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
-		   </h:panelGrid>	
+		   </h:panelGrid>	 
 		   <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox id="exemptId" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"
-			   disabled="#{contractDetailsBackingBean.managedBean.chkConceValue}" style="text-align:top;">
+			  <p:selectBooleanCheckbox id="exemptId" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
+			   disabled="true" style="text-align:top;">
 			     <p:ajax event="change" update="justificationPanel" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
