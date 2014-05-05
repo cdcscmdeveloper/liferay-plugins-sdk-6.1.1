@@ -73,7 +73,7 @@
 				<table width="5%" styleClass="noBorders tr,noBorders td" >
 					<tr>
 						<td><p:commandLink id="promoLink" title="Promotion"
-								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
+								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
 								update="@form, deleteLink, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
@@ -87,7 +87,7 @@
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:commandLink id="deleteLink" title="Delete" action="#{catalogueBackingBean.setRowIndex}" rendered="#{price.showFlag}"
-								disabled="#{price.standardDisabled}" oncomplete="confirmation.show()">
+								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" oncomplete="confirmation.show()">
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
@@ -119,7 +119,7 @@
 			header="Confirmation Message" widgetVar="confirmation">
 
 			<p:commandButton id="conf" value="Yes"
-				actionListener="#{catalogueBackingBean.deleteTierPrice()}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID"
+				actionListener="#{catalogueBackingBean.deleteTierPrice()}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"
 				oncomplete="confirmation.hide()" />
 			<p:commandButton id="decline" value="No"
 				onclick="confirmation.hide()" />
