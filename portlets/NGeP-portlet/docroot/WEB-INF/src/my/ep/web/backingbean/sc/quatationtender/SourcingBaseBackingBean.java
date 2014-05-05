@@ -21,6 +21,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -243,5 +244,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		baseObject.setChangedBy(user.getUserId());
 		baseObject.setCreatedBy(user.getUserId());
 		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+	}
+	
+	public String getMessgeConstant(String outCome){
+		String msgCode=null;
+		if(outCome.equalsIgnoreCase("SUBMIT")){
+			 msgCode=MessageConst.INFO_700005;
+		 }else if(outCome.equalsIgnoreCase("REJECT")){
+			 msgCode=MessageConst.INFO_700008;
+		 }else if(outCome.equalsIgnoreCase("REVISE")){
+			 msgCode=MessageConst.INFO_700012;
+		 }else if(outCome.equalsIgnoreCase("APPROVE")){
+			 msgCode=MessageConst.INFO_700007;
+		 }else if(outCome.equalsIgnoreCase("ACCEPT")){
+			 msgCode=MessageConst.INFO_700013;
+		 }
+		return msgCode;
 	}
 }

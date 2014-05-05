@@ -260,7 +260,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
-	private List<BriefingZoneBean> deliveryLocBean = new ArrayList<BriefingZoneBean>();
+	private List<BriefingZoneBean> deliveryLocBean;
 	public List<ScQtDeliveryLoc> deliveryLoc;
 	public List<ScQtDeliveryLoc> deliveryNonZoneList;
 	public List<ScQtDeliveryLoc> deleteDeliveryList;

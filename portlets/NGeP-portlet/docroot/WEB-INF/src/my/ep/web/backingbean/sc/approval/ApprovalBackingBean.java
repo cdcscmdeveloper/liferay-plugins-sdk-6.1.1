@@ -23,14 +23,13 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.QTStatusConst;
-import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -46,7 +45,6 @@ import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.quatationtender.QTCommitteBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
@@ -383,16 +381,18 @@ public class ApprovalBackingBean extends
 			qtReqDTO.setQtdetail(qt);
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
-
-			resDTO.setSuccessful(true);
+			
 			if (resDTO.isSuccessful()) {
 				ScQt scQt = resDTO.getQtDetail();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_700007, new String[] {
-												scQt.getQtNo(), approval.getApprovalType()},
+										getMessgeConstant(outcome),new String[] {
+											getParameterDesc(
+													ParameterTypeConst.DOCUMENT_TYPES,
+													ParameterConst.DOCTYPE_QUOTATION),
+											scQt.getQtNo()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
@@ -407,7 +407,7 @@ public class ApprovalBackingBean extends
 									new FacesScopes().getUserLocale())));
 			ex.printStackTrace();
 		}
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		return null;
 
 	}
 

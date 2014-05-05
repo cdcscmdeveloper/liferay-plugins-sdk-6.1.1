@@ -163,6 +163,8 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import weblogic.wsee.wstx.wsat.v10.types.Outcome;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -185,7 +187,7 @@ public class SpecificationBackingBean extends
 	private int outputTab;
 
 	public SpecificationBackingBean() {
-		FacesScopes scope = new FacesScopes();
+		
 
 	}
 
@@ -382,41 +384,9 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
-	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
-		List<PmDivision> results = new ArrayList<PmDivision>();
-		for (TreeNode treeNode : treeNodes) {
-			for (TreeNode childNode : treeNode.getChildren()) {
-				for (TreeNode divNode : childNode.getChildren()) {
-					if (divNode.getChildren() != null) {
-						ScQtLocCriteria locationDTO = (ScQtLocCriteria) divNode
-								.getData();
-						if (locationDTO.getPmDivision() != null) {
-							results.add(locationDTO.getPmDivision());
-						}
-					}
-				}
-			}
-		}
-		return results;
-	}
+	
 
-	private List<PmDistrict> getPmDistricts(List<TreeNode> treeNodes) {
-		List<PmDistrict> results = new ArrayList<PmDistrict>();
-		for (TreeNode treeNode : treeNodes) {
-			if (treeNode.isLeaf()) {
-				ScQtLocCriteria locationDTO = (ScQtLocCriteria) treeNode
-						.getData();
-				if (locationDTO.getPmDistrict() != null) {
-					results.add(locationDTO.getPmDistrict());
-				}
-			} else {
-				if (treeNode.getChildren() != null) {
-					results.addAll(getPmDistricts(treeNode.getChildren()));
-				}
-			}
-		}
-		return results;
-	}
+	
 
 	public void saveSpecificationDtls() {
 		IQTDetailSO detailSO;
@@ -427,21 +397,36 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
 
 			if (resDTo.isSuccessful()) {
+			ScQt scQt=	resDTo.getQtDetail();
 				FacesContext
-						.getCurrentInstance()
-						.addMessage(
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
 								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										"Specification Details saved successfully.",
-										""));
+								MessageUtils
+										.getMessage(
+												MessageConst.INFO_700004,
+												new String[] {"Specification Created For "
+														,
+														scQt.getQtNo()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes()
+														.getUserLocale())));
 			}
-
+			
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Please Contact Administrator.", ""));
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils
+									.getMessage(MessageConst.INFO_000001,											
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+													.getUserLocale())));
 			e.printStackTrace();
 		} finally {
 			detailSO = null;
@@ -451,330 +436,43 @@ public class SpecificationBackingBean extends
 	public void saveSpecificationCommitteeDtls() {
 		IQTDetailSO detailSO;
 		try {
-
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			ScQt scQt = this.getManagedBean().getScQt();
-			scQt.setFulfilmentType("S");
-			System.out
-					.println("=======enter saveSpecificationCommitteeDtls method===");
-			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
-			List<ScQtCheckList> techCheckList = this.getManagedBean()
-					.getScQtCheckSt2techProposal();
-			if (techCheckList != null && !techCheckList.isEmpty()) {
-				localChecklist.addAll(techCheckList);
-				scQt.setScQtChecklists(localChecklist);
-			}
-			List<ScQtCheckList> financialCheckList = this.getManagedBean()
-					.getScQtCheckSt2financeProposalList();
-			if (financialCheckList != null && !financialCheckList.isEmpty()) {
-				localChecklist.addAll(financialCheckList);
-				scQt.setScQtChecklists(localChecklist);
-			}
-			List<ScQtCheckList> technicalScoring = this.getManagedBean()
-					.getTechnicalScoring();
-			if (technicalScoring != null && !technicalScoring.isEmpty()) {
-				System.out.println("@@@@@@@@@@@@@@@@"
-						+ technicalScoring.get(0).getChangedDate());
-				for (ScQtCheckList scQtCheckList : technicalScoring) {
-					System.out.println("===score for technical"
-							+ scQtCheckList.getQtScoreWeightage()
-									.getWeightage());
-				}
-				localChecklist.addAll(technicalScoring);
-				scQt.setScQtChecklists(localChecklist);
-			}
-			List<ScQtCheckList> financialScoring = this.getManagedBean()
-					.getFinancialScoring();
-			if (financialScoring != null && !financialScoring.isEmpty()) {
-
-				List<ScQtCheckList> finSpecs = constructFinSpecsNSocre(financialScoring
-						.get(0));
-				financialScoring.remove(0);
-				localChecklist.addAll(finSpecs);
-				localChecklist.addAll(financialScoring);
-				scQt.setScQtChecklists(localChecklist);
-			}
-			/*
-			 * ScQtScoreOfferPrice
-			 * packageOfferPrice=this.getManagedBean().getPackageScoreSetting();
-			 * if(packageOfferPrice!=null){ packageOfferPrice.setChangedBy(1L);
-			 * packageOfferPrice.setCreatedBy(1L);
-			 * packageOfferPrice.setCreatedDate(new
-			 * Timestamp(System.currentTimeMillis()));
-			 * 
-			 * }
-			 */
-			List<ScQtSchedule> freqschedule = this.getManagedBean()
-					.getScheduleList();
-			List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
-			if (freqschedule != null && !freqschedule.isEmpty()) {
-				String Startmonth = "";
-				String endmonth = "03";
-				for (ScQtSchedule schedule : freqschedule) {
-					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-						Startmonth = "01";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-						Startmonth = "02";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-						Startmonth = "03";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-						Startmonth = "04";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-						Startmonth = "05";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-						Startmonth = "06";
-					}
-
-					if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-						Startmonth = "07";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-						Startmonth = "08";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-						Startmonth = "09";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-						Startmonth = "10";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-						Startmonth = "11";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-						Startmonth = "12";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-						endmonth = "01";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-						endmonth = "02";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-						endmonth = "03";
-					}
-
-					if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-						endmonth = "04";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-						endmonth = "05";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-						endmonth = "06";
-					}
-
-					if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-						endmonth = "07";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-						endmonth = "08";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-						endmonth = "09";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-						endmonth = "10";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-						endmonth = "11";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-						endmonth = "12";
-					}
-					Date d1 = new Date();
-
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
-							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
-							+ schedule.getEndYear();
-					// System.out.println("======display schedule No==="+schedule.getScheduleNo());
-					schedule.setScheduleNo(schedule.getScheduleNo());
-					schedule.setScheduleType(1);
-					schedule.setFromDate(df.parse(fromdate));
-					schedule.setToDate(df.parse(toDate));
-					schedule.setScQt(this.getManagedBean().getScQt());
-					localScheduleList.add(schedule);
-					scQt.setScQtSchedules(localScheduleList);
-
-				}
-			}
-
-			List<ScQtProgressivePayment> progressivePayemnt = this
-					.getManagedBean().getProgressivePaymentList();
-			List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
-			if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-				String Startmonth = "";
-				String endmonth = "";
-				for (ScQtProgressivePayment schedule : progressivePayemnt) {
-					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-						Startmonth = "01";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-						Startmonth = "02";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-						Startmonth = "03";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-						Startmonth = "04";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-						Startmonth = "05";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-						Startmonth = "06";
-					}
-
-					if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-						Startmonth = "07";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-						Startmonth = "08";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-						Startmonth = "09";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-						Startmonth = "10";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-						Startmonth = "11";
-					}
-					if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-						Startmonth = "12";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-						endmonth = "01";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-						endmonth = "02";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-						endmonth = "03";
-					}
-
-					if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-						endmonth = "04";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-						endmonth = "05";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-						endmonth = "06";
-					}
-
-					if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-						endmonth = "07";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-						endmonth = "08";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-						endmonth = "09";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-						endmonth = "10";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-						endmonth = "11";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-						endmonth = "12";
-					}
-					Date d1 = new Date();
-
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
-							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
-							+ schedule.getEndYear();
-					schedule.setFromDate(df.parse(fromdate));
-					schedule.setToDate(df.parse(toDate));
-					schedule.setScQt(this.getManagedBean().getScQt());
-					paymentList.add(schedule);
-					scQt.setScQtProgressivePayments(paymentList);
-
-				}
-			}
-
-			List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
-			ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
-					.getTechnicalScoreSetting();
-			if (technicalScoreSetting != null) {
-				scoreSetting.add(technicalScoreSetting);
-				scQt.setScQtScoreSettings(scoreSetting);
-			}
-			ScQtScoreSetting financialScoreSetting = this.getManagedBean()
-					.getFinancialScoreSetting();
-			if (financialScoreSetting != null) {
-				scoreSetting.add(financialScoreSetting);
-				scQt.setScQtScoreSettings(scoreSetting);
-			}
-			ScQtScoreSetting demoScoreSetting = this.getManagedBean()
-					.getDemoScoreSetting();
-			if (demoScoreSetting != null) {
-				scoreSetting.add(demoScoreSetting);
-				scQt.setScQtScoreSettings(scoreSetting);
-			}
-			ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-					.getRecommendationPackageScore();
-			if (packageScoreSetting != null) {
-				scoreSetting.add(packageScoreSetting);
-				scQt.setScQtScoreSettings(scoreSetting);
-			}
-
-			ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-					.getRecommendationScore();
-			if (itemScoreSetting != null) {
-				scoreSetting.add(itemScoreSetting);
-				scQt.setScQtScoreSettings(scoreSetting);
-			}
-
-			List<ScQtDeliveryLoc> localDeliveryList = new ArrayList<ScQtDeliveryLoc>();
-			// List<BriefingZoneBean> deliveryList=
-			// this.getManagedBean().getDeliveryLocBean();
-			List<BriefingZoneBean> deliveryList = this.getManagedBean()
-					.getAddressZoneBean();
-			if (deliveryList != null && !deliveryList.isEmpty()) {
-				for (BriefingZoneBean briefingZoneBean : deliveryList) {
-					if (briefingZoneBean.getDeliveryLocList() != null
-							&& !briefingZoneBean.getDeliveryLocList().isEmpty()) {
-
-						localDeliveryList.addAll(briefingZoneBean
-								.getDeliveryLocList());
-
-					}
-					scQt.setScQtDeliveryLocs(localDeliveryList);
-				}
-
-			}
-			List<ScQtDeliveryLoc> nonZoneList = this.getManagedBean()
-					.getDeliveryNonZoneList();
-			if (nonZoneList != null && !nonZoneList.isEmpty()) {
-				scQt.setScQtDeliveryLocs(nonZoneList);
-			}
-
-			reqDTO.setQtdetail(scQt);
+			QuationTenderReqDTO reqDTO = constructSpecCommitteDtls();
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
-			System.out.println("=========successfully saved date====");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+			if (resDTo.isSuccessful()) {
+				ScQt scQt=	resDTo.getQtDetail();
+					FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													MessageConst.INFO_700004,
+													new String[] {"Specification Committe Details For "
+															,
+															scQt.getQtNo()},
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+				}
+				
+			} catch (Exception e) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								MessageUtils
+										.getMessage(MessageConst.INFO_000001,											
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes()
+														.getUserLocale())));
+				e.printStackTrace();
+			} finally {
 			detailSO = null;
 		}
 	}
@@ -888,7 +586,7 @@ public class SpecificationBackingBean extends
 				.getSuppCriteriaopenList();
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<ScQtCategory>();
-			
+
 		}
 
 		ScQtCategory category = new ScQtCategory();
@@ -1153,7 +851,7 @@ public class SpecificationBackingBean extends
 		String tabTitle = event.getTab().getTitle();
 
 		if (tabTitle.equalsIgnoreCase("General")) {
-
+			// retriveSpecdetails(this.getManagedBean().getScQt().getQtId());
 		} else if (tabTitle.equalsIgnoreCase("Supplier Qualification Criteria")) {
 			retriveBusinessOwnerQualificationCriteri();
 		} else if (tabTitle.equalsIgnoreCase("Prepare Specification")) {
@@ -1658,7 +1356,6 @@ public class SpecificationBackingBean extends
 	public String retriveFinancialScoring() {
 		IQTSpecSO specSo = null;
 		try {
-			this.getManagedBean().setTabActiveIndex(5);
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
 			if (checklist == null) {
@@ -1798,7 +1495,7 @@ public class SpecificationBackingBean extends
 
 					this.getManagedBean().setOfferPriceItem(
 							new ScQtScoreOfferPrice());
-					this.getManagedBean().getOfferPricePackage()
+					this.getManagedBean().getOfferPriceItem()
 							.setOfferPriceType("I");
 					this.getManagedBean()
 							.getOfferPriceItem()
@@ -2174,39 +1871,45 @@ public class SpecificationBackingBean extends
 		try {
 			retriveStateList();
 			retriveMinistryList();
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			specSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			SpecificationResDTO resDTO = specSo
-					.retrieveDeliverSeriviceAddress(reqDTO);
-			if (resDTO.getSpecZoneDtls() == null
-					|| resDTO.getSpecZoneDtls().isEmpty()) {
-				List<ScQtDeliveryLoc> deliveryLoc = this.getManagedBean()
-						.getDeliveryNonZoneList();
-				if (deliveryLoc == null) {
-					deliveryLoc = new ArrayList<ScQtDeliveryLoc>();
-				}
-				this.getManagedBean().setDeliveryNonZoneList(
-						resDTO.getAddressResultBean());
+			if (this.getManagedBean().getDeliveryNonZoneList() == null
+					&& null == this.getManagedBean().getDeliveryLocBean()) {
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				specSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				SpecificationResDTO resDTO = specSo
+						.retrieveDeliverSeriviceAddress(reqDTO);
+				if (resDTO.getSpecZoneDtls() == null
+						|| resDTO.getSpecZoneDtls().isEmpty()) {
+					List<ScQtDeliveryLoc> deliveryLoc = this.getManagedBean()
+							.getDeliveryNonZoneList();
+					if (deliveryLoc == null) {
+						deliveryLoc = new ArrayList<ScQtDeliveryLoc>();
+					}
+					this.getManagedBean().setDeliveryNonZoneList(
+							resDTO.getAddressResultBean());
 
-			} else {
+				} else {
 
-				this.getManagedBean()
-						.setDeliveryZones(resDTO.getSpecZoneDtls());
+					this.getManagedBean().setDeliveryZones(
+							resDTO.getSpecZoneDtls());
 
-				for (TplSpecZoneDtl tplSpecZoneDtl : this.getManagedBean()
-						.getDeliveryZones()) {
-					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-					reqDTO.setZoneId(tplSpecZoneDtl.getSpecZoneId());
-					resDTO = specSo.retrieveDeliveryAddressDtls(reqDTO);
-
-					BriefingZoneBean bean = new BriefingZoneBean(
-							tplSpecZoneDtl, resDTO.getAddressResultBean());
-					this.getManagedBean().getDeliveryLocBean().add(bean);
+					for (TplSpecZoneDtl tplSpecZoneDtl : this.getManagedBean()
+							.getDeliveryZones()) {
+						reqDTO.setQtId(this.getManagedBean().getScQt()
+								.getQtId());
+						reqDTO.setZoneId(tplSpecZoneDtl.getSpecZoneId());
+						resDTO = specSo.retrieveDeliveryAddressDtls(reqDTO);
+						if (this.getManagedBean().getDeliveryLocBean() == null) {
+							this.getManagedBean().setDeliveryLocBean(
+									new ArrayList());
+						}
+						BriefingZoneBean bean = new BriefingZoneBean(
+								tplSpecZoneDtl, resDTO.getAddressResultBean());
+						this.getManagedBean().getDeliveryLocBean().add(bean);
+					}
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2871,9 +2574,9 @@ public class SpecificationBackingBean extends
 				scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
 						.getPmCategoryL2());
 				scQtCategory.setScQt(this.getManagedBean().getScQt());
-				setUserDetails(scQtCategory);	
+				setUserDetails(scQtCategory);
 				categoryList.add(scQtCategory);
-				
+
 			}
 			scQt.setScQtCategorys(categoryList);
 		}
@@ -2889,24 +2592,24 @@ public class SpecificationBackingBean extends
 				scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
 						.getPmCategoryL2());
 				scQtCategory.setScQt(this.getManagedBean().getScQt());
-				setUserDetails(scQtCategory);				
+				setUserDetails(scQtCategory);
 				categoryList.add(scQtCategory);
-				
+
 			}
 			scQt.setScQtCategorys(categoryList);
 		}
 		List<ScQtRemark> remarksList = this.getManagedBean()
 				.getScQtRemarksList();
-		List<ScQtRemark> specRemarks=null;
-		if (isNotNullOREmpty(remarksList)) {	
-			 specRemarks=new ArrayList<ScQtRemark>();
+		List<ScQtRemark> specRemarks = null;
+		if (isNotNullOREmpty(remarksList)) {
+			specRemarks = new ArrayList<ScQtRemark>();
 			for (ScQtRemark remarks : remarksList) {
-				if (remarks.getRemark() != null && ""!=remarks.getRemark()) {				
+				if (remarks.getRemark() != null && "" != remarks.getRemark()) {
 					specRemarks.add(remarks);
 				}
-				
+
 			}
-			
+
 		}
 		scQt.setScQtRemarks(specRemarks);
 		scQt.setScQtCommittees(null);
@@ -2937,6 +2640,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveSpecdetails(Long qtId) {
 		try {
+
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
@@ -2950,30 +2654,33 @@ public class SpecificationBackingBean extends
 					getManagedBean().getScQt().setScQtZoneCriteria(
 							new ScQtZoneCriteria());
 				}
-				if (tenderResDTO.getQtDetail().isZonal()) {
-					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-						for (TplSpecZoneDtl zone : tenderResDTO
-								.getZoneDetails()) {
-							List<PmState> states = SourcingLocationHelper
-									.getStateFromZoneLocationDTOs(zone
-											.getTplSpecZoneLocs());
+				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+					if (tenderResDTO.getQtDetail().isZonal()) {
+						if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+							for (TplSpecZoneDtl zone : tenderResDTO
+									.getZoneDetails()) {
+								List<PmState> states = SourcingLocationHelper
+										.getStateFromZoneLocationDTOs(zone
+												.getTplSpecZoneLocs());
 
-							List<PmDivision> divisions = SourcingLocationHelper
-									.getDivisionFromZoneLocationDTOs(zone
-											.getTplSpecZoneLocs());
-							List<PmDistrict> districts = SourcingLocationHelper
-									.getDistrictFromZoneLocationDTOs(zone
-											.getTplSpecZoneLocs());
+								List<PmDivision> divisions = SourcingLocationHelper
+										.getDivisionFromZoneLocationDTOs(zone
+												.getTplSpecZoneLocs());
+								List<PmDistrict> districts = SourcingLocationHelper
+										.getDistrictFromZoneLocationDTOs(zone
+												.getTplSpecZoneLocs());
 
-							List<PmCity> cities = SourcingLocationHelper
-									.getCityFromZoneLocationDTOs(zone
-											.getTplSpecZoneLocs());
-							getManagedBean().getZoneGeneralTrees().add(
-									LocationSingleton.getInstance()
-											.buildGeneralZoneTree(zone, states,
-													districts, divisions,
-													cities));
+								List<PmCity> cities = SourcingLocationHelper
+										.getCityFromZoneLocationDTOs(zone
+												.getTplSpecZoneLocs());
 
+								getManagedBean().getZoneGeneralTrees().add(
+										LocationSingleton.getInstance()
+												.buildGeneralZoneTree(zone,
+														states, districts,
+														divisions, cities));
+
+							}
 						}
 					}
 				}
@@ -7246,92 +6953,6 @@ public class SpecificationBackingBean extends
 		scQtChecklist.setScQtCheckListAttachment(attachment);
 	}
 
-	/*
-	 * public void preRenderView() { HttpServletRequest servletRequest =
-	 * PortalUtil .getHttpServletRequest(new FacesScopes().getRequest());
-	 * HttpServletRequest originalServletRequest = PortalUtil
-	 * .getOriginalServletRequest(servletRequest); String taskId =
-	 * originalServletRequest.getParameter("taskId");
-	 * 
-	 * this.getManagedBean().setTaskId(taskId);
-	 * 
-	 * IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-	 * .getServiceObject(IBpmSO.class); // TODO FacesScopes facesScopes = new
-	 * FacesScopes(); String ctx = facesScopes.getBPMAuthenticationCtxToken();
-	 * // String ctx = bpmSO.authenticate("roslan", "welcome1"); BpmRequestDTO
-	 * reqDTO = new BpmRequestDTO(); reqDTO.setCtxToken(ctx);
-	 * reqDTO.setTaskId(taskId); BpmResponseDTO res =
-	 * bpmSO.getTaskDetails(reqDTO); Object obj = res.getPojo();
-	 * this.getManagedBean().setOutComes(res.getAction());
-	 * SCSpecificationDataType specificationDataType = (SCSpecificationDataType)
-	 * obj;
-	 * 
-	 * this.getManagedBean().setSpecificationDataType(specificationDataType);
-	 * 
-	 * IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	 * QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-	 * tenderReqDTO.setQtId(new Long(specificationDataType.getQtId())
-	 * .longValue()); QuationTenderResDTO tenderResDTO = detailSO
-	 * .retriveQTDetails(tenderReqDTO); QTDetailBackingBean detailBackingBean =
-	 * new QTDetailBackingBean();
-	 * detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-	 * detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-	 * //
-	 * detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-	 * retriveSpecdetails(specificationDataType.getQtId().longValue());
-	 * FacesContext fc = FacesContext.getCurrentInstance(); fc.getApplication()
-	 * .getNavigationHandler() .handleNavigation( fc, null,
-	 * "/xhtml/ss/specification/specificationview.xhtml" +
-	 * "?faces-redirect=true"); }
-	 */
-
-	public String submitSpecDetails(String outCome) {
-
-		QuationTenderReqDTO specReqDTO = prepareSpecReq();
-		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		specReqDTO.setToken(ctxToken);
-
-		specReqDTO.setTaskId(this.getManagedBean().getTaskId());
-
-		// specReqDTO.setScSpecificationDataType(this.getManagedBean()
-		// .getSpecificationDataType());
-		specReqDTO.setOutcome(outCome);
-		IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		QuationTenderResDTO resDTO = new QuationTenderResDTO();
-		try {
-			// SpecificationResDTO resDTO =
-			// iqtSpecSO.updateBPMAction(specReqDTO);
-			if (resDTO.isSuccessful()) {
-
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
-
-						));
-
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/shared/acknowledge.xhtml");
-
-			} else {
-
-			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
 	/**
 	 * @return the selctValue
 	 */
@@ -7356,10 +6977,10 @@ public class SpecificationBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
-		IQTDetailSO specSO = getSpecSO();
-		// QuationTenderResDTO resDTO = new QuationTenderResDTO();
+		IQTDetailSO detailSO = getDetailSO();
+
 		try {
-			QuationTenderResDTO resDTO = specSO.updateBPMAction(spReqDTO);
+			QuationTenderResDTO resDTO = detailSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getQtDetail();
 
@@ -7372,11 +6993,9 @@ public class SpecificationBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														MessageConst.INFO_700007,
+														getMessgeConstant(action),
 														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
+																"Specification Details For ",
 																qt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
@@ -7393,11 +7012,11 @@ public class SpecificationBackingBean extends
 
 					));
 		}
-		return null;
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 	}
 
-	private IQTDetailSO getSpecSO() {
+	private IQTDetailSO getDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
@@ -8179,7 +7798,8 @@ public class SpecificationBackingBean extends
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
 				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (weight.getDefinationType().getParameterId() == 185) {
+				if (null != weight.getDefinationType()
+						&& weight.getDefinationType().getParameterId() == 185) {
 					getManagedBean().setTechnicalChecklistScoring(
 							weight.getQtScoreWeightage().getScore().intValue());
 					getManagedBean().setScoreVarience(
@@ -8673,7 +8293,7 @@ public class SpecificationBackingBean extends
 			scqtDocDest.getTplSpecMaster().setChangedDate(null);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
@@ -8743,5 +8363,381 @@ public class SpecificationBackingBean extends
 		return scqtDocDest;
 	}
 
+	private QuationTenderReqDTO constructSpecCommitteDtls() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		ScQt scQt = this.getManagedBean().getScQt();
+		scQt.setFulfilmentType("S");
+		System.out
+				.println("=======enter saveSpecificationCommitteeDtls method===");
+		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> techCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		if (techCheckList != null && !techCheckList.isEmpty()) {
+			localChecklist.addAll(techCheckList);
+			scQt.setScQtChecklists(localChecklist);
+		}
+		List<ScQtCheckList> financialCheckList = this.getManagedBean()
+				.getScQtCheckSt2financeProposalList();
+		if (financialCheckList != null && !financialCheckList.isEmpty()) {
+			localChecklist.addAll(financialCheckList);
+			scQt.setScQtChecklists(localChecklist);
+		}
+		List<ScQtCheckList> technicalScoring = this.getManagedBean()
+				.getTechnicalScoring();
+		if (technicalScoring != null && !technicalScoring.isEmpty()) {
+			System.out.println("@@@@@@@@@@@@@@@@"
+					+ technicalScoring.get(0).getChangedDate());
+			for (ScQtCheckList scQtCheckList : technicalScoring) {
+				System.out.println("===score for technical"
+						+ scQtCheckList.getQtScoreWeightage().getWeightage());
+			}
+			localChecklist.addAll(technicalScoring);
+			scQt.setScQtChecklists(localChecklist);
+		}
+		List<ScQtCheckList> financialScoring = this.getManagedBean()
+				.getFinancialScoring();
+		if (financialScoring != null && !financialScoring.isEmpty()) {
+
+			List<ScQtCheckList> finSpecs = constructFinSpecsNSocre(financialScoring
+					.get(0));
+			financialScoring.remove(0);
+			localChecklist.addAll(finSpecs);
+			localChecklist.addAll(financialScoring);
+			scQt.setScQtChecklists(localChecklist);
+		}
+		/*
+		 * ScQtScoreOfferPrice
+		 * packageOfferPrice=this.getManagedBean().getPackageScoreSetting();
+		 * if(packageOfferPrice!=null){ packageOfferPrice.setChangedBy(1L);
+		 * packageOfferPrice.setCreatedBy(1L);
+		 * packageOfferPrice.setCreatedDate(new
+		 * Timestamp(System.currentTimeMillis()));
+		 * 
+		 * }
+		 */
+		List<ScQtSchedule> freqschedule = this.getManagedBean()
+				.getScheduleList();
+		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
+		if (freqschedule != null && !freqschedule.isEmpty()) {
+			String Startmonth = "";
+			String endmonth = "03";
+			for (ScQtSchedule schedule : freqschedule) {
+				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+					Startmonth = "01";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+					Startmonth = "02";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+					Startmonth = "03";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+					Startmonth = "04";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+					Startmonth = "05";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+					Startmonth = "06";
+				}
+
+				if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+					Startmonth = "07";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+					Startmonth = "08";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+					Startmonth = "09";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+					Startmonth = "10";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+					Startmonth = "11";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+					Startmonth = "12";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+					endmonth = "01";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+					endmonth = "02";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+					endmonth = "03";
+				}
+
+				if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+					endmonth = "04";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+					endmonth = "05";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+					endmonth = "06";
+				}
+
+				if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+					endmonth = "07";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+					endmonth = "08";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+					endmonth = "09";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+					endmonth = "10";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+					endmonth = "11";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+					endmonth = "12";
+				}
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/" + Startmonth + "/"
+						+ schedule.getStartYear();
+				String toDate = date + "/" + endmonth + "/"
+						+ schedule.getEndYear();
+				// System.out.println("======display schedule No==="+schedule.getScheduleNo());
+				schedule.setScheduleNo(schedule.getScheduleNo());
+				schedule.setScheduleType(1);
+				try {
+					schedule.setFromDate(df.parse(fromdate));
+					schedule.setToDate(df.parse(toDate));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				schedule.setScQt(this.getManagedBean().getScQt());
+				localScheduleList.add(schedule);
+				scQt.setScQtSchedules(localScheduleList);
+
+			}
+		}
+
+		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
+				.getProgressivePaymentList();
+		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
+			String Startmonth = "";
+			String endmonth = "";
+			for (ScQtProgressivePayment schedule : progressivePayemnt) {
+				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+					Startmonth = "01";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+					Startmonth = "02";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+					Startmonth = "03";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+					Startmonth = "04";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+					Startmonth = "05";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+					Startmonth = "06";
+				}
+
+				if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+					Startmonth = "07";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+					Startmonth = "08";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+					Startmonth = "09";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+					Startmonth = "10";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+					Startmonth = "11";
+				}
+				if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+					Startmonth = "12";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+					endmonth = "01";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+					endmonth = "02";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+					endmonth = "03";
+				}
+
+				if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+					endmonth = "04";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+					endmonth = "05";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+					endmonth = "06";
+				}
+
+				if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+					endmonth = "07";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+					endmonth = "08";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+					endmonth = "09";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+					endmonth = "10";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+					endmonth = "11";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+					endmonth = "12";
+				}
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/" + Startmonth + "/"
+						+ schedule.getStartYear();
+				String toDate = date + "/" + endmonth + "/"
+						+ schedule.getEndYear();
+				try {
+					schedule.setFromDate(df.parse(fromdate));
+					schedule.setToDate(df.parse(toDate));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				schedule.setScQt(this.getManagedBean().getScQt());
+				paymentList.add(schedule);
+				scQt.setScQtProgressivePayments(paymentList);
+
+			}
+		}
+
+		List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
+		ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
+				.getTechnicalScoreSetting();
+		if (technicalScoreSetting != null) {
+			scoreSetting.add(technicalScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
+				.getFinancialScoreSetting();
+		if (financialScoreSetting != null) {
+			scoreSetting.add(financialScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+		ScQtScoreSetting demoScoreSetting = this.getManagedBean()
+				.getDemoScoreSetting();
+		if (demoScoreSetting != null) {
+			scoreSetting.add(demoScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
+				.getRecommendationPackageScore();
+		if (packageScoreSetting != null) {
+			scoreSetting.add(packageScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+
+		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
+				.getRecommendationScore();
+		if (itemScoreSetting != null) {
+			scoreSetting.add(itemScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+
+		List<ScQtDeliveryLoc> localDeliveryList = new ArrayList<ScQtDeliveryLoc>();
+		// List<BriefingZoneBean> deliveryList=
+		// this.getManagedBean().getDeliveryLocBean();
+		List<BriefingZoneBean> deliveryList = this.getManagedBean()
+				.getAddressZoneBean();
+		if (deliveryList != null && !deliveryList.isEmpty()) {
+			for (BriefingZoneBean briefingZoneBean : deliveryList) {
+				if (briefingZoneBean.getDeliveryLocList() != null
+						&& !briefingZoneBean.getDeliveryLocList().isEmpty()) {
+
+					localDeliveryList.addAll(briefingZoneBean
+							.getDeliveryLocList());
+
+				}
+				scQt.setScQtDeliveryLocs(localDeliveryList);
+			}
+
+		}
+		List<ScQtDeliveryLoc> nonZoneList = this.getManagedBean()
+				.getDeliveryNonZoneList();
+		if (nonZoneList != null && !nonZoneList.isEmpty()) {
+			scQt.setScQtDeliveryLocs(nonZoneList);
+		}
+
+		scQt.setScQtCommittees(null);
+		reqDTO.setQtdetail(scQt);
+		return reqDTO;
+	}
+
+	public String updateSpecCommitteBpmTask(String action) {
+		QuationTenderReqDTO spReqDTO = constructSpecCommitteDtls();
+		spReqDTO.setOutcome(action);
+		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		spReqDTO.setToken(ctx);
+		IQTDetailSO qtDetailSO = getDetailSO();
+		// QuationTenderResDTO resDTO = new QuationTenderResDTO();
+		try {
+			QuationTenderResDTO resDTO = qtDetailSO.updateBPMAction(spReqDTO);
+			if (resDTO.isSuccessful()) {
+				ScQt qt = resDTO.getQtDetail();
+			FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(getMessgeConstant(action)
+														,
+														new String[] {
+																"Specification",
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			}
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process ", " "
+
+					));
+		}
+		return null;
+
+	}
 
 }
