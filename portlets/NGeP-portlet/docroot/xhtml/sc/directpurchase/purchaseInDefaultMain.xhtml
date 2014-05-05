@@ -11,7 +11,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	<ac:title value="#{lbl['lbl.sc.pid']}"/>
     <p:panel id="mailPanel">
-      <p:spacer height="5px" />
 	  <div align="right">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	      
@@ -53,28 +52,20 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						<p:commandButton value="#{action}" process="@all"
 								styleClass="ui-button" icon="#{iconVar}"
 								actionListener="#{purchaseInDefaultBackingBean.updateBpmTask(action)}" />
-								
-						
 						</c:forEach>
-
 					</c:if></td>
 			</tr>
 		</table>
-	    
-	    
      </div>
 	   
 	  <p:spacer height="5px" />
 		<table style="border: 0px; align:center">
 			<tr>
-				<td> <td width="100%" align="left" valign="top" style="border: 0.5px; 
-				     align:center; padding-right: 10px; padding-bottom: 10px;padding-left: 10px; background-color: #F2F2F2;">
+			  <td> <td width="100%" align="left" valign="top">
 				   <ui:include src="/xhtml/sc/directpurchase/purchaseInDefault.xhtml" />
 				</td></td>
 			</tr>
 		</table>
-		
-		
      </p:panel>	
    			
 	</ui:define>

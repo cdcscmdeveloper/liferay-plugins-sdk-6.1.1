@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	 <p:spacer height="10px" />
 	<h:panelGrid border="0" cellpadding="" cellspacing="4" width="100%"
-		columns="8" style="background-color: #F2F2F2;">
+		columns="8">
 		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
 		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}" disabled="true"/>
 
@@ -100,7 +100,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">
 				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" size="30" 
-				     disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
+				     disabled="#{!purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
 			</p:column>
 
 		</p:dataTable>

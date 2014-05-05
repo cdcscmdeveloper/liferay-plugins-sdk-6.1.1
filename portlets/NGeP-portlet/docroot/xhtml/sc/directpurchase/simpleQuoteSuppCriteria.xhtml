@@ -6,6 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="suppCriteria" header="SUPPLIER CRITERIA" toggleable="true">
+		<ac:lovPopup />
+		
 		<h:panelGroup
 			rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
@@ -124,15 +126,25 @@
 
 					</p:dataTable>
 
-					<div align="right" style="width: 100%">
-						<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
-							postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
-							headerText="Business Nature Lov" buttonLabel="Add"
-							buttonIcon="ui-icon-add"
-							saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
-							conditionField="recordStatus^1" update="@form" />
-						<ac:lovPopup />
-					</div>
+					<p:panelGrid styleClass="noBorders tr,noBorders td">
+						<p:row>
+							<p:column width="60%" style="text-align:right">
+								<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
+									postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
+									headerText="Business Nature Lov" buttonLabel="Add"
+									buttonIcon="ui-icon-add" selectionMode="multiple"
+									saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
+									conditionField="recordStatus^1" update="@form" />
+
+								 <p:commandButton
+									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									process="@this,byBusNatureDtl" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.deleteBusinessNature}"
+									update="byBusNatureDtl" icon="ui-icon-delete" />
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
 
 				</p:tab>
 
@@ -143,9 +155,10 @@
 					<p:spacer height="10px"></p:spacer>
 					<p:dataTable id="supplierItemDt" var="quoteSupplier"
 						rowKey="#{quoteSupplier}" rowIndexVar="index"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
 						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
 						<ac:paginator for="supplierItemDt" />
-
+						<p:column selectionMode="multiple" style="width:2%" />
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
@@ -162,21 +175,25 @@
 						</p:column>
 					</p:dataTable>
 
-					<div align="right" style="width: 100%">
-						<ac:lov id="supplier" lovId="SM_SUPPLIER"
-							postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers)"
-							headerText="Supplier Lov" buttonLabel="Add"
-							buttonIcon="ui-icon-add"
-							saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
-							conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" update="@form" />
-						<ac:lovPopup />
+					<p:panelGrid styleClass="noBorders tr,noBorders td">
+						<p:row>
+							<p:column width="60%" style="text-align:right">
+								<ac:lov id="supplier" lovId="SM_SUPPLIER"
+									postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers)"
+									headerText="Supplier Lov" buttonLabel="Add"
+									buttonIcon="ui-icon-add" selectionMode="multiple"
+									saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
+									conditionField="#{simpleQuoteBackingBean.supplierListCriteria}"
+									update="@([id$=suppCriteriasId])" />
 
-						<p:commandButton
-							value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-							process="@this,supplierItemDt" partialSubmit="true"
-							action="#{simpleQuoteBackingBean.deleteSupplier}"
-							update="supplierItemDt" icon="ui-icon-delete" />
-					</div>
+								<p:commandButton
+									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									process="@this,supplierItemDt" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.deleteSupplier}"
+									update="supplierItemDt" icon="ui-icon-delete" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
 				</p:tab>
 
 				<!--  BY Government Seller   -->
@@ -185,8 +202,10 @@
 					<p:spacer height="10px"></p:spacer>
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 						<ac:paginator for="govtSellerId" />
+							<p:column selectionMode="multiple" style="width:2%" />
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
@@ -204,21 +223,27 @@
 
 					</p:dataTable>
 
-					<div align="right" style="width: 100%">
-						<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
-						    postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
-							headerText="Government Seller"
-							buttonLabel="Add"
-							buttonIcon="ui-icon-add"
-							saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
-							conditionField="recordStatus^1" update="@form" />
-						<ac:lovPopup />
-						<p:commandButton
-							value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-							process="@this,govtSellerId" partialSubmit="true"
-							action="#{simpleQuoteBackingBean.deleteGovtSeller}"
-							update="govtSellerId" icon="ui-icon-delete" />
-					</div>
+					<p:panelGrid styleClass="noBorders tr,noBorders td">
+						<p:row>
+							<p:column width="60%" style="text-align:right">
+								<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
+									postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
+									headerText="Government Seller" 
+									buttonLabel="Add"
+									buttonIcon="ui-icon-add" 
+									selectionMode="multiple"
+									saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
+									conditionField="recordStatus^1" update="@form" />
+
+								<p:commandButton
+									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									process="@this,govtSellerId" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.deleteGovtSeller}"
+									update="govtSellerId" icon="ui-icon-delete" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					
 				</p:tab>
 
 				<!-- Panel Supplier   -->
@@ -229,6 +254,7 @@
 						rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
 						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">
+						
 						<ac:paginator for="bypanelItemId" />
 						<p:column selectionMode="multiple" style="width:2%" />
 
@@ -250,21 +276,24 @@
 
 					</p:dataTable>
 
-					<div align="right" style="width: 100%">
-						<ac:lov id="panelSupplier" lovId="CT_PANEL_SUPPLIER"
-							headerText="Panel Supplier " 
-							buttonLabel="Add"
-							buttonIcon="ui-icon-add"
-							saveObject="simpleQuoteBackingBean.managedBean.ctPanelSuppliers"
-							conditionField="recordStatus^1" update="@form" />
-						<ac:lovPopup />
-						
-						<p:commandButton
-							value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-							process="@this,bypanelItemId" partialSubmit="true"
-							action="#{simpleQuoteBackingBean.deletePanelSupplier}"
-							update="bypanelItemId" icon="ui-icon-delete" />
-					</div>
+					<p:panelGrid styleClass="noBorders tr,noBorders td">
+						<p:row>
+							<p:column width="60%" style="text-align:right">
+								<ac:lov id="panelSupplierId" lovId="CT_PANEL_SUPPLIER"
+									postUpdateListener="simpleQuoteBackingBean.panelItemListener(simpleQuoteBackingBean.managedBean.ctPanelSuppliers)"
+									headerText="Panel Supplier" buttonLabel="Add"
+									buttonIcon="ui-icon-add" selectionMode="multiple"
+									saveObject="simpleQuoteBackingBean.managedBean.ctPanelSuppliers"
+									conditionField="recordStatus^1" update="@form" />
+
+								<p:commandButton
+									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									process="@this,bypanelItemId" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.deletePanelSupplier}"
+									update="bypanelItemId" icon="ui-icon-delete" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
 				</p:tab>
 
 			</p:tabView>
