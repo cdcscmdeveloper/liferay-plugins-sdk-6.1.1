@@ -34,7 +34,7 @@ public class UserprofileBackingBean extends
 		retriveUserDtls();
 
 	}
-	
+		
 	private void retriveUserDtls() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = facesScopes.getUserSessionBean();
@@ -62,6 +62,5 @@ public class UserprofileBackingBean extends
 		}
 	}
 	
-
 
 }
