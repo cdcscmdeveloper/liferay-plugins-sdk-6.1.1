@@ -109,10 +109,10 @@
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locLevels"
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.locationLevel}"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 								<f:selectItems
-									value="#{qTSupplierQulCriteriaBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+									value="#{qTSupplierQulCriteriaBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
 									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
 							</p:selectOneMenu></td>
@@ -175,11 +175,11 @@
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel}"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel.parmaeterId}"
 								style="width: 178px;">
 
 								<f:selectItems
-									value="#{qTSupplierQulCriteriaBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+									value="#{qTSupplierQulCriteriaBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
 									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
 							</p:selectOneMenu></td>
