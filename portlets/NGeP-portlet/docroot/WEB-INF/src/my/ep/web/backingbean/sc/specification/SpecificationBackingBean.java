@@ -2753,20 +2753,12 @@ public class SpecificationBackingBean extends
 		try {
 			String type = (String) event.getComponent().getAttributes()
 					.get("value");
-			System.out.println("====fulfilment type====" + type);
+			
 			this.getManagedBean().setFulfilmentType(type);
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
-			/*
-			 * if (type != null) { for (PmParameterDesc paramDesc :
-			 * localParamDesc) { if (paramDesc.getPmParameter().getParameterId()
-			 * .equals(Long.valueOf(type))) {
-			 * 
-			 * this.getManagedBean().setFulfilmentType(
-			 * paramDesc.getCodeName()); } } }
-			 */
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 
 	}
 
@@ -2774,9 +2766,7 @@ public class SpecificationBackingBean extends
 		try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
-
-			this.getManagedBean().getScQt()
-					.setFulfilmentType(String.valueOf(type));
+			
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
@@ -8366,9 +8356,8 @@ public class SpecificationBackingBean extends
 	private QuationTenderReqDTO constructSpecCommitteDtls() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
-		scQt.setFulfilmentType("S");
-		System.out
-				.println("=======enter saveSpecificationCommitteeDtls method===");
+		
+		
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
