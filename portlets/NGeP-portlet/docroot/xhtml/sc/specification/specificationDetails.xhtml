@@ -119,14 +119,14 @@
 			<tr>
 				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
 				<td><p:selectOneMenu
-						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType}"
+						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="margin-bottom:5px;">
 						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
 				<f:selectItem itemLabel="Periodic(As and When Basis)" itemValue="2" />
 				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" /> -->
 						<!-- update="progressive,frequency,businessSpecId" -->
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentType)}" />
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="progressive,frequency,businessSpecId"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
@@ -164,7 +164,7 @@
 						style="width: 178px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.zoneLocationLevel)}" />
+							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
