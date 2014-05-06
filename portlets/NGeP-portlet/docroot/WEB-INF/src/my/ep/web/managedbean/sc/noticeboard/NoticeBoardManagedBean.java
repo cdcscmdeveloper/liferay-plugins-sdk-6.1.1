@@ -10,6 +10,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
@@ -116,6 +117,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> zones;
 
 	private List<PmOrgProfile>ptjList;
+	private ScQtBsv bsv;
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -543,6 +545,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setPtjList(List<PmOrgProfile> ptjList) {
 		this.ptjList = ptjList;
+	}
+
+	public ScQtBsv getBsv() {
+		return bsv;
+	}
+
+	public void setBsv(ScQtBsv bsv) {
+		this.bsv = bsv;
 	}
 
 }

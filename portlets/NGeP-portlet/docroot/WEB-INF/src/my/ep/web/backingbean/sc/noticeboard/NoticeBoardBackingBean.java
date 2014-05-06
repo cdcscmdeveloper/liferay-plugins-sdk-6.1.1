@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -48,9 +49,11 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -68,7 +71,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.tabview.Tab;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -110,7 +112,8 @@ public class NoticeBoardBackingBean extends
 		log.info("*** TabChange Event **** ");
 
 		PmParameterDesc desc = (PmParameterDesc) event.getData();
-		this.getManagedBean().setSelectedTab(desc.getPmParameter().getParameterCode());
+		this.getManagedBean().setSelectedTab(
+				desc.getPmParameter().getParameterCode());
 	}
 
 	/**
@@ -124,8 +127,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-
-			reqDTO.setQtId(146l);
+			reqDTO.setQtId(qt.getQtId());
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
@@ -135,31 +137,19 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setCategoryList(
 					resDTO.getCategoryResultBean().getResultList());
 
-			this.getManagedBean().setZones(resDTO.getZones());
-			if (!resDTO.getScQt().isZonal()) {
+			
+			if (!resDTO.getScQt().isZonal()) {				
 				constructLocationTree(resDTO.getLocCriteria());
+				this.getManagedBean().setBsv(resDTO.getScQtBsv());
 				this.getManagedBean().setBriefingDtls(
 						resDTO.getBriefingResultBean().getResultList());
 				this.getManagedBean().setSiteVisitDtls(
 						resDTO.getSiteVisitResultBean().getResultList());
-			} else {
-				/*if (scQt.isSameBsv()) {
-					List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-							scQt.getQtId(), resDTO.getZones().get(0)
-									.getSpecZoneId(), scQt.getAttendenceType());
-					this.getManagedBean().setBriefingDtls(briefings);
-				} else {*/
-					List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-							scQt.getQtId(), resDTO.getZones().get(0)
-									.getSpecZoneId(), "B");
-					this.getManagedBean().setBriefingDtls(briefings);
-					List<ScQtBsvDtl> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-							scQt.getQtId(), resDTO.getZones().get(0)
-									.getSpecZoneId(), "S");
-					this.getManagedBean().setBriefingDtls(briefings);
-					this.getManagedBean().setSiteVisitDtls(siteVisit);
+			} else {	
+				this.getManagedBean().setZones(resDTO.getZones());
+				
 
-				//}
+				// }
 				// constructLocationTree(resDTO.getLocCriteria());
 			}
 			// constructBrifingSiteVisitDtls(resDTO);
@@ -239,72 +229,11 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
-	/*
-	 * Method to load the categories list for notice board
-	 */
-	/*
-	 * public void retriveCategoriesCode1() { if
-	 * (this.getManagedBean().getLocationRootNode() == null) { ICategoryCodeSO
-	 * categoryCodeSO = BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-	 * ICategoryCodeSO.class);
-	 * 
-	 * CategoryCodeResDTO catResDTO = categoryCodeSO .retrieveCategoryL1List();
-	 * 
-	 * org.primefaces.model.TreeNode node = this.getManagedBean()
-	 * .getCategoryRootNode(); if (node == null) { node = new
-	 * EpDefaultTreeNode("Root", null); for (PmCategoryL1 categoryL1 :
-	 * catResDTO.getCategoryL1List()) { new
-	 * EpDefaultTreeNode(QTConstants.CATEGORY_L1_CODE, categoryL1, node); } }
-	 * this.getManagedBean().setCategoryRootNode(node);
-	 * 
-	 * } }
-	 */
-
-	/*
-	 * Method to call dynamic tabs for notice board search
-	 */
-	public void getTabs() {
-		List<Tab> tabs = new ArrayList<Tab>();
-		Tab tab1 = new Tab();
-		tab1.setTitle("Publish");
-		tabs.add(tab1);
-
-		Tab tab2 = new Tab();
-		tab2.setTitle("Changes");
-		tabs.add(tab2);
-
-		Tab tab3 = new Tab();
-		tab3.setTitle("Closed");
-		tabs.add(tab3);
-
-		Tab tab4 = new Tab();
-		tab4.setTitle("Price Schedule");
-		tabs.add(tab4);
-
-		Tab tab5 = new Tab();
-		tab5.setTitle("Awarded");
-		tabs.add(tab5);
-
-		this.getManagedBean().setTabList(tabs);
-
-	}
-
 	/**
 	 * Cancel button for Notice Board
 	 */
 	public String backBtn() {
 		log.info("** Back Button **");
-		/*
-		 * if (getManagedBean().getMinistryOrgProfile() == null) {
-		 * getManagedBean().setScQt(new ScQt());
-		 * getManagedBean().getScQt().setPmOrgProfile(new PmOrgProfile());
-		 * getManagedBean().getScQt() .setMinistryOrgProfile(new
-		 * PmOrgProfile()); getManagedBean().getScQt().setDepartmentOrgProfile(
-		 * new PmOrgProfile());
-		 * 
-		 * }
-		 */
 
 		return "/xhtml/sc/noticeboard/"
 				+ this.getManagedBean().getPreviousPage()
@@ -401,34 +330,7 @@ public class NoticeBoardBackingBean extends
 		TreeNode node = event.getTreeNode();
 
 		Object selectedObject = node.getData();
-
-		/*
-		 * if (selectedObject instanceof PmOrgProfile) {
-		 * 
-		 * root = consturctTreeNode(node);
-		 * 
-		 * if (this.getManagedBean().getTempMinstryRootNode() == null) {
-		 * this.getManagedBean().setTempMinstryRootNode(
-		 * this.getManagedBean().getMinstryRootNode()); } //
-		 * this.getManagedBean().getTempMinstryRootNode().setSelected(false);
-		 * this.getManagedBean().setMinstryRootNode(root);
-		 * this.getManagedBean().setMistrySearchBean( new
-		 * SearchBean<PmOrgProfile>());
-		 * 
-		 * } else if (selectedObject instanceof PmCategoryL1 || selectedObject
-		 * instanceof PmCategoryL2 || selectedObject instanceof PmCategoryL3) {
-		 * 
-		 * root = consturctTreeNode(node); if
-		 * (this.getManagedBean().getTempCategoryRootNode() == null) {
-		 * this.getManagedBean().setTempCategoryRootNode(
-		 * this.getManagedBean().getCategoryRootNode()); }
-		 * 
-		 * this.getManagedBean().getTempCategoryRootNode()
-		 * .setSelectable(false);
-		 * 
-		 * this.getManagedBean().setCategoryRootNode(root);
-		 * this.getManagedBean().setCategorySearchBean(new SearchBean<>()); }
-		 */if (selectedObject instanceof PmState
+		if (selectedObject instanceof PmState
 				|| selectedObject instanceof PmDistrict
 				|| selectedObject instanceof PmCity) {
 			root = consturctTreeNode(node);
@@ -444,45 +346,6 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	/*
-	 * public void onOrgProfileNodeExpand(NodeExpandEvent event) { PmOrgProfile
-	 * orgProfile = (PmOrgProfile) event.getTreeNode().getData(); Long
-	 * parentOrgProfileId = orgProfile.getOrgProfileId();
-	 * this.getManagedBean().setMistrySearchBean(null); int childCount =
-	 * event.getTreeNode().getChildCount(); if (childCount == 0) { if
-	 * (orgProfile.getParentOrgProfile() == null) {
-	 * 
-	 * if (parentOrgProfileId != null) { OrgProfileReqDTO reqDTO = new
-	 * OrgProfileReqDTO();
-	 * reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-	 * reqDTO.setParentOrgProfileId(parentOrgProfileId);
-	 * 
-	 * IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-	 * .getServiceObject( ModuleCodeConst.PROFILE_MANAGEMENT,
-	 * IOrgProfileSO.class); OrgProfileResDTO resDTO = orgProfileSO
-	 * .retrieveOrgProfileListByOrgType(reqDTO);
-	 * 
-	 * List<PmOrgProfile> deptList = resDTO.getOrgProfileList();
-	 * org.primefaces.model.TreeNode root = event.getTreeNode();
-	 * root.getParent().setSelected(false); for (PmOrgProfile pmOrgProfile :
-	 * deptList) { new EpDefaultTreeNode(pmOrgProfile, root); }
-	 * 
-	 * } } else { if (parentOrgProfileId != null) { OrgProfileReqDTO reqDTO =
-	 * new OrgProfileReqDTO();
-	 * reqDTO.setOrgType(OrganizationType.DIVISION.value());
-	 * reqDTO.setParentOrgProfileId(parentOrgProfileId);
-	 * 
-	 * IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-	 * .getServiceObject( ModuleCodeConst.PROFILE_MANAGEMENT,
-	 * IOrgProfileSO.class); OrgProfileResDTO resDTO = orgProfileSO
-	 * .retrieveOrgProfileListByOrgType(reqDTO);
-	 * 
-	 * List<PmOrgProfile> deptList = resDTO.getOrgProfileList();
-	 * org.primefaces.model.TreeNode root = event.getTreeNode(); for
-	 * (PmOrgProfile pmOrgProfile : deptList) { new
-	 * DefaultTreeNode(pmOrgProfile, root); } } } } }
-	 */
-
 	public void onNodeCollapse(NodeCollapseEvent event) {
 		System.out.println("collapse @@@@@@@@@@@@@ " + event.getTreeNode());
 	}
@@ -496,40 +359,7 @@ public class NoticeBoardBackingBean extends
 		Object obj = event.getTreeNode().getData();
 
 		if (event.getTreeNode().getChildCount() <= 0) {
-			/*
-			 * if (obj instanceof PmCategoryL1) {
-			 * this.getManagedBean().setCategorySearchBean(null);
-			 * ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-			 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-			 * ICategoryCodeSO.class); CategoryCodeReqDTO reqDTO = new
-			 * CategoryCodeReqDTO(); reqDTO.setCategoryL1Id(((PmCategoryL1)
-			 * obj).getCategoryL1Id()); CategoryCodeResDTO categorysResDTO =
-			 * categoryCodeSO .retrieveCategoryL2ListByL1Id(reqDTO);
-			 * List<PmCategoryL2> catL2List = categorysResDTO
-			 * .getCategoryL2List();
-			 * 
-			 * org.primefaces.model.TreeNode root = event.getTreeNode();
-			 * root.getParent().setSelected(false); for (PmCategoryL2
-			 * pmCategoryL2 : catL2List) { new
-			 * EpDefaultTreeNode(QTConstants.CATEGORY_L2_CODE, pmCategoryL2,
-			 * root); } } else if (obj instanceof PmCategoryL2) {
-			 * this.getManagedBean().setCategorySearchBean(null);
-			 * ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-			 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-			 * ICategoryCodeSO.class); CategoryCodeReqDTO reqDTO = new
-			 * CategoryCodeReqDTO();
-			 * 
-			 * reqDTO.setCategoryL2Id(((PmCategoryL2) obj).getCategoryL2Id());
-			 * CategoryCodeResDTO categorysResDTO = categoryCodeSO
-			 * .retrieveCategoryL3ListByL2Id(reqDTO); List<PmCategoryL3>
-			 * catL3List = categorysResDTO .getCategoryL3List();
-			 * org.primefaces.model.TreeNode root = event.getTreeNode(); for
-			 * (PmCategoryL3 pmCategoryL3 : catL3List) { new
-			 * DefaultTreeNode(QTConstants.CATEGORY_L3_CODE, pmCategoryL3,
-			 * root); }
-			 * 
-			 * }
-			 */
+			
 			if (obj instanceof PmState) {
 				this.getManagedBean().setLocationSearchBean(null);
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -619,30 +449,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void clearTreeNode(String selectedNode) {
-		/*
-		 * if (selectedNode.equalsIgnoreCase("ministry")) {
-		 * this.getManagedBean().setMinistrySelectedNode(null);
-		 * 
-		 * TreeNode rootNode = this.getManagedBean().getTempMinstryRootNode();
-		 * List<TreeNode> childNodes = rootNode.getChildren();
-		 * 
-		 * for (TreeNode node : childNodes) { if (node.isExpanded()) {
-		 * node.setExpanded(false); } }
-		 * this.getManagedBean().setMinstryRootNode(rootNode);
-		 * this.getManagedBean().setTempMinstryRootNode(null);
-		 * this.getManagedBean().setMistrySearchBean(null);
-		 * 
-		 * } else if (selectedNode.equalsIgnoreCase("category")) {
-		 * this.getManagedBean().setCategorySelectedNode(null); TreeNode
-		 * rootNode = this.getManagedBean().getTempCategoryRootNode();
-		 * List<TreeNode> childNodes = rootNode.getChildren();
-		 * 
-		 * for (TreeNode node : childNodes) { if (node.isExpanded()) {
-		 * node.setExpanded(false); } }
-		 * this.getManagedBean().setCategoryRootNode(rootNode);
-		 * this.getManagedBean().setTempLocationRootNode(null);
-		 * this.getManagedBean().setCategorySearchBean(null); } else
-		 */if (selectedNode.equalsIgnoreCase("location")) {
+	if (selectedNode.equalsIgnoreCase("location")) {
 			this.getManagedBean().setLocationSelectedNode(null);
 			TreeNode rootNode = this.getManagedBean().getTempLocationRootNode();
 			List<TreeNode> childNodes = rootNode.getChildren();
@@ -791,32 +598,35 @@ public class NoticeBoardBackingBean extends
 	public void zoneTabChange(TabChangeEvent changeEvent) {
 
 		ScQt scQt = getManagedBean().getScQt();
-
-		/*TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) changeEvent.getData();
-
 		
-			List<ScQtBsvDtl> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-					scQt.getQtId(), specZoneDtl.getSpecZoneId(),
-					scQt.getAttendenceType());
-			this.getManagedBean().setBriefingDtls(briefings);
+		 TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) changeEvent.getData();
+		 NoticeBoardReqDTO boardReqDTO= new NoticeBoardReqDTO();
 		
-			List<ScQtBriefing> briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-					scQt.getQtId(), specZoneDtl.getSpecZoneId(), "B");
-			this.getManagedBean().setBriefingDtls(briefings);
-			List<ScQtBriefing> siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-					scQt.getQtId(), specZoneDtl.getSpecZoneId(), "S");
-
-			this.getManagedBean().setSiteVisitDtls(siteVisit);*/
-
-		
-
+		IQTNoticeBoardSO	qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+		     boardReqDTO.setQtId(scQt.getQtId());
+		     boardReqDTO.setZoneId(specZoneDtl.getSpecZoneId());
+			NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveBSVDtlsByZone(boardReqDTO);
+		 	 		
+			ScQtBsv scQtBsv = resDTO.getScQtBsv();
+			this.getManagedBean().setBsv(scQtBsv);
+		  if(null != scQtBsv && scQtBsv.isSameBsv()){			  
+			  this.getManagedBean().setBriefingDtls(resDTO.getBriefingResultBean().getResultList());
+		  }else{
+			  this.getManagedBean().setBriefingDtls(resDTO.getBriefingResultBean().getResultList());
+			  this.getManagedBean().setSiteVisitDtls(resDTO.getSiteVisitResultBean().getResultList());
+		  }
+		  List<TplSpecLoc> locs= resDTO.getLocCriteria();		  
+		  constructLocationTree(locs);
+		 this.getManagedBean().setContactPersons(resDTO.getContactPersonResultBean().getResultList());
+		 
 	}
 
-	// constructLocationTree(null);
+	
 
-	public void showLocationDtls(ScQtBriefing briefing) {
+	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		this.getManagedBean().setAddress(briefing.getPmAddress().getAddress1());
+		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
 	}
 
 	private void constructBrifingSiteVisitDtls(NoticeBoardResDTO resDTO) {
@@ -869,20 +679,7 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
-	private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId(
-			Long qtId, Long zoneId, String bsvType) {
-		IQTBriefingSO qTBriefingSO;
-
-		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-		BriefingReqDTO reqDTO = new BriefingReqDTO();
-		reqDTO.setQtId(qtId);
-		reqDTO.setSpecZoneId(zoneId);
-		reqDTO.setBriefingType(bsvType);
-		BriefingResDTO briefingResDTO = qTBriefingSO
-				.retrieveBriefingSiteVisitList(reqDTO);
-		return briefingResDTO.getBriefingResultBean().getResultList();
-	}
+	
 
 	public String getMofNo() {
 		return mofNo;
@@ -905,8 +702,8 @@ public class NoticeBoardBackingBean extends
 	 * */
 	public void handleMinistryProfileChanged() {
 
-		Long parentOrgProfileId = this.getManagedBean().getMinistryProfile().
-				getOrgProfileId();
+		Long parentOrgProfileId = this.getManagedBean().getMinistryProfile()
+				.getOrgProfileId();
 
 		if (parentOrgProfileId != null) {
 			PmUser user = new FacesScopes().getUserSessionBean();
@@ -921,7 +718,7 @@ public class NoticeBoardBackingBean extends
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO	
+				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
 
 				this.getManagedBean().setPtjList(resDTO.getOrgProfileList());
@@ -930,26 +727,25 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setPtjList(new ArrayList<PmOrgProfile>());
 		}
 
-		this.getManagedBean().getPtjProfile()
-				.setOrgProfileId(null);
+		this.getManagedBean().getPtjProfile().setOrgProfileId(null);
 
 	}
-	
+
 	public Long getClosingDays(Date closingDate) {
 		if (log.isDebugEnabled()) {
 			log.debug("getClosingDays");
 		}
-		
+
 		Long closingDays = null;
 		Date currentDate = new Date();
-		
+
 		if (closingDate != null && closingDate.after(currentDate)) {
-			closingDays = DateUtils.getDaysDifference(currentDate, closingDate);	
+			closingDays = DateUtils.getDaysDifference(currentDate, closingDate);
 		}
-		
+
 		return closingDays;
 	}
-	
+
 	/**
 	 * notice board quotation/tender list paging class
 	 */
@@ -964,10 +760,13 @@ public class NoticeBoardBackingBean extends
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
+		public ISearchResultBean<ScQt> pageChangeListener(
+				ISearchBean<ScQt> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -977,40 +776,43 @@ public class NoticeBoardBackingBean extends
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-				// Filter By - Status				
+				// Filter By - Status
 				List<Long> statusIds = new ArrayList<Long>();
 				String selectedTab = getManagedBean().getSelectedTab();
-				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
-					//TODO filter by changes flag.
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
+						.equals(selectedTab)) {
+					// TODO filter by changes flag.
 				} else {
-					if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED.equals(selectedTab)) {
+					if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
+							.equals(selectedTab)) {
 						statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
 						statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 						statusIds.add(QTStatusConst.QT_LOI_LOA);
-					} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED.equals(selectedTab)) {
+					} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
+							.equals(selectedTab)) {
 						statusIds.add(QTStatusConst.QT_AWARDED);
 					} else {
 						statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 						statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					}
-					
+
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("scQtStatus.current",
-									SearchOperator.OPERATOR_EQUALS.value(), 
+									SearchOperator.OPERATOR_EQUALS.value(),
 									true));
-					
+
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtStatus.pmStatus.statusId",
-									SearchOperator.OPERATOR_IN.value(), 
+							new SearchFilterBean(
+									"scQtStatus.pmStatus.statusId",
+									SearchOperator.OPERATOR_IN.value(),
 									statusIds));
 				}
-				
-				
+
 				// Filter By - QT No
 				if (StringUtils.isNotBlank(getManagedBean().getQtNo())) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("qtNo",
-									SearchOperator.OPERATOR_LIKE.value(), 
+									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getQtNo()));
 
 				}
@@ -1019,141 +821,178 @@ public class NoticeBoardBackingBean extends
 				if (StringUtils.isNotBlank(getManagedBean().getTitle())) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("qtTitle",
-									SearchOperator.OPERATOR_LIKE.value(), 
-									getManagedBean().getTitle(),
-									true));
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getTitle(), true));
 
 				}
 
 				// Filter By - Category Code
 				PmCategoryL3 pmCategoryL3 = getManagedBean().getCategoryL3();
-				if (pmCategoryL3 != null && pmCategoryL3.getCategoryL3Id() != null) {
+				if (pmCategoryL3 != null
+						&& pmCategoryL3.getCategoryL3Id() != null) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtCategorys.pmCategoryL3.categoryL3Id",
-									SearchOperator.OPERATOR_EQUALS.value(), 
+							new SearchFilterBean(
+									"scQtCategorys.pmCategoryL3.categoryL3Id",
+									SearchOperator.OPERATOR_EQUALS.value(),
 									pmCategoryL3.getCategoryL3Id()));
 
 				}
 
 				// Filter By - Ministry
-				PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
-				if (ministryProfile != null && ministryProfile.getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_EQUALS.value(), 
+				PmOrgProfile ministryProfile = getManagedBean()
+						.getMinistryProfile();
+				if (ministryProfile != null
+						&& ministryProfile.getOrgProfileId() != null) {
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									"pmOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(),
 									ministryProfile.getOrgProfileId()));
 
 				}
-				
+
 				// Filter By - PTJ
 				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
 				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_EQUALS.value(), 
+									SearchOperator.OPERATOR_EQUALS.value(),
 									ptjProfile.getOrgProfileId()));
 
 				}
-				
+
 				// Filter By - Publish Date
-				NoticeBoardSearchDataBean publishSearchDataBean = getManagedBean().getPublishSearchDataBean();
+				NoticeBoardSearchDataBean publishSearchDataBean = getManagedBean()
+						.getPublishSearchDataBean();
 				if (publishSearchDataBean != null) {
-					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean("publishDate", publishSearchDataBean);
-					
+					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean(
+							"publishDate", publishSearchDataBean);
+
 					if (searchFilterBean != null) {
-						searchBean.getDataFilterBeans().add(searchFilterBean);	
+						searchBean.getDataFilterBeans().add(searchFilterBean);
 					}
 				}
 
 				// Filter By - Briefing & Site Visit Date
-				//TODO cannot search for both.
-				NoticeBoardSearchDataBean briefSearchDataBean = getManagedBean().getBriefSearchDataBean();
-				NoticeBoardSearchDataBean siteVisitDataBean = getManagedBean().getSiteVisitDataBean();
+				// TODO cannot search for both.
+				NoticeBoardSearchDataBean briefSearchDataBean = getManagedBean()
+						.getBriefSearchDataBean();
+				NoticeBoardSearchDataBean siteVisitDataBean = getManagedBean()
+						.getSiteVisitDataBean();
 				if (briefSearchDataBean != null || siteVisitDataBean != null) {
 					String searchField = "scQtBriefings.scQtBsvDtls.bsvDate";
-					SearchFilterBean briefSearchFilterBean = getSearchFilterBeanByDataBean(searchField, briefSearchDataBean);
-					SearchFilterBean siteVisitSearchFilterBean = getSearchFilterBeanByDataBean(searchField, siteVisitDataBean);
-					
-					if (briefSearchFilterBean != null || siteVisitSearchFilterBean != null) {
+					SearchFilterBean briefSearchFilterBean = getSearchFilterBeanByDataBean(
+							searchField, briefSearchDataBean);
+					SearchFilterBean siteVisitSearchFilterBean = getSearchFilterBeanByDataBean(
+							searchField, siteVisitDataBean);
+
+					if (briefSearchFilterBean != null
+							|| siteVisitSearchFilterBean != null) {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("isBsvRequired",
-										SearchOperator.OPERATOR_EQUALS.value(), 
+										SearchOperator.OPERATOR_EQUALS.value(),
 										true));
-						
+
 						List<String> bsvTypes = new ArrayList<String>();
 						bsvTypes.add("A");
-						
+
 						if (briefSearchFilterBean != null) {
 							bsvTypes.add("B");
-							
-							searchBean.getDataFilterBeans().add(briefSearchFilterBean);
+
+							searchBean.getDataFilterBeans().add(
+									briefSearchFilterBean);
 						}
-						
+
 						if (siteVisitSearchFilterBean != null) {
 							bsvTypes.add("S");
-							
-							searchBean.getDataFilterBeans().add(siteVisitSearchFilterBean);
+
+							searchBean.getDataFilterBeans().add(
+									siteVisitSearchFilterBean);
 						}
-						
+
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("scQtBriefings.scQtBsvDtls.bsvType",
-										SearchOperator.OPERATOR_IN.value(), 
+								new SearchFilterBean(
+										"scQtBriefings.scQtBsvDtls.bsvType",
+										SearchOperator.OPERATOR_IN.value(),
 										bsvTypes));
 					}
 				}
 
 				// Filter By - Closing Date
-				NoticeBoardSearchDataBean clsDataBean = getManagedBean().getClsDataBean();
+				NoticeBoardSearchDataBean clsDataBean = getManagedBean()
+						.getClsDataBean();
 				if (clsDataBean != null) {
-					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean("closingDate", clsDataBean);
-					
+					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean(
+							"closingDate", clsDataBean);
+
 					if (searchFilterBean != null) {
-						searchBean.getDataFilterBeans().add(searchFilterBean);	
+						searchBean.getDataFilterBeans().add(searchFilterBean);
 					}
 				}
-				
+
 				// Filter By - Location
-				TreeNode locationRootNode = getManagedBean().getLocationRootNode();
+				TreeNode locationRootNode = getManagedBean()
+						.getLocationRootNode();
 				if (locationRootNode != null) {
 					TreeNode treeNode = locationRootNode;
-					
+
 					// Get the last child node.
-					while (treeNode != null && treeNode.getChildren().size() > 0) {
+					while (treeNode != null
+							&& treeNode.getChildren().size() > 0) {
 						treeNode = treeNode.getChildren().iterator().next();
 					}
-					
+
 					if (treeNode != null) {
 						if (treeNode.getType().equals("state")) {
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmState.stateId",
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											((PmState)treeNode.getData()).getStateId()));	
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(
+											"scQtSupplierCriteria.scQtLocCriteria.pmState.stateId",
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											((PmState) treeNode.getData())
+													.getStateId()));
 						} else if (treeNode.getType().equals("division")) {
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDivision.divisionId",
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											((PmDivision)treeNode.getData()).getDivisionId()));	
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(
+											"scQtSupplierCriteria.scQtLocCriteria.pmDivision.divisionId",
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											((PmDivision) treeNode.getData())
+													.getDivisionId()));
 						} else if (treeNode.getType().equals("district")) {
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDistrict.districtId",
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											((PmDistrict)treeNode.getData()).getDistrictId()));	
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(
+											"scQtSupplierCriteria.scQtLocCriteria.pmDistrict.districtId",
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											((PmDistrict) treeNode.getData())
+													.getDistrictId()));
 						} else if (treeNode.getType().equals("city")) {
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("scQtSupplierCriteria.scQtLocCriteria.pmDistrict.pmCities.cityId",
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											((PmCity)treeNode.getData()).getCityId()));	
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(
+											"scQtSupplierCriteria.scQtLocCriteria.pmDistrict.pmCities.cityId",
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											((PmCity) treeNode.getData())
+													.getCityId()));
 						}
-							
+
 					}
 				}
 
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				qtReqDTO.setQtSearchBean(searchBean);
-				
-				QuationTenderResDTO qtResDTO = detailSO.getQuationTenders(qtReqDTO);
-				
-				System.out.println("qtResDTO:" + qtResDTO.getQtResultBean().getTotalRecord());
+
+				QuationTenderResDTO qtResDTO = detailSO
+						.getQuationTenders(qtReqDTO);
+
+				System.out.println("qtResDTO:"
+						+ qtResDTO.getQtResultBean().getTotalRecord());
 				return qtResDTO.getQtResultBean();
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -1164,31 +1003,38 @@ public class NoticeBoardBackingBean extends
 			return null;
 		}
 	}
-	
-	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField, NoticeBoardSearchDataBean searchDataBean) {
+
+	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField,
+			NoticeBoardSearchDataBean searchDataBean) {
 		SearchFilterBean searchFilterBean = new SearchFilterBean();
-		
+
 		if (searchDataBean.isToday()) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+					.value());
 			searchFilterBean.setSearchValue(new Date());
 		} else if (searchDataBean.isYesterday()) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+					.value());
 			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), 1));
 		} else if (searchDataBean.getPassDays() != null) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(), searchDataBean.getPassDays()));
-		} else if (searchDataBean.getFromDate() != null && searchDataBean.getToDate() != null) {
-			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+					.value());
+			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(),
+					searchDataBean.getPassDays()));
+		} else if (searchDataBean.getFromDate() != null
+				&& searchDataBean.getToDate() != null) {
+			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
+					.value());
 			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
 					searchDataBean.getFromDate(), searchDataBean.getToDate()));
 		}
-		
+
 		if (searchFilterBean.getSearchValue() == null) {
 			return null;
 		}
-		
+
 		searchFilterBean.setSearchField(searchField);
-		
+
 		return searchFilterBean;
 	}
 
@@ -1200,10 +1046,11 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
-	 * @param qtDataModel the qtDataModel to set
+	 * @param qtDataModel
+	 *            the qtDataModel to set
 	 */
 	public void setQtDataModel(IPagingDataModel<ScQt> qtDataModel) {
 		this.qtDataModel = qtDataModel;
 	}
-	
+
 }
