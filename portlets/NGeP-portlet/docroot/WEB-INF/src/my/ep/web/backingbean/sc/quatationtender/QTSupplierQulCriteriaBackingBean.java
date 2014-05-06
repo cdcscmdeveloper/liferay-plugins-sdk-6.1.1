@@ -684,10 +684,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	public void selectLocation(AjaxBehaviorEvent event) {
-		Integer location = (Integer) event.getComponent().getAttributes()
+		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
 		System.out.println("=======location level====" + location);
-		this.getManagedBean().getQt().setZoneLocationLevel(location);
+		this.getManagedBean().getQt().getZoneLocationLevel().setParameterId(location);
+		//this.getManagedBean().getQt().setZoneLocationLevel(location);
 		// this.getManagedBean().getQtCriteria().setSupplierLocation(location);
 	}
 
@@ -772,11 +773,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void showZoneLocationPopup() {
 		debugLogger("showZoneLocationPopup");
-		Integer locationLevel = (Integer) this.getManagedBean().getQt()
-				.getZoneLocationLevel();
+		Integer locationLevel = this.getManagedBean().getQt().getZoneLocationLevel().getParameterId().intValue();
+				
 
 		if (locationLevel == null) {
-			locationLevel = 3;
+			locationLevel = 121;
 		}
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L, null,

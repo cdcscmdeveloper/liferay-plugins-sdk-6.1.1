@@ -163,8 +163,6 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import weblogic.wsee.wstx.wsat.v10.types.Outcome;
-
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -2177,10 +2175,10 @@ public class SpecificationBackingBean extends
 	public void showZoneLocationPopup() {
 
 		Integer locationLevel = (Integer) this.getManagedBean().getScQt()
-				.getZoneLocationLevel();
+				.getZoneLocationLevel().getParameterId().intValue();
 
 		if (locationLevel == null) {
-			locationLevel = 3;
+			locationLevel = 121;
 		}
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationZoneTree(1L, null,
@@ -2190,10 +2188,10 @@ public class SpecificationBackingBean extends
 	public void showGeneralZoneLocationPopup() {
 
 		Integer locationLevel = (Integer) this.getManagedBean().getScQt()
-				.getZoneLocationLevel();
+				.getZoneLocationLevel().getParameterId().intValue();
 
 		if (locationLevel == null) {
-			locationLevel = 3;
+			locationLevel = 121;
 		}
 		getManagedBean().setRootZoanlTree(
 				LocationSingleton.getInstance().buildLocationZonalTree(1L,
@@ -2797,10 +2795,10 @@ public class SpecificationBackingBean extends
 	}
 
 	public void selectLocation(AjaxBehaviorEvent event) {
-		Integer location = (Integer) event.getComponent().getAttributes()
+		Long location =  (Long) event.getComponent().getAttributes()
 				.get("value");
 		System.out.println("=======location level====" + location);
-		this.getManagedBean().getScQt().setZoneLocationLevel(location);
+	this.getManagedBean().getScQt().getZoneLocationLevel().setParameterId(location);
 	}
 
 	public void scoreTypeChange(AjaxBehaviorEvent event) {

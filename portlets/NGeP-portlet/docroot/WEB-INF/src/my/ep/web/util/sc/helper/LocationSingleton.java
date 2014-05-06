@@ -296,7 +296,7 @@ public class LocationSingleton {
 		
 			
 			
-			if(location==2){
+			if(location==120){
 				
 				for (PmDistrict district : state.getPmDistricts()) {
 					if(district.getPmDivision() == null){
@@ -348,7 +348,7 @@ public class LocationSingleton {
 			
 			
 			
-			if(location==3){
+			if(location==121){
 				
 				for (PmDistrict district : state.getPmDistricts()) {
 					if(district.getPmDivision() == null){
