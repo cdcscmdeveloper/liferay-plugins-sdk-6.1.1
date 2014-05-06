@@ -20,12 +20,12 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
-import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -47,10 +47,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String processName;
 	
 	private boolean pbConfirmMeeting;
-	private boolean memberSignOff;
+	private boolean memberSignOff = true;
 	private boolean approvrLetter;
 	private boolean bpkSaSkApprover;
 	private boolean prepareLOA;
+	private boolean signOffDecision;
+	private boolean signUpdateDecision;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -99,6 +101,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<PmUser> externalUsers;
 	private SelectItem[] roleTypes; // Role type drop down
 	private List<CtCommitteeMember> ctCommitteeMembers;
+	private Long meetingStatusId;
+	private ScLoaWitness scLoaWitness;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -531,4 +535,37 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
 		this.pbConfirmMeeting = pbConfirmMeeting;
 	}
+
+	public boolean isSignOffDecision() {
+		return signOffDecision;
+	}
+
+	public void setSignOffDecision(boolean signOffDecision) {
+		this.signOffDecision = signOffDecision;
+	}
+
+	public Long getMeetingStatusId() {
+		return meetingStatusId;
+	}
+
+	public void setMeetingStatusId(Long meetingStatusId) {
+		this.meetingStatusId = meetingStatusId;
+	}
+
+	public boolean isSignUpdateDecision() {
+		return signUpdateDecision;
+	}
+
+	public void setSignUpdateDecision(boolean signUpdateDecision) {
+		this.signUpdateDecision = signUpdateDecision;
+	}
+
+	public ScLoaWitness getScLoaWitness() {
+		return scLoaWitness;
+	}
+
+	public void setScLoaWitness(ScLoaWitness scLoaWitness) {
+		this.scLoaWitness = scLoaWitness;
+	}
+
 }

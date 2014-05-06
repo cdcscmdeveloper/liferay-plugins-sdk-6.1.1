@@ -26,7 +26,7 @@
 					<td class="ppRightBtn">
 						<ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
-								action="#{amendmentBackingBean.saveContractAmendment(outcome)}" />
+								action="#{amendmentBackingBean.saveContractAmendment(outcome)}" rendered="#{amendmentBackingBean.managedBean.memberSignOff}" />
 						</ui:repeat>
 					</td>
 				</tr>
@@ -82,8 +82,16 @@
 	      <ui:include src="item.xhtml" />
        </p:tab>
        
-        <p:tab title="Meeting Details">
+        <p:tab title="Meeting Details"  rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}">
 	      <ui:include src="pbqcc/meeting.xhtml"/>
+       </p:tab>
+       
+        <p:tab title="Decision"  rendered="#{amendmentBackingBean.managedBean.signOffDecision}">
+	      <ui:include src="pbqcc/signOffMember.xhtml"/>
+       </p:tab>
+       
+       <p:tab title="Decision"  rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}">
+	      <ui:include src="pbqcc/signOffpbqcc.xhtml"/>
        </p:tab>
        
        <p:tab title="Loa Details" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">

@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	 <p:panel id="panelSupplier" header="   SUPPLIER DETAILS" toggleable="true" toggleSpeed="500">
+	 <p:panel id="panelSupplier" header="SUPPLIER DETAILS" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 			<p:outputLabel value="MOF No"/>
 			<p:inputText style="width:170px;"
@@ -44,7 +44,8 @@
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 		   <p:outputLabel value="File No"/>
 		   <h:panelGrid columns="3">
-		      <p:inputText style="width:170px;"/>
+		      <p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" 
+		         style="width:170px;"/>
 		      <p:spacer width="2"/>
 		      <p:inputText style="width:10px;"/>
 		   </h:panelGrid>
@@ -56,16 +57,19 @@
             </p:selectOneRadio> 
 	    </h:panelGrid>
 	    <p:outputLabel value="Contract Type"/>
-			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
+			<p:selectOneMenu value="" 
+			   style="width:180px;margin-bottom: 5px;">
 			   <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
 			</p:selectOneMenu>
 		<p:outputLabel value="Agency"/>
-			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;"
+			  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAgency}">
 			   <f:selectItem itemLabel="--" itemValue=""/>
 			</p:selectOneMenu>
 		<p:outputLabel value="Contract Adminstrator"/>
-			<p:selectOneMenu style="width:180px;margin-bottom: 5px;">
-			   <f:selectItem itemLabel="--" itemValue=""/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;"
+			  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userId}">
+			   <f:selectItems value="#{amendmentBackingBean.getcontractAdminDropdown()}"/>
 			</p:selectOneMenu>
         <p:outputLabel value="Completion/Contract Period"/>
 		         <h:panelGrid columns="3">
@@ -77,11 +81,11 @@
 		 
 		 <p:outputLabel value="Completion/Contract Effective Date"/>
 		      
-		         <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+		         <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractEffDate}" 
 		           id="popupButtonCal1" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 		           
 		            <p:outputLabel value="Completion/Contract Expiry Date"/>
-		               <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+		               <p:calendar value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractExpDate}" 
 		           id="popupButtonCal2" showOn="button"  size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 		       
 		          <p:outputLabel value="Amendment Effective Date"/>    
@@ -109,8 +113,8 @@
      <p:panel id="contractSigner" header="Contract Signer" toggleable="true" toggleSpeed="500">
 		  <h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 		     <p:outputLabel value="Contract Signer"/>
-		      <p:selectOneMenu id="signer"
-            	    style="width:200px" >
+		      <p:selectOneMenu id="signer"  style="width:200px" 
+		         value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
             		<f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}"/>
             	</p:selectOneMenu>
 		   </h:panelGrid> 
@@ -118,30 +122,37 @@
 	 <p:panel id="agencyWitness" header="AGENCY WITNESS DETAILS" toggleable="true" toggleSpeed="500">
        <h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 			<p:outputLabel value="*Full Name"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			  value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" />
 			<p:outputLabel value="*IC No."/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			  value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}" />
 			<p:outputLabel value="*Designation"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			   value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"/>
 			<h:panelGroup>
               <div style="height: 75px; vertical-align:top;">
                 <p:outputLabel for="agencyAddress" value="Address " />
             </div>
            </h:panelGroup>
            <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
-             <p:inputTextarea id="agencyAddress" disabled="true"  
+             <p:inputTextarea id="agencyAddress" value="#{amendmentBackingBean.managedBean.scLoaWitness.address}"
                 rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
              <h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">
                <p:outputLabel value="*Tell No"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			   value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"/>
 			<p:outputLabel value="*Fax No."/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			  value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}"/>
 			<p:outputLabel value="*Mobile No"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			  value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"/>
            </h:panelGrid>
           </h:panelGrid>
           <p:outputLabel value="*Email"/>
-		  <p:inputText style="width:170px;"/>
+		  <p:inputText style="width:170px;"
+		    value="#{amendmentBackingBean.managedBean.scLoaWitness.email}"/>
 	     </h:panelGrid>  
      </p:panel>	    
 </ui:composition>

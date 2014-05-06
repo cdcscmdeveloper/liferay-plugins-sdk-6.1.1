@@ -9,8 +9,11 @@
     <p:panel id="memberPanel" header="Meeting Decision Details" toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20">
          <p:outputLabel value="Decision"/>
-         <p:selectOneMenu style="width:180px;margin-bottom: 4px;" >
-			   <f:selectItem itemLabel="--" itemValue=""/>
+        <p:selectOneMenu value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbQcApproved}" 
+            style="width:180px;margin-bottom: 4px;" disabled="true" >
+               <f:selectItem itemLabel="-Select One-" itemValue=""/>
+			   <f:selectItem itemLabel="Approved" itemValue="True"/>
+			   <f:selectItem itemLabel="Reject" itemValue="False"/>
 		 </p:selectOneMenu>
 		 <h:panelGroup>
             <div style="height: 60px; vertical-align:top;">
@@ -18,35 +21,38 @@
             </div>
           </h:panelGroup>
           <h:panelGrid>
-             <p:inputTextarea id="justificationMember"
-                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 4px;" />
+             <p:inputTextarea id="justificationMember" disabled="true"
+                 value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"
+                rows="4" cols="31" maxlength="200"  autoResize="false" style="margin-bottom: 4px;" />
           </h:panelGrid>
            <p:outputLabel value="Date Of Meeting"/>    
-           <p:inputText style="width:170px;">
-               <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-           </p:inputText>
+           <p:calendar value="#{amendmentBackingBean.meetingDate(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}" 
+               size="29" id="calMemMeeting" showOn="button" disabled="true" style="margin-bottom: 4px;"
+               pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> 
 		   <h:panelGroup>
-            <div style="height: 60px; vertical-align:top;">
+            <div style="height: 80px; vertical-align:top;">
                 <p:outputLabel for="memberLocation" value="Location of Meeting" />
             </div>
           </h:panelGroup>
           <h:panelGrid>
              <p:inputTextarea id="memberLocation" disabled="true" 
+                 value="#{amendmentBackingBean.meetingLocation(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}"
                 rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 4px;" />
           </h:panelGrid> 
         <p:outputLabel value="List of Committee Members" />
-         <p:dataTable id="memberTable" var="data" value=" ">
+         <p:dataTable id="memberTable" var="data" 
+            value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
              <ac:paginator for="decisionTable" />
-             <p:columnGroup type="header"> 
-			  <p:row> 
-				 <p:column style="width:20%;" headerText="Name" /> 
-				 <p:column style="width:10%;" headerText="Role" /> 	
-				 <p:column style="width:10%;" headerText="Attendance" /> 	
-			  </p:row>							
-			 </p:columnGroup>
-			   <p:column> </p:column>
-			   <p:column> </p:column>
-			   <p:column> </p:column>
+            	 <p:column style="width:20%;" headerText="Name">
+				    <p:outputLabel value="#{data.memberName}" style="float:left;"/>
+				 </p:column> 
+				 <p:column style="width:15%;" headerText="Role">
+				    <p:outputLabel value="#{amendmentBackingBean.getParameterDesc(data.memberRoleId)}" 
+				       style="float:left;"/>
+				 </p:column> 	
+				 <p:column style="width:10%;" headerText="Attendance" styleClass="column-align-center">
+				     <p:selectBooleanCheckbox value="#{data.attended}" disabled="true" />
+				 </p:column> 	
            </p:dataTable>
            </h:panelGrid>
      </p:panel>

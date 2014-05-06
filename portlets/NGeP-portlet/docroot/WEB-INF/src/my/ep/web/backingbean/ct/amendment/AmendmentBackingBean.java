@@ -87,7 +87,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.LocationDTO;
-import my.ep.web.backingbean.sc.quatationtender.QTBusinessOwnerBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -120,15 +119,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private CtCommitteeMember[] selectedCommitteMembers;
 	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
-	
-	QTBusinessOwnerBackingBean qTBusinessOwnerBackingBean=null;
-	
 
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
 			 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 		}
-		qTBusinessOwnerBackingBean = new QTBusinessOwnerBackingBean();
 		
 		
 	}
@@ -221,21 +216,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
 				this.getManagedBean().setApprovrLetter(true);
-		        this.getManagedBean().setPrepareLOA(true);		 
-			 
-		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)){
-				 FacesContext fc = FacesContext.getCurrentInstance();
-			//     this.getManagedBean().setAmendAckw(true);
-				// this.getManagedBean().setAmendDisable(false);  
-				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-					  
+		        this.getManagedBean().setPrepareLOA(true);		
+		        this.getManagedBean().setMemberSignOff(true);
+			
+		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)){
+		    	  this.getManagedBean().setMemberSignOff(false);
+		    	  this.getManagedBean().setPbConfirmMeeting(true);
+		    }
+		    
+		    if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)){
+		        this.getManagedBean().setAction(res.getAction());
+		        this.getManagedBean().setSignOffDecision(true);
 			 }
-//			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_HT_NAME)){
-//				 FacesContext fc = FacesContext.getCurrentInstance();
-//				 this.getManagedBean().setApprovrLetter(true);
-//				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
-//					  
-//			 }
+			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+				 this.getManagedBean().setSignUpdateDecision(true);
+				 this.getManagedBean().setPbConfirmMeeting(true);	  
+			 }
 			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
 				 this.getManagedBean().setBpkSaSkApprover(true); 
 			 } 
@@ -313,6 +309,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	            ChkComplyAP201Rule();	
 	        } */  
 	     
+	        this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
 	        this.getManagedBean().getContractVer().getCtPerformanceBonds().get(0).getFinancialOrg().setFinancialOrgId(1L);
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 	        reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
@@ -380,8 +377,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				return RoleCode.QCB_CHAIRPERSON.value();
 			else if(getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value()))
 				return RoleCode.QCB_SECRETARY.value();
-			else if(getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()))
-				return RoleCode.QCB_MEMBER.value();
+			else if(getFacesScopes().hasRoleUser(RoleCode.QC_MEMBER.value()))
+				return RoleCode.QC_MEMBER.value();
 			else 
 				return null;
 		}
@@ -907,6 +904,28 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   return items;
 		}
 		
+		public SelectItem[] getcontractAdminDropdown(){
+			SelectItem[] items = null;     
+			try{
+			   int i = 1;
+			   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			   UserReqDTO reqDTO = new UserReqDTO();
+			   reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());	
+			   reqDTO.setOrgProfileId(this.getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+				List<PmUser> list = resDTO.getUserList();
+			   items = new SelectItem[list.size()+1];
+		       items[0] = new SelectItem(null, "- Select One -");
+		       for(PmUser pmUser : list) {
+			       items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
+		       }
+			 }catch (Exception e) {
+		    	   e.printStackTrace();
+		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		     }
+		   return items;
+		}
+		
 		public SelectItem[] getMeetingStatusDropdown(){
 			SelectItem[] items = null;     
 			try{
@@ -931,6 +950,28 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		     }
 		   return items;
 		}
+		
+		public Date meetingDate(List<CtMeeting> ctmeeting){
+			CtMeeting newObject = null;
+			for(CtMeeting o : ctmeeting){
+			   if (newObject == null || o.getMeetingDate().compareTo(newObject.getMeetingDate()) > 0){
+				   newObject = o;
+			   }  
+			}
+			return newObject.getMeetingDate();
+		}
+		
+		public String meetingLocation(List<CtMeeting> ctmeeting){
+			CtMeeting newObject = null;
+			for(CtMeeting o : ctmeeting){
+			   if (newObject == null || o.getMeetingDate().compareTo(newObject.getMeetingDate()) > 0){
+				   newObject = o;
+			   }  
+			}
+			this.getManagedBean().setMeetingStatusId(newObject.getMeetingStatusId());
+			return newObject.getMeetingLocation();
+		}
+		
 	    
 	    public CtPerformanceBond[] getSelectedBondList() {
 			return selectedBondList;
