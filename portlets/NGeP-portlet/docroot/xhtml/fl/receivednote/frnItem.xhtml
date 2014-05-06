@@ -45,13 +45,7 @@
 			</p:column>
 			<p:column headerText="Delivered Amt.(RM)">
 				<h:panelGroup id="delAmountTxt">
-					<h:outputText value="#{item.flDelOrderItem.deliveredAmt}"
-						rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
-						<f:convertNumber pattern="#,#00.00" />
-					</h:outputText>
-					<h:outputText
-						rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
-						value="#{item.flDelOrderItem.deliveredAmt}">
+					<h:outputText value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#,#00.00" />
 					</h:outputText>
 					<p:inputText value="#{item.flDelOrderItem.deliveredAmt}"
