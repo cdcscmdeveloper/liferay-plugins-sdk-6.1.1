@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.creatdo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,8 +15,10 @@ import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+//import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -46,7 +49,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
-//	private List<PmMaksud> maksudCodeList;
+	//private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
 	
 	private String fulfillmentReqId;
@@ -61,6 +64,33 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
 	private String docType;
 	private String statusDesc;
+	
+	private FlFulfilmentItemAddr selectedItemRow;
+	private List <FlFulfilmentItemAddr>selectedItemRowList;
+	private FlFulfilmentItemAddr selectedItemAmountSection;
+	private List <FlFulfilmentItemAddr>selectedItemRowCalList;
+	private List <FlDeliveryAddress>selectedDelAddressList;
+	
+	private String itemSelectedForCal; 
+	private int delQtyCal;
+	private int delAmtCal;
+	
+	private List<FlRemark> remarkList;
+	private List<FlAttachment> attachmentList;
+
+	/**
+	 * @return the itemSelectedForCal
+	 */
+	public String getItemSelectedForCal() {
+		return itemSelectedForCal;
+	}
+
+	/**
+	 * @param itemSelectedForCal the itemSelectedForCal to set
+	 */
+	public void setItemSelectedForCal(String itemSelectedForCal) {
+		this.itemSelectedForCal = itemSelectedForCal;
+	}
 
 	/**
 	 * @return the flRemark
@@ -149,6 +179,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setFulfillmentReqId(String fulfillmentReqId) {
 		this.fulfillmentReqId = fulfillmentReqId;
 	}
+
+	/**
+	 * @return the maksudCodeList
+	 *//*
+	public List<PmMaksud> getMaksudCodeList() {
+		return maksudCodeList;
+	}
+
+	*//**
+	 * @param maksudCodeList the maksudCodeList to set
+	 *//*
+	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
+		this.maksudCodeList = maksudCodeList;
+	}*/
 
 	/**
 	 * @return the checkPtjFlg
@@ -388,4 +432,134 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.supplierAddress = supplierAddress;
 	}
 
+	/**
+	 * @return the selectedItemRow
+	 */
+	public FlFulfilmentItemAddr getSelectedItemRow() {
+		return selectedItemRow;
+	}
+
+	/**
+	 * @param selectedItemRow the selectedItemRow to set
+	 */
+	public void setSelectedItemRow(FlFulfilmentItemAddr selectedItemRow) {
+		this.selectedItemRow = selectedItemRow;
+	}
+
+	/**
+	 * @return the selectedItemAmountSection
+	 */
+	public FlFulfilmentItemAddr getSelectedItemAmountSection() {
+		return selectedItemAmountSection;
+	}
+
+	/**
+	 * @param selectedItemAmountSection the selectedItemAmountSection to set
+	 */
+	public void setSelectedItemAmountSection(
+			FlFulfilmentItemAddr selectedItemAmountSection) {
+		this.selectedItemAmountSection = selectedItemAmountSection;
+	}
+
+	/**
+	 * @return the selectedItemRowList
+	 */
+	public List<FlFulfilmentItemAddr> getSelectedItemRowList() {
+		return selectedItemRowList;
+	}
+
+	/**
+	 * @param selectedItemRowList the selectedItemRowList to set
+	 */
+	public void setSelectedItemRowList(
+			List<FlFulfilmentItemAddr> selectedItemRowList) {
+		this.selectedItemRowList = selectedItemRowList;
+	}
+
+	/**
+	 * @return the selectedItemRowCalList
+	 */
+	public List<FlFulfilmentItemAddr> getSelectedItemRowCalList() {
+		return selectedItemRowCalList;
+	}
+
+	/**
+	 * @param selectedItemRowCalList the selectedItemRowCalList to set
+	 */
+	public void setSelectedItemRowCalList(
+			List<FlFulfilmentItemAddr> selectedItemRowCalList) {
+		this.selectedItemRowCalList = selectedItemRowCalList;
+	}
+
+	/**
+	 * @return the delQtyCal
+	 */
+	public int getDelQtyCal() {
+		return delQtyCal;
+	}
+
+	/**
+	 * @param delQtyCal the delQtyCal to set
+	 */
+	public void setDelQtyCal(int delQtyCal) {
+		this.delQtyCal = delQtyCal;
+	}
+
+	/**
+	 * @return the delAmtCal
+	 */
+	public int getDelAmtCal() {
+		return delAmtCal;
+	}
+
+	/**
+	 * @param delAmtCal the delAmtCal to set
+	 */
+	public void setDelAmtCal(int delAmtCal) {
+		this.delAmtCal = delAmtCal;
+	}
+
+	/**
+	 * @return the selectedDelAddressList
+	 */
+	public List<FlDeliveryAddress> getSelectedDelAddressList() {
+		return selectedDelAddressList;
+	}
+
+	/**
+	 * @param selectedDelAddressList the selectedDelAddressList to set
+	 */
+	public void setSelectedDelAddressList(
+			List<FlDeliveryAddress> selectedDelAddressList) {
+		this.selectedDelAddressList = selectedDelAddressList;
+	}
+
+	/**
+	 * @return the remarkList
+	 */
+	public List<FlRemark> getRemarkList() {
+		return remarkList;
+	}
+
+	/**
+	 * @param remarkList the remarkList to set
+	 */
+	public void setRemarkList(List<FlRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	/**
+	 * @return the attachmentList
+	 */
+	public List<FlAttachment> getAttachmentList() {
+		return attachmentList;
+	}
+
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
+	public void setAttachmentList(List<FlAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+	
 }

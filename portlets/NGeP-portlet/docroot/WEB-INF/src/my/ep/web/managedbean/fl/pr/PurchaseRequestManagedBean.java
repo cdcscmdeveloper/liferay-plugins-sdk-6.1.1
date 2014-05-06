@@ -12,6 +12,12 @@ import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -39,12 +45,18 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
+
+
 
 /**
  * Managed Bean for Create Purchase Order
@@ -171,6 +183,15 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<PmSetia> setiaList;
 	private List<PmSubSetia> subSetiaList;
 	private List<PmPrgActivity> prgActivityList;
+	private List<SelectItem> manualAddrList;
+	
+	// set chargeline for selected items
+	private String votFundCode;
+	private String projectCode;
+	private String setiaCode;
+	private String subSetiaCode;
+	private String prgActivityCode;
+	
 	private Long votFundId;
 	private Long projectId;
 	private Long setiaId;
@@ -1354,61 +1375,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.subSetiaList = subSetiaList;
 	}
 
-	/**
-	 * @return the votFundId
-	 */
-	public Long getVotFundId() {
-		return votFundId;
-	}
-
-	/**
-	 * @param votFundId the votFundId to set
-	 */
-	public void setVotFundId(Long votFundId) {
-		this.votFundId = votFundId;
-	}
-
-	/**
-	 * @return the projectId
-	 */
-	public Long getProjectId() {
-		return projectId;
-	}
-
-	/**
-	 * @param projectId the projectId to set
-	 */
-	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
-	}
-
-	/**
-	 * @return the setiaId
-	 */
-	public Long getSetiaId() {
-		return setiaId;
-	}
-
-	/**
-	 * @param setiaId the setiaId to set
-	 */
-	public void setSetiaId(Long setiaId) {
-		this.setiaId = setiaId;
-	}
-
-	/**
-	 * @return the subSetiaId
-	 */
-	public Long getSubSetiaId() {
-		return subSetiaId;
-	}
-
-	/**
-	 * @param subSetiaId the subSetiaId to set
-	 */
-	public void setSubSetiaId(Long subSetiaId) {
-		this.subSetiaId = subSetiaId;
-	}
 
 	/**
 	 * @return the prgActivityList
@@ -1422,20 +1388,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPrgActivityList(List<PmPrgActivity> prgActivityList) {
 		this.prgActivityList = prgActivityList;
-	}
-
-	/**
-	 * @return the prgActivityId
-	 */
-	public Long getPrgActivityId() {
-		return prgActivityId;
-	}
-
-	/**
-	 * @param prgActivityId the prgActivityId to set
-	 */
-	public void setPrgActivityId(Long prgActivityId) {
-		this.prgActivityId = prgActivityId;
 	}
 
 	/**
@@ -1550,4 +1502,160 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setDeleteButtonHide(boolean deleteButtonHide) {
 		this.deleteButtonHide = deleteButtonHide;
 	}
+
+	/**
+	 * @return the manualAddrList
+	 */
+	public List<SelectItem> getManualAddrList() {
+		return manualAddrList;
+	}
+
+	/**
+	 * @param manualAddrList the manualAddrList to set
+	 */
+	public void setManualAddrList(List<SelectItem> manualAddrList) {
+		this.manualAddrList = manualAddrList;
+	}
+
+	/**
+	 * @return the votFundCode
+	 */
+	public String getVotFundCode() {
+		return votFundCode;
+	}
+
+	/**
+	 * @param votFundCode the votFundCode to set
+	 */
+	public void setVotFundCode(String votFundCode) {
+		this.votFundCode = votFundCode;
+	}
+
+	/**
+	 * @return the projectCode
+	 */
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	/**
+	 * @param projectCode the projectCode to set
+	 */
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
+
+	/**
+	 * @return the setiaCode
+	 */
+	public String getSetiaCode() {
+		return setiaCode;
+	}
+
+	/**
+	 * @param setiaCode the setiaCode to set
+	 */
+	public void setSetiaCode(String setiaCode) {
+		this.setiaCode = setiaCode;
+	}
+
+	/**
+	 * @return the subSetiaCode
+	 */
+	public String getSubSetiaCode() {
+		return subSetiaCode;
+	}
+
+	/**
+	 * @param subSetiaCode the subSetiaCode to set
+	 */
+	public void setSubSetiaCode(String subSetiaCode) {
+		this.subSetiaCode = subSetiaCode;
+	}
+
+	/**
+	 * @return the prgActivityCode
+	 */
+	public String getPrgActivityCode() {
+		return prgActivityCode;
+	}
+
+	/**
+	 * @param prgActivityCode the prgActivityCode to set
+	 */
+	public void setPrgActivityCode(String prgActivityCode) {
+		this.prgActivityCode = prgActivityCode;
+	}
+
+	/**
+	 * @return the votFundId
+	 */
+	public Long getVotFundId() {
+		return votFundId;
+	}
+
+	/**
+	 * @param votFundId the votFundId to set
+	 */
+	public void setVotFundId(Long votFundId) {
+		this.votFundId = votFundId;
+	}
+
+	/**
+	 * @return the projectId
+	 */
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	/**
+	 * @param projectId the projectId to set
+	 */
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	/**
+	 * @return the setiaId
+	 */
+	public Long getSetiaId() {
+		return setiaId;
+	}
+
+	/**
+	 * @param setiaId the setiaId to set
+	 */
+	public void setSetiaId(Long setiaId) {
+		this.setiaId = setiaId;
+	}
+
+	/**
+	 * @return the subSetiaId
+	 */
+	public Long getSubSetiaId() {
+		return subSetiaId;
+	}
+
+	/**
+	 * @param subSetiaId the subSetiaId to set
+	 */
+	public void setSubSetiaId(Long subSetiaId) {
+		this.subSetiaId = subSetiaId;
+	}
+
+	/**
+	 * @return the prgActivityId
+	 */
+	public Long getPrgActivityId() {
+		return prgActivityId;
+	}
+
+	/**
+	 * @param prgActivityId the prgActivityId to set
+	 */
+	public void setPrgActivityId(Long prgActivityId) {
+		this.prgActivityId = prgActivityId;
+	}
+
+	
 }
