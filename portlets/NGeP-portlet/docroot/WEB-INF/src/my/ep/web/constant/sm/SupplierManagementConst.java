@@ -51,11 +51,14 @@ public class SupplierManagementConst {
 	public static final String APPROVER_DECISION_ACK = "/xhtml/sm/approverDecisionPages/approverDecisionAckPage.xhtml";
 	public static final String PO_DECISION_ACK = "/xhtml/sm/poDecisionPages/poDecisionAckPage.xhtml";
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
-	public static final int NEW_APPL_REVIEW_MAXCOUNT = 14;
-	public static final int BUMI_APPL_REVIEW_MAXCOUNT = 8;
+	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 14;
+	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 18;
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 8;
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_REVIEW_MAXCOUNT = 14;
-	public static final int ADDLN_CATCODES_APPL_REVIEW_MAXCOUNT = 13;
+	public static final int ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
+	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
 
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
@@ -119,8 +122,8 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
-	
-	//Site Visit 
+
+	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
 
 	// Getters for panel info

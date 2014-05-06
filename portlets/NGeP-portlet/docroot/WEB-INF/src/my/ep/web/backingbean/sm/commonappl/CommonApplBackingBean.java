@@ -91,6 +91,51 @@ public class CommonApplBackingBean extends
 			// FacesContext fc = FacesContext.getCurrentInstance();
 			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
 			// null, "/xhtml/sm/svositevisit/siteVisitView");
+		} else if (resDTO.getTaskName().equalsIgnoreCase("Respond PO Inquiry")) {
+			System.out.println("** Respond to PO Inquiry *********"
+					+ resDTO.getProcessName());
+			if (resDTO.getProcessName()
+					.equalsIgnoreCase("MOF Account Maintain")) {
+				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+						.getPojo();
+				// TODO Remove this code and get the applicationType From DB
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SmAppl appl = mofResDto.getSmAppl();
+
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				// TODO Change this impl to get values from DB and set
+				// smSupplier , smAppl of the managedBean
+
+				smApplBB.getManagedBean().setSmAppl(appl);
+				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
+				setNavigationForSmDecision("RS", smApplBB);
+			} else if (resDTO.getProcessName().equalsIgnoreCase(
+					"MOF Supplier Registration")) {
+				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
+				// TODO Remove this code and get the applicationType From DB
+				System.out
+						.println(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+								+ resDTO.getDocNumber());
+				System.out.println("**** APPLICATION TYPE ******"
+						+ resDTO.getDocNumber().charAt(1));
+				System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
+						+ smObj.getDocumentId());
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SmAppl appl = mofResDto.getSmAppl();
+
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				// TODO Change this impl to get values from DB and set
+				// smSupplier , smAppl of the managedBean
+
+				smApplBB.getManagedBean().setSmAppl(appl);
+				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
+				setNavigationForSmDecision("RS", smApplBB);
+			}
+
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Review Application (Escalated)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
@@ -206,7 +251,7 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
-					"Review New Mof Registration Applicatoin - ");
+					"Review New Mof Registration Application - ");
 			break;
 		case "A":
 			fc.getApplication()
@@ -215,7 +260,7 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Additional Category Code(s) Applicatoin - ");
+					"Review Additional Category Code(s) Application - ");
 			break;
 		case "B":
 			fc.getApplication()
@@ -224,7 +269,7 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Bumi Status Applicatoin - ");
+					"Review Bumi Status Application - ");
 			break;
 		case "U":
 			fc.getApplication()
@@ -233,7 +278,7 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Update Mof Details Applicatoin - ");
+					"Review Update Mof Details Application - ");
 			break;
 		case "R":
 			fc.getApplication()
@@ -242,7 +287,23 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
-					"Review Renew Mof Registration Applicatoin - ");
+					"Review Renew Mof Registration Application - ");
+			break;
+		case "RS":
+			System.out.println(" *** DOC MODE ****"
+					+ smApplBB.getManagedBean().getSmAppl()
+							.getSupportingDocMode());
+			String out = "";
+			if (smApplBB.getManagedBean().getSmAppl().getSupportingDocMode()
+					.equalsIgnoreCase("O")) {
+				out = "/xhtml/sm/shared/respondToPoInquiry/onlineResendSupportingDocsForm.xhtml";
+			} else {
+				out = "/xhtml/sm/shared/respondToPoInquiry/offlineResendSupportingDocsForm.xhtml";
+			}
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, out);
+			smApplBB.getManagedBean().setHeaderMsg(
+					" Respond PO Inquiry For Application - ");
 			break;
 		default:
 			System.out
