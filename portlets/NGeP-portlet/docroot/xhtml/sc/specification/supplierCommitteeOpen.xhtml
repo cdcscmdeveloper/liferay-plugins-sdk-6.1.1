@@ -65,11 +65,11 @@
 			<tr>
 				<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
-						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel}"
+						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
@@ -130,11 +130,11 @@
 			<tr>
 				<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
-						value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel}"
+						value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
 						style="width: 178px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
