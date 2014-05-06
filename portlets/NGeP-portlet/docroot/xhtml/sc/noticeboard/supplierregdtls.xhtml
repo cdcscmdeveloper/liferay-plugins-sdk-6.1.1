@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -6,23 +7,25 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel>
-		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.sameBsv}">
-			<p:panel header="Briefing And Site Visit Details">
+	<ui:param name="bsv" value="#{noticeBoardBackingBean.managedBean.bsv}"></ui:param>
+	<c:if test="${bsv.sameBsv}">
+			<p:panel header="Briefing And Site Visit Details" toggleable="true">
 
 				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
+					value="All/At Least #{bsv.minBriefingAttend} Attandence required for Briefing"></h:outputText>
+					
 				<p:dataTable var="brfsitdtl"
 					value="#{noticeBoardBackingBean.managedBean.briefingDtls}"
 					selection="#{noticeBoardBackingBean.managedBean.selectedBriefingDtls}"
-					rowKey="#{brfsitdtl.qtBriefingId}">
+					rowKey="#{brfsitdtl.qtBsvDtlId}">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.briefingDate}" />
+						<h:outputText value="#{brfsitdtl.bsvDate}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
@@ -38,34 +41,35 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
 				</p:dataTable>
 
 			</p:panel>
 		</c:if>
-		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.sameBsv}">
+		<c:if test="${!bsv.sameBsv}">
 
-			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
+			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 
 				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
+					value="All/At Least #{bsv.minBriefingAttend} Attandence required for Briefing"></h:outputText>
+					
 				<p:dataTable var="brfsitdtl"
 					value="#{noticeBoardBackingBean.managedBean.briefingDtls}"
 					selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
-					rowKey="#{brfsitdtl.qtBriefingId}">
+					rowKey="#{brfsitdtl.qtBsvDtlId}">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{brfsitdtl.briefingDesc}" />
+						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.briefingDate}" />
+						<h:outputText value="#{brfsitdtl.bsvDate}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
@@ -81,33 +85,33 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
 						style="width:120px;">
-						<h:outputText value="#{brfsitdtl.maxAttendance}" />
+						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
 				</p:dataTable>
 
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
+			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 				<h:outputText
-					value="All/At Least X Attandence required for Briefing"></h:outputText>
+					value="All/At Least #{bsv.minSiteVisitAttend} Attandence required for Briefing"></h:outputText>
 
 				<p:dataTable var="sitevisitDtls"
 					value="#{noticeBoardBackingBean.managedBean.siteVisitDtls}"
 					selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
-					rowKey="#{sitevisitDtls.qtBriefingId}">
+					rowKey="#{sitevisitDtls.qtBsvDtlId}">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{sitevisitDtls.briefingDesc}" />
+						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{sitevisitDtls.briefingDate}" />
+						<h:outputText value="#{sitevisitDtls.bsvDate}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
@@ -124,11 +128,11 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
 						style="width:120px;">
-						<h:outputText value="#{sitevisitDtls.maxAttendance}" />
+						<h:outputText value="#{sitevisitDtls.maxNoOfAttendance}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
 						style="width:120px;">
-						<h:outputText value="#{sitevisitDtls.maxAttendance}" />
+						<h:outputText value="#{sitevisitDtls.maxNoOfAttendance}" />
 					</p:column>
 
 				</p:dataTable>
@@ -149,7 +153,7 @@
 			<p:dataTable var="sitevisitDtls"
 				value="#{noticeBoardBackingBean.managedBean.siteVisitDtls}"
 				selection="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"
-				rowKey="#{sitevisitDtls.qtBriefingId}" selectionMode="multiple">
+				rowKey="#{sitevisitDtls.qtBsvDtlId}" selectionMode="multiple">
 
 
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
@@ -173,9 +177,7 @@
 
 
 			</p:dataTable>
-			<p:commandButton value="#{lbl['lbl.qt.nb.register']}"
-				style="float:right;" />
-<br></br>
+			
 		</p:panel>
 	</p:panel>
 </ui:composition>

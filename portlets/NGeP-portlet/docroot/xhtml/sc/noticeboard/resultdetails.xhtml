@@ -74,7 +74,7 @@
 						test="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
 						<p:commandLink
 							action="#{noticeBoardBackingBean.showPriceSchedules(scqt)}"
-							oncomplete="popupPriceSchedule.show()" update="@(.priceschedule)">
+							>
 							<h:outputText value="Price Schedule"></h:outputText>
 						</p:commandLink>
 					</c:if>

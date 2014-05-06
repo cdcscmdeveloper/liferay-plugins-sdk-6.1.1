@@ -30,7 +30,7 @@
 		</p:dataTable>
 	</p:panel>
 	<ui:param name="bsv" value="#{noticeBoardBackingBean.managedBean.bsv}"></ui:param>
-	<c:if test="${bsv.sameBsv}">
+	<c:if test="#{bsv.sameBsv}">
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 			<c:if test="${bsv.allBriefingReq}">
 				<h:outputText value="All Attandence required for SiteVisit"></h:outputText>
@@ -77,7 +77,7 @@
 			<c:if test="${bsv.allBriefingReq}">
 				<h:outputText value="All Attandence required for SiteVisit"></h:outputText>
 			</c:if>
-			<c:if test="${!bsv.allBriefingReq}">
+			<c:if test="#{!bsv.allBriefingReq}">
 				<h:outputText
 					value="All/At Least #{bsv.minBriefingAttend} Attandence required for Briefing"></h:outputText>
 			</c:if>
@@ -115,10 +115,10 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
-			<c:if test="${bsv.allSiteVisitReq}">
+			<c:if test="#{bsv.allSiteVisitReq}">
 				<h:outputText value="All Attandence required for SiteVisit"></h:outputText>
 			</c:if>
-			<c:if test="${bsv.allSiteVisitReq}">
+			<c:if test="#{bsv.allSiteVisitReq}">
 				<h:outputText
 					value="All/At Least #{bsv.minSiteVisitAttend} Attandence required for SiteVisit"></h:outputText>
 

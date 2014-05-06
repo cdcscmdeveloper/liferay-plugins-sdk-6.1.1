@@ -1,15 +1,30 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<ac:title value="Price Schedule" />
+		<p:panel>
+			<p:panelGrid style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:left">
+						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+							icon="ui-icon-back" action="#{noticeBoardBackingBean.backBtn}"
+							style="float:left;" />
+					</p:column>
 
-	<p:dialog widgetVar="popupPriceSchedule" modal="true"
-		 dynamic="true" styleClass="priceschedule">
-		<p:panel header="#{lbl['lbl.qt.nb.pricingheader']}">
-			<h:panelGrid border="0"  width="100%"
-				columns="2" columnClasses="columnWidth20"	>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.qt.nb.pricingheader']}" toggleable="true">
+			<h:panelGrid border="0" width="100%" columns="2"
+				columnClasses="columnWidth20">
 
 				<h:outputLabel value="#{lbl['lbl.qt.nb.ministry']}"></h:outputLabel>
 				<h:outputText
@@ -51,14 +66,12 @@
 
 			</h:panelGrid>
 
-			<p:outputPanel deferred="true">
-				<h3>
-					<u>#{lbl['lbl.qt.nb.scheduledetails']}</u>
-				</h3>
+
+			<p:panel header="Supplier List" toggleable="true">
 				<p:dataTable id="supplierPriceDtls"
 					value="#{noticeBoardBackingBean.managedBean.categoryList}"
 					var="catCode" rowKey="#{catCode.qtCategoryId}" rowIndexVar="index">
-
+					<ac:paginator for="supplierPriceDtls"></ac:paginator>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.supplierno']}">
 						<h:outputText value="" />
@@ -72,17 +85,8 @@
 
 				</p:dataTable>
 
-			</p:outputPanel>
+			</p:panel>
 		</p:panel>
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.qt.nb.printpdf']}" />
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.close']}"
-						onclick="popupPriceSchedule.hide()" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-	</p:dialog>
+
+	</ui:define>
 </ui:composition>
