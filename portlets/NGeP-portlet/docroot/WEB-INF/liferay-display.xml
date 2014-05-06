@@ -34,7 +34,8 @@
 			<portlet id="pmAuthrisationRole"></portlet>	
 			<portlet id="pmZone"></portlet>	
 			<portlet id="pmNotifications"></portlet>				
-			<portlet id="quickLinks"></portlet>			
+			<portlet id="quickLinks"></portlet>	
+			<portlet id="pmUserProfilePersonalization"></portlet>		
 		</category>
 		<!-- Profile Management - END -->		
 
