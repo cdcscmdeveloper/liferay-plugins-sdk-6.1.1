@@ -17,9 +17,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
@@ -33,8 +31,6 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sc.quationtender.BriefingReqDTO;
-import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -48,7 +44,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -479,21 +474,27 @@ public class NoticeBoardBackingBean extends
 	public String gotoSupplierRegistration(ScQt qt) {
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 		reqDTO.setQtId(qt.getQtId());
 		NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
-		if (resDTO.getScQt() != null) {
-			ScQt scQt = resDTO.getScQt();
-			if (scQt.getScQtContactPersons() != null) {
-				this.getManagedBean().setContactPersons(
-						scQt.getScQtContactPersons());
-			}
-			constructBrifingSiteVisitDtls(resDTO);
-
+		
+		if (!resDTO.getScQt().isZonal()) {				
+			constructLocationTree(resDTO.getLocCriteria());
+			this.getManagedBean().setBsv(resDTO.getScQtBsv());
+			this.getManagedBean().setBriefingDtls(
+					resDTO.getBriefingResultBean().getResultList());
+			this.getManagedBean().setSiteVisitDtls(
+					resDTO.getSiteVisitResultBean().getResultList());
+		} else {	
+			this.getManagedBean().setZones(resDTO.getZones());
+			
 		}
 
+	
+	
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
 
@@ -662,10 +663,11 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	public void showPriceSchedules(ScQt scqt) {
+	public String showPriceSchedules(ScQt scqt) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-
+		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
@@ -677,6 +679,7 @@ public class NoticeBoardBackingBean extends
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml?faces-redirect=true";
 	}
 
 	
