@@ -77,121 +77,28 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Query">
-				
+
 			</p:column>
 		</p:treeTable>
 		<br />
 		<br />
 		<br />
-			<table style="width: 93%">
-				<tr>
-					<td  style="text-align:right; font: bold; size: 10;">Grand Total: <p:spacer width="10px"/><h:outputText
-							value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
-							<f:convertNumber pattern="#,#00.00" />
-						</h:outputText></td>
-				</tr>
-			</table>
-		<br />
-		<br />
-		<br />
-		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
-							style="margin-bottom:15px;" /></td>
-					<td><p:selectOneMenu id="votCodeDis"
-							value="#{purchaseRequestBackingBean.managedBean.votFundId}"
-							style=" margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="votCodeList"
-								value="#{purchaseRequestBackingBean.managedBean.votFundList}"
-								itemLabel="#{votCodeList.votFundCode}"
-								itemValue="#{votCodeList.votFundId}" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.getProjectList}"
-								update="project" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.getProgramList}"
-								update="prgActivity" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-							<f:selectItem itemLabel="Value1" itemValue="1" />
-							<f:selectItem itemLabel="Value2" itemValue="2" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-							<f:selectItem itemLabel="Value1" itemValue="1" />
-							<f:selectItem itemLabel="Value2" itemValue="2" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.program.activity']}"
-							style="margin-bottom:15px;" /></td>
-					<td><p:selectOneMenu id="prgActivityDis"
-							value="#{purchaseRequestBackingBean.managedBean.prgActivityId}"
-							style=" margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="prgActivityList"
-								value="#{purchaseRequestBackingBean.managedBean.prgActivityList}"
-								itemLabel="#{prgActivityList.prgActivityCode}"
-								itemValue="#{prgActivityList.prgActivityId}" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
-							style="margin-bottom:15px;" /></td>
-					<td><p:selectOneMenu id="projectDis"
-							value="#{purchaseRequestBackingBean.managedBean.projectId}"
-							style=" margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="projectList"
-								value="#{purchaseRequestBackingBean.managedBean.projectList}"
-								itemLabel="#{projectList.projectCode}"
-								itemValue="#{projectList.projectId}" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.getSetiaList}" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}"
-							style="margin-bottom:15px;" /></td>
-					<td><p:selectOneMenu id="setiaDis"
-							value="#{purchaseRequestBackingBean.managedBean.setiaId}"
-							style=" margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="setiaList"
-								value="#{purchaseRequestBackingBean.managedBean.setiaList}"
-								itemLabel="#{setiaList.setiaCode}"
-								itemValue="#{setiaList.setiaId}" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.getSubSetiaList}"
-								update="subSetia" />
-						</p:selectOneMenu></td>
-					<td><p:selectOneMenu id="subSetiaDis"
-							value="#{purchaseRequestBackingBean.managedBean.subSetiaId}"
-							style=" margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="subSetiaList"
-								value="#{purchaseRequestBackingBean.managedBean.subSetiaList}"
-								itemLabel="#{subSetiaList.subSetiaCode}"
-								itemValue="#{subSetiaList.subSetiaId}" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
-							style="margin-bottom:15px;" /></td>
-					<td><p:selectOneMenu style="margin-bottom:15px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-							<f:selectItem itemLabel="Loan1" itemValue="1" />
-							<f:selectItem itemLabel="Loan2" itemValue="2" />
-						</p:selectOneMenu></td>
-
-				</tr>
-			</table>
-		</h:panelGroup>
+		
+		<table style="width: 93%">
+			<tr>
+				<td style="text-align: right; font: bold; size: 10;">Grand
+					Total: <p:spacer width="10px" />
+					<h:outputText
+						value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
+						<f:convertNumber pattern="#,#00.00" />
+					</h:outputText>
+				</td>
+			</tr>
+		</table>
 		<table style="width: 100%;">
 			<tr>
 
-				<td colspan="4" style="text-align: right"><p:commandButton
+				<td colspan="4" style="text-align: left"><p:commandButton
 						value="Bulk Update" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						oncomplete="applyBulkCharge.show();"
@@ -200,6 +107,55 @@
 
 			</tr>
 		</table>
+		<br />
+		<br />
+		<br />
+		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{purchaseRequestBackingBean.managedBean.votFundCode}"
+							size="9" disabled="true" /> </td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+					<td><p:inputText
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
+					<td><p:inputText
+							size="9" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.program.activity']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{purchaseRequestBackingBean.managedBean.prgActivityCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{purchaseRequestBackingBean.managedBean.projectCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{purchaseRequestBackingBean.managedBean.setiaCode}"
+							size="9" disabled="true" /></td>
+					<td><p:inputText
+							value="#{purchaseRequestBackingBean.managedBean.subSetiaCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							size="9" disabled="true" /></td>
+
+				</tr>
+			</table>
+		</h:panelGroup>
+		
 	</p:panel>
 	<p:dialog id="queryDialog" header="QUERY" widgetVar="addQuery"
 		showEffect="fade" hideEffect="fade" modal="true" width="600px"
@@ -254,7 +210,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
 						<f:selectItem itemLabel="Value1" itemValue="1" />
 						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>
@@ -263,7 +219,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
 						<f:selectItem itemLabel="Value1" itemValue="1" />
 						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>
@@ -332,7 +288,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 						style="margin-bottom:15px;" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select -- "  itemValue="0" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
 						<f:selectItem itemLabel="Value1" itemValue="1" />
 						<f:selectItem itemLabel="Value2" itemValue="2" />
 					</p:selectOneMenu></td>

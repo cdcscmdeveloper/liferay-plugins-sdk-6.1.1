@@ -9,27 +9,25 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" 
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
-
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+				<td><p:commandButton value="Back" immediate="true"
+						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<c:if test="#{empty createDOBackingBean.managedBean.buttonVal}">
 
-					<td colspan="4" style="text-align: right" ><p:commandButton
-							value="Submit" ajax='false'
-							action="#{createDOBackingBean.createDeliveryOrder('Submit')}" />
-						<p:commandButton value="Stop Delivery" icon="ui-icon-cancel" 
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="SUBMIT" ajax='false'
+							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
+						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel"
+							rendered="#{createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
 					</td>
 				</c:if>
 			</tr>
-
 		</table>
-
 		<table style="width: 100%;">
 			<tr>
 				<c:if
@@ -51,12 +49,12 @@
 			</tr>
 		</table>
 		<ui:include src="doReviewHeaderPage.xhtml" />
-		<p:spacer height="20px"/>
+		<p:spacer height="20px" />
 		<p:tabView id="dotabs" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="doGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item and Remarks">
+			<p:tab title="Delivery Items">
 				<ui:include src="doItem.xhtml" />
 			</p:tab>
 		</p:tabView>

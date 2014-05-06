@@ -3,26 +3,40 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -33,6 +47,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  * Backing Bean for Create Purchase Order
@@ -48,6 +64,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * get faces scopes
 	 * @return FacesScopes
 	 */
+	private FlFulfilmentItemAddr amountSectionItemRow;
+	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -62,6 +80,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder() );
 			getManagedBean().setDeliveryAddress(new FlDeliveryAddress());
+		}
+		if(null == getManagedBean().getSelectedItemRowCalList()){
+			getManagedBean().setSelectedItemRowCalList(new ArrayList<FlFulfilmentItemAddr>() );
+			
 		}
 	}
 
@@ -78,31 +100,68 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
 			
+			// do validation for selected address have items with delmount and delQty or not....
+			checkItemsWithDoAddress();
+			
 			Long fulfilmentOrderId = Long.valueOf(flOrderId);
 			log.info("fulfilmentOrderId::: "+fulfilmentOrderId);
 			String  statusId = this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlDeliveryOrder flDeliveryOrder = getManagedBean().getFlDeliveryOrder();
+			
+			for(FlDeliveryAddress flDeliveryAddress:getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				/*flDeliveryAddress.getAttachmentList().size();
+				if(!flDeliveryAddress.getAttachmentList().isEmpty()){
+					flDeliveryAddress.getAttachmentList().get(0).getFileName();
+				}*/
+				FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
+				flDeliveryOrder.setSupplierDoRef("SM123");
+				flDeliveryOrder.setEstStartDate(new Timestamp(System.currentTimeMillis()));
+				flDeliveryOrder.setFlRequest(getManagedBean().getFulfilmentRequest());
+				flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
+				//FlDelOrderItem
+				ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
+				for(FlFulfilmentItemAddr itemAddress:flDeliveryAddress.getFlFulfilmentItemAddr()){
+					FlDelOrderItem flDelOrderItem= new FlDelOrderItem();
+					flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+					flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
+					flDelOrderItem.setFlDeliveryOrder(flDeliveryOrder);
+					flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
+					flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
+					delOrderList.add(flDelOrderItem);
+					
+				}
+				flDeliveryOrder.setFlDelOrderItem(delOrderList);
+				reqDTO.getDeliveryOrdersList().add(flDeliveryOrder);
+				
+				reqDTO.setFlAttachmentList(flDeliveryAddress.getAttachmentList());
+				if(!flDeliveryAddress.getRemarkList().isEmpty()){
+					reqDTO.setFlRemark(flDeliveryAddress.getRemarkList().get(0));
+				}
+				
+				
+			}
+			
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			if(getManagedBean().getDocType().equalsIgnoreCase("CR")){
+			/*if(getManagedBean().getDocType().equalsIgnoreCase("CR")){
 				System.out.println("--CR calculateDelAmt--");
 				calculateDelAmt(flDeliveryOrder);
-			}
+			}*/
+			
 			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
 			reqDTO.setStatusId(statusId);
-			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
+			//reqDTO.setFlDeliveryOrder(flDeliveryOrder);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setOutcome(action);
-			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
+			
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String message = "Delivery Order Id. : "+flDeliveryOrder.getDeliveryOrderId();
+				/*String message = "Delivery Order Id. : "+flDeliveryOrder.getDeliveryOrderId();
 				if(flDeliveryOrder.getDeliveryOrderNo()!=null) {
 					message = message + ". Delivery Order. : "+flDeliveryOrder.getDeliveryOrderNo();
-				}
+				}*/
+				String message="DeliveryOrder";
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
 					renewSesionObject();
@@ -120,6 +179,28 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 		return null;
 	}
+	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
+	private void checkItemsWithDoAddress() {
+		// TODO Auto-generated method stub
+		getManagedBean().getSelectedDelAddressList().size();
+		if(getManagedBean().getSelectedDelAddressList().size()==0){
+			throw new EpException(" Select Deliver Address .");
+			//System.out.println("Please select Del Address");
+		}else{
+			for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getSelectedDelAddressList()){
+				for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+					System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemName());
+					itemAddress.getDeliveredQty();
+					itemAddress.getDeliveredAmt();
+					if(null==itemAddress.getDeliveredAmt()){
+						throw new EpException(" Del Qty and Del Amout is Required .");
+					}
+				}
+			}
+		}
+		
+	}
+
 	public void stopDelivery() {
 		
 		Long flOrderId;
@@ -132,6 +213,32 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
 		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 		flOrderSO.stopDeliveryWSDL(reqDTO);
+		
+	}
+	
+	public void updateDeliveryAddr(){
+		getManagedBean().getFlDeliveryOrder().setFlDeliveryAddress(getManagedBean().getSelectedAddrRow());
+		for(FlFulfilmentItemAddr itemAddr : getManagedBean().getSelectedAddrRow().getFlFulfilmentItemAddr()){
+			//Doc Condition chck
+			FlDelOrderItem orderItem = new FlDelOrderItem();
+				orderItem.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+				orderItem.setFlFulfilmentItemAddr(itemAddr);
+				getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
+				//flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType
+							
+				if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){
+					itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
+					for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
+						/*if(null==item.getDeliveredAmt()){
+							item.setDeliveredAmt(itemAddr.getOrderedAmt());
+						}*/
+						/*if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
+							item.setDeliveredQty(new BigDecimal(1L));
+						}*/
+					}
+				}
+			
+		}
 		
 	}
 	
@@ -155,25 +262,28 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().clear();
 		}
 		getManagedBean().getFlDeliveryOrder().setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-		
 		for(FlFulfilmentItemAddr itemAddr : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
+			//Doc Condition chck
 			FlDelOrderItem orderItem = new FlDelOrderItem();
-			orderItem.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
-			orderItem.setFlFulfilmentItemAddr(itemAddr);
-			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
-			//flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType
-						
-//			if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){//TODO change the code
-//				itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
-//				for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
-//					if(null==item.getDeliveredAmt()){
-//						item.setDeliveredAmt(itemAddr.getOrderedAmt());
-//					}
-//					if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
-//						item.setDeliveredQty(new BigDecimal(1L));
-//					}
-//				}
-//			}
+			
+			if(!itemAddr.getOrderedQty().equals(itemAddr.getReceivedQty())){
+				orderItem.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+				orderItem.setFlFulfilmentItemAddr(itemAddr);
+				getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
+				//flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType
+							
+				if(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl() != null ){
+					itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType();
+					for(FlDelOrderItem item:getManagedBean().getFlDeliveryOrder().getFlDelOrderItem()){
+						if(null==item.getDeliveredAmt()){
+							item.setDeliveredAmt(itemAddr.getOrderedAmt());
+						}
+						if("S".equalsIgnoreCase(itemAddr.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemType()) && itemAddr.getOrderedQty().intValue() ==1){
+							item.setDeliveredQty(new BigDecimal(1L));
+						}
+					}
+				}
+			}
 		}
 		
 	}
@@ -185,27 +295,100 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		FulfilmentResDTO resDTO = flOrderSO.getDeliveryAddressListById(reqDTO);
 		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
 	}
-	public void retrievedDelAmount(FlDelOrderItem flDelOrderItem){
+	
+	/*public void retrievedDelAmount(FlFulfilmentItemAddr flFulfilmentItemAddr){
 		int unitPrice = 0;
 		int delQnty = 0;
 		int delAmoun = 0;
-		if(null != flDelOrderItem.getFlFulfilmentItemAddr().getUnitPrice())
-			unitPrice= flDelOrderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue();
-		if(null != flDelOrderItem.getDeliveredQty())
-			delQnty = flDelOrderItem.getDeliveredQty().intValue();
+		if(null != flFulfilmentItemAddr.getUnitPrice())
+			unitPrice= flFulfilmentItemAddr.getUnitPrice().intValue();
+		if(null != flFulfilmentItemAddr.getDeliveredQty())
+			delQnty = flFulfilmentItemAddr.getDeliveredQty().intValue();
 		delAmoun =((unitPrice) * (delQnty));
 		BigDecimal delAmountTotal = new BigDecimal("0");
 		delAmountTotal=new BigDecimal(delAmoun);
-		flDelOrderItem.setDeliveredAmt(delAmountTotal);
-	}
-	
+		flFulfilmentItemAddr.setDeliveredAmt(delAmountTotal);
+		
+		
+	}*/
 	
 	public void calculateDelAmt(FlDeliveryOrder delOrder){
 		for(FlDelOrderItem orderItem : delOrder.getFlDelOrderItem()){
 			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
 		}
 	}
+	public void onAddressSelect(){
+		System.out.println("in on address select ");
+		getManagedBean().getSelectedDelAddressList().size();
+		
+	}
 	
+	public void selectItemEvent() {
+		System.out.println("order amount:::: "+getManagedBean().getSelectedItemRow().getOrderedAmt());
+		getManagedBean().setSelectedItemRowCalList(new ArrayList<FlFulfilmentItemAddr>());
+		FlFulfilmentItemAddr selectedAddressItem=new FlFulfilmentItemAddr();
+		selectedAddressItem.setOrderedAmt(getManagedBean().getSelectedItemRow().getOrderedAmt());
+		getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
+		getManagedBean().getSelectedItemRowCalList().size();
+		getManagedBean().setItemSelectedForCal("S");
+		/*for(FlFulfilmentItemAddr selectedAddressItem:getManagedBean().getSelectedItemRowList()){
+			selectedAddressItem.getOrderedAmt();
+			getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
+		}*/
+		
+		/*getManagedBean().getSelectedItemRow().getOrderedAmt();
+		System.out.println("order amount:::: "+getManagedBean().getSelectedItemRow().getOrderedAmt());
+		if(null==getManagedBean().getSelectedItemAmountSection()){
+			getManagedBean().setSelectedItemAmountSection(new FlFulfilmentItemAddr());
+		}
+		getManagedBean().getSelectedItemAmountSection().setOrderedAmt(getManagedBean().getSelectedItemRow().getOrderedAmt());
+		*/
+		
+		/*if(null== getManagedBean().getSelectedAddrRow()){
+			throw new EpException(" Select Deliver Address .");
+		}else{
+			getSelectedItemRow().setOrderedAmt(fulItemAddress.getOrderedAmt());
+		}*/
+		
+	}
+	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
+		//System.out.println("Del Qty::: "+itemAddress.getDeliveredAmt());
+		//System.out.println("Order Amount::: "+itemAddress.getOrderedAmt());
+		int delQtyCal=0;
+		int delAmtCal=0;
+		int unitPriceCal=0;
+		unitPriceCal=itemAddress.getUnitPrice().intValue();
+		delQtyCal= itemAddress.getDeliveredQty().intValue();
+		delAmtCal=unitPriceCal*delQtyCal;
+		BigDecimal total=new BigDecimal(delAmtCal);
+		itemAddress.setDeliveredAmt(total);
+
+		//FlFulfilmentItemAddr selectedAddressItem=new FlFulfilmentItemAddr();
+		//selectedAddressItem.setDeliveredAmt(total);
+		//selectedAddressItem.setOrderedAmt(getManagedBean().getSelectedItemRow().getOrderedAmt());
+		//getManagedBean().getSelectedItemRowCalList().get(0).setDeliveredAmt(total);
+		//getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
+		//getManagedBean().getSelectedItemRowCalList().size();
+		//getManagedBean().setItemSelectedForCal("S");
+		
+		
+	}
 	
+
+
+
+	/**
+	 * @return the amountSectionItemRow
+	 */
+	public FlFulfilmentItemAddr getAmountSectionItemRow() {
+		return amountSectionItemRow;
+	}
+
+	/**
+	 * @param amountSectionItemRow the amountSectionItemRow to set
+	 */
+	public void setAmountSectionItemRow(FlFulfilmentItemAddr amountSectionItemRow) {
+		this.amountSectionItemRow = amountSectionItemRow;
+	}
 
 }

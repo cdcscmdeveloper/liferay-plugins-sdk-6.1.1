@@ -16,6 +16,15 @@
 			<p:ajax event="rowSelect"
 				update=":form:prtabs:itemDetPanelGroup,:form:prtabs:deleteAddrBtn"
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
+			<p:column>
+				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
+					styleClass="myCustomChekBox">
+					<p:ajax event="change"
+						update=":form:prtabs:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
+						listener="#{purchaseRequestBackingBean.selectOneCheckboxSelect}"></p:ajax>
+
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column headerText="Delivery Address">
 				<h:outputText
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
@@ -69,7 +78,7 @@
 			<p:commandButton id="deleteAddrBtn" value="Delete"
 				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
 				update=":form:prtabs:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
-				disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
+				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}">
 			</p:commandButton>
 		</div>
 		<p:confirmDialog message="Do you want to delete the record?"
@@ -266,19 +275,11 @@
 				<td><p:inputText size="35" /></td>
 				<td><p:outputLabel value="* Delivery Address" /></td>
 				<td><p:selectOneMenu id="manAddress"
-						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItems var="districtList"
-							value="#{purchaseRequestBackingBean.managedBean.districtList}"
-							itemValue="#{districtList.districtId}"
-							itemLabel="#{districtList.districtName}" />
-						<p:ajax event="change"
-							listener="#{purchaseRequestBackingBean.retrieveCityList}"
-							update="manCity" />
-						<p:ajax event="change"
-							listener="#{purchaseRequestBackingBean.retrieveCityList}"
-							update="manAddress" />
+						<f:selectItems var="delAddByDistrict"
+							value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
+
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>

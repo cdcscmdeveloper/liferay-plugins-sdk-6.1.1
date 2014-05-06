@@ -7,156 +7,132 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="DELIVERY ADDRESS" toggleable="true">
 		<p:dataTable id="doDelAddress" var="doDelAddress"
-			styleClass="orderSummaryChange hide-column-names"
-			selection="#{createDOBackingBean.managedBean.selectedAddrRow}"
-			rowIndexVar="index" rowKey="#{doDelAddress}"
+			styleClass="orderSummaryChange hide-column-names "
+			rowIndexVar="index"
+			selection="#{createDOBackingBean.managedBean.selectedDelAddressList}"
+			rowKey="#{doDelAddress}"
 			value="#{createDOBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
 			<ac:paginator for="doDelAddress" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="Delivery Address">
+			<p:column selectionMode="multiple" rowspan="2" width="5%" />
+
+			<p:column headerText="Delivery Address" width="10"
+				styleClass="fixed-size">
 				<h:outputText rendered="#{doDelAddress.addressType !=null}"
 					value="#{doDelAddress.addressType.pmAddress.address1}, #{doDelAddress.addressType.pmAddress.address2}, #{doDelAddress.addressType.pmAddress.address3}, #{doDelAddress.addressType.pmAddress.address4}" />
 				<h:outputText rendered="#{doDelAddress.addressType eq null}"
 					value="#{doDelAddress.pmAddress.address1}, #{doDelAddress.pmAddress.address2}, #{doDelAddress.pmAddress.address3}, #{doDelAddress.pmAddress.address4}" />
 			</p:column>
-			<p:column>
+			<p:column style="width:2%">
 				<h:outputText value="Delivery Start / End" />
-				<p:spacer width="7" />
-				<p:inputText size="13" value="10/02/2014" disabled="true" />
-				<p:spacer width="7" />
-				<p:inputText size="13" value="10/02/2014" disabled="true" />
+				<p:spacer width="4" />
+				<p:inputText size="7" disabled="true" />
+				<p:spacer width="4" />
+				<p:inputText size="7" disabled="true" />
 			</p:column>
 			<p:column>
-				<h:outputText value="* Supplier Ref. No." />
-				<p:spacer width="15" />
-				<p:inputText></p:inputText>
-				<p:commandLink oncomplete="addRemarks.show();" action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}" update=":form:dotabs:addRemarmAttachmentDialog" >
+				<h:outputText value="* Supplier DO.No." />
+				<p:spacer width="4" />
+				<p:inputText size="9"></p:inputText>
+				<p:commandLink oncomplete="addRemarks.show();"
+					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
+					update=":form:dotabs:addRemarmAttachmentDialog">
 					<p:graphicImage library="ep/images/design" name="attach.png"
 						value="/resources/ep/images/design/attach.png"
 						title="Remark and Attachment" />
 				</p:commandLink>
 			</p:column>
 			<p:rowExpansion>
-				<p:dataTable id="doItems" var="doItems" selectionMode="single"
-					rowIndexVar="index" rowKey="#{doItems}"
-					selection="#{createDOBackingBean.managedBean.selectedItemRow}"
-					value="#{doDelAddress.flFulfilmentItemAddr}"
-					styleClass="show-column-names">
-					<p:ajax event="rowSelect"
-						listener="#{createDOBackingBean.selectItemEvent(doItems)}"
-						update="@(.#{index+1}OrderAmountSection)" />
-					<p:column headerText="Item Type">
-						<h:outputText
-							value="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType}" />
-					</p:column>
+				<p:dataTable id="doItems" var="doItems"
+					value="#{doDelAddress.flFulfilmentItemAddr}" lazy="true"
+					rowIndexVar="index" rowKey="#{flItem}"
+					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="Item Code">
-						<h:outputText />
+						<h:outputText
+							value="#{doItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
 					<p:column headerText="Item Name">
-						<h:outputText
-							value="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}" />
+						<h:outputText value="#{doItems.scRequestItem.itemName}" />
 					</p:column>
 					<p:column headerText="UOM">
 						<h:outputText />
 					</p:column>
-					<p:column headerText="Unit Price (RM)">
+					<p:column headerText="Unit Price &lt;br /&gt; (RM)">
 						<h:outputText disabled="true" value="#{doItems.unitPrice}"
 							style="text-align:right">
 							<f:convertNumber pattern="#,#00.00" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered Qty.">
+					<p:column headerText="Ordered &lt;br /&gt; Qty.">
 						<h:outputText value="#{doItems.orderedQty}"
 							style="text-align:right" />
 					</p:column>
-					<p:column headerText="Received Qty.">
-						<h:outputText value="#{doItems.receivedQty}" />
+					<p:column headerText="Remaining &lt;br /&gt; Qty.">
+						<h:outputText value="#{doItems.orderedQty}"
+							style="text-align:right" />
 					</p:column>
-					<p:column headerText="Delivered Qty.">
+					<p:column headerText="Deliverey &lt;br /&gt; Qty.">
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P' and createDOBackingBean.managedBean.docType eq 'PR'}">
+							rendered="#{doItems.scRequestItem.itemType eq 'P' and createDOBackingBean.managedBean.docType eq 'PR'}">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
-								listener="#{createDOBackingBean.retrievedDelAmount(doItems)}" />
+								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 						</p:inputText>
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR'}">
+							rendered="#{doItems.scRequestItem.itemType eq 'S' and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR'}">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
-								listener="#{createDOBackingBean.retrievedDelAmount(doItems)}" />
+								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 						</p:inputText>
 						<p:inputText value="#{doItems.deliveredQty}" disabled="true"
-							rendered="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR'}" />
+							rendered="#{doItems.scRequestItem.itemType eq 'S' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR'}" />
 						<p:inputText value="#{item.deliveredQty}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
 						</p:inputText>
 					</p:column>
-					<p:column headerText="Ordered Amt.(RM)">
-						<h:outputText value="#{doItems.orderedAmt}"
-							style="text-align:right" disabled="true">
-							<f:convertNumber pattern="#,#00.00" />
-						</h:outputText>
-					</p:column>
-					<p:column headerText="Received Amt.(RM)">
-						<h:outputText value="#{doItems.receivedAmt}">
-							<f:convertNumber pattern="#,#00.00" />
-						</h:outputText>
-					</p:column>
-					<p:column headerText="Delivered Amt.(RM)">
+					<p:column headerText="Deliverey &lt;br /&gt; Amt.(RM)">
 						<h:panelGroup id="delAmountTxt">
-							<h:outputText value="#{doItems.deliveredAmt}"
-								rendered="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}"
-								disabled="true">
+							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
+								rendered="#{doItems.scRequestItem.itemType eq 'P'}">
 								<f:convertNumber pattern="#,#00.00" />
 							</h:outputText>
-							<p:inputText value="#{doItems.deliveredAmt}" size="10"
-								rendered="#{doItems.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}">
+							<p:inputText value="#{doItems.deliveredAmt}" size="5"
+								rendered="#{doItems.scRequestItem.itemType eq 'S'}">
 								<f:convertNumber pattern="#,#00.00" />
 							</p:inputText>
+
 						</h:panelGroup>
 					</p:column>
+					<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)">
+						<h:outputText value="#{doItems.orderedAmt}" />
+					</p:column>
+					<p:column headerText="Received &lt;br /&gt; Qty.">
+						<h:outputText value="#{doItems.receivedQty}" />
+					</p:column>
+					<p:column headerText="Rejected &lt;br /&gt; Qty.">
+						<h:outputText value="#{doItems.receivedQty}" />
+					</p:column>
 				</p:dataTable>
-				<h:panelGroup styleClass="#{index+1}OrderAmountSection">
-					<table style="width: 100%">
-						<tr>
-							<td><p:outputLabel value="Ordered Amt. (RM)" /></td>
-							<td><p:inputText size="10"
-									value="#{createDOBackingBean.managedBean.selectedItemAmountSection.orderedAmt}"
-									disabled="true">
-									<f:convertNumber pattern="#,#00.00" />
-								</p:inputText></td>
-							<td><p:outputLabel value="Received Amt.(RM)" /></td>
-							<td><p:inputText size="10" id="recAmtText" disabled="true">
-									<f:convertNumber pattern="#,#00.00" />
-								</p:inputText></td>
-							<td><p:outputLabel value="Delivery Qty." /></td>
-							<td><p:inputText size="5" id="delQtyText">
-								</p:inputText></td>
-							<td><p:outputLabel value="Delivery Amt.(RM)" /></td>
-							<td><p:inputText size="10" id="delAmtText">
-									<f:convertNumber pattern="#,#00.00" />
-								</p:inputText></td>
-						</tr>
-					</table>
-				</h:panelGroup>
+				
 			</p:rowExpansion>
+
 		</p:dataTable>
 	</p:panel>
 	<p:dialog id="addRemarmAttachmentDialog" header="Remarks"
 		widgetVar="addRemarks" showEffect="fade" hideEffect="fade"
 		modal="true" height="450" width="900" resizable="false">
 		<table>
-		<tr>
-		<td> <p:outputLabel value="#{lbl['lbl.fl.delivery.address']}"/> </td>  
-		<td>
-			<p:inputTextarea cols="50" rows="6"
-						style=" margin-bottom:5px;" disabled="true" />
-		</td>
-		</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" />
+				</td>
+				<td><p:inputTextarea cols="50" rows="6"
+						style=" margin-bottom:5px;" disabled="true" /></td>
+			</tr>
 		</table>
 		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 			<table style="width: 100%">
 				<tr>
+					<ui:param name="deliverAddress" value="#{doDelAddress}"></ui:param>
 					<td width="50%" valign="top"><ui:include
 							src="/xhtml/fl/shared/remark.xhtml" /></td>
 					<td width="50%" valign="top"><ui:include
@@ -167,12 +143,10 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Ok" icon="ui-icon-accept"
-				oncomplete="addRemarks.hide();" 
-				process="@this">
+				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
 			<p:commandButton value="Close" icon="ui-icon-cancel"
-				oncomplete="addRemarks.hide();" 
-				process="@this">
+				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
 		</div>
 	</p:dialog>
