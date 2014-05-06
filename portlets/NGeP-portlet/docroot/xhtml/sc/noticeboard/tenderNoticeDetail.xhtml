@@ -17,7 +17,8 @@
 		<br />
 		
 		<p:panel 
-			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}" >
+			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}" toggleable="true">
+			
 			<h:panelGrid columns="2" columnClasses="columnWidth20,columnWidth30">
 				<h:outputLabel value="#{lbl['lbl.qt.nb.title']}"></h:outputLabel>
 				<h:outputText
@@ -53,9 +54,7 @@
 				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidityUntil']}"></h:outputLabel>
 				<h:outputText></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputLabel>
-				<h:outputText></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.qt.nb.downloadDoc']}"></h:outputLabel>
-				<h:outputText></h:outputText>
+				
 			</h:panelGrid>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.qt.supplierqulificationcriteria']}">
