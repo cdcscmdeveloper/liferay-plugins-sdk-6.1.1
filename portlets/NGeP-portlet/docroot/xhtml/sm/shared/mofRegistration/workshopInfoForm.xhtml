@@ -16,7 +16,7 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Workshop Name">
-				<h:outputText value="--WS Name TBC--" />
+				<h:outputText value="#{work.facilityName}" />
 			</p:column>
 
 			<p:column headerText="Workshop Address">
@@ -56,7 +56,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>

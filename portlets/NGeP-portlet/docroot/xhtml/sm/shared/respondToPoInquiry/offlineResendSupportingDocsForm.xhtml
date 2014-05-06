@@ -1,0 +1,114 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<p:panel
+			header=" Supporting Document Offline Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
+			<br />
+			<table style="width: 100%;">
+
+				<tr>
+					<td style="background-color: aqua; color: black; text-align: left;"><h6>
+							<h:outputText
+								value="* You choose to send the documents offline. Please send all the necessary documents mentioned in the check list." />
+							<br />
+							<h:outputText
+								value="* Please print the checklist along with Application number provided , given below and attach a copy with along with other documents being posted." />
+							<br />
+							<h:outputText
+								value="* All the offline documents should be sent via mail/postal to their corresponding address mentioned below :" />
+							<br />
+						</h6></td>
+
+				</tr>
+
+			</table>
+			<br />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 33%">
+						<table>
+							<tr>
+								<td><b>For Peninsular Malaysia:</b><br /> (Contractor only
+									and all Peninsular Malaysian Consultant)</td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;">Unit Pendaftaran Syarikat<br />
+									Bahagian Perolehan Kerajaan<br /> Tingkat Bawah Blok Utara<br />
+									Kompleks Kementerian Kewangan<br /> Precint 2, Pusat
+									Pentadbiran Kerajaan Persekutuan<br /> 62592 Putrajay
+								</td>
+							</tr>
+						</table>
+					</td>
+
+					<td style="width: 33%"><table>
+							<tr>
+								<td><b>For Sabah:</b><br /> (Contractors in Sabah only)</td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
+									Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia
+									Sabah<br /> Tingkat 2 Rumah Persekutuan<br /> Jalan Mat
+									Salleh<br /> 88592 Kota Kinabalu Sabah
+								</td>
+							</tr>
+						</table></td>
+					<td style="width: 33%"><table>
+							<tr>
+								<td><b>For Sarawak:</b><br /> (Contractors in Sarawak
+									only)</td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
+									Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia
+									Sarawak<br /> Tingkat 16 Bangunan Sultan Iskandar<br /> Jalan
+									Simpang Tiga<br /> 93592 Kuching Sarawak
+								</td>
+							</tr>
+						</table></td>
+				</tr>
+			</table>
+
+
+
+			<p:dataTable var="table" id="offSdList"
+				value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
+				<ac:paginator for="offSdList" />
+
+				<p:column headerText="Document Description">
+					<h:outputText value="#{table.pmDocument.docName}"
+						rendered="#{table.verifiedFlg != 1}" />
+				</p:column>
+
+				<p:column headerText="PO Remarks">
+					<p:inputTextarea value="#{table.poRemarks}" readonly="true"
+						disabled="true" rendered="#{table.verifiedFlg != 1}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<br />
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.printList']}">
+					<p:printer target=":form:tt:offSdList" />
+				</p:commandButton>
+			</div>
+
+		</p:panel>
+	</ui:define>
+</ui:composition>

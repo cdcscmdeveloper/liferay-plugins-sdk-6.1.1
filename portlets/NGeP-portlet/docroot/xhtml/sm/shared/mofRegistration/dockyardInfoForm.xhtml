@@ -16,7 +16,7 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Dockyard Name">
-				<h:outputText value="-- DOC Name TBC --" />
+				<h:outputText value="#{doc.facilityName}" />
 			</p:column>
 
 			<p:column headerText="Dockyard Address">
@@ -54,7 +54,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedDockyardFacility.facilityName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>

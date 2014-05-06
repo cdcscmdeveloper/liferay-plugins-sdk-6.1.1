@@ -1,0 +1,75 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:panel
+			header=" Supporting Document Online Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}"
+			id="onSupTblPan">
+			<br />
+			<table style="width: 100%">
+
+				<tr>
+					<td style="background-color: aqua; color: black; text-align: left;">
+						<h:outputText
+							value="* You choose to send the documents online. Please send all the necessary documents mentioned in the check list." />
+						<br /> <h:outputText
+							value="* The system can only accommodate files in Word format and PDF:" />
+						<br />
+
+					</td>
+
+				</tr>
+
+			</table>
+
+			<p:dataTable var="table" id="onSdList"
+				value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
+				<ac:paginator for="onSdList" />
+
+				<p:column headerText="Document Description">
+					<h:outputText value="#{table.pmDocument.docName}"
+						rendered="#{table.verifiedFlg != 1}" />
+				</p:column>
+
+				<p:column headerText="PO Remarks">
+					<p:inputTextarea value="#{table.poRemarks}" readonly="true"
+						disabled="true" rendered="#{table.verifiedFlg != 1}" />
+				</p:column>
+
+				<p:column headerText="Upload Document ">
+					<p:commandLink oncomplete="attachDlg1.show();return false;"
+						action="#{backingBean.assignSelectedSupportDoc(table)}"
+						rendered="#{table.verifiedFlg != 1}">
+						<p:graphicImage library="ep/images/design" name="upload.png"
+							value="/resources/ep/images/design/upload.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="Added Document Name">
+					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
+						rendered="#{table.verifiedFlg != 1}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+		<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:fileUpload
+				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
+				update="onSdList" oncomplete="attachDlg1.hide();" />
+		</p:dialog>
+	</ui:define>
+</ui:composition>

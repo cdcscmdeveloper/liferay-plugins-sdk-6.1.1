@@ -60,14 +60,16 @@
 						<td><div align="left" style="width: 100%">
 								<p:commandButton value="#{lbl['lbl.sm.prev']}"
 									actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-									icon="ui-icon-prev" action="#{backingBean.updateSmAppl}"
+									icon="ui-icon-prev"
+									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,'BasicInfo')}"
 									update=":form" />
 							</div></td>
 						<td><div align="right" style="width: 100%">
 								<p:commandButton value="#{lbl['lbl.sm.next']}"
 									icon="ui-icon-next" iconPos="right"
 									actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-									action="#{backingBean.updateSmAppl}" update=":form" />
+									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,'BasicInfo')}"
+									update=":form" />
 							</div></td>
 					</tr>
 				</table></td>

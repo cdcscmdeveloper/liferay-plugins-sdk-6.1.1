@@ -19,7 +19,11 @@
 			</p:column>
 
 			<p:column headerText="Document Valid?">
-				<p:selectBooleanCheckbox value="#{offTable.verified}" />
+				<p:selectOneRadio value="#{offTable.verifiedFlg}"
+					layout="pageDirection">
+					<f:selectItem itemLabel="Valid" itemValue="1" />
+					<f:selectItem itemLabel="In-Valid" itemValue="0" />
+				</p:selectOneRadio>
 			</p:column>
 		</p:dataTable>
 		<br />

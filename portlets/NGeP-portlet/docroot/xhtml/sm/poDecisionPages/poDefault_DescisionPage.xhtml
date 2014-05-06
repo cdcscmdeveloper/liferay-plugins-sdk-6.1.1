@@ -41,13 +41,15 @@
 					<p:commandButton value="Recommend Site Visit"
 						onclick="svcDialog.show();" />
 
-					<p:commandButton value="Send Enquiry" />
+					<p:commandButton value="Send Enquiry"
+						onclick="sendInqDialog.show();" />
 				</div> <p:panel header="PO Decision">
 					<table>
 						<tr>
 							<td><p:outputLabel value="Supplier Name" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" value="Sample Data"
+							<td><p:inputText readonly="true"
+									value="#{backingBean.managedBean.smSupplier.companyName}"
 									disabled="true" /></td>
 
 						</tr>
@@ -95,6 +97,19 @@
 				</p:panel></td>
 		</tr>
 	</table>
+
+	<p:dialog width="1050px" header="Send Inquiry"
+		widgetVar="sendInqDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
+		<div align="right">
+			<p:commandButton value="Submit" onclick="sendInqDialog.hide();"
+				action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+			<p:commandButton value="Cancel" onclick="sendInqDialog.hide();" />
+		</div>
+	</p:dialog>
 	<p:dialog width="900px" height="450px" header="Assign Site Visit"
 		widgetVar="svcDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
