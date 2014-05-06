@@ -11,7 +11,7 @@
 			  <p:inputText for="cno" value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		 	  <p:inputText for="physicalNo" value="#{suspensionBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" />				
+		 	  <p:inputText for="physicalNo" value="#{suspensionBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
@@ -21,7 +21,7 @@
 			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
-				   <f:convertNumber pattern="#,###.00" />
+				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>	
 			<p:outputLabel id="signBy" value="Signed Date"  rendered="#{suspensionBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
@@ -29,7 +29,7 @@
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!suspensionBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!suspensionBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
-					disabled="#{suspensionBackingBean.managedBean.ctContract.zonalPricing}" />
+					disabled="true" />
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
@@ -59,7 +59,7 @@
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
-			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
+			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			    <p:ajax event="change" update="justificationPanel,exemptId" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -84,7 +84,7 @@
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    disabled="#{contractDetailsBackingBean.managedBean.chkConceValue}" style="text-align:top;">
+			    disabled="true" style="text-align:top;">
 			     <p:ajax event="change" update="justificationPanel" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -103,7 +103,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="3" cols="140" disabled="false" autoResize="false" />	
+		  rows="3" cols="140" disabled="true" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

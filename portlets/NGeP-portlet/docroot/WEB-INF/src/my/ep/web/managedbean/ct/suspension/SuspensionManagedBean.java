@@ -36,7 +36,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String[] action;
 	private String editorValue;
-	private PmUser userLogin;
 	private CtContract ctContract;
 	private List<CtRemark> remarkList;
 	private CtContractVer contractVer;
@@ -83,14 +82,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
-	}
-
-	public PmUser getUserLogin() {
-		return userLogin;
-	}
-
-	public void setUserLogin(PmUser userLogin) {
-		this.userLogin = userLogin;
 	}
 
 	public List<CtRemark> getRemarkList() {

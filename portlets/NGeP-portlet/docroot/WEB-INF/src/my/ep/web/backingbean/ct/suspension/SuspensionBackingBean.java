@@ -68,7 +68,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 private List<CtContractItem> ctContractItems;
 	 public SuspensionBackingBean(){
 	    if (this.getManagedBean().getAction() == null) {
-	    	this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT});	
+	    	this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
 	    }
 	    if(getManagedBean().getUserMap().size()==0) {
 			 initializeApproverList();
@@ -124,10 +124,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			CTContractSuspensionDataType dataType = (CTContractSuspensionDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-			PmUser pmUser = new PmUser();
-			pmUser.setUserId(dataType.getContractAdmin().getUserId().longValue());
-			pmUser.setUserName(dataType.getContractAdmin().getUserName());
-			this.getManagedBean().setUserLogin(pmUser);
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 			ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
@@ -190,15 +186,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      reqDTO.setOutcome(action);
 		      reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		        
-		      if(this.getManagedBean().getUserLogin() == null) {
-		          reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		      } else {
-		    	  reqDTO.setPmUser(this.getManagedBean().getUserLogin());
-		      }
-		       
 		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-		      //this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
-		     // this.getManagedBean().getContractVer().getCtContractValue().setSuspendActiveLetter(this.getManagedBean().getEditorValue().getBytes());
 		      
 		      if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
 			    for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
@@ -220,7 +208,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		             
 		      reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 		      reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-		        
+		      reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		      reqDTO.setUserRole(getUserRole());
 	          reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			  reqDTO.setAttachments(this.getManagedBean().getAttachmentList());

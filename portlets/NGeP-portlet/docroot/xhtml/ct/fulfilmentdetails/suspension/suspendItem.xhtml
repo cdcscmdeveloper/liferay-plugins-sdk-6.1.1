@@ -10,17 +10,10 @@
        <p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}" 
          widgetVar="ctItemsTable"  filteredValue="#{suspensionBackingBean.ctFilterItems}">
 		  <ac:paginator for="itemTable"/>
-            <p:column  style="width:15%;" 
-		       headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
-		       <p:outputLabel value="#{data.itemType.pmParameterType.parameterName}" style="float:left;"/>
+            <p:column  style="width:15%;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
+		       <p:outputLabel value="#{suspensionBackingBean.getParameterDesc(data.itemType)}" style="float:left;"/>
 		    </p:column> 
-		    <p:column id="modelColumn" style="width:45%;">
-		       <f:facet name="header">
-                 <p:outputPanel>  
-                    <h:outputText value="#{lbl['lbl.ct.susp.tbl.item.name']}"/>  
-                    <p:inputText id="globalFilter"  onkeyup="ctItemsTable.filter()"  style="width:100px;" />  
-                 </p:outputPanel>  
-              </f:facet>
+		    <p:column id="modelColumn" filterBy="#{data.itemName}" headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" filterMatchMode="contains" style="width:45%;">
              <p:outputLabel value ="#{data.itemName}" style="float:left;width:55%;"/>
            </p:column>
            <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
