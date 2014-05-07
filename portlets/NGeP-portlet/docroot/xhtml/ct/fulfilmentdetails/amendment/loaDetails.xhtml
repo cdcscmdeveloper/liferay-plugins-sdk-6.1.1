@@ -58,7 +58,7 @@
             </p:selectOneRadio> 
 	    </h:panelGrid>
 	    <p:outputLabel value="Contract Type"/>
-			<p:selectOneMenu value="" 
+			<p:selectOneMenu value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType.parameterId}" 
 			   style="width:180px;margin-bottom: 5px;">
 			   <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
 			</p:selectOneMenu>
