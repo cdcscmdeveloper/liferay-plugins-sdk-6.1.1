@@ -182,12 +182,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-//				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
+				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
 				// TODO hardcode to get the value, should remove after have real data
 				reqDTO.setOrgProfileId(1003L);
 			} else { // Central Contract	
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-//				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
+				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
 				// TODO hardcode to get the value, should remove after have real data
 				reqDTO.setOrgType("RSH");
 			}
@@ -1289,15 +1289,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			suspBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			
-			suspBB.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    	suspBB.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    	suspBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-		    
 		    suspBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    suspBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(suspBB.getManagedBean().getRemarkList(), suspBB.getManagedBean().getAttachmentList()); 
 			
 		} catch(Exception e) {
 			e.printStackTrace();

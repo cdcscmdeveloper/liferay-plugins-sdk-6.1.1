@@ -5,11 +5,9 @@ package my.ep.web.backingbean.ct.suspension;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -17,26 +15,20 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -47,10 +39,9 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
 
-import com.liferay.portal.kernel.search.ParseException;
+import org.apache.log4j.Logger;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -70,24 +61,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    if (this.getManagedBean().getAction() == null) {
 	    	this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
 	    }
-	    if(getManagedBean().getUserMap().size()==0) {
-			 initializeApproverList();
-	    }
 	 }
-	 
-     @PostConstruct
-	 public void initializeContractValue() throws ParseException {
-		 ContractBackingBean ctSuspBB = new ContractBackingBean();
-		 ctSuspBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-	 }
-     
-     private void initializeApproverList() {
- 		if (getManagedBean().getApproverModel() == null) {
- 			List<String> source = new ArrayList<String>();
- 			List<String> target = new ArrayList<String>();
- 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
- 		}
- 	}
 	 
 	 private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
@@ -154,15 +128,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			
-			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		    	this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		    	this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			}  
-			
-			/*String decoded = new String(this.getManagedBean().getContractVer().getCtContractValue().getSuspendActiveLetter(), "UTF-8");
-			this.getManagedBean().setEditorValue(decoded);
-			*/
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_SUSPENSION);
 		      
@@ -212,15 +177,20 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      reqDTO.setUserRole(getUserRole());
 	          reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			  reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-			  reqDTO.setUserMap(getManagedBean().getUserMap());
-			  reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			  reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 		         
 			  ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			  if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
+					String messageId = MessageConst.INFO_700005;
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						messageId = MessageConst.INFO_700007;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						messageId = MessageConst.INFO_700008;
+					}						
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
@@ -275,59 +245,27 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				System.out.println(e);
 		   }
 	}
-	 
-	 private List<String> getAvailableApproverList() {
-			IUserSO userSO = null;
-			List<String> sourceList = new ArrayList<String>();
-			try {
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO reqDTO = new UserReqDTO();
-
-				if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-					reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-					reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
-					// TODO hardcode to get the value, should remove after have real data
-					reqDTO.setOrgProfileId(1003L);
-				} else { // Central Contract	
-					reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-					reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
-					// TODO hardcode to get the value, should remove after have real data
-					reqDTO.setOrgType("RSH");
-				}
-
-				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				List<PmUser> list = resDTO.getUserList();
-				
-				for (PmUser user : list) {
-					sourceList.add(user.getUserName());
-					getManagedBean().getUserMap().put(user.getUserName(), user);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			} finally {
-				userSO = null;
-			}
-			return sourceList;
-		}
 		
-		private String getUserRole() {		
-			if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
-				return RoleCode.MIN_CONTRACT_ADMIN.value();
-			else if(getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
-				return RoleCode.CT_APPROVER.value();
-			else 
-				return null;
-		}
-
+	private String getUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
+			return RoleCode.MIN_CONTRACT_ADMIN.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
+			return RoleCode.BPK_CCA.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
+			return RoleCode.CT_APPROVER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
+			return RoleCode.BPK_APPROVER.value();
+		else
+			return null;
+	}
 	 
-	 public List<CtContractItem> getCtFilterItems() {
-			return ctFilterItems;
-	 }
+	public List<CtContractItem> getCtFilterItems() {
+		return ctFilterItems;
+	}
 
-	 public void setCtFilterItems(List<CtContractItem> ctFilterItems) {
-			this.ctFilterItems = ctFilterItems;
-	 }
+	public void setCtFilterItems(List<CtContractItem> ctFilterItems) {
+		this.ctFilterItems = ctFilterItems;
+	}
 
 	public List<CtContractItem> getCtContractItems() {
 		return ctContractItems;

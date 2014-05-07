@@ -4,20 +4,15 @@
 package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.primefaces.model.DualListModel;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -40,8 +35,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private CtContractVer contractVer;
 	private List<CtAttachment> attachmentList;
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
 	private boolean chkConceValue;
 
 	public String getEditorValue() {
@@ -102,25 +95,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
-	}
-
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-
-	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
-			userMap = new HashMap<String, PmUser>();
-		}
-		return userMap;
-	}
-
-	public void setUserMap(Map<String, PmUser> userMap) {
-		this.userMap = userMap;
 	}
 
 	public boolean isChkConceValue() {
