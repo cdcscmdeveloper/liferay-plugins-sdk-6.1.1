@@ -37,6 +37,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
 	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+	private List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
 	private	DualListModel<PmUser>	approvalUsers;
 	private	String	fulfillmentType;
 	private	Long	assignedToUserId;
@@ -63,6 +64,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SCDirectPurchaseDataType directPurchaseDataType;
     
     public RequestNoteManagedBean() {
+    	requestSupplierItem.setRequestNoteItem(new ScRequestItem());
 	}
 	/**
 	 * @return the requestNote
@@ -406,5 +408,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 			}
 		}
 		return result;
+	}
+	/**
+	 * @return the requestNoteItems
+	 */
+	public List<ScRequestItem> getRequestNoteItems() {
+		return requestNoteItems;
+	}
+	/**
+	 * @param requestNoteItems the requestNoteItems to set
+	 */
+	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
+		this.requestNoteItems = requestNoteItems;
 	}
 }
