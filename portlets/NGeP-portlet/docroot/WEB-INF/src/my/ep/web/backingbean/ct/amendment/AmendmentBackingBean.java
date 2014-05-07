@@ -36,6 +36,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -55,6 +56,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -75,10 +78,13 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -215,9 +221,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   this.getManagedBean().setPbConfirmMeeting(true);
 				
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
-				this.getManagedBean().setApprovrLetter(true);
+				this.getManagedBean().setLetterOfAcceptance(true);
 		        this.getManagedBean().setPrepareLOA(true);		
 		        this.getManagedBean().setMemberSignOff(true);
+		        if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null){
+		        	this.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(new ScLoa());
+		        }
 			
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)){
 		    	  this.getManagedBean().setMemberSignOff(false);
@@ -305,9 +314,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        }
 	        
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-	       /* if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
+	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
 	            ChkComplyAP201Rule();	
-	        } */  
+	        }   
+	        
+	        if(this.getManagedBean().isPrepareLOA()){
+	        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null){
+	        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
+	        	}
+	        	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(this.getManagedBean().getScLoaWitness());
+	        }
 	     
 	        this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
 	        this.getManagedBean().getContractVer().getCtPerformanceBonds().get(0).getFinancialOrg().setFinancialOrgId(1L);
@@ -926,6 +942,23 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   return items;
 		}
 		
+		public List<PmDocument> getLoaDocumentList(){
+			
+			 IDocumentSO documentSO = null;
+			try{
+			     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+			     DocumentReqDTO reqDTO = new DocumentReqDTO();
+			     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+			     DocumentResDTO resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+			     return resDTO.getDocumentList();
+			}catch(Exception e){
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		
+			}
+			return null;
+		}
+		
 		public SelectItem[] getMeetingStatusDropdown(){
 			SelectItem[] items = null;     
 			try{
@@ -1014,5 +1047,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			this.selectedMeetingUser = selectedMeetingUser;
 		}
 		
-		
+		public int calculateInMonths(int years){
+			return years * 12;
+		}
 }

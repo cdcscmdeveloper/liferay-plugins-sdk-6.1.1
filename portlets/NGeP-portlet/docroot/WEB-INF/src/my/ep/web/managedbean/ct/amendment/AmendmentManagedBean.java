@@ -48,7 +48,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean pbConfirmMeeting;
 	private boolean memberSignOff = true;
-	private boolean approvrLetter;
+	private boolean letterOfAcceptance;
 	private boolean bpkSaSkApprover;
 	private boolean prepareLOA;
 	private boolean signOffDecision;
@@ -152,12 +152,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.memberSignOff = memberSignOff;
 	}
 
-	public boolean isApprovrLetter() {
-		return approvrLetter;
+	public boolean isLetterOfAcceptance() {
+		return letterOfAcceptance;
 	}
 
-	public void setApprovrLetter(boolean approvrLetter) {
-		this.approvrLetter = approvrLetter;
+	public void setLetterOfAcceptance(boolean letterOfAcceptance) {
+		this.letterOfAcceptance = letterOfAcceptance;
 	}
 
 	public List<CtRemark> getRemarkList() {
