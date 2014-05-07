@@ -3,6 +3,15 @@
  */
 package my.ep.web.backingbean.ct.supplier;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,15 +24,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
@@ -32,6 +46,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -42,12 +58,12 @@ import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -60,6 +76,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -122,8 +140,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setStatus(new PmStatus());
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getStatus().setStatusId(1L);
 			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-			if(this.getManagedBean().getFactoring().getLoa() == null)
-				this.getManagedBean().getFactoring().setLoa(new ScLoa());
+			//if(this.getManagedBean().getFactoring().getLoa() == null)
+				//this.getManagedBean().getFactoring().setLoa(new ScLoa());
 		}
 		 
 		if(this.getManagedBean().getCtTerminationReason() == null){
@@ -351,7 +369,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			
-			reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
+			 reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
@@ -388,7 +406,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
  			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
  			 String token = getFacesScopes().getBPMAuthenticationCtxToken();
  			 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
- 			 reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
+  			
  			 reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 			 reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			 resDTO = contractSO.objCloneSupplierTerminationReq(reqDTO);
@@ -479,7 +497,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setParameterType("BS");
 			reqDTO.setParameterCode("FC");
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			resDTO.getPmParameter().getParameterId();
+			Long value = resDTO.getPmParameter().getParameterId();
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -512,7 +530,80 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
     }
     
+public SelectItem[] retrieveFinancialOrgList() throws NamingException {
+		
+		SelectItem[] items = null; 
+		IFinancialOrgSO financialOrgSO;
+		try{
+		    int i = 1;
+			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
+			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
+			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    for(PmFinancialOrg pmFinancialOrg : list) 
+				  items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
+	    }catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}   	
+	   return items;
+	}
     
+    public void fileUpload(FileUploadEvent event) throws Exception {
+	    UploadedFile item = event.getFile();
+	    String filePath = "C:/projects/uploads/"+item.getFileName();
+	    FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+        fileOuputStream.write(item.getContents());
+        fileOuputStream.close();
+    }
+    
+    public String fileNames(String filePath){
+		String fileName = "";
+		if(filePath == null || filePath=="")
+		  return fileName;
+		
+		File file = new File(filePath);
+		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+	    return fileName;
+	}
+    
+    public void downloadFile(String filePath) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		String fileName = null;
+		
+		File file = new File(filePath);
+		fileName = file.getName();
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+	
     
     public List<SelectItem> getPopulateBankAccountList() {
 		return populateBankAccountList;
