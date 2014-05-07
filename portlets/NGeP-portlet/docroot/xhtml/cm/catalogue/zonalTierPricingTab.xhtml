@@ -24,7 +24,7 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;" disabled="#{tier.standardDisabled}">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
@@ -41,16 +41,16 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{tier.price}" size="10">
+				<p:inputText value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}">
 				<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
-				</h:inputText>
+				</p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText value="#{tier.fromQty}" size="4">
+				<p:inputText value="#{tier.fromQty}" size="4" disabled="#{!tier.showFlag || tier.standardDisabled}">
 				<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:inputText>
 
@@ -59,7 +59,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
-				<p:inputText value="#{tier.toQty}" size="4">
+				<p:inputText value="#{tier.toQty}" size="4" disabled="#{tier.standardDisabled}">
 				<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:inputText>
 			</p:column>
@@ -68,7 +68,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" showOn="button" size="10" rendered="#{tier.showFlag}" disabled="#{!tier.brandNew}" 
+				<p:calendar value="#{tier.startDate}" showOn="button" size="10" rendered="#{tier.showFlag}" disabled="#{tier.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
@@ -79,7 +79,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10" rendered="#{tier.showFlag}" disabled="#{!tier.brandNew}" 
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" rendered="#{tier.showFlag}" disabled="#{tier.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
@@ -95,7 +95,7 @@
 				<table width="5%">
 					<tr>
 						<td><p:commandLink id="zTPromoLink" title="Promotion" rendered="#{tier.showFlag}"
-								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
+								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
 								action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
 								update="@form">
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
@@ -107,9 +107,10 @@
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;"><p:commandLink title="Delete" id="zTDeleteLink" rendered="#{tier.showFlag}"
-								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
-								action="#{catalogueBackingBean.deleteZonalTierPrice(rowIndex)}"
+								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
+								action="#{catalogueBackingBean.setZonalRowIndex}" oncomplete="confirmationZonal.show()"
 								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
+								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 						<td style="text-align: right;">
@@ -134,6 +135,17 @@
 				action="#{catalogueBackingBean.addNewZonalTierPricing()}"
 				update="cmZonalTierPricingsId" process="@this cmZonalTierPricingsId"></p:commandButton>
 		</div>
+		
+		<p:confirmDialog id="confirmDeleteZonalTierId" message="Are you sure ?"
+			header="Confirmation Message" widgetVar="confirmationZonal">
+
+			<p:commandButton id="conf" value="Yes"
+				actionListener="#{catalogueBackingBean.deleteZonalTierPrice()}" update=":form"
+				oncomplete="confirmationZonal.hide()" />
+			<p:commandButton id="decline" value="No"
+				onclick="confirmationZonal.hide()" />
+
+		</p:confirmDialog>
 
 
 

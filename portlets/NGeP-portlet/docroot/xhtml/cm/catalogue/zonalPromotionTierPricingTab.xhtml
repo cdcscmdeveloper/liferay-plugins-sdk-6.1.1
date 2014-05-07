@@ -18,12 +18,13 @@
 
 			<ac:paginator for="cmZonalPromotionTierPricingsId"></ac:paginator>
 
-			
+
 			<p:column>
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}"
+					style="width: 128px;" disabled="true">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
@@ -33,60 +34,88 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			
+
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{tier.price}" size="10"></h:inputText>
+				<p:inputText value="#{tier.price}" size="10">
+					<p:ajax event="keyup" update="zPromoTierPriceId" />
+					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
+				</p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText value="#{tier.fromQty}" size="4"></p:inputText>
+				<p:inputText value="#{tier.fromQty}" readonly="true" size="4"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
-				<p:inputText value="#{tier.toQty}" size="4"></p:inputText>
+				<p:inputText value="#{tier.toQty}" readonly="true" size="4"></p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" showOn="button" size="10" mindate="#{tier.minDate}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
+					mindate="#{tier.minDate}" rendered="#{tier.showFlag}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form" />
+				</p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10" maxdate="#{tier.maxDate}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10"
+					maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form" />
+				</p:calendar>
 
 			</p:column>
-			
+
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<p:commandLink style="margin-left: 10px;" title="Delete"
-					action="#{catalogueBackingBean.deleteZonalPromotionTierPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricings">
-					<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-				</p:commandLink>
+
+				<table>
+					<tr>
+						<td style="text-align: right;"><p:commandLink
+								style="margin-left: 10px;" title="Delete"
+								rendered="#{tier.showFlag}"
+								action="#{catalogueBackingBean.deleteZonalPromotionTierPrice(rowIndex)}"
+								update=":form">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+						<td style="text-align: right;"><p:commandLink
+								id="zPromoTierPriceId" title="Error" process="@this"
+								actionListener="#{catalogueBackingBean.updateZonalPromotionTierErrorDialog(rowIndex)}"
+								update=":form" oncomplete="errorDialog.show();"
+								disabled="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction)}">
+								<p:graphicImage
+									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
+
+
 
 			</p:column>
 
 		</p:dataTable>
 
-	
+
 	</p:outputPanel>
 
 
