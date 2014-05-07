@@ -182,12 +182,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
+//				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
 				// TODO hardcode to get the value, should remove after have real data
 				reqDTO.setOrgProfileId(1003L);
 			} else { // Central Contract	
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
+//				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
 				// TODO hardcode to get the value, should remove after have real data
 				reqDTO.setOrgType("RSH");
 			}
