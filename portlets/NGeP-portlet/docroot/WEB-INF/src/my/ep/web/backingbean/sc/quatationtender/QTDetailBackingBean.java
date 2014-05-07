@@ -65,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -1612,6 +1613,9 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setOutComes(res.getAction());
 		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;		
 		retrieveQuationTenderDetails(new Long(quotationTenderDataType.getQtId()));
+		if(null==this.getManagedBean().getQt().getProcurementMode()){
+			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
+		}
 		this.getManagedBean().setQuotationTenderDataType(
 				quotationTenderDataType);
 		this.getManagedBean().setProcessName(res.getProcessName());

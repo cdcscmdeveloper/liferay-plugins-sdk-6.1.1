@@ -185,7 +185,6 @@ public class SpecificationBackingBean extends
 	private int outputTab;
 
 	public SpecificationBackingBean() {
-		
 
 	}
 
@@ -382,10 +381,6 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
-	
-
-	
-
 	public void saveSpecificationDtls() {
 		IQTDetailSO detailSO;
 		try {
@@ -395,36 +390,25 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
 
 			if (resDTo.isSuccessful()) {
-			ScQt scQt=	resDTo.getQtDetail();
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
+				ScQt scQt = resDTo.getQtDetail();
+				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								MessageUtils
-										.getMessage(
-												MessageConst.INFO_700004,
-												new String[] {"Specification Created For "
-														,
-														scQt.getQtNo()},
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes()
-														.getUserLocale())));
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700004, new String[] {
+												"Specification Created For ",
+												scQt.getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
-			
+
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils
-									.getMessage(MessageConst.INFO_000001,											
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes()
-													.getUserLocale())));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_000001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			e.printStackTrace();
 		} finally {
 			detailSO = null;
@@ -439,38 +423,34 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
 			if (resDTo.isSuccessful()) {
-				ScQt scQt=	resDTo.getQtDetail();
-					FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_700004,
-													new String[] {"Specification Committe Details For "
-															,
-															scQt.getQtNo()},
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-				}
-				
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
+				ScQt scQt = resDTo.getQtDetail();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
 								null,
-								MessageUtils
-										.getMessage(MessageConst.INFO_000001,											
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes()
-														.getUserLocale())));
-				e.printStackTrace();
-			} finally {
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700004,
+														new String[] {
+																"Specification Committe Details For ",
+																scQt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_000001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			e.printStackTrace();
+		} finally {
 			detailSO = null;
 		}
 	}
@@ -914,8 +894,9 @@ public class SpecificationBackingBean extends
 					.retriveQTSuppQulCriDetails(tenderReqDTO);
 			List<ScQtCategory> categoryResults = tenderResDTO
 					.getCategoryResultBean().getResultList();
+
 			if (isNotNullOREmpty(categoryResults)) {
-				// this.getManagedBean().setScQt(tenderResDTO.getQtDetail());
+				
 				if ("O".equalsIgnoreCase(tenderResDTO.getQtDetail().getQtType())) {
 					this.getManagedBean().setSuppCriteriaopenList(
 							categoryResults);
@@ -924,15 +905,12 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setSuppCriteriarestrictedList(
 							categoryResults);
 				}
-				this.getManagedBean().setSupplierCriteria(
-						tenderResDTO.getQtSupplierCriteria());
 			}
 
-			else {
-				this.getManagedBean().setSupplierCriteria(
-						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
-				List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-
+			this.getManagedBean().setSupplierCriteria(
+					tenderResDTO.getQtDetail().getScQtSupplierCriteria());
+			List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+			if (null != tenderResDTO.getLocationDetails()) {
 				for (TplSpecLoc localLoc : tenderResDTO.getLocationDetails()) {
 					ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
 					locCriteria.add(criteria);
@@ -2516,28 +2494,33 @@ public class SpecificationBackingBean extends
 
 		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
+		
+			
+		
 		scQt.setItemType("P");
 		PmParameter parameter = scQt.getPmProcurementCategory();
 		if (null == parameter) {
 			scQt.setPmProcurementCategory(null);
 		}
 		if (!scQt.isZonal()) {
+			scQt.setZoneLocationLevel(null);
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 					this.getManagedBean().getZoneTrees(), null);
 			if (locCriteria != null && !locCriteria.isEmpty()) {
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(locCriteria);
-				this.getManagedBean().getSupplierCriteria()
-						.setScQt(this.getManagedBean().getScQt());
-				this.getManagedBean().getSupplierCriteria().setChangedBy(1L);
-				this.getManagedBean().getSupplierCriteria().setCreatedBy(1L);
-				this.getManagedBean()
-						.getSupplierCriteria()
-						.setCreatedDate(
-								new Timestamp(System.currentTimeMillis()));
-				scQt.setScQtSupplierCriteria(this.getManagedBean()
-						.getSupplierCriteria());
+				
+				if (null != scQt.getScQtSupplierCriteria().getLocationLevel()
+						&& null == scQt.getScQtSupplierCriteria()
+								.getLocationLevel().getParameterId()) {
+					scQt.getScQtSupplierCriteria().setLocationLevel(null);
+				}
 			}
+			this.getManagedBean().getSupplierCriteria()
+			.setScQt(this.getManagedBean().getScQt());
+	    setUserDetails(this.getManagedBean().getSupplierCriteria());		
+	    scQt.setScQtSupplierCriteria(this.getManagedBean()
+			.getSupplierCriteria());
 			scQt.setScQtZoneCriteria(null);
 		} else {
 			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
@@ -2553,10 +2536,7 @@ public class SpecificationBackingBean extends
 				}
 				zoneCriteria.setTplSpecZoneDtls(zoneLocal);
 				zoneCriteria.setScQt(this.getManagedBean().getScQt());
-				zoneCriteria.setChangedBy(1L);
-				zoneCriteria.setCreatedBy(1L);
-				zoneCriteria.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
+				setUserDetails(zoneCriteria);
 				scQt.setScQtZoneCriteria(zoneCriteria);
 
 			}
@@ -2751,12 +2731,12 @@ public class SpecificationBackingBean extends
 		try {
 			String type = (String) event.getComponent().getAttributes()
 					.get("value");
-			
+
 			this.getManagedBean().setFulfilmentType(type);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 
 	}
 
@@ -2764,7 +2744,7 @@ public class SpecificationBackingBean extends
 		try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
-			
+
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
@@ -2795,10 +2775,11 @@ public class SpecificationBackingBean extends
 	}
 
 	public void selectLocation(AjaxBehaviorEvent event) {
-		Long location =  (Long) event.getComponent().getAttributes()
+		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
 		System.out.println("=======location level====" + location);
-	this.getManagedBean().getScQt().getZoneLocationLevel().setParameterId(location);
+		this.getManagedBean().getScQt().getZoneLocationLevel()
+				.setParameterId(location);
 	}
 
 	public void scoreTypeChange(AjaxBehaviorEvent event) {
@@ -6972,22 +6953,16 @@ public class SpecificationBackingBean extends
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getQtDetail();
 
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(action),
-														new String[] {
-																"Specification Details For ",
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										getMessgeConstant(action),
+										new String[] {
+												"Specification Details For ",
+												qt.getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
@@ -8235,24 +8210,32 @@ public class SpecificationBackingBean extends
 		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
 		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
-		this.getManagedBean().getScQt().setPanel(true);
-		this.getManagedBean().getScQt().setOpenFor("A");
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String taskName = res.getTaskName();
 		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
+			this.getManagedBean().getScQt().setPanel(true);
+			this.getManagedBean().getScQt().setOpenFor("A");
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
 		} else if (SCProcessNameConst.CONSOLIDATE_SPECIFICATION
 				.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
+			this.getManagedBean().getScQt().setPanel(true);
+			this.getManagedBean().getScQt().setOpenFor("A");
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
 		} else {
+			if(this.getManagedBean().getScQt().getPmProcurementCategory()== null && this.getManagedBean().getScQt().getFulfilmentType()==null){
 			this.getManagedBean().getScQt()
 					.setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getScQt().setFulfilmentType(new PmParameter());
+			}
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -8354,8 +8337,7 @@ public class SpecificationBackingBean extends
 	private QuationTenderReqDTO constructSpecCommitteDtls() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
-		
-		
+
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
@@ -8695,22 +8677,15 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO resDTO = qtDetailSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getQtDetail();
-			FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(getMessgeConstant(action)
-														,
-														new String[] {
-																"Specification",
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										getMessgeConstant(action),
+										new String[] { "Specification",
+												qt.getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
