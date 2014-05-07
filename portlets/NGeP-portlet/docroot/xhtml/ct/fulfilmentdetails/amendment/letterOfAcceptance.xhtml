@@ -1,0 +1,49 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	 <p:panel id="loaContents" header="LOA CONTENTS" toggleable="true"  toggleSpeed="500">  
+	  <p:dataTable id="letterAcceptance" var="data"
+	     value="#{amendmentBackingBean.loaDocumentList}">
+	      
+	       <p:column headerText="Content" style="width:40%;">
+	         <p:outputLabel value="#{data.docName}"  style="float:left;"/>
+	       </p:column>
+	       <p:column headerText="Type" style="width:20%;">
+	          <p:outputLabel style="float:left;"
+	            value="#{amendmentBackingBean.getParameterDesc(data.docDefinitionTypeCode.pmParameterType.parameterType,data.docDefinitionTypeCode.parameterCode)}" />
+	       </p:column>
+	       <p:column headerText="Upload" styleClass="column-align-center" style="width:15%;">
+               <h:panelGroup id="uploadLetterPg">
+				    <p:commandButton oncomplete="uploadLetterPg.show();return false;" icon="iconAttachment" 
+					   update=":form:tabview:letterAcceptance"></p:commandButton>	
+			   </h:panelGroup> 
+			</p:column>
+	        <p:column headerText="Action" styleClass="column-align-center" style="width:20%;">
+	             <h:commandLink value="#{amendmentBackingBean.fileNames(data.)}" action="#{}"
+				      style="float:left;" styleClass="blue_font"/>					
+	        </p:column>
+	    </p:dataTable>
+	     <div class="ppRightBtn"> 
+          <p:commandButton value="Download All"  icon="ui-icon-download" />
+		  <p:spacer width="1"/>
+		   <p:commandButton value="Add"  icon="ui-icon-add" />
+		   <p:spacer width="1"/>
+		   <p:commandButton value="Delete"  icon="ui-icon-delete" />
+	   </div>
+	    <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" modal="false" resizable="false" width="700px" height="350" 
+	   	    styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		    <p:ajax event="close" />
+	      	<p:fileUpload style="display:inline;" mode="advanced" 
+			  fileUploadListener="#{amendmentBackingBean.fileUpload}" 
+			  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			  update=":form:tabview:letterAcceptance" >
+		    </p:fileUpload> 
+	    </p:dialog>
+	 </p:panel>
+</ui:composition>
+	   

@@ -105,7 +105,7 @@
          <ui:include src="bpk/approvalOfAP201.xhtml"/>
        </p:tab>  
        
-        <p:tab title="Letter Of Acceptance">
+        <p:tab title="Letter Of Acceptance" rendered="#{amendmentBackingBean.managedBean.letterOfAcceptance}">
          <ui:include src="letterOfAcceptance.xhtml"/>
        </p:tab>  
 	</p:tabView>

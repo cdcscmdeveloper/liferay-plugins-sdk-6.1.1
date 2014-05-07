@@ -51,9 +51,10 @@
 		   </h:panelGrid>
 		   <p:outputLabel value="Required Insurance / Warranty"/>
 		    <h:panelGrid columns="4">
-		     <p:selectOneRadio id="radiOptions" value="1" required="true">  
-                  <f:selectItem itemLabel="Yes" itemValue="1"/>  
-                  <f:selectItem itemLabel="No" itemValue="2" /> 
+		     <p:selectOneRadio id="radiOptions"  required="true"
+		        value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.insWarrantyReq}">  
+                  <f:selectItem itemLabel="Yes" itemValue="true"/>  
+                  <f:selectItem itemLabel="No" itemValue="false" /> 
             </p:selectOneRadio> 
 	    </h:panelGrid>
 	    <p:outputLabel value="Contract Type"/>

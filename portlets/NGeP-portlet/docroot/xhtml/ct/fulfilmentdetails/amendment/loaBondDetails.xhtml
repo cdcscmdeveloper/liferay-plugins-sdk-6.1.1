@@ -13,30 +13,33 @@
 			 </h:commandLink>					
 			<p:outputLabel value="Bond Response Due Date"/>
 			<h:panelGrid columns="3">
-			    <p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}" 
-			       style="width:120px;"/>
+			   <p:inputText  style="width:120px;"
+			     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}"/>
 			    <p:spacer width="1"/>
-			    <p:inputText style="width:40px;" />
+			    <p:inputText style="width:40px;"/>
 			</h:panelGrid>
 			<p:outputLabel value="Contract Period"/>
 			<h:panelGrid columns="5">
-			    <p:inputText style="width:80px;"/>
+			    <p:inputText style="width:80px;"
+			      value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}"/>
 			    <p:spacer width="1"/>
 			    <p:outputLabel value="(Year)"/>
 			    <p:spacer width="1"/>
-			    <p:outputLabel value="..Months"/>
+			    <p:outputLabel value="#{amendmentBackingBean.calculateInMonths(amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod)}, Months"/>
 			</h:panelGrid>
 			<p:outputLabel value="Contract Amount (RM)"/>
-			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}"
+			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 			   style="width:170px;"/>
 			<p:outputLabel value="Percentage Bond"/>
 			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}" 
 			  style="width:170px;"/>
 			<p:outputLabel value="Bond Amount Per Year (RM)"/>
 			<h:panelGrid columns="3">
-		  	  <p:inputText style="width:170px;"/>
+		  	  <p:inputText style="width:170px;"
+		  	    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}"/>
 			   <p:spacer width="1"/>
-			  <p:inputText style="width:300px;"/>
+			  <p:inputText style="width:300px;"
+			    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.proposedAmt}"/>
 			</h:panelGrid>
 		 </h:panelGrid>
 	</p:panel>	
