@@ -19,6 +19,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -31,6 +32,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -102,16 +105,27 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 * @return 
 	  */
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
+		  debugLogger("prInquiryAction");
+		  ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		  IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		  IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
-		   debugLogger("prInquiryAction");
+		 
+		   CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+		   catReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
+		   
 		   ScPrInquiry scPrInquiry = new ScPrInquiry(); 
 		   ScRequestItem scRequestItem = new ScRequestItem();
-		   getManagedBean().setSupplierItem(cmSupplierItem);
 		   if(cmSupplierItem != null) {
 			  ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-			  this.getManagedBean().setSupplierItem(cmSupplierItem);
+			  
 			  ScSupplierItemPrice supplierItemPrice = new ScSupplierItemPrice();
+			  // TODO Check active CmPricings
+			  CatalogueResDTO catResDTO = catalogueSO.findActivePricing(catReqDTO);
+			  List<CmPricing> pricings = catResDTO.getPriceLs();
+			 
+			  cmSupplierItem.setCmPricings(pricings);
+			  this.getManagedBean().setSupplierItem(cmSupplierItem);
+			  
 			  supplierItemPrice.setPricing(cmSupplierItem.getCmPricings().get(0));
 			  requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
 			  supplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
@@ -131,7 +145,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			      workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
 			   }
 			  workFlowStatus.setCurrent(true);
-		      workFlowStatuses.add(workFlowStatus);
+		     // workFlowStatuses.add(workFlowStatus);
 			  scPrInquiry.setWorkflowStatuses(workFlowStatuses);
 			  
 			  scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -252,7 +266,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
                  iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
                  directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-				 PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();				 
+				 PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();	
+				 FacesScopes facesScopes = new FacesScopes();
 				 ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			     prInquiry.setDateToResponse(new Timestamp(System.currentTimeMillis()));
 			     List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
@@ -264,6 +279,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     for (ScRequestSupplierItem scRequestSupplierItem :  prInquiry.getScRequestSupplierItems()) {
 			    	 ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 				     requestNoteDtl.setScRequestNote(requestNote);
+				     requestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 				     requestNoteDtls.add(requestNoteDtl);
 				     scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
 				     scRequestSupplierItem.setScPrInquiy(prInquiry);
@@ -289,7 +305,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     workFlowStatuses.add(workFlowStatus);
 			     
 			     prInquiry.setWorkflowStatuses(workFlowStatuses);
-				 FacesScopes facesScopes = new FacesScopes();
+				 
 				 String token = facesScopes.getBPMAuthenticationCtxToken();
 				 reqDTO.setToken(token);
 			     reqDTO.setPrInquiryDetail(prInquiry);
@@ -533,7 +549,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 			requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
-			
+			requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 			scRequestNoteDtl.setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
