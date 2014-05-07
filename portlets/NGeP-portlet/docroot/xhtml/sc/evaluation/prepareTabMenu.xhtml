@@ -7,33 +7,22 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<p:tabMenu 
+		style="display : table-caption;">
+
+		<p:menuitem value="#{lbl['lbl.sc.eva.prepare.mtng.dtls']}"		
+			action="#{evaluationBackingBean.retriveDetails}"  />
+		<p:menuitem value="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
+			
+			action="#{evaluationBackingBean.retriveOpeningCommitteeDtls}"
+			 />
+		<p:menuitem value="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
+		
+			action="#{evaluationBackingBean.retriveTurutHadirDtls}"
+			/>
+	</p:tabMenu>
 
 
 
-	<p:tabView dynamic="true" orientation="left" id="evaluationMeetingId">
-       <p:ajax event="tabChange"
-			listener="#{evaluationBackingBean.preparationTabChange}" />
-
-
-		<p:tab title="#{lbl['lbl.sc.eva.prepare.mtng.dtls']}">
-			<ui:include src="meetingDetails.xhtml"></ui:include>
-
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.eva.mtng.opn.committee']}">
-			<ui:include src="openCommittee.xhtml"></ui:include>
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.eva.prepare.turut.hadir']}">
-			<ui:include src="turuthadir.xhtml"></ui:include>
-		</p:tab>
-
-
-
-
-
-
-
-	</p:tabView>
 
 </ui:composition>

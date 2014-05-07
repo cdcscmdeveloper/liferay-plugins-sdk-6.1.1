@@ -7,17 +7,26 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+
+<div align="right">
+	
+	<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+		style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
+		icon="ui-icon-save" />
+</div>
+
+	<p:spacer height="40"></p:spacer>
+
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
-			editable="true" rowIndexVar="index" style="width:100%"
+			editable="true" rowIndexVar="index" style="width: 1000px;"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
 				<p:inputText size="70"></p:inputText>
 
@@ -31,7 +40,7 @@
 	</p:panel>
 
 	<p:panel>
-		<table style="width: 50%">
+		<table style="width: 100%">
 
 			<tr>
 				<td><h:outputLabel
@@ -49,13 +58,12 @@
 
 		<p:dataTable var="disQualifiedSupplier"
 			id="complianceDisQualifiedSupplier" editable="true"
-			rowIndexVar="index" style="width:100%"
+			rowIndexVar="index" style="width: 1000px;"
 			rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
 				<p:inputText size="70"></p:inputText>
 
@@ -69,7 +77,7 @@
 	</p:panel>
 
 	<p:panel>
-		<table style="width: 50%">
+		<table style="width: 100%">
 
 			<tr>
 				<td><h:outputLabel

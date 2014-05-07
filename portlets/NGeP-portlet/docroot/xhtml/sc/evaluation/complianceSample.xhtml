@@ -7,64 +7,85 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-<ui:fragment rendered="#{evaluationBackingBean.managedBean.countDays gt 0}">
-	<p:panel style="margin-top:20px;">
-		<table style="width: 30%">
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.smpl.opn.date']}" /></td>
-				<td><p:inputText value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}" readonly="true" disabled="true">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
-				</p:inputText></td>
-			</tr>
-
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.smpl.count.down']}" /></td>
-				<td><p:inputText value="#{evaluationBackingBean.managedBean.countDays}" readonly="true" disabled="true"></p:inputText></td>
-			</tr>
-		</table>
-	</p:panel>
-</ui:fragment>
-
-<ui:fragment rendered="#{evaluationBackingBean.managedBean.countDays lt 0}">
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.smpl.sup.list']}"
-		toggleable="true">
-
-		<p:dataTable var="complianceSample" id="complianceSample"
-			editable="true" rowIndexVar="index" style="width:100%"
-			rowKey="#{complianceTech}">
-			<ac:paginator for="complianceSample" />
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" style="float:right;"
+			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
+		
+	</div>
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"
-				style="width:60%">
-
-				<h:outputText></h:outputText>
 
 
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}" style="width:30%">
+	<ui:fragment
+		rendered="#{evaluationBackingBean.managedBean.countDays gt 0}">
+		<p:panel style="margin-top:20px;">
+			<table style="width: 50%">
+
+				<tr>
+					<td><h:outputLabel style="width:122px;"
+							value="#{lbl['lbl.sc.eva.compliance.smpl.opn.date']}" /></td>
+					<td><p:inputText
+							value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}"
+							readonly="true" disabled="true">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.count.down']}" /></td>
+					<td><p:inputText
+							value="#{evaluationBackingBean.managedBean.countDays}"
+							readonly="true" disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:fragment>
+
+<p:spacer height="40"></p:spacer>
+	<ui:fragment
+		rendered="#{evaluationBackingBean.managedBean.countDays lt 0}">
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.smpl.sup.list']}"
+			toggleable="true">
+
+			<p:dataTable var="complianceSample" id="complianceSample"
+				rowIndexVar="index" style="width:100%"
+				value="#{evaluationBackingBean.managedBean.complianceSampleLblsupplier}"
+				rowKey="#{complianceSample}">
+				<ac:paginator for="complianceSample" />
 
 
-				<h:outputText></h:outputText>
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"
+					style="width:60%">
 
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}" style="width:10%">
-
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
-					process="@this" partialSubmit="true" />
+					<h:outputText value="#{complianceSample.scQtProposal.supplierNo}"></h:outputText>
 
 
-			</p:column>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"
+					style="width:30%">
 
-		</p:dataTable>
+
+					<h:outputText value="#{complianceSample.lableNo}"></h:outputText>
+
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+					style="width:10%">
+
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
+						process="@this" partialSubmit="true"
+						action="#{evaluationBackingBean.sampleCompliance(complianceSample)}" />
 
 
-	</p:panel>
+				</p:column>
 
-</ui:fragment>
+			</p:dataTable>
+
+
+		</p:panel>
+
+	</ui:fragment>
 
 </ui:composition>

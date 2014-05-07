@@ -8,12 +8,22 @@
 
 
 
+	<div align="right">
+
+		
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			style="float:right;" 
+			action="#{evaluationBackingBean.saveOpenCommitteeDtls}"
+			icon="ui-icon-save" />
+	</div>
+
+	<p:spacer height="40"></p:spacer>
 
 	<p:panel header="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
-			rowKey="#{committeeMember.qtCommitteeActivityId}"
+			rowKey="#{committeeMember.qtCommitteeActivityId}" style="width:100%"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
 			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}">
 			<ac:paginator for="evaluationpreparecommittee" />
@@ -83,9 +93,6 @@
 		</p:dataTable>
 
 	</p:panel>
-	
-	
-	
 	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
 		toggleable="true">
 		<table style="width: 100%" id="remarkslist">
@@ -120,6 +127,5 @@
 			</tr>
 		</table>
 	</p:panel>
-
 
 </ui:composition>

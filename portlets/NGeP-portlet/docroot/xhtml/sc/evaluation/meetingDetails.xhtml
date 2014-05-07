@@ -7,14 +7,25 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" /> -->
+
+	<div align="right">
+
+		
+
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			style="float:right;" immediate="true"
+			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
+	</div>
+
+	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
 		toggleable="true">
 
-		<p:dataTable var="meeting" id="evaluationmeetingDetails" widgetVar="evaluationMeeting"
+		<p:dataTable var="meeting" id="evaluationmeetingDetails"
+			widgetVar="evaluationMeeting"
 			value="#{evaluationBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationBackingBean.managedBean.meetingMultiSelect}"
-			editable="true" rowIndexVar="index" style="width:100%"
-			rowKey="#{meeting}">
+			editable="true" rowIndexVar="index" rowKey="#{meeting}">
 			<ac:paginator for="evaluationmeetingDetails" />
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
@@ -29,7 +40,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.loc']}">
 
 
-				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2" cols="50"></p:inputTextarea>
+				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
+					cols="50"></p:inputTextarea>
 
 			</p:column>
 
@@ -63,7 +75,8 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}" oncomplete="evaluationMeeting.paginator.endLink.click();"
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" icon="ui-icon-add" />

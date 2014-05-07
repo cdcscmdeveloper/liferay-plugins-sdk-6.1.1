@@ -7,10 +7,21 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<div align="right">
+
+		
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			style="float:right;"
+			action="#{evaluationBackingBean.saveMeetingAttendenceDtls}"
+			icon="ui-icon-save" />
+	</div>
+	<p:spacer height="40"></p:spacer>
+
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
 		toggleable="true">
 
-		<p:dataTable var="meetingAttendance" id="turuthadir" widgetVar="tirutWidget"
+		<p:dataTable var="meetingAttendance" id="turuthadir"
+			widgetVar="tirutWidget"
 			value="#{evaluationBackingBean.managedBean.meetingAttendanceList}"
 			selection="#{evaluationBackingBean.managedBean.meetingAttendanceSelectList}"
 			editable="true" rowIndexVar="index" style="width:100%"
@@ -39,16 +50,18 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
 				process="@this,turuthadir" partialSubmit="true" update="turuthadir"
-				icon="ui-icon-add"   oncomplete="tirutWidget.paginator.endLink.click();"
-				actionListener="#{evaluationBackingBean.addTurutDetails}" />
+				icon="ui-icon-add" immediate1="true"
+				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				process="@this,turuthadir" partialSubmit="true"
-				icon="ui-icon-delete" update="turuthadir"
+				icon="ui-icon-delete" update="turuthadir" immediate1="true"
 				actionListener="#{evaluationBackingBean.deleteTurutHadirDetails}" />
 
 		</div>
 
 	</p:panel>
+
+
 
 
 

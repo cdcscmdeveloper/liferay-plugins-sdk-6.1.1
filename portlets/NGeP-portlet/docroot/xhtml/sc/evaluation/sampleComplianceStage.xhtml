@@ -15,10 +15,10 @@
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" />
+				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+				style="float:right;" icon="ui-icon-save" action="#{evaluationBackingBean.saveComplianceSample}"/>
 		</div>
 
 		<p:panel>
@@ -26,10 +26,14 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
-					<td><h:outputLabel
+					<td ><p:inputText size="50"
+							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.scQtProposal.supplierNo}"
+							disabled="true"></p:inputText></td>
+					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><p:inputText size="50"
+							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo}"
+							disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -37,13 +41,56 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
 			toggleable="true">
+			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
+				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
+				rowIndexVar="index" style="width:100%" rowKey="#{sampleItem}">
+				<ac:paginator for="sampleItemId" />
 
+
+				<p:column headerText="Item" style="width:35%">
+
+					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
+
+
+				</p:column>
+				<p:column headerText="Label Extension No" style="width:10%">
+					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
+
+				</p:column>
+
+
+
+				<p:column headerText="Submission Status" style="width:20%">
+					<p:selectOneMenu
+						value="#{sampleItem. submissionStatus.parameterId}">
+						<f:selectItem itemLabel="Hantar dan Mematuhi" itemValue="1"></f:selectItem>
+						<f:selectItem itemLabel="Hantar dan Tidak Mematuhi" itemValue="2"></f:selectItem>
+						<f:selectItem itemLabel="Tidak Hantar" itemValue="3"></f:selectItem>
+					</p:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+					style="width:35%">
+					<p:inputTextarea rows="2" cols="40" value="#{sampleItem.remark}"></p:inputTextarea>
+				</p:column>
+			</p:dataTable>
 
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
 			toggleable="true">
+			<p:dataTable var="itemspec" id="itemSpecId" editable="true"
+				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
+				rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
+				<ac:paginator for="itemSpecId" />
 
+
+				<p:column headerText="Specification" style="width:50%">
+
+					<h:outputText value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
 
 		</p:panel>
 

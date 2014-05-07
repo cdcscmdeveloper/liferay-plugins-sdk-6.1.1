@@ -9,7 +9,8 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
+<p:messages id="financialCompliance" showDetail="true" autoUpdate="true"
+				closable="true" />
 
 	<ui:define name="contentSection">
 
@@ -19,7 +20,7 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+				style="float:right;" icon="ui-icon-save" action="#{evaluationBackingBean.saveFinacialCompliance}"/>
 		</div>
 
 		<p:panel>
@@ -45,28 +46,33 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
-
-					<h:outputText></h:outputText>
-
+                    <h:outputText value="#{complianceFinancialSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+					style="width:10%">
 					<h:outputText></h:outputText>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:20%">
-					<h:outputText></h:outputText>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
+					style="width:20%">
+					<h:outputText
+						value="#{complianceFinancialSupplier.scQtCheckList.pmStatus.statusId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}" style="width:15%">
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
+					style="width:15%">
+					<p:selectOneMenu value="#{complianceFinancialSupplier.compliance}">
+						<f:selectItem itemLabel="Not compliance" itemValue="false"></f:selectItem>
+						<f:selectItem itemLabel="Compliance" itemValue="true"></f:selectItem>
 					</p:selectOneMenu>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}" style="width:35%">
-					<p:inputTextarea rows="2" cols="40" value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+					style="width:35%">
+					<p:inputTextarea rows="2" cols="40"
+						value="#{complianceFinancialSupplier.remark}"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

@@ -18,7 +18,7 @@
 				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+				style="float:right;" icon="ui-icon-save" action="#{evaluationBackingBean.saveTechnicalCompliance}"/>
 		</div>
 
 		<p:panel>
@@ -42,7 +42,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
 
-					<h:outputText></h:outputText>
+					 <h:outputText value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
@@ -52,11 +52,12 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:20%">
-					<h:outputText></h:outputText>
+					<h:outputText
+						value="#{complianceTechnicalSupplier.scQtCheckList.pmStatus.statusId}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}" style="width:15%">
-					<p:selectOneMenu>
+					<p:selectOneMenu value="#{complianceTechnicalSupplier.compliance}">
 						<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
 						<f:selectItem itemLabel="Not Compliance" itemValue="false"></f:selectItem>
 							<f:selectItem itemLabel="Compliance" itemValue="True"></f:selectItem>

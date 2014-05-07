@@ -8,8 +8,8 @@
 	</ui:define>
   <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
 				closable="true" /> 
-	<ui:include src="/xhtml/sc/evaluation/evaluationButtons.xhtml" />
-	  <ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml" />
+	
+	 
 
 	<table style="width: 100%">
 		<tr>
@@ -85,32 +85,5 @@
 			<td></td>
 		</tr>
 	</table>
- <ui:param name="scQt" value="#{specificationBackingBean.managedBean.qt}" />
-           <ui:include src="/xhtml/sc/confirmMeeting/evaluationMeetingHeader.xhtml" /> 
-
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
-		<ui:include src="prepare.xhtml" />
-		<!--  <ui:include src="/xhtml/sc/evaluation/sendEmail.xhtml" /> -->
-	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1}">
-		<!-- <ui:include src="/xhtml/sc/evaluation/stage1.xhtml" />
-		<ui:include src="/xhtml/sc/evaluation/manualsubmission.xhtml" />
-		<ui:include src="/xhtml/sc/evaluation/evaluationpopup.xhtml" /> -->
-		
-		<ui:include src="complianceStage.xhtml" />
-	</c:if>
-	
-		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
-			<!-- <ui:include src="/xhtml/sc/evaluation/summary.xhtml" /> -->
-			<ui:include src="evaluationStage.xhtml" /> 
-		</c:if>
-		
-	
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
-		<ui:include src="report.xhtml" />
-	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
-		<ui:include src="signoff.xhtml" />
-	</c:if>
-
+ 
 </ui:composition>
