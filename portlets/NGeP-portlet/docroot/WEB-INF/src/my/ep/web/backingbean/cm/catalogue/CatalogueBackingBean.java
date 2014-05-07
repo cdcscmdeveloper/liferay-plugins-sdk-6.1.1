@@ -88,7 +88,12 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
@@ -509,7 +514,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.debug("*****addNewTierPricing*****");
 		CmTierPricing price = new CmTierPricing();
-
+		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size() > 0){
+			int size = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size();
+			price.setStand_group_id(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(size - 1).getStand_group_id() + 1);
+		} else {
+			price.setStand_group_id(1);
+		}
 		this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().add(price);
 	}
 	public void addNewPromotionTierPricing(){
@@ -876,7 +887,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 
-		/*		int zonalNo = 1;
+		int zonalNo = 1;
 		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
@@ -890,7 +901,60 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 					dataLs.add(price.getCmSupplierItem().getCmItem().getExtensionCode());
 
-					if(price.getPricingType().equalsIgnoreCase("05")){
+					if(price.getCmSupplierZone()!=null){
+						dataLs.add(price.getCmSupplierZone().getSuppZoneName());
+					} else {
+						dataLs.add("");
+					}
+					
+					
+					IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
+							.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
+					ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
+
+					ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.getSupplierZones(reqDTO);
+					
+					List<CmSupplierZone> zoneList = resDTO.getCmSupplierZones();
+					
+					String[] zoneNames = new String[zoneList.size()];
+					int j = 0;
+					for(CmSupplierZone zone : zoneList){
+						zoneNames[j]=zone.getSuppZoneName();
+						j++;
+					}
+					
+					/*if(zoneList != null && zoneList.size() > 0){
+						dataLs.add(zoneNames);
+					} else {
+						dataLs.add("");
+					}*/
+					
+					
+					
+					DataValidationHelper dvHelper = zonal.getDataValidationHelper();
+					  DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(zoneNames);
+					  CellRangeAddressList addressList = new CellRangeAddressList(zonalNo, zonalNo, 1, 1);            
+					  DataValidation validation = dvHelper.createValidation(
+					    dvConstraint, addressList);
+					  // Note the check on the actual type of the DataValidation object.
+					  // If it is an instance of the XSSFDataValidation class then the
+					  // boolean value 'false' must be passed to the setSuppressDropDownArrow()
+					  // method and an explicit call made to the setShowErrorBox() method.
+					  
+					  dvConstraint.getExplicitListValues();
+					  if(validation instanceof XSSFDataValidation) {
+					    validation.setSuppressDropDownArrow(true);
+					    validation.setShowErrorBox(true);
+					  }
+					  else {
+					    // If the Datavalidation contains an instance of the HSSFDataValidation
+					    // class then 'true' should be passed to the setSuppressDropDownArrow()
+					    // method and the call to setShowErrorBox() is not necessary.
+					    validation.setSuppressDropDownArrow(false);
+					  }
+					  zonal.addValidationData(validation);
+					
+					/*if(price.getPricingType().equalsIgnoreCase("05")){
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal District Standard");
 						}else{
@@ -921,10 +985,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						}else{
 							dataLs.add("Zonal State Promotion Tier");
 						}
-					}
+					}*/
 
-					dataLs.add(price.getPmState().getStateName());
-					dataLs.add(price.getPmDistrict().getDistrictName()!=null?price.getPmDistrict().getDistrictName():"");
+					/*dataLs.add(price.getPmState().getStateName());
+					dataLs.add(price.getPmDistrict().getDistrictName()!=null?price.getPmDistrict().getDistrictName():"");*/
 					dataLs.add(price.getPrice());
 					dataLs.add(formater.format(price.getStartDate()));
 					dataLs.add(formater.format(price.getEndDate()));		
@@ -938,7 +1002,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		}
-		 */
 
 
 
@@ -2718,7 +2781,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		if(index < this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size()-1){
 			CmTierPricing tier = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index+1);
-			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getToQty() + 1);
+			if(tier.getStand_group_id() == this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStand_group_id())
+				tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getToQty() + 1);
 		}
 	}
 
@@ -2880,14 +2944,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		tier.setStartDate(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate());
 		tier.setEndDate(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getEndDate());
 		tier.setShowFlag(false);
-
+		tier.setStand_group_id(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStand_group_id());
+		
 		if(index < this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size()-1){
 			int tempIndex = index + 1;
 			int markIndex = index + 1;
 
 			while(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex) != null){
-				if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex).getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStartDate()) == 0){
-					tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex).getToQty() + 1);
+				if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex).getStand_group_id() == this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStand_group_id()){
 					markIndex = tempIndex;
 				}
 				if(tempIndex < this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size()-1)
@@ -2896,8 +2960,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					break;
 				}
 			}
-
-			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().add(markIndex + 1 , tier);
+			
+			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(markIndex - 1).getToQty() + 1);
+			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().add(markIndex, tier);
 		} else {
 			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getToQty() + 1);
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().add(index + 1, tier);
