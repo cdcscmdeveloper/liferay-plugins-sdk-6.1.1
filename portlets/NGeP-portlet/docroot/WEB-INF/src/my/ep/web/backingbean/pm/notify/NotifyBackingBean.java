@@ -18,7 +18,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "notifyBackingBean")
 @RequestScoped
@@ -66,25 +65,22 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					+ this.getManagedBean().getSelectedNotifys().length + "]");
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
+
 			for (PmNotifyUser notifyUser : this.getManagedBean()
 					.getSelectedNotifys()) {
-				reqDTO.setPmNotifyUser(notifyUser);
-				NotifyResDTO resDTO = reqSO.removeNotify(reqDTO);
-				debugLogger("Result[" + resDTO.isSuccessful() + "]");
+				reqDTO.getPmNotifyUserList().add(notifyUser);
 			}
-			retrieveNotifyList();
-			String message = "";
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record removed successfully.", message));
+			NotifyResDTO resDTO = reqSO.removeNotifyList(reqDTO);
+			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful() + "]");
+			if (resDTO.isSuccessful()) {
+				retrieveNotifyList();
+				String message = "";
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record removed successfully.", message));
+			}
 		}
-	}
-
-	public void onRowSelect(SelectEvent event) {
-		debugLogger("onRowSelect");
-		// PmNotifyUser notifyUser = ((PmNotifyUser) event.getObject());
-		// this.getManagedBean().setSelectedNotify(notifyUser);
 	}
 
 	private void resetSelectedNotify() {
