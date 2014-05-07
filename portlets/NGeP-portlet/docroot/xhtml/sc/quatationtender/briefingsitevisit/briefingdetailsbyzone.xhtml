@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog id="dlgId" widgetVar="zonebriefing" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+	<p:dialog id="dlgId" widgetVar="zonebriefing" modal="false"
+		position="top" dynamic="true" resizable="false" width="700px"
 		height="300" styleClass="pop_up_top" header="Briefing Details">
 		<p:panel toggleable="true" styleClass="qtBriefDetails">
 			<table style="width: 100%" border="1">
@@ -15,7 +15,7 @@
 							value="#{lbl['lbl.so.briefdesc']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
-							style="margin-top:5px;" size="82"
+							style="margin-top:5px;" size="95"
 							disabled="#{!qTDetailBB.managedBean.editable}" /></td>
 				</tr>
 				<tr>
@@ -23,7 +23,8 @@
 					<td colspan="3"><p:calendar
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 							id="briefingDate"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+							size="30" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /></td>
@@ -36,34 +37,8 @@
 					<td><p:inputText
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address1}"
 							size="30" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /></td>
-					<td><p:inputText
-							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmCity.cityName}"
-							size="30" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
-					<td><p:inputText
-							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address2}"
-							size="30" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /></td>
-					<td><p:selectOneMenu id="zonebriefdistrictsId"
-							styleClass="zonebrieftstate"
-							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDistrict.districtName}">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="district"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.districts}"
-								itemValue="#{district.districtId}"
-								itemLabel="#{district.districtName}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
-					<td><p:inputText
-							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address3}"
-							size="30" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.state']}" /></td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmState.stateId}">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="state"
@@ -71,7 +46,41 @@
 								itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
 							<p:ajax event="change"
 								listener="#{qTBriefingSiteVisitBackingBean.retrievePmDistrictList}"
-								update="zonebriefdistrictsId" />
+								update="@(.zoneStateDistrict)" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
+					<td><p:inputText
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address2}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /></td>
+					<td><p:selectOneMenu styleClass="zoneStateDistrict"
+							style="width: 218px;margin-bottom: 5px;"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDistrict.districtId}">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItems var="district"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.districts}"
+								itemValue="#{district.districtId}"
+								itemLabel="#{district.districtName}" />
+							<p:ajax event="change"
+								listener="#{qTBriefingSiteVisitBackingBean.retrievePmCityList}"
+								update="@(.zonedistrictCity)" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
+					<td><p:inputText
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address3}"
+							size="30" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /></td>
+					<td><p:selectOneMenu styleClass="zonedistrictCity"
+							style="width: 218px;margin-bottom: 5px;"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmCity.cityId}">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItems var="city"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.citys}"
+								itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -88,7 +97,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
-							size="30" /></td>
+							size="95" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.maxattendance']}" /></td>

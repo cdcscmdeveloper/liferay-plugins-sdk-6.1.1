@@ -13,7 +13,7 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
 						size="30" /></td>
 				<td style="width: 200px;"><p:outputLabel value="* State" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
 						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="state"
@@ -31,6 +31,7 @@
 						size="30" /></td>
 				<td><p:outputLabel value="District" /></td>
 				<td><p:selectOneMenu styleClass="stateDistrict"
+						style="width: 218px;margin-bottom: 5px;"
 						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="district"
@@ -49,6 +50,7 @@
 						size="30" /></td>
 				<td><p:outputLabel value="* City/Town" /></td>
 				<td><p:selectOneMenu styleClass="districtCity"
+						style="width: 218px;margin-bottom: 5px;"
 						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="city"
@@ -64,7 +66,7 @@
 				<td><p:outputLabel value="* Postalcode" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
-						size="30" /></td>
+						size="38" /></td>
 			</tr>
 		</table>
 

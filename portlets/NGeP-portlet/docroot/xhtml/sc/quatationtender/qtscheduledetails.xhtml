@@ -8,7 +8,7 @@
 
 
 	<p:panel header="Schedule" toggleable="true">
-		<table style="width: 100%" border="1">
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /></td>
 				<td><p:calendar
@@ -72,7 +72,7 @@
 	<p:panel id="samplezoneid" header="Sample Submission" toggleable="true"
 		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 		<p:dataTable id="sampleid" var="samplesubmissiondtl"
-			style="width : 60%" editable="true" rowIndexVar="rowIndex"
+			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
 			styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
@@ -92,7 +92,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<div align="right" style="width: 60%;">
+		<div align="right" style="width: 100%;">
 			<p:commandButton value="Apply" process="@this" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.applySampleSubmission}"
 				update="samplePopup" icon="ui-icon-add"
@@ -173,7 +173,7 @@
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex"
-			style="width : 40%;">
+			style="width : 100%;">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -196,7 +196,7 @@
 			</p:column>
 
 		</p:dataTable>
-		<div align="right" style="width: 40%;">
+		<div align="right" style="width: 100%;">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
 				partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"

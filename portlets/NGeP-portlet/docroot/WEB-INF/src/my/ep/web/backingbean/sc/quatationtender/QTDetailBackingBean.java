@@ -52,7 +52,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
@@ -116,7 +115,6 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
-import my.ep.web.type.sc.quationtender.BPMOutComeTypes;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1334,6 +1332,9 @@ public class QTDetailBackingBean extends
 		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStatusSO.class);
+		if(null == getManagedBean().getRemarks()) {
+			getManagedBean().setRemarks(new ArrayList<ScRemark>());
+		}
 		ScRemark remark = null;
 		if (isZonal) {
 			remark = new ScQtBreifingZoneRemark();
@@ -1354,7 +1355,6 @@ public class QTDetailBackingBean extends
 			remark.setPmStatus(statusResDTO.getPmStatus());
 			getManagedBean().getRemarks().add(remark);
 		}
-
 	}
 
 	/**

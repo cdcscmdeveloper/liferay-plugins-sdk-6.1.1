@@ -9,6 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -17,6 +18,8 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -99,16 +102,31 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setStates(list);
 		// retrievePmDistrictList();
 	}
-
-	public void retrievePmDistrictList() {
+	
+	public void retrievePmDistrictList(AjaxBehaviorEvent event) {
 		debugLogger("retrievePmDistrictList");
+		Long stateId = (Long) event.getComponent().getAttributes().get("value");
+		log.info("State Id : " + stateId);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(1l);
+		reqDTO.setStateId(stateId);
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDistrictSO.class);
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
 		this.getManagedBean().setDistricts(resDTO.getDistrictList());
+	}
+	
+	public void retrievePmCityList(AjaxBehaviorEvent event) {
+		Long districtId = (Long) event.getComponent().getAttributes()
+				.get("value");
+		log.info("District Id : " + districtId);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setDistrictId(districtId);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+		this.getManagedBean().setCitys(resDTO.getCityList());
 	}
 
 	public void bsvZoneTabChange(TabChangeEvent evnt) {
