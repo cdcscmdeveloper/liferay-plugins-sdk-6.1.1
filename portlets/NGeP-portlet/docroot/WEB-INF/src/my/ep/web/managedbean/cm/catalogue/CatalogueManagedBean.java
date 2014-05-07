@@ -150,6 +150,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private Integer zonalTierPricingIndex=0;
 	
 	private int tierRowIndex;
+	private int zonalTierRowIndex;
 	
 	private boolean error1 = false;
 	private boolean error2 = false;
@@ -1255,7 +1256,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setError6(boolean error6) {
 		this.error6 = error6;
 	}
+
+
+	public int getZonalTierRowIndex() {
+		return zonalTierRowIndex;
+	}
+
+
+	public void setZonalTierRowIndex(int zonalTierRowIndex) {
+		this.zonalTierRowIndex = zonalTierRowIndex;
+	}
+
 	
-	
+
 
 }
