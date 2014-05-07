@@ -108,7 +108,7 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public void retriveDetails() {
+	public String retriveDetails() {
 		IQTMeetingSO meetingSO;
 		
 		try {
@@ -145,14 +145,14 @@ public class EvaluationBackingBean extends
 		} finally {
 			meetingSO = null;
 		}
-		//return "evaluationstage1view.xhtml";
+		return "evaluationstage1view.xhtml";
 	}
 
 	
 
 	
 
-	public void retriveOpeningCommitteeDtls() {
+	public String retriveOpeningCommitteeDtls() {
 		IQTMeetingSO meetingSO = null;
 		
 		this.getManagedBean().setPrepareActiveIndex(1);
@@ -188,10 +188,9 @@ public class EvaluationBackingBean extends
 			}
 		
 			if ( null!=qtRemarkList && !qtRemarkList.isEmpty()) {
-				for (ScQtCommitteRemarks remark : resDTO.getQtCommittee()
-						.getQtCommitteRemarks()) {
+				for (ScQtCommitteRemarks remark : qtRemarkList) {
 					ScQtCommitteRemarks qtRemark = (ScQtCommitteRemarks) remark;
-					qtRemarkList.add(qtRemark);
+					//qtRemarkList.add(qtRemark);
 				}
 				this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 			}
@@ -201,7 +200,7 @@ public class EvaluationBackingBean extends
 			e.printStackTrace();
 		}
 		
-		//return "evaluationstage1view.xhtml";
+		return "evaluationstage1view.xhtml";
 	}
 
 	public void initializeRemarks() {
@@ -236,7 +235,7 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().getQtCommitteeRemarks().add(remark);
 	}
 
-	public void retriveTurutHadirDtls() {
+	public String retriveTurutHadirDtls() {
 		this.getManagedBean().setPrepareActiveIndex(2);
 		try {
 
@@ -251,7 +250,7 @@ public class EvaluationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//return "evaluationstage1view.xhtml";
+		return "evaluationstage1view.xhtml";
 	}
 
 	public String technicalComplianceAction(ScQtCheckList checklist) {
@@ -513,7 +512,105 @@ public class EvaluationBackingBean extends
 		return "evaluationstage1view.xhtml";
 	}
 
+	
+	public void retriveTechnicalEvaluationStage(){
+		
+			
+			IQTSpecSO specSo = null;
+			SpecificationResDTO resDTO = null;
+			this.getManagedBean().setEvaluatioStageActiveIndex(0);
+			try {
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				specSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				// this.getManagedBean().getScQt().getQtId()
+				reqDTO.setQtId(791L);
+				reqDTO.setSpecType("1");
 
+				resDTO = specSo.retrieveCheckLists(reqDTO);
+
+				this.getManagedBean().setEvaluationStgTechnicalCheckList(
+						resDTO.getSpecResultBean().getResultList());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+
+			}
+			//return "evaluationstage1view.xhtml";
+			
+		
+	}
+	
+	public void retriveFinancialEvaluationStage(){
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTO = null;
+		this.getManagedBean().setEvaluatioStageActiveIndex(1);
+		try {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			// this.getManagedBean().getScQt().getQtId()
+			reqDTO.setQtId(791L);
+			reqDTO.setSpecType("2");
+
+			resDTO = specSo.retrieveCheckLists(reqDTO);
+
+			this.getManagedBean().setEvaluationStgfinancialCheckList(
+					resDTO.getSpecResultBean().getResultList());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+		}
+	}
+	
+	public void retriveSummaryEvaluationStage(){
+		try{
+			this.getManagedBean().setEvaluatioStageActiveIndex(2);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public String viewTechnicalEvaluation(ScQtCheckList checklist){
+		IQTEvaluationSO evaluationSo=null;
+		EvaluationResDTO resDTO=null;
+		try{
+			this.getManagedBean().setScQtChecklist(checklist);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setCheckListId(checklist.getQtChecklistId());
+			resDTO = evaluationSo.retrieveComplianceDtls(reqDTO);
+			if (resDTO.getComplianceResultBean().getResultList() != null
+					&& resDTO.getComplianceResultBean().getResultList()
+							.isEmpty()) {
+				this.getManagedBean().setComplianceTechnicalProposalCheckList(
+						new ArrayList<ScQtProposalChecklist>());
+
+			} else {
+				
+				this.getManagedBean().setComplianceTechnicalProposalCheckList(
+						resDTO
+						.getComplianceResultBean().getResultList());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	return "technicalEvaluationStgView.xhtml";
+	}
+	
+	public String evaluateTechnicalEvaluation(ScQtCheckList checklist){
+		try{
+			this.getManagedBean().setScQtChecklist(checklist);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	return "technicalEvaluationEvaluateDocument.xhtml";
+	}
 	
 
 	public void reportDownLoadZipFile() throws IOException {
@@ -623,6 +720,7 @@ public class EvaluationBackingBean extends
 				// retrives1Details();
 			}
 			if (outputTab == 2) {
+				retriveTechnicalEvaluationStage();
 				// getManagedBean().getTemplateSpecBean().setSelectedSpecQuestion(new
 				// TplSpecQuestion());
 				// retrives2Details();

@@ -90,6 +90,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtSampleLable> complianceSampleLblsupplier;
 	private ScQtSampleLable scQtSampleLbl;
 	private List<ScQtSampleItem> complianceSampleItemList;
+	private int evaluatioStageActiveIndex;
+	private List<ScQtCheckList> evaluationStgTechnicalCheckList;
+	private List<ScQtCheckList> evaluationStgfinancialCheckList;
 	
 
 	
@@ -982,6 +985,50 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setComplianceSampleItemList(
 			List<ScQtSampleItem> complianceSampleItemList) {
 		this.complianceSampleItemList = complianceSampleItemList;
+	}
+
+	/**
+	 * @return the evaluatioStageActiveIndex
+	 */
+	public int getEvaluatioStageActiveIndex() {
+		return evaluatioStageActiveIndex;
+	}
+
+	/**
+	 * @param evaluatioStageActiveIndex the evaluatioStageActiveIndex to set
+	 */
+	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
+		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
+	}
+
+	/**
+	 * @return the evaluationStgTechnicalCheckList
+	 */
+	public List<ScQtCheckList> getEvaluationStgTechnicalCheckList() {
+		return evaluationStgTechnicalCheckList;
+	}
+
+	/**
+	 * @param evaluationStgTechnicalCheckList the evaluationStgTechnicalCheckList to set
+	 */
+	public void setEvaluationStgTechnicalCheckList(
+			List<ScQtCheckList> evaluationStgTechnicalCheckList) {
+		this.evaluationStgTechnicalCheckList = evaluationStgTechnicalCheckList;
+	}
+
+	/**
+	 * @return the evaluationStgfinancialCheckList
+	 */
+	public List<ScQtCheckList> getEvaluationStgfinancialCheckList() {
+		return evaluationStgfinancialCheckList;
+	}
+
+	/**
+	 * @param evaluationStgfinancialCheckList the evaluationStgfinancialCheckList to set
+	 */
+	public void setEvaluationStgfinancialCheckList(
+			List<ScQtCheckList> evaluationStgfinancialCheckList) {
+		this.evaluationStgfinancialCheckList = evaluationStgfinancialCheckList;
 	}
 
 	

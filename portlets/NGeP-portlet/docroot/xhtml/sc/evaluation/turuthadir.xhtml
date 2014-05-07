@@ -48,7 +48,7 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton id="turutbutton" value="#{lbl['lbl.sc.eva.btn.add']}"
 				process="@this,turuthadir" partialSubmit="true" update="turuthadir"
 				icon="ui-icon-add" immediate1="true"
 				action="#{evaluationBackingBean.addTurutDetails}" />

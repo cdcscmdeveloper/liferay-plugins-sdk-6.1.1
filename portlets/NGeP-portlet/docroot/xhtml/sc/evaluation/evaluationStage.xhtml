@@ -8,32 +8,40 @@
 
 
 
+	<table>
+		<tr>
+			<td style="width: 20%; vertical-align: baseline;"><p:tabMenu
+					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
+					styleClass="sidemenu" style="display : table-caption;">
+
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
+						action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
+						action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
+						action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
+						update="@form" />
 
 
-	<p:tabView dynamic="true" orientation="left" id="complianceId">
+				</p:tabMenu></td>
+			<td><c:if
+					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 
+					<ui:include src="technicalEvaluation.xhtml"></ui:include>
 
-		<p:tab title="#{lbl['lbl.sc.eva.compliance.stg.tech']}">
-			<ui:include src="technicalEvaluation.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
-		</p:tab>
+					<ui:include src="financialEvaluation.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
 
-
-		<p:tab title="#{lbl['lbl.sc.eva.compliance.stg.fin']}">
-		<ui:include src="financialEvaluation.xhtml"></ui:include>
-
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.eva.compliance.stg.summary']}">
-		<ui:include src="FinancialEvaluationCommitteeSummary.xhtml"></ui:include>
-
-		</p:tab>
-
-
-
-
-
-	</p:tabView>
+					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml"></ui:include>
+				</c:if></td>
+		</tr>
+	</table>
 
 	<table style="width: 100%">
 		<tr>
@@ -44,13 +52,13 @@
 						update=":form" />
 				</div></td>
 			<td><div align="right" style="width: 99%">
-					
-				
-						<p:commandButton value="#{lbl['lbl.sm.next']}"
-							actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
-							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-next" iconPos="right" update=":form" />
-					
+
+
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						iconPos="right" update=":form" />
+
 				</div></td>
 		</tr>
 	</table>

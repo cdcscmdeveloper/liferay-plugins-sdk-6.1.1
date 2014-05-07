@@ -9,18 +9,18 @@
 
 	<table>
 		<tr>
-			<td style="width: 20%; vertical-align: baseline;"><p:tabMenu
+			<td style="width: 20%; vertical-align: baseline;"><p:tabMenu styleClass="sidemenu"
 					activeIndex="#{evaluationBackingBean.managedBean.prepareActiveIndex}"
 					style="display : table-caption;">
 
 					<p:menuitem value="#{lbl['lbl.sc.eva.prepare.mtng.dtls']}"
-						action="#{evaluationBackingBean.retriveDetails}" update="@form" />
+						action="#{evaluationBackingBean.retriveDetails}" update=":form" />
 					<p:menuitem value="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
 						action="#{evaluationBackingBean.retriveOpeningCommitteeDtls}"
-						update="@form" />
+						update=":form" />
 					<p:menuitem value="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
 						action="#{evaluationBackingBean.retriveTurutHadirDtls}"
-						update="@form" />
+						update=":form" />
 				</p:tabMenu></td>
 			<td><c:if
 					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '0'}">

@@ -75,7 +75,7 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton id="meetingbutton" value="#{lbl['lbl.sc.eva.btn.add']}"
 				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
