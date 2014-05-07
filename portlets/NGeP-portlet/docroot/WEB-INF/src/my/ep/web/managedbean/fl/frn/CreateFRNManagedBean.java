@@ -14,7 +14,6 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
-import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -43,7 +42,6 @@ public class CreateFRNManagedBean extends BaseManagedBean {
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
-	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
 	
 	private String fulfillmentReqId;
@@ -153,20 +151,6 @@ public class CreateFRNManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfillmentReqId(String fulfillmentReqId) {
 		this.fulfillmentReqId = fulfillmentReqId;
-	}
-
-	/**
-	 * @return the maksudCodeList
-	 */
-	public List<PmMaksud> getMaksudCodeList() {
-		return maksudCodeList;
-	}
-
-	/**
-	 * @param maksudCodeList the maksudCodeList to set
-	 */
-	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
-		this.maksudCodeList = maksudCodeList;
 	}
 
 	/**

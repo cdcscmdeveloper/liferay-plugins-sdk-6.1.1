@@ -26,8 +26,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private FlInvoice invoice = new FlInvoice();
-	private FlInvoiceItem invItem = new FlInvoiceItem();
+	private FlInvoice invoice;
+	private FlInvoiceItem invItem;
 	
 	private String DocProcess;
 	private String buttonVal;

@@ -18,7 +18,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
+import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -70,6 +70,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 //			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			System.out.println("action: "+action);
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
@@ -115,16 +116,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
-			flReqDTO.setFlOrderId(paymentObj.getFulfillmentOrderId());
+			FLPaymentInstructionDataType paymentObj = (FLPaymentInstructionDataType)obj;
+			flReqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 			paymentAdvice.setFlInvoice(resDTO.getInvoice());
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			System.out.println("fulfilment req id::: "+paymentObj.getFullfillmentRequestId());
-			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
-			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			System.out.println("fulfilment req id::: "+paymentObj.getFlRequestId());
 			// Get Remark and Attachment
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -136,7 +134,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setOutComes(res.getAction());
 
 			// For PO No Deduction Panel 
-			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			getManagedBean().setDocType(resDTO.getInvoice().getFlRequest().getDocType());
 			
 			
 
