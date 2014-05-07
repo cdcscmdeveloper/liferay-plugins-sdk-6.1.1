@@ -34,10 +34,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
 				<td>
 					<!-- <c:if test="#{qTDetailBB.managedBean.qt.brandNew}"> --> <p:selectOneMenu
-						value="#{qTDetailBB.managedBean.qt.procurementMode}"
+						value="#{qTDetailBB.managedBean.qt.procurementMode.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+							value="#{qTDetailBB.getDropdownValues(PmCodeCatConst.scProcurementMode)}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}" />
 					</p:selectOneMenu> <!-- </c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
