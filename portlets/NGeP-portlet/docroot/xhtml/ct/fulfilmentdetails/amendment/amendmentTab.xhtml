@@ -20,6 +20,11 @@
          <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<p:panel>
 			<f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
+			<h:panelGroup rendered="#{amendmentBackingBean.getCompareUser() and amendmentBackingBean.managedBean.taskId == null}">
+			    <div align="left" class="screen-title" style="border-bottom: 0px">
+			         Contract Amendment
+			   </div>
+			 </h:panelGroup>
 			<table style="width: 100%;">
 				<tr>
 					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();"/></td>

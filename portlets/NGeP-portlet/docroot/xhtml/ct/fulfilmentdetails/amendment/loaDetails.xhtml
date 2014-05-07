@@ -60,7 +60,7 @@
 	    <p:outputLabel value="Contract Type"/>
 			<p:selectOneMenu value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType.parameterId}" 
 			   style="width:180px;margin-bottom: 5px;">
-			   <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
+			   <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.contractType)}"/>
 			</p:selectOneMenu>
 		<p:outputLabel value="Agency"/>
 			<p:selectOneMenu style="width:180px;margin-bottom: 5px;"
@@ -70,7 +70,8 @@
 		<p:outputLabel value="Contract Adminstrator"/>
 			<p:selectOneMenu style="width:180px;margin-bottom: 5px;"
 			  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userId}">
-			   <f:selectItems value="#{amendmentBackingBean.getcontractAdminDropdown()}"/>
+			   <f:selectItem itemLabel="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}"
+			    itemValue="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userId}"/>
 			</p:selectOneMenu>
         <p:outputLabel value="Completion/Contract Period"/>
 		         <h:panelGrid columns="3">

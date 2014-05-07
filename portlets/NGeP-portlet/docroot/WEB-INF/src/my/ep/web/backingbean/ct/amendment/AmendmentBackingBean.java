@@ -130,8 +130,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		if(this.getManagedBean().getAction() == null) {
 			 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 		}
-		
-		
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -336,9 +334,26 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			 if(resDTO.isSuccessful()) {
+						log.info("Record saved successfully");
+						String messageId = MessageConst.INFO_700005;
+						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+							messageId = MessageConst.INFO_700025;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+							messageId = MessageConst.INFO_700009;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							messageId = MessageConst.INFO_700007;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							messageId = MessageConst.INFO_700008;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+							messageId = MessageConst.INFO_700011;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+							messageId = MessageConst.INFO_700013;
+						} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null) {
+							messageId = MessageConst.INFO_700026;
+						}
 					log.info("Record saved successfully");
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(MessageConst.INFO_700005, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
@@ -1005,7 +1020,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			return newObject.getMeetingLocation();
 		}
 		
-	    
+		public boolean getCompareUser(){
+			if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()))
+				return true;
+			else 
+				return false;
+		}
+		
 	    public CtPerformanceBond[] getSelectedBondList() {
 			return selectedBondList;
 		}
