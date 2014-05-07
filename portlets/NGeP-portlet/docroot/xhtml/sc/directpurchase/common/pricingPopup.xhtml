@@ -39,24 +39,24 @@
 		</table>
 
 		<p:spacer height="15px" />
-		<p:dataTable id="priceDtl" var="pricing"
-			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmPricings}"
-			rowKey="#{pricing}" rowIndexVar="index">
+		<p:dataTable id="priceDtl" var="itemPrice"
+			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrices}"
+			rowKey="#{itemPrice}" rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:30%">
-				<p:inputText value="zone" disabled="true"  style="text-align:right;"/>
+				<p:inputText value="#{itemPrice.zone.zoneName}" disabled="true"  style="text-align:right;"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:10%"> 
-				<p:inputText value="#{pricing.fromQty}"  style="text-align:right;" disabled="true"/>
+				<p:inputText value="#{itemPrice.pricing.fromQty}"  style="text-align:right;" disabled="true"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.to.qty']}" style="width:10%">
-				<p:inputText value="#{pricing.toQty}"  style="text-align:right;" disabled="true"/>
+				<p:inputText value="#{itemPrice.pricing.toQty}"  style="text-align:right;" disabled="true"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.offered']}" style="width:20%">
-				<p:inputText value="#{pricing.price}"  style="text-align:right;" disabled="true"/>
+				<p:inputText value="#{itemPrice.itemPrice}"  style="text-align:right;" disabled="true"/>
 			</p:column>
 
 		</p:dataTable>

@@ -6,32 +6,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
    <p:spacer height="5px" />
 	<p:panel id="prInqPanel">
-	<p:panelGrid styleClass="noBorders tr,noBorders td,headerClass"  id="prHeaderId">
-		<p:row>
-			<p:column>
-				<p:outputLabel
-					value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
-			</p:column>
-			<p:column width="25%">
-				<p:inputText disabled="true"  value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}"/>
-			</p:column>
-
-			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
-			</p:column>
-
-			<p:column width="25%" style="align : center;" >
-			<p:inputText disabled="true" size="45" value="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}"/>
-			</p:column>
-
-			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
-			</p:column>
-			<p:column width="25%">
-				<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.managedBean.priStatus}"  />
-			</p:column>
-		</p:row>
-	</p:panelGrid>
+		<h:panelGrid border="0"  width="100%" styleClass="header-info"
+			columns="6" id="prHeaderId">
+			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
+			<p:inputText disabled="true"  value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}"/>
+			
+			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
+			<p:inputText disabled="true" size="45" value="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}"/>		
+			
+			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />	
+			<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.managedBean.priStatus}"  />												
+			
+	    </h:panelGrid>
+	
+	
 	<p:spacer height="5px" />
 	<p:panel header=" INQUIRY DETAIL" toggleable="true" id="addToCartId">
 		<table>
@@ -241,7 +229,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
-				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" size="30" disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
+				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" size="30" 
+				  disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 			</p:column>
 
 		</p:dataTable>
