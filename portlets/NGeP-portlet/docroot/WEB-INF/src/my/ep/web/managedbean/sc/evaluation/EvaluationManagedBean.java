@@ -18,6 +18,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -84,6 +86,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtCommittee scQtCommittee;
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	private int complianceActiveIndex;
+	private int prepareActiveIndex;
+	private List<ScQtSampleLable> complianceSampleLblsupplier;
+	private ScQtSampleLable scQtSampleLbl;
+	private List<ScQtSampleItem> complianceSampleItemList;
+	
 
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -917,6 +924,64 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceActiveIndex(int complianceActiveIndex) {
 		this.complianceActiveIndex = complianceActiveIndex;
+	}
+
+	/**
+	 * @return the prepareActiveIndex
+	 */
+	public int getPrepareActiveIndex() {
+		return prepareActiveIndex;
+	}
+
+	/**
+	 * @param prepareActiveIndex the prepareActiveIndex to set
+	 */
+	public void setPrepareActiveIndex(int prepareActiveIndex) {
+		this.prepareActiveIndex = prepareActiveIndex;
+	}
+
+	/**
+	 * @return the complianceSampleLblsupplier
+	 */
+	public List<ScQtSampleLable> getComplianceSampleLblsupplier() {
+		return complianceSampleLblsupplier;
+	}
+
+	/**
+	 * @param complianceSampleLblsupplier the complianceSampleLblsupplier to set
+	 */
+	public void setComplianceSampleLblsupplier(
+			List<ScQtSampleLable> complianceSampleLblsupplier) {
+		this.complianceSampleLblsupplier = complianceSampleLblsupplier;
+	}
+
+	/**
+	 * @return the scQtSampleLbl
+	 */
+	public ScQtSampleLable getScQtSampleLbl() {
+		return scQtSampleLbl;
+	}
+
+	/**
+	 * @param scQtSampleLbl the scQtSampleLbl to set
+	 */
+	public void setScQtSampleLbl(ScQtSampleLable scQtSampleLbl) {
+		this.scQtSampleLbl = scQtSampleLbl;
+	}
+
+	/**
+	 * @return the complianceSampleItemList
+	 */
+	public List<ScQtSampleItem> getComplianceSampleItemList() {
+		return complianceSampleItemList;
+	}
+
+	/**
+	 * @param complianceSampleItemList the complianceSampleItemList to set
+	 */
+	public void setComplianceSampleItemList(
+			List<ScQtSampleItem> complianceSampleItemList) {
+		this.complianceSampleItemList = complianceSampleItemList;
 	}
 
 	
