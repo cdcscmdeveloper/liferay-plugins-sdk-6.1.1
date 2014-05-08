@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -39,6 +40,8 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -58,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -93,8 +97,10 @@ import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.email.SmEmailNotificationHelper;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
@@ -137,6 +143,7 @@ public class SmApplicationBackingBean extends
 		retrievePmProfBodyList();
 		retrieveParentCategoryList();
 		retrieveUomList();
+		retrieveRejectReasonList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -297,9 +304,13 @@ public class SmApplicationBackingBean extends
 			System.out
 					.println(" **** APPLICATION TYPE **** " + applicationType);
 			if (fromBpm) {
-				getManagedBean().setMaxReviewCount(
-						assignMaxReviewCount(applicationType, getManagedBean()
-								.getSmAppl().getApplCategoryType()));
+				getManagedBean()
+						.setMaxReviewCount(
+								assignMaxReviewCount(applicationType,
+										getManagedBean().getSmAppl()
+												.getApplCategoryType(),
+										getManagedBean().getSmAppl()
+												.getSupplierType()));
 
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 					smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
@@ -576,6 +587,74 @@ public class SmApplicationBackingBean extends
 			}
 			mofRegistrationSO = null;
 		}
+	}
+
+	private void setSmApplRejectionReasons() {
+		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
+		for (Long resId : getManagedBean().getReasonId()) {
+			for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
+				if (desc.getPmReason().getReasonId().equals(resId)) {
+					SmApplRejectReason rej = new SmApplRejectReason();
+					rej.setPmReason(desc.getPmReason());
+					rej.setSmAppl(getManagedBean().getSmAppl());
+					resList.add(rej);
+				}
+			}
+		}
+		getManagedBean().getSmAppl().setSmApplRejectReasons(resList);
+	}
+
+	private boolean siteVisitDataUpdate() {
+		SmSvTask svTask = new SmSvTask();
+		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
+		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
+		svTask.setSmAppl(getManagedBean().getSmAppl());
+		for (SmFacility fac : getManagedBean().getSelectedFactoryFacilities()) {
+			SmSvAddress facAddr = new SmSvAddress();
+			facAddr.setSmSvTask(svTask);
+			facAddr.setSmAddress(fac.getSmAddress());
+			addrList.add(facAddr);
+		}
+		for (SmSupplierBranch br : getManagedBean().getSelectedBranches()) {
+
+			SmSvAddress brAddr = new SmSvAddress();
+			brAddr.setSmSvTask(svTask);
+			brAddr.setSmAddress(br.getSmAddress());
+			addrList.add(brAddr);
+		}
+		for (SmAssociateCompany assoc : getManagedBean()
+				.getSelectedAssocCompanies()) {
+			SmSvAddress asocAddr = new SmSvAddress();
+			asocAddr.setSmSvTask(svTask);
+			asocAddr.setSmAddress(assoc.getSmAddress());
+			addrList.add(asocAddr);
+		}
+		svTask.setSmSvAddresses(addrList);
+		List<PmParameter> catParam = new ArrayList<PmParameter>();
+		for (SmSupplierCategory cat : getManagedBean().getSelectedCategories()) {
+			if (!catParam.contains(cat.getPmCategoryL3().getCategoryTypeCode())) {
+				catParam.add(cat.getPmCategoryL3().getCategoryTypeCode());
+
+			}
+			SmSvCategory svCat = new SmSvCategory();
+			svCat.setSmSvTask(svTask);
+			svCat.setPmCategoryL1(cat.getPmCategoryL1());
+			svCat.setPmCategoryL2(cat.getPmCategoryL2());
+			svCat.setPmCategoryL3(cat.getPmCategoryL3());
+			smSvCategories.add(svCat);
+
+		}
+		svTask.setSmSvCategories(smSvCategories);
+		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
+		for (PmParameter param : catParam) {
+			SmSvTemplate temp = new SmSvTemplate();
+			temp.setPmParameter(param);
+			temp.setSmSvTask(svTask);
+			templates.add(temp);
+		}
+		svTask.setSmSvTemplates(templates);
+		return updateSiteVisitTask(svTask);
+
 	}
 
 	private boolean updateSiteVisitTask(SmSvTask svTask) {
@@ -950,6 +1029,11 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCatTypeConfirm());
 		System.out.println(" -- DOC MODE -- "
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
+		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
+			assignMaxReviewCount(getManagedBean().getSmAppl().getApplType(),
+					getManagedBean().getSmAppl().getApplCategoryType(),
+					getManagedBean().getSmAppl().getSupplierType());
+		}
 	}
 
 	public void assignApplnCategoryType() {
@@ -2901,7 +2985,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String submitPOorApproverReviewToBPM(String res) {
-		updateSmAppl("Basic", getManagedBean().getSmAppl().getApplType());
 		IReviewApplicationSO reqSO = null;
 		try {
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
@@ -2929,91 +3012,40 @@ public class SmApplicationBackingBean extends
 
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-				System.out.println("**** This is site visit task *********");
-				System.out.println(" Size of selected branches "
-						+ getManagedBean().getSelectedBranches().size());
-				System.out.println(" Size of selected assocs "
-						+ getManagedBean().getSelectedAssocCompanies().size());
-				System.out.println(" Size of selected facilities "
-						+ getManagedBean().getSelectedFactoryFacilities()
-								.size());
-				System.out.println(" Size of selected branches "
-						+ getManagedBean().getSelectedCategories().size());
-
-				SmSvTask svTask = new SmSvTask();
-				List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
-				List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
-				svTask.setSmAppl(getManagedBean().getSmAppl());
-				for (SmFacility fac : getManagedBean()
-						.getSelectedFactoryFacilities()) {
-					SmSvAddress facAddr = new SmSvAddress();
-					facAddr.setSmSvTask(svTask);
-					facAddr.setSmAddress(fac.getSmAddress());
-					addrList.add(facAddr);
-				}
-				for (SmSupplierBranch br : getManagedBean()
-						.getSelectedBranches()) {
-
-					SmSvAddress brAddr = new SmSvAddress();
-					brAddr.setSmSvTask(svTask);
-					brAddr.setSmAddress(br.getSmAddress());
-					addrList.add(brAddr);
-				}
-				for (SmAssociateCompany assoc : getManagedBean()
-						.getSelectedAssocCompanies()) {
-					SmSvAddress asocAddr = new SmSvAddress();
-					asocAddr.setSmSvTask(svTask);
-					asocAddr.setSmAddress(assoc.getSmAddress());
-					addrList.add(asocAddr);
-				}
-				svTask.setSmSvAddresses(addrList);
-				List<PmParameter> catParam = new ArrayList<PmParameter>();
-				for (SmSupplierCategory cat : getManagedBean()
-						.getSelectedCategories()) {
-					if (!catParam.contains(cat.getPmCategoryL3()
-							.getCategoryTypeCode())) {
-						catParam.add(cat.getPmCategoryL3()
-								.getCategoryTypeCode());
-
-					}
-					SmSvCategory svCat = new SmSvCategory();
-					svCat.setSmSvTask(svTask);
-					svCat.setPmCategoryL1(cat.getPmCategoryL1());
-					svCat.setPmCategoryL2(cat.getPmCategoryL2());
-					svCat.setPmCategoryL3(cat.getPmCategoryL3());
-					smSvCategories.add(svCat);
-
-				}
-				svTask.setSmSvCategories(smSvCategories);
-				List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
-				for (PmParameter param : catParam) {
-					SmSvTemplate temp = new SmSvTemplate();
-					temp.setPmParameter(param);
-					temp.setSmSvTask(svTask);
-					templates.add(temp);
-				}
-				svTask.setSmSvTemplates(templates);
-				validSiteVisit = updateSiteVisitTask(svTask);
-
+				validSiteVisit = siteVisitDataUpdate();
 			}
+			if (res.equalsIgnoreCase("Reject")) {
+				setSmApplRejectionReasons();
+			}
+			updateSmAppl("Basic", getManagedBean().getSmAppl().getApplType());
+
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
 						.submitPOorApproverReviewToBPM(reqDTO);
 				String msgConst = "";
-				if (getManagedBean().isApproverUser()) {
-					System.out
-							.println(" **** Final Decision from Approver ****");
-					if (res.equalsIgnoreCase("Approve")) {
-						msgConst = MessageConst.INFO_700007;
-					} else if (res.equalsIgnoreCase("Reject")) {
-						msgConst = MessageConst.INFO_700008;
-					}
-					return SupplierManagementConst.APPROVER_DECISION_ACK;
-				} else if (getManagedBean().isPoUser()) {
+				// if (getManagedBean().isApproverUser()) {
+				// System.out
+				// .println(" **** Final Decision from Approver ****");
+				// if (res.equalsIgnoreCase("Approve")) {
+				// msgConst = MessageConst.INFO_700007;
+				// } else if (res.equalsIgnoreCase("Reject")) {
+				// SmEmailNotificationHelper
+				// .sendApplicaitonRejectNotifMail(getManagedBean()
+				// .getSmAppl());
+				// msgConst = MessageConst.INFO_700008;
+				// }
+				// return SupplierManagementConst.APPROVER_DECISION_ACK;
+				// }
+				// else
+				if (getManagedBean().isPoUser()
+						|| getManagedBean().isApproverUser()) {
 					System.out.println(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
 						msgConst = MessageConst.INFO_700007;
 					} else if (res.equalsIgnoreCase("Reject")) {
+						SmEmailNotificationHelper
+								.sendApplicaitonRejectNotifMail(getManagedBean()
+										.getSmAppl());
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						msgConst = MessageConst.INFO_700014;
@@ -3024,6 +3056,7 @@ public class SmApplicationBackingBean extends
 					} else if (res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
 						msgConst = MessageConst.INFO_700017;
 					}
+
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -3171,6 +3204,12 @@ public class SmApplicationBackingBean extends
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
 		sec.setSitevisitVerified(isVerifiedAll);
+		sec.setFactoryVerify(isVerifiedAll);
+		sec.setManufacturingVerified(isVerifiedAll);
+		sec.setMachineryVerified(isVerifiedAll);
+		sec.setLicenseVerified(isVerifiedAll);
+		sec.setAssocBodyVerified(isVerifiedAll);
+
 		return sec;
 	}
 
@@ -3326,6 +3365,19 @@ public class SmApplicationBackingBean extends
 		UomResDTO resDTO = reqSO.retrieveUomList();
 
 		this.getManagedBean().setUomLs(resDTO.getPmUomList());
+	}
+
+	private void retrieveRejectReasonList() {
+		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IReasonSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
+				.value());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
+		System.out.println(" *** Reject List ****** "
+				+ resDTO.getReasonDescList().size());
+		this.getManagedBean().setReasonDescList(resDTO.getReasonDescList());
 	}
 
 	private void retrievePmProfBodyList() {
@@ -3524,7 +3576,8 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	private int assignMaxReviewCount(String appType, String applCatType) {
+	private int assignMaxReviewCount(String appType, String applCatType,
+			String supplierType) {
 		int i = 0;
 		switch (appType) {
 
@@ -3553,11 +3606,18 @@ public class SmApplicationBackingBean extends
 			i = SupplierManagementConst.UPDATE_MOF_APPL_REVIEW_MAXCOUNT;
 			break;
 		case "R":
-			i = SupplierManagementConst.RENEW_APPL_REVIEW_MAXCOUNT;
+			if (applCatType.equalsIgnoreCase("S")) {
+				i = SupplierManagementConst.RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT;
+			} else {
+				i = SupplierManagementConst.RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT;
+			}
 			break;
 		default:
 			break;
 
+		}
+		if (supplierType.equalsIgnoreCase("J")) {
+			i = i + 1;
 		}
 		return i;
 	}

@@ -14,6 +14,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -307,6 +308,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmCertBody> profBodyLs;
 	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
+	List<PmReasonDesc> reasonDescList;
+	
+	private Long[] reasonId;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1798,6 +1802,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSupportDoc(SmApplSupportDoc supportDoc) {
 		this.supportDoc = supportDoc;
+	}
+
+	public List<PmReasonDesc> getReasonDescList() {
+		return reasonDescList;
+	}
+
+	public void setReasonDescList(List<PmReasonDesc> reasonDescList) {
+		this.reasonDescList = reasonDescList;
+	}
+
+	public Long[] getReasonId() {
+		return reasonId;
+	}
+
+	public void setReasonId(Long[] reasonId) {
+		this.reasonId = reasonId;
 	}
 
 }
