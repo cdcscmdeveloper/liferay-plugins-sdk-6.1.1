@@ -222,9 +222,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				this.getManagedBean().setLetterOfAcceptance(true);
 		        this.getManagedBean().setPrepareLOA(true);		
 		        this.getManagedBean().setMemberSignOff(true);
+		        this.getManagedBean().setWitnessHeader("AGENCY WITNESS DETAILS");
 		        if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null){
 		        	this.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(new ScLoa());
-		        }
+		        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractType() == null)
+			        	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractType(new PmParameter());
+		        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null)
+		        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractSigner(new PmUser());
+		        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null){
+		        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(new PmUser());
+		        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
+		        	}		
+		         }
 			
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)){
 		    	  this.getManagedBean().setMemberSignOff(false);
@@ -315,6 +324,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
 	            ChkComplyAP201Rule();	
 	        }   
+	        
+	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
+	        	this.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(this.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+	        }
 	        
 	        if(this.getManagedBean().isPrepareLOA()){
 	        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null){
