@@ -325,7 +325,7 @@ public class QTDetailBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
+							FacesMessage.SEVERITY_ERROR,
 							null,
 							MessageUtils
 									.getMessage(MessageConst.INFO_000001,											
