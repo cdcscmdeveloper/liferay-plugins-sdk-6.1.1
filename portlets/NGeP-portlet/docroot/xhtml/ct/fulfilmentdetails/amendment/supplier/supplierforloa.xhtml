@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	 <p:panel id="panelSupplier" header="SUPPLIER DETAILS" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
+			<p:outputLabel value="MOF No"/>
+			<p:inputText style="width:170px;"
+			   value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
+			<p:outputLabel value="Supplier Name"/>
+			<p:inputText style="width:170px;"
+			 value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}"/>
+			<p:outputLabel value="Branch"/>
+			<p:selectOneMenu style="width:180px;margin-bottom: 5px;" >
+			   <f:selectItem itemLabel="--" itemValue=""/>
+			</p:selectOneMenu>
+			 <h:panelGroup>
+            <div style="height: 90px; vertical-align:top;">
+                <p:outputLabel for="address" value="Address " />
+            </div>
+           </h:panelGroup>
+           <h:panelGrid>
+             <p:inputTextarea id="address" disabled="true"  value="#{amendmentBackingBean.managedBean.supplierAddress}"
+                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
+           </h:panelGrid>
+			<p:outputLabel value="Contact Person"/>
+			<p:inputText style="width:170px;"/>  
+		    <p:outputLabel value="Tel No"/>
+			<p:inputText style="width:170px;"/> 
+			<p:outputLabel value="Mobile No"/>
+			 <h:panelGrid columns="3" columnClasses="columnWidth30,columnWidth30">
+			   <p:inputText style="width:170px;"/>  
+		       <p:outputLabel value="Fax No"/>
+			 <p:inputText style="width:140px;"
+			 value=" "/> 
+			</h:panelGrid>
+			<p:outputLabel value="Email Id"/>
+			 <p:inputText style="width:95%;"/>  
+		 </h:panelGrid>
+	</p:panel>	
+</ui:composition>
+
+
+
+
+

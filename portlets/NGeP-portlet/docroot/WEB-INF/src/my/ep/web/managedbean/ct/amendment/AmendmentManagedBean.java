@@ -102,7 +102,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private SelectItem[] roleTypes; // Role type drop down
 	private List<CtCommitteeMember> ctCommitteeMembers;
 	private Long meetingStatusId;
-	private ScLoaWitness scLoaWitness;
+	private ScLoaWitness scLoaWitness = new ScLoaWitness();
+	private String witnessHeader;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -566,6 +567,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setScLoaWitness(ScLoaWitness scLoaWitness) {
 		this.scLoaWitness = scLoaWitness;
+	}
+
+	public String getWitnessHeader() {
+		return witnessHeader;
+	}
+
+	public void setWitnessHeader(String witnessHeader) {
+		this.witnessHeader = witnessHeader;
 	}
 
 }

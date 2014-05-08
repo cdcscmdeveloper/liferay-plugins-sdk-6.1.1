@@ -100,7 +100,9 @@
        </p:tab>
        
        <p:tab title="Loa Details" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
-	      <ui:include src=" loaDetails.xhtml " />
+          <ui:include src="supplier/supplierforloa.xhtml" />
+	      <ui:include src="loaDetails.xhtml" />
+	      <ui:include src="witnessDetails.xhtml" />
        </p:tab>
        <p:tab title="Performance Bond" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
 	      <ui:include src="loaBondDetails.xhtml" />
