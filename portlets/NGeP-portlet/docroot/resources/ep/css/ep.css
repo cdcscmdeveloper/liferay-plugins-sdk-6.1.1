@@ -4851,5 +4851,12 @@ table.rptTbl {
 }
 
 .nbColumnHeight {
- height: 27px;
+	height: 27px;
+}
+
+.ui-datatable .ui-column-filter {
+	display: initial;
+	margin-left: 5px;
+	height: 12px;
+	margin-bottom: 0px;
 }
