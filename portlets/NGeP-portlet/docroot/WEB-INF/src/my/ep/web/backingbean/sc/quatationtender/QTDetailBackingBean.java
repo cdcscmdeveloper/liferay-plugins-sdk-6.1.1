@@ -562,9 +562,6 @@ public class QTDetailBackingBean extends
 		// scQt.setPmOrgProfile(orgProfile);
 		scQt.setPmOrgProfile(getManagedBean().getOrgProfile());
 
-		String order_id = getAlphaNumeric(8);
-		scQt.setQtNo("qt" + order_id);
-
 		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 		populateUserMinistryList();
@@ -576,24 +573,11 @@ public class QTDetailBackingBean extends
 		PmStatus qtStatus = new PmStatus();
 		qtStatus.setStatusId(QTStatusConst.ASSIGN_BO);
 		scQt.setQtStatus(qtStatus);
+		scQt.setQtNo(dto.getQtNo());
 		this.getManagedBean().setQt(scQt);
 
 		onChangeAction();
 		return QTConstants.BO_MAINTANANCE_PAGE + "?faces-redirect=true";
-	}
-
-	/**
-	 * @param i
-	 * @return
-	 */
-	private String getAlphaNumeric(int len) {
-		StringBuffer sb = new StringBuffer(len);
-		for (int i = 0; i < len; i++) {
-			int ndx = (int) (Math.random() * getManagedBean().getALPHA_NUM()
-					.length());
-			sb.append(getManagedBean().getALPHA_NUM().charAt(ndx));
-		}
-		return sb.toString();
 	}
 
 	/**
