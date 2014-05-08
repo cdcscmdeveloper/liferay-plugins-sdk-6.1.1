@@ -111,6 +111,46 @@
 		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="nbZones.xhtml"></ui:include>
 		</c:if>
+		
+			<p:panel header="Document List" toggleable="true">
+		<p:dataTable var="document" id="doctbl" 
+			value="#{noticeBoardBackingBean.managedBean.docuements}"			
+			styleClass="documentslist" >
+
+			<ac:paginator for="doctbl" />
+
+						
+
+			<p:column headerText="#{lbl['lbl.so.title']}" >
+
+				<h:outputText value="#{document.title}"
+					rendered="#{document.brandNew eq false}" />
+
+				
+			</p:column>
+
+					
+			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+				
+				<p:commandLink
+					action="#{noticeBoardBackingBean.downloadDocumentFile(document)}"
+					update="doctbl">
+					<p:graphicImage library="ep/images/design" name="download.png"
+						value="/resources/ep/images/design/download.png"
+						/>
+				</p:commandLink>
+
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="20px" />
+		<div align="right">
+			<p:commandButton ajax="false" value="Download All"
+				actionListener="#{noticeBoardBackingBean.documentDownLoadZipFile(noticeBoardBackingBean.managedBean.documents)}" />
+			
+		</div>
+
+	</p:panel>
 
 	</ui:define>
 </ui:composition>
