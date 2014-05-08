@@ -302,7 +302,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				      workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
 				   }
 				 workFlowStatus.setCurrent(true);
-			     workFlowStatuses.add(workFlowStatus);
+			    // workFlowStatuses.add(workFlowStatus);
 			     
 			     prInquiry.setWorkflowStatuses(workFlowStatuses);
 				 
