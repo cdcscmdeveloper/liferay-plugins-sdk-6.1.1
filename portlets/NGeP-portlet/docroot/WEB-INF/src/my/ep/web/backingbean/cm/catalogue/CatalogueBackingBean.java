@@ -2942,11 +2942,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 	public void validateZonalPromotionTierDates(int index){
-		List<CmZonalPromotionTierPricing> previousList = new ArrayList<CmZonalPromotionTierPricing>();
-		for(int i = 0; i < index; i++)
-			previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i));
-
+		
 		CmZonalPromotionTierPricing tier = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
+
+		List<CmZonalPromotionTierPricing> previousList = new ArrayList<CmZonalPromotionTierPricing>();
+		for(int i = 0; i < this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().size(); i++){
+			if(tier.getStand_group_id().equals(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getStand_group_id())){
+				previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i));
+			}
+		}
+		
+		
 		if(tier.getStartDate() != null && tier.getEndDate() != null){
 			for(CmZonalPromotionTierPricing cmPricing : previousList){
 
