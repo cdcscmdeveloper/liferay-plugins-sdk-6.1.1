@@ -10,7 +10,7 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" action="#{specificationBackingBean.saveSpecificationDtls}"  icon="ui-icon-save" />
+					<p:commandButton value="Save" update="@all" action="#{specificationBackingBean.saveSpecificationDtls}"  icon="ui-icon-save" />
 				
 			<c:forEach items="#{specificationBackingBean.managedBean.outComes}"
 						var="action">
@@ -40,7 +40,7 @@
 			
 			
 							<p:commandButton value="#{action}" process="@all" 
-								styleClass="ui-button"
+								styleClass="ui-button" update="@all"
 								action="#{specificationBackingBean.updateBpmTask(action)}"  icon="#{iconVar}"/>
 								
 						</c:forEach>

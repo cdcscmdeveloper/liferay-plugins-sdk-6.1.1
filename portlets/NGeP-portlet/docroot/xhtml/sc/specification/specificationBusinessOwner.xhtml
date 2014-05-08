@@ -21,9 +21,11 @@
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}"
 						readonly="true" disabled="true"></p:inputText></td>
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
-				<td><p:inputText size="35" style="text-align:right"
-						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"></p:inputText></td>
+						<td><h:outputLabel value="*#{lbl['lbl.sc.spec.est.price']}" /></td>
+				<td><p:inputText size="35" style="text-align:right" id="estPrice" required="true" label="#{lbl['lbl.sc.spec.est.price']}"
+						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"></p:inputText>
+						<p:message id="priceMsg" for="estPrice" display="icon" />
+						</td>
 						
 			</tr>
 			
@@ -38,8 +40,8 @@
 				
 					
 						<tr>
-							<td style="width: 17%"><h:outputLabel
-									value="Quotation/Tender Type" /></td>
+							<td style="width: 17%"><h:outputLabel 
+									value="*#{lbl['lbl.sc.spec.qut.tender.type']}"/></td>
 							<td><ui:fragment
 									rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
 									<p:selectOneMenu
@@ -55,7 +57,7 @@
 								</ui:fragment> <ui:fragment
 									rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 
-									<p:selectOneRadio 
+									<p:selectOneRadio required="true" id="tenderType" label="*#{lbl['lbl.sc.spec.qut.tender.type']}"
 										value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
 										<f:selectItems
@@ -65,30 +67,35 @@
 										<p:ajax event="change" update="suppQualSpec"
 											listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
 									</p:selectOneRadio>
+									<p:message id="tenderMsg" for="tenderType" display="icon" />
 								</ui:fragment></td>
 								</tr>
 								<tr>
 							<ui:fragment
 								rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-								<td><h:outputLabel value="Open For" /></td>
-								<td><p:selectOneRadio
+								<td><h:outputLabel   value="*#{lbl['lbl.sc.spec.opn.for']}" /></td>
+								<td><p:selectOneRadio required="true" id="openFor"  label="#{lbl['lbl.sc.spec.opn.for']}"
 										value="#{specificationBackingBean.managedBean.scQt.openFor}">
 
 										<f:selectItem itemLabel="Bumiputra" itemValue="B" />
 										<f:selectItem itemLabel="All" itemValue="A" />
-									</p:selectOneRadio></td>
+									</p:selectOneRadio>
+									<p:message id="openMsg" for="openFor" display="icon" />
+									</td>
 							</ui:fragment>
 						</tr>
 					
 
 			<tr>
-				<td><h:outputLabel
-						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
-				<td><p:selectOneRadio
+				<td><h:outputLabel 
+						value="*#{lbl['lbl.sc.spec.evaluation.type']}" /></td>
+				<td><p:selectOneRadio required="true" id="evalType" label=" #{lbl['lbl.sc.spec.evaluation.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
 						<f:selectItem itemLabel="One Tier" itemValue="1" />
 						<f:selectItem itemLabel="Two Tier" itemValue="2" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					<p:message id="evalMsg" for="evalType" display="icon" />
+					</td>
 					</tr>
 					<tr>
 				<ui:fragment
@@ -107,13 +114,17 @@
 			</tr>
 			<tr>
 
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
-				<td><p:selectOneMenu
-						value="#{specificationBackingBean.managedBean.scQt.itemType}"
-						style="margin-bottom:5px;width:150px;">
+				<td><h:outputLabel
+						value="*#{lbl['lbl.sc.spec.peocure.category']}" /></td>
+				<td><p:selectOneMenu id="procCategory" required="true" label="#{lbl['lbl.sc.spec.peocure.category']}"
+						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownCodeValues(ParameterTypeConst.scItemType)}" />
-					</p:selectOneMenu></td>
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+						<p:ajax event="change"
+							listener="#{specificationBackingBean.procurementChange}"></p:ajax>
+					</p:selectOneMenu>
+						<p:message id="titleMsg" for="procCategory" display="icon" />
+					</td>
 			</tr>
 			
 			
