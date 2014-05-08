@@ -514,7 +514,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.debug("*****addNewTierPricing*****");
 		CmTierPricing price = new CmTierPricing();
-		
+
 		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size() > 0){
 			int size = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size();
 			price.setStand_group_id(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(size - 1).getStand_group_id() + 1);
@@ -912,54 +912,54 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					} else {
 						dataLs.add("");
 					}
-					
-					
+
+
 					IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 							.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 					ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 
 					ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.getSupplierZones(reqDTO);
-					
+
 					List<CmSupplierZone> zoneList = resDTO.getCmSupplierZones();
-					
+
 					String[] zoneNames = new String[zoneList.size()];
 					int j = 0;
 					for(CmSupplierZone zone : zoneList){
 						zoneNames[j]=zone.getSuppZoneName();
 						j++;
 					}
-					
+
 					/*if(zoneList != null && zoneList.size() > 0){
 						dataLs.add(zoneNames);
 					} else {
 						dataLs.add("");
 					}*/
-					
-					
-					
+
+
+
 					DataValidationHelper dvHelper = zonal.getDataValidationHelper();
-					  DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(zoneNames);
-					  CellRangeAddressList addressList = new CellRangeAddressList(zonalNo, zonalNo, 1, 1);            
-					  DataValidation validation = dvHelper.createValidation(
-					    dvConstraint, addressList);
-					  // Note the check on the actual type of the DataValidation object.
-					  // If it is an instance of the XSSFDataValidation class then the
-					  // boolean value 'false' must be passed to the setSuppressDropDownArrow()
-					  // method and an explicit call made to the setShowErrorBox() method.
-					  
-					  dvConstraint.getExplicitListValues();
-					  if(validation instanceof XSSFDataValidation) {
-					    validation.setSuppressDropDownArrow(true);
-					    validation.setShowErrorBox(true);
-					  }
-					  else {
-					    // If the Datavalidation contains an instance of the HSSFDataValidation
-					    // class then 'true' should be passed to the setSuppressDropDownArrow()
-					    // method and the call to setShowErrorBox() is not necessary.
-					    validation.setSuppressDropDownArrow(false);
-					  }
-					  zonal.addValidationData(validation);
-					
+					DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(zoneNames);
+					CellRangeAddressList addressList = new CellRangeAddressList(zonalNo, zonalNo, 1, 1);            
+					DataValidation validation = dvHelper.createValidation(
+							dvConstraint, addressList);
+					// Note the check on the actual type of the DataValidation object.
+					// If it is an instance of the XSSFDataValidation class then the
+					// boolean value 'false' must be passed to the setSuppressDropDownArrow()
+					// method and an explicit call made to the setShowErrorBox() method.
+
+					dvConstraint.getExplicitListValues();
+					if(validation instanceof XSSFDataValidation) {
+						validation.setSuppressDropDownArrow(true);
+						validation.setShowErrorBox(true);
+					}
+					else {
+						// If the Datavalidation contains an instance of the HSSFDataValidation
+						// class then 'true' should be passed to the setSuppressDropDownArrow()
+						// method and the call to setShowErrorBox() is not necessary.
+						validation.setSuppressDropDownArrow(false);
+					}
+					zonal.addValidationData(validation);
+
 					/*if(price.getPricingType().equalsIgnoreCase("05")){
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal District Standard");
@@ -2643,7 +2643,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setTierRowIndex(index);
 
 	}
-	
+
 	public void setZonalRowIndex(){
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -2656,8 +2656,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setZonalTierRowIndex(index);
 
 	}
-	
-	
+
+
 
 	public void deleteTierPrice(){
 
@@ -2710,20 +2710,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 				this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().remove(price);
 			}
-			
+
 			for(CmPromotionTierPricing price :this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
-				
+
 				if(price.getStand_group_id().equals(groupingId)){
 					price.getParentPrice().setStandardDisabled(true);
 				}
 			}
-			
+
 		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price deleted.", ""));
 	}
-	
+
 	public void deleteZonalPromotionTierPrice(int index){
 
 		Map<Date, List<CmZonalPromotionTierPricing>> tierMap = groupingDate(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings());
@@ -2733,7 +2733,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			List <CmZonalPromotionTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index).getStartDate());	
 			Integer groupingId = 0;
 			for(CmZonalPromotionTierPricing price :dataList){
-				
+
 				groupingId = price.getStand_group_id();
 				if(price.getParentPrice() != null){
 					price.getParentPrice().setStandardDisabled(false);
@@ -2741,8 +2741,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 				this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().remove(price);
 			}
-			
-			
+
+
 			for(CmZonalPromotionTierPricing price :this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
 				System.out.println("groupingId:"+groupingId);
 				System.out.println("price.getStand_group_id()"+price.getStand_group_id());
@@ -2750,20 +2750,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					price.getParentPrice().setStandardDisabled(true);
 				}
 			}
-			
+
 		}
-		
-		
-		
+
+
+
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price deleted.", ""));
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	public void deleteZonalStandardPrice(int index){
 		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().remove(index);
 	}
@@ -2771,8 +2771,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().remove(index);
 	}
 	public void deleteZonalTierPrice(){
-		
-		
+
+
 		List<CmZonalTierPricing> tierList = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings();
 		List <CmZonalTierPricing>dataList = new ArrayList<CmZonalTierPricing>(); 
 		for(CmZonalTierPricing cmPricing : tierList){
@@ -2800,9 +2800,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		for(CmZonalTierPricing price :dataList){
 			this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().remove(price);
 		}
-		
-		
-		
+
+
+
 
 	}
 
@@ -2859,7 +2859,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 	}
-	
+
 	public void updateValidateZonalGroupingDates(int index){
 
 		CmZonalPromotionTierPricing zonal = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
@@ -2901,19 +2901,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 			tempIndex++;
 		}
-		
+
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
 	}
-	
-	
+
+
 
 	public void validatePromotionTierDates(int index){
-		List<CmPromotionTierPricing> previousList = new ArrayList<CmPromotionTierPricing>();
-		for(int i = 0; i < index; i++)
-			previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().get(i));
 
 		CmPromotionTierPricing tier = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().get(index);
+
+		List<CmPromotionTierPricing> previousList = new ArrayList<CmPromotionTierPricing>();
+		for(int i = 0; i < this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().size(); i++){
+			if(tier.getStand_group_id().equals(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().get(i).getStand_group_id())){
+				previousList.add(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().get(i));
+			}
+		}
+
 		if(tier.getStartDate() != null && tier.getEndDate() != null){
 			for(CmPromotionTierPricing cmPricing : previousList){
 
@@ -2935,7 +2940,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	}
-	
+
 	public void validateZonalPromotionTierDates(int index){
 		List<CmZonalPromotionTierPricing> previousList = new ArrayList<CmZonalPromotionTierPricing>();
 		for(int i = 0; i < index; i++)
@@ -2960,15 +2965,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 			}
 		}
-		
+
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
 
 
 	}
-	
-	
-	
+
+
+
 
 	public void cloneTierPrice(int index){
 
@@ -2977,7 +2982,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		tier.setEndDate(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getEndDate());
 		tier.setShowFlag(false);
 		tier.setStand_group_id(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).getStand_group_id());
-		
+
 		if(index < this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size()-1){
 			int tempIndex = index + 1;
 			int markIndex = index + 1;
@@ -2992,7 +2997,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					break;
 				}
 			}
-			
+
 			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(markIndex - 1).getToQty() + 1);
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().add(markIndex, tier);
 		} else {
@@ -3001,7 +3006,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 	}
-	
+
 	public void cloneZonalTierPrice(int index){
 
 		CmZonalTierPricing tier = new CmZonalTierPricing();
@@ -3018,7 +3023,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			while(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(tempIndex) != null){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(tempIndex).getStand_group_id() == this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getStand_group_id()){
-					
+
 					markIndex = tempIndex;
 				}
 				if(tempIndex < this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size()-1)
@@ -3140,7 +3145,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	
+
 
 	public void updateErrorDialog(int index){
 		CmTierPricing cmTierPricing = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -3306,7 +3311,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setTierPricingIndex(1);
 
 	}
-	
+
 	public void updateZonalPromotionTierErrorDialog(int index){
 
 		CmZonalPromotionTierPricing zonal = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
@@ -3330,9 +3335,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setZonalTierPricingIndex(1);
 
 	}
-	
-	
-	
+
+
+
 
 	public void updateZonalTierErrorDialog(int index){
 		CmZonalTierPricing cmZonalTierPricing = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index);
@@ -3356,7 +3361,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setZonalTierPricingIndex(0);
 	}
 
-	
+
 
 
 	public boolean validateBeforeAddToZonalPromotion(List<CmZonalTierPricing> cmPricings){
@@ -3932,7 +3937,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	//      }
 	//		
 	//	}
-	
-	
+
+
 
 }
