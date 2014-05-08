@@ -610,7 +610,7 @@ public class QTDetailBackingBean extends
 		List<PmOrgProfile> orgProfileList = getManagedBean()
 				.getUserDivisionList();
 		for (PmOrgProfile list : orgProfileList) {
-			if (list.getOrgProfileId() == orgProfile.getOrgProfileId()) {
+			if (list.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
 				getManagedBean().setOrgProfile(list);
 			}
 		}
