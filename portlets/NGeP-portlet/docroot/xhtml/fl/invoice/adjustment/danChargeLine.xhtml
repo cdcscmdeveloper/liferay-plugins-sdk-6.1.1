@@ -23,15 +23,60 @@
 		</table>
 	</p:panel>
 	<p:panel header="CHARGE LINE ITEMS">
-		<p:dataTable id="chargeLine">
-		<ac:paginator for="chargeLine" />
-			<p:column headerText="Item Code"></p:column>
-			<p:column headerText="Item Name"></p:column>
-			<p:column headerText="UOM"></p:column>
-			<p:column headerText="Unit Price"></p:column>
-			<p:column headerText="Ordered Amt."></p:column>
-			<p:column headerText="DAN Amt."></p:column>
 		
-		</p:dataTable>
+		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
+			styleClass="chargeLineChange"
+			selection="#{danBackingBean.managedBean.selectedNode}"
+			selectionMode="single"
+			value="#{danBackingBean.managedBean.danChargeLineTree}">
+			<p:ajax event="select"/>
+			<p:ajax event="unselect"/>
+			<p:column headerText="Item Code">
+				<h:outputText
+					value="#{chargeLineNode.flItem.cmItem.extensionCode}" rendered="#{chargeLineNode.parent}"/>
+			</p:column>
+			<p:column headerText="Item Name">
+				<h:outputText value="#{chargeLineNode.flItem.cmItem.itemName}" rendered="#{chargeLineNode.parent}"/>
+			</p:column>
+			<p:column headerText="UOM">
+				<h:outputText value="Unit" rendered="#{chargeLineNode.parent}"/>
+			</p:column>
+			<p:column headerText="Unit Price (RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.flItem.unitPrice}" rendered="#{!chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedAmt}" rendered="#{chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedAmt}" rendered="#{!chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Invoice Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" rendered="#{chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" rendered="#{!chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="DAN Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.adjustedAmt}" rendered="#{chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.adjustedAmt}" rendered="#{!chargeLineNode.parent}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:treeTable>
 	</p:panel>
 </ui:composition>

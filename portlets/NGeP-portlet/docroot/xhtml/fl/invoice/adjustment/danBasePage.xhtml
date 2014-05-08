@@ -13,7 +13,7 @@
 	<ui:define name="contentSection">
 	<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	<ui:include src="/xhtml/fl/invoice/danHeaderPage.xhtml" />
+	<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="danGeneral.xhtml" />

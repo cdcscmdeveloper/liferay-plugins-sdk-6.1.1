@@ -46,26 +46,27 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="35"
 						value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.orgName}" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']}" /></td>
-				<td><p:inputText value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" disabled="true" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.fl.factored']}" /></td>
-				<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flInvoice.factored}" disabled="true"></p:selectBooleanCheckbox></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.supp.inv.no']}" /></td>
+				<td colspan="2"><p:inputText size="35" value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText
 						value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile.orgName}"
 						size="35" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
-				<td><p:inputText value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" disabled="true" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
-				<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.mto}" disabled="true" ></p:selectBooleanCheckbox></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']}" /></td>
+				<td><p:inputText value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" disabled="true" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.factored']}" /></td>
+				<td><p:selectBooleanCheckbox value="" disabled="true"></p:selectBooleanCheckbox></td>
+				
 				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.requisitioner']}" /></td>
 				<td><p:inputText size="35"
 						value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.orgName}" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
+				<td><p:inputText value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -81,24 +82,18 @@
 							<td><p:inputText size="10" disabled="true" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:selectOneMenu
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="MALAYSIA BANK" itemValue="1" />
-					</p:selectOneMenu></td> 
+				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
+				<td><p:inputText size="35" value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" disabled="true" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td> 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}"/></td>
-				<td style="width: 100px;"><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
+				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
+				<td style="width: 100px;"><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
+				<td><p:inputText size="35" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.supp.inv.no']}" /></td>
-				<td><p:inputText size="35" value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width:137px;"><p:outputLabel value="Address" /></td>
@@ -126,21 +121,17 @@
 		</table>
 	</p:panel>
 	
-	<p:panel header="FACTORING DETAIL" toggleable="true">
+	<p:panel header="FACTORING DETAIL" toggleable="true" rendered="#{danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
 				<td style="width:133px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
+				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-				<td><p:selectOneMenu
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="MALAYSIA BANK BRANCH" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:inputText value="" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
 			</tr>
