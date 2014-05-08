@@ -10,85 +10,106 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.manufacturingVerified}"
+							id="poManuVer">
+							<p:ajax update=":form:tt:manuInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.manufacturingVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.manufacturingVerified}"
+							id="apprManuVer">
+							<p:ajax update=":form:tt:manuInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.manufacturingVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
 		</table>
 		<br />
-		<p:dataTable var="manBean"
-			value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
-			selection="#{backingBean.managedBean.selectedManufacturingList}"
-			rowKey="#{manBean}" rowIndexVar="index" id="manDt">
-			<ac:paginator for="manDt" />
-			<p:column selectionMode="multiple" width="5%" />
+		<p:panel id="manuInfPan">
+			<p:blockUI block=":form:tt:manuInfPan" widgetVar="buiPoManu"
+				id="poManuBlc"
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.manufacturingVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.manufacturingVerified : false)}" />
 
-			<p:column headerText="Type Of Product (s)">
-				<h:outputText value="#{manBean.goodsType}" />
-			</p:column>
+			<p:dataTable var="manBean"
+				value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
+				selection="#{backingBean.managedBean.selectedManufacturingList}"
+				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
+				<ac:paginator for="manDt" />
+				<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Brand">
-				<h:outputText value="#{manBean.brand}" />
-			</p:column>
-			<p:column headerText="Production Capability / Month">
-				<h:outputText value="#{manBean.productionCapacity}" />
-			</p:column>
+				<p:column headerText="Type Of Product (s)">
+					<h:outputText value="#{manBean.goodsType}" />
+				</p:column>
 
-			<p:column headerText="Measurement Unit">
-				<h:outputText value="#{manBean.pmUom.uomName}" />
-			</p:column>
-			<p:column headerText="Action">
-				<p:commandLink oncomplete="manufactorDialog.show();"
+				<p:column headerText="Brand">
+					<h:outputText value="#{manBean.brand}" />
+				</p:column>
+				<p:column headerText="Production Capability / Month">
+					<h:outputText value="#{manBean.productionCapacity}" />
+				</p:column>
+
+				<p:column headerText="Measurement Unit">
+					<h:outputText value="#{manBean.pmUom.uomName}" />
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandLink oncomplete="manufactorDialog.show();"
+						update=":form:tt:manDia"
+						action="#{backingBean.assignSelManufacturer(manBean)}"
+						style="padding-right:5px">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
 					update=":form:tt:manDia"
-					action="#{backingBean.assignSelManufacturer(manBean)}"
-					style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			</p:column>
+					action="#{backingBean.assignNewManufacturerBean}" />
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedManufacturers}"
+					update=":form:tt:manDt" />
+			</div>
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
 
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
-				update=":form:tt:manDia"
-				action="#{backingBean.assignNewManufacturerBean}" />
-			<p:commandButton value="Delete"
-				action="#{backingBean.deleteSelectedManufacturers}"
-				update=":form:tt:manDt" />
-		</div>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41" /></td>
-					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-
-				</tr>
-			</table>
-		</p:outputPanel>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 	<p:dialog width="600px" header="Manufacturing / Assembly Information"
 		widgetVar="manufactorDialog" resizable="false" showEffect="fade"

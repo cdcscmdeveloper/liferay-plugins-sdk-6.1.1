@@ -16,7 +16,7 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="Factory Name">
-				<h:outputText value="-- Fac TBC Mapping --" />
+				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
 			<p:column headerText="Factory Address">
@@ -55,7 +55,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText size="35" value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}"/></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>

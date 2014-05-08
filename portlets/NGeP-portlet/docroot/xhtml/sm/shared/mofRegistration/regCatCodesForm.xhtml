@@ -128,7 +128,8 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.categoryRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -137,9 +138,11 @@
 					<tr>
 						<td><p:outputLabel value="PO Remarks" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41" /></td>
+								disabled="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.categoryRemark}" /></td>
 						<td><p:outputLabel value="Approver Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.apprvrSecReview.categoryRemark}" /></td>
 
 					</tr>
 				</table>
