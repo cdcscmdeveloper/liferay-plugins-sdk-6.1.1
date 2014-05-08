@@ -12,9 +12,9 @@
 				
 				<p:button value="#{lbl['lbl.so.cancelbtn']}" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
 				<p:commandButton value="#{lbl['lbl.so.submit']}" 
-					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" />
+					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" update="@all"  />
 				<p:commandButton value="#{lbl['lbl.so.save']}" 
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save"/>
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save" update="@all" />
 				<br />
 				<br />
 			</c:if>
