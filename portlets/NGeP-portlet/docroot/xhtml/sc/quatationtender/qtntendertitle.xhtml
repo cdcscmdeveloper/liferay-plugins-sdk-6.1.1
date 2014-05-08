@@ -10,17 +10,21 @@
 		<table>
 			<tr>
 				<td style="width: 155px;" valign="top"><p:outputLabel
-						value="#{lbl['lbl.so.title']}" /></td>
-				<td colspan="3"><p:inputTextarea
+						value="* #{lbl['lbl.so.title']}" /></td>
+				<td colspan="3"><p:inputTextarea id="title1" label="#{lbl['lbl.so.title']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2"
 						disabled="#{!qTDetailBB.managedBean.editable}"
-						style=" margin-bottom:5px;" /></td>
+						style=" margin-bottom:5px;" />
+					<p:message id="title1Msg" for="title1" display="icon" />
+							
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.fileno']}" /></td>
-				<td><p:inputText id="fileno"
+				<td><p:outputLabel value="* #{lbl['lbl.so.fileno']}" /></td>
+				<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.fileNo}"
-						disabled="#{!qTDetailBB.managedBean.editable}" size="30" /></td>
+						disabled="#{!qTDetailBB.managedBean.editable}" size="30" />
+						<p:message id="filenoMsg" for="fileno" display="icon" /></td>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.so.crtdt']}" /></td>
 				<td><p:inputText
@@ -46,10 +50,22 @@
 							disabled="true" size="30" />
 					</c:if> -->
 				</td>
+				<td />
+				<td />
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
 				<td><p:inputText id="estprice"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
 						disabled="true" readonly="true" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.justification']}" /></td>
+				<td colspan="3" valign="top"><p:inputTextarea
+						value="#{qTDetailBB.managedBean.qt.justificationRemark}" cols="30"
+						rows="2" style=" margin-bottom:5px;" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -105,7 +121,8 @@
 				<h:outputText value="#{gosodo.budgetAmt}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:inputText value="#{gosodo.budgetAmt}" rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}"/>
+					<p:inputText value="#{gosodo.budgetAmt}"
+						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				</c:if>
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:inputText value="#{gosodo.budgetAmt}" disabled="true" />

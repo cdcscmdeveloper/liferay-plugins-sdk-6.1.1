@@ -43,9 +43,7 @@
 					<f:selectItem itemValue="true" itemLabel="" />
 				</p:selectOneRadio>
 			</p:column>
-
 		</p:dataTable>
-		<p:spacer height="5px" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 				onclick="cloneBusinessOwner.show();" process="@this"
@@ -62,9 +60,7 @@
 				action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
 				update="businessownerId" />
 		</div>
-		<br />
 	</p:panel>
-	<p:spacer height="5px" />
 	<p:panel header="Specification Approval" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
 			columnClasses="columnWidth10" style="margin-left: 26px;">
@@ -75,7 +71,6 @@
 			</p:selectBooleanCheckbox>
 			<h:outputLabel value="#{lbl['lbl.so.req.approval.specification']}" />
 		</h:panelGrid>
-		<p:spacer height="5px" />
 
 		<h:panelGroup id="approvalSpec">
 			<p:panel
@@ -86,7 +81,7 @@
 						<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
 					</h:column>
 					<h:column>
-						<p:selectOneMenu
+						<p:selectOneMenu id="ministryspec" label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
 							value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
@@ -95,6 +90,7 @@
 								var="appName" itemLabel="#{appName.userName}"
 								itemValue="#{appName.userId}" />
 						</p:selectOneMenu>
+						<p:message id="ministryspecMsg" for="ministryspec" display="icon" />
 					</h:column>
 				</h:panelGrid>
 			</p:panel>
