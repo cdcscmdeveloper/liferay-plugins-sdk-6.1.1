@@ -246,7 +246,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 }
 			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 				 this.getManagedBean().setSignUpdateDecision(true);
-				 this.getManagedBean().setPbConfirmMeeting(true);	  
+				 this.getManagedBean().setPbConfirmMeeting(true);	
 			 }
 			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
 				 this.getManagedBean().setBpkSaSkApprover(true); 
@@ -334,6 +334,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
 	        	}
 	        	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(this.getManagedBean().getScLoaWitness());
+	        }
+	        
+	        if(this.getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) ||
+	        		this.getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)){
+	        	  reqDTO.setTaskName(this.getManagedBean().getTaskName());
 	        }
 	     
 	        this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
