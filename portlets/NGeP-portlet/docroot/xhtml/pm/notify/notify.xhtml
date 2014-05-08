@@ -25,7 +25,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="messages"  autoUpdate="true" />
+		<p:messages id="messages" autoUpdate="true" />
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="40%" valign="top">
@@ -45,15 +45,19 @@
 
 						<p:column selectionMode="multiple" style="width:2%" />
 
-						<p:column headerText="#{lbl['lbl.portal.alert.sender']}/#{lbl['lbl.portal.alert.subject']}">
+						<p:column
+							headerText="#{lbl['lbl.portal.alert.sender']}/#{lbl['lbl.portal.alert.subject']}">
 							#{notify.pmUser.userName} <br />
-							<p:commandLink id="btnNotifyLink" update=":form:pnldetail">
+							<p:commandLink id="btnNotifyLink"
+								action="#{notifyBackingBean.selectedNotify}"
+								update=":form:pnldetail,:form:notifyTable">
 								<h:outputText value="#{notify.pmNotifyLog.subject}"></h:outputText>
 								<f:setPropertyActionListener value="#{notify}"
 									target="#{notifyBackingBean.managedBean.selectedNotify}" />
 							</p:commandLink>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.portal.alert.datetime']}" style="text-align: right">
+						<p:column headerText="#{lbl['lbl.portal.alert.datetime']}"
+							style="text-align: right">
 							<h:outputText value="#{notify.pmNotifyLog.createdDate}">
 								<f:convertDateTime pattern="dd-MM-yyyy" />
 							</h:outputText>
@@ -70,7 +74,8 @@
 						<table border="1" width="100%" cellpadding="0" cellspacing="0">
 							<tr>
 								<td style="width: 80px; height: 30px;"><h:outputLabel
-										style="font-weight:bold;text-align: left" value="#{lbl['lbl.portal.alert.sender']} :" /></td>
+										style="font-weight:bold;text-align: left"
+										value="#{lbl['lbl.portal.alert.sender']} :" /></td>
 								<td><p:inputText
 										value="#{notifyBackingBean.managedBean.selectedNotify.pmUser.userName}"
 										readonly="true"></p:inputText></td>
@@ -84,7 +89,8 @@
 							</tr>
 							<tr>
 								<td style="width: 80px; height: 30px;"><h:outputLabel
-										style="font-weight:bold;text-align: left" value="#{lbl['lbl.portal.alert.subject']} :" /></td>
+										style="font-weight:bold;text-align: left"
+										value="#{lbl['lbl.portal.alert.subject']} :" /></td>
 								<td colspan="3"><p:inputText readonly="true"
 										style="width:545px"
 										value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.subject}"></p:inputText>
@@ -92,10 +98,12 @@
 							</tr>
 							<tr>
 								<td style="width: 80px; height: 60px;" colspan="1" valign="top"><h:outputLabel
-										style="font-weight:bold;text-align:left;" value="#{lbl['lbl.portal.alert.message']} :" /></td>
+										style="font-weight:bold;text-align:left;"
+										value="#{lbl['lbl.portal.alert.message']} :" /></td>
 								<td colspan="3"><p:scrollPanel layout="block"
 										style="text-align:left;width:555px;height:240px;border:1px solid #CECECE;">
-										<p:outputLabel escape="false" readonly="true" style="width:540px;height:240px;"
+										<p:outputLabel escape="false" readonly="true"
+											style="width:540px;height:240px;"
 											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.content}"></p:outputLabel>
 									</p:scrollPanel></td>
 							</tr>

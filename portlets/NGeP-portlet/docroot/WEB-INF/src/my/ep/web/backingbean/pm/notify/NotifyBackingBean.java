@@ -71,7 +71,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				reqDTO.getPmNotifyUserList().add(notifyUser);
 			}
 			NotifyResDTO resDTO = reqSO.removeNotifyList(reqDTO);
-			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful() + "]");
+			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
+					+ "]");
 			if (resDTO.isSuccessful()) {
 				retrieveNotifyList();
 				String message = "";
@@ -79,6 +80,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Record removed successfully.", message));
+			}
+		}
+	}
+
+	public void selectedNotify() {
+		debugLogger("=== selectedNotify ===");
+		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
+		debugLogger("IsRead[" + selectedNotify.getPmAlert().getIsRead() + "]");
+		if (selectedNotify.getPmAlert().getIsRead() == 0) {
+			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+			NotifyReqDTO reqDTO = new NotifyReqDTO();
+			reqDTO.setPmNotifyUser(selectedNotify);
+			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
+			debugLogger("NotifyResDTO updateIsReadNotify[" + resDTO.isSuccessful()
+					+ "]");
+			if (resDTO.isSuccessful()) {
+				selectedNotify.getPmAlert().setIsRead(1);
 			}
 		}
 	}
