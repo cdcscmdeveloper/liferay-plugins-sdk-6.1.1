@@ -884,6 +884,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveBusinessOwnerQualificationCriteri() {
 		try {
+
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
@@ -1420,6 +1421,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinPoints(local);
 				} //
 					// ScQtCheckList schecklist = specChecklist.get(0);
+				if(null != specChecklist && specChecklist.size()>0){
 				tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 						.getQtScoreWeightage());
 				if (specChecklist.get(0).getQtScoreWeightage().getScore() != null) {
@@ -1427,9 +1429,10 @@ public class SpecificationBackingBean extends
 							specChecklist.get(0).getQtScoreWeightage()
 									.getScore());
 				}
+				}
 				tmpCheckList.setTitle(sb.toString());
 				localChecklist.add(0, tmpCheckList);
-				if (tmpCheckList.getQtScoreWeightage().getScore() == null) {
+				if (null == tmpCheckList.getQtScoreWeightage() || tmpCheckList.getQtScoreWeightage().getScore() == null) {
 
 					this.getManagedBean().setScQtChecklist(tmpCheckList);
 					// String title=localTitle.substring(0,
@@ -2494,9 +2497,6 @@ public class SpecificationBackingBean extends
 
 		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
-		
-			
-		
 		scQt.setItemType("P");
 		PmParameter parameter = scQt.getPmProcurementCategory();
 		if (null == parameter) {
