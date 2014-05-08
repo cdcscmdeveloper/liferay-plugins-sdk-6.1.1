@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
      <p:dialog  widgetVar="pricingPopup" modal="true" header="PRICING"
 		width="670" height="350" resizable="false" >
-		<p:spacer height="5px"/>
+	   <h:panelGroup>
 		<table style="width: 550px">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
@@ -37,7 +37,9 @@
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.priceTypeCode)}" /></td>
 			</tr>
 		</table>
-
+		</h:panelGroup>
+		
+      <h:panelGroup>
 		<p:spacer height="15px" />
 		<p:dataTable id="priceDtl" var="itemPrice"
 			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrices}"
@@ -60,12 +62,13 @@
 			</p:column>
 
 		</p:dataTable>
-      <p:spacer height="15px"></p:spacer>
+		</h:panelGroup>
+      <p:spacer height="4px"/>
 	  <p:panelGrid styleClass="noBorders tr,noBorders td">
 		 <p:row>
 			<p:column width="60%" style="text-align:right">
 			 <p:commandButton value="#{lbl['lbl.sc.close']}"
-					onclick="pricingPopup.hide()" icon="ui-icon-back" />
+					onclick="pricingPopup.hide()" icon="ui-icon-close" />
 		   </p:column>
 		</p:row>
 	</p:panelGrid>

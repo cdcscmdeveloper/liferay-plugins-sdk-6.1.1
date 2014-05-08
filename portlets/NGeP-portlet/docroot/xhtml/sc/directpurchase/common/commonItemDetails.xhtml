@@ -4,52 +4,57 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:spacer height="10px" />
-		<h:panelGrid border="0"  width="100%" styleClass="header-info"
-			columns="8" id="rnHeaderId">
-			<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
-			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}"/>
-																		
-			<h:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
-			 <p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}"  
-			          style="width: 200px;"/>
-			
-			<h:outputLabel value="#{lbl['lbl.sc.request.note.method']}" />
-			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.sourceMethod}"/>
-	
-			<h:outputLabel value="#{lbl['lbl.sc.request.note.status']}" />
-			<p:inputText disabled="true" value="#{requestNoteBackingBean.managedBean.requestNoteStatus}" />
-		</h:panelGrid>
-		<p:spacer height="5px" />
+   <div class="header-info">
+	<h:panelGrid border="0" width="100%"
+		columns="8" id="rnHeaderId">
+		<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
+		<p:inputText disabled="true"
+			value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}" />
 
-	<p:panel id="ptjNameId">
-		<table style="width: 70%">
-			<tr>
-                   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
-					<td style="width: 180px;"><p:outputLabel
-							value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
-					<td><p:selectOneMenu
-							value="#{requestNoteBackingBean.managedBean.orgProfileId}"
-							styleClass="divisionclass"
-							style="width: 250px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.userDivisionList}"
-								var="pmOrgProfile"
-								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-								itemValue="#{pmOrgProfile.orgProfileId}" />
-							<p:ajax event="change" update="rnHeaderId ,ptjNameId"
-								process="@all" listener="#{requestNoteBackingBean.ptjNameEvent}" />
-						</p:selectOneMenu></td>
-						</ui:fragment>
-			</tr>
-		</table>
-	</p:panel>
+		<h:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
+		<p:inputText disabled="true"
+			value="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}"
+			style="width: 200px;" />
 
+		<h:outputLabel value="#{lbl['lbl.sc.request.note.method']}" />
+		<p:inputText disabled="true"
+			value="#{requestNoteBackingBean.managedBean.sourceMethod}" />
+
+		<h:outputLabel value="#{lbl['lbl.sc.request.note.status']}" />
+		<p:inputText disabled="true"
+			value="#{requestNoteBackingBean.managedBean.requestNoteStatus}" />
+	</h:panelGrid>
+	</div>
 	<p:panel id="glb_panel_request_list"
 		header="#{lbl['lbl.sc.panel.title.item.detail']}" toggleable="true"
 		toggleSpeed="500">
-		<h:panelGrid width="100%" style="margin-top:20px">
+          <p:outputPanel>	
+			<table style="width: 70%">
+				<tr>
+					<ui:fragment
+						rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
+						<td style="width: 95px;"><p:outputLabel
+								value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
+						<td><p:selectOneMenu
+								value="#{requestNoteBackingBean.managedBean.orgProfileId}"
+								styleClass="divisionclass"
+								style="width: 250px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
+								<f:selectItems
+									value="#{requestNoteBackingBean.managedBean.userDivisionList}"
+									var="pmOrgProfile"
+									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+									itemValue="#{pmOrgProfile.orgProfileId}" />
+								<p:ajax event="change" update="@([id$=rnHeaderId ])"
+									process="@all"
+									listener="#{requestNoteBackingBean.ptjNameEvent}" />
+							</p:selectOneMenu></td>
+					</ui:fragment>
+				</tr>
+			</table>
+			</p:outputPanel>
+		
+		<h:panelGrid width="100%" style="margin-top:10px">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rows="10"
@@ -65,7 +70,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}">
-						<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'E'}">
+					<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'E'}">
 						<p:commandLink value="Emergency"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
@@ -93,12 +98,42 @@
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}">
-					<p:commandLink actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
-						oncomplete="pricingPopup.show();">
-				    <p:graphicImage
-						value="/resources/ep/images/design/document.png" height="15px" width="15px"/>
-				  </p:commandLink> 
+
+					<ui:fragment
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType eq ParameterConst.priceTypeStandard}">
+						<h:outputText
+							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
+							disabled="true" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType eq ParameterConst.priceTypePromotion}">
+						<h:outputText
+							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
+							disabled="true" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
+						<p:commandLink
+							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+							oncomplete="pricingPopup.show();">
+							<p:graphicImage value="/resources/ep/images/design/document.png"
+								height="15px" width="15px" />
+						</p:commandLink>
+					</ui:fragment>
+					
+					<ui:fragment
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
+						<p:commandLink
+							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+							oncomplete="pricingPopup.show();">
+							<p:graphicImage value="/resources/ep/images/design/document.png"
+								height="15px" width="15px" />
+						</p:commandLink>
+					</ui:fragment>
+
 				</p:column>
+				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" disabled="true" size="8" />

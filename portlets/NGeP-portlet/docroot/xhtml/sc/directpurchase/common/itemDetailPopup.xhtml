@@ -76,7 +76,7 @@
             <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></td>
 				<td><p:inputText disabled="true" size="33"
-				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.qty}"/>
+				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}"/>
 			   </td>
 			</tr>
 			<tr>
@@ -92,7 +92,7 @@
 				<p:row>
 					<p:column width="60%" style="text-align:right">
 						<p:commandButton value="#{lbl['lbl.sc.close']}"
-							onclick="itemDtlPopup.hide()" icon="ui-icon-back" />
+							onclick="itemDtlPopup.hide()" icon="ui-icon-close" />
 					</p:column>
 				</p:row>
 		 </p:panelGrid>
