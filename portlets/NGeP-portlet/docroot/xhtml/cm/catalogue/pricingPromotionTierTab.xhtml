@@ -12,7 +12,7 @@
 
 
 	<p:outputPanel id="pricePromotionTierPageID">
-	
+
 		<p:dataTable id="pricingPromotionTierID" rowIndexVar="rowIndex"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionTierPricings}"
 			width="100%" var="price">
@@ -22,64 +22,90 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText value="#{price.price}" size="10">
-				 <p:ajax event="keyup" update="pTErrorLink" />
-				 <p:ajax event="change" listener="#{catalogueBackingBean.validatePromotionTierDates(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
-                </p:inputText>
+					<p:ajax event="keyup" update="pTErrorLink" />
+					<p:ajax event="change"
+						listener="#{catalogueBackingBean.validatePromotionTierDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText value="#{price.fromQty}" size="5" readonly="true" disabled="#{price.standardDisabled}"></p:inputText>
+				<p:inputText value="#{price.fromQty}" size="5" readonly="true"
+					disabled="#{price.standardDisabled}"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
-				<p:inputText value="#{price.toQty}" size="5" readonly="true" disabled="#{price.standardDisabled}"></p:inputText>
+				<p:inputText value="#{price.toQty}" size="5" readonly="true"
+					disabled="#{price.standardDisabled}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button" mindate="#{price.minDate}" rendered="#{price.showFlag}"
+				<p:calendar value="#{price.startDate}" showOn="button"
+					mindate="#{price.minDate}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
-				 <p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
-                </p:calendar>
+					<p:ajax event="dateSelect"
+						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+					<p:ajax event="keyup"
+						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+				</p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" maxdate="#{price.maxDate}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" rendered="#{price.showFlag}">
-				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
-				 <p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+				<p:calendar value="#{price.endDate}" showOn="button"
+					maxdate="#{price.maxDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					rendered="#{price.showFlag}">
+					<p:ajax event="dateSelect"
+						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+					<p:ajax event="keyup"
+						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 				</p:calendar>
 
 			</p:column>
-			
+
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-				<td style="text-align: right;">
-					<p:commandLink style="margin-left: 10px;" title="Delete" rendered="#{price.showFlag}"
-						action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
-						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
-						<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-					</p:commandLink></td>
-				<td style="text-align: right;">
-					<p:commandLink id="pTErrorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog" 
-						oncomplete="errorDialog.show();" 
-						disabled="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction)}" >
-						<p:graphicImage value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
-					</p:commandLink></td>
+
+				<table>
+					<tr>
+
+						<td style="text-align: right;"><p:commandLink
+								style="margin-left: 10px;" title="Delete"
+								rendered="#{price.showFlag}"
+								action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+						<td style="text-align: right;"><p:commandLink
+								id="pTErrorLink" title="Error" process="@this"
+								actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
+								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
+								oncomplete="errorDialog.show();"
+								disabled="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction)}">
+								<p:graphicImage
+									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+
+				</table>
 			</p:column>
-			
+
 
 		</p:dataTable>
 

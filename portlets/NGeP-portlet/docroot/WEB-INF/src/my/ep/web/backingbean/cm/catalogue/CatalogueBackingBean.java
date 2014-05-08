@@ -2701,14 +2701,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		if(!tierMap.isEmpty() && tierMap.size() > 0 ){ 
 
 			List <CmPromotionTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().get(index).getStartDate());	
-
+			Integer groupingId = 0;
 			for(CmPromotionTierPricing price :dataList){
+				groupingId = price.getStand_group_id();
 				if(price.getParentPrice() != null){
 					price.getParentPrice().setStandardDisabled(false);
 					price.setParentPrice(null);
 				}
 				this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().remove(price);
 			}
+			
+			for(CmPromotionTierPricing price :this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+				
+				if(price.getStand_group_id().equals(groupingId)){
+					price.getParentPrice().setStandardDisabled(true);
+				}
+			}
+			
 		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -2724,7 +2733,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			List <CmZonalPromotionTierPricing>dataList  = (List)tierMap.get(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index).getStartDate());	
 			Integer groupingId = 0;
 			for(CmZonalPromotionTierPricing price :dataList){
-				System.out.println("price.getStand_group_id()"+price.getStand_group_id());
+				
 				groupingId = price.getStand_group_id();
 				if(price.getParentPrice() != null){
 					price.getParentPrice().setStandardDisabled(false);
@@ -3413,6 +3422,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setDisplayAction(false);
 						price.setParentPrice(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex++));
 						price.setPromo_group_id(promo_group_id+1);
+						price.setStand_group_id(pricing.getStand_group_id());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 
@@ -3484,6 +3494,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						price.setDisplayAction(false);
 						price.setParentPrice(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(tempIndex++));
 						price.setPromo_group_id(promo_group_id);
+						price.setStand_group_id(pricing.getStand_group_id());
 
 						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 					}
