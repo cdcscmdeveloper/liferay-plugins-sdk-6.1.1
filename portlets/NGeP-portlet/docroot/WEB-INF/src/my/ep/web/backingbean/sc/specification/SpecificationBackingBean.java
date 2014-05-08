@@ -396,7 +396,7 @@ public class SpecificationBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										MessageConst.INFO_700004, new String[] {
-												"Specification Created For ",
+												"Specification For ",
 												scQt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
@@ -435,7 +435,7 @@ public class SpecificationBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700004,
 														new String[] {
-																"Specification Committe Details For ",
+																"Specification Details For ",
 																scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
@@ -6957,9 +6957,9 @@ public class SpecificationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										getMessgeConstant(action),
+										MessageConst.INFO_700026,
 										new String[] {
-												"Specification Details For ",
+												"Specification For ",
 												qt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
@@ -8217,6 +8217,10 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
 			this.getManagedBean().getScQt().setPanel(true);
 			this.getManagedBean().getScQt().setOpenFor("A");
+			if(null == this.getManagedBean().getScQt().getPmProcurementCategory()){
+			this.getManagedBean().getScQt()
+			.setPmProcurementCategory(new PmParameter());
+			}
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -8226,14 +8230,17 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
 			this.getManagedBean().getScQt().setPanel(true);
 			this.getManagedBean().getScQt().setOpenFor("A");
+			if(null == this.getManagedBean().getScQt().getPmProcurementCategory()){
+			this.getManagedBean().getScQt()
+			.setPmProcurementCategory(new PmParameter());
+			}
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
 		} else {
-			if(this.getManagedBean().getScQt().getPmProcurementCategory()== null && this.getManagedBean().getScQt().getFulfilmentType()==null){
-			this.getManagedBean().getScQt()
-					.setPmProcurementCategory(new PmParameter());
+			if(this.getManagedBean().getScQt().getFulfilmentType()==null){
+			
 			this.getManagedBean().getScQt().setFulfilmentType(new PmParameter());
 			}
 			fc.getApplication()

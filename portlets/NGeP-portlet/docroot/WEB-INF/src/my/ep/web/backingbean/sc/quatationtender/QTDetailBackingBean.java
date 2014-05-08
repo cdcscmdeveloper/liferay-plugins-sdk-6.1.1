@@ -368,7 +368,7 @@ public class QTDetailBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														MessageConst.INFO_700005,
+														MessageConst.INFO_700026,
 														new String[] {
 																getParameterDesc(
 																		ParameterTypeConst.DOCUMENT_TYPES,
@@ -831,6 +831,14 @@ public class QTDetailBackingBean extends
 				tabBean.getScQtApproval().setScQtApprovalAttachment(null);
 				tabBean.getScQtApproval().setApproverSettings(
 						approverSettingList);
+				List<ScQtApprovalRemark> remarks = tabBean.getScQtApproval().getScQtApprovalRemarks();
+				if(null != remarks){
+				for ( int i=0; i<remarks.size();i++) {
+					if(remarks.get(i).getRemark()==null || remarks.get(i).getRemark()==""){
+						 tabBean.getScQtApproval().getScQtApprovalRemarks().remove(i);
+					}
+				}
+				}
 				approvalList.add(tabBean.getScQtApproval());
 			}
 			// approvalList.add(getManagedBean().getScQtApproval());

@@ -13,6 +13,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -118,6 +119,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	private List<PmOrgProfile>ptjList;
 	private ScQtBsv bsv;
+	
+	private List<ScQtCheckList> docuements;
+	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -553,6 +557,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setBsv(ScQtBsv bsv) {
 		this.bsv = bsv;
+	}
+
+	public List<ScQtCheckList> getDocuements() {
+		return docuements;
+	}
+
+	public void setDocuements(List<ScQtCheckList> docuements) {
+		this.docuements = docuements;
 	}
 
 }
