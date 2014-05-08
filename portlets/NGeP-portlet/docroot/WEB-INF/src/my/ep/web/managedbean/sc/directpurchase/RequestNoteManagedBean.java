@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -64,7 +65,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SCDirectPurchaseDataType directPurchaseDataType;
     
     public RequestNoteManagedBean() {
-    	requestSupplierItem.setRequestNoteItem(new ScRequestItem());
+    	ScRequestItem requestItem = new ScRequestItem();
+    	ScSupplierItemPrice itemPrice = new ScSupplierItemPrice();
+    	requestSupplierItem.setRequestNoteItem(requestItem);
+    	requestSupplierItem.setSupplierItemPrice(itemPrice);
 	}
 	/**
 	 * @return the requestNote
