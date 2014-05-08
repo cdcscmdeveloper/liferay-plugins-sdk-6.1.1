@@ -153,7 +153,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 			workFlowStatus.setCurrent(true);
 			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-			wflowStatus.add(workFlowStatus);
+			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 	
 			getCurrentStatus(status.getStatusId());  
@@ -171,7 +171,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			debugLogger("submitPurchaseInDefault");
 			IPurchaseInDefaultSO purchaseInDefaultSO = null;
 			try {
-				IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 				PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
@@ -182,21 +181,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// Target Approver
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
 				// WorkFlow Status 
-				List<ScPIDWorkFlowStatus> workflowStatuses = new ArrayList<ScPIDWorkFlowStatus>();
-				ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
-				PmStatus status = new PmStatus();
-				status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				if (status != null) {
-					statusReqDTO.setStatusId(status.getStatusId());
-					StatusResDTO statusResDTO = iStatusSO
-							.retrieveStatusByStatusId(statusReqDTO);
-					workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-				}
-				workFlowStatus.setCurrent(true);
-				workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-				workflowStatuses.add(workFlowStatus);
-				//scPurchaseInDefault.setWorkFlowStatuses(workflowStatuses);
+				scPurchaseInDefault.setWorkFlowStatuses(null);
 				// remarks
 				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 				if(getManagedBean().getAttachments() != null){
@@ -287,7 +272,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							this.sendNotificationEmail();
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700005, 
+									MessageUtils.getMessage(MessageConst.INFO_700007, 
 											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
 											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 							FacesContext fc = FacesContext.getCurrentInstance();
