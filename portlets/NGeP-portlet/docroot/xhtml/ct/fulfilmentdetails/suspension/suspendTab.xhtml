@@ -21,11 +21,13 @@
 		</style>
 		<p:panel>
 			<f:event listener="#{suspensionBackingBean.preRenderView}" type="preRenderView" />
-			<div align="left" class="screen-title" style="border-bottom: 0px">Contract Suspension</div>
+			<h:panelGroup rendered="#{suspensionBackingBean.managedBean.taskId==null}">
+				<div align="left" class="screen-title" style="border-bottom: 0px">Contract Suspension</div>
+			</h:panelGroup>
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+					<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" rendered="#{suspensionBackingBean.managedBean.taskId==null}" oncomplete="window.history.back();" /></td>
 					<td class="ppRightBtn">
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" process="@form"

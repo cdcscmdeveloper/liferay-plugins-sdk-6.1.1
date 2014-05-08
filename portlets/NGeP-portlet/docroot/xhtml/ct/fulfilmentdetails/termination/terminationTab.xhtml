@@ -22,13 +22,15 @@
     </style> 
 	 <p:panel>
 	   <f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
+	   <h:panelGroup rendered="#{terminationBackingBean.managedBean.taskId==null}">
 			<div align="left" class="screen-title" style="border-bottom: 0px">
 			Contract Termination
 			</div>	   
+		</h:panelGroup>
 	   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	   <table style="width: 100%;">
 	     <tr>
-	    	<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    	<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" rendered="#{terminationBackingBean.managedBean.taskId==null}" oncomplete="window.history.back();" /></td>
 	    	<td class="ppRightBtn">
 			  	<ui:repeat var="outcome" value="#{terminationBackingBean.managedBean.action}">
 			        <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
