@@ -30,7 +30,7 @@
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
-				 <p:ajax event="change" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:selectOneMenu>
 
 			</p:column>
