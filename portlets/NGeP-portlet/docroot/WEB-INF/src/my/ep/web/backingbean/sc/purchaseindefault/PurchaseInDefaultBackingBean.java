@@ -202,6 +202,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),purchaseInDefault.getPurchaseInDefaultNo()},  
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
+					// clear pid data
+					 super.renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			} catch (Exception ex) {
