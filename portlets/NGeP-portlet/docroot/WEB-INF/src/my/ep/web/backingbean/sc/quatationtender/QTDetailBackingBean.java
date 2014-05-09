@@ -1611,7 +1611,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setQuotationTenderDataType(
 				quotationTenderDataType);
 		this.getManagedBean().setProcessName(res.getProcessName());
-		populateParentOrgProfile(this.getManagedBean().getQt());
+		//populateParentOrgProfile(this.getManagedBean().getQt());
 		// onChangeAction();
 		// tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
 		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
@@ -1670,10 +1670,14 @@ public class QTDetailBackingBean extends
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process now", ""
-
-					));
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils
+									.getMessage(MessageConst.INFO_000001,											
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+													.getUserLocale())));
 		}
 		return null;
 
