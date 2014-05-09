@@ -3,6 +3,7 @@ package my.ep.web.util.sc.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -11,7 +12,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZoneLocation;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 
@@ -45,6 +45,29 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
+	
+	
+	public	static	List<PmState>	getStateFromCtPanelZone(List<CtPanelZoneDtl> locationDTOs){
+		List<PmState>	results	=	new ArrayList<>();
+		for(CtPanelZoneDtl locationDTO: locationDTOs){
+			if(locationDTO.getStateId() != null){
+				results.add(locationDTO.getStateId());
+			}
+		}
+		return results;
+	}
+	
+	
+	public	static	List<PmDistrict>	getDistrictFromCtPanelZone(List<CtPanelZoneDtl> locationDTOs){
+		List<PmDistrict>	results	=	new ArrayList<>();
+		for(CtPanelZoneDtl locationDTO: locationDTOs){
+			if(locationDTO.getDistrictId() != null){
+				results.add(locationDTO.getDistrictId());
+			}
+		}
+		return results;
+	}
+	
 	public	static	List<PmDistrict>	getDistricts(ScQuoteZone zone){
 		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
 		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
