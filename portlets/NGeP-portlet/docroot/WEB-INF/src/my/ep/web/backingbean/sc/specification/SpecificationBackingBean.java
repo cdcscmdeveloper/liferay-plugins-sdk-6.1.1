@@ -244,7 +244,7 @@ public class SpecificationBackingBean extends
 
 			for (TreeNode treeNode2 : stateNodes) {
 				List<TreeNode> district = treeNode2.getChildren();
-
+ if(null != district && !district.isEmpty()){
 				for (TreeNode devision : district) {
 					if (devision.getChildCount() > 0) {
 						for (TreeNode districtNode : devision.getChildren()) {
@@ -279,6 +279,18 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+ }else{
+	 ScQtLocCriteria criteria = new ScQtLocCriteria();		
+	 
+		criteria.setPmState(((ScQtLocCriteria)treeNode2.getData()).getPmState());			
+		criteria.setScQtSupplierCriteria(this.getManagedBean()
+				.getSupplierCriteria());
+		criteria.setChangedBy(1L);
+		criteria.setCreatedBy(1L);
+		criteria.setCreatedDate(new Timestamp(System
+				.currentTimeMillis()));
+		results.add(criteria);
+ }
 			}
 
 		}
@@ -910,6 +922,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setSupplierCriteria(
 					tenderResDTO.getQtDetail().getScQtSupplierCriteria());
+			
+			if(this.getManagedBean().getZoneTrees() != null && this.getManagedBean().getZoneTrees().size()==0){
 			List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 			if (null != tenderResDTO.getLocationDetails()) {
 				for (TplSpecLoc localLoc : tenderResDTO.getLocationDetails()) {
@@ -930,6 +944,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().getZoneTrees().add(
 						LocationSingleton.getInstance().buildZoneTree(null,
 								states, districts, divisions, cities));
+			}
 
 			}
 
@@ -2509,9 +2524,9 @@ public class SpecificationBackingBean extends
 			if (locCriteria != null && !locCriteria.isEmpty()) {
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(locCriteria);
-				
-				if (null != scQt.getScQtSupplierCriteria().getLocationLevel()
-						&& null == scQt.getScQtSupplierCriteria()
+				ScQtSupplierCriteria qtSupplierCriteria = this.getManagedBean().getSupplierCriteria();
+				if (null != qtSupplierCriteria && null != qtSupplierCriteria.getLocationLevel()
+						&& null == qtSupplierCriteria
 								.getLocationLevel().getParameterId()) {
 					scQt.getScQtSupplierCriteria().setLocationLevel(null);
 				}
