@@ -57,48 +57,45 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private static final Logger log = EpLogger
 			.getLogger(SpecificationManagedBean.class);
 
-	
-	
 	private ScQtRemark scQtRemarks;
-	
+
 	private ScQtCheckList scQtChecklist;
-	
+
 	private List<ScQtCheckList> scQtCheckSt1techProposal;
-	
+
 	private ScQtDeduction scQtDeduction;
-	
+
 	private List<ScQtDeduction> scQtDeductionList;
-	
+
 	private List<ScQtCheckList> scQtCheckSt1techAdditionalProposalList;
 	private List<ScQtCheckList> scQtCheckSt1financeProposalList;
-	
+
 	private List<ScQtCheckList> scQtCheckSt1financeAdditionalProposalList;
-	
+
 	private List<ScQtCheckList> scQtCheckSt2techProposal;
-	
+
 	private List<ScQtCheckList> scQtCheckSt2techAdditionalProposalList;
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
-	
+
 	private List<ScQtCheckList> scQtCheckSt2financeAdditionalProposalList;
-	
-	private List<String> compilanceList=new ArrayList<String>();
+
+	private List<String> compilanceList = new ArrayList<String>();
 	// public List<SpecificationCompilanceBean> compilaenceList;
-	 private ScRemark scRemark;
-	 private List<SelectItem> comitteeUsers;
-	 private List<SelectItem> currencyListDetails;
-	 private List<SelectItem> procurementListDetails;
-	 private List<ScCommitteeMember> committeeMemberList;
-	 
-	 private Object specificationDataType;
-	
-	
-	public boolean isSampleReq=true;
+	private ScRemark scRemark;
+	private List<SelectItem> comitteeUsers;
+	private List<SelectItem> currencyListDetails;
+	private List<SelectItem> procurementListDetails;
+	private List<ScCommitteeMember> committeeMemberList;
+
+	private Object specificationDataType;
+
+	public boolean isSampleReq = true;
 	public String approvalDate;
-	
-	 private boolean isSpecStatus;
-	 private Long procurementId;
-	 private List<SelectItem> approvalList;
-	 private String evaluationType;
+
+	private boolean isSpecStatus;
+	private Long procurementId;
+	private List<SelectItem> approvalList;
+	private String evaluationType;
 	private ScQt scQt;
 	private List<PmCheckListCategory> stageOneComplianceList;
 	private List<PmCheckListCategory> stageOneComplianceSelect;
@@ -122,48 +119,48 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String toMonth;
 	private String startYear;
 	private String endYear;
-	//B,S
-	private String businessOwner="B";
+	// B,S
+	private String businessOwner = "B";
 	private List<BankingBean> bankList;
-	private List<ScQtCheckListScore> checkListScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringForYears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> contractAmount=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> bankStamentScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> creditFacility=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringCash=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> assetScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> warantyScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> trainingScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> totalEmployeeScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalStaffScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> paidUpCapitalScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalScoreyears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalContractScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> itemScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> checkListSelectScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringForSelectYears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalSelectScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalSelectScoreyears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> warantySelectScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> trainingSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalStaffSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> totalEmployeeSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finGovContractSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finPrivateContractSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> creditfacilitySelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> cashSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> bankSelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> assetLiabilitySelectList=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> paidUpSelectList=new ArrayList<ScQtCheckListScore>();
-	
+	private List<ScQtCheckListScore> checkListScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringForYears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> contractAmount = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankStamentScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditFacility = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringCash = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> warantyScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> trainingScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> totalEmployeeScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalStaffScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> paidUpCapitalScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalScoreyears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalContractScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> itemScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> checkListSelectScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> scoringForSelectYears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalSelectScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> nonFederalSelectScoreyears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> warantySelectScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> trainingSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalStaffSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> totalEmployeeSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finGovContractSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finPrivateContractSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditfacilitySelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> cashSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetLiabilitySelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> paidUpSelectList = new ArrayList<ScQtCheckListScore>();
+
 	private List<ScQtSchedule> scheduleList;
 	private List<ScQtProgressivePayment> progressivePaymentList;
-	
+
 	private int totalFrequency;
 	private int totalProgressivePayment;
-	private String technicalWeightage="2";
-	private String financialWeightage="2";
+	private String technicalWeightage = "2";
+	private String financialWeightage = "2";
 	private String cirCularNo;
 	private String circularName;
 	private String itemName;
@@ -171,50 +168,48 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private BigDecimal financialWeightageScore;
 	private int totalAmount;
 	private BigDecimal totalAmountAvg;
-	
+
 	private List<CtPanelItem> panelItemList;
 	private List<CtPanelItem> selectpanelItem;
 	private List<CtPanelItem> panelItemDetailsList;
 	private List<CtPanelItem> selectItemDetailsList;
 	private boolean isPanel;
-	//private List<CtCircularZone> ctZoneList;
-	//private List<CtCircularZone> ctZoneSelectList;
-	private TreeNode	ctZoneTrees ;
-	private TreeNode[]	ctZoneTreeSelectedNodes ;
-	private TreeNode	ctZoneSuppliers ;
-	
+	// private List<CtCircularZone> ctZoneList;
+	// private List<CtCircularZone> ctZoneSelectList;
+	private TreeNode ctZoneTrees;
+	private TreeNode[] ctZoneTreeSelectedNodes;
+	private TreeNode ctZoneSuppliers;
+
 	private List<CtPanelSupplier> ctZoneSupplierList;
-	
-	
-	//supplier Qualification Criteria List and variables
+
+	// supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> suppCriteriaopenList;
 	private List<ScQtCategory> suppCriteriaopenSelectList;
-	
 
-	private	TreeNode rootLocationTree;
-	private	TreeNode rootZoanlTree;
-	private	String	zoneName;
+	private TreeNode rootLocationTree;
+	private TreeNode rootZoanlTree;
+	private String zoneName;
 
-	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
-	private List<TreeNode>	zoneGeneralTrees = new ArrayList<TreeNode>();
-	private List<TreeNode>	zonesList = new ArrayList<TreeNode>();
-	private List<TreeNode>	zoneTreeList = new ArrayList<TreeNode>();
-	private List<TreeNode>	zoneTreeAddrList = new ArrayList<TreeNode>();
-	private	String	zoneName1;
-	private	String	zoneAddrName;
+	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+	private List<TreeNode> zonesList = new ArrayList<TreeNode>();
+	private List<TreeNode> zoneTreeList = new ArrayList<TreeNode>();
+	private List<TreeNode> zoneTreeAddrList = new ArrayList<TreeNode>();
+	private String zoneName1;
+	private String zoneAddrName;
 	private List<PmReportSection> pmReportSectionList;
 	private List<PmReportSection> selectedPmReportSectionList;
-	private	TreeNode rootLocationTreeList;
+	private TreeNode rootLocationTreeList;
 	private TreeNode rootAddressLocationTreeList;
 	private TreeNode[] selectedNodes;
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode[] selectedLocNodes;
 	private String circularExpDate;
 	private String circularType;
-	
-	//template Specification variables
-	private String standardTemplate="ST";
+
+	// template Specification variables
+	private String standardTemplate = "ST";
 	private String supportingDoc;
 	private String templateType;
 	private String specificationType;
@@ -231,20 +226,19 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String qtNum;
 	private Long statusId;
 	private boolean isRecordStatus;
-	private int index=-1;
+	private int index = -1;
 	private List<ScQtCategory> qtCategoryOpenSelectList;
 	private List<ScQtCategory> suppCriteriarestrictedSelectList;
-	
-	private BigDecimal estimatedPrice=new BigDecimal("50000");
+
+	private BigDecimal estimatedPrice = new BigDecimal("50000");
 	private int fromJulat;
 	private int toJulat;
 	private BigDecimal fromPrice;
 	private BigDecimal toPrice;
-	
-	private ScQtCategory qtCategory=new ScQtCategory();
-	
-	
-	//technical Scoring Financial Scoring lists
+
+	private ScQtCategory qtCategory = new ScQtCategory();
+
+	// technical Scoring Financial Scoring lists
 	private List<ScQtCheckList> technicalScoring;
 	private List<ScQtCheckList> financialScoring;
 	private List<ScQtCheckListScore> packScoringList;
@@ -252,31 +246,30 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int finPoints;
 	private List<ScQtCheckList> technicalSpecList;
 	private List<ScQtCheckList> financialSpecList;
-	
+
 	private List<SelectItem> yearList;
-	
+
 	private int totalSuppliers;
-	
-	
+
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-	
-	private List<BriefingZoneBean> deliveryLocBean;
+
+	private List<BriefingZoneBean> deliveryLocBean = new ArrayList<BriefingZoneBean>();
 	public List<ScQtDeliveryLoc> deliveryLoc;
 	public List<ScQtDeliveryLoc> deliveryNonZoneList;
 	public List<ScQtDeliveryLoc> deleteDeliveryList;
 	public List<ScQtDeliveryLoc> selectDeliveryList;
-	
-	public ScQtSupplierCriteria supplierCriteria =new ScQtSupplierCriteria();
-	
+
+	public ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+
 	public String deliveyzoneName;
 	private int technicalChecklistScoring;
-	private String checklistScoreType="1";
-	private String companyScoreType="1";
+	private String checklistScoreType = "1";
+	private String companyScoreType = "1";
 	private ScQtCheckListScore scQtCheckListScore;
 	private ScQtCheckListScore scQtContractScore;
-	
+
 	private List<SelectItem> technicalChecklistAction;
-	
+
 	private BigDecimal scoreVarience;
 	private ScQtScoreOfferPrice offerPricePackage;
 	private ScQtScoreOfferPrice OfferPriceItem;
@@ -288,7 +281,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQtScoreSetting recommendationScore;
 	private String procuremntCategory;
 	private String fulfilmentType;
-	
+
 	private BigDecimal technicalpackage;
 	private BigDecimal financialpackage;
 	private BigDecimal recommendationPackageTotal;
@@ -305,32 +298,32 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long ptjId;
 	private String stateCode;
 	private String districtCode;
-	
-private	List<PmOrgProfile> ministryList;
-private	List<PmOrgProfile> departmentList;
-private	List<PmOrgProfile> ptjtList;
-private	List<PmAddressType> deliveryAddressSelect;
-private	List<TplSpecZoneDtl> deliveryZones;
-private TplSpecZoneDtl tplSpecZoneDtl;;
-private List<BriefingZoneBean> addressZoneBean;
-private String panelItemCategory;
-	
+
+	private List<PmOrgProfile> ministryList;
+	private List<PmOrgProfile> departmentList;
+	private List<PmOrgProfile> ptjtList;
+	private List<PmAddressType> deliveryAddressSelect;
+	private List<TplSpecZoneDtl> deliveryZones;
+	private TplSpecZoneDtl tplSpecZoneDtl;;
+	private List<BriefingZoneBean> addressZoneBean;
+	private String panelItemCategory;
+
 	private List<ScQtCheckList> finSpecList;
 	private Long panelItemId;
 	private int activeIndex;
-	
-	
-	
-	
-	public SpecificationManagedBean(){
-		//deliveryLocBean.add(new BriefingZoneBean(1,"South", deliveryLoc,deleteDeliveryList));
-		//deliveryLocBean.add(new BriefingZoneBean(2,"North", deliveryLoc,deleteDeliveryList));
-		//deliveryLocBean.add(new BriefingZoneBean(3,"East", deliveryLoc,deleteDeliveryList));
-		//deliveryLocBean.add(new BriefingZoneBean(4,"West", deliveryLoc,deleteDeliveryList));
-		
-	}
+	private CtPanelItem ctPanelItem;
 
-	
+	public SpecificationManagedBean() {
+		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
+		// deliveryLoc,deleteDeliveryList));
+		// deliveryLocBean.add(new BriefingZoneBean(2,"North",
+		// deliveryLoc,deleteDeliveryList));
+		// deliveryLocBean.add(new BriefingZoneBean(3,"East",
+		// deliveryLoc,deleteDeliveryList));
+		// deliveryLocBean.add(new BriefingZoneBean(4,"West",
+		// deliveryLoc,deleteDeliveryList));
+
+	}
 
 	/**
 	 * @return the scQtRemarks
@@ -340,7 +333,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtRemarks the scQtRemarks to set
+	 * @param scQtRemarks
+	 *            the scQtRemarks to set
 	 */
 	public void setScQtRemarks(ScQtRemark scQtRemarks) {
 		this.scQtRemarks = scQtRemarks;
@@ -354,7 +348,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtChecklist the scQtChecklist to set
+	 * @param scQtChecklist
+	 *            the scQtChecklist to set
 	 */
 	public void setScQtChecklist(ScQtCheckList scQtChecklist) {
 		this.scQtChecklist = scQtChecklist;
@@ -368,7 +363,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt1techProposal the scQtCheckSt1techProposal to set
+	 * @param scQtCheckSt1techProposal
+	 *            the scQtCheckSt1techProposal to set
 	 */
 	public void setScQtCheckSt1techProposal(
 			List<ScQtCheckList> scQtCheckSt1techProposal) {
@@ -383,7 +379,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtDeduction the scQtDeduction to set
+	 * @param scQtDeduction
+	 *            the scQtDeduction to set
 	 */
 	public void setScQtDeduction(ScQtDeduction scQtDeduction) {
 		this.scQtDeduction = scQtDeduction;
@@ -397,7 +394,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtDeductionList the scQtDeductionList to set
+	 * @param scQtDeductionList
+	 *            the scQtDeductionList to set
 	 */
 	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
 		this.scQtDeductionList = scQtDeductionList;
@@ -411,7 +409,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt1techAdditionalProposalList the scQtCheckSt1techAdditionalProposalList to set
+	 * @param scQtCheckSt1techAdditionalProposalList
+	 *            the scQtCheckSt1techAdditionalProposalList to set
 	 */
 	public void setScQtCheckSt1techAdditionalProposalList(
 			List<ScQtCheckList> scQtCheckSt1techAdditionalProposalList) {
@@ -426,7 +425,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt1financeProposalList the scQtCheckSt1financeProposalList to set
+	 * @param scQtCheckSt1financeProposalList
+	 *            the scQtCheckSt1financeProposalList to set
 	 */
 	public void setScQtCheckSt1financeProposalList(
 			List<ScQtCheckList> scQtCheckSt1financeProposalList) {
@@ -441,7 +441,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt1financeAdditionalProposalList the scQtCheckSt1financeAdditionalProposalList to set
+	 * @param scQtCheckSt1financeAdditionalProposalList
+	 *            the scQtCheckSt1financeAdditionalProposalList to set
 	 */
 	public void setScQtCheckSt1financeAdditionalProposalList(
 			List<ScQtCheckList> scQtCheckSt1financeAdditionalProposalList) {
@@ -456,7 +457,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt2techProposal the scQtCheckSt2techProposal to set
+	 * @param scQtCheckSt2techProposal
+	 *            the scQtCheckSt2techProposal to set
 	 */
 	public void setScQtCheckSt2techProposal(
 			List<ScQtCheckList> scQtCheckSt2techProposal) {
@@ -471,7 +473,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt2techAdditionalProposalList the scQtCheckSt2techAdditionalProposalList to set
+	 * @param scQtCheckSt2techAdditionalProposalList
+	 *            the scQtCheckSt2techAdditionalProposalList to set
 	 */
 	public void setScQtCheckSt2techAdditionalProposalList(
 			List<ScQtCheckList> scQtCheckSt2techAdditionalProposalList) {
@@ -486,7 +489,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt2financeProposalList the scQtCheckSt2financeProposalList to set
+	 * @param scQtCheckSt2financeProposalList
+	 *            the scQtCheckSt2financeProposalList to set
 	 */
 	public void setScQtCheckSt2financeProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
@@ -501,7 +505,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQtCheckSt2financeAdditionalProposalList the scQtCheckSt2financeAdditionalProposalList to set
+	 * @param scQtCheckSt2financeAdditionalProposalList
+	 *            the scQtCheckSt2financeAdditionalProposalList to set
 	 */
 	public void setScQtCheckSt2financeAdditionalProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeAdditionalProposalList) {
@@ -516,13 +521,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param compilanceList the compilanceList to set
+	 * @param compilanceList
+	 *            the compilanceList to set
 	 */
 	public void setCompilanceList(List<String> compilanceList) {
 		this.compilanceList = compilanceList;
 	}
-
-
 
 	/**
 	 * @return the scRemark
@@ -532,7 +536,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scRemark the scRemark to set
+	 * @param scRemark
+	 *            the scRemark to set
 	 */
 	public void setScRemark(ScRemark scRemark) {
 		this.scRemark = scRemark;
@@ -546,7 +551,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param isSampleReq the isSampleReq to set
+	 * @param isSampleReq
+	 *            the isSampleReq to set
 	 */
 	public void setSampleReq(boolean isSampleReq) {
 		this.isSampleReq = isSampleReq;
@@ -560,7 +566,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param comitteeUsers the comitteeUsers to set
+	 * @param comitteeUsers
+	 *            the comitteeUsers to set
 	 */
 	public void setComitteeUsers(List<SelectItem> comitteeUsers) {
 		this.comitteeUsers = comitteeUsers;
@@ -574,7 +581,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param approvalDate the approvalDate to set
+	 * @param approvalDate
+	 *            the approvalDate to set
 	 */
 	public void setApprovalDate(String approvalDate) {
 		this.approvalDate = approvalDate;
@@ -588,7 +596,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param currencyListDetails the currencyListDetails to set
+	 * @param currencyListDetails
+	 *            the currencyListDetails to set
 	 */
 	public void setCurrencyListDetails(List<SelectItem> currencyListDetails) {
 		this.currencyListDetails = currencyListDetails;
@@ -602,9 +611,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param procurementListDetails the procurementListDetails to set
+	 * @param procurementListDetails
+	 *            the procurementListDetails to set
 	 */
-	public void setProcurementListDetails(List<SelectItem> procurementListDetails) {
+	public void setProcurementListDetails(
+			List<SelectItem> procurementListDetails) {
 		this.procurementListDetails = procurementListDetails;
 	}
 
@@ -616,9 +627,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param committeeMemberList the committeeMemberList to set
+	 * @param committeeMemberList
+	 *            the committeeMemberList to set
 	 */
-	public void setCommitteeMemberList(List<ScCommitteeMember> committeeMemberList) {
+	public void setCommitteeMemberList(
+			List<ScCommitteeMember> committeeMemberList) {
 		this.committeeMemberList = committeeMemberList;
 	}
 
@@ -630,8 +643,6 @@ private String panelItemCategory;
 		this.specificationDataType = specificationDataType;
 	}
 
-
-
 	/**
 	 * @return the isSpecStatus
 	 */
@@ -640,7 +651,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param isSpecStatus the isSpecStatus to set
+	 * @param isSpecStatus
+	 *            the isSpecStatus to set
 	 */
 	public void setSpecStatus(boolean isSpecStatus) {
 		this.isSpecStatus = isSpecStatus;
@@ -654,7 +666,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param procurementId the procurementId to set
+	 * @param procurementId
+	 *            the procurementId to set
 	 */
 	public void setProcurementId(Long procurementId) {
 		this.procurementId = procurementId;
@@ -668,7 +681,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param approvalList the approvalList to set
+	 * @param approvalList
+	 *            the approvalList to set
 	 */
 	public void setApprovalList(List<SelectItem> approvalList) {
 		this.approvalList = approvalList;
@@ -682,13 +696,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param evaluationType the evaluationType to set
+	 * @param evaluationType
+	 *            the evaluationType to set
 	 */
 	public void setEvaluationType(String evaluationType) {
 		this.evaluationType = evaluationType;
 	}
-
-	
 
 	/**
 	 * @return the stageOneComplianceList
@@ -698,7 +711,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param stageOneComplianceList the stageOneComplianceList to set
+	 * @param stageOneComplianceList
+	 *            the stageOneComplianceList to set
 	 */
 	public void setStageOneComplianceList(
 			List<PmCheckListCategory> stageOneComplianceList) {
@@ -713,16 +727,13 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param stageOneComplianceSelect the stageOneComplianceSelect to set
+	 * @param stageOneComplianceSelect
+	 *            the stageOneComplianceSelect to set
 	 */
 	public void setStageOneComplianceSelect(
 			List<PmCheckListCategory> stageOneComplianceSelect) {
 		this.stageOneComplianceSelect = stageOneComplianceSelect;
 	}
-
-
-
-
 
 	/**
 	 * @return the s1TechSelect
@@ -732,7 +743,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s1TechSelect the s1TechSelect to set
+	 * @param s1TechSelect
+	 *            the s1TechSelect to set
 	 */
 	public void setS1TechSelect(List<ScQtCheckList> s1TechSelect) {
 		this.s1TechSelect = s1TechSelect;
@@ -746,7 +758,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s1TechAddSelect the s1TechAddSelect to set
+	 * @param s1TechAddSelect
+	 *            the s1TechAddSelect to set
 	 */
 	public void setS1TechAddSelect(List<ScQtCheckList> s1TechAddSelect) {
 		this.s1TechAddSelect = s1TechAddSelect;
@@ -760,7 +773,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s1FinSelect the s1FinSelect to set
+	 * @param s1FinSelect
+	 *            the s1FinSelect to set
 	 */
 	public void setS1FinSelect(List<ScQtCheckList> s1FinSelect) {
 		this.s1FinSelect = s1FinSelect;
@@ -774,7 +788,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s1FinAddSelect the s1FinAddSelect to set
+	 * @param s1FinAddSelect
+	 *            the s1FinAddSelect to set
 	 */
 	public void setS1FinAddSelect(List<ScQtCheckList> s1FinAddSelect) {
 		this.s1FinAddSelect = s1FinAddSelect;
@@ -788,7 +803,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s2TechSelect the s2TechSelect to set
+	 * @param s2TechSelect
+	 *            the s2TechSelect to set
 	 */
 	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
 		this.s2TechSelect = s2TechSelect;
@@ -802,7 +818,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s2TechAddSelect the s2TechAddSelect to set
+	 * @param s2TechAddSelect
+	 *            the s2TechAddSelect to set
 	 */
 	public void setS2TechAddSelect(List<ScQtCheckList> s2TechAddSelect) {
 		this.s2TechAddSelect = s2TechAddSelect;
@@ -816,7 +833,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s2FinSelect the s2FinSelect to set
+	 * @param s2FinSelect
+	 *            the s2FinSelect to set
 	 */
 	public void setS2FinSelect(List<ScQtCheckList> s2FinSelect) {
 		this.s2FinSelect = s2FinSelect;
@@ -830,7 +848,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param s2FinAddSelect the s2FinAddSelect to set
+	 * @param s2FinAddSelect
+	 *            the s2FinAddSelect to set
 	 */
 	public void setS2FinAddSelect(List<ScQtCheckList> s2FinAddSelect) {
 		this.s2FinAddSelect = s2FinAddSelect;
@@ -844,7 +863,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scoringList the scoringList to set
+	 * @param scoringList
+	 *            the scoringList to set
 	 */
 	public void setScoringList(List<ScQtCheckListScore> scoringList) {
 		this.scoringList = scoringList;
@@ -858,7 +878,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectscoring the selectscoring to set
+	 * @param selectscoring
+	 *            the selectscoring to set
 	 */
 	public void setSelectscoring(List<ScQtCheckListScore> selectscoring) {
 		this.selectscoring = selectscoring;
@@ -872,7 +893,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param collectionScoring the collectionScoring to set
+	 * @param collectionScoring
+	 *            the collectionScoring to set
 	 */
 	public void setCollectionScoring(List<ScQtCheckListScore> collectionScoring) {
 		this.collectionScoring = collectionScoring;
@@ -886,7 +908,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scheduleType the scheduleType to set
+	 * @param scheduleType
+	 *            the scheduleType to set
 	 */
 	public void setScheduleType(String scheduleType) {
 		this.scheduleType = scheduleType;
@@ -900,7 +923,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param businessOwner the businessOwner to set
+	 * @param businessOwner
+	 *            the businessOwner to set
 	 */
 	public void setBusinessOwner(String businessOwner) {
 		this.businessOwner = businessOwner;
@@ -914,7 +938,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param fromMonth the fromMonth to set
+	 * @param fromMonth
+	 *            the fromMonth to set
 	 */
 	public void setFromMonth(String fromMonth) {
 		this.fromMonth = fromMonth;
@@ -928,7 +953,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param toMonth the toMonth to set
+	 * @param toMonth
+	 *            the toMonth to set
 	 */
 	public void setToMonth(String toMonth) {
 		this.toMonth = toMonth;
@@ -942,7 +968,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param bankList the bankList to set
+	 * @param bankList
+	 *            the bankList to set
 	 */
 	public void setBankList(List<BankingBean> bankList) {
 		this.bankList = bankList;
@@ -956,7 +983,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param checkListScore the checkListScore to set
+	 * @param checkListScore
+	 *            the checkListScore to set
 	 */
 	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
 		this.checkListScore = checkListScore;
@@ -970,7 +998,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scoringForYears the scoringForYears to set
+	 * @param scoringForYears
+	 *            the scoringForYears to set
 	 */
 	public void setScoringForYears(List<ScQtCheckListScore> scoringForYears) {
 		this.scoringForYears = scoringForYears;
@@ -984,7 +1013,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param contractAmount the contractAmount to set
+	 * @param contractAmount
+	 *            the contractAmount to set
 	 */
 	public void setContractAmount(List<ScQtCheckListScore> contractAmount) {
 		this.contractAmount = contractAmount;
@@ -998,7 +1028,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param bankStamentScore the bankStamentScore to set
+	 * @param bankStamentScore
+	 *            the bankStamentScore to set
 	 */
 	public void setBankStamentScore(List<ScQtCheckListScore> bankStamentScore) {
 		this.bankStamentScore = bankStamentScore;
@@ -1026,7 +1057,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param creditFacility the creditFacility to set
+	 * @param creditFacility
+	 *            the creditFacility to set
 	 */
 	public void setCreditFacility(List<ScQtCheckListScore> creditFacility) {
 		this.creditFacility = creditFacility;
@@ -1040,7 +1072,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scoringCash the scoringCash to set
+	 * @param scoringCash
+	 *            the scoringCash to set
 	 */
 	public void setScoringCash(List<ScQtCheckListScore> scoringCash) {
 		this.scoringCash = scoringCash;
@@ -1054,13 +1087,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param assetScore the assetScore to set
+	 * @param assetScore
+	 *            the assetScore to set
 	 */
 	public void setAssetScore(List<ScQtCheckListScore> assetScore) {
 		this.assetScore = assetScore;
 	}
-
-
 
 	/**
 	 * @return the totalFrequency
@@ -1070,7 +1102,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalFrequency the totalFrequency to set
+	 * @param totalFrequency
+	 *            the totalFrequency to set
 	 */
 	public void setTotalFrequency(int totalFrequency) {
 		this.totalFrequency = totalFrequency;
@@ -1084,7 +1117,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param financialWeightage the financialWeightage to set
+	 * @param financialWeightage
+	 *            the financialWeightage to set
 	 */
 	public void setFinancialWeightage(String financialWeightage) {
 		this.financialWeightage = financialWeightage;
@@ -1098,7 +1132,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param technicalWeightage the technicalWeightage to set
+	 * @param technicalWeightage
+	 *            the technicalWeightage to set
 	 */
 	public void setTechnicalWeightage(String technicalWeightage) {
 		this.technicalWeightage = technicalWeightage;
@@ -1112,7 +1147,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param cirCularNo the cirCularNo to set
+	 * @param cirCularNo
+	 *            the cirCularNo to set
 	 */
 	public void setCirCularNo(String cirCularNo) {
 		this.cirCularNo = cirCularNo;
@@ -1126,7 +1162,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param circularName the circularName to set
+	 * @param circularName
+	 *            the circularName to set
 	 */
 	public void setCircularName(String circularName) {
 		this.circularName = circularName;
@@ -1140,7 +1177,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param panelItemList the panelItemList to set
+	 * @param panelItemList
+	 *            the panelItemList to set
 	 */
 	public void setPanelItemList(List<CtPanelItem> panelItemList) {
 		this.panelItemList = panelItemList;
@@ -1154,7 +1192,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectpanelItem the selectpanelItem to set
+	 * @param selectpanelItem
+	 *            the selectpanelItem to set
 	 */
 	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
 		this.selectpanelItem = selectpanelItem;
@@ -1168,7 +1207,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param panelItemDetailsList the panelItemDetailsList to set
+	 * @param panelItemDetailsList
+	 *            the panelItemDetailsList to set
 	 */
 	public void setPanelItemDetailsList(List<CtPanelItem> panelItemDetailsList) {
 		this.panelItemDetailsList = panelItemDetailsList;
@@ -1182,7 +1222,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectItemDetailsList the selectItemDetailsList to set
+	 * @param selectItemDetailsList
+	 *            the selectItemDetailsList to set
 	 */
 	public void setSelectItemDetailsList(List<CtPanelItem> selectItemDetailsList) {
 		this.selectItemDetailsList = selectItemDetailsList;
@@ -1196,7 +1237,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param technicalWeightageScore the technicalWeightageScore to set
+	 * @param technicalWeightageScore
+	 *            the technicalWeightageScore to set
 	 */
 	public void setTechnicalWeightageScore(BigDecimal technicalWeightageScore) {
 		this.technicalWeightageScore = technicalWeightageScore;
@@ -1210,7 +1252,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalAmount the totalAmount to set
+	 * @param totalAmount
+	 *            the totalAmount to set
 	 */
 	public void setTotalAmount(int totalAmount) {
 		this.totalAmount = totalAmount;
@@ -1224,7 +1267,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalAmountAvg the totalAmountAvg to set
+	 * @param totalAmountAvg
+	 *            the totalAmountAvg to set
 	 */
 	public void setTotalAmountAvg(BigDecimal totalAmountAvg) {
 		this.totalAmountAvg = totalAmountAvg;
@@ -1238,7 +1282,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param financialWeightageScore the financialWeightageScore to set
+	 * @param financialWeightageScore
+	 *            the financialWeightageScore to set
 	 */
 	public void setFinancialWeightageScore(BigDecimal financialWeightageScore) {
 		this.financialWeightageScore = financialWeightageScore;
@@ -1252,7 +1297,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param isPanel the isPanel to set
+	 * @param isPanel
+	 *            the isPanel to set
 	 */
 	public void setPanel(boolean isPanel) {
 		this.isPanel = isPanel;
@@ -1266,7 +1312,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param itemName the itemName to set
+	 * @param itemName
+	 *            the itemName to set
 	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
@@ -1280,7 +1327,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param suppCriteriarestrictedList the suppCriteriarestrictedList to set
+	 * @param suppCriteriarestrictedList
+	 *            the suppCriteriarestrictedList to set
 	 */
 	public void setSuppCriteriarestrictedList(
 			List<ScQtCategory> suppCriteriarestrictedList) {
@@ -1295,13 +1343,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param suppCriteriaopenList the suppCriteriaopenList to set
+	 * @param suppCriteriaopenList
+	 *            the suppCriteriaopenList to set
 	 */
 	public void setSuppCriteriaopenList(List<ScQtCategory> suppCriteriaopenList) {
 		this.suppCriteriaopenList = suppCriteriaopenList;
 	}
-
-
 
 	/**
 	 * @return the rootLocationTree
@@ -1311,7 +1358,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param rootLocationTree the rootLocationTree to set
+	 * @param rootLocationTree
+	 *            the rootLocationTree to set
 	 */
 	public void setRootLocationTree(TreeNode rootLocationTree) {
 		this.rootLocationTree = rootLocationTree;
@@ -1325,7 +1373,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneName the zoneName to set
+	 * @param zoneName
+	 *            the zoneName to set
 	 */
 	public void setZoneName(String zoneName) {
 		this.zoneName = zoneName;
@@ -1339,7 +1388,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneTrees the zoneTrees to set
+	 * @param zoneTrees
+	 *            the zoneTrees to set
 	 */
 	public void setZoneTrees(List<TreeNode> zoneTrees) {
 		this.zoneTrees = zoneTrees;
@@ -1353,7 +1403,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneTreeList the zoneTreeList to set
+	 * @param zoneTreeList
+	 *            the zoneTreeList to set
 	 */
 	public void setZoneTreeList(List<TreeNode> zoneTreeList) {
 		this.zoneTreeList = zoneTreeList;
@@ -1367,7 +1418,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneTreeAddrList the zoneTreeAddrList to set
+	 * @param zoneTreeAddrList
+	 *            the zoneTreeAddrList to set
 	 */
 	public void setZoneTreeAddrList(List<TreeNode> zoneTreeAddrList) {
 		this.zoneTreeAddrList = zoneTreeAddrList;
@@ -1381,7 +1433,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneName1 the zoneName1 to set
+	 * @param zoneName1
+	 *            the zoneName1 to set
 	 */
 	public void setZoneName1(String zoneName1) {
 		this.zoneName1 = zoneName1;
@@ -1395,7 +1448,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneAddrName the zoneAddrName to set
+	 * @param zoneAddrName
+	 *            the zoneAddrName to set
 	 */
 	public void setZoneAddrName(String zoneAddrName) {
 		this.zoneAddrName = zoneAddrName;
@@ -1409,7 +1463,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param pmReportSectionList the pmReportSectionList to set
+	 * @param pmReportSectionList
+	 *            the pmReportSectionList to set
 	 */
 	public void setPmReportSectionList(List<PmReportSection> pmReportSectionList) {
 		this.pmReportSectionList = pmReportSectionList;
@@ -1423,7 +1478,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectedPmReportSectionList the selectedPmReportSectionList to set
+	 * @param selectedPmReportSectionList
+	 *            the selectedPmReportSectionList to set
 	 */
 	public void setSelectedPmReportSectionList(
 			List<PmReportSection> selectedPmReportSectionList) {
@@ -1438,7 +1494,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param rootLocationTreeList the rootLocationTreeList to set
+	 * @param rootLocationTreeList
+	 *            the rootLocationTreeList to set
 	 */
 	public void setRootLocationTreeList(TreeNode rootLocationTreeList) {
 		this.rootLocationTreeList = rootLocationTreeList;
@@ -1452,9 +1509,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param rootAddressLocationTreeList the rootAddressLocationTreeList to set
+	 * @param rootAddressLocationTreeList
+	 *            the rootAddressLocationTreeList to set
 	 */
-	public void setRootAddressLocationTreeList(TreeNode rootAddressLocationTreeList) {
+	public void setRootAddressLocationTreeList(
+			TreeNode rootAddressLocationTreeList) {
 		this.rootAddressLocationTreeList = rootAddressLocationTreeList;
 	}
 
@@ -1466,7 +1525,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectedNodes the selectedNodes to set
+	 * @param selectedNodes
+	 *            the selectedNodes to set
 	 */
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
@@ -1480,7 +1540,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectedLocNodes the selectedLocNodes to set
+	 * @param selectedLocNodes
+	 *            the selectedLocNodes to set
 	 */
 	public void setSelectedLocNodes(TreeNode[] selectedLocNodes) {
 		this.selectedLocNodes = selectedLocNodes;
@@ -1494,7 +1555,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param standardTemplate the standardTemplate to set
+	 * @param standardTemplate
+	 *            the standardTemplate to set
 	 */
 	public void setStandardTemplate(String standardTemplate) {
 		this.standardTemplate = standardTemplate;
@@ -1508,7 +1570,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param supportingDoc the supportingDoc to set
+	 * @param supportingDoc
+	 *            the supportingDoc to set
 	 */
 	public void setSupportingDoc(String supportingDoc) {
 		this.supportingDoc = supportingDoc;
@@ -1522,7 +1585,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param templateType the templateType to set
+	 * @param templateType
+	 *            the templateType to set
 	 */
 	public void setTemplateType(String templateType) {
 		this.templateType = templateType;
@@ -1536,7 +1600,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param specificationType the specificationType to set
+	 * @param specificationType
+	 *            the specificationType to set
 	 */
 	public void setSpecificationType(String specificationType) {
 		this.specificationType = specificationType;
@@ -1550,7 +1615,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scqtDoc the scqtDoc to set
+	 * @param scqtDoc
+	 *            the scqtDoc to set
 	 */
 	public void setScqtDoc(ScQtDoc scqtDoc) {
 		this.scqtDoc = scqtDoc;
@@ -1564,7 +1630,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param ministryName the ministryName to set
+	 * @param ministryName
+	 *            the ministryName to set
 	 */
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
@@ -1578,7 +1645,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param supportDocList the supportDocList to set
+	 * @param supportDocList
+	 *            the supportDocList to set
 	 */
 	public void setSupportDocList(List<ScQtCheckList> supportDocList) {
 		this.supportDocList = supportDocList;
@@ -1592,7 +1660,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param searchItemTypeId the searchItemTypeId to set
+	 * @param searchItemTypeId
+	 *            the searchItemTypeId to set
 	 */
 	public void setSearchItemTypeId(Long searchItemTypeId) {
 		this.searchItemTypeId = searchItemTypeId;
@@ -1606,7 +1675,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param searchSpecTypeId the searchSpecTypeId to set
+	 * @param searchSpecTypeId
+	 *            the searchSpecTypeId to set
 	 */
 	public void setSearchSpecTypeId(Long searchSpecTypeId) {
 		this.searchSpecTypeId = searchSpecTypeId;
@@ -1620,7 +1690,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param searchProcurementId the searchProcurementId to set
+	 * @param searchProcurementId
+	 *            the searchProcurementId to set
 	 */
 	public void setSearchProcurementId(Long searchProcurementId) {
 		this.searchProcurementId = searchProcurementId;
@@ -1634,7 +1705,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param docSearchlist the docSearchlist to set
+	 * @param docSearchlist
+	 *            the docSearchlist to set
 	 */
 	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
 		this.docSearchlist = docSearchlist;
@@ -1648,7 +1720,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param checkListItem the checkListItem to set
+	 * @param checkListItem
+	 *            the checkListItem to set
 	 */
 	public void setCheckListItem(List<ScQtCheckList> checkListItem) {
 		this.checkListItem = checkListItem;
@@ -1662,7 +1735,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneList the zoneList to set
+	 * @param zoneList
+	 *            the zoneList to set
 	 */
 	public void setZoneList(List<SelectItem> zoneList) {
 		this.zoneList = zoneList;
@@ -1676,7 +1750,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param specName the specName to set
+	 * @param specName
+	 *            the specName to set
 	 */
 	public void setSpecName(String specName) {
 		this.specName = specName;
@@ -1690,7 +1765,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param qtNum the qtNum to set
+	 * @param qtNum
+	 *            the qtNum to set
 	 */
 	public void setQtNum(String qtNum) {
 		this.qtNum = qtNum;
@@ -1704,7 +1780,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param statusId the statusId to set
+	 * @param statusId
+	 *            the statusId to set
 	 */
 	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
@@ -1718,7 +1795,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param isRecordStatus the isRecordStatus to set
+	 * @param isRecordStatus
+	 *            the isRecordStatus to set
 	 */
 	public void setRecordStatus(boolean isRecordStatus) {
 		this.isRecordStatus = isRecordStatus;
@@ -1732,16 +1810,16 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param templateSpecBean the templateSpecBean to set
+	 * @param templateSpecBean
+	 *            the templateSpecBean to set
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
 	}
 
-	
-
 	/**
-	 * @param circularExpDate the circularExpDate to set
+	 * @param circularExpDate
+	 *            the circularExpDate to set
 	 */
 	public void setCircularExpDate(String circularExpDate) {
 		this.circularExpDate = circularExpDate;
@@ -1755,7 +1833,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param circularType the circularType to set
+	 * @param circularType
+	 *            the circularType to set
 	 */
 	public void setCircularType(String circularType) {
 		this.circularType = circularType;
@@ -1776,7 +1855,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param index the index to set
+	 * @param index
+	 *            the index to set
 	 */
 	public void setIndex(int index) {
 		this.index = index;
@@ -1790,7 +1870,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param qtCategoryOpenSelectList the qtCategoryOpenSelectList to set
+	 * @param qtCategoryOpenSelectList
+	 *            the qtCategoryOpenSelectList to set
 	 */
 	public void setQtCategoryOpenSelectList(
 			List<ScQtCategory> qtCategoryOpenSelectList) {
@@ -1805,7 +1886,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param suppCriteriarestrictedSelectList the suppCriteriarestrictedSelectList to set
+	 * @param suppCriteriarestrictedSelectList
+	 *            the suppCriteriarestrictedSelectList to set
 	 */
 	public void setSuppCriteriarestrictedSelectList(
 			List<ScQtCategory> suppCriteriarestrictedSelectList) {
@@ -1820,7 +1902,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalProgressivePayment the totalProgressivePayment to set
+	 * @param totalProgressivePayment
+	 *            the totalProgressivePayment to set
 	 */
 	public void setTotalProgressivePayment(int totalProgressivePayment) {
 		this.totalProgressivePayment = totalProgressivePayment;
@@ -1834,7 +1917,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param qtCategory the qtCategory to set
+	 * @param qtCategory
+	 *            the qtCategory to set
 	 */
 	public void setQtCategory(ScQtCategory qtCategory) {
 		this.qtCategory = qtCategory;
@@ -1848,7 +1932,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param estimatedPrice the estimatedPrice to set
+	 * @param estimatedPrice
+	 *            the estimatedPrice to set
 	 */
 	public void setEstimatedPrice(BigDecimal estimatedPrice) {
 		this.estimatedPrice = estimatedPrice;
@@ -1862,7 +1947,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param fromJulat the fromJulat to set
+	 * @param fromJulat
+	 *            the fromJulat to set
 	 */
 	public void setFromJulat(int fromJulat) {
 		this.fromJulat = fromJulat;
@@ -1876,7 +1962,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param toJulat the toJulat to set
+	 * @param toJulat
+	 *            the toJulat to set
 	 */
 	public void setToJulat(int toJulat) {
 		this.toJulat = toJulat;
@@ -1890,7 +1977,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param fromPrice the fromPrice to set
+	 * @param fromPrice
+	 *            the fromPrice to set
 	 */
 	public void setFromPrice(BigDecimal fromPrice) {
 		this.fromPrice = fromPrice;
@@ -1904,7 +1992,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param toPrice the toPrice to set
+	 * @param toPrice
+	 *            the toPrice to set
 	 */
 	public void setToPrice(BigDecimal toPrice) {
 		this.toPrice = toPrice;
@@ -1918,7 +2007,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zonesList the zonesList to set
+	 * @param zonesList
+	 *            the zonesList to set
 	 */
 	public void setZonesList(List<TreeNode> zonesList) {
 		this.zonesList = zonesList;
@@ -1932,7 +2022,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param technicalScoring the technicalScoring to set
+	 * @param technicalScoring
+	 *            the technicalScoring to set
 	 */
 	public void setTechnicalScoring(List<ScQtCheckList> technicalScoring) {
 		this.technicalScoring = technicalScoring;
@@ -1946,7 +2037,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param financialScoring the financialScoring to set
+	 * @param financialScoring
+	 *            the financialScoring to set
 	 */
 	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
 		this.financialScoring = financialScoring;
@@ -1960,7 +2052,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param packScoringList the packScoringList to set
+	 * @param packScoringList
+	 *            the packScoringList to set
 	 */
 	public void setPackScoringList(List<ScQtCheckListScore> packScoringList) {
 		this.packScoringList = packScoringList;
@@ -1974,7 +2067,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param warantyScore the warantyScore to set
+	 * @param warantyScore
+	 *            the warantyScore to set
 	 */
 	public void setWarantyScore(List<ScQtCheckListScore> warantyScore) {
 		this.warantyScore = warantyScore;
@@ -1988,7 +2082,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param trainingScore the trainingScore to set
+	 * @param trainingScore
+	 *            the trainingScore to set
 	 */
 	public void setTrainingScore(List<ScQtCheckListScore> trainingScore) {
 		this.trainingScore = trainingScore;
@@ -2002,9 +2097,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalEmployeeScore the totalEmployeeScore to set
+	 * @param totalEmployeeScore
+	 *            the totalEmployeeScore to set
 	 */
-	public void setTotalEmployeeScore(List<ScQtCheckListScore> totalEmployeeScore) {
+	public void setTotalEmployeeScore(
+			List<ScQtCheckListScore> totalEmployeeScore) {
 		this.totalEmployeeScore = totalEmployeeScore;
 	}
 
@@ -2016,9 +2113,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param technicalStaffScore the technicalStaffScore to set
+	 * @param technicalStaffScore
+	 *            the technicalStaffScore to set
 	 */
-	public void setTechnicalStaffScore(List<ScQtCheckListScore> technicalStaffScore) {
+	public void setTechnicalStaffScore(
+			List<ScQtCheckListScore> technicalStaffScore) {
 		this.technicalStaffScore = technicalStaffScore;
 	}
 
@@ -2030,9 +2129,11 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param paidUpCapitalScore the paidUpCapitalScore to set
+	 * @param paidUpCapitalScore
+	 *            the paidUpCapitalScore to set
 	 */
-	public void setPaidUpCapitalScore(List<ScQtCheckListScore> paidUpCapitalScore) {
+	public void setPaidUpCapitalScore(
+			List<ScQtCheckListScore> paidUpCapitalScore) {
 		this.paidUpCapitalScore = paidUpCapitalScore;
 	}
 
@@ -2044,7 +2145,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param nonFederalScore the nonFederalScore to set
+	 * @param nonFederalScore
+	 *            the nonFederalScore to set
 	 */
 	public void setNonFederalScore(List<ScQtCheckListScore> nonFederalScore) {
 		this.nonFederalScore = nonFederalScore;
@@ -2058,7 +2160,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param nonFederalScoreyears the nonFederalScoreyears to set
+	 * @param nonFederalScoreyears
+	 *            the nonFederalScoreyears to set
 	 */
 	public void setNonFederalScoreyears(
 			List<ScQtCheckListScore> nonFederalScoreyears) {
@@ -2073,14 +2176,13 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param nonFederalContractScore the nonFederalContractScore to set
+	 * @param nonFederalContractScore
+	 *            the nonFederalContractScore to set
 	 */
 	public void setNonFederalContractScore(
 			List<ScQtCheckListScore> nonFederalContractScore) {
 		this.nonFederalContractScore = nonFederalContractScore;
 	}
-
-	
 
 	/**
 	 * @return the ctZoneSupplierList
@@ -2090,7 +2192,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param ctZoneSupplierList the ctZoneSupplierList to set
+	 * @param ctZoneSupplierList
+	 *            the ctZoneSupplierList to set
 	 */
 	public void setCtZoneSupplierList(List<CtPanelSupplier> ctZoneSupplierList) {
 		this.ctZoneSupplierList = ctZoneSupplierList;
@@ -2104,15 +2207,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param totalSuppliers the totalSuppliers to set
+	 * @param totalSuppliers
+	 *            the totalSuppliers to set
 	 */
 	public void setTotalSuppliers(int totalSuppliers) {
 		this.totalSuppliers = totalSuppliers;
 	}
-
-	
-
-	
 
 	/**
 	 * @return the ctZoneTrees
@@ -2122,7 +2222,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param ctZoneTrees the ctZoneTrees to set
+	 * @param ctZoneTrees
+	 *            the ctZoneTrees to set
 	 */
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
@@ -2136,7 +2237,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param ctZoneTreeSelectedNodes the ctZoneTreeSelectedNodes to set
+	 * @param ctZoneTreeSelectedNodes
+	 *            the ctZoneTreeSelectedNodes to set
 	 */
 	public void setCtZoneTreeSelectedNodes(TreeNode[] ctZoneTreeSelectedNodes) {
 		this.ctZoneTreeSelectedNodes = ctZoneTreeSelectedNodes;
@@ -2150,7 +2252,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param ctZoneSuppliers the ctZoneSuppliers to set
+	 * @param ctZoneSuppliers
+	 *            the ctZoneSuppliers to set
 	 */
 	public void setCtZoneSuppliers(TreeNode ctZoneSuppliers) {
 		this.ctZoneSuppliers = ctZoneSuppliers;
@@ -2164,7 +2267,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param yearList the yearList to set
+	 * @param yearList
+	 *            the yearList to set
 	 */
 	public void setYearList(List<SelectItem> yearList) {
 		this.yearList = yearList;
@@ -2178,7 +2282,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -2192,7 +2297,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param techPoints the techPoints to set
+	 * @param techPoints
+	 *            the techPoints to set
 	 */
 	public void setTechPoints(int techPoints) {
 		this.techPoints = techPoints;
@@ -2206,7 +2312,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param finPoints the finPoints to set
+	 * @param finPoints
+	 *            the finPoints to set
 	 */
 	public void setFinPoints(int finPoints) {
 		this.finPoints = finPoints;
@@ -2220,7 +2327,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param technicalSpecList the technicalSpecList to set
+	 * @param technicalSpecList
+	 *            the technicalSpecList to set
 	 */
 	public void setTechnicalSpecList(List<ScQtCheckList> technicalSpecList) {
 		this.technicalSpecList = technicalSpecList;
@@ -2234,7 +2342,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param itemScore the itemScore to set
+	 * @param itemScore
+	 *            the itemScore to set
 	 */
 	public void setItemScore(List<ScQtCheckListScore> itemScore) {
 		this.itemScore = itemScore;
@@ -2248,7 +2357,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param financialSpecList the financialSpecList to set
+	 * @param financialSpecList
+	 *            the financialSpecList to set
 	 */
 	public void setFinancialSpecList(List<ScQtCheckList> financialSpecList) {
 		this.financialSpecList = financialSpecList;
@@ -2262,7 +2372,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param zoneGeneralTrees the zoneGeneralTrees to set
+	 * @param zoneGeneralTrees
+	 *            the zoneGeneralTrees to set
 	 */
 	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
 		this.zoneGeneralTrees = zoneGeneralTrees;
@@ -2276,7 +2387,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectedGeneralTreeNodes the selectedGeneralTreeNodes to set
+	 * @param selectedGeneralTreeNodes
+	 *            the selectedGeneralTreeNodes to set
 	 */
 	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
 		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
@@ -2290,7 +2402,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param deliveryLocBean the deliveryLocBean to set
+	 * @param deliveryLocBean
+	 *            the deliveryLocBean to set
 	 */
 	public void setDeliveryLocBean(List<BriefingZoneBean> deliveryLocBean) {
 		this.deliveryLocBean = deliveryLocBean;
@@ -2304,7 +2417,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param deliveryLoc the deliveryLoc to set
+	 * @param deliveryLoc
+	 *            the deliveryLoc to set
 	 */
 	public void setDeliveryLoc(List<ScQtDeliveryLoc> deliveryLoc) {
 		this.deliveryLoc = deliveryLoc;
@@ -2318,7 +2432,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param deliveyzoneName the deliveyzoneName to set
+	 * @param deliveyzoneName
+	 *            the deliveyzoneName to set
 	 */
 	public void setDeliveyzoneName(String deliveyzoneName) {
 		this.deliveyzoneName = deliveyzoneName;
@@ -2332,7 +2447,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param deliveryNonZoneList the deliveryNonZoneList to set
+	 * @param deliveryNonZoneList
+	 *            the deliveryNonZoneList to set
 	 */
 	public void setDeliveryNonZoneList(List<ScQtDeliveryLoc> deliveryNonZoneList) {
 		this.deliveryNonZoneList = deliveryNonZoneList;
@@ -2346,7 +2462,8 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param deleteDeliveryList the deleteDeliveryList to set
+	 * @param deleteDeliveryList
+	 *            the deleteDeliveryList to set
 	 */
 	public void setDeleteDeliveryList(List<ScQtDeliveryLoc> deleteDeliveryList) {
 		this.deleteDeliveryList = deleteDeliveryList;
@@ -2360,13 +2477,12 @@ private String panelItemCategory;
 	}
 
 	/**
-	 * @param selectDeliveryList the selectDeliveryList to set
+	 * @param selectDeliveryList
+	 *            the selectDeliveryList to set
 	 */
 	public void setSelectDeliveryList(List<ScQtDeliveryLoc> selectDeliveryList) {
 		this.selectDeliveryList = selectDeliveryList;
 	}
-
-
 
 	/**
 	 * @return the supplierCriteria
@@ -2375,16 +2491,13 @@ private String panelItemCategory;
 		return supplierCriteria;
 	}
 
-
-
 	/**
-	 * @param supplierCriteria the supplierCriteria to set
+	 * @param supplierCriteria
+	 *            the supplierCriteria to set
 	 */
 	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
 		this.supplierCriteria = supplierCriteria;
 	}
-
-
 
 	/**
 	 * @return the technicalChecklistScoring
@@ -2393,16 +2506,13 @@ private String panelItemCategory;
 		return technicalChecklistScoring;
 	}
 
-
-
 	/**
-	 * @param technicalChecklistScoring the technicalChecklistScoring to set
+	 * @param technicalChecklistScoring
+	 *            the technicalChecklistScoring to set
 	 */
 	public void setTechnicalChecklistScoring(int technicalChecklistScoring) {
 		this.technicalChecklistScoring = technicalChecklistScoring;
 	}
-
-
 
 	/**
 	 * @return the checklistScoreType
@@ -2411,16 +2521,13 @@ private String panelItemCategory;
 		return checklistScoreType;
 	}
 
-
-
 	/**
-	 * @param checklistScoreType the checklistScoreType to set
+	 * @param checklistScoreType
+	 *            the checklistScoreType to set
 	 */
 	public void setChecklistScoreType(String checklistScoreType) {
 		this.checklistScoreType = checklistScoreType;
 	}
-
-
 
 	/**
 	 * @return the scQtCheckListScore
@@ -2429,16 +2536,13 @@ private String panelItemCategory;
 		return scQtCheckListScore;
 	}
 
-
-
 	/**
-	 * @param scQtCheckListScore the scQtCheckListScore to set
+	 * @param scQtCheckListScore
+	 *            the scQtCheckListScore to set
 	 */
 	public void setScQtCheckListScore(ScQtCheckListScore scQtCheckListScore) {
 		this.scQtCheckListScore = scQtCheckListScore;
 	}
-
-
 
 	/**
 	 * @return the companyScoreType
@@ -2447,16 +2551,13 @@ private String panelItemCategory;
 		return companyScoreType;
 	}
 
-
-
 	/**
-	 * @param companyScoreType the companyScoreType to set
+	 * @param companyScoreType
+	 *            the companyScoreType to set
 	 */
 	public void setCompanyScoreType(String companyScoreType) {
 		this.companyScoreType = companyScoreType;
 	}
-
-
 
 	/**
 	 * @return the technicalChecklistAction
@@ -2465,17 +2566,14 @@ private String panelItemCategory;
 		return technicalChecklistAction;
 	}
 
-
-
 	/**
-	 * @param technicalChecklistAction the technicalChecklistAction to set
+	 * @param technicalChecklistAction
+	 *            the technicalChecklistAction to set
 	 */
 	public void setTechnicalChecklistAction(
 			List<SelectItem> technicalChecklistAction) {
 		this.technicalChecklistAction = technicalChecklistAction;
 	}
-
-
 
 	/**
 	 * @return the scoreVarience
@@ -2484,19 +2582,13 @@ private String panelItemCategory;
 		return scoreVarience;
 	}
 
-
-
 	/**
-	 * @param scoreVarience the scoreVarience to set
+	 * @param scoreVarience
+	 *            the scoreVarience to set
 	 */
 	public void setScoreVarience(BigDecimal scoreVarience) {
 		this.scoreVarience = scoreVarience;
 	}
-
-
-
-
-
 
 	/**
 	 * @return the scQtScoreWeightage
@@ -2505,16 +2597,13 @@ private String panelItemCategory;
 		return scQtScoreWeightage;
 	}
 
-
-
 	/**
-	 * @param scQtScoreWeightage the scQtScoreWeightage to set
+	 * @param scQtScoreWeightage
+	 *            the scQtScoreWeightage to set
 	 */
 	public void setScQtScoreWeightage(ScQtScoreWeightage scQtScoreWeightage) {
 		this.scQtScoreWeightage = scQtScoreWeightage;
 	}
-
-
 
 	/**
 	 * @return the scheduleList
@@ -2523,20 +2612,13 @@ private String panelItemCategory;
 		return scheduleList;
 	}
 
-
-
 	/**
-	 * @param scheduleList the scheduleList to set
+	 * @param scheduleList
+	 *            the scheduleList to set
 	 */
 	public void setScheduleList(List<ScQtSchedule> scheduleList) {
 		this.scheduleList = scheduleList;
 	}
-
-
-
-
-
-
 
 	/**
 	 * @return the scQtContractScore
@@ -2545,16 +2627,13 @@ private String panelItemCategory;
 		return scQtContractScore;
 	}
 
-
-
 	/**
-	 * @param scQtContractScore the scQtContractScore to set
+	 * @param scQtContractScore
+	 *            the scQtContractScore to set
 	 */
 	public void setScQtContractScore(ScQtCheckListScore scQtContractScore) {
 		this.scQtContractScore = scQtContractScore;
 	}
-
-
 
 	/**
 	 * @return the procuremntCategory
@@ -2563,16 +2642,13 @@ private String panelItemCategory;
 		return procuremntCategory;
 	}
 
-
-
 	/**
-	 * @param procuremntCategory the procuremntCategory to set
+	 * @param procuremntCategory
+	 *            the procuremntCategory to set
 	 */
 	public void setProcuremntCategory(String procuremntCategory) {
 		this.procuremntCategory = procuremntCategory;
 	}
-
-
 
 	/**
 	 * @return the fulfilmentType
@@ -2581,16 +2657,13 @@ private String panelItemCategory;
 		return fulfilmentType;
 	}
 
-
-
 	/**
-	 * @param fulfilmentType the fulfilmentType to set
+	 * @param fulfilmentType
+	 *            the fulfilmentType to set
 	 */
 	public void setFulfilmentType(String fulfilmentType) {
 		this.fulfilmentType = fulfilmentType;
 	}
-
-
 
 	/**
 	 * @return the technicalScoreSetting
@@ -2599,16 +2672,13 @@ private String panelItemCategory;
 		return technicalScoreSetting;
 	}
 
-
-
 	/**
-	 * @param technicalScoreSetting the technicalScoreSetting to set
+	 * @param technicalScoreSetting
+	 *            the technicalScoreSetting to set
 	 */
 	public void setTechnicalScoreSetting(ScQtScoreSetting technicalScoreSetting) {
 		this.technicalScoreSetting = technicalScoreSetting;
 	}
-
-
 
 	/**
 	 * @return the financialScoreSetting
@@ -2617,16 +2687,13 @@ private String panelItemCategory;
 		return financialScoreSetting;
 	}
 
-
-
 	/**
-	 * @param financialScoreSetting the financialScoreSetting to set
+	 * @param financialScoreSetting
+	 *            the financialScoreSetting to set
 	 */
 	public void setFinancialScoreSetting(ScQtScoreSetting financialScoreSetting) {
 		this.financialScoreSetting = financialScoreSetting;
 	}
-
-
 
 	/**
 	 * @return the technicalpackage
@@ -2635,16 +2702,13 @@ private String panelItemCategory;
 		return technicalpackage;
 	}
 
-
-
 	/**
-	 * @param technicalpackage the technicalpackage to set
+	 * @param technicalpackage
+	 *            the technicalpackage to set
 	 */
 	public void setTechnicalpackage(BigDecimal technicalpackage) {
 		this.technicalpackage = technicalpackage;
 	}
-
-
 
 	/**
 	 * @return the financialpackage
@@ -2653,16 +2717,13 @@ private String panelItemCategory;
 		return financialpackage;
 	}
 
-
-
 	/**
-	 * @param financialpackage the financialpackage to set
+	 * @param financialpackage
+	 *            the financialpackage to set
 	 */
 	public void setFinancialpackage(BigDecimal financialpackage) {
 		this.financialpackage = financialpackage;
 	}
-
-
 
 	/**
 	 * @return the recommendationPackageTotal
@@ -2671,16 +2732,14 @@ private String panelItemCategory;
 		return recommendationPackageTotal;
 	}
 
-
-
 	/**
-	 * @param recommendationPackageTotal the recommendationPackageTotal to set
+	 * @param recommendationPackageTotal
+	 *            the recommendationPackageTotal to set
 	 */
-	public void setRecommendationPackageTotal(BigDecimal recommendationPackageTotal) {
+	public void setRecommendationPackageTotal(
+			BigDecimal recommendationPackageTotal) {
 		this.recommendationPackageTotal = recommendationPackageTotal;
 	}
-
-
 
 	/**
 	 * @return the recommendTechnicalScore
@@ -2689,16 +2748,13 @@ private String panelItemCategory;
 		return recommendTechnicalScore;
 	}
 
-
-
 	/**
-	 * @param recommendTechnicalScore the recommendTechnicalScore to set
+	 * @param recommendTechnicalScore
+	 *            the recommendTechnicalScore to set
 	 */
 	public void setRecommendTechnicalScore(BigDecimal recommendTechnicalScore) {
 		this.recommendTechnicalScore = recommendTechnicalScore;
 	}
-
-
 
 	/**
 	 * @return the recommendfinancialScore
@@ -2707,16 +2763,13 @@ private String panelItemCategory;
 		return recommendfinancialScore;
 	}
 
-
-
 	/**
-	 * @param recommendfinancialScore the recommendfinancialScore to set
+	 * @param recommendfinancialScore
+	 *            the recommendfinancialScore to set
 	 */
 	public void setRecommendfinancialScore(BigDecimal recommendfinancialScore) {
 		this.recommendfinancialScore = recommendfinancialScore;
 	}
-
-
 
 	/**
 	 * @return the checkListSelectScore
@@ -2725,17 +2778,14 @@ private String panelItemCategory;
 		return checkListSelectScore;
 	}
 
-
-
 	/**
-	 * @param checkListSelectScore the checkListSelectScore to set
+	 * @param checkListSelectScore
+	 *            the checkListSelectScore to set
 	 */
 	public void setCheckListSelectScore(
 			List<ScQtCheckListScore> checkListSelectScore) {
 		this.checkListSelectScore = checkListSelectScore;
 	}
-
-
 
 	/**
 	 * @return the scoringForSelectYears
@@ -2744,17 +2794,14 @@ private String panelItemCategory;
 		return scoringForSelectYears;
 	}
 
-
-
 	/**
-	 * @param scoringForSelectYears the scoringForSelectYears to set
+	 * @param scoringForSelectYears
+	 *            the scoringForSelectYears to set
 	 */
 	public void setScoringForSelectYears(
 			List<ScQtCheckListScore> scoringForSelectYears) {
 		this.scoringForSelectYears = scoringForSelectYears;
 	}
-
-
 
 	/**
 	 * @return the nonFederalSelectScore
@@ -2763,17 +2810,14 @@ private String panelItemCategory;
 		return nonFederalSelectScore;
 	}
 
-
-
 	/**
-	 * @param nonFederalSelectScore the nonFederalSelectScore to set
+	 * @param nonFederalSelectScore
+	 *            the nonFederalSelectScore to set
 	 */
 	public void setNonFederalSelectScore(
 			List<ScQtCheckListScore> nonFederalSelectScore) {
 		this.nonFederalSelectScore = nonFederalSelectScore;
 	}
-
-
 
 	/**
 	 * @return the nonFederalSelectScoreyears
@@ -2782,17 +2826,14 @@ private String panelItemCategory;
 		return nonFederalSelectScoreyears;
 	}
 
-
-
 	/**
-	 * @param nonFederalSelectScoreyears the nonFederalSelectScoreyears to set
+	 * @param nonFederalSelectScoreyears
+	 *            the nonFederalSelectScoreyears to set
 	 */
 	public void setNonFederalSelectScoreyears(
 			List<ScQtCheckListScore> nonFederalSelectScoreyears) {
 		this.nonFederalSelectScoreyears = nonFederalSelectScoreyears;
 	}
-
-
 
 	/**
 	 * @return the warantySelectScore
@@ -2801,16 +2842,14 @@ private String panelItemCategory;
 		return warantySelectScore;
 	}
 
-
-
 	/**
-	 * @param warantySelectScore the warantySelectScore to set
+	 * @param warantySelectScore
+	 *            the warantySelectScore to set
 	 */
-	public void setWarantySelectScore(List<ScQtCheckListScore> warantySelectScore) {
+	public void setWarantySelectScore(
+			List<ScQtCheckListScore> warantySelectScore) {
 		this.warantySelectScore = warantySelectScore;
 	}
-
-
 
 	/**
 	 * @return the trainingSelectList
@@ -2819,16 +2858,14 @@ private String panelItemCategory;
 		return trainingSelectList;
 	}
 
-
-
 	/**
-	 * @param trainingSelectList the trainingSelectList to set
+	 * @param trainingSelectList
+	 *            the trainingSelectList to set
 	 */
-	public void setTrainingSelectList(List<ScQtCheckListScore> trainingSelectList) {
+	public void setTrainingSelectList(
+			List<ScQtCheckListScore> trainingSelectList) {
 		this.trainingSelectList = trainingSelectList;
 	}
-
-
 
 	/**
 	 * @return the technicalStaffSelectList
@@ -2837,17 +2874,14 @@ private String panelItemCategory;
 		return technicalStaffSelectList;
 	}
 
-
-
 	/**
-	 * @param technicalStaffSelectList the technicalStaffSelectList to set
+	 * @param technicalStaffSelectList
+	 *            the technicalStaffSelectList to set
 	 */
 	public void setTechnicalStaffSelectList(
 			List<ScQtCheckListScore> technicalStaffSelectList) {
 		this.technicalStaffSelectList = technicalStaffSelectList;
 	}
-
-
 
 	/**
 	 * @return the totalEmployeeSelectList
@@ -2856,17 +2890,14 @@ private String panelItemCategory;
 		return totalEmployeeSelectList;
 	}
 
-
-
 	/**
-	 * @param totalEmployeeSelectList the totalEmployeeSelectList to set
+	 * @param totalEmployeeSelectList
+	 *            the totalEmployeeSelectList to set
 	 */
 	public void setTotalEmployeeSelectList(
 			List<ScQtCheckListScore> totalEmployeeSelectList) {
 		this.totalEmployeeSelectList = totalEmployeeSelectList;
 	}
-
-
 
 	/**
 	 * @return the finGovContractSelectList
@@ -2875,17 +2906,14 @@ private String panelItemCategory;
 		return finGovContractSelectList;
 	}
 
-
-
 	/**
-	 * @param finGovContractSelectList the finGovContractSelectList to set
+	 * @param finGovContractSelectList
+	 *            the finGovContractSelectList to set
 	 */
 	public void setFinGovContractSelectList(
 			List<ScQtCheckListScore> finGovContractSelectList) {
 		this.finGovContractSelectList = finGovContractSelectList;
 	}
-
-
 
 	/**
 	 * @return the finPrivateContractSelectList
@@ -2894,17 +2922,14 @@ private String panelItemCategory;
 		return finPrivateContractSelectList;
 	}
 
-
-
 	/**
-	 * @param finPrivateContractSelectList the finPrivateContractSelectList to set
+	 * @param finPrivateContractSelectList
+	 *            the finPrivateContractSelectList to set
 	 */
 	public void setFinPrivateContractSelectList(
 			List<ScQtCheckListScore> finPrivateContractSelectList) {
 		this.finPrivateContractSelectList = finPrivateContractSelectList;
 	}
-
-
 
 	/**
 	 * @return the creditfacilitySelectList
@@ -2913,17 +2938,14 @@ private String panelItemCategory;
 		return creditfacilitySelectList;
 	}
 
-
-
 	/**
-	 * @param creditfacilitySelectList the creditfacilitySelectList to set
+	 * @param creditfacilitySelectList
+	 *            the creditfacilitySelectList to set
 	 */
 	public void setCreditfacilitySelectList(
 			List<ScQtCheckListScore> creditfacilitySelectList) {
 		this.creditfacilitySelectList = creditfacilitySelectList;
 	}
-
-
 
 	/**
 	 * @return the cashSelectList
@@ -2932,16 +2954,13 @@ private String panelItemCategory;
 		return cashSelectList;
 	}
 
-
-
 	/**
-	 * @param cashSelectList the cashSelectList to set
+	 * @param cashSelectList
+	 *            the cashSelectList to set
 	 */
 	public void setCashSelectList(List<ScQtCheckListScore> cashSelectList) {
 		this.cashSelectList = cashSelectList;
 	}
-
-
 
 	/**
 	 * @return the bankSelectList
@@ -2950,16 +2969,13 @@ private String panelItemCategory;
 		return bankSelectList;
 	}
 
-
-
 	/**
-	 * @param bankSelectList the bankSelectList to set
+	 * @param bankSelectList
+	 *            the bankSelectList to set
 	 */
 	public void setBankSelectList(List<ScQtCheckListScore> bankSelectList) {
 		this.bankSelectList = bankSelectList;
 	}
-
-
 
 	/**
 	 * @return the assetLiabilitySelectList
@@ -2968,17 +2984,14 @@ private String panelItemCategory;
 		return assetLiabilitySelectList;
 	}
 
-
-
 	/**
-	 * @param assetLiabilitySelectList the assetLiabilitySelectList to set
+	 * @param assetLiabilitySelectList
+	 *            the assetLiabilitySelectList to set
 	 */
 	public void setAssetLiabilitySelectList(
 			List<ScQtCheckListScore> assetLiabilitySelectList) {
 		this.assetLiabilitySelectList = assetLiabilitySelectList;
 	}
-
-
 
 	/**
 	 * @return the paidUpSelectList
@@ -2987,16 +3000,13 @@ private String panelItemCategory;
 		return paidUpSelectList;
 	}
 
-
-
 	/**
-	 * @param paidUpSelectList the paidUpSelectList to set
+	 * @param paidUpSelectList
+	 *            the paidUpSelectList to set
 	 */
 	public void setPaidUpSelectList(List<ScQtCheckListScore> paidUpSelectList) {
 		this.paidUpSelectList = paidUpSelectList;
 	}
-
-
 
 	/**
 	 * @return the tabActiveIndex
@@ -3005,16 +3015,13 @@ private String panelItemCategory;
 		return tabActiveIndex;
 	}
 
-
-
 	/**
-	 * @param tabActiveIndex the tabActiveIndex to set
+	 * @param tabActiveIndex
+	 *            the tabActiveIndex to set
 	 */
 	public void setTabActiveIndex(int tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
 	}
-
-
 
 	/**
 	 * @return the rootZoanlTree
@@ -3023,16 +3030,13 @@ private String panelItemCategory;
 		return rootZoanlTree;
 	}
 
-
-
 	/**
-	 * @param rootZoanlTree the rootZoanlTree to set
+	 * @param rootZoanlTree
+	 *            the rootZoanlTree to set
 	 */
 	public void setRootZoanlTree(TreeNode rootZoanlTree) {
 		this.rootZoanlTree = rootZoanlTree;
 	}
-
-
 
 	/**
 	 * @return the suppCriteriaopenSelectList
@@ -3041,17 +3045,14 @@ private String panelItemCategory;
 		return suppCriteriaopenSelectList;
 	}
 
-
-
 	/**
-	 * @param suppCriteriaopenSelectList the suppCriteriaopenSelectList to set
+	 * @param suppCriteriaopenSelectList
+	 *            the suppCriteriaopenSelectList to set
 	 */
 	public void setSuppCriteriaopenSelectList(
 			List<ScQtCategory> suppCriteriaopenSelectList) {
 		this.suppCriteriaopenSelectList = suppCriteriaopenSelectList;
 	}
-
-
 
 	/**
 	 * @return the progressivePaymentList
@@ -3060,17 +3061,14 @@ private String panelItemCategory;
 		return progressivePaymentList;
 	}
 
-
-
 	/**
-	 * @param progressivePaymentList the progressivePaymentList to set
+	 * @param progressivePaymentList
+	 *            the progressivePaymentList to set
 	 */
 	public void setProgressivePaymentList(
 			List<ScQtProgressivePayment> progressivePaymentList) {
 		this.progressivePaymentList = progressivePaymentList;
 	}
-
-
 
 	/**
 	 * @return the scQtRemarksList
@@ -3079,16 +3077,13 @@ private String panelItemCategory;
 		return scQtRemarksList;
 	}
 
-
-
 	/**
-	 * @param scQtRemarksList the scQtRemarksList to set
+	 * @param scQtRemarksList
+	 *            the scQtRemarksList to set
 	 */
 	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
 		this.scQtRemarksList = scQtRemarksList;
 	}
-
-
 
 	/**
 	 * @return the stateList
@@ -3097,16 +3092,13 @@ private String panelItemCategory;
 		return stateList;
 	}
 
-
-
 	/**
-	 * @param stateList the stateList to set
+	 * @param stateList
+	 *            the stateList to set
 	 */
 	public void setStateList(List<PmState> stateList) {
 		this.stateList = stateList;
 	}
-
-
 
 	/**
 	 * @return the districtList
@@ -3115,16 +3107,13 @@ private String panelItemCategory;
 		return districtList;
 	}
 
-
-
 	/**
-	 * @param districtList the districtList to set
+	 * @param districtList
+	 *            the districtList to set
 	 */
 	public void setDistrictList(List<PmDistrict> districtList) {
 		this.districtList = districtList;
 	}
-
-
 
 	/**
 	 * @return the stateId
@@ -3133,16 +3122,13 @@ private String panelItemCategory;
 		return stateId;
 	}
 
-
-
 	/**
-	 * @param stateId the stateId to set
+	 * @param stateId
+	 *            the stateId to set
 	 */
 	public void setStateId(Long stateId) {
 		this.stateId = stateId;
 	}
-
-
 
 	/**
 	 * @return the districtId
@@ -3151,16 +3137,13 @@ private String panelItemCategory;
 		return districtId;
 	}
 
-
-
 	/**
-	 * @param districtId the districtId to set
+	 * @param districtId
+	 *            the districtId to set
 	 */
 	public void setDistrictId(Long districtId) {
 		this.districtId = districtId;
 	}
-
-
 
 	/**
 	 * @return the ministryList
@@ -3169,16 +3152,13 @@ private String panelItemCategory;
 		return ministryList;
 	}
 
-
-
 	/**
-	 * @param ministryList the ministryList to set
+	 * @param ministryList
+	 *            the ministryList to set
 	 */
 	public void setMinistryList(List<PmOrgProfile> ministryList) {
 		this.ministryList = ministryList;
 	}
-
-
 
 	/**
 	 * @return the ministryId
@@ -3187,16 +3167,13 @@ private String panelItemCategory;
 		return ministryId;
 	}
 
-
-
 	/**
-	 * @param ministryId the ministryId to set
+	 * @param ministryId
+	 *            the ministryId to set
 	 */
 	public void setMinistryId(Long ministryId) {
 		this.ministryId = ministryId;
 	}
-
-
 
 	/**
 	 * @return the departmentList
@@ -3205,16 +3182,13 @@ private String panelItemCategory;
 		return departmentList;
 	}
 
-
-
 	/**
-	 * @param departmentList the departmentList to set
+	 * @param departmentList
+	 *            the departmentList to set
 	 */
 	public void setDepartmentList(List<PmOrgProfile> departmentList) {
 		this.departmentList = departmentList;
 	}
-
-
 
 	/**
 	 * @return the ptjtList
@@ -3223,16 +3197,13 @@ private String panelItemCategory;
 		return ptjtList;
 	}
 
-
-
 	/**
-	 * @param ptjtList the ptjtList to set
+	 * @param ptjtList
+	 *            the ptjtList to set
 	 */
 	public void setPtjtList(List<PmOrgProfile> ptjtList) {
 		this.ptjtList = ptjtList;
 	}
-
-
 
 	/**
 	 * @return the departmentId
@@ -3241,16 +3212,13 @@ private String panelItemCategory;
 		return departmentId;
 	}
 
-
-
 	/**
-	 * @param departmentId the departmentId to set
+	 * @param departmentId
+	 *            the departmentId to set
 	 */
 	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
 	}
-
-
 
 	/**
 	 * @return the ptjId
@@ -3259,16 +3227,13 @@ private String panelItemCategory;
 		return ptjId;
 	}
 
-
-
 	/**
-	 * @param ptjId the ptjId to set
+	 * @param ptjId
+	 *            the ptjId to set
 	 */
 	public void setPtjId(Long ptjId) {
 		this.ptjId = ptjId;
 	}
-
-
 
 	/**
 	 * @return the deliveryAddressSelect
@@ -3277,16 +3242,14 @@ private String panelItemCategory;
 		return deliveryAddressSelect;
 	}
 
-
-
 	/**
-	 * @param deliveryAddressSelect the deliveryAddressSelect to set
+	 * @param deliveryAddressSelect
+	 *            the deliveryAddressSelect to set
 	 */
-	public void setDeliveryAddressSelect(List<PmAddressType> deliveryAddressSelect) {
+	public void setDeliveryAddressSelect(
+			List<PmAddressType> deliveryAddressSelect) {
 		this.deliveryAddressSelect = deliveryAddressSelect;
 	}
-
-
 
 	/**
 	 * @return the stageTwoTechComplianceList
@@ -3295,17 +3258,14 @@ private String panelItemCategory;
 		return stageTwoTechComplianceList;
 	}
 
-
-
 	/**
-	 * @param stageTwoTechComplianceList the stageTwoTechComplianceList to set
+	 * @param stageTwoTechComplianceList
+	 *            the stageTwoTechComplianceList to set
 	 */
 	public void setStageTwoTechComplianceList(
 			List<PmDocument> stageTwoTechComplianceList) {
 		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
 	}
-
-
 
 	/**
 	 * @return the stageTwoTechComplianceSelect
@@ -3314,17 +3274,14 @@ private String panelItemCategory;
 		return stageTwoTechComplianceSelect;
 	}
 
-
-
 	/**
-	 * @param stageTwoTechComplianceSelect the stageTwoTechComplianceSelect to set
+	 * @param stageTwoTechComplianceSelect
+	 *            the stageTwoTechComplianceSelect to set
 	 */
 	public void setStageTwoTechComplianceSelect(
 			List<PmDocument> stageTwoTechComplianceSelect) {
 		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
 	}
-
-
 
 	/**
 	 * @return the stageTwoFinComplianceList
@@ -3333,17 +3290,14 @@ private String panelItemCategory;
 		return stageTwoFinComplianceList;
 	}
 
-
-
 	/**
-	 * @param stageTwoFinComplianceList the stageTwoFinComplianceList to set
+	 * @param stageTwoFinComplianceList
+	 *            the stageTwoFinComplianceList to set
 	 */
 	public void setStageTwoFinComplianceList(
 			List<PmDocument> stageTwoFinComplianceList) {
 		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
 	}
-
-
 
 	/**
 	 * @return the stageTwoFinComplianceSelect
@@ -3352,17 +3306,14 @@ private String panelItemCategory;
 		return stageTwoFinComplianceSelect;
 	}
 
-
-
 	/**
-	 * @param stageTwoFinComplianceSelect the stageTwoFinComplianceSelect to set
+	 * @param stageTwoFinComplianceSelect
+	 *            the stageTwoFinComplianceSelect to set
 	 */
 	public void setStageTwoFinComplianceSelect(
 			List<PmDocument> stageTwoFinComplianceSelect) {
 		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
 	}
-
-
 
 	/**
 	 * @return the startYear
@@ -3371,16 +3322,13 @@ private String panelItemCategory;
 		return startYear;
 	}
 
-
-
 	/**
-	 * @param startYear the startYear to set
+	 * @param startYear
+	 *            the startYear to set
 	 */
 	public void setStartYear(String startYear) {
 		this.startYear = startYear;
 	}
-
-
 
 	/**
 	 * @return the endYear
@@ -3389,16 +3337,13 @@ private String panelItemCategory;
 		return endYear;
 	}
 
-
-
 	/**
-	 * @param endYear the endYear to set
+	 * @param endYear
+	 *            the endYear to set
 	 */
 	public void setEndYear(String endYear) {
 		this.endYear = endYear;
 	}
-
-
 
 	/**
 	 * @return the offerPricePackage
@@ -3407,16 +3352,13 @@ private String panelItemCategory;
 		return offerPricePackage;
 	}
 
-
-
 	/**
-	 * @param offerPricePackage the offerPricePackage to set
+	 * @param offerPricePackage
+	 *            the offerPricePackage to set
 	 */
 	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
 		this.offerPricePackage = offerPricePackage;
 	}
-
-
 
 	/**
 	 * @return the offerPriceItem
@@ -3425,16 +3367,13 @@ private String panelItemCategory;
 		return OfferPriceItem;
 	}
 
-
-
 	/**
-	 * @param offerPriceItem the offerPriceItem to set
+	 * @param offerPriceItem
+	 *            the offerPriceItem to set
 	 */
 	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
 		OfferPriceItem = offerPriceItem;
 	}
-
-
 
 	/**
 	 * @return the demoScoreSetting
@@ -3443,16 +3382,13 @@ private String panelItemCategory;
 		return demoScoreSetting;
 	}
 
-
-
 	/**
-	 * @param demoScoreSetting the demoScoreSetting to set
+	 * @param demoScoreSetting
+	 *            the demoScoreSetting to set
 	 */
 	public void setDemoScoreSetting(ScQtScoreSetting demoScoreSetting) {
 		this.demoScoreSetting = demoScoreSetting;
 	}
-
-
 
 	/**
 	 * @return the recommendationPackageScore
@@ -3461,17 +3397,14 @@ private String panelItemCategory;
 		return recommendationPackageScore;
 	}
 
-
-
 	/**
-	 * @param recommendationPackageScore the recommendationPackageScore to set
+	 * @param recommendationPackageScore
+	 *            the recommendationPackageScore to set
 	 */
 	public void setRecommendationPackageScore(
 			ScQtScoreSetting recommendationPackageScore) {
 		this.recommendationPackageScore = recommendationPackageScore;
 	}
-
-
 
 	/**
 	 * @return the recommendationScore
@@ -3480,16 +3413,13 @@ private String panelItemCategory;
 		return recommendationScore;
 	}
 
-
-
 	/**
-	 * @param recommendationScore the recommendationScore to set
+	 * @param recommendationScore
+	 *            the recommendationScore to set
 	 */
 	public void setRecommendationScore(ScQtScoreSetting recommendationScore) {
 		this.recommendationScore = recommendationScore;
 	}
-
-
 
 	/**
 	 * @return the stateCode
@@ -3498,16 +3428,13 @@ private String panelItemCategory;
 		return stateCode;
 	}
 
-
-
 	/**
-	 * @param stateCode the stateCode to set
+	 * @param stateCode
+	 *            the stateCode to set
 	 */
 	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
 	}
-
-
 
 	/**
 	 * @return the districtCode
@@ -3516,16 +3443,13 @@ private String panelItemCategory;
 		return districtCode;
 	}
 
-
-
 	/**
-	 * @param districtCode the districtCode to set
+	 * @param districtCode
+	 *            the districtCode to set
 	 */
 	public void setDistrictCode(String districtCode) {
 		this.districtCode = districtCode;
 	}
-
-
 
 	/**
 	 * @return the deliveryZones
@@ -3534,16 +3458,13 @@ private String panelItemCategory;
 		return deliveryZones;
 	}
 
-
-
 	/**
-	 * @param deliveryZones the deliveryZones to set
+	 * @param deliveryZones
+	 *            the deliveryZones to set
 	 */
 	public void setDeliveryZones(List<TplSpecZoneDtl> deliveryZones) {
 		this.deliveryZones = deliveryZones;
 	}
-
-
 
 	/**
 	 * @return the tplSpecZoneDtl
@@ -3552,16 +3473,13 @@ private String panelItemCategory;
 		return tplSpecZoneDtl;
 	}
 
-
-
 	/**
-	 * @param tplSpecZoneDtl the tplSpecZoneDtl to set
+	 * @param tplSpecZoneDtl
+	 *            the tplSpecZoneDtl to set
 	 */
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
-
-
 
 	/**
 	 * @return the addressZoneBean
@@ -3570,16 +3488,13 @@ private String panelItemCategory;
 		return addressZoneBean;
 	}
 
-
-
 	/**
-	 * @param addressZoneBean the addressZoneBean to set
+	 * @param addressZoneBean
+	 *            the addressZoneBean to set
 	 */
 	public void setAddressZoneBean(List<BriefingZoneBean> addressZoneBean) {
 		this.addressZoneBean = addressZoneBean;
 	}
-
-
 
 	/**
 	 * @return the panelItemCategory
@@ -3588,16 +3503,13 @@ private String panelItemCategory;
 		return panelItemCategory;
 	}
 
-
-
 	/**
-	 * @param panelItemCategory the panelItemCategory to set
+	 * @param panelItemCategory
+	 *            the panelItemCategory to set
 	 */
 	public void setPanelItemCategory(String panelItemCategory) {
 		this.panelItemCategory = panelItemCategory;
 	}
-
-
 
 	/**
 	 * @return the finSpecList
@@ -3606,16 +3518,13 @@ private String panelItemCategory;
 		return finSpecList;
 	}
 
-
-
 	/**
-	 * @param finSpecList the finSpecList to set
+	 * @param finSpecList
+	 *            the finSpecList to set
 	 */
 	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
 		this.finSpecList = finSpecList;
 	}
-
-
 
 	/**
 	 * @return the panelItemId
@@ -3624,16 +3533,13 @@ private String panelItemCategory;
 		return panelItemId;
 	}
 
-
-
 	/**
-	 * @param panelItemId the panelItemId to set
+	 * @param panelItemId
+	 *            the panelItemId to set
 	 */
 	public void setPanelItemId(Long panelItemId) {
 		this.panelItemId = panelItemId;
 	}
-
-
 
 	/**
 	 * @return the activeIndex
@@ -3642,51 +3548,26 @@ private String panelItemCategory;
 		return activeIndex;
 	}
 
-
-
 	/**
-	 * @param activeIndex the activeIndex to set
+	 * @param activeIndex
+	 *            the activeIndex to set
 	 */
 	public void setActiveIndex(int activeIndex) {
 		this.activeIndex = activeIndex;
 	}
 
+	/**
+	 * @return the ctPanelItem
+	 */
+	public CtPanelItem getCtPanelItem() {
+		return ctPanelItem;
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-	
-	
-
-
-
-	
-
-
-	
-
-	
-
-	
-
-	
-
-
-	
-	
+	/**
+	 * @param ctPanelItem the ctPanelItem to set
+	 */
+	public void setCtPanelItem(CtPanelItem ctPanelItem) {
+		this.ctPanelItem = ctPanelItem;
+	}
 
 }
