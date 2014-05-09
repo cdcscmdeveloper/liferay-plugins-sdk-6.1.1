@@ -912,6 +912,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			 purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 			// fetch pid item for request note item	
+			List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
 			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteDtls()) {
@@ -931,11 +932,22 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestSupplierItem.setRequestNoteItem(requestItem);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 					requestNoteDtls.add(scRequestNoteDtl);
+				
+					List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+					ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
+					requestSupplierItem.setRequestNoteItem(requestItem);
+					requestSupplierItems.add(scReqSupplierItem);
+				
+					requestItem.setSupplierItems(requestSupplierItems);
+					requestNoteItems.add(requestItem);
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			ScRequestNote requestNote = getManagedBean().getRequestNote();
 			requestNote.setRequestNoteDtls(requestNoteDtls);
+			requestNote.setRequestNoteItems(requestNoteItems);
+			
+			
 			this.getManagedBean().setRequestNote(requestNote);
 		}
 		return getManagedBean().getRequestNote().getPmOrgProfile();
