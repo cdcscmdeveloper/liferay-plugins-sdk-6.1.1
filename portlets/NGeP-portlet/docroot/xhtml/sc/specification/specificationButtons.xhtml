@@ -38,11 +38,11 @@
 						</c:if>
 			
 			
-			
+						<c:if test="${action != '~'}">
 							<p:commandButton value="#{action}" process="@all" 
 								styleClass="ui-button" update="@all"
 								action="#{specificationBackingBean.updateBpmTask(action)}"  icon="#{iconVar}"/>
-								
+						</c:if>
 						</c:forEach>
 						</p:column>
 						</p:row>
