@@ -355,9 +355,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return parameter description
 	 */
 	public String getParameterDesc(PmParameter parameter) {
-		return getParameterDesc(
-				parameter.getPmParameterType().getParameterType(),
-				parameter.getParameterCode());
+		if (parameter != null) {
+			return getParameterDesc(
+					parameter.getPmParameterType().getParameterType(),
+					parameter.getParameterCode());	
+		} else {
+			return null;
+		}
 	}
 	
 	/**
