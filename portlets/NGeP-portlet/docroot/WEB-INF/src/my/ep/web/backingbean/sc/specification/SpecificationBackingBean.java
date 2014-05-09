@@ -281,16 +281,22 @@ public class SpecificationBackingBean extends
 
 					}
 				} else {
-					ScQtLocCriteria criteria = new ScQtLocCriteria();
-
-					criteria.setPmState(((ScQtLocCriteria) treeNode2.getData())
-							.getPmState());
+					
+					ScQtLocCriteria criteria = (ScQtLocCriteria)treeNode2.getData();
 					criteria.setScQtSupplierCriteria(this.getManagedBean()
 							.getSupplierCriteria());
 					criteria.setChangedBy(1L);
 					criteria.setCreatedBy(1L);
 					criteria.setCreatedDate(new Timestamp(System
 							.currentTimeMillis()));
+					/*criteria.setPmState(((ScQtLocCriteria) treeNode2.getData())
+							.getPmState());
+					criteria.setScQtSupplierCriteria(this.getManagedBean()
+							.getSupplierCriteria());
+					criteria.setChangedBy(1L);
+					criteria.setCreatedBy(1L);
+					criteria.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));*/
 					results.add(criteria);
 				}
 			}
@@ -807,8 +813,9 @@ public class SpecificationBackingBean extends
 						ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
 						locCriteria.add(criteria);
 					}
-
-					List<PmState> states = SourcingLocationHelper
+					getManagedBean().getZoneTrees().add(
+							LocationSingleton.getInstance().constuctTreeNode(locCriteria));
+					/*List<PmState> states = SourcingLocationHelper
 							.getStateFromLocationDTOs(locCriteria);
 
 					List<PmDivision> divisions = SourcingLocationHelper
@@ -820,7 +827,7 @@ public class SpecificationBackingBean extends
 
 					getManagedBean().getZoneTrees().add(
 							LocationSingleton.getInstance().buildZoneTree(null,
-									states, districts, divisions, cities));
+									states, districts, divisions, cities));*/
 				}
 
 			}
@@ -2438,7 +2445,7 @@ public class SpecificationBackingBean extends
 						&& null != qtSupplierCriteria.getLocationLevel()
 						&& null == qtSupplierCriteria.getLocationLevel()
 								.getParameterId()) {
-					scQt.getScQtSupplierCriteria().setLocationLevel(null);
+					qtSupplierCriteria.setLocationLevel(null);
 				}
 			}
 			this.getManagedBean().getSupplierCriteria()
