@@ -1060,4 +1060,44 @@ public class LocationSingleton {
 	return root;
 	}
 	
+	public TreeNode constuctTreeNode(List<ScQtLocCriteria> specLocs){
+		TreeNode root=new DefaultTreeNode("root",null);
+		if(specLocs!=null){
+			
+			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			TreeNode stateNode=null;
+			TreeNode divisonNode = null;
+			//List<TreeNode> locations = new ArrayList<TreeNode>();
+			for (TplSpecLoc locCriteria : specLocs) {
+				PmState pmState = locCriteria.getPmState();
+				
+				if (null != pmState && !states.contains(pmState)) {
+					 stateNode = new DefaultTreeNode("state", locCriteria, root);					
+					//locations.add(root);
+				}
+				PmDivision division = locCriteria.getPmDivision();
+				
+				if (division != null) {
+					divisonNode = new DefaultTreeNode("division", locCriteria, stateNode);
+					
+				}
+				PmDistrict pmDistrict = locCriteria.getPmDistrict();
+				
+				if (pmDistrict != null) {
+					if (divisonNode == null) {
+						 new DefaultTreeNode("district", locCriteria,
+								stateNode);
+						
+					} else {
+						 new DefaultTreeNode("district", locCriteria,
+								divisonNode);
+						
+					}
+				}
+				states.add(pmState);
+			}
+		}
+	return root;
+	}
 }
