@@ -44,7 +44,7 @@
 									var="pmOrgProfile"
 									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change" update=":form:rnHeaderId ,requestListDataTable"
+								<p:ajax event="change" update="rnHeaderId ,itemDtlId"
 									process="@all"
 									listener="#{requestNoteBackingBean.ptjNameEvent}" />
 							</p:selectOneMenu></td>
@@ -53,7 +53,7 @@
 			</table>
 			</p:outputPanel>
 		
-		<h:panelGrid width="100%" style="margin-top:10px">
+		<h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rows="10"
@@ -66,13 +66,13 @@
 						value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						oncomplete="itemDtlPopup.show();" />
-						
-					<ui:fragment rendered="#{requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault ne 'null'}">
-						<p:commandLink actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}">
+					<p:spacer width="2px;"/>
+					<c:if test="#{(requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault ne 'null')}" >
+					     <p:commandLink actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}">
 							<p:graphicImage value="/resources/ep/images/design/document.png"
 								height="15px" width="15px" />
 						</p:commandLink>
-				  </ui:fragment>
+					</c:if>
 				
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%">
@@ -141,12 +141,12 @@
 				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" disabled="true" size="8" />
-					
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" 
+					   disabled="true" size="4" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.loa.prepare.by']}"  style="width:10%">
-					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}"> 
+					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}"
@@ -156,10 +156,10 @@
 				</p:column>
 			
 			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:10%">
-					<p:inputText style="width:20px;text-align:right;" required="false" size="8"
+					<p:inputText style="width:20px;text-align:right;" required="false" size="2" maxlength="3"
 						value="#{requestNoteDtl.deliverPeriod}"/>
 					<p:spacer width="2px;"></p:spacer>
-					<p:selectOneMenu id="periodMode"
+					<p:selectOneMenu id="periodMode" style="width:75px;"
 						value="#{requestNoteDtl.deliverPeriodType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
