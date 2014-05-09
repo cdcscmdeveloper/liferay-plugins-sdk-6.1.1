@@ -426,7 +426,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO.setTaskId(this.getManagedBean().getTaskId());
             reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
             
-            if(this.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE))
+            if(ContractConst.DOC_TYPE_CONTRACT_UPDATE.equalsIgnoreCase(this.getManagedBean().getContractVer().getDocType()))
                this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);	
             else
               this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);
