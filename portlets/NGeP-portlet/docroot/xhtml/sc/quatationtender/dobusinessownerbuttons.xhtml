@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+		<div align="right">
+
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
+				
+				<p:commandButton value="#{lbl['lbl.so.save']}" 
+					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}" process="@all" icon="ui-icon-save" update="@all" />
+				<p:commandButton value="#{lbl['lbl.so.submit']}" 
+					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}" process="@all" icon="ui-icon-submit" update="@all"  />
+				<p:button value="#{lbl['lbl.so.cancelbtn']}" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
+				
+			</c:if>
+		
+		<table>
+			<tr>
+				<td align="right"><c:if
+						test="#{(qTDetailBB.managedBean.processName eq 'Prepare QT Details') || (qTDetailBB.managedBean.processName eq 'Quotation Tender Creation')}">
+						<c:forEach items="#{qTDetailBB.managedBean.outComes}"
+						var="action">
+
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
+
+						</c:if>
+
+						<c:if test="${action == 'REJECT'}">
+							<ui:param name="iconVar" value="ui-icon-reject" />
+
+						</c:if>
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
+
+						</c:if>
+						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+							<p:commandButton value="#{action}" process="@all"
+								styleClass="ui-button" icon="#{iconVar}"
+								action="#{qTDetailBB.updateBpmTask(action)}" />
+						</c:forEach>
+
+
+					</c:if></td>
+			</tr>
+		</table>
+		</div>
+	</p:panel>
+</ui:composition>

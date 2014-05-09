@@ -753,12 +753,7 @@ public class QTDetailBackingBean extends
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(1l);
 
-		// Setting the Business Owner details to Qtdetails
 		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
-		qtCommittees.add(this.getManagedBean().getScQtCommittee());
-		scQt.setScQtCommittees(qtCommittees);
-		// scQt.setMinistrySpecSecrataryId(users);
-
 		// Setting the Committee Appointment details to Qtdetails
 		List<TabBean> committeTabs = getManagedBean()
 				.getScCommitteeMemberTabList();
@@ -799,12 +794,14 @@ public class QTDetailBackingBean extends
 					qtSupplierCriteria.setLocationLevel(null);
 				}
 			}
-			this.getManagedBean().getSupplierCriteria()
-					.setScQt(this.getManagedBean().getQt());
-			setUserDetails(this.getManagedBean().getSupplierCriteria());
-			scQt.setScQtSupplierCriteria(this.getManagedBean()
-					.getSupplierCriteria());
-			scQt.setScQtZoneCriteria(null);
+			if(this.getManagedBean().getSupplierCriteria() != null) {
+				this.getManagedBean().getSupplierCriteria()
+						.setScQt(this.getManagedBean().getQt());
+				setUserDetails(this.getManagedBean().getSupplierCriteria());
+				scQt.setScQtSupplierCriteria(this.getManagedBean()
+						.getSupplierCriteria());
+				scQt.setScQtZoneCriteria(null);
+			}
 		} else {
 			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
 					this.getManagedBean().getZoneGeneralTrees(), null);
