@@ -441,7 +441,7 @@ public class SpecificationBackingBean extends
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.INFO_000001,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
@@ -474,7 +474,7 @@ public class SpecificationBackingBean extends
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.INFO_000001,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
