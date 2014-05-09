@@ -63,6 +63,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
 import my.ep.web.sc.directpurchase.common.DPStatusConstants;
@@ -585,7 +586,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 		List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
 		ScRequestItem scRequestItem = new ScRequestItem();
-		
 		ScRequestNote  requestNote = getManagedBean().getRequestNote();
 		
 		if(getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)){
@@ -601,19 +601,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 		} else {
 			// purchase in default & add to cart
-			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-			
-		    purchaseInDefaultReqDTO.setItemId(requestSupplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId());
+			//IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			//PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+		    //purchaseInDefaultReqDTO.setItemId(requestSupplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId());
 		    // TODO hard coded ptj id for non contract item for pid
-		    purchaseInDefaultReqDTO.setOrgProfileId(16717L);
-		    PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
+		    //purchaseInDefaultReqDTO.setOrgProfileId(16717L);
+		    //PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
 		    
 		    // pid to request note
-		    if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+		   /* if(defaultResDTO.getPurchaseInDefaultDtl() != null){
 		    	ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
 		    	scRequestItem.setPurchaseInDefault(purchaseInDefault);
-		    }
+		    }*/
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		}
 		
@@ -659,7 +658,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if (itemIds.size() > 0) {
 				if(itemIds.contains(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId())){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							FacesMessage.SEVERITY_INFO, 
+							FacesMessage.SEVERITY_WARN, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700027, 
 									new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName()}, 
@@ -675,16 +674,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		
 		// request items & request supplier items
-		List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
-		ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
-		requestSupplierItem.setRequestNoteItem(scRequestItem);
-		requestSupplierItems.add(scReqSupplierItem);
+		//List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+		//ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
+		//requestSupplierItem.setRequestNoteItem(scRequestItem);
+		//requestSupplierItems.add(scReqSupplierItem);
 		
-		scRequestItem.setSupplierItems(requestSupplierItems);
-		requestNoteItems.add(scRequestItem);
-		requestNote.setRequestNoteItems(requestNoteItems);
+		//scRequestItem.setSupplierItems(requestSupplierItems);
+		//requestNoteItems.add(scRequestItem);
+		//requestNote.setRequestNoteItems(requestNoteItems);
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-		this.getManagedBean().setRequestNoteItems(requestNoteItems);
+		//this.getManagedBean().setRequestNoteItems(requestNoteItems);
 		
 		populateUserDivisionList();
 		getManagedBean().setRequestNote(requestNote);
@@ -898,6 +897,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 	
 	public PmOrgProfile ptjNameEvent() {
+		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+		try {
+			
 		if (getManagedBean().getOrgProfileId() != null) {
 			for (PmOrgProfile orgProfile : getManagedBean().getUserDivisionList()) {
 				if (orgProfile.getOrgProfileId().equals(getManagedBean().getOrgProfileId())) {
@@ -907,26 +909,82 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			//TODO Based on ptj selection have to get pid for request note 
-			/*IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			 purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 			// fetch pid item for request note item	
+			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteDtls()) {
-					ScRequestItem  scRequestItem = new ScRequestItem();
-					// TODO hard coded ptj id for non contract item for pid
+					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+					ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
+
+					// TODO selected ptj id for non contract item for pid
 					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
-				    purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
+					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
 					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
 
 					// pid to request note
 					if(defaultResDTO.getPurchaseInDefaultDtl() != null){
 						ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
-						scRequestItem.setPurchaseInDefault(purchaseInDefault);
+						requestItem.setPurchaseInDefault(purchaseInDefault);
 					}
+					requestSupplierItem.setRequestNoteItem(requestItem);
+					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+					requestNoteDtls.add(scRequestNoteDtl);
 				}
-			}*/
+			}
+			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			ScRequestNote requestNote = getManagedBean().getRequestNote();
+			requestNote.setRequestNoteDtls(requestNoteDtls);
+			this.getManagedBean().setRequestNote(requestNote);
 		}
 		return getManagedBean().getRequestNote().getPmOrgProfile();
+	} catch (Exception ex) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sorry We are unable to process.", ""));
+		ex.printStackTrace();
+	} finally {
+		purchaseInDefaultSO = null;
 	}
+		return null;
+}
 	
+	public void showPurchaseInDefault(ScRequestNoteDtl requestNoteDtl){
+		log.info("showPurchaseInDefault");
+		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+		try{
+		if(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault().getPurchaseInDefaultId() != null){
+			// Purchase In Default	
+		     purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault().getPurchaseInDefaultId());
+			purchaseInDefaultReqDTO.setFetchSubEntity(true);
+			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+			PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
+			if(purchaseInDefault != null){
+				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
+				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
+				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
+				purchaseInDefaultBackingBean.justificationTypeEvent();
+				purchaseInDefaultBackingBean.getManagedBean().setPmOrgProfile(getManagedBean().getOrgProfile());
+				purchaseInDefaultBackingBean.getCurrentStatus(DPStatusConstants.PID_COMPLETED);
+			}
+		}
+         
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
+	} catch (Exception ex) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sorry We are unable to process.", ""));
+		ex.printStackTrace();
+	} finally {
+		purchaseInDefaultSO = null;
+	}
+	}
+
 }
