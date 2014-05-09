@@ -104,10 +104,10 @@
 					<c:choose>
 						<c:when test="#{backingBean.managedBean.supplierUser }">
 							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include src="step7SupportingDocumentsInfo.xhtml" />
+								<ui:include src="step7RenewAppln_SupportingDocumentsInfo.xhtml" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
+								<ui:include src="step8RenewAppln_ProcessingFeePaymentInfo.xhtml" />
 							</c:if>
 
 						</c:when>
@@ -151,14 +151,13 @@
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
-			
+
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
-					update=":form:tt:onSdList"
-					oncomplete="attachDlg1.hide();" />
+					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>
 		</ac:smPanel>
 
