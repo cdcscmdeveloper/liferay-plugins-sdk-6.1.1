@@ -10,6 +10,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
+import my.ep.web.constant.sm.SupplierManagementConst;
 
 public class SmEmailNotificationHelper {
 
@@ -39,7 +40,7 @@ public class SmEmailNotificationHelper {
 	}
 
 	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl) {
-		String templateId = "399999";
+		String templateId = "400001";
 		List<String> emailLst = new ArrayList<String>();
 		List<String> contList = new ArrayList<String>();
 		for (SmPersonnel per : smAppl.getSmPersonnels()) {
@@ -55,15 +56,55 @@ public class SmEmailNotificationHelper {
 		}
 
 		List<String> subList = new ArrayList<String>();
-		subList.add("SM Application - " + smAppl.getApplNo() + " Rejected");
+		subList.add(getApplicationDesc(smAppl.getApplType()));
+		subList.add(smAppl.getApplNo());
 
-		contList.add("Rejection codes");
+		contList.add(smAppl.getApplNo());
+		contList.add(getApplicationDesc(smAppl.getApplType()));
+		StringBuffer sb = new StringBuffer();
+		int count = 0;
 		for (SmApplRejectReason res : smAppl.getSmApplRejectReasons()) {
-			contList.add(res.getPmReason().getPmReasonDescs().get(0)
+			sb.append(++count).append(".)");
+			sb.append(res.getPmReason().getPmReasonDescs().get(0)
 					.getReasonDesc());
+			sb.append("\n");
 		}
+		contList.add(sb.toString());
 
 		sendEmail(templateId, emailLst, subList, contList);
 
+	}
+
+	private static String getApplicationDesc(String appType) {
+		String s = null;
+		switch (appType) {
+
+		case "N":
+			s = "New MOF Registration";
+			break;
+		case "A":
+			s = "Additional Category Codes";
+			// PROCEED_ADDTNLCAT_MOF_APPLN;
+			break;
+		case "B":
+			s = "Bumputera Status";
+			// PROCEED_BUMI_APPLN;
+			break;
+		case "U":
+			s = "Updae MOF Profile";
+			// PROCEED_UPDATE_MOF_APPLN;
+			break;
+		case "R":
+			s = "Renew MOF";
+			// PROCEED_RENEW_MOF_APPLN;
+			break;
+		case "C":
+			s = "Cancel MOF Registration";
+			break;
+		default:
+			break;
+
+		}
+		return s;
 	}
 }

@@ -5,12 +5,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.constants.SMProcessNameConst;
-import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
@@ -21,7 +18,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
-import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -142,7 +138,7 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
-			String applicationType = "";
+			//String applicationType = "";
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
 				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
@@ -156,7 +152,7 @@ public class CommonApplBackingBean extends
 				// retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for account maintain********"
-								+ applicationType);
+								+ appl.getSupplierType());
 				System.out.println("********getTaskId********" + taskId);
 				System.out.println("********getTaskName********"
 						+ this.getManagedBean().getTaskName());

@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvCategory;
+import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.logging.LogKey;
@@ -609,6 +610,14 @@ public class SmApplicationBackingBean extends
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
 		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
 		svTask.setSmAppl(getManagedBean().getSmAppl());
+		System.out.println("** Basic Office ***"
+				+ getManagedBean().getBasicCompanyFacility().getSmAddress()
+						.getAddress1() + " -- Id -- "
+				+ getManagedBean().getBasicCompanyFacility().getFacilityId());
+		SmSvOffice svOff = new SmSvOffice();
+		svOff.setSmSvTask(svTask);
+		svOff.setSmFacility(getManagedBean().getBasicCompanyFacility());
+		svTask.setSmSvOffice(svOff);
 		for (SmFacility fac : getManagedBean().getSelectedFactoryFacilities()) {
 			SmSvAddress facAddr = new SmSvAddress();
 			facAddr.setSmSvTask(svTask);
@@ -3582,21 +3591,21 @@ public class SmApplicationBackingBean extends
 		switch (appType) {
 
 		case "N":
-			if (applCatType.equalsIgnoreCase("S")) {
+			if (applCatType != null && applCatType.equalsIgnoreCase("S")) {
 				i = SupplierManagementConst.NEW_APPL_SPLCAT_REVIEW_MAXCOUNT;
 			} else {
 				i = SupplierManagementConst.NEW_APPL_NORMCAT_REVIEW_MAXCOUNT;
 			}
 			break;
 		case "A":
-			if (applCatType.equalsIgnoreCase("S")) {
+			if (applCatType != null && applCatType.equalsIgnoreCase("S")) {
 				i = SupplierManagementConst.ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT;
 			} else {
 				i = SupplierManagementConst.ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT;
 			}
 			break;
 		case "B":
-			if (applCatType.equalsIgnoreCase("S")) {
+			if (applCatType != null && applCatType.equalsIgnoreCase("S")) {
 				i = SupplierManagementConst.BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT;
 			} else {
 				i = SupplierManagementConst.BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT;
@@ -3606,7 +3615,7 @@ public class SmApplicationBackingBean extends
 			i = SupplierManagementConst.UPDATE_MOF_APPL_REVIEW_MAXCOUNT;
 			break;
 		case "R":
-			if (applCatType.equalsIgnoreCase("S")) {
+			if (applCatType != null && applCatType.equalsIgnoreCase("S")) {
 				i = SupplierManagementConst.RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT;
 			} else {
 				i = SupplierManagementConst.RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT;
