@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -929,15 +930,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
 						requestItem.setPurchaseInDefault(purchaseInDefault);
 					}
+					
 					requestSupplierItem.setRequestNoteItem(requestItem);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 					requestNoteDtls.add(scRequestNoteDtl);
-				
+				   
+					// Request Supplier Items
 					List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 					ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
 					requestSupplierItem.setRequestNoteItem(requestItem);
 					requestSupplierItems.add(scReqSupplierItem);
-				
+				    
+					// request Note Items
 					requestItem.setSupplierItems(requestSupplierItems);
 					requestNoteItems.add(requestItem);
 				}
@@ -946,8 +950,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			ScRequestNote requestNote = getManagedBean().getRequestNote();
 			requestNote.setRequestNoteDtls(requestNoteDtls);
 			requestNote.setRequestNoteItems(requestNoteItems);
-			
-			
 			this.getManagedBean().setRequestNote(requestNote);
 		}
 		return getManagedBean().getRequestNote().getPmOrgProfile();
@@ -961,12 +963,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		purchaseInDefaultSO = null;
 	}
 		return null;
-}
+  }
 	
+	/**
+	  * To get Approver Pick List  in Request Note
+	 */
 	public void showPurchaseInDefault(ScRequestNoteDtl requestNoteDtl){
 		log.info("showPurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
-		try{
+		FacesScopes facesScopes = new FacesScopes();
+	 try{
 		if(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault().getPurchaseInDefaultId() != null){
 			// Purchase In Default	
 		     purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
@@ -981,8 +987,17 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
 				purchaseInDefaultBackingBean.justificationTypeEvent();
-				purchaseInDefaultBackingBean.getManagedBean().setPmOrgProfile(getManagedBean().getOrgProfile());
+				purchaseInDefaultBackingBean.getManagedBean().setSelectedPmOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile());
 				purchaseInDefaultBackingBean.getCurrentStatus(DPStatusConstants.PID_COMPLETED);
+				List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+				ScPurchaseInDefaultAttachment attachment =purchaseInDefault.getScPurchaseInDefaultAttachment();
+				attachment.setUser(facesScopes.getUserSessionBean());
+				attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+				attachments.add(attachment);
+				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
+				
+				// disable all for pid view
+				purchaseInDefaultBackingBean.getManagedBean().setApproverFlag(true);
 			}
 		}
          
