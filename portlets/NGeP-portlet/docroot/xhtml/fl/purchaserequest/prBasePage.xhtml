@@ -18,7 +18,7 @@
 			closable="true" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
