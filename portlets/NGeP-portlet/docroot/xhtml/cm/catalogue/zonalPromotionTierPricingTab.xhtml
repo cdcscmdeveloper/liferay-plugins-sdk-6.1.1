@@ -64,7 +64,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
-					mindate="#{tier.minDate}" rendered="#{tier.showFlag}"
+					mindate="#{tier.minDate}" maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form" />
@@ -75,7 +75,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10"
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" mindate="#{tier.minDate}"
 					maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
