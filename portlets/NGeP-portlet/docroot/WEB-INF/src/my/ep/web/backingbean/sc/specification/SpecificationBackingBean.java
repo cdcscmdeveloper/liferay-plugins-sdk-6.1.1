@@ -700,7 +700,7 @@ public class SpecificationBackingBean extends
 							"Record saved successfully.", ""
 
 					));
-			if (null == processName) {
+			if (null == processName||"".equals(processName)) {
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else {
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";

@@ -22,10 +22,10 @@
 				action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
 
 			<p:commandButton value="Complete" style="float:right;"
-				action="#{specificationBackingBean.completeTemplateSpec}" />
+				action="#{specificationBackingBean.completeTemplateSpec('sc')}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
-				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
+				action="#{specificationBackingBean.saveTemplateSpec(null,'1','sc')}"
 				icon="ui-icon-save" />
 
 		</div>

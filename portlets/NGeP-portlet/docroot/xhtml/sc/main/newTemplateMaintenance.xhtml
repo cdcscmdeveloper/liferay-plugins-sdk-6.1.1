@@ -21,10 +21,10 @@
 				style="float:right;" icon="ui-icon-cancel"
 				action="#{specificationBackingBean.backAction}"></p:commandButton>
 			<p:commandButton value="Complete" style="float:right;"
-				action="#{specificationBackingBean.completeTemplateSpec}" />
+				action="#{specificationBackingBean.completeTemplateSpec(null)}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
-				action="#{specificationBackingBean.saveTemplateSpec(null,'1')}"
+				action="#{specificationBackingBean.saveTemplateSpec(null,'1',null)}"
 				icon="ui-icon-save" />
 
 		</div>
