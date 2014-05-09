@@ -16,8 +16,11 @@
 				<h:outputText value="#{ctZones.name}" />
 			</p:treeNode>
 			<p:treeNode type="state">
-				<h:outputText value="#{ctZones.stateName}" />
-			</p:treeNode>
+					<h:outputText value="#{ctZones.stateId.stateName}" />
+				</p:treeNode>
+				<p:treeNode type="district">
+					<h:outputText value="#{ctZones.districtId.districtName}" />
+				</p:treeNode>
 		</p:tree>
 
 	</p:panel>

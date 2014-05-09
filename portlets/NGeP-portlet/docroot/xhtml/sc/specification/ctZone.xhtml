@@ -8,7 +8,7 @@
 
 
 	<p:dialog header="Zone" widgetVar="ctZone" modal="true" width="400"
-		height="200">
+		height="500" position="top">
 		<p:panel id="ctZonedetails">
 
 			<p:tree id="ctZones"
@@ -20,7 +20,10 @@
 					<h:outputText value="#{ctZones.name}" />
 				</p:treeNode>
 				<p:treeNode type="state">
-					<h:outputText value="#{ctZones.stateName}" />
+					<h:outputText value="#{ctZones.stateId.stateName}" />
+				</p:treeNode>
+				<p:treeNode type="district">
+					<h:outputText value="#{ctZones.districtId.districtName}" />
 				</p:treeNode>
          </p:tree>
 		</p:panel>

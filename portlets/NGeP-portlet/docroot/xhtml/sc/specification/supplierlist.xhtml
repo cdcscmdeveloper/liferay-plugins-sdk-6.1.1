@@ -7,12 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="totalSupplier">
-		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
-		<p:spacer width="5" />
-		<p:inputText
-			value="#{specificationBackingBean.managedBean.totalSuppliers}"
-			disabled="true" />
-		<p:panel id="supplierlist" header="Supplier List" toggleable="true">
+		
 			<c:if
 				test="#{
 					 specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypePanel}">
@@ -74,7 +69,12 @@
 			</c:if>
 
 			<br />
-
+        <h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<p:spacer width="5" />
+		<p:inputText
+			value="#{specificationBackingBean.managedBean.totalSuppliers}"
+			disabled="true" />
+		<p:panel id="supplierlist" header="Supplier List" toggleable="true">
 
 			<div align="right">
 				<p:commandButton value="Search" oncomplete="ctZone.show();"
