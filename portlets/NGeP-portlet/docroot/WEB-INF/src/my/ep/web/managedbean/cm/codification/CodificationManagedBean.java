@@ -25,6 +25,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -66,7 +67,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private CmUnspsc selectedLovUnspscFamily;
 	private CmUnspsc selectedLovUnspscClass;
 
-	private String extensionCodeTemp;
+	private String itemCode;
 
 	private List<SelectItem> segmentCriteria;
 	private List<SelectItem> familyCriteria;
@@ -111,13 +112,24 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private Object[] selectedObject;
 	private List<VCmPendingCodifiedItem> viewPendingCodifiedItemList;
 	private VCmPendingCodifiedItem selectedVPendingCodifiedItem;
-
+	private List<ScRequestItem> selectedVPendingRequestItemList;
+    private ScRequestItem selectedRequestItem;
+    private Object[] selectedExtenstionForItem;
+    
 	public Object[] getSelectedObject() {
 		return selectedObject;
 	}
 
 	public void setSelectedObject(Object[] selectedObject) {
 		this.selectedObject = selectedObject;
+	}
+	
+	public Object[] getSelectedExtenstionForItem() {
+		return selectedExtenstionForItem;
+	}
+
+	public void setSelectedExtenstionForItem(Object[] selectedExtenstionForItem) {
+		this.selectedExtenstionForItem = selectedExtenstionForItem;
 	}
 
 	public ExtensionCodeVO[] getSelectedExtensionVO() {
@@ -483,9 +495,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedUNSPSCObj(CmUnspsc selectedUNSPSCObj) {
 		this.selectedUNSPSCObj = selectedUNSPSCObj;
-		System.out
-				.println(">>>>>>>>>>>>>>>>>> seting commidity - selectedUNSPSCObj= "
-						+ selectedUNSPSCObj);
+	
 	}
 
 	public List<CmItem> getItemList() {
@@ -562,16 +572,23 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
 		this.selectedLovUnspscClass = selectedLovUnspscClass;
-		System.out.println(">>>>>>>>>>seting selectedLovUnspscClass="
-				+ selectedLovUnspscClass);
+		
+	}
+ 
+	public ScRequestItem getSelectedRequestItem() {
+		return selectedRequestItem;
 	}
 
-	public String getExtensionCodeTemp() {
-		return extensionCodeTemp;
+	public void setSelectedRequestItem(ScRequestItem selectedRequestItem) {
+		this.selectedRequestItem = selectedRequestItem;
 	}
 
-	public void setExtensionCodeTemp(String extensionCodeTemp) {
-		this.extensionCodeTemp = extensionCodeTemp;
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
 	}
 
 	public VCmPendingCodifiedItem getSelectedVPendingCodifiedItem() {
@@ -591,6 +608,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 			List<VCmPendingCodifiedItem> viewPendingCodifiedItemList) {
 		this.viewPendingCodifiedItemList = viewPendingCodifiedItemList;
 	}
+
+	public List<ScRequestItem> getSelectedVPendingRequestItemList() {
+		return selectedVPendingRequestItemList;
+	}
+
+	public void setSelectedVPendingRequestItemList(
+			List<ScRequestItem> selectedVPendingRequestItemList) {
+		this.selectedVPendingRequestItemList = selectedVPendingRequestItemList;
+	}
+
 
 	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new SearchPagingDataModel();
 
@@ -617,19 +644,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 		protected ISearchResultBean<VCmPendingCodifiedItem> pageChangeListener(
 				ISearchBean<VCmPendingCodifiedItem> searchBean) {
 
-			// if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)contractNoFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
-			// &&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
-			// &&districtId == null) {
-			// System.out.println("******SearchResultBean******");
-			// return new SearchResultBean();
-			// }
-
 			IPendingCodifiedItemSO viewSO = null;
 
 			try {
@@ -638,102 +652,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.getInstance().getServiceObject("cm",
 								IPendingCodifiedItemSO.class);
 
-				// if
-				// (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue()))
-				// {
-				// itemNameFilterBean.setSearchField("itemName");
-				// searchBean.getDataFilterBeans().add(itemNameFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue()))
-				// {
-				// itemCodeFilterBean.setSearchField("itemCode");
-				// searchBean.getDataFilterBeans().add(itemCodeFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue()))
-				// {
-				// supplierNameFilterBean.setSearchField("companyName");
-				// searchBean.getDataFilterBeans().add(supplierNameFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue()))
-				// {
-				// contractNoFilterBean.setSearchField("contractNo");
-				// searchBean.getDataFilterBeans().add(contractNoFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue()))
-				// {
-				// circularNoFilterBean.setSearchField("circularNo");
-				// searchBean.getDataFilterBeans().add(circularNoFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue()))
-				// {
-				// epNoFilterBean.setSearchField("epNo");
-				// searchBean.getDataFilterBeans().add(epNoFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue()))
-				// {
-				// mofNoFilterBean.setSearchField("mofNo");
-				// searchBean.getDataFilterBeans().add(mofNoFilterBean);
-				// }
-				//
-				// if
-				// (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue()))
-				// {
-				// bizRegNoFilterBean.setSearchField("bizRegNo");
-				// searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
-				// }
-				//
-				// UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-				// System.out.println("bb.isRequisitioner()"+bb.isRequisitioner());
-				// if(!bb.isRequisitioner()){
-				// catTypeFilterBean.setSearchField("catType");
-				// catTypeFilterBean.setSearchValue("XC");
-				// searchBean.getDataFilterBeans().add(catTypeFilterBean);
-				// }
-				//
-				//
-				// setDistrictLs(new ArrayList<Long>());
-				// System.out.println("districtId:"+districtId);
-				// for(Long district : districtId){
-				// System.out.println("district:"+district);
-				// districtLs.add(district);
-				// }
-				//
-				// System.out.println("districtLs.size():"+districtLs.size());
-				// if(districtLs != null && districtLs.size()>0){
-				// districtFilterBean.setSearchField("districtId");
-				// districtFilterBean.setSearchValue(districtLs);
-				// searchBean.getDataFilterBeans().add(districtFilterBean);
-				// }
-				//
-				// setStateLs(new ArrayList<Long>());
-				// for(Long state : stateId){
-				// System.out.println("state:"+state);
-				// stateLs.add(state);
-				// }
-				// System.out.println("districtLs"+districtLs);
-				// if(districtLs.isEmpty()){
-				// if(stateLs!=null && stateLs.size()>0){
-				// stateFilterBean.setSearchField("stateId");
-				// stateFilterBean.setSearchValue(stateLs);
-				// searchBean.getDataFilterBeans().add(stateFilterBean);
-				//
-				// }
-				//
-				// }
-				// System.out.println("stateLs"+stateLs);
-
+		
 				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
 				FacesScopes facesScopes = new FacesScopes();

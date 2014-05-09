@@ -9,31 +9,54 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
+import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
-	
+
 	private List<WorklistItemVO> taskList;
+	private List<FlFulfilmentOrder> flFulfilmentOrderList;
 	private Map bpmMap = new HashMap();
 	private String processName;
 	private String[] action;
-	
+
 	private String taskId;
-	
-	//private String status="ASSIGNED";
-	
+
+	// private String status="ASSIGNED";
+
 	private String taskName;
-	
-	private String tempLoginId; //TODO: temp and to be removed
-	
-	private String viewBy="ALL";
+
+	private String tempLoginId; // TODO: temp and to be removed
+
+	private String viewBy = "ALL";
+
+	private String assignment = "ALL";
+
+	private int showIndex = 0;
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -75,13 +98,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.taskId = taskId;
 	}
 
-	/*public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}*/
+	/*
+	 * public String getStatus() { return status; }
+	 * 
+	 * public void setStatus(String status) { this.status = status; }
+	 */
 
 	public String getTaskName() {
 		return taskName;
@@ -106,10 +127,102 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setViewBy(String viewBy) {
 		this.viewBy = viewBy;
 	}
-	
-	
-	
-	
-	
-	
+
+	public String getAssignment() {
+		return assignment;
+	}
+
+	public void setAssignment(String assignment) {
+		this.assignment = assignment;
+	}
+
+	public int getShowIndex() {
+		return showIndex;
+	}
+
+	public void setShowIndex(int showIndex) {
+		this.showIndex = showIndex;
+	}
+
+	public List<FlFulfilmentOrder> getFlFulfilmentOrderList() {
+		return flFulfilmentOrderList;
+	}
+
+	public void setFlFulfilmentOrderList(
+			List<FlFulfilmentOrder> flFulfilmentOrderList) {
+		this.flFulfilmentOrderList = flFulfilmentOrderList;
+	}
+
+	private IPagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
+
+	public IPagingDataModel<WorklistItemVO> getTaskListDataModel() {
+		return taskListDataModel;
+	}
+
+	public void setTaskListDataModel(
+			IPagingDataModel<WorklistItemVO> taskListDataModel) {
+		this.taskListDataModel = taskListDataModel;
+	}
+
+	private class taskPagingDataModel extends PagingDataModel<WorklistItemVO> {
+
+		private static final long serialVersionUID = 1L;
+
+		public taskPagingDataModel() {
+			super("bpmTaskItemID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
+				ISearchBean<WorklistItemVO> searchBean) {
+System.out.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
+			IBpmSO bpmSO = null;
+			try {
+				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="+getAssignment());
+				
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+
+				// String token = bpmSO.authenticate("roslan", "welcome1");
+				FacesScopes face = new FacesScopes();
+				String token = face.getBPMAuthenticationCtxToken();
+
+				System.out.println("testing BPM auth******" + token);
+				BpmRequestDTO reqDTO = new BpmRequestDTO();
+				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and
+												// set do variable
+				reqDTO.setViewBy(getViewBy());
+				reqDTO.setAssignment(getAssignment());
+				reqDTO.setCtxToken(token);
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+
+				System.out.println("testing BPM******size="
+						+ responseDTO.getWorklistVO().getWorklistItem().size());
+				System.out.println("testing BPM******total="
+						+ responseDTO.getWorklistVO().getTotal());
+
+//				setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
+				resultBean.setTotalRecord(responseDTO.getWorklistVO()
+						.getTotal());
+				resultBean.setResultList(responseDTO.getWorklistVO()
+						.getWorklistItem());
+				return resultBean;
+			} finally {
+				bpmSO = null;
+			}
+		}
+
+	}
+
+	private int calculateFinalOffSet(int currentPage) {
+
+		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+
+		return offSet;
+	}
+
 }

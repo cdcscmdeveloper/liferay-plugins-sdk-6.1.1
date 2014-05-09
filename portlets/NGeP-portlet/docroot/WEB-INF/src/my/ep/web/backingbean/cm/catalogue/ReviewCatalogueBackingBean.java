@@ -50,6 +50,19 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 	}
 
+	 public void refreshCatalogueList(){
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+
+			reqDTO.setItemStatus("P");
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setReviewSupplierItems(resDTO.getSupplierItemList()); 
+		 
+	}
+		
 
 
 	public String navigateToCatalogDet(){

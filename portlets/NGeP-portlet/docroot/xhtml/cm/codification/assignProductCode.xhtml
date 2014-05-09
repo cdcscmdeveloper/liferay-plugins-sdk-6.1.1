@@ -48,41 +48,51 @@
     </p:panel>
 		
 	<p:panel header="ITEM LIST" toggleable="true">
-			<p:dataTable value="" var="" 
+			<p:dataTable value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}" var="requestItem" 
 				 id="contractedTableId">
 				<p:column>
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.name']}
 						</f:facet>
-						test
+						#{requestItem.itemName}
 					</p:column>
 				<p:column>
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.description']}
 						</f:facet>
+						#{requestItem.itemDesc}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-							#{lbl['lbl.cm.system.code']}
+							#{lbl['lbl.cm.item.table.type']}
 						</f:facet>
+						#{requestItem.itemType}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-							#{lbl['lbl.cm.unspsc.code']}
+							#{lbl['lbl.cm.item.table.uom']}
 						</f:facet>
+						#{requestItem.uom}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-							#{lbl['lbl.cm.extension.code']}
+							#{lbl['lbl.cm.item.table.temporary.code']}
 						</f:facet>
-					#{codificationBackingBean.managedBean.extensionCodeTemp}
+						#{requestItem.cmItem.unspscCode}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.item.table.code']}
+						</f:facet>
+						#{requestItem.cmItem.extensionCode}
+						
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
 					<p:commandButton value="#{lbl['lbl.cm.assign']}"
-						action="#{codificationBackingBean.assignProductCode}"
+						action="#{codificationBackingBean.assignProductCode(requestItem)}"
 						onclick="contractedItemPopUp.show()"
 						update=":form:contractedItemPopUpId"></p:commandButton>
 				</p:column>

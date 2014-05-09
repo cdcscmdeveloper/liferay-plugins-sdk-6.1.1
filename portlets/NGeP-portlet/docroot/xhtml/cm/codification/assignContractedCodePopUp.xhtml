@@ -8,100 +8,164 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 	<h:panelGroup id="contractedItemPopUpId">
-		<table>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.segment']}"></p:outputLabel></td>
-				<td><ac:lov id="segmentId" lovId="CM_UNSPSC" size="26"
-						headerText="Segment" update=":form:contractedItemPopUpId"
-						saveObject="codificationBackingBean.managedBean.selectedLovUnspscSegment"
-						value="#{codificationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^0">
-					</ac:lov></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.family']}"></p:outputLabel></td>
-				<td><ac:lov id="familyId" lovId="CM_UNSPSC" size="26"
-						headerText="Family" update=":form:contractedItemPopUpId"
-						saveObject="codificationBackingBean.managedBean.selectedLovUnspscFamily"
-						value="#{codificationBackingBean.managedBean.selectedLovUnspscFamily.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
-					</ac:lov></td>
+		<p:panel header="SEARCH">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.segment']}"></p:outputLabel></td>
+					<td><ac:lov id="segmentId" lovId="CM_UNSPSC" size="26"
+							headerText="Segment" update=":form:contractedItemPopUpId"
+							saveObject="codificationBackingBean.managedBean.selectedLovUnspscSegment"
+							value="#{codificationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"
+							conditionField="recordStatus^1|unspscLevel^0">
+						</ac:lov></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.family']}"></p:outputLabel></td>
+					<td><ac:lov id="familyId" lovId="CM_UNSPSC" size="26"
+							headerText="Family" update=":form:contractedItemPopUpId"
+							saveObject="codificationBackingBean.managedBean.selectedLovUnspscFamily"
+							value="#{codificationBackingBean.managedBean.selectedLovUnspscFamily.unspscTitle}"
+							conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
+						</ac:lov></td>
 
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.class']}"></p:outputLabel></td>
-				<td><ac:lov id="classId" lovId="CM_UNSPSC" size="26"
-						headerText="Class" update=":form:contractedItemPopUpId"
-						saveObject="codificationBackingBean.managedBean.selectedLovUnspscClass"
-						value="#{codificationBackingBean.managedBean.selectedLovUnspscClass.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscFamily.unspscCode}">
-					</ac:lov></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.commodity']}"></p:outputLabel></td>
-				<td><ac:lov id="commodityId" lovId="CM_UNSPSC" size="26"
-						headerText="Commodity" update=":form:contractedItemPopUpId"
-						saveObject="codificationBackingBean.managedBean.selectedUNSPSCObj"
-						value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
-						postUpdateListener="#{codificationBackingBean.fillExtensionLists()}">
-					</ac:lov></td>
-			</tr>
-		
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
-				<td><p:selectOneMenu id="typeDD" required="ture" requiredMessage="Please select"
-						value="#{codificationBackingBean.managedBean.typeCode}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{codificationBackingBean.managedBean.typeCriteria}" />
-					</p:selectOneMenu></td>
-			</tr>
-			
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-				<td><p:selectOneMenu id="brandDD" required="ture"
-						value="#{codificationBackingBean.managedBean.brandCode}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{codificationBackingBean.managedBean.brandCriteria}" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr style="margin-bottom: 10px" />
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-				<td><p:selectOneMenu id="measurementDD" required="ture"
-						value="#{codificationBackingBean.managedBean.measurementCode}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{codificationBackingBean.managedBean.measurementCriteria}" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr style="margin-bottom: 10px" />
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
-				<td><p:selectOneMenu id="colorDD" required="ture"
-						value="#{codificationBackingBean.managedBean.colorCode}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{codificationBackingBean.managedBean.colorCriteria}" />
-					</p:selectOneMenu></td>
-			</tr>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.class']}"></p:outputLabel></td>
+					<td><ac:lov id="classId" lovId="CM_UNSPSC" size="26"
+							headerText="Class" update=":form:contractedItemPopUpId"
+							saveObject="codificationBackingBean.managedBean.selectedLovUnspscClass"
+							value="#{codificationBackingBean.managedBean.selectedLovUnspscClass.unspscTitle}"
+							conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscFamily.unspscCode}">
+						</ac:lov></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.commodity']}"></p:outputLabel></td>
+					<td><ac:lov id="commodityId" lovId="CM_UNSPSC" size="26"
+							headerText="Commodity" update=":form:contractedItemPopUpId"
+							saveObject="codificationBackingBean.managedBean.selectedUNSPSCObj"
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+							conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
+							postUpdateListener="#{codificationBackingBean.fillExtensionLists()}">
+						</ac:lov></td>
+				</tr>
 
-		</table>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu id="typeDD" required="ture"
+							requiredMessage="Please select"
+					        value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								style="width:278px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{codificationBackingBean.managedBean.typeCriteria}" />
+						</p:selectOneMenu></td>
+				</tr>
 
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+					<td><p:selectOneMenu id="brandDD" required="ture"
+							value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								style="width:278px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{codificationBackingBean.managedBean.brandCriteria}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr style="margin-bottom: 10px" />
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+					<td><p:selectOneMenu id="measurementDD" required="ture"
+								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								style="width:278px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{codificationBackingBean.managedBean.measurementCriteria}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr style="margin-bottom: 10px" />
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
+					<td><p:selectOneMenu id="colorDD" required="ture"
+							value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								style="width:278px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{codificationBackingBean.managedBean.colorCriteria}" />
+						</p:selectOneMenu></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<div style="text-align: right;">
+			<p:commandButton value="Search" icon="ui-icon-search"
+				action="#{codificationBackingBean.extensionCodeSearch}"
+				update="itemTableID" />
+		</div>
+
+		<p:panel header="SEARCH RESULTS">
+
+			<p:dataTable id="itemTableID"
+				value="#{codificationBackingBean.extensionSearchItemDataModel}"
+				rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
+				selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"
+				lazy="true">
+
+				<p:column selectionMode="single" style="width:2%" />
+
+				<ac:paginator for="itemTableID"></ac:paginator>
+
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.type']}
+						</f:facet>
+						#{obj[4]}
+
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.brand']}
+						</f:facet>
+						#{obj[5]}
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.measurement']}
+						</f:facet>
+						
+						#{obj[6]}
+
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.color']}
+						</f:facet>
+						#{obj[7]}
+					</p:column>
+
+
+
+
+			</p:dataTable>
+
+			<div class="clear"></div>
+			<div style="text-align: right;"></div>
+
+		</p:panel>
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.cm.assign']}"
+				action="#{codificationBackingBean.insertContractedItemCode}"
+				update=":form:contractedTableId" icon="ui-icon-accept"
+				onclick="contractedItemPopUp.hide()"></p:commandButton>
+
+
+			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+				icon="ui-icon-cancel" immediate="true"
+				onclick="contractedItemPopUp.hide()"></p:commandButton>
+		</div>
+		<div class="clear"></div>
 
 	</h:panelGroup>
 
-	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.ok']}"
-			action="#{codificationBackingBean.insertContractedItemCode}"
-			update=":form:contractedTableId" icon="ui-icon-accept"
-			onclick="contractedItemPopUp.hide()"></p:commandButton>
 
 
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}" icon="ui-icon-cancel"
-			immediate="true" onclick="contractedItemPopUp.hide()"></p:commandButton>
-	</div>
-<div class="clear"></div>
 </ui:composition>

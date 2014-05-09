@@ -2,6 +2,7 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -9,6 +10,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -20,6 +22,7 @@ import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.PagingConst;
@@ -143,43 +146,49 @@ public class BPMTaskListBackingBean extends
 
 		String viewBy = "";
 		try{
-			BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
+//			 retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
+			
+			this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
 		}catch(Exception e){
 			log.info("BPM Errors");
 			e.printStackTrace();
 		}
 	}
 
-	public BpmResponseDTO retrieveWorklistItems(String status, String viewBy) {
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		// String token = bpmSO.authenticate("roslan", "welcome1");
-		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
-
-		System.out.println("testing BPM auth******" + token);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-		reqDTO.setOffset(calculateFinalOffSet(1));
-		reqDTO.setState(status);
-		reqDTO.setViewBy(viewBy);
-		reqDTO.setCtxToken(token);
-		BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
-
-		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
-
+	public void retrieveWorklistItems(String status, String viewBy, String assignment) {
+		System.out.println(">>>>>>>>>>retrieveWorklistItems<<<<<<<<<<");
 		
+//		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+//				.getServiceObject(IBpmSO.class);
+//
+//		// String token = bpmSO.authenticate("roslan", "welcome1");
+//		FacesScopes face = new FacesScopes();
+//		String token = face.getBPMAuthenticationCtxToken();
+//
+//		System.out.println("testing BPM auth******" + token);
+//		BpmRequestDTO reqDTO = new BpmRequestDTO();
+//
+//		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+//		reqDTO.setOffset(calculateFinalOffSet(1));
+//		reqDTO.setState(status);
+//		reqDTO.setViewBy(viewBy);
+//		reqDTO.setAssignment(assignment);
+//		reqDTO.setCtxToken(token);
+//		BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+//
+//		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
+//		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getTotal());
+//
+//
+//		
 
-
-		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
-
-
-
-
-		return responseDTO;
+//
+//		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+//
+//
+//
+//
+//		return responseDTO;
 	}
 
 	public void navigateToURL() throws PortalException, SystemException {
@@ -254,18 +263,16 @@ public class BPMTaskListBackingBean extends
 
 	}
 
-	private int calculateFinalOffSet(int currentPage) {
-
-		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
-
-		return offSet;
-	}
-
-	public void filterViewby() {
+	
+	public void filterViewbyNAssignment() {
+		System.out.println(">>>>>>>>>>>>>>>filterViewbyNAssignment<<<<<<<<<<<<<<<<<");
 		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getViewBy());
-		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
+		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getAssignment());
+//		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
+		this.getManagedBean().getTaskListDataModel().reloadData();
 
 	}
+	
 
 /*	public void filterStatus() {
 
@@ -305,8 +312,40 @@ public class BPMTaskListBackingBean extends
 	
 	public void refreshTaskList(){
 		
-		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
+		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 	}
 	
+   public void refreshPendingDeliveryList(){
+	   
+	   this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
+	}
+   
+ 
+	public String goToMyTasks(int showIndex){
+		System.out.println(">>>>>>>>>>goToMyTasks<<<<<<<<<<");
+		System.out.println(">>>>>showIndex = "+showIndex);
+		this.getManagedBean().setShowIndex(showIndex);
+		
+		if(showIndex == 0){
+		//set filters to default for MyTasks
+		this.getManagedBean().setViewBy("ALL");
+		this.getManagedBean().setAssignment("ALL");
+		}
+
+	
+		return "taskListview";
+	}
+	
+	public List<FlFulfilmentOrder> retrievePendingDeliverylist() {
+		System.out.println(">>>>>>>>>>retrievePendingDeliverylist<<<<<<<<<<");
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance()
+				.getServiceObject("fl", IFulfilmentOrderSO.class);
+
+		
+		List<FlFulfilmentOrder> flFulFilmentOrderList = fulfilmentOrderSO.getPendingDoList();
+
+			return flFulFilmentOrderList;
+	}
+
 
 }
