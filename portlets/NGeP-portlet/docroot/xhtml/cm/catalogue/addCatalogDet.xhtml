@@ -10,6 +10,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+
+  <!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
+  
+<h:outputScript library="jquery/slides" name="jquery.slides.js" />
+
+  <script>
+    $(function() {
+      $('#slides').slidesjs({
+        width: 940,
+        height: 528,
+        navigation: {
+          effect: "fade"
+        },
+        pagination: {
+          effect: "fade"
+        },
+        effect: {
+          fade: {
+            speed: 400
+          }
+        }
+      });
+    });
+  </script>
+
 	<p:messages id="catalogDetMsgId" globalOnly="true"></p:messages>
 	<p:outputPanel id="addCatDet">
 
@@ -71,16 +96,19 @@
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10" style="width: 250px;"><h:panelGrid
-							styleClass="imageFrame">
+					<td rowspan="10" >
 
-							<p:galleria id="imageUploadID" autoPlay="false"
-								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
-								var="imageObj" panelWidth="230" panelHeight="150">
-								<p:graphicImage id="imageId" height="150" width="230"
-									value="/images/#{imageObj.imageName}" />
-							</p:galleria>
-						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
+					  		<div class="container">
+							  <div id="slides" style="width:250px;">
+							  
+							    <ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+							    	<img src="/NGeP-portlet/images/#{cmImage.imageName}" />
+							    </ui:repeat>
+							    
+							  </div>
+							</div>
+							
+						<p:commandButton value="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
 							icon="ui-icon-upload" onclick="imageDialog.show()" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
@@ -157,11 +185,10 @@
 
 
 			<p:fileUpload
-				fileUploadListener="#{catalogueBackingBean.imageUpload}"
-				oncomplete="refresh();" mode="advanced" id="upload"
+				fileUploadListener="#{catalogueBackingBean.imageUpload}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="imageUploadID">
+				oncomplete="refresh();" multiple="true" >
 			</p:fileUpload>
 
 		</p:dialog>
