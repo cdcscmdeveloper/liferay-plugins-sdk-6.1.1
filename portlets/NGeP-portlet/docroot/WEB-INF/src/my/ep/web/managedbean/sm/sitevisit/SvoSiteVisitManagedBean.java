@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.sitevisit;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,9 +8,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -29,6 +30,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvAddress selectedSmSvAddress;
 	private Map<String,SmSvTemplate> smSvTemplateMap;
 	private SmSvTemplate selectedSvTemplate;
+	private List<SmSvInterviewee> selectedIntervieweeLs;
 	
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -108,6 +110,16 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSelectedSvTemplate(SmSvTemplate selectedSvTemplate) {
 		this.selectedSvTemplate = selectedSvTemplate;
+	}
+
+	public List<SmSvInterviewee> getSelectedIntervieweeLs() {
+		if(selectedIntervieweeLs == null)
+			selectedIntervieweeLs = new ArrayList<SmSvInterviewee>();
+		return selectedIntervieweeLs;
+	}
+
+	public void setSelectedIntervieweeLs(List<SmSvInterviewee> selectedIntervieweeLs) {
+		this.selectedIntervieweeLs = selectedIntervieweeLs;
 	}
 
 

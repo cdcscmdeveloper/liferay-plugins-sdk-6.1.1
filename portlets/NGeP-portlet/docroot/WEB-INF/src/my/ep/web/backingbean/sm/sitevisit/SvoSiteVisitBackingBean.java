@@ -17,8 +17,10 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
+import my.ep.persistence.entity.sm.SmSvComment;
 import my.ep.persistence.entity.sm.SmSvFinChecklist;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
+import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -105,15 +107,24 @@ public class SvoSiteVisitBackingBean extends
 				//						+ entry.getValue().getPmParameter().getParameterCode());
 				//			}
 			}
-		}
+			
+			if(smSvTask.getSmSvComment() == null){
+				smSvTask.setSmSvComment(new SmSvComment());
+				smSvTask.getSmSvComment().setSmSvTask(this.getManagedBean().getSmSvTask());
+			}
+			
+			if(smSvTask.getSmSvOffice() == null){
+				smSvTask.setSmSvOffice(new SmSvOffice());
+				smSvTask.getSmSvOffice().setSmSvTask(this.getManagedBean().getSmSvTask());
+			}
+//		}
+		
+		System.out.println("*********categories**" +this.getManagedBean().getSmSvTask().getSmSvCategories().size());
 
-//	}
+	}
 	
 	public String submitSiteVisitReport(String action){
-		/*Map map2 = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap();
-		String action = (String) map2.get("name1");
-		*/
+
 		log.info("----------------------submitSiteVisitReport start----------------" +  action);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
@@ -144,63 +155,38 @@ public class SvoSiteVisitBackingBean extends
 	public void changeActiveIndex(int index,String catType){
 		System.out.println("*******changeActiveIndex********" + index);
 		this.getManagedBean().setActiveIndex(index);
-		
+		System.out.println("*******Category pass********" + this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).isPassed()+"****"+ this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPmCategoryL3().getCategoryL3Code());
 		System.out.println("*******changeActiveIndex CatType********" + catType.length());
 		if(catType.length() > 0){
+//			this.getManagedBean().setSelectedSvTemplate(new SmSvTemplate());
 			this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 			
-			System.out.println("******SELECTED TEMPLATE" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
-			
-//			if(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress() == null){
-//				System.out.println("**********SvAddress Null*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
-//				//System.out.println("**********SvAddress Class Null*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getClass());
-//				this.getManagedBean().getSelectedSvTemplate().setSmSvAddress(new SmSvAddress());
-//				//this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().setSmSvTask(this.getManagedBean().getSmSvTask());
-//				System.out.println("**********SvAddress Added*********");
-//				System.out.println("**********SvAddress Added*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
-//			}
-//			
-//			if(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees() == null){
-//				// || this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees().isEmpty()
-//				System.out.println("**********getSmSvInterviewees Null*********");
-//				this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().setSmSvInterviewees(new ArrayList<SmSvInterviewee>());
-//			}
+			//this.getManagedBean().setSelectedSmSvAddress(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
 		}
-		System.out.println("**********SvAddress Selected SV*********" + this.getManagedBean().getSelectedSvTemplate());
-		//System.out.println("**********SvAddress Added ENd*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
-		//System.out.println("**********SvAddress getSmSvInterviewees*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees());
-		
+//		System.out.println("**********SvAddress Selected SV*********" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
 	}
 	
 	public void addInterviewee(){
-		System.out.println("*******addInterviewee**********");
-		System.out.println("**********addInterviewee Selected SV*********" + this.getManagedBean().getSelectedSvTemplate());
-		
-		if(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress() == null){
-			//System.out.println("**********SvAddress Null*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
-			//System.out.println("**********SvAddress Class Null*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getClass());
-			this.getManagedBean().getSelectedSvTemplate().setSmSvAddress(new SmSvAddress());
-			this.getManagedBean().getSelectedSvTemplate().setSmSvTask(this.getManagedBean().getSmSvTask());
-			
-			//this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().setSmSvTask(this.getManagedBean().getSmSvTask());
-			//System.out.println("**********SvAddress Added*********");
-			//System.out.println("**********SvAddress Added*********" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
-		}
-		
-		//this.getManagedBean().getSelectedSmSvAddress().setSmAddress(smAddress);
-//		
-//		if(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees() == null){
-//			// || this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees().isEmpty()
-//			System.out.println("**********getSmSvInterviewees Null*********");
-//			this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().setSmSvInterviewees(new ArrayList<SmSvInterviewee>());
-//		}
-		System.out.println("******b4******"+this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees().size());
-		
-		//System.out.println("*******getSelectedSvTemplate**********" + this.getManagedBean().getSelectedSvTemplate());
-		SmSvInterviewee obj =new SmSvInterviewee();
+		System.out.println("*******getSelectedSvTemplate**********" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
+		SmSvInterviewee obj = new SmSvInterviewee();
+		obj.setSmSvAddress(this.getManagedBean().getSelectedSvTemplate().getSmSvAddress());
 		this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees().add(obj);
 		
 		System.out.println("******after******"+this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmSvInterviewees().size());
+	}
+	
+	public void selectSvAddress(){
+		System.out.println("******preSetSelectedAddress*******" + this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSvAddressId());
+		System.out.println("******preSetSelectedAddress add1*******" +this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().getSmAddress().getAddress1());
+		
+		this.getManagedBean().getSelectedSvTemplate().getSmSvAddress().setSmSvInterviewees(new ArrayList<SmSvInterviewee>());
+	}
+	
+	public void testGetValue(){
+//		this.getManagedBean().getSmSvTask().getSmSvOffice().isOwned()
+		SmSvTemplate svTemp = this.getManagedBean().getSmSvTemplateMap().get("L");
+		System.out.println("*****Sv Address*****" + svTemp.getSmSvAddress().getSmAddress().getAddress1());
+		System.out.println("*****Sv Interviewee size*****" + svTemp.getSmSvAddress().getSmSvInterviewees().size());
 	}
 	
 	public void test(){
@@ -221,6 +207,5 @@ public class SvoSiteVisitBackingBean extends
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		//}
 	}
-	
 
 }

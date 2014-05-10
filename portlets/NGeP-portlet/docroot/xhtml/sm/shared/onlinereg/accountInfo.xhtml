@@ -40,15 +40,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busTypeId"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}"
 						readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}" style="width:200px">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
-						<f:selectItems
-							value="#{registrationBackingBean.managedBean.businessTypeLs}"
-							var="busTypeLs"
-							itemValue="#{busTypeLs.pmParameter.parameterCode}"
-							itemLabel="#{busTypeLs.codeName}"></f:selectItems>
-						<p:ajax event="change" update="outPnlRegForm,indBtnSubmit"
-							listener="#{registrationBackingBean.businessTypeOnChange}" />
-
+						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
 					</p:selectOneMenu></td>
 				<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">

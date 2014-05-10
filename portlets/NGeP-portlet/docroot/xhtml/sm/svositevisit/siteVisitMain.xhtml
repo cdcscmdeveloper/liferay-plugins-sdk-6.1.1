@@ -17,20 +17,34 @@
 				<td><ui:include
 						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
-				<td style="text-align: left;"><p:outputPanel id="pnlDisplay"
-						style="width:100%">
+				<td><p:outputPanel id="pnlDisplay">
 						<c:if
 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
-							<ui:include src="/xhtml/sm/svositevisit/siteVisitView.xhtml" />
+							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 						</c:if>
+
+<!-- 						<c:if -->
+<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}"> -->
+<!-- 							<ui:include src="/xhtml/sm/svositevisit/siteVisitRptCommon.xhtml" /> -->
+<!-- 						</c:if> -->
 
 						<c:if
 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
-							<ui:include src="/xhtml/sm/svositevisit/siteVisitRptCommon.xhtml" />
+							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 
 						<c:if
 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 2}">
+							<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 3}">
+							<ui:include src="/xhtml/sm/svositevisit/commentRecommendation.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 11}">
 							<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
 						</c:if>
 					</p:outputPanel></td>

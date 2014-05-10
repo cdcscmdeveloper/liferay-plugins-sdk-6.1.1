@@ -8,13 +8,16 @@
 <!-- 		#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates[0].pmParameter.parameterCode} -->
 	<p:tabMenu style="display : table-caption;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
 		<p:menuitem value="Site Visit Info" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
-		<p:menuitem value="Common" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
+<!-- 		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" /> -->
+		<p:menuitem value="Financial Information" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
+		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
+		<p:menuitem value="Comments &#38; Recommendations" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
 		<c:forEach var="catType"
 			items="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
 			<c:if test="#{catType.pmParameter.parameterCode == 'L'}">
 				<p:menuitem value="Dockyard" id="dockyardId"
 					update="pnlDisplay,tabIndex"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,catType.pmParameter.parameterCode)}" />
+					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(11,catType.pmParameter.parameterCode)}" />
 			</c:if>
 		</c:forEach>
 	</p:tabMenu>

@@ -1,0 +1,186 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Capital/Equity Details" toggleable="true" id="pnlCapital">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Authorized Capital (RM)" /></td>
+				<td><p:inputText /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Paid-up Capital (RM)" /></td>
+				<td><p:inputText /></td>
+				<td></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Equity" toggleable="true" id="pnlEquity">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Total Owner" /></td>
+				<td><p:inputText />person(s)</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Owner Name 1." /></td>
+				<td><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="2." /></td>
+				<td><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Company Name" /></td>
+				<td><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Bumiputera (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non-Bumiputera (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non-Malaysian (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Gov Agency Equity" /><br /><p:outputLabel
+						value="Unit Trust Agency (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Gov Equity (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Local Company (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Foreign Company (RM)" /></td>
+				<td><p:inputText /></td>
+				<td><p:inputText />%</td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Board of Directors" toggleable="true" id="pnlBOD">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Total" /></td>
+				<td><p:inputText />person(s)</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Non Bumiputera " /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Director Name" /></td>
+				<td><p:inputText /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Management" toggleable="true" id="pnlMgmt">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Total" /></td>
+				<td><p:inputText />person(s)</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non Bumiputera" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="CEO Name" /></td>
+				<td><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Manager Name" /></td>
+				<td><p:inputText /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Workers" toggleable="true" id="pnlWorker">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Total" /></td>
+				<td><p:inputText />person(s)</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non Bumiputera" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:inputText />person(s)</td>
+				<td><p:inputText />%</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

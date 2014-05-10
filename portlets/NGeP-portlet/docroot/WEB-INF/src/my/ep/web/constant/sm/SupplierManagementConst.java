@@ -102,6 +102,8 @@ public class SupplierManagementConst {
 	public static final String STYPE_CONSULTANT = "J";
 	public static final String STYPE_CONTRACTOR = "K";
 	public static final String STYPE_BASIC = "B";
+	public static final String ACC_BASIC = "B";
+	public static final String ACC_MOF = "M";
 	public static final String PERM_ADD = "P";
 	public static final String BUS_ADD = "C";
 	public static final String RES_ADD = "R";
@@ -111,6 +113,7 @@ public class SupplierManagementConst {
 	public static final int FIRST_USER_CONT_SIGNER = 1;
 	public static final boolean FIRST_USER_CONT_PERSON = true;
 	public static final int REG_SOFTCERT = 0;
+	public static final int REG_BUMI = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
 
 	public static final String SECTION_REV_ROLE_PO = "P";

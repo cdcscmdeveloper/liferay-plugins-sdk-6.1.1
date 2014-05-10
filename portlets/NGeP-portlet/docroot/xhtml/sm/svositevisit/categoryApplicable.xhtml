@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Category Applicable" id="pnlCategoryApplicable" toggleable="true">
+		<p:dataTable
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvCategories}"
+			var="catApp">
+
+			<p:column headerText="L1">
+						#{catApp.pmCategoryL1.categoryL1Code}
+				</p:column>
+
+			<p:column headerText="L2">
+						#{catApp.pmCategoryL2.categoryL2Code}
+					</p:column>
+
+			<p:column headerText="L3">
+						#{catApp.pmCategoryL3.categoryL3Code}
+				</p:column>
+
+			<p:column headerText="Category Description">
+						#{catApp.pmCategoryL3.categoryName}
+				</p:column>
+
+			<p:column headerText="First Recommendation">
+				<p:selectOneMenu id="catPassed" value="#{catApp.passed}">
+					<f:selectItem itemLabel="---Select---" itemValue="#{null}"/>
+					<f:selectItem itemValue="true" itemLabel="Approve" />
+					<f:selectItem itemValue="false" itemLabel="Reject" />
+				</p:selectOneMenu>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
