@@ -18,7 +18,7 @@ public interface QTConstants {
 	public static final String STATUS="";
 	
 	public static final String MAINTANANCE_PAGE="quatationtendercreation";
-	public static final String BO_MAINTANANCE_PAGE="businessownercreation";
+	public static final String BO_MAINTANANCE_PAGE="/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	
@@ -92,4 +92,5 @@ public interface QTConstants {
 	//S2 bpm page redirect urls
 	public static final String BUSINESS_OWNER_SPEC_PREPARATION="/xhtml/sc/specification/specificationview.xhtml";
 	public static final String SPECIFICICATON_PREPARATION="/xhtml/sc/specification/specificationCommitteeView.xhtml";
+	public static final String BO_SPEC_CREATION_PAGE="/xhtml/sc/specification/specificationCreation.xhtml";
 }

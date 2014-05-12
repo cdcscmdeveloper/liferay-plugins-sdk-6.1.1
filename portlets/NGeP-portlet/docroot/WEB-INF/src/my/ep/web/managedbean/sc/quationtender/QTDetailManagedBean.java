@@ -247,7 +247,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
-	private List<ScCommitteeMember> selectScCommitteMember;
+	private ScCommitteeMember selectScCommitteMember;
 	private ScCommitteeMember committeMember;
 	private List<SelectItem> selections;
 	private List<PmUser> externalUsers;
@@ -624,12 +624,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedCloneCommittee = selectedCloneCommittee;
 	}
 
-	public List<ScCommitteeMember> getSelectScCommitteMember() {
+	public ScCommitteeMember getSelectScCommitteMember() {
 		return selectScCommitteMember;
 	}
 
 	public void setSelectScCommitteMember(
-			List<ScCommitteeMember> selectScCommitteMember) {
+			ScCommitteeMember selectScCommitteMember) {
 		this.selectScCommitteMember = selectScCommitteMember;
 	}
 

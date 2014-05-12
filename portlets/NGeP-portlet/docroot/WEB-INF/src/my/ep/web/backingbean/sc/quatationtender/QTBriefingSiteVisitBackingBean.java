@@ -282,7 +282,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		} finally {
 			statusSO = null;
 		}
-		selectedBriefing.setPmStatus(status);
+		selectedBriefing.setBsvStatus(status);
 
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
@@ -333,7 +333,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		} finally {
 			statusSO = null;
 		}
-		selectedSiteBriefing.setPmStatus(status);
+		selectedSiteBriefing.setBsvStatus(status);
 
 		List<BriefingZoneBean> beans = getManagedBean().getBriefingZoneBean();
 		for (BriefingZoneBean briefingZoneBean : beans) {
@@ -431,7 +431,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		} finally {
 			statusSO = null;
 		}
-		selectedBrefing.setPmStatus(status);
+		selectedBrefing.setBsvStatus(status);
 		if (null == brefings) {
 			brefings = new ArrayList<ScQtBsvDtl>();
 		}
@@ -474,7 +474,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			statusSO = null;
 		}
 
-		selectedSiteBriefing.setPmStatus(status);
+		selectedSiteBriefing.setBsvStatus(status);
 		if (null == siteBriefings) {
 			siteBriefings = new ArrayList<ScQtBsvDtl>();
 		}
