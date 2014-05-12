@@ -8,13 +8,13 @@
 
 	<p:panel>
 	 <br/>
-	    <p:dataTable value="" var="PreferenceList" >
+	    <p:dataTable value="#{userprofilesManagedBean.preferencelists}" var="PreferenceList" >
 
 	    <p:column headerText="#{lbl['lbl.pm.profiles.preferences.preferred']}" > 
 	      <p:selectBooleanCheckbox/> 
         </p:column> 		
-	    <p:column > 
-          <h:outputText />
+	    <p:column headerText="#{lbl['lbl.pm.profiles.preferences.notificationmode']}" > 
+          <h:outputText value="#{PreferenceList.noticeMode}" />
         </p:column>            
 	</p:dataTable>
 	       		
