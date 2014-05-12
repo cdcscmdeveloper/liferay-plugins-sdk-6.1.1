@@ -11,6 +11,7 @@
 	<cc:attribute name="lovId" required="true" />
 	<cc:attribute name="value" />
 	<cc:attribute name="disabled" default="false" />
+	<cc:attribute name="required" default="false" />
 	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="saveObject" required="true" />
 	<cc:attribute name="headerText" />
@@ -32,7 +33,8 @@
 			value="#{cc.attrs.value}"
 			size="#{cc.attrs.size}"
 			readonly="#{cc.attrs.readonly}"
-			disabled="#{cc.attrs.disabled}">
+			disabled="#{cc.attrs.disabled}"
+			required="#{cc.attrs.required}">
 		</p:inputText>
 	</h:panelGroup>
 	&#160;
