@@ -185,6 +185,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
 					reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
 				}// TODO hardcode to get the value, should remove after have real data
+				reqDTO.setOrgProfileId(1003L);
 			} else { // Central Contract	
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 				if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
