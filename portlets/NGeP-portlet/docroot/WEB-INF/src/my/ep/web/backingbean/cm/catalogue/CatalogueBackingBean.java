@@ -976,8 +976,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		//Read Excel document first
-//		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
-		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template-mod11.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
