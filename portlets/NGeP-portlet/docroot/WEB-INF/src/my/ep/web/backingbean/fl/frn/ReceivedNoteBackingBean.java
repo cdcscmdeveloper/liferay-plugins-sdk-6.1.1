@@ -70,6 +70,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
 			System.out.println("getReceivedQty: "+getManagedBean().getFulfilmentNoteItem().getReceivedQty());
 			getUserProfiles(reqDTO);
+			//fulfilmentNote.setFlRequest(getManagedBean().getFulfilmentRequest());
 			reqDTO.setFulfilmentNote(fulfilmentNote);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
@@ -158,6 +159,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			//Add noteItemList to Managed Bean List.
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 			getManagedBean().getFulfilmentNoteItem();
+			getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
 				
 			}*/
@@ -179,39 +181,45 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    		address.append(strSpace);
+	    	if(null != fulfilmentRequest.getSupplierBranch()){
+	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
+	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    	    		address.append(strSpace);
+	    	    		
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    	    		address.append(strSpace);
+	    	    	
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    	    		address.append("\n");
+	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
+	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	    	}
+	    	    	if(null != address.toString()){
+	    	    		System.out.println("addresss     "+address.toString());
+	    	    	}
+	    			
+	    		}
+	    	}	
 	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    		address.append(strSpace);
-	    		
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    		address.append(strSpace);
-	    	
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    		address.append("\n");
-	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
-	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	}
-	    	if(null != address.toString()){
-	    		System.out.println("addresss     "+address.toString());
-	    	}
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
 	 
