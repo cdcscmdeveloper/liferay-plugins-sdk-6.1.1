@@ -4480,7 +4480,7 @@
 		</portlet>
 		<portlet>
 		<portlet-name>pmUserProfilePersonalization</portlet-name>
-		<display-name>User Profile Details Personalization</display-name>
+		<display-name>My Profile</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -4494,8 +4494,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>User Profile Details Link</title>
-			<short-title>User Profile Details Link</short-title>
+			<title>My Profile</title>
+			<short-title>My Profile</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
