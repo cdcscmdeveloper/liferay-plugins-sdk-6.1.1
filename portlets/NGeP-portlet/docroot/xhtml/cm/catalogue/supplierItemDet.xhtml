@@ -13,15 +13,15 @@
 
 	<p:outputPanel id="supplierItemDet">
 
-		<div style="text-align: right;">
+		<div style="text-align: right; float: left;">
 
 
-			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
 				action="#{catalogueBackingBean.cancelToSupplierItemSearch()}"
 				immediate="true"></p:commandButton>
 		</div>
 
-
+<p:spacer height="40px;"></p:spacer>
 		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
 
 			<table style="width: 100%; margin-top: 10px;">

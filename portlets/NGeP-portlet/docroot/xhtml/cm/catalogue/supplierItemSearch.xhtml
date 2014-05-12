@@ -15,95 +15,92 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:tabView style="width: 100%;" id="searchTabId">
+				<td><p:panel style="width: 100%;" header="SEARCH"
+						toggleable="true" id="searchTabId">
 
-						<p:tab id="tab2" title="Search">
-							<table style="margin-top: 10px; width: 100%;">
-								<tr>
-									<td width="15%"><p:outputLabel
-											value="#{lbl['lbl.cm.item.name']}" /></td>
-									<td width="35%%"><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-									<td width="15%"><p:outputLabel
-											value="#{lbl['lbl.cm.item.code']}" /></td>
-									<td width="35%"><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
-								</tr>
+						<table style="margin-top: 10px; width: 100%;">
+							<tr>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.cm.item.name']}" /></td>
+								<td width="35%%"><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.cm.item.code']}" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
+							</tr>
 
 
-								<tr>
-									<td><p:outputLabel value="Supplier Name" /></td>
-									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
-									<td><p:outputLabel value="Business Reg No" /></td>
-									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
-								</tr>
-							</table>
-							<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
-								<table style="width: 100%">
-									<tr>
-										<td width="15%"><p:outputLabel value="EP No" /></td>
-										<td width="35%"><p:inputText size="50"
-												value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
-										<td width="15%"><p:outputLabel value="MOF No" /></td>
-										<td width="35%"><p:inputText size="50"
-												value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
-									</tr>
-
-									<tr>
-										<td><p:outputLabel value="Contract No" /></td>
-										<td><p:inputText size="50"
-												value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText></td>
-
-										<td><p:outputLabel value="Cicular No" /></td>
-										<td><p:inputText size="50"
-												value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
-									</tr>
-								</table>
-							</h:panelGroup>
+							<tr>
+								<td><p:outputLabel value="Supplier Name" /></td>
+								<td><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td><p:outputLabel value="Business Reg No" /></td>
+								<td><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+						</table>
+						<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
 							<table style="width: 100%">
 								<tr>
-									<td width="15%"><p:outputLabel value="State" /></td>
-									<td width="35%"><p:selectManyMenu id="stateIdDD"
-											showCheckbox="true" style="height:100px;width: 200px;"
-											value="#{catalogueBackingBean.managedBean.stateId}">
-											<f:selectItems
-												value="#{catalogueBackingBean.managedBean.stateList}"
-												var="state" itemLabel="#{state.stateName}"
-												itemValue="#{state.stateId}"></f:selectItems>
-											<p:ajax listener="#{catalogueBackingBean.findDistrict}"
-												update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
-										</p:selectManyMenu></td>
-									<td width="15%"><p:outputLabel value="District" /></td>
-									<td width="35%"><p:selectManyMenu id="districtDD"
-											showCheckbox="true" style="height:100px;width: 200px;"
-											value="#{catalogueBackingBean.managedBean.districtId}">
-											<f:selectItems
-												value="#{catalogueBackingBean.managedBean.districtList}"
-												var="district" itemLabel="#{district.districtName}"
-												itemValue="#{district.districtId}"></f:selectItems>
-										</p:selectManyMenu></td>
+									<td width="15%"><p:outputLabel value="EP No" /></td>
+									<td width="35%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
+									<td width="15%"><p:outputLabel value="MOF No" /></td>
+									<td width="35%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
+								</tr>
 
+								<tr>
+									<td><p:outputLabel value="Contract No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText></td>
+
+									<td><p:outputLabel value="Cicular No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
 							</table>
+						</h:panelGroup>
+						<table style="width: 100%">
+							<tr>
+								<td width="15%"><p:outputLabel value="State" /></td>
+								<td width="35%"><p:selectManyMenu id="stateIdDD"
+										showCheckbox="true" style="height:100px;width: 200px;"
+										value="#{catalogueBackingBean.managedBean.stateId}">
+										<f:selectItems
+											value="#{catalogueBackingBean.managedBean.stateList}"
+											var="state" itemLabel="#{state.stateName}"
+											itemValue="#{state.stateId}"></f:selectItems>
+										<p:ajax listener="#{catalogueBackingBean.findDistrict}"
+											update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
+									</p:selectManyMenu></td>
+								<td width="15%"><p:outputLabel value="District" /></td>
+								<td width="35%"><p:selectManyMenu id="districtDD"
+										showCheckbox="true" style="height:100px;width: 200px;"
+										value="#{catalogueBackingBean.managedBean.districtId}">
+										<f:selectItems
+											value="#{catalogueBackingBean.managedBean.districtList}"
+											var="district" itemLabel="#{district.districtName}"
+											itemValue="#{district.districtId}"></f:selectItems>
+									</p:selectManyMenu></td>
+
+							</tr>
+						</table>
 
 
 
 
-							<div style="text-align: right;">
-								<p:commandButton value="Search" icon="ui-icon-search"
-									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									update="@([id$=SupplierItemDtlId])">
-									<f:param name="unspscCode" value="#{unspscCode}" />
+						<div style="text-align: right;">
+							<p:commandButton value="Search" icon="ui-icon-search"
+								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+								update="@([id$=SupplierItemDtlId])">
+								<f:param name="unspscCode" value="#{unspscCode}" />
 
-								</p:commandButton>
+							</p:commandButton>
 
-							</div>
-
-						</p:tab>
-
-					</p:tabView></td>
+						</div>
+					</p:panel></td>
 			</tr>
 		</table>
 		<h:panelGroup id="SupplierItemDtlId">
@@ -209,37 +206,41 @@
 									<p:column headerText="Action" width="2%"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
 										<p:commandLink disabled="#{!supplierItem.atcRequired}"
-														action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
-														process="@this" update="@([id$=addToCartId])"
-														oncomplete="addToCartPopup.show();return false;"
-														partialSubmit="true"
-														rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
-														<p:graphicImage library="ep/images/design"
-															name="cart_full.png" id="addToCartId" />
-													</p:commandLink> <p:tooltip for="addToCartId"
-														value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
-														hideEffect="fade" />
-												<p:commandButton
-														value="#{lbl['lbl.sc.purchase.in.default']}" id="pidId"
-														action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
-														disabled="#{!supplierItem.pidRequired}"
-														rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
-													</p:commandButton> <p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
-														showEffect="fade" hideEffect="fade" />
+											action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
+											process="@this" update="@([id$=addToCartId])"
+											oncomplete="addToCartPopup.show();return false;"
+											partialSubmit="true"
+											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+											<p:graphicImage library="ep/images/design"
+												name="cart_full.png" id="addToCartId" />
+										</p:commandLink>
+										<p:tooltip for="addToCartId"
+											value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
+											hideEffect="fade" />
+										<p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
+											id="pidId"
+											action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
+											disabled="#{!supplierItem.pidRequired}"
+											rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
+										</p:commandButton>
+										<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
+											showEffect="fade" hideEffect="fade" />
 
-												<p:commandButton
-														value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
-														action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
-														rendered="#{supplierItem.circularNo ne null}"
-														disabled="#{supplierItem.circularNo eq null }">
-													</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
-														showEffect="fade" hideEffect="fade" />
+										<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
+											id="sqId"
+											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
+											rendered="#{supplierItem.circularNo ne null}"
+											disabled="#{supplierItem.circularNo eq null }">
+										</p:commandButton>
+										<p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
+											showEffect="fade" hideEffect="fade" />
 
-												<p:commandButton value="CR" update="@form" id="crId"
-														action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
-														rendered="#{supplierItem.contractNo ne null}">
-													</p:commandButton>
-										<p:tooltip for="crId" value="Contract Request" showEffect="fade" hideEffect="fade" /> 
+										<p:commandButton value="CR" update="@form" id="crId"
+											action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
+											rendered="#{supplierItem.contractNo ne null}">
+										</p:commandButton>
+										<p:tooltip for="crId" value="Contract Request"
+											showEffect="fade" hideEffect="fade" />
 									</p:column>
 
 								</p:dataTable>
