@@ -772,143 +772,158 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			String paymentTerms = null;
 //			Map map = new HashMap();
 
-			rowIterator.next();
+			Row row = rowIterator.next();
 
+			String invalidDataMsg = "The following rows have invalid data:\n";
+			int rowNum = 1;
+			int count = 0;
 			while(rowIterator.hasNext()) {
 
-				CmSupplierItem catalogItem = new CmSupplierItem();
-				Row row = rowIterator.next();
+				row = rowIterator.next();
 
-				if(row.getCell(0)!=null){
-					itemcode =  row.getCell(0).getStringCellValue();
-					log.debug("Item Code:" + itemcode);
-				}
-				
-				if(itemcode != null){
-					for(CmSupplierItem supplierItem : cmSupplierItems){
-						if(supplierItem.getCmItem().getExtensionCode().equalsIgnoreCase(itemcode)){
-							catalogItem = supplierItem;
-							catItems.add(catalogItem);
-						}
-					}
+				if(row.getCell(0) == null || row.getCell(0).getStringCellValue().isEmpty() || row.getCell(11) == null || row.getCell(11).getStringCellValue().isEmpty()){
+					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum + "\n");
+					count++;
+					if(rowIterator.hasNext())
+						row = rowIterator.next();
 				} else {
-					break;
-				}
-				CmPricing cmStandardPricing = new CmPricing();
 				
-				if(catalogItem.getCmPricings() != null && catalogItem.getCmPricings().size() > 0){
-					for(CmPricing cmPricing : catalogItem.getCmPricings()){
-						if(cmPricing.getPricingType().equalsIgnoreCase("01")){
-							cmStandardPricing = cmPricing;
+					if(row.getCell(0)!=null){
+						itemcode =  row.getCell(0).getStringCellValue();
+						log.debug("Item Code:" + itemcode);
+					}
+					
+					CmSupplierItem catalogItem = new CmSupplierItem();
+					
+					if(itemcode != null){
+						for(CmSupplierItem supplierItem : cmSupplierItems){
+							if(supplierItem.getCmItem().getExtensionCode().equalsIgnoreCase(itemcode)){
+								catalogItem = supplierItem;
+								catItems.add(catalogItem);
+							}
+						}
+					} else {
+						break;
+					}
+					CmPricing cmStandardPricing = new CmPricing();
+					
+					if(catalogItem.getCmPricings() != null && catalogItem.getCmPricings().size() > 0){
+						for(CmPricing cmPricing : catalogItem.getCmPricings()){
+							if(cmPricing.getPricingType().equalsIgnoreCase("01")){
+								cmStandardPricing = cmPricing;
+							}
 						}
 					}
-				}
-
-				if(cmStandardPricing.getPricingType() == null){
-					cmStandardPricing = new CmStandardPricing();
-					cmStandardPricing.setCmSupplierItem(catalogItem);
-					List<CmPricing> cmPricings = new ArrayList<CmPricing>();
-					cmPricings.add(cmStandardPricing);
-					catalogItem.setCmPricings(cmPricings);
-				}
-				
-				if(row.getCell(6)!=null){
-					price = row.getCell(6).getNumericCellValue();
-					log.debug("price:"+price);
-					cmStandardPricing.setPrice(new BigDecimal(price));
-				}
-				
-				if(row.getCell(7)!=null){
-					startDate = new SimpleDateFormat("dd/mm/yy").parse(row.getCell(7).getStringCellValue());
-					log.debug("start date:"+startDate);
-					cmStandardPricing.setStartDate(startDate);
-				}
-				
-				if(row.getCell(8)!=null){
-					endDate =  new SimpleDateFormat("dd/mm/yy").parse(row.getCell(8).getStringCellValue());
-					log.debug("end date:"+endDate);
-					cmStandardPricing.setEndDate(endDate);
-				}
-				
-				if(row.getCell(9)!=null){
-					additionalItemDesc =  row.getCell(9).getStringCellValue();
-					log.debug("addnl desc:"+additionalItemDesc);
-					catalogItem.setItemDesc(additionalItemDesc);
-				}
-				
-				if(row.getCell(10)!=null){
-					frequency =  row.getCell(10).getNumericCellValue();
-					log.debug("Frequency:"+frequency);
-					catalogItem.setFrequency(new BigDecimal(frequency));
-				}
-				
-				if(row.getCell(11)!=null){
+	
+					if(cmStandardPricing.getPricingType() == null){
+						cmStandardPricing = new CmStandardPricing();
+						cmStandardPricing.setCmSupplierItem(catalogItem);
+						List<CmPricing> cmPricings = new ArrayList<CmPricing>();
+						cmPricings.add(cmStandardPricing);
+						catalogItem.setCmPricings(cmPricings);
+					}
 					
-					IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
-							.getServiceObject("pm", IUomSO.class);
-					UomResDTO resDTO = uomSO.retrieveUomList();
-					List<PmUom> uomList = resDTO.getPmUomList();
+					if(row.getCell(6)!=null){
+						price = row.getCell(6).getNumericCellValue();
+						log.debug("price:"+price);
+						cmStandardPricing.setPrice(new BigDecimal(price));
+					}
 					
-					uom =  row.getCell(11).getStringCellValue();
-					PmUom pmUom = new PmUom();
-					for(PmUom u : uomList){
-						if(u.getUomName() != null && u.getUomName().equalsIgnoreCase(uom)){
-							pmUom = u;
+					if(row.getCell(7)!=null && !row.getCell(7).getStringCellValue().isEmpty()){
+	//					startDate = row.getCell(7).getDateCellValue();
+						startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(7).getStringCellValue());
+						log.debug("start date:"+startDate);
+						cmStandardPricing.setStartDate(startDate);
+					}
+					
+					if(row.getCell(8)!=null && !row.getCell(8).getStringCellValue().isEmpty()){
+	//					endDate =  row.getCell(8).getDateCellValue();
+						endDate =  new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
+						log.debug("end date:"+endDate);
+						cmStandardPricing.setEndDate(endDate);
+					}
+					
+					if(row.getCell(9)!=null){
+						additionalItemDesc =  row.getCell(9).getStringCellValue();
+						log.debug("addnl desc:"+additionalItemDesc);
+						catalogItem.setItemDesc(additionalItemDesc);
+					}
+					
+					if(row.getCell(10)!=null){
+						frequency =  row.getCell(10).getNumericCellValue();
+						log.debug("Frequency:"+frequency);
+						catalogItem.setFrequency(new BigDecimal(frequency));
+					}
+					
+					if(row.getCell(11)!=null && !row.getCell(11).getStringCellValue().isEmpty()){
+						
+						IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
+								.getServiceObject("pm", IUomSO.class);
+						UomResDTO resDTO = uomSO.retrieveUomList();
+						List<PmUom> uomList = resDTO.getPmUomList();
+						
+						uom =  row.getCell(11).getStringCellValue();
+						PmUom pmUom = new PmUom();
+						for(PmUom u : uomList){
+							if(u.getUomName() != null && u.getUomName().equalsIgnoreCase(uom)){
+								pmUom = u;
+								break;
+							}
+						}
+						
+						if(pmUom.getUomCode() != null)
+							catalogItem.setPmUom(pmUom);
+						else{
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Uom not valid", ""));
 							break;
 						}
 					}
 					
-					if(pmUom.getUomCode() != null)
-						catalogItem.setPmUom(pmUom);
-					else{
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Uom not valid", ""));
-						break;
+					if(row.getCell(12)!=null){
+						modelNo =  row.getCell(12).getStringCellValue();
+						log.debug("Model No:"+modelNo);
+						catalogItem.setModelNumber(modelNo);
 					}
-				}
-				
-				if(row.getCell(12)!=null){
-					modelNo =  row.getCell(12).getStringCellValue();
-					log.debug("Model No:"+modelNo);
-					catalogItem.setModelNumber(modelNo);
-				}
-				
-				if(row.getCell(13)!=null){
-					skuNo =  row.getCell(13).getStringCellValue();
-					log.debug("Sku No:"+skuNo);
-					catalogItem.setSkuNumber(skuNo);
-				}
-				
-				if(row.getCell(14)!=null){
-					manfPartNo =  row.getCell(14).getStringCellValue();
-					log.debug("Manufacturer Part No:"+manfPartNo);
-					catalogItem.setManufacturer(manfPartNo);
-				}
-				
-				if(row.getCell(15)!=null){
-					minOrder =  row.getCell(15).getNumericCellValue();
-					log.debug("Min Order:"+minOrder);
-					catalogItem.setMinOrder(minOrder.intValue());
-				}
-				
-				if(row.getCell(16)!=null){
-					maxOrder =  row.getCell(16).getNumericCellValue();
-					log.debug("Max Order:"+maxOrder);
-					catalogItem.setMaxOrder(maxOrder.intValue());
-				}
-				
-				if(row.getCell(17)!=null){
-					leadTime =  row.getCell(17).getNumericCellValue();
-					log.debug("Lead Time:"+leadTime);
-					catalogItem.setLeadTime(new BigDecimal(leadTime));
-				}
-				
-				if(row.getCell(18)!=null){
-					paymentTerms =  row.getCell(18).getStringCellValue();
-					log.debug("Payment Terms:"+paymentTerms);
-					catalogItem.setPaymentTerms(paymentTerms);
-				}
+					
+					if(row.getCell(13)!=null){
+						skuNo =  row.getCell(13).getStringCellValue();
+						log.debug("Sku No:"+skuNo);
+						catalogItem.setSkuNumber(skuNo);
+					}
+					
+					if(row.getCell(14)!=null){
+						manfPartNo =  row.getCell(14).getStringCellValue();
+						log.debug("Manufacturer Part No:"+manfPartNo);
+						catalogItem.setManufacturer(manfPartNo);
+					}
+					
+					if(row.getCell(15)!=null && !row.getCell(15).getStringCellValue().isEmpty()){
+						minOrder =  row.getCell(15).getNumericCellValue();
+						log.debug("Min Order:"+minOrder);
+						catalogItem.setMinOrder(minOrder.intValue());
+					}
+					
+					if(row.getCell(16)!=null && !row.getCell(16).getStringCellValue().isEmpty()){
+						maxOrder =  row.getCell(16).getNumericCellValue();
+						log.debug("Max Order:"+maxOrder);
+						catalogItem.setMaxOrder(maxOrder.intValue());
+					}
+					
+					if(row.getCell(17)!=null){
+						leadTime =  row.getCell(17).getNumericCellValue();
+						log.debug("Lead Time:"+leadTime);
+						catalogItem.setLeadTime(new BigDecimal(leadTime));
+					}
+					
+					if(row.getCell(18)!=null){
+						paymentTerms =  row.getCell(18).getStringCellValue();
+						log.debug("Payment Terms:"+paymentTerms);
+						catalogItem.setPaymentTerms(paymentTerms);
+					}
+				}	
 //				map.put(name, desc);
+				rowNum++;
 			}
 
 			log.debug("********sheet2**********");
@@ -931,7 +946,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				System.out.println("\nItem Desc:" + cmSupplierItem.getCmItem().getItemName());
 			}
 			
-			
+			if(count > 0){
+				System.out.println(invalidDataMsg);
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,invalidDataMsg, ""));
+			}	
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -958,7 +977,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		//Read Excel document first
 //		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
-		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template-mod1.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template-mod11.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
