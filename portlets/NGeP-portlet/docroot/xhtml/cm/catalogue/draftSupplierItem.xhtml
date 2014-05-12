@@ -106,11 +106,11 @@
 
 
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
-		resizable="false" appendToBody="true">
+		resizable="false" styleClass="pop_up_top">
 
 
 		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
-			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/" update="@form"
 			invalidFileMessage="Only XLS files are accepted">
 		</p:fileUpload>
 

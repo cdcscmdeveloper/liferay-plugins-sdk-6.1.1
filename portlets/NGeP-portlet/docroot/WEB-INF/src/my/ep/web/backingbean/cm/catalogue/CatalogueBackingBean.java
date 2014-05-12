@@ -35,6 +35,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -50,6 +51,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
@@ -73,6 +76,7 @@ import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -91,6 +95,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
@@ -742,35 +747,168 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 
 			//Get first sheet from the workbook
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			XSSFSheet sheet = workbook.getSheetAt(1);
 
 
 			//Iterate through each rows from first sheet
 			Iterator<Row> rowIterator = sheet.iterator();
 
-			long name = 0;
-			String desc = null;
-			Map map = new HashMap();
+			List<CmSupplierItem> cmSupplierItems = this.getManagedBean().getMaintainItemList();
+			List<CmSupplierItem> catItems = new ArrayList<CmSupplierItem>();
+			
+			String itemcode = null;
+			Double price;
+			Date startDate = null;
+			Date endDate = null;
+			String additionalItemDesc = null;
+			Double frequency;
+			String uom = null;
+			String modelNo = null;
+			String skuNo = null;
+			String manfPartNo = null;
+			Double minOrder;
+			Double maxOrder;
+			Double leadTime = null;
+			String paymentTerms = null;
+//			Map map = new HashMap();
 
-
+			rowIterator.next();
 
 			while(rowIterator.hasNext()) {
+
+				CmSupplierItem catalogItem = new CmSupplierItem();
 				Row row = rowIterator.next();
 
 				if(row.getCell(0)!=null){
-					name =  (long) row.getCell(0).getNumericCellValue();
-					log.debug("name:"+name);
-
-
-
+					itemcode =  row.getCell(0).getStringCellValue();
+					log.debug("Item Code:" + itemcode);
+				}
+				
+				if(itemcode != null){
+					for(CmSupplierItem supplierItem : cmSupplierItems){
+						if(supplierItem.getCmItem().getExtensionCode().equalsIgnoreCase(itemcode)){
+							catalogItem = supplierItem;
+							catItems.add(catalogItem);
+						}
+					}
+				} else {
+					break;
+				}
+				CmPricing cmStandardPricing = new CmPricing();
+				
+				if(catalogItem.getCmPricings() != null && catalogItem.getCmPricings().size() > 0){
+					for(CmPricing cmPricing : catalogItem.getCmPricings()){
+						if(cmPricing.getPricingType().equalsIgnoreCase("01")){
+							cmStandardPricing = cmPricing;
+						}
+					}
 				}
 
-				if(row.getCell(1)!=null){
-					desc = row.getCell(1).getStringCellValue();
-					log.debug("desc:"+desc);
-
+				if(cmStandardPricing.getPricingType() == null){
+					cmStandardPricing = new CmStandardPricing();
+					cmStandardPricing.setCmSupplierItem(catalogItem);
+					List<CmPricing> cmPricings = new ArrayList<CmPricing>();
+					cmPricings.add(cmStandardPricing);
+					catalogItem.setCmPricings(cmPricings);
 				}
-				map.put(name, desc);
+				
+				if(row.getCell(6)!=null){
+					price = row.getCell(6).getNumericCellValue();
+					log.debug("price:"+price);
+					cmStandardPricing.setPrice(new BigDecimal(price));
+				}
+				
+				if(row.getCell(7)!=null){
+					startDate = new SimpleDateFormat("dd/mm/yy").parse(row.getCell(7).getStringCellValue());
+					log.debug("start date:"+startDate);
+					cmStandardPricing.setStartDate(startDate);
+				}
+				
+				if(row.getCell(8)!=null){
+					endDate =  new SimpleDateFormat("dd/mm/yy").parse(row.getCell(8).getStringCellValue());
+					log.debug("end date:"+endDate);
+					cmStandardPricing.setEndDate(endDate);
+				}
+				
+				if(row.getCell(9)!=null){
+					additionalItemDesc =  row.getCell(9).getStringCellValue();
+					log.debug("addnl desc:"+additionalItemDesc);
+					catalogItem.setItemDesc(additionalItemDesc);
+				}
+				
+				if(row.getCell(10)!=null){
+					frequency =  row.getCell(10).getNumericCellValue();
+					log.debug("Frequency:"+frequency);
+					catalogItem.setFrequency(new BigDecimal(frequency));
+				}
+				
+				if(row.getCell(11)!=null){
+					
+					IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
+							.getServiceObject("pm", IUomSO.class);
+					UomResDTO resDTO = uomSO.retrieveUomList();
+					List<PmUom> uomList = resDTO.getPmUomList();
+					
+					uom =  row.getCell(11).getStringCellValue();
+					PmUom pmUom = new PmUom();
+					for(PmUom u : uomList){
+						if(u.getUomName() != null && u.getUomName().equalsIgnoreCase(uom)){
+							pmUom = u;
+							break;
+						}
+					}
+					
+					if(pmUom.getUomCode() != null)
+						catalogItem.setPmUom(pmUom);
+					else{
+						FacesContext facesContext = FacesContext.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Uom not valid", ""));
+						break;
+					}
+				}
+				
+				if(row.getCell(12)!=null){
+					modelNo =  row.getCell(12).getStringCellValue();
+					log.debug("Model No:"+modelNo);
+					catalogItem.setModelNumber(modelNo);
+				}
+				
+				if(row.getCell(13)!=null){
+					skuNo =  row.getCell(13).getStringCellValue();
+					log.debug("Sku No:"+skuNo);
+					catalogItem.setSkuNumber(skuNo);
+				}
+				
+				if(row.getCell(14)!=null){
+					manfPartNo =  row.getCell(14).getStringCellValue();
+					log.debug("Manufacturer Part No:"+manfPartNo);
+					catalogItem.setManufacturer(manfPartNo);
+				}
+				
+				if(row.getCell(15)!=null){
+					minOrder =  row.getCell(15).getNumericCellValue();
+					log.debug("Min Order:"+minOrder);
+					catalogItem.setMinOrder(minOrder.intValue());
+				}
+				
+				if(row.getCell(16)!=null){
+					maxOrder =  row.getCell(16).getNumericCellValue();
+					log.debug("Max Order:"+maxOrder);
+					catalogItem.setMaxOrder(maxOrder.intValue());
+				}
+				
+				if(row.getCell(17)!=null){
+					leadTime =  row.getCell(17).getNumericCellValue();
+					log.debug("Lead Time:"+leadTime);
+					catalogItem.setLeadTime(new BigDecimal(leadTime));
+				}
+				
+				if(row.getCell(18)!=null){
+					paymentTerms =  row.getCell(18).getStringCellValue();
+					log.debug("Payment Terms:"+paymentTerms);
+					catalogItem.setPaymentTerms(paymentTerms);
+				}
+//				map.put(name, desc);
 			}
 
 			log.debug("********sheet2**********");
@@ -780,6 +918,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			//    new FileOutputStream(new File("C"));
 			// workbook.write(out);
 			//  out.close();
+			
+			
+				ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+					CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
+					reqDTO.setSaveSupplierItems(catItems);
+					CatalogueResDTO resDTO  = catalogueSO.updateSupplierItem(reqDTO);
+
+			
+			for(CmSupplierItem cmSupplierItem : cmSupplierItems){
+				System.out.println("\nItem Code:" + cmSupplierItem.getCmItem().getExtensionCode());
+				System.out.println("\nItem Desc:" + cmSupplierItem.getCmItem().getItemName());
+			}
+			
+			
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -805,13 +957,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		//Read Excel document first
-		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
+//		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template-mod1.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
 		XSSFSheet product = my_xlsx_workbook.getSheetAt(1);
-		XSSFSheet pricing = my_xlsx_workbook.getSheetAt(2);
-		XSSFSheet zonal = my_xlsx_workbook.getSheetAt(3);
+//		XSSFSheet pricing = my_xlsx_workbook.getSheetAt(2);
+//		XSSFSheet zonal = my_xlsx_workbook.getSheetAt(3);
 
 		//sheet.protectSheet("welcome1"); 
 
@@ -826,16 +979,71 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			List dataLs = new Vector();
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 
-			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscCode());
-			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscTitle());
+//			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscCode());
+//			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscTitle());
 			dataLs.add(catalog.getCmItem().getExtensionCode());
 			dataLs.add(catalog.getCmItem().getItemName());
 			dataLs.add(catalog.getCmItem().getCmType().getTypeName());
 			dataLs.add(catalog.getCmItem().getCmBrand().getBrandName());
 			dataLs.add(catalog.getCmItem().getCmMeasurement().getMeasurementName());
 			dataLs.add(catalog.getCmItem().getCmColor().getColorName());
+			
+			CmPricing cmPricing = new CmPricing();
+			for(CmPricing pricing : catalog.getCmPricings()){
+				if(pricing.getPricingType().equalsIgnoreCase("01")){
+					cmPricing = pricing;
+				}
+			}
+			if(cmPricing.getPrice() != null)
+				dataLs.add(cmPricing.getPrice());
+			else
+				dataLs.add("");
+			
+			if(cmPricing.getStartDate() != null)
+				dataLs.add(formater.format(cmPricing.getStartDate()));
+			else
+				dataLs.add("");
+			
+			if(cmPricing.getEndDate() != null)
+				dataLs.add(formater.format(cmPricing.getEndDate()));
+			
 			dataLs.add(catalog.getItemDesc());
 			dataLs.add(catalog.getFrequency());
+			
+			/*IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IUomSO.class);
+			UomResDTO resDTO = uomSO.retrieveUomList();
+			List<PmUom> uomList = resDTO.getPmUomList();
+			String[] uomNames = new String[uomList.size()];
+			int j = 0;
+			for(PmUom uom : uomList){
+				uomNames[j]=uom.getUomName();
+				j++;
+			}
+			
+			DataValidationHelper dvHelper = product.getDataValidationHelper();
+			  DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(uomNames);
+			  CellRangeAddressList uomNameList = new CellRangeAddressList(no, no, 11, 11);            
+			  DataValidation validation = dvHelper.createValidation(
+			    dvConstraint, uomNameList);
+			  // Note the check on the actual type of the DataValidation object.
+			  // If it is an instance of the XSSFDataValidation class then the
+			  // boolean value 'false' must be passed to the setSuppressDropDownArrow()
+			  // method and an explicit call made to the setShowErrorBox() method.
+			  
+			  dvConstraint.getExplicitListValues();
+			  if(validation instanceof XSSFDataValidation) {
+			    validation.setSuppressDropDownArrow(true);
+			    validation.setShowErrorBox(true);
+			  }
+			  else {
+			    // If the Datavalidation contains an instance of the HSSFDataValidation
+			    // class then 'true' should be passed to the setSuppressDropDownArrow()
+			    // method and the call to setShowErrorBox() is not necessary.
+			    validation.setSuppressDropDownArrow(false);
+			  }
+			  product.addValidationData(validation);*/
+			
 			dataLs.add(catalog.getPmUom().getUomName());
 			dataLs.add(catalog.getModelNumber());
 			dataLs.add(catalog.getSkuNumber());
@@ -849,17 +1057,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 
-		int priceNo = 1;
+		/*int priceNo = 1;
 		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 
 			for(CmPricing price: catalog.getCmPricings()){
 				List dataLs = new Vector();
-				if((price.getPricingType().equalsIgnoreCase("01")||
-						price.getPricingType().equalsIgnoreCase("02")||
-						price.getPricingType().equalsIgnoreCase("03")||
-						price.getPricingType().equalsIgnoreCase("04")) && price.getPrice()!=null){
+				if((price.getPricingType().equalsIgnoreCase("01")
+//						||price.getPricingType().equalsIgnoreCase("02")
+//						||price.getPricingType().equalsIgnoreCase("03")
+//						||price.getPricingType().equalsIgnoreCase("04")
+						) && price.getPrice()!=null){
 
 					dataLs.add(price.getCmSupplierItem().getCmItem().getExtensionCode());
 
@@ -890,10 +1099,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-		}
+		}*/
 
 
-		int zonalNo = 1;
+		/*int zonalNo = 1;
 		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
@@ -912,55 +1121,55 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					} else {
 						dataLs.add("");
 					}
-
-
+					
+					
 					IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 							.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 					ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 
 					ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.getSupplierZones(reqDTO);
-
+					
 					List<CmSupplierZone> zoneList = resDTO.getCmSupplierZones();
-
+					
 					String[] zoneNames = new String[zoneList.size()];
 					int j = 0;
 					for(CmSupplierZone zone : zoneList){
 						zoneNames[j]=zone.getSuppZoneName();
 						j++;
 					}
-
-					/*if(zoneList != null && zoneList.size() > 0){
+					
+					if(zoneList != null && zoneList.size() > 0){
 						dataLs.add(zoneNames);
 					} else {
 						dataLs.add("");
-					}*/
-
-
-
+					}
+					
+					
+					
 					DataValidationHelper dvHelper = zonal.getDataValidationHelper();
-					DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(zoneNames);
-					CellRangeAddressList addressList = new CellRangeAddressList(zonalNo, zonalNo, 1, 1);            
-					DataValidation validation = dvHelper.createValidation(
-							dvConstraint, addressList);
-					// Note the check on the actual type of the DataValidation object.
-					// If it is an instance of the XSSFDataValidation class then the
-					// boolean value 'false' must be passed to the setSuppressDropDownArrow()
-					// method and an explicit call made to the setShowErrorBox() method.
-
-					dvConstraint.getExplicitListValues();
-					if(validation instanceof XSSFDataValidation) {
-						validation.setSuppressDropDownArrow(true);
-						validation.setShowErrorBox(true);
-					}
-					else {
-						// If the Datavalidation contains an instance of the HSSFDataValidation
-						// class then 'true' should be passed to the setSuppressDropDownArrow()
-						// method and the call to setShowErrorBox() is not necessary.
-						validation.setSuppressDropDownArrow(false);
-					}
-					zonal.addValidationData(validation);
-
-					/*if(price.getPricingType().equalsIgnoreCase("05")){
+					  DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(zoneNames);
+					  CellRangeAddressList addressList = new CellRangeAddressList(zonalNo, zonalNo, 1, 1);            
+					  DataValidation validation = dvHelper.createValidation(
+					    dvConstraint, addressList);
+					  // Note the check on the actual type of the DataValidation object.
+					  // If it is an instance of the XSSFDataValidation class then the
+					  // boolean value 'false' must be passed to the setSuppressDropDownArrow()
+					  // method and an explicit call made to the setShowErrorBox() method.
+					  
+					  dvConstraint.getExplicitListValues();
+					  if(validation instanceof XSSFDataValidation) {
+					    validation.setSuppressDropDownArrow(true);
+					    validation.setShowErrorBox(true);
+					  }
+					  else {
+					    // If the Datavalidation contains an instance of the HSSFDataValidation
+					    // class then 'true' should be passed to the setSuppressDropDownArrow()
+					    // method and the call to setShowErrorBox() is not necessary.
+					    validation.setSuppressDropDownArrow(false);
+					  }
+					  zonal.addValidationData(validation);
+					
+					if(price.getPricingType().equalsIgnoreCase("05")){
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal District Standard");
 						}else{
@@ -991,10 +1200,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						}else{
 							dataLs.add("Zonal State Promotion Tier");
 						}
-					}*/
+					}
 
-					/*dataLs.add(price.getPmState().getStateName());
-					dataLs.add(price.getPmDistrict().getDistrictName()!=null?price.getPmDistrict().getDistrictName():"");*/
+					dataLs.add(price.getPmState().getStateName());
+					dataLs.add(price.getPmDistrict().getDistrictName()!=null?price.getPmDistrict().getDistrictName():"");
 					dataLs.add(price.getPrice());
 					dataLs.add(formater.format(price.getStartDate()));
 					dataLs.add(formater.format(price.getEndDate()));		
@@ -1007,7 +1216,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 
-		}
+		}*/
 
 
 
