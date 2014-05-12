@@ -22,6 +22,7 @@
 	<cc:attribute name="selectionMode" default="single" />
 	<cc:attribute name="buttonLabel" default="" />
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
+	
 </cc:interface>
 
 <cc:implementation>
@@ -44,7 +45,8 @@
 			action="#{lovBackingBean.initLov}"
 			oncomplete="updateSearchDialog(); lovPopup.show();"
 			disabled="#{cc.attrs.disabled}"
-			readonly="#{cc.attrs.readonly}">
+			readonly="#{cc.attrs.readonly}"
+			partialSubmit="true" process="@this">
 			
 			<f:param name="lovId" 			value="#{cc.attrs.lovId}" />
 			<f:param name="componentId" 	value="#{cc.attrs.id}" />
@@ -86,6 +88,7 @@
 					
 		</p:commandButton>
 	</h:panelGroup>
+	<p:message id="#{cc.attrs.id}Msg" for="#{cc.attrs.id}"></p:message>
 	
 </h:panelGroup>
 
