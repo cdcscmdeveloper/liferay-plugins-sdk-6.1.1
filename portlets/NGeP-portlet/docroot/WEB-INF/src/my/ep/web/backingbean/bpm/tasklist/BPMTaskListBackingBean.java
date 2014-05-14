@@ -25,7 +25,6 @@ import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -191,6 +190,19 @@ public class BPMTaskListBackingBean extends
 //		return responseDTO;
 	}
 
+	public void navigateToDeliveryOrderURL() throws IOException, PortalException, SystemException {
+		String orderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId");
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+		
+		System.out.println("getURLCurrent"+themeDisplay.getURLCurrent());
+		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		System.out.println("commonUrl"+commonUrl);
+		
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		externalContext.redirect(commonUrl+"/delivery-order?orderId="+orderId);
+	}
+	
 	public void navigateToURL() throws PortalException, SystemException {
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
