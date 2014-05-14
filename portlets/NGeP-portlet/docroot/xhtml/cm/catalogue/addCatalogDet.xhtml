@@ -99,10 +99,12 @@
 					<td rowspan="10" >
 
 					  		<div class="container">
-							  <div id="slides" style="width:250px;">
+					  		
+					  		
+							  <div id="slides" style="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 ? 'margin-top: 0px;width:250px;' : 'margin-top: 100px;width:250px;'}">
 							  
 							    <ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-							    	<img src="/NGeP-portlet/images/#{cmImage.imageName}" />
+							    	<img src="/NGeP-portlet/images/#{cmImage.imageName}" height="150px" />
 							    </ui:repeat>
 							    
 							  </div>
@@ -127,7 +129,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov"
+							headerText="UOM Lov" required="true" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
@@ -135,7 +137,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"></p:inputText></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
@@ -144,22 +146,22 @@
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}" /> <p:inputText
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}" /> <p:inputText
 							style="margin-left: 2px;" size="3" value="days" disabled="true" /></td>
 				</tr>
 
@@ -169,7 +171,7 @@
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
 					<td colspan="3"><p:inputTextarea style="width:660px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin}" /></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}" /></td>
 
 				</tr>
 
@@ -207,7 +209,6 @@
 					<p:tab title="Normal">
 
 						<p:tabView id="normalId" activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
-
 
 							<p:tab title="Standard">
 								<ui:include src="pricingTab.xhtml" />
