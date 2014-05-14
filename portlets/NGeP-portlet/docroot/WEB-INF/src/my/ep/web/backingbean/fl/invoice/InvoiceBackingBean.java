@@ -172,24 +172,24 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
 			BigDecimal sumOrderedQty = new BigDecimal(0);
 			BigDecimal sumOrderedAmt = new BigDecimal(0);
-			BigDecimal sumRecalledQty = new BigDecimal(0);
-			BigDecimal sumRecalledAmt = new BigDecimal(0);
+//			BigDecimal sumRecalledQty = new BigDecimal(0);
+//			BigDecimal sumRecalledAmt = new BigDecimal(0);
 			BigDecimal sumReceivedQty = new BigDecimal(0);
 			BigDecimal sumReceivedAmt = new BigDecimal(0);
 			invoiceItem.setFlFulfilmentItem(item);
 			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
 				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
 				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-				sumRecalledQty = sumRecalledQty.add(itemAddr.getRecalledQty());
-				sumRecalledAmt = sumRecalledAmt.add(itemAddr.getRecalledAmt());
-				sumReceivedQty = sumReceivedQty.add(itemAddr.getRecalledQty());
+//				sumRecalledQty = sumRecalledQty.add(itemAddr.getRecalledQty());
+//				sumRecalledAmt = sumRecalledAmt.add(itemAddr.getRecalledAmt());
+				sumReceivedQty = sumReceivedQty.add(itemAddr.getReceivedQty());
 				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getReceivedAmt());
 				
 			}
 			invoiceItem.setOrderedQty(sumOrderedQty);
 			invoiceItem.setOrderedAmt(sumOrderedAmt);
-			invoiceItem.setRecalledQty(sumRecalledQty);
-			invoiceItem.setRecalledAmt(sumRecalledAmt);
+//			invoiceItem.setRecalledQty(sumRecalledQty);
+//			invoiceItem.setRecalledAmt(sumRecalledAmt);
 			invoiceItem.setReceivedQty(sumReceivedQty);
 			invoiceItem.setReceivedAmt(sumReceivedAmt);
 			invoiceItem.setInvAmt(sumReceivedAmt);

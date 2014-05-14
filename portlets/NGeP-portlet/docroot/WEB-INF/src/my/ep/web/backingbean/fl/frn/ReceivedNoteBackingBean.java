@@ -147,11 +147,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
 			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
+			int i = 0;
 			for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
 				FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
 				noteItem.setFlDelOrderItem(delOrderItem);
 				noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 				noteItem.setFlItem(delOrderItem.getFlItem());
+				if(i == 0){
+					getManagedBean().setSelectedItem(noteItem);
+				}
+				i++;
 				noteItemList.add(noteItem);
 				//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
 				//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());

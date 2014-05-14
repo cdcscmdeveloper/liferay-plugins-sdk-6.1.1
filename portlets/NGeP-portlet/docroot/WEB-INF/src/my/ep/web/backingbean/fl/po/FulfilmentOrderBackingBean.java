@@ -82,9 +82,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(27);
-			flRequest.setSmSupplier(smSupplier);
+//			SmSupplier smSupplier = new SmSupplier();
+//			smSupplier.setSupplierId(1L);
+//			flRequest.setSmSupplier(smSupplier);
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
