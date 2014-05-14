@@ -44,13 +44,13 @@
 				<p:outputLabel value="Promotion" />
 			</p:column>
 			<p:column>
-				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" update="promotionErrorLink" />
 					</p:inputText>
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
@@ -59,7 +59,7 @@
 
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />

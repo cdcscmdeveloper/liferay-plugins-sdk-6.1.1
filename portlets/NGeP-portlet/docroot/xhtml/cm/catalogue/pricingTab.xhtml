@@ -43,13 +43,13 @@
 				<p:outputLabel value="Standard *" />
 			</p:column>
 			<p:column>
-				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}">
 					<p:ajax event="keyup" update="standardErrorLink" />
 				</p:inputText>
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" 
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="standardErrorLink" />
@@ -58,7 +58,7 @@
 
 			</p:column>
 			<p:column>
-				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
+				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" update="standardErrorLink" />
