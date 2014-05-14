@@ -1490,15 +1490,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 							this.getManagedBean().setTierPricingIndex(1);
 							return "addCatalogView";
 						}
-
-						/*if(tier.getStartDate().compareTo(tier.getEndDate())>0){
-
-							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Promotion Tier End date must be greater than Promotion Tier start date", ""));
-							this.getManagedBean().setPricingTabIndex(1);
-							this.getManagedBean().setTierPricingIndex(1);
-							return "addCatalogView";
-						}*/
 					}
 					perviouslyList = sortedTier;
 				}
@@ -1569,131 +1560,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 				previousZPromotionObj = standard;
 			}
-
-
-			/*			List<CmZonalStandardPricing> zStandardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getzStdPrices());
-
-			CmZonalStandardPricing previousZStandardObj = null;
-			for(int i =0; i<zStandardPricing.size(); i++){
-				CmZonalStandardPricing standard = zStandardPricing.get(i);
-				if(previousZStandardObj!=null){
-					if(previousZStandardObj.getEndDate().compareTo(standard.getStartDate()) >0){
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Standard Start date Overlapping", ""));	
-						this.getManagedBean().setPricingTabIndex(2);
-						this.getManagedBean().setZonalPricingIndex(0);
-						return "addCatalogView";
-					}
-				}
-				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Zonal Standard End Date must be greater than Zonal Standard Start Date", ""));
-					this.getManagedBean().setPricingTabIndex(2);
-					this.getManagedBean().setZonalPricingIndex(0);
-					return "addCatalogView";
-				}
-				previousZStandardObj = standard;
-			}*/
-
-
-
-			/*if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
-
-				this.getManagedBean().setPricingTabIndex(0);
-				this.getManagedBean().setNormalPricingIndex(0);
-				return "addCatalogView";
-			}*/
-
-
-			/*if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null 
-					||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null
-					||this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null){
-
-				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())>0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion End Date must be greater than Normal Promotion Start Date", ""));
-					this.getManagedBean().setPricingTabIndex(0);
-					this.getManagedBean().setNormalPricingIndex(1);
-					return "addCatalogView";
-				}
-
-
-				if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate())>0 
-						|| this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())>0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Date must within Normal Standard Date range", ""));
-					this.getManagedBean().setPricingTabIndex(0);
-					this.getManagedBean().setNormalPricingIndex(1);
-					return "addCatalogView";
-				}
-
-
-				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice())>0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Price must be less than Normal Standard Price", ""));
-					this.getManagedBean().setPricingTabIndex(0);
-					this.getManagedBean().setNormalPricingIndex(1);
-					return "addCatalogView";
-
-				}
-			}*/
-
-
-
-			/*List<CmStandardPricing> standardPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings());
-
-			CmStandardPricing previousStandardObj = null;
-			for(int i =0; i<standardPricing.size(); i++){
-				CmStandardPricing standard = standardPricing.get(i);
-				if(previousStandardObj!=null){
-					if(previousStandardObj.getEndDate().compareTo(standard.getStartDate()) >0){
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard Start date Overlapping", ""));		
-						this.getManagedBean().setPricingTabIndex(0);
-						this.getManagedBean().setNormalPricingIndex(0);
-						return "addCatalogView";
-					}
-				}
-				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Standard End Date must be greater than Normal Standard Start Date", ""));
-
-					this.getManagedBean().setPricingTabIndex(0);
-					this.getManagedBean().setNormalPricingIndex(0);
-					return "addCatalogView";
-				}
-				previousStandardObj = standard;
-			}*/
-
-
-
-			/*List<CmPromotionPricing> promotionPricing = sortByStartDate(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings());
-
-			CmPromotionPricing previousPromotionObj = null;
-			for(int i =0; i<promotionPricing.size(); i++){
-				CmPromotionPricing standard = promotionPricing.get(i);
-				if(previousPromotionObj!=null){
-					if(previousPromotionObj.getEndDate().compareTo(standard.getStartDate()) >0){
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion Start date Overlapping", ""));	
-						this.getManagedBean().setPricingTabIndex(0);
-						this.getManagedBean().setNormalPricingIndex(1);
-						return "addCatalogView";
-					}
-				}
-				if(standard.getStartDate().compareTo(standard.getEndDate()) >0){
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Normal Promotion End Date must be greater than Normal Promotion Start Date", ""));
-					this.getManagedBean().setPricingTabIndex(0);
-					this.getManagedBean().setNormalPricingIndex(1);
-					return "addCatalogView";
-				}
-				previousPromotionObj = standard;
-			}*/
-
-
 
 
 			Map<Date, List<CmZonalTierPricing>> zTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
@@ -1825,6 +1691,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 			/////////////////////////////////////////////////////////////////////
 
+			if(this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName().isEmpty()){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"UOM cannot be empty", ""));
+				return "addCatalogView";
+			}
+			
 
 
 
@@ -2927,8 +2799,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		List<CmTierPricing> tierList = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings();
 		List <CmTierPricing>dataList = new ArrayList<CmTierPricing>(); 
+		System.out.println("tierList:"+tierList.size());
 		for(CmTierPricing cmPricing : tierList){
-
+			System.out.println("cmPricing.getStand_group_id()"+cmPricing.getStand_group_id());
+			System.out.println("tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()"+tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id());
 			if(cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0){
 				dataList.add(cmPricing);
 			}
@@ -2949,6 +2823,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().remove(price);
 		}
 
+		System.out.println("dataList:"+dataList.size());
 		for(CmTierPricing price :dataList){
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().remove(price);
 		}
