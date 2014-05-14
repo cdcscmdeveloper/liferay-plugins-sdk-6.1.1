@@ -146,8 +146,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  if(this.getManagedBean().getCtCommitteeMember().getUserId() == null){
 				  this.getManagedBean().getCtCommitteeMember().setUserId(new PmUser());				  
 			  }
-			  if(this.getManagedBean().getCtCommitteeMember().getMemberRoleId() == null){
-				  this.getManagedBean().getCtCommitteeMember().setMemberRoleId(new PmParameter());
+			  if(this.getManagedBean().getCtCommitteeMember().getMemberRole() == null){
+				  this.getManagedBean().getCtCommitteeMember().setMemberRole(new PmParameter());
 			  }
 		  }
 	}
@@ -341,7 +341,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	  reqDTO.setTaskName(this.getManagedBean().getTaskName());
 	        }
 	     
-	        this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
+	        //this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
 	        this.getManagedBean().getContractVer().getCtPerformanceBonds().get(0).getFinancialOrg().setFinancialOrgId(1L);
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 	        reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
@@ -922,7 +922,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  	      }
 				     committeeMember.setGrade(user.getGrade());
 				     committeeMember.setCtAmendment(this.getManagedBean().getContractVer().getCtAmendment());
-				     committeeMember.setMemberRoleId(new PmParameter());
+				     committeeMember.setMemberRole(new PmParameter());
 				     committeeMember.setPnp(user.isPMP());
 				     committeeMember.setUserId(user);
 				     committeeMember.setExternalUser(true);

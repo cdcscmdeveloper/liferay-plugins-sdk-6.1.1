@@ -76,7 +76,7 @@
 							<h:outputText value="Chairperson" />
 					 </ui:fragment>
 					<ui:fragment rendered="#{data.pnp == false}">
-						<p:selectOneMenu id="appaction" value="#{data.memberRoleId.parameterId}"
+						<p:selectOneMenu id="appaction" value="#{data.memberRole.parameterId}"
 							style="width: 110px;margin-bottom: 5px;">
 							 <f:selectItems
 								value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
@@ -209,7 +209,7 @@
 	                value="#{amendmentBackingBean.managedBean.ctCommitteeMember.email}"/>
 	              <p:outputLabel for="newRole" value="Role" />
 	              <p:selectOneMenu id="newRole" style="width:180px;"
-	                value="#{amendmentBackingBean.managedBean.ctCommitteeMember.memberRoleId.parameterId}">
+	                value="#{amendmentBackingBean.managedBean.ctCommitteeMember.memberRole.parameterId}">
 	                <f:selectItems />
 	              </p:selectOneMenu>
                 </h:panelGrid>
