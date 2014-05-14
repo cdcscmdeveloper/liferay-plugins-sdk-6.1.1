@@ -88,6 +88,9 @@ public class QTCommitteBackingBean extends
 	public QTCommitteBackingBean() {
 		getManagedBean().setRoleTypes(
 				getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE));
+		if(null == this.getManagedBean().getCommitteMember()){
+			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+		}
 	}
 
 	public void onTabChangeAction(TabChangeEvent event) {
@@ -350,27 +353,15 @@ public class QTCommitteBackingBean extends
 		}
 	}
 
-	public void addCommitteMember(ScCommittee committee, String titleName) {
-		debugLogger("addCommitteMember");
-		
-		if(titleName.equalsIgnoreCase("Specification Committee")) {
-			committee.setCommitteeType("SC");
-		} else if(titleName.equalsIgnoreCase("Opening Committee")) {
-			committee.setCommitteeType("OC");
-		} else if(titleName.equalsIgnoreCase("Evaluation Committee")) {
-			committee.setCommitteeType("EC");
-		} else if(titleName.equalsIgnoreCase("TEC")) {
-			committee.setCommitteeType("TEC");
-		} else if(titleName.equalsIgnoreCase("FEC")) {
-			committee.setCommitteeType("FEC");
-		}
+	public void addCommitteMember(ScQtCommittee committee, String titleName) {
+		debugLogger("addCommitteMember");		
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
-		getManagedBean().setScCommittee(committee);
+		getManagedBean().setScQtCommittee(committee);
 		getManagedBean().setTabTitle(titleName);
 	}
 
@@ -461,9 +452,9 @@ public class QTCommitteBackingBean extends
 						IOrgProfileSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		
-		ScCommittee scCommittee = this.getManagedBean().getScCommittee();
+		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee().getScCommittee();
 		ScQt scQt = this.getManagedBean().getQt();
-		List<ScCommitteeMember> memberList = getManagedBean().getScCommittee()
+		List<ScCommitteeMember> memberList = getManagedBean().getScQtCommittee().getScCommittee()
 				.getScCommitteeMembers();
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
@@ -593,15 +584,14 @@ public class QTCommitteBackingBean extends
 		}
 		
 		scCommittee.setScCommitteeMembers(memberList);
-		ScQtCommittee scQtCommittee = new ScQtCommittee();
-		scQtCommittee.setScCommittee(scCommittee);
-		scQtCommittee.setScQt(scQt);
-		this.getManagedBean().setScQtCommittee(scQtCommittee);
+		this.getManagedBean().getScQtCommittee().setScCommittee(scCommittee);
+		
+		//this.getManagedBean().setScQtCommittee(scQtCommittee);
 		
 		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		for (TabBean tabBean : tabs) {
 			if (tabBean.getTitleName().equalsIgnoreCase(this.getManagedBean().getTabTitle())) {
-				tabBean.setScCommittee(this.getManagedBean().getScCommittee());
+				tabBean.setScQtCommittee(this.getManagedBean().getScQtCommittee());
 				break;
 			}
 		}

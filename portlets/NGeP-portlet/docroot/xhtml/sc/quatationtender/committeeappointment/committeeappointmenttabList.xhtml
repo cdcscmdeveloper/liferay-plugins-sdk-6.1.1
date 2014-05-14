@@ -19,7 +19,7 @@
 					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
 
 					<ui:param name="committe"
-						value="#{committeeApproval.scCommittee}" />
+						value="#{committeeApproval.scQtCommittee.scCommittee}" />
 
 					<ui:include src="businessOwnerCommittee.xhtml" />
 
@@ -29,7 +29,7 @@
 					rendered="#{committeeApproval.titleName ne 'Finalization Secretary' and committeeApproval.titleName ne 'Business Owner'}">
 
 					<ui:param name="committe"
-						value="#{committeeApproval.scCommittee}" />
+						value="#{committeeApproval.scQtCommittee.scCommittee}" />
 
 					<ui:param name="selectedMembersList"
 						value="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}" />
@@ -39,7 +39,7 @@
 					<div class="ppRightBtn">
 						<p:commandButton id="specificationcommitteeadd"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scCommittee, committeeApproval.titleName)}"
+							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scQtCommittee, committeeApproval.titleName)}"
 							oncomplete="newspecificationcommittee.show();"
 							update="@(.scAddMember)" icon="ui-icon-add" />
 
@@ -51,7 +51,7 @@
 						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 							process="@this"
 							rendered="#{committeeApproval.titleName eq 'Specification Committee'}"
-							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scCommittee)}" />
+							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scQtCommittee)}" />
 					</div>
 				</ui:fragment>
 

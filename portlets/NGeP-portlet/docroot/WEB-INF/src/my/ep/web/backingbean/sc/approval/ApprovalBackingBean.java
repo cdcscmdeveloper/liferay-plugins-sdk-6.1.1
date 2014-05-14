@@ -120,12 +120,12 @@ public class ApprovalBackingBean extends
 	 */
 	public List<Long> getAppCatList() {
 		List<Long> appCatList = new ArrayList<Long>();
-
-		for (TabBean tabBean : this.getManagedBean().getTabList()) {
-			appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
-					.getParameterId());
+		if (null != this.getManagedBean().getTabList()) {
+			for (TabBean tabBean : this.getManagedBean().getTabList()) {
+				appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
+						.getParameterId());
+			}
 		}
-
 		return appCatList;
 	}
 
@@ -319,7 +319,9 @@ public class ApprovalBackingBean extends
 			commSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("scQt.qtId",
 							SearchOperator.OPERATOR_EQUALS.value(), qtId));
-			commSearchBean.getDataFilterBeans().add(new SearchFilterBean("scCommittee.approvalReq",SearchOperator.OPERATOR_EQUALS.value(),"1"));
+			commSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scCommittee.approvalReq",
+							SearchOperator.OPERATOR_EQUALS.value(), "1"));
 			committeReqDTO.setCommSearchBean(commSearchBean);
 			CommitteResDTO resDTO = committeSO
 					.retriveQtCommitteDtls(committeReqDTO);
@@ -357,44 +359,53 @@ public class ApprovalBackingBean extends
 							IQTDetailSO.class);
 			ScQt qt = this.getManagedBean().getQt();
 			ScQtApproval approval = this.getManagedBean().getScQtApproval();
-			if(null != approval && null != approval.getQtApprovalId()){
-			approval.setApproverAction("A");
-			
-		//	approval.setApproverId(facesScopes.getUserSessionBean());
-			List<ScQtApproval> qtApproval= new ArrayList<ScQtApproval>();
-			qtApproval.add(approval);
-			//qt.setScQtApprovals(qtApproval);
+			if (null != approval && null != approval.getQtApprovalId()) {
+				approval.setApproverAction("A");
+
+				// approval.setApproverId(facesScopes.getUserSessionBean());
+				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
+				qtApproval.add(approval);
+				// qt.setScQtApprovals(qtApproval);
 			}
-			//List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
-			ISearchResultBean<ScQtCommittee> qtCommittes=this.getManagedBean().getQtCommittes();
-			if(null !=qtCommittes &&null != qtCommittes.getResultList()){
-				for(ScQtCommittee scQtCommittee : qtCommittes.getResultList()){
-					PmStatus committeStatus= new PmStatus();
+			// List<TabBean> committeTabs =
+			// this.getManagedBean().getScCommitteeMemberTabList();
+			ISearchResultBean<ScQtCommittee> qtCommittes = this
+					.getManagedBean().getQtCommittes();
+			if (null != qtCommittes && null != qtCommittes.getResultList()) {
+				for (ScQtCommittee scQtCommittee : qtCommittes.getResultList()) {
+					PmStatus committeStatus = new PmStatus();
 					committeStatus.setStatusId(60202L);
-					scQtCommittee.getScCommittee().setCommitteStatus(committeStatus);
+					scQtCommittee.getScCommittee().setCommitteStatus(
+							committeStatus);
 				}
 				qt.setScQtCommittees(qtCommittes.getResultList());
-			}
-			else{
-			qt.setScQtCommittees(null);
+			} else {
+				qt.setScQtCommittees(null);
 			}
 			qtReqDTO.setQtdetail(qt);
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
-			
+
 			if (resDTO.isSuccessful()) {
 				ScQt scQt = resDTO.getQtDetail();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										getMessgeConstant(outcome),new String[] {
-											getParameterDesc(
-													ParameterTypeConst.DOCUMENT_TYPES,
-													ParameterConst.DOCTYPE_QUOTATION),
-											scQt.getQtNo()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(outcome),
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_QUOTATION),
+																scQt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}

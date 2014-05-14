@@ -162,7 +162,7 @@
 
 			<p:panel
 				header="#{lbl['lbl.so.location.list']} / #{lbl['lbl.so.paidup.capital']}"
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
+				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 160px"><p:outputLabel
@@ -175,7 +175,7 @@
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.so.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel.parmaeterId}"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
@@ -187,7 +187,7 @@
 				</table>
 			</p:panel>
 			<p:panel
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'}">
+				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"

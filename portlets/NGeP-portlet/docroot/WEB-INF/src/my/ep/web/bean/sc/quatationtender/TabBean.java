@@ -7,22 +7,25 @@ import org.primefaces.model.DualListModel;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 
 public class TabBean {
 	private String titleName;
 	private ScQtApproval scQtApproval;
 	private ScCommittee scCommittee;
 	private ScCommittee selectedScCommittee;
-	private DualListModel<PmUser> budgetApprovalUsers;
-	private List<PmUser> selectedApproverList;
+	private DualListModel<ScQtApproverSettings> budgetApprovalUsers;
+	private List<ScQtApproverSettings> selectedApproverList;
 	private List<ScQtApproval> scQtApprovalList;
+	private ScQtCommittee scQtCommittee;
 
 	public TabBean(String titleName, ScQtApproval scQtApproval,
-			DualListModel<PmUser> budgetApprovalUsers) {
+			DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
 		this.titleName = titleName;
 		this.scQtApproval = scQtApproval;
 		this.budgetApprovalUsers = budgetApprovalUsers;
-		this.selectedApproverList = budgetApprovalUsers.getTarget();
+		
 	}
 
 	public TabBean(String titleName, ScQtApproval scQtApproval) {
@@ -38,6 +41,11 @@ public class TabBean {
 	public TabBean(String titleName, List<ScQtApproval> scQtApprovalList) {
 		this.titleName = titleName;
 		this.scQtApprovalList = scQtApprovalList;
+	}
+	
+	public TabBean(String titleName, ScQtCommittee scQtCommittee) {
+		this.titleName = titleName;
+		this.scQtCommittee = scQtCommittee;
 	}
 
 	public String getTitleName() {
@@ -72,19 +80,19 @@ public class TabBean {
 		this.selectedScCommittee = selectedScCommittee;
 	}
 
-	public DualListModel<PmUser> getBudgetApprovalUsers() {
+	public DualListModel<ScQtApproverSettings> getBudgetApprovalUsers() {
 		return budgetApprovalUsers;
 	}
 
-	public void setBudgetApprovalUsers(DualListModel<PmUser> budgetApprovalUsers) {
+	public void setBudgetApprovalUsers(DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
 		this.budgetApprovalUsers = budgetApprovalUsers;
 	}
 
-	public List<PmUser> getSelectedApproverList() {
+	public List<ScQtApproverSettings> getSelectedApproverList() {
 		return selectedApproverList;
 	}
 
-	public void setSelectedApproverList(List<PmUser> selectedApproverList) {
+	public void setSelectedApproverList(List<ScQtApproverSettings> selectedApproverList) {
 		this.selectedApproverList = selectedApproverList;
 	}
 
@@ -94,6 +102,14 @@ public class TabBean {
 
 	public void setScQtApprovalList(List<ScQtApproval> scQtApprovalList) {
 		this.scQtApprovalList = scQtApprovalList;
+	}
+
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
+	}
+
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
 	}
 
 }

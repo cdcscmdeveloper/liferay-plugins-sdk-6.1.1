@@ -244,6 +244,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		baseObject.setChangedBy(user.getUserId());
 		baseObject.setCreatedBy(user.getUserId());
 		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+	
 	}
 	
 	public String getMessgeConstant(String outCome){
