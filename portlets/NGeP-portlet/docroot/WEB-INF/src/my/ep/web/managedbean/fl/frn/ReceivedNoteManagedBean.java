@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.frn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -259,6 +260,9 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 * @return the selectedItem
 	 */
 	public FlFulfilmentNoteItem getSelectedItem() {
+		if(getSelectedItem() == null){
+			setSelectedItem(new FlFulfilmentNoteItem());
+		}
 		return selectedItem;
 	}
 
