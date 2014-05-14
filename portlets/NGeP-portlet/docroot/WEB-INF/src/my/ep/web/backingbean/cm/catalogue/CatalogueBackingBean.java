@@ -99,6 +99,8 @@ import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -793,7 +795,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 				row = rowIterator.next();
 
-				if(row.getCell(0) == null || row.getCell(0).getStringCellValue().isEmpty() || row.getCell(11) == null || row.getCell(11).getStringCellValue().isEmpty()){
+				boolean rowEmpty = true;
+				
+				for(int cN = 0; cN < row.getLastCellNum(); cN++){
+					if(row.getCell(cN)!=null && !row.getCell(cN).toString().isEmpty()){
+						rowEmpty = false;
+					}
+				}
+				
+				if(rowEmpty){
+					if(rowIterator.hasNext())
+						row = rowIterator.next();
+				} else if(row.getCell(0) == null || row.getCell(0).getStringCellValue().isEmpty() || row.getCell(11) == null || row.getCell(11).getStringCellValue().isEmpty()){
 					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum + "\n");
 					count++;
 					if(rowIterator.hasNext())
@@ -962,7 +975,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				System.out.println(invalidDataMsg);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,invalidDataMsg, ""));
-			}	
+			} else {
+				System.out.println("Updated successfully.");
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Updated successfully.", ""));
+			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -1278,7 +1295,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void addCellToRow(XSSFSheet sheet, int count, List colValList, CellStyle catalogCellStyle) throws Exception {  
 
 		Row row = sheet.createRow(count);
-
+		XSSFCellStyle cs = sheet.getWorkbook().createCellStyle();
+		XSSFDataFormat df = sheet.getWorkbook().createDataFormat();
+		
 		for(int i = 0; i < colValList.size(); i++){
 			Object colVal = (Object)colValList.get(i);
 
@@ -1290,6 +1309,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			if(i==1){
 				catalogCellStyle.setLocked(false);
 				cell.setCellStyle(catalogCellStyle);
+			}
+			if(i==6 || i==10 || i==15 || i==16 || i==17){
+				cs.setDataFormat(df.getFormat("0.00"));
+				cell.setCellStyle(cs);
 			}
 			if(colVal==null) colVal = new String("");
 
