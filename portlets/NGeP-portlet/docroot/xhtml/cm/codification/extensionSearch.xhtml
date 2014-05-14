@@ -86,7 +86,8 @@
 								size="50" disabled="true" /></td>
 					</tr>
 					<tr>
-						<td><h:outputText style="font-weight: bold;" value="Extension Attribute"></h:outputText> </td>
+						<td><h:outputText style="font-weight: bold;"
+								value="Extension Attribute"></h:outputText></td>
 					</tr>
 
 					<tr>
@@ -127,23 +128,24 @@
 							</p:selectOneMenu></td>
 					</tr>
 				</table>
+
+				<div style="text-align: right;">
+					<p:commandButton value="Search" icon="ui-icon-search"
+						action="#{codificationBackingBean.extensionCodeSearch}"
+						update="itemTableID" />
+					<p:commandButton value="Back" icon="ui-icon-back"
+						action="#{codificationBackingBean.backToPrev}" />
+				</div>
 			</p:panel>
 
-			<div style="text-align: right;">
-				<p:commandButton value="Search" icon="ui-icon-search"
-					action="#{codificationBackingBean.extensionCodeSearch}" update="itemTableID" />
-				<p:commandButton value="Back" icon="ui-icon-back"
-					action="#{codificationBackingBean.backToPrev}" />
-			</div>
+
 
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
- 
+
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
-					rowKey="#{obj}" 
-					var="obj" 
-					rowIndexVar="rowIndex"
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedObject}"
 					lazy="true">
 
@@ -180,7 +182,7 @@
 					</p:column>
 
 
-					
+
 
 				</p:dataTable>
 
