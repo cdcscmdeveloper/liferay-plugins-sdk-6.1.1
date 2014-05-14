@@ -37,7 +37,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
 	private FlFulfilmentNoteItem fulfilmentNoteItem = new FlFulfilmentNoteItem();
 	private FlFulfilmentRequest fulfilmentRequest;
-	private FlFulfilmentNoteItem selectedItem;
+	private FlFulfilmentNoteItem selectedItem = new FlFulfilmentNoteItem();
 
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
@@ -260,9 +260,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 * @return the selectedItem
 	 */
 	public FlFulfilmentNoteItem getSelectedItem() {
-		if(getSelectedItem() == null){
-			setSelectedItem(new FlFulfilmentNoteItem());
-		}
 		return selectedItem;
 	}
 
