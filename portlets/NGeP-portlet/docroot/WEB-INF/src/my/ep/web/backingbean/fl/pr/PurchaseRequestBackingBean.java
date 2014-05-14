@@ -298,7 +298,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				
 			}
 			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(1);
+			smSupplier.setSupplierId(1L);
 			flFulfilmentRequest.setSmSupplier(smSupplier);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
@@ -632,7 +632,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		 PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
 		//PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
 		 purResDTO.getPurchaseRequest().getRequestNoteDtls().size();
-		System.out.println("Item name::: "+purResDTO.getPurchaseRequest().getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
+//		System.out.println("Item name::: "+purResDTO.getPurchaseRequest().getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
 		List<ScRequestNoteDtl> noteDtlList=new ArrayList<ScRequestNoteDtl>();
 		noteDtlList.addAll( purResDTO.getPurchaseRequest().getRequestNoteDtls());
 		
@@ -650,7 +650,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			BigDecimal unitPrice = new BigDecimal("200");
 			flItem = new FlFulfilmentItem();
 			PmParameter pmParameter = new PmParameter();
-		    pmParameter.setParameterId(232L);
+		    pmParameter.setParameterId(155L);
 			CmItem cmItem = new CmItem();
 			cmItem.setItemId(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId());
 			//PmVotFund pmVotFund=new PmVotFund();
