@@ -152,6 +152,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int tierRowIndex;
 	private int zonalTierRowIndex;
 	
+	private CmSupplierItem cloneCmSupplierItem;
+	private int cloneIndex;
+	
 	private boolean error1 = false;
 	private boolean error2 = false;
 	private boolean error3 = false;
@@ -1267,6 +1270,27 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.zonalTierRowIndex = zonalTierRowIndex;
 	}
 
+
+	public CmSupplierItem getCloneCmSupplierItem() {
+		return cloneCmSupplierItem;
+	}
+
+
+	public void setCloneCmSupplierItem(CmSupplierItem cloneCmSupplierItem) {
+		this.cloneCmSupplierItem = cloneCmSupplierItem;
+	}
+
+
+	public int getCloneIndex() {
+		return cloneIndex;
+	}
+
+
+	public void setCloneIndex(int cloneIndex) {
+		this.cloneIndex = cloneIndex;
+	}
+
+	
 	
 
 
