@@ -2929,7 +2929,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		List <CmTierPricing>dataList = new ArrayList<CmTierPricing>(); 
 		for(CmTierPricing cmPricing : tierList){
 
-			if(cmPricing.getStartDate().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStartDate()) == 0){
+			if(cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0){
 				dataList.add(cmPricing);
 			}
 		}
@@ -3039,7 +3039,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		List <CmZonalTierPricing>dataList = new ArrayList<CmZonalTierPricing>(); 
 		for(CmZonalTierPricing cmPricing : tierList){
 
-			if(cmPricing.getStartDate().compareTo(tierList.get(this.getManagedBean().getZonalTierRowIndex()).getStartDate()) == 0){
+			if(cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getZonalTierRowIndex()).getStand_group_id()) == 0){
 				dataList.add(cmPricing);
 			}
 		}

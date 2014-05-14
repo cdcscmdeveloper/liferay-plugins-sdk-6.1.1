@@ -86,8 +86,7 @@
 								<p:graphicImage value="/resources/ep/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
-							<p:commandLink id="deleteLink" title="Delete" action="#{catalogueBackingBean.setRowIndex}" rendered="#{price.showFlag}"
-								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" oncomplete="confirmation.show()">
+							<p:commandLink id="deleteLink" title="Delete" action="#{catalogueBackingBean.setRowIndex}" rendered="#{price.showFlag}" oncomplete="confirmation.show()">
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
