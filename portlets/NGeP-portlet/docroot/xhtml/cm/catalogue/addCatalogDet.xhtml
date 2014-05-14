@@ -129,7 +129,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov" required="true" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
+							headerText="UOM Lov" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
