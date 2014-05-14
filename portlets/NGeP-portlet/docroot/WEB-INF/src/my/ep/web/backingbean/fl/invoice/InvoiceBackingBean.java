@@ -23,10 +23,12 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
+import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlShippingInstrItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -172,24 +174,27 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
 			BigDecimal sumOrderedQty = new BigDecimal(0);
 			BigDecimal sumOrderedAmt = new BigDecimal(0);
-//			BigDecimal sumRecalledQty = new BigDecimal(0);
-//			BigDecimal sumRecalledAmt = new BigDecimal(0);
+			BigDecimal sumRecalledQty = new BigDecimal(0);
+			BigDecimal sumRecalledAmt = new BigDecimal(0);
 			BigDecimal sumReceivedQty = new BigDecimal(0);
 			BigDecimal sumReceivedAmt = new BigDecimal(0);
 			invoiceItem.setFlFulfilmentItem(item);
 			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-//				sumRecalledQty = sumRecalledQty.add(itemAddr.getRecalledQty());
-//				sumRecalledAmt = sumRecalledAmt.add(itemAddr.getRecalledAmt());
-				sumReceivedQty = sumReceivedQty.add(itemAddr.getReceivedQty());
-				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getReceivedAmt());
-				
+				if(!itemAddr.getStopInstrItems().isEmpty()){
+					for(FlStopInstrItem stopInstrItem : itemAddr.getStopInstrItems()){
+						sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
+						sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
+						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
+						sumReceivedQty = sumReceivedQty.add(itemAddr.getReceivedQty());
+						sumReceivedAmt = sumReceivedAmt.add(itemAddr.getReceivedAmt());
+					}
+				}
 			}
 			invoiceItem.setOrderedQty(sumOrderedQty);
 			invoiceItem.setOrderedAmt(sumOrderedAmt);
-//			invoiceItem.setRecalledQty(sumRecalledQty);
-//			invoiceItem.setRecalledAmt(sumRecalledAmt);
+			invoiceItem.setRecalledQty(sumRecalledQty);
+			invoiceItem.setRecalledAmt(sumRecalledAmt);
 			invoiceItem.setReceivedQty(sumReceivedQty);
 			invoiceItem.setReceivedAmt(sumReceivedAmt);
 			invoiceItem.setInvAmt(sumReceivedAmt);
