@@ -39,13 +39,13 @@
 				<f:facet name="header">
 					#{lbl['lbl.fl.del.order.doc.title']}
 				</f:facet>
-				<p:outputLabel value="#{order.flFulfilmentRequest.title}"/>
+				#{order.flFulfilmentRequest.title}
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.fl.del.order.ptj.name']}
 				</f:facet>
-				<p:outputLabel value="#{order.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"/>
+				#{order.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}
 			</p:column>
 			<p:column width="12%;">
 				<f:facet name="header">
