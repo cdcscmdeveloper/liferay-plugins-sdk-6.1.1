@@ -1,27 +1,19 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
-import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
-import my.ep.persistence.entity.cm.catalog.CmRequestCode;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -29,10 +21,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pp.common.CommonMethod;
-import my.ep.web.vo.AdvanceSearchVO;
-import my.ep.web.vo.PricingVO;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
