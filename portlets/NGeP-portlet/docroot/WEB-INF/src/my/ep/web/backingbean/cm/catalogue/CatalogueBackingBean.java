@@ -272,8 +272,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			catalogueSO.saveSupplierItem(reqDTO);
 		}
 
-
-
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully", ""));
+		
 
 
 
