@@ -10,6 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<f:event listener="#{createDOBackingBean.preRenderView}" type="preRenderView" />	
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">

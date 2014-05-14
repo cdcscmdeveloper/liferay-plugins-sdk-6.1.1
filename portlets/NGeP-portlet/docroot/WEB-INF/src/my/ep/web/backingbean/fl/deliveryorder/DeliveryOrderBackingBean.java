@@ -11,9 +11,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -31,6 +33,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Purchase Order
@@ -311,7 +315,21 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 	}
 	
-
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String orderId = originalServletRequest.getParameter("orderId");
+		System.out.println("orderId :" + orderId);
+		if(orderId != null){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlOrderId(Long.parseLong(orderId));
+			FlFulfilmentOrder flOrder = orderSO.retrieveFulfilmentOrderById(reqDTO).getFlOrder();
+			
+			getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
+			getManagedBean().setFulfilmentOrder(flOrder);
+		}
+	}
 
 
 	/**
