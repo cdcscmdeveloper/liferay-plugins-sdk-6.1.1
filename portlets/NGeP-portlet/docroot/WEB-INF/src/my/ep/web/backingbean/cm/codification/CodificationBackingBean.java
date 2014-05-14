@@ -637,7 +637,7 @@ public class CodificationBackingBean extends
 		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
 
 		reqDTO.setDocType(item.getDocType());
-		reqDTO.setDocId(item.getDocNo());
+		reqDTO.setDocId(item.getDocId());
 
 		RequestItemResDTO resDTO = requestItemSO
 				.retrieveItemListByDocIdNType(reqDTO);

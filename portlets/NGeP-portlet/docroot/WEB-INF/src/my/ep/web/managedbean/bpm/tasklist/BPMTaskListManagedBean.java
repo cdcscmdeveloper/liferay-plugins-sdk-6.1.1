@@ -164,11 +164,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
 				ISearchBean<WorklistItemVO> searchBean) {
-System.out.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
+			System.out
+					.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 			IBpmSO bpmSO = null;
 			try {
-				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="+getAssignment());
-				
+				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
+						+ getAssignment());
+
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 
@@ -186,18 +188,25 @@ System.out.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 				reqDTO.setAssignment(getAssignment());
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
-
-				System.out.println("testing BPM******size="
-						+ responseDTO.getWorklistVO().getWorklistItem().size());
-				System.out.println("testing BPM******total="
-						+ responseDTO.getWorklistVO().getTotal());
-
-//				setTaskList(responseDTO.getWorklistVO().getWorklistItem());
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				resultBean.setTotalRecord(responseDTO.getWorklistVO()
-						.getTotal());
-				resultBean.setResultList(responseDTO.getWorklistVO()
-						.getWorklistItem());
+				
+				if (responseDTO.getWorklistVO() != null) {
+					System.out.println("testing BPM******size="
+							+ responseDTO.getWorklistVO().getWorklistItem()
+									.size());
+					System.out.println("testing BPM******total="
+							+ responseDTO.getWorklistVO().getTotal());
+
+					// setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+
+					resultBean.setTotalRecord(responseDTO.getWorklistVO()
+							.getTotal());
+					resultBean.setResultList(responseDTO.getWorklistVO()
+							.getWorklistItem());
+				} else {
+					resultBean.setTotalRecord(0);
+					resultBean.setResultList(null);
+				}
 				return resultBean;
 			} finally {
 				bpmSO = null;

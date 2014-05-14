@@ -307,7 +307,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				System.out.println("*********after***********");
 				
 				// enable or disable simple quote in search catalogue
-				if(resDTO.getViewSuppItemResultBean().getResultList() !=null && resDTO.getViewSuppItemResultBean().getResultList().size() > 0){
+				if(resDTO.getViewSuppItemResultBean() != null && resDTO.getViewSuppItemResultBean().getResultList() !=null && resDTO.getViewSuppItemResultBean().getResultList().size() > 0){
 					setSimpleQuoteFlag(true);
 				} else {
 					setSimpleQuoteFlag(false);
