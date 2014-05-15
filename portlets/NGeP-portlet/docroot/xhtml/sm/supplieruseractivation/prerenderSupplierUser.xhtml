@@ -15,23 +15,23 @@
 			type="preRenderView" />	
 	</h:panelGroup>
 	
-	<h:panelGroup rendered="#{supplierUserActivationBackingBean.managedBean.validActivation}">
-		<table>
-			<tr>
-				<td>
-					#{lbl['lbl.sm.activation.password']}:
-					<p:inputText value="#{supplierUserActivationBackingBean.tempPassword}" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p:commandButton 
-						value="#{lbl['lbl.btn.submit']}"
-						action="#{supplierUserActivationBackingBean.activateSupplierUser}" />
-				</td>
-			</tr>
-		</table>
-	</h:panelGroup>
+<!-- 	<h:panelGroup rendered="#{supplierUserActivationBackingBean.managedBean.validActivation}"> -->
+<!-- 		<table> -->
+<!-- 			<tr> -->
+<!-- 				<td> -->
+<!-- 					#{lbl['lbl.sm.activation.password']}: -->
+<!-- 					<p:inputText value="#{supplierUserActivationBackingBean.tempPassword}" /> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td> -->
+<!-- 					<p:commandButton  -->
+<!-- 						value="#{lbl['lbl.btn.submit']}" -->
+<!-- 						action="#{supplierUserActivationBackingBean.activateSupplierUser}" /> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 		</table> -->
+<!-- 	</h:panelGroup> -->
 
 	<h:panelGroup rendered="#{!supplierUserActivationBackingBean.managedBean.validActivation}">
 		invalid user activation

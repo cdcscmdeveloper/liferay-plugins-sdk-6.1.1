@@ -118,6 +118,8 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	public static final String ACTIVATION_PATH = "/web/guest/supplier-user-activation?";
+	public static final String ORG_TYPE_SUPPLIER = "SUP";
 
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
