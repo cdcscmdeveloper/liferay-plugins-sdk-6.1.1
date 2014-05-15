@@ -23,7 +23,6 @@ import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -31,7 +30,6 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -44,7 +42,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.ToggleEvent;
 
 import com.liferay.portal.util.PortalUtil;
 //import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
@@ -106,11 +103,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
-				/*log.info("Record saved successfully");
-				String message = "Fulfilment Request No. : "+flRequest.getFulfilmentReqId();
-				if(flRequest.getDocNo()!=null) {
-					message = message + ". Doc No. : "+flRequest.getDocNo();
-				}*/
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -177,11 +169,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 
 	public String navigateToFlOrder(int index) {
-		System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+		//System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 		//		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("status");
-		System.out.println("Status:::: "+statusDesc);
+		//System.out.println("Status:::: "+statusDesc);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		flReqDTO.setFlRequestId(getManagedBean().getSelectedFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
@@ -228,7 +220,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:" + taskId);
 		if(taskId != null){
 
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -240,7 +231,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
-			System.out.println("res.getProcessName(): "+res.getProcessName());
 			if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
@@ -259,16 +249,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-				
-				FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-				
-				/*//if(coObj.getContractRequestId().intValue() == 0){
-					//flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-				}else{
-					flReqDTO.setFlRequestId(coObj.getContractRequestId());
-				}
-
-				flReqDTO.setSelectedApprovers(coObj.getApproverList());*/
 
 				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
@@ -291,7 +271,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		String taskId = originalServletRequest.getParameter("taskId");
 		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
-		//		System.out.println("loginId:" + loginId);
 // temp for delivery term days
 		getManagedBean().setTermDays("Days");
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -306,7 +285,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
 		if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
-			System.out.println("Process name is NUllllllllllllllll");
+			System.out.println("Process name is NUll");
 		}	
 		else if (FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
@@ -328,8 +307,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
-			System.out.println("req id from BPM::::::: "+flPurchaseOrd.getOrderDetails().getRequestId());
-			System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getOrderDetails().getReqDocNo());
+			//System.out.println("req id from BPM::::::: "+flPurchaseOrd.getOrderDetails().getRequestId());
+			//System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getOrderDetails().getReqDocNo());
 			//flp.getOrderDetails().setReqDocNo
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
 			//flReqDTO.setSelectedApprovers(flPurchaseOrd..getApproverList());
@@ -360,7 +339,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		String id = (String) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
 		getManagedBean().setFactoringCheck(id);
-
 	}
 	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
@@ -418,9 +396,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			BigDecimal ordAmount = new BigDecimal("0");
 			ordAmount=new BigDecimal(ordAmoun);
 			fulfilmentItemAddr.setOrderedAmt(ordAmount);
-			
 		}
-
 		
 		public void checkValidity(FlFulfilmentRequest flRequest) {
 			Date date = new Date();

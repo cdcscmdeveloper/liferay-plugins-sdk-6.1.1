@@ -11,6 +11,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+	
 		<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}" sortMode="multiple"
 			var="pending" id="pendingTable" rowIndexVar="rowIndex" width="100%">
 			<ac:paginator for="pendingTable" />
