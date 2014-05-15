@@ -139,7 +139,7 @@
 					</p:tab>
 					
 					<p:tab title="Promotion"
-						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricings) > 0}">
+						rendered="#{catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricing.price > 0}">
 						<ui:include src="/xhtml/cm/pricing/promotionPricingTab.xhtml"></ui:include>
 
 					</p:tab>
