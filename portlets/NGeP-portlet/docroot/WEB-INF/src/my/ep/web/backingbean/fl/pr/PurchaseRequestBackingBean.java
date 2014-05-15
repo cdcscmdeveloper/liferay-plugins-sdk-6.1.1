@@ -30,6 +30,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -62,6 +63,7 @@ import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
@@ -388,6 +390,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
 			return;
 		}
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		FlDeliveryAddress deliveryAddr = null;
 		int i = 0;
 		for (PmAddressType addrType : getManagedBean().getSelectedPmDelAddrList()) {
@@ -403,9 +407,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				//deliveryAddr.setAddressType(addrType);
 				deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
 				deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
-				PmParameter pmUom=new PmParameter();
-				pmUom.setParameterId(1L);
-				deliveryAddr.setPmUom(pmUom);
+				paramReqDTO.setParameterId(574L);
+				deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
 				deliveryAddr.setDeliveryTerm(10);
 				if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
@@ -420,6 +423,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	public void updateManualDeliveryAddrDt() {
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+		
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			return;
 		}
@@ -432,9 +438,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		deliveryAddr.setCheckManualAddress(true);
 		deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
 		deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
-		PmParameter pmUom=new PmParameter();
-		pmUom.setParameterId(1L);
-		deliveryAddr.setPmUom(pmUom);
+		paramReqDTO.setParameterId(574L);
+		deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
 		deliveryAddr.setDeliveryTerm(10);
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
