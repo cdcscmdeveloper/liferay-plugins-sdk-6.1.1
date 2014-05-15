@@ -65,6 +65,7 @@
 					<p:commandLink
 						value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+						update=":form:itemDtlPopup"
 						oncomplete="itemDtlPopup.show();" />
 					<p:spacer width="2px;"/>
 					<c:if test="#{(requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault ne 'null')}" >
@@ -78,12 +79,14 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'E'}">
 						<p:commandLink value="Emergency"
+							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 
 					</ui:fragment>
 					<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'A'}">
 						<p:commandLink value="Ad hoc"
+							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 					</ui:fragment>
@@ -97,6 +100,7 @@
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
 					<p:commandLink
+						update=":form:popupSuppDtl"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						oncomplete="suppDetailsPopup.show();">
 						<h:outputText value="supplier" />
@@ -120,6 +124,7 @@
 					<ui:fragment
 						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
 						<p:commandLink
+							update=":form:pricingPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="pricingPopup.show();">
 							<p:graphicImage value="/resources/ep/images/design/document.png"
@@ -130,6 +135,7 @@
 					<ui:fragment
 						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
 						<p:commandLink
+							update=":form:pricingPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="pricingPopup.show();">
 							<p:graphicImage value="/resources/ep/images/design/document.png"
