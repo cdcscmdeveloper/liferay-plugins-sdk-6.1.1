@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.ct.template.CtTemplate;
@@ -205,7 +207,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			   for(CtAgreementParty ctAgreementParty : this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties()){
 				  if(ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(
-					 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())){
+					 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())){  
 					this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 				  }else if(ctAgreementParty.getAgreementPartyType().getParameterId() .equals(retrieveParameterByCodeType(
 					ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId())){
@@ -224,6 +226,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			} 
+		    
+		    initializeRemarks();
+		    ContractBackingBean ctBB = new ContractBackingBean();
+		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		  
 		   if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)){
 			  if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME) ||
@@ -266,16 +272,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSignAgencyWitness());
 			this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSupplierWitness());
 		 
-			this.getManagedBean().getCtContract().getCurrentAgreement().setApprovedDate(new Date());
       		this.getManagedBean().getCtContract().getCurrentAgreement().setCtContract(this.getManagedBean().getCtContract());
             
-           // reqDTO.setSelectedApprovers(this.getManagedBean().getApproverModel().getTarget());
-          //  reqDTO.setAvailableApprovers(this.getManagedBean().getApproverModel().getSource());
-            
+      		if(isApprover()) {
+            	this.getManagedBean().getCtContract().getCurrentContractVer().setApprover(getFacesScopes().getUserSessionBean());
+            	this.getManagedBean().getCtContract().getCurrentContractVer().setApprovedDate(new Date());
+			}
+      		
+      		reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+ 		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+ 		    reqDTO.setUserMap(getManagedBean().getUserMap());
+ 		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+ 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 	
 			reqDTO.setAgreement(this.getManagedBean().getCtContract().getCurrentAgreement());
+		
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			
 			 if(resDTO.isSuccessful()) {
@@ -619,17 +631,22 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 	 }
 	 
 	 public void addAgencySignerParty(){
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			ctAgreementParty.setAgreementPartyType(new PmParameter());
-			if(ctAgreementParty.getOfficer() == null)
+		try{
+			 CtAgreementParty ctAgreementParty = new CtAgreementParty();
+			 ctAgreementParty.setAgreementPartyType(new PmParameter());
+		     ctAgreementParty.getAgreementPartyType().setParameterId(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId());
+			 if(ctAgreementParty.getOfficer() == null)
 				ctAgreementParty.setOfficer(new PmUser());
-			if(ctAgreementParty.getOrgProfile() == null){
+			 if(ctAgreementParty.getOrgProfile() == null){
 			   ctAgreementParty.setOrgProfile(new PmOrgProfile());
 				if(ctAgreementParty.getOrgProfile().getParentOrgProfile() == null){
 				   ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
 				}
-			}this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
-		}
+			 }this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
+		  }catch (NamingException e) {
+ 			  e.printStackTrace();
+		  }
+	  }
 		
 		public void deleteAgencySignerParty(){
 			for(int i = 0; i < selectedAgencySigner.length; i++) {
@@ -639,10 +656,16 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 		}
 		
 		public void addSupplierSigner(){
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			if(ctAgreementParty.getOfficer() == null)
-			   ctAgreementParty.setOfficer(new PmUser());
-		    this.getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+			try{
+			    CtAgreementParty ctAgreementParty = new CtAgreementParty();
+			    ctAgreementParty.setAgreementPartyType(new PmParameter());
+		        ctAgreementParty.getAgreementPartyType().setParameterId(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
+			    if(ctAgreementParty.getOfficer() == null)
+			       ctAgreementParty.setOfficer(new PmUser());
+		        this.getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+			} catch (NamingException e){
+				e.printStackTrace();
+			}
 		}
 		
 		public void deleteSupplierSigner(){
@@ -653,8 +676,14 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 		}
 		
 		public void addSupplierWitness(){
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			this.getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+			try{
+			    CtAgreementParty ctAgreementParty = new CtAgreementParty();
+		        ctAgreementParty.setAgreementPartyType(new PmParameter());
+		        ctAgreementParty.getAgreementPartyType().setParameterId(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
+			    this.getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+			} catch (NamingException e){
+				e.printStackTrace();
+			}
 		}
 		
 		public void deleteSupplierWitness(){
@@ -665,8 +694,15 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 		}
 		
 		public void addAgencyWitnes(){
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
+			try{
+			    CtAgreementParty ctAgreementParty = new CtAgreementParty();
+			    ctAgreementParty.setAgreementPartyType(new PmParameter());
+		        ctAgreementParty.getAgreementPartyType().setParameterId(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
+				this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
+			} catch (NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		public void deleteAgencyWitnes(){
@@ -802,6 +838,23 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		       }
 			}
+		}
+	}
+	
+	private void initializeRemarks() {
+		initiateRemark(getManagedBean().getCtContract().getCurrentContractVer().getSigningAgRemark());
+		
+	}
+		
+	private void initiateRemark(List<CtRemark> remarks) {
+		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+		  CtRemark remark = new CtRemark();
+		  remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		  remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		  remark.setChangedBy(remark.getCreatedBy());
+		  remark.setChangedDate(remark.getCreatedDate());
+		  remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+		  remarks.add(0, remark);
 		}
 	}
 	
