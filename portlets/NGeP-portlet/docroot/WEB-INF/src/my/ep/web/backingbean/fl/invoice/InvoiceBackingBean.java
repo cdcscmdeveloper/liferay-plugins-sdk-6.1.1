@@ -180,14 +180,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			BigDecimal sumReceivedAmt = new BigDecimal(0);
 			invoiceItem.setFlFulfilmentItem(item);
 			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
+				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+				sumReceivedQty = sumReceivedQty.add(itemAddr.getReceivedQty());
+				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getReceivedAmt());
 				if(!itemAddr.getStopInstrItems().isEmpty()){
 					for(FlStopInstrItem stopInstrItem : itemAddr.getStopInstrItems()){
-						sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-						sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
 						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
 						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
-						sumReceivedQty = sumReceivedQty.add(itemAddr.getReceivedQty());
-						sumReceivedAmt = sumReceivedAmt.add(itemAddr.getReceivedAmt());
+						
 					}
 				}
 			}
