@@ -130,7 +130,7 @@
 				   </p:selectOneMenu>
 	
 	            <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.district']}" /> 
-		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmAddress.pmCity.pmDistrict.districtId}" 
+		           <p:selectOneMenu 
 		              style="width:188px;margin-bottom:5px;"> 
 		             <f:selectItem itemLabel="Select One" itemValue="" />        
             	     <f:selectItems var="districtlist"
@@ -139,7 +139,7 @@
 				   </p:selectOneMenu>	
 							    						    				              			    
 			    <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
-		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmAddress.pmCity.cityId}"  
+		           <p:selectOneMenu   
 		              style="width:188px;margin-bottom:5px;"> 
 		             <f:selectItem itemLabel="Select One" itemValue="" /> 
             	     <f:selectItems var="citylist"
