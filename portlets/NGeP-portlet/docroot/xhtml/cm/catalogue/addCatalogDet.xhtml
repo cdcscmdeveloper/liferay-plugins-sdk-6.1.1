@@ -110,9 +110,16 @@
 							  </div>
 							</div>
 							
-						<p:commandButton value="#{lbl['lbl.cm.upload']}"
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
-							icon="ui-icon-upload" onclick="imageDialog.show()" /></td>
+							<p:commandLink style="margin-left: 200px;padding-right: 10px;" title="Upload"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }" onclick="imageDialog.show()">
+							<p:graphicImage value="/resources/ep/images/design/upload.png" style="margin-top:10px;" ></p:graphicImage>
+						</p:commandLink> 
+						
+						<p:commandLink rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }" title="Delete" oncomplete="deleteImage.show()" >
+							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+						</p:commandLink> 
+							
+						</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:inputText readonly="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
@@ -338,7 +345,17 @@
 						</tr>
 					</table>
 				</h:panelGroup>
-		</p:dialog>			
+		</p:dialog>		
+		
+		
+		<p:dialog id="deleteImage" header="Delete Image" widgetVar="deleteImage" modal="true"
+			width="500" height="500">
+				
+				
+				<ui:include src="deleteImage.xhtml"></ui:include>
+					
+				
+		</p:dialog>				
 
 
 

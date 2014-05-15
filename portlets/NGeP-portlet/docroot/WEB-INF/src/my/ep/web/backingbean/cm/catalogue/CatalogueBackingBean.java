@@ -4080,6 +4080,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	//      }
 	//		
 	//	}
+	
+	public void deleteImage(int index){
+		
+		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(index);
+			
+	}
 
 
 
