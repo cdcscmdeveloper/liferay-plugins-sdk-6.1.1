@@ -191,8 +191,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			detailBackingBean.getManagedBean().setTaskId(taskId);
 			detailBackingBean.getManagedBean().setQuotationTenderDataType(
 					datatype);
-			populateParentOrgProfile(tenderResDTO.getQtDetail());
-			detailBackingBean.onChangeAction();
+			//populateParentOrgProfile(tenderResDTO.getQtDetail());
+			//detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
 			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 

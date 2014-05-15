@@ -2677,10 +2677,10 @@ public class SpecificationBackingBean extends
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
 		try {
-			String type = (String) event.getComponent().getAttributes()
+			Long type =  (Long) event.getComponent().getAttributes()
 					.get("value");
 
-			this.getManagedBean().setFulfilmentType(type);
+			this.getManagedBean().setFulfilmentType(type.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();

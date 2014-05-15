@@ -554,7 +554,7 @@ public class QTCommitteBackingBean extends
 			UserResDTO resDTO = iUserSO.saveUser(userReqDTO);
 			System.out.println("done");
 			member.setPmUser(resDTO.getPmUser());
-			
+			setUserDetails(member);
 			memberList.add(member);
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
@@ -578,6 +578,7 @@ public class QTCommitteBackingBean extends
 				committeeMember.setMemberRole(user.getMemberRole());
 				committeeMember.setAccessRight("E");
 				committeeMember.setScCommittee(scCommittee);
+				setUserDetails(committeeMember);
 				memberList.add(committeeMember);
 			}
 			this.getManagedBean().setScCommitteeMemberList(memberList);

@@ -118,9 +118,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.PR_ACK_HT, "purchase-order");
 		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
 
-		temp.put("Service QuotationTender Creation", "supplierpp");
-		temp.put("Committee Approval", "committeMaintance");
-		
+				
 		//Added for qt..
 		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.PREPARE_SPECIFICATION , "businessowner");
 		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.CONSOLIDATE_SPECIFICATION , "businessowner");
@@ -135,8 +133,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BPK_APPROVAL , "qtapprovals");
 		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.QT_PREPARE_SCHEDULE , "qtdetails");
-		temp.put(SCProcessNameConst.SOURCING_APPROVAL +SCProcessNameConst.APPROVE_COMMITTE , "qtapprovals");
-		temp.put(SCProcessNameConst.SOURCING_APPROVAL +SCProcessNameConst.REVISE_COMMITTE , "qtdetails");
+		temp.put(SCProcessNameConst.COMMITTE_APPROVAL_PROCESS +SCProcessNameConst.APPROVE_COMMITTE , "qtapprovals");
+		temp.put(SCProcessNameConst.COMMITTE_APPROVAL_PROCESS +SCProcessNameConst.REVISE_COMMITTE , "qtdetails");
 		
 
 		this.getManagedBean().setBpmMap(temp);
@@ -153,7 +151,6 @@ public class BPMTaskListBackingBean extends
 			e.printStackTrace();
 		}
 	}
-
 	public void retrieveWorklistItems(String status, String viewBy, String assignment) {
 		System.out.println(">>>>>>>>>>retrieveWorklistItems<<<<<<<<<<");
 		
@@ -189,7 +186,7 @@ public class BPMTaskListBackingBean extends
 //
 //		return responseDTO;
 	}
-
+	
 	public void navigateToDeliveryOrderURL() throws IOException, PortalException, SystemException {
 		String orderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId");
 		FacesScopes facesScope = new FacesScopes();
@@ -202,7 +199,6 @@ public class BPMTaskListBackingBean extends
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		externalContext.redirect(commonUrl+"/delivery-order?orderId="+orderId);
 	}
-	
 	public void navigateToURL() throws PortalException, SystemException {
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
