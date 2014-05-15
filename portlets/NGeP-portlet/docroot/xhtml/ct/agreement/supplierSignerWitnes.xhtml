@@ -1,0 +1,131 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <p:panel id="signingWitness" header="SUPPLIER SIGNING DETAILS"  toggleable="true"  toggleSpeed="500">
+      <h:panelGrid style="width:100%">  
+        <p:outputLabel value="Signer" style="float:left;"/>
+         <p:dataTable id="agSupplierSigner" var="data" value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+           selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{data}">
+            <ac:paginator for="agSupplierSigner"/>
+			   <p:column selectionMode="multiple" style="width:2%"/> 
+                   <p:column style="width:25%;" headerText="Company Name">
+                     <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.smSupplier.companyName}" style="float:left;"/>
+                </p:column> 
+                <p:column style="width:25%;" headerText="Contract Signer">
+                  <p:selectOneMenu id="contractSigner" value="#{data.officer.userId}"  style="width:95%;">
+                   <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(data)}"/>
+                     <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setUserValue(data,data.officer.userId)}"/> 
+                   </p:selectOneMenu>
+                </p:column>  
+                <p:column style="width:25%;" headerText="IC No"> 
+                   <p:outputLabel id="suOfId" value="#{data.officerIc}" style="float:left;"/>
+                </p:column> 	
+                <p:column style="width:25%;" headerText="Position" >
+                   <p:outputLabel id="suOfPosition" value="#{data.officerPosition}" style="float:left;"/>
+                </p:column>  	
+             </p:dataTable>
+		</h:panelGrid>
+		 <div class="ppRightBtn"> 
+		    <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSupplierSigner()}"
+		       icon="ui-icon-add" update="agSupplierSigner"/>
+		    <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSupplierDel.show()"/>
+        </div>
+         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" header="Delete Confirmation" styleClass="screen-title"  
+           resizable="false" modal="true" width="325" height="90">  
+            <h:panelGrid columns="3">
+              <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+              <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+              styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="agSupplierSigner" process="@form" 
+				actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
+		   </div>
+        </p:dialog>  
+        <h:panelGrid style="width:100%">
+          <p:outputLabel value="Witness" style="float:left;"/>
+          <p:dataTable id="supplierWitnesTable" var="data" value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
+            selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{data}">
+            <ac:paginator for="witnessSign"/>
+            <p:column selectionMode="multiple" style="width:2%"/> 
+            <p:column style="width:50%;" headerText="Witness Name">
+               <p:inputText value="#{data.officerName}" style="width:95%;"/>
+            </p:column>
+            <p:column style="width:25%;" headerText="IC No"> 
+               <p:inputText value="#{data.officerIc}" style="width:95%;"/>
+            </p:column> 	       
+            <p:column style="width:20%;" headerText="Position" >
+               <p:inputText value="#{data.officerPosition}" style="width:95%;"/>
+            </p:column>  
+        </p:dataTable>
+       </h:panelGrid>
+        <div class="ppRightBtn"> 
+		    <p:commandButton value="Add" process="@form" action="#{agreementBackingBean.addSupplierWitness()}"
+		       icon="ui-icon-add" update="supplierWitnesTable"/>
+		    <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()"/>
+        </div>
+         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" header="Delete Confirmation" styleClass="screen-title"  
+           resizable="false" modal="true" width="325" height="90">  
+            <h:panelGrid columns="3">
+              <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+              <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+              styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="supplierWitnesTable" process="@form" 
+				actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
+		   </div>
+        </p:dialog>  
+       </p:panel>
+       <p:panel header="Remarks" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{agreementBackingBean.managedBean.contractVer.zoneRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{agreementBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				</td>
+			</tr>
+		</table>
+	</p:panel>		   	
+</ui:composition>

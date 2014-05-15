@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.ct.agreement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,18 +12,11 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
-import my.ep.persistence.entity.ct.template.CtTemplate;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 
 @ManagedBean(name ="agreementManagedBean")
@@ -30,49 +24,31 @@ import org.primefaces.model.DualListModel;
 public class AgreementManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(AgreementManagedBean.class);
 	
 	private String taskId;
 	private String[] action;
 	private String taskName;
-	
-	private boolean userDefined = true;
-	private boolean sysDefined;
-	private CtContract ctContract;
-	private CtAgreement ctAgreement;
-	private CtContractVer ctContractVer;
-	private CtAmendment ctAmendment;
-	
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	private List<CtAgreementParty> ctSignParties;
-	private List<CtAgreementParty> ctSignWitness;
-	private List<CtAgreementParty> ctSignSuppliers;
-	
-	private PmOrgProfile pmOrgProfile;
-	
-	private Long contractId;
-	private String agreementType ="";
-	
-	List<AgreementDetails> agreementList;
-	
-	private Long parameterId;
 	private PmUser userLogin;
 	private Long ministryProfileId;
 	private Long departmentProfileId;
-
-	private Map<Long, PmUserGroup> userGroupMap;
+	private String agreementType ="";
+	private String uploadFinalAgreement;
+	
+	private CtContract ctContract;
+	private CtContractVer contractVer;
+	
+	private List<CtAgreementParty> ctAgencySigner;
+	private List<CtAgreementParty> ctSupplierSigner;
+	private List<CtAgreementParty> ctSupplierWitness;
+	private List<CtAgreementParty> ctSignAgencyWitness;
+	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private CtAgreementContent selectedAgreementContent;
+	private Map<String, PmUser> userMap;
 	private DualListModel<String> approverModel;
 	
-	private PmParameter pmParameter;
-	
-	private String uploadFinalAgreement;
-	private List<PmOrgProfile> orgList;
-	private List<PmOrgProfile> orgListDep;
-	private String filePath;
-	private CtTemplate ctTemplates;
-	
-	private AgreementDetails agreementDetails;
+	private boolean chkConceValue;
 	
 	public AgreementManagedBean(){
 		
@@ -86,28 +62,12 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.action = action;
 	}
 
-	public CtAgreement getCtAgreement() {
-		return ctAgreement;
-	}
-
-	public void setCtAgreement(CtAgreement ctAgreement) {
-		this.ctAgreement = ctAgreement;
-	}
-
 	public String getTaskId() {
 		return taskId;
 	}
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
-	}
-
-	public Long getContractId() {
-		return contractId;
-	}
-
-	public void setContractId(Long contractId) {
-		this.contractId = contractId;
 	}
 
 	public String getAgreementType() {
@@ -133,46 +93,47 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
+	
+	
 
-	public List<CtAgreementParty> getCtSignParties() {
-		return ctSignParties;
+	public List<CtAgreementParty> getCtAgencySigner() {
+		if(ctAgencySigner == null)
+			ctAgencySigner = new ArrayList<CtAgreementParty>();
+		return ctAgencySigner;
 	}
 
-	public void setCtSignParties(List<CtAgreementParty> ctSignParties) {
-		this.ctSignParties = ctSignParties;
+	public void setCtAgencySigner(List<CtAgreementParty> ctAgencySigner) {
+		this.ctAgencySigner = ctAgencySigner;
 	}
 
-	public List<CtAgreementParty> getCtSignSuppliers() {
-		return ctSignSuppliers;
+	public List<CtAgreementParty> getCtSignAgencyWitness() {
+		if(ctSignAgencyWitness == null)
+			ctSignAgencyWitness = new ArrayList<CtAgreementParty>();
+		return ctSignAgencyWitness;
 	}
 
-	public void setCtSignSuppliers(List<CtAgreementParty> ctSignSuppliers) {
-		this.ctSignSuppliers = ctSignSuppliers;
+	public void setCtSignAgencyWitness(List<CtAgreementParty> ctSignAgencyWitness) {
+		this.ctSignAgencyWitness = ctSignAgencyWitness;
 	}
 
-	public boolean isUserDefined() {
-		return userDefined;
+	public List<CtAgreementParty> getCtSupplierSigner() {
+		if(ctSupplierSigner == null)
+			ctSupplierSigner = new ArrayList<CtAgreementParty>();
+		return ctSupplierSigner;
 	}
 
-	public void setUserDefined(boolean userDefined) {
-		this.userDefined = userDefined;
+	public void setCtSupplierSigner(List<CtAgreementParty> ctSupplierSigner) {
+		this.ctSupplierSigner = ctSupplierSigner;
 	}
 
-	public boolean isSysDefined() {
-		return sysDefined;
+	public List<CtAgreementParty> getCtSupplierWitness() {
+		if(ctSupplierWitness == null)
+			ctSupplierWitness = new ArrayList<CtAgreementParty>();
+		return ctSupplierWitness;
 	}
 
-	public void setSysDefined(boolean sysDefined) {
-		this.sysDefined = sysDefined;
-	}
-
-
-	public PmOrgProfile getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
+	public void setCtSupplierWitness(List<CtAgreementParty> ctSupplierWitness) {
+		this.ctSupplierWitness = ctSupplierWitness;
 	}
 
 	public Long getMinistryProfileId() {
@@ -190,23 +151,15 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setDepartmentProfileId(Long departmentProfileId) {
 		this.departmentProfileId = departmentProfileId;
 	}
-
-	public List<CtAgreementParty> getCtSignWitness() {
-		return ctSignWitness;
-	}
-
-	public void setCtSignWitness(List<CtAgreementParty> ctSignwitness) {
-		this.ctSignWitness = ctSignwitness;
-	}
-
-	public CtContractVer getCtContractVer() {
-		return ctContractVer;
-	}
-
-	public void setCtContractVer(CtContractVer ctContractVer) {
-		this.ctContractVer = ctContractVer;
-	}
 	
+	public CtContractVer getContractVer() {
+		return contractVer;
+	}
+
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
+	}
+
 	public List<CtRemark> getRemarkList() {
 		if(remarkList == null)
 			remarkList = new ArrayList<CtRemark>();
@@ -235,12 +188,15 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.userLogin = userLogin;
 	}
 
-	public Map<Long, PmUserGroup> getUserGroupMap() {
-		return userGroupMap;
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
 	}
 
-	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
-		this.userGroupMap = userGroupMap;
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
 	}
 
 	public DualListModel<String> getApproverModel() {
@@ -251,30 +207,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 
-	public List<AgreementDetails> getAgreementList() {
-		return agreementList;
-	}
-
-	public void setAgreementList(List<AgreementDetails> agreementList) {
-		this.agreementList = agreementList;
-	}
-
-	public Long getParameterId() {
-		return parameterId;
-	}
-
-	public void setParameterId(Long parameterId) {
-		this.parameterId = parameterId;
-	}
-
-	public PmParameter getPmParameter() {
-		return pmParameter;
-	}
-
-	public void setPmParameter(PmParameter pmParameter) {
-		this.pmParameter = pmParameter;
-	}
-
 	public String getUploadFinalAgreement() {
 		return uploadFinalAgreement;
 	}
@@ -283,54 +215,22 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.uploadFinalAgreement = uploadFinalAgreement;
 	}
 
-	public CtAmendment getCtAmendment() {
-		return ctAmendment;
+	public boolean isChkConceValue() {
+		return chkConceValue;
 	}
 
-	public void setCtAmendment(CtAmendment ctAmendment) {
-		this.ctAmendment = ctAmendment;
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
 	}
 
-	public List<PmOrgProfile> getOrgList() {
-		return orgList;
+	public CtAgreementContent getSelectedAgreementContent() {
+		return selectedAgreementContent;
 	}
 
-	public void setOrgList(List<PmOrgProfile> orgList) {
-		this.orgList = orgList;
+	public void setSelectedAgreementContent(
+			CtAgreementContent selectedAgreementContent) {
+		this.selectedAgreementContent = selectedAgreementContent;
 	}
 
-	public List<PmOrgProfile> getOrgListDep() {
-		return orgListDep;
-	}
-
-	public void setOrgListDep(List<PmOrgProfile> orgListDep) {
-		this.orgListDep = orgListDep;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
-	public CtTemplate getCtTemplates() {
-		return ctTemplates;
-	}
-
-	public void setCtTemplates(CtTemplate ctTemplates) {
-		this.ctTemplates = ctTemplates;
-	}
-
-	public AgreementDetails getAgreementDetails() {
-		return agreementDetails;
-	}
-
-	public void setAgreementDetails(AgreementDetails agreementDetails) {
-		this.agreementDetails = agreementDetails;
-	}
-	
-	
 	
 }

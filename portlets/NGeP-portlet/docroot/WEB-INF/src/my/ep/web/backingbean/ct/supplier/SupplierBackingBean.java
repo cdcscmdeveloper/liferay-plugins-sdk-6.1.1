@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -48,8 +47,6 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
@@ -57,14 +54,10 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -100,10 +93,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	ContractBackingBean ctBB = null;
 	
 	public SupplierBackingBean(){
-		 if(this.getManagedBean().getAction() == null) {
-	 			this.getManagedBean().setAction(new String[]{"Save", "Submit"});
-	 		}
-	//	getFactoringDropdownValues();
+	   if(this.getManagedBean().getAction() == null) 
+	 	   this.getManagedBean().setAction(new String[]{"Save", "Submit"});
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -118,37 +109,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		
 		if(this.getManagedBean().getFactoring() == null){
-			this.getManagedBean().setFactoring(new CtFactoring());
-			this.getManagedBean().getFactoring().setCtContract(new CtContract());
-			this.getManagedBean().getFactoring().getCtContract().setLatestContractVer(new CtContractVer());
-			this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-			this.getManagedBean().getFactoring().setContractAdmin(new PmUser());
-			this.getManagedBean().getFactoring().setSmSupplier(new SmSupplier());
-			this.getManagedBean().getFactoring().setStatus(new PmStatus());
-			
-			this.getManagedBean().getFactoring().getCtContract().setContractId(11L);
-			this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
-			this.getManagedBean().getFactoring().getContractAdmin().setUserId(27L);
-			this.getManagedBean().getFactoring().getStatus().setStatusId(1L);
-			this.getManagedBean().getFactoring().getSmSupplier().setSupplierId(4L);
-			
-			this.getManagedBean().getFactoring().setAuthRefNo("123-09234-76453");
-			this.getManagedBean().getFactoring().setEffDate(new Date());
-			this.getManagedBean().getFactoring().setExpDate(new Date());
-			
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setContractVerId(11L);
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setStatus(new PmStatus());
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getStatus().setStatusId(1L);
-			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-			//if(this.getManagedBean().getFactoring().getLoa() == null)
-				//this.getManagedBean().getFactoring().setLoa(new ScLoa());
+		   this.getManagedBean().setFactoring(new CtFactoring());
+		   if(this.getManagedBean().getFactoring().getFinancialOrg() == null){
+		      this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
+		      this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
+		   
+		   }if(this.getManagedBean().getFactoring().getFinancialBranchId() == null)
+			   this.getManagedBean().getFactoring().setFinancialBranchId(new PmFinancialBranch());
 		}
-		 
-		if(this.getManagedBean().getCtTerminationReason() == null){
-		    	this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
-		 }
-		
-        
 	}
     
     public void preRenderView(){
@@ -181,20 +149,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		
     		if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)){
     			CTBankAccountDataType dataType = (CTBankAccountDataType)obj;
-    			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
-    			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-    		
-    		}else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
-    			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
-    			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
-    			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
+    			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
     		
     		}else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)){
     			CTFactoringDataType dataType = (CTFactoringDataType)obj;
     			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-    			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
+    			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
     		}
 
     		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
@@ -202,6 +164,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
     		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 
+    		if(resDTO.getCtContractVer().getCtContract().getCtFactoring()!= null 
+    				&& resDTO.getCtContractVer().getCtContract().getCtFactoring().getFactoringId() != null){
+    			this.getManagedBean().setFactoring(resDTO.getCtContractVer().getCtContract().getCtFactoring());
+    			this.getManagedBean().setRemoveFactoring(true);
+    		}
     		if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
@@ -211,11 +178,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_FACTORING);
-    		
-    		}else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
-    			
-    			FacesContext fc = FacesContext.getCurrentInstance();
-    			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_TERMINATION);
     		
     		}else{
     		
@@ -233,24 +195,22 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 
 		IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
-		try {
-			
-				 reqDTO = new ContractSupplierReqDTO();
-				 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-				 FacesScopes facesScopes = new FacesScopes();
-				 reqDTO.setUserLonginId(facesScopes.getUserSessionBean().getUserId());
-				 ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-		         
-			if (resDTO.getContractList()!= null && !resDTO.getContractList().isEmpty()) {
+		
+		try{
+			 reqDTO = new ContractSupplierReqDTO();
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+			 reqDTO.setSupplierUser(getFacesScopes().getUserSessionBean());
+			 ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+		     
+			 if(resDTO.getContractList()!= null && !resDTO.getContractList().isEmpty()) {
 				populateContractList = new ArrayList<SelectItem>();
 				dbContractList = resDTO.getContractList();
 				for (CtContract obj : dbContractList) {
 					populateContractList.add(new SelectItem(obj.getContractId(),obj.getContractNo()));
 			    }      
-		  }
-		} finally {
-			// resetObjectConditions();
-
+		    }
+		}finally {
+			supplierSO = null;
 		}
 		return populateContractList;
 	}
@@ -260,13 +220,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 
 		IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
-		try {
+		try{
 			
-				 reqDTO = new ContractSupplierReqDTO();
-				 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-				 FacesScopes facesScopes = new FacesScopes();
-				 reqDTO.setUserLonginId(facesScopes.getUserSessionBean().getUserId());
-				 ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+			reqDTO = new ContractSupplierReqDTO();
+			supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setUserLonginId(facesScopes.getUserSessionBean().getUserId());
+			ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
 		         
 			if (resDTO.getContractList()!= null && !resDTO.getContractList().isEmpty()) {
 				populateContractList = new ArrayList<SelectItem>();
@@ -274,68 +234,64 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				for (CtContract obj : dbContractList) {
 					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(),obj.getContractNo()));
 			    }      
-		  }
-		} finally {
-			// resetObjectConditions();
-
-		}
+		    }
+		 }finally {}
 		return populateLoaList;
-	}
+	 }
 
-	/* Function to populate state value */
-	public void changeContractActionListener() {
+	 /* Function to populate state value */
+	 public void changeContractActionListener() {
 
 		IContractSO contractSO = null;
         ContractReqDTO reqDTO = null;	
-		try {
+		try{
 		
-			 reqDTO = new ContractReqDTO();
-			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			 reqDTO.setContractId(this.getManagedBean().getContractNo());
-			 ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
-			 if(resDTO.isSuccessful()){
-				 this.getManagedBean().setCtContract(resDTO.getContract());
-			     this.getManagedBean().setContractVer(resDTO.getContract().getLatestContractVer()); 
-			    
-			     changeAccountActionListener();
-			 }
-		} catch (Exception ex) {
+		   reqDTO = new ContractReqDTO();
+		   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+		   reqDTO.setContractId(this.getManagedBean().getContractNo());
+		   ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
+		   if(resDTO.isSuccessful()){
+			  this.getManagedBean().setCtContract(resDTO.getContract());
+			  this.getManagedBean().setContractVer(resDTO.getContract().getLatestContractVer()); 
+			  changeAccountActionListener();
+		   }
+		 }catch (Exception ex) {
 			log.error("Exception", ex);
-		} finally {
+		}finally {
 			// resetObjectConditions();
 		}
-	}/* Function End */
+	 }/* Function End */
     
-	public void changeAccountActionListener(){
+	 public void changeAccountActionListener(){
 		
 		IMofRegistrationSO iMofRegistrationSO = null;
     	MofRegistrationReqDTO reqDTO = null;	
-		try {
+		try{
 		
 			 reqDTO = new MofRegistrationReqDTO();
 	    	 reqDTO.setSupplierId(this.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
 	    	 iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 	    	 MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
 	    	 List<SmSupplierBank> smSupplierBanks = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
-	        if (smSupplierBanks != null && !smSupplierBanks.isEmpty()) {
-		    			populateBankAccountList = new ArrayList<SelectItem>();
-		    			for (SmSupplierBank obj : smSupplierBanks) {
-							populateBankAccountList.add(new SelectItem(obj.getSupplierBankId(), obj.getAccountNo()));
-					    }      
-		    		}
-		} catch (Exception ex) {
+	         if(smSupplierBanks != null && !smSupplierBanks.isEmpty()) {
+		    	populateBankAccountList = new ArrayList<SelectItem>();
+		    	for(SmSupplierBank obj : smSupplierBanks) {
+					populateBankAccountList.add(new SelectItem(obj.getSupplierBankId(), obj.getAccountNo()));
+				}      
+		     }
+		 }catch (Exception ex) {
 			log.error("Exception", ex);
-		} finally {
+		 }finally {
 			// resetObjectConditions();
-		}
-	}
+		 }
+	  }
 	
-	public SelectItem[] getBankAccountList(){
+	  public SelectItem[] getBankAccountList(){
 		
-		SelectItem[] items = null;   
-		IMofRegistrationSO iMofRegistrationSO = null;
-    	MofRegistrationReqDTO reqDTO = null;
-	    try{
+		  SelectItem[] items = null;   
+		  IMofRegistrationSO iMofRegistrationSO = null;
+    	  MofRegistrationReqDTO reqDTO = null;
+	      try{
 	    	    int i = 1;
 	    		reqDTO = new MofRegistrationReqDTO();
 	    		reqDTO.setSupplierId(this.getManagedBean().getCtContract().getSmSupplier().getSupplierId());
@@ -345,15 +301,16 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    		items = new SelectItem[smSupplierBanks.size()+1];
 			    items[0] = new SelectItem(null, "- Select One -");
 			    for(SmSupplierBank bankList : smSupplierBanks) {
-				       items[i++] = new SelectItem(bankList.getSupplierBankId(), bankList.getAccountNo());
+				     items[i++] = new SelectItem(bankList.getSupplierBankId(), bankList.getAccountNo());
 			       }
 			 }catch (Exception e) {
 		    	   e.printStackTrace();
 		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		     }
 		return items;
-	}
-     public String saveChangeBankRequest(String action){
+	  }
+     
+	  public String saveChangeBankRequest(String action){
 		
 	    IContractSO contractSO = null;
 		try{
@@ -373,34 +330,34 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
-		    if (resDTO.isSuccessful()) {
-				
-				  log.info("Record saved successfully");
-				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Change Bank Account. : "));
-				  if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-						renewSesionObject();
-						return "/xhtml/shared/acknowledge.xhtml";
-				   }
-			  } else {
-					throw new EpException("Failed.");
+		    if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Change Bank Account. : "));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				    renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
 				}
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			contractSO = null;
-		}
+			 }else{
+			   throw new EpException("Failed.");
+			 }
+		  }catch (Exception e) {
+			  log.error("Exception>>", e);
+			  e.printStackTrace();
+			  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		  } finally {
+			  contractSO = null;
+		  }
 		return null;
-	}
+	  }
      
-     public String saveTerminationRequest(String outcome){
+      public String saveTerminationRequest(String outcome){
      	
-     	System.out.println("inside supplier termination Log >>>>>>>>>>>>>>>>>>");
+     	 System.out.println("inside supplier termination Log >>>>>>>>>>>>>>>>>>");
      	 IContractSO contractSO = null;
-     	ContractReqDTO reqDTO = null;	
-     	ContractResDTO resDTO = null;
- 		try{
+      	 ContractReqDTO reqDTO = null;	
+     	 ContractResDTO resDTO = null;
+ 		
+     	 try{
  			
  			 reqDTO = new ContractReqDTO();
  			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
@@ -484,28 +441,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 		return null;
 	}
-    
-    public SelectItem[] getFactoringDropdownValues() {
-		
-    	SelectItem[] items = null;
-	    IParameterSO parameterSO = null;
-	    ParameterReqDTO reqDTO = null;
-		try{
-		   
-			reqDTO = new ParameterReqDTO();
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
-			reqDTO.setParameterType("BS");
-			reqDTO.setParameterCode("FC");
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			Long value = resDTO.getPmParameter().getParameterId();
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	    return items;
-	}
-    
+        
     public void retrieveSupplierProfile(Long supplierId){
     	
     	IMofRegistrationSO iMofRegistrationSO = null;
@@ -530,7 +466,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
     }
     
-public SelectItem[] retrieveFinancialOrgList() throws NamingException {
+    public SelectItem[] retrieveFinancialOrgList() throws NamingException {
 		
 		SelectItem[] items = null; 
 		IFinancialOrgSO financialOrgSO;
@@ -551,11 +487,81 @@ public SelectItem[] retrieveFinancialOrgList() throws NamingException {
 		}   	
 	   return items;
 	}
+
+    public SelectItem[] retrieveFinancialBranchOrgById() throws NamingException {
+	  SelectItem[] items = null; 
+	  IFinancialOrgSO financialOrgSO;
+	  try{
+	       int i = 1;
+	       financialOrgSO = (IFinancialOrgSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+	       FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+	       reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+	       FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
+	       List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
+	       items = new SelectItem[list.size()+1];
+	       items[0] = new SelectItem(null, "- Select One -");
+	       for(PmFinancialBranch pmFinancialBranch : list) 
+			  items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
+    
+	    }catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	 }   	
+     return items;
+   }
+
+   public String getPaymentBankName(){
+	   IFinancialOrgSO financialOrgSO;
+		  try{
+		       financialOrgSO = (IFinancialOrgSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+		       FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+		       if(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() == null)
+		    	   this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
+		       reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+		       FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
+		       if((resDTO.getPmFinancialOrg().getPmFinancialBranchs().size() == 0 || resDTO.getPmFinancialOrg().getPmFinancialBranchs() == null)
+		    		&& (resDTO.getPmFinancialOrg().getPmFinancialAccs().size() > 0 && resDTO.getPmFinancialOrg().getPmFinancialAccs()!= null)){
+		    	   List<PmFinancialAcc> list = resDTO.getPmFinancialOrg().getPmFinancialAccs();
+			       PmFinancialAcc pmObj = null;
+			       for(PmFinancialAcc o : list) {
+			    	   if (pmObj == null || o.getExpDate().compareTo(new Date()) > 0){
+			    		   pmObj = o;
+					   } 
+			       } this.getManagedBean().setAccountNo(pmObj.getAccountNo());
+			       return pmObj.getPmPaymentBankOrg().getFinOrgName();
+		       
+		       }else if(resDTO.getPmFinancialOrg().getPmFinancialBranchs().size() > 0 && resDTO.getPmFinancialOrg().getPmFinancialBranchs() != null){
+		    	   
+		    	   List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
+			       PmFinancialAcc pmObj = null;
+			       for(PmFinancialBranch pmFinancialBranch : list){ 
+			    	   if(pmFinancialBranch.getFinancialBranchId().equals(this.getManagedBean().getFactoring().getFinancialBranchId().getFinancialBranchId())){
+			               for(PmFinancialAcc o : pmFinancialBranch.getPmFinancialAccs()) {
+			    	          if (pmObj == null || o.getExpDate().compareTo(new Date()) > 0)
+			    		          pmObj = o;
+			              } this.getManagedBean().setAccountNo(pmObj.getAccountNo());
+			                return pmObj.getPmPaymentBankOrg().getFinOrgName();
+		               }
+			       }
+		       } 
+		    }catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}   	
+	  return "";
+   }
+
+   public void reset(){ 
+	   
+	   this.getManagedBean().setAccountNo(null);
+   }
     
     public void fileUpload(FileUploadEvent event) throws Exception {
 	    UploadedFile item = event.getFile();
 	    String filePath = "C:/projects/uploads/"+item.getFileName();
 	    FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    this.getManagedBean().getFactoring().setFileName(item.getFileName());
+	    this.getManagedBean().getFactoring().setFilePath(filePath);
         fileOuputStream.write(item.getContents());
         fileOuputStream.close();
     }
@@ -620,5 +626,4 @@ public SelectItem[] retrieveFinancialOrgList() throws NamingException {
         	return str;
         return format.format(time); 
     } 
-
 }

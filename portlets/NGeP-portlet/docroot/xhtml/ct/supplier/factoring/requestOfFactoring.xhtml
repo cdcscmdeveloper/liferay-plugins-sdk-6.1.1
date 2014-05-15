@@ -42,7 +42,8 @@
 							<p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
 					</td>
 					<td>
-							<p:inputText size="30" disabled="true" value="#{supplierBackingBean.managedBean.ctContract.smSupplier.companyName}"/>
+							<p:inputText size="30" disabled="true" 
+							  value="#{supplierBackingBean.managedBean.ctContract.smSupplier.companyName}"/>
 					</td>					
 					<td>
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
@@ -55,94 +56,106 @@
 				</tr>
 			</table>	    		
 	</p:panel>
-	  <p:panel id="loaId" header="LOA Details"    toggleable="true"  toggleSpeed="500">
+	  <p:panel id="loaId" header="LOA Details" toggleable="true"  toggleSpeed="500">
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
 			<p:outputLabel value="LOA No." />
-			<p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.factoring.loa.loaId}"
+			<p:selectOneMenu style="width:210px;" 
 			         rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
 				     <f:selectItem itemLabel="-Please Select--" itemValue="" />
 				     <f:selectItem itemLabel="LOA-123" itemValue="1" />
 				     </p:selectOneMenu>
-			          <p:inputText  style="width:170px;" disabled="true"
+			          <p:inputText  style="width:200px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
 		       <p:outputLabel value="LOA Date" />
-		       <p:inputText style="width:170px;"  disabled="true"/> 
+		       <p:inputText style="width:200px;"  disabled="true"/> 
 		      
 		       <p:outputLabel value="Contract No." />
-		       <p:inputText style="width:170px;"  disabled="true"/>
+		       <p:inputText style="width:200px;"  disabled="true"/>
 		       <p:outputLabel value="Contract Name" />
-		       <p:inputText style="width:170px;"  disabled="true"/> 
+		       <p:inputText style="width:200px;"  disabled="true"/> 
 	           
 	           <p:outputLabel value="Contract Effective Date" />
-	           <p:inputText style="width:170px;"  disabled="true"/> 
+	           <p:inputText style="width:200px;"  disabled="true"/> 
 	           <p:outputLabel value="Contract Expiry Date" />
-	           <p:inputText style="width:170px;"  disabled="true"/> 
+	           <p:inputText style="width:200px;"  disabled="true"/> 
 	  </h:panelGrid>
    </p:panel>
     <p:panel id="factoringPanel" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
          <p:outputLabel  value="Factoring Company"/> 
-		 <p:selectOneMenu style="width:180px;">
-            <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
+		 <p:selectOneMenu style="width:210px;"
+		    value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
+              <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
+              <p:ajax event="change" process="@this" update="branchId,bankName,accNo" listener="#{supplierBackingBean.reset}"/>
          </p:selectOneMenu> 
-         <p:outputLabel  value="Factoring Agreement"/> 
-         
-           <h:panelGroup id="uploadBondPg">
-             <h:panelGrid columns="3">
-			 <p:commandButton oncomplete="uploadBondDlg.show();return false;" icon="iconAttachment"  update="factoringPanel">
-				<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctPerformanceBond}" /></p:commandButton>	
-				<p:spacer width="1"/>
-		     <h:commandLink value="#{amendmentBackingBean.fileNames('khan.doc')}" 
-				style="float:left;" styleClass="blue_font" action="#{amendmentBackingBean.downloadFile('khan.doc')}"/>		
-				</h:panelGrid>			
-		   </h:panelGroup> 
-         
-          <p:outputLabel  value="Factoring Branch"/> 
-		 <p:selectOneMenu style="width:180px;">
-            <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+         <p:outputLabel  value="Authorization Ref No."/> 
+         <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:200px;" disabled="false"/>
+         <p:outputLabel  value="Factoring Branch"/> 
+		 <p:selectOneMenu id="branchId" style="width:210px;"
+		    value="#{supplierBackingBean.managedBean.factoring.financialBranchId.financialBranchId}">
+            <f:selectItems value="#{supplierBackingBean.retrieveFinancialBranchOrgById()}"/> 
+             <p:ajax event="change" process="@this" update="bankName,accNo" listener="#{supplierBackingBean.reset}"/>
          </p:selectOneMenu> 
-		 <p:outputLabel  value="Authorization Ref No."/> 
-         <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" disabled="false"/>
-         <p:outputLabel  value="Payment Bank Name"/> 
-         <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" disabled="false"/>
          <p:outputLabel value="Start Date"/>
-         <p:calendar size="25" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-				          value="#{supplierBackingBean.managedBean.factoring.effDate}"
-				id="effdateCal" showOn="button" />
-		  <p:outputLabel value="Account No." /> 
-           <p:inputText style="width:170px;"  disabled="true"/> 
-          <p:outputLabel value="End Date"/>
-          <p:calendar size="25" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-				          value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" />
+         <p:calendar size="30" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+		    value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" />
+         <p:outputLabel  value="Payment Bank Name"/> 
+         <p:inputText id="bankName" value="#{supplierBackingBean.getPaymentBankName()}" style="width:200px;" disabled="true"/>
+         <p:outputLabel value="End Date"/>
+         <p:calendar size="30" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+		     value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" />
+		 <p:outputLabel value="Account No."/> 
+         <p:inputText id="accNo" style="width:200px;"  disabled="true"
+            value="#{supplierBackingBean.managedBean.accountNo}"/> 
+            <f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
+             <f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
+         <p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}"/> 
+          <p:inputText size="20" rendered="#{supplierBackingBean.managedBean.removeFactoring}"
+			value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}"
+			disabled="true" />
+          <p:outputLabel  value="Factoring Agreement"/> 
+         <h:panelGroup id="uploadFactoringPg">
+           <h:panelGrid columns="3">
+			 <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" icon="iconAttachment" value="Upload"
+			  update="factoringPanel"></p:commandButton>	
+				<p:spacer width="1"/>
+		     <h:commandLink value="#{amendmentBackingBean.fileNames(supplierBackingBean.managedBean.factoring.fileName)}" 
+		        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
+				action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath)}"/>		
+		    </h:panelGrid>			
+		  </h:panelGroup> 
       </h:panelGrid>
-       <p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false" resizable="false" width="700px" height="350" 
+       <p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="false" resizable="false" width="700px" height="350" 
 	   	    styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		    <p:ajax event="close" />
 	      	<p:fileUpload style="display:inline;" mode="advanced" 
 			  fileUploadListener="#{supplierBackingBean.fileUpload}" 
 			  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			  update="factoringPanel" >
+			  update="factoringPanel">
 		    </p:fileUpload> 
 	    </p:dialog>
      </p:panel>
-     <p:panel id="calausePanel" header="Caluse Details"    toggleable="true"  toggleSpeed="500">
-     <p:spacer height="8"/>
-	    <table style="width: 100%">
-				<tr>
-					<td style="width: 15%;"><f:verbatim /></td>
-					<td><p:outputLabel
-							value="Therefore, according to the terms related to the payment for the requisition below, 
-							 The Government need to pay all that is needed to Us under the specific requisition directly to the (Fill in the Factoring company)"/></td>
+     <p:panel id="calausePanel" header="Caluse Details" toggleable="true"  toggleSpeed="500"
+      rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
+       <p:spacer height="8"/>
+	      <table style="width: 100%">
+			 <tr>
+				<td style="width: 15%;"><f:verbatim/></td>
+				<td><p:outputLabel
+					   value="Therefore, according to the terms related to the payment for the requisition below, 
+					   The Government need to pay all that is needed to Us under the specific requisition directly to the (Fill in the Factoring company)"/></td>
 				</tr>
-				<tr>
-				<td /><td><p:commandButton value="View Factoring Clauses"/></td>
+				<tr><td />
+				 <td><p:commandButton value="View Factoring Clauses" onclick="factoringClauseDlg.show();"/></td>
 				</tr>
-				<tr>
-					<td />
-					<td><p:selectBooleanCheckbox /><h:outputText value="I Agree" /></td>
+				<tr><td />
+				  <td><p:selectBooleanCheckbox /><h:outputText value="I Agree"/></td>
 				</tr>
 			</table>
+	        <p:dialog id="factoringClauseDlg" header="Factoring Clause" widgetVar="factoringClauseDlg" modal="true" width="600" height="400">
+    	    
+    	    </p:dialog>
      </p:panel>
        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
    </ui:define>

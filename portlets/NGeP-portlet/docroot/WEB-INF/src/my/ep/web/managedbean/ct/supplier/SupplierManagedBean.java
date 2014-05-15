@@ -15,11 +15,8 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -45,17 +42,17 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String loginUser;
 	private int selectedIndex;
 	private CtFactoring factoring;
-	private CtTermination termination;
-	private CtTerminationReason ctTerminationReason;
+	private CtFactoring uploadFiles;
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
 	private CtContractVer contractVer;
-	private CtCircular ctCircular = new CtCircular();
-	private CtAgreement ctAgreement = new CtAgreement();
 	private CtContract ctContract;
+	private List<PmFinancialAcc>  financialAccList;
+	private String accountNo="";
+	private boolean removeFactoring;
 	
 	public SupplierManagedBean(){
 		
@@ -92,23 +89,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setFactoring(CtFactoring factoring) {
 		this.factoring = factoring;
 	}
-	
-	public CtTermination getTermination() {
-		return termination;
-	}
-	
-	public void setTermination(CtTermination termination) {
-		this.termination = termination;
-	}
-	
-	public CtTerminationReason getCtTerminationReason() {
-		return ctTerminationReason;
-	}
-	
-	public void setCtTerminationReason(CtTerminationReason ctTerminationReason) {
-		this.ctTerminationReason = ctTerminationReason;
-	}
-	
+		
 	public SearchFilterBean getSearchFilterBean() {
 		return searchFilterBean;
 	}
@@ -163,22 +144,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
-	}
-
-	public CtCircular getCtCircular() {
-		return ctCircular;
-	}
-
-	public void setCtCircular(CtCircular ctCircular) {
-		this.ctCircular = ctCircular;
-	}
-
-	public CtAgreement getCtAgreement() {
-		return ctAgreement;
-	}
-
-	public void setCtAgreement(CtAgreement ctAgreement) {
-		this.ctAgreement = ctAgreement;
 	}
 
 	public String getTaskName() {
@@ -236,6 +201,38 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setChkMenuOrTxtBox(String chkMenuOrTxtBox) {
 		this.chkMenuOrTxtBox = chkMenuOrTxtBox;
 	}
-	
-	
+
+	public List<PmFinancialAcc> getFinancialAccList() {
+		if(financialAccList == null)
+			financialAccList = new ArrayList<PmFinancialAcc>();
+		 return financialAccList;
+	}
+
+	public void setFinancialAccList(List<PmFinancialAcc> financialAccList) {
+		this.financialAccList = financialAccList;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public boolean isRemoveFactoring() {
+		return removeFactoring;
+	}
+
+	public void setRemoveFactoring(boolean removeFactoring) {
+		this.removeFactoring = removeFactoring;
+	}
+
+	public CtFactoring getUploadFiles() {
+		return uploadFiles;
+	}
+
+	public void setUploadFiles(CtFactoring uploadFiles) {
+		this.uploadFiles = uploadFiles;
+	}	
 }
