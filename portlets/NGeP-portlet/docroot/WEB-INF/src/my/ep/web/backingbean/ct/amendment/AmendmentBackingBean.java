@@ -322,7 +322,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
-	            ChkComplyAP201Rule();	
+	            if(!this.getManagedBean().getContractVer().getCtContractValue().isConcession() || !this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+	            	ChkComplyAP201Rule();
+	            }
 	        }   
 	        
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
