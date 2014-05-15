@@ -8,10 +8,10 @@
 	<p:outputPanel id="indBtnSubmit">
 		<c:if test="#{registrationBackingBean.managedBean.smAppl.brandNew}">
 			<c:if
-				test="#{registrationBackingBean.managedBean.smSupp.businessType == '13'}">
+				test="#{registrationBackingBean.managedBean.smSupp.businessType == 'A'}">
 				<div align="right">
 					<p:commandButton value="Submit"
-						action="#{registrationBackingBean.submitRegistration}" />
+						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])" />
 				</div>
 			</c:if>
 		</c:if>
@@ -25,23 +25,29 @@
 
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
-					<td class="tdContent"><p:selectOneMenu
-							value="#{registrationBackingBean.managedBean.smAppl.supplierType}" style="width:200px">
+					<td class="tdContent"><p:selectOneMenu id="suppTypeId"
+							required="true"
+							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
+							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
-							<f:selectItem itemLabel="Contractor" itemValue="K" />
-							<f:selectItem itemLabel="Consultant" itemValue="J" />
-							<p:ajax event="change" update="busTypeId,outPnlRegForm,"
-								listener="#{registrationBackingBean.suppTypeOnChange}" />
-						</p:selectOneMenu></td>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
+								itemValue="K" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}"
+								itemValue="J" />
+							<p:ajax event="change" update="busTypeId,outPnlRegForm" />
+						</p:selectOneMenu>
+						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" /></td>
 				</c:if>
 
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="busTypeId"
+				<td class="tdContent">
+					<p:selectOneMenu id="busTypeId" required="true" label="#{lbl['lbl.sm.businesscomptype']}"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}"
 						readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}" style="width:200px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
-					</p:selectOneMenu></td>
+						<p:ajax event="change" update="outPnlRegForm"></p:ajax>
+					</p:selectOneMenu><p:message id="busTypeIdMsg" for="busTypeId" display="icon" /></td>
 				<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">
 					<td class="tdTitle"></td>
@@ -51,7 +57,7 @@
 
 			<c:if test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Account Status" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.accountstatus']}" /></td>
 					<td class="tdContent"><p:selectOneRadio>
 							<f:selectItem itemLabel="Active" itemValue="1" />
 							<f:selectItem itemLabel="Deactivate" itemValue="0" />

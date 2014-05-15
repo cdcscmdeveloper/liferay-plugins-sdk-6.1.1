@@ -22,7 +22,7 @@
 					action="#{registrationBackingBean.returnToSignUp}" />
 
 				<p:commandButton value="Next" style="float:right;"
-					action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
+					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])" />
 				<!-- 			<p:commandButton value="Ajax" update="pnlCompInfo"  validateClient="true" /> -->
 		</div>
 		<div style="clear: both;"></div>

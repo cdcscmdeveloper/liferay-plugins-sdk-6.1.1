@@ -85,8 +85,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private Long bizIdL2;
 	private Long bizIdL3;
 	private Long bizIdL4;
-
-	private UploadedFile uploadedFile;  
+	
+	private boolean agreeTC;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -335,14 +335,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.serviceLs = serviceLs;
 	}
 
-	public UploadedFile getUploadedFile() {
-		return uploadedFile;
-	}
-
-	public void setUploadedFile(UploadedFile uploadedFile) {
-		this.uploadedFile = uploadedFile;
-	}
-
 	public List<PmBusinessNature> getBusinessNatureL1() {
 		return businessNatureL1;
 	}
@@ -448,6 +440,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setBizIdL4(Long bizIdL4) {
 		this.bizIdL4 = bizIdL4;
+	}
+
+	public boolean isAgreeTC() {
+		return agreeTC;
+	}
+
+	public void setAgreeTC(boolean agreeTC) {
+		this.agreeTC = agreeTC;
 	}
 
 }

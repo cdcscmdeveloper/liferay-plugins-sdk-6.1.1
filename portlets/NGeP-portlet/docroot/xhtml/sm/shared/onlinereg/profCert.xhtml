@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Professional Body Information" id="pnlProfCert"
+	<p:panel header="#{lbl['lbl.sm.prof.profbodyinformation']}" id="pnlProfCert"
 		toggleable="true">
 		<p:dataTable var="suppCert" id="profCertId"
 			value="#{registrationBackingBean.managedBean.smAppl.smSupplierCerts}"
@@ -16,7 +16,7 @@
 				<p:inputText value="#{suppCert.certName}" />
 			</p:column>
 
-			<p:column headerText="Certification Body">
+			<p:column headerText="#{lbl['lbl.sm.prof.certificationbody']}">
 				<p:selectOneMenu id="certBodyId" value="#{suppCert.pmCertBody.certBodyId}">
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.profCertBodyLs}"
@@ -25,26 +25,26 @@
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="Start Date">
+			<p:column headerText="#{lbl['lbl.sm.prof.startdate']}">
 				<p:calendar value="#{suppCert.certStartDate}" id="startDateId"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</p:column>
 
-			<p:column headerText="End Date">
+			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<p:calendar value="#{suppCert.certEndDate}" id="endDateId"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</p:column>
 
-			<p:column headerText="Rating">
+			<p:column headerText="#{lbl['lbl.sm.prof.rating']}">
 				<p:inputText value="#{suppCert.certScore}" />
 			</p:column>
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				action="#{registrationBackingBean.addProfessionalCert}"
 				update="pnlProfCert" />
-			<p:commandButton value="Remove"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				action="#{registrationBackingBean.removeProfessionalCert}"
 				update="pnlProfCert" />
 		</div>

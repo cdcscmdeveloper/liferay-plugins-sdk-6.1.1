@@ -8,14 +8,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+<!-- 	<p:messages id="messages"  autoUpdate="true" /> -->
+<!-- 	<p:inputText id="textInt" value="" required="true" /> -->
+<!-- 	<p:message id="textMsg" for="textInt" display="icon"  /> -->
+	
+<!-- 		<p:inputText id="textInt1" value="" required="true" /> -->
+<!-- 	<p:message id="testtextMsg" for="textInt1" display="icon"  update="@([id$=Msg])" /> -->
 		<p:panel header="Account Type">
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
-							<f:selectItem itemLabel="Basic Account" itemValue="B" />
-							<f:selectItem itemLabel="MOF Registeration" itemValue="M" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="B" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="M" />
 							<p:ajax event="change" update="agreementId" />
 						</p:selectOneRadio></td>
 				</tr>
@@ -27,7 +33,7 @@
 				<c:choose>
 					<c:when
 						test="${registrationBackingBean.managedBean.applType == 'M'}">
-						<b>MOF Account</b>
+						<b>#{lbl['lbl.sm.basic.account.mof']}</b>
 						<br />
 						<p>Lorem ipsum dolor sit amet, ea sit tation exerci soluta. Ut
 							sit facete quaestio consetetur. Vide justo te eum, id sea posse
@@ -64,16 +70,21 @@
 					</c:when>
 
 					<c:otherwise>
-						<b>Basic Account</b>
+						<b>#{lbl['lbl.sm.basic.account']}</b>
 						<br />
 						<p><p:outputLabel escape="false" value="#{lbl['lbl.sm.basic.account']}" /></p>
 					</c:otherwise>
 				</c:choose>
 			</p:scrollPanel>
+			<br />
+			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" update="btnProceed">
+				<p:ajax update="btnProceed" />
+			</p:selectBooleanCheckbox>
+			I have agreed the <a href="">Terms &#38; Conditions</a>
 		</p:panel>
 
 		<div align="right">
-			<p:commandButton value="Next"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" disabled="#{!registrationBackingBean.managedBean.agreeTC}"
 				action="#{registrationBackingBean.proceedToCompanyInfo}" />
 		</div>
 
