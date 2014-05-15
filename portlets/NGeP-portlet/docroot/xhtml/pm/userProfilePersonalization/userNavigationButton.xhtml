@@ -7,7 +7,9 @@
 
 	<p:panel>	
 
-		  <p:commandButton value="Save" icon="ui-icon-save" style="float:right;" />			  					  		  
+		  <p:commandButton value="Save" 
+		     action="#{userprofileBackingBean.updateMyProfileAction(userprofileBackingBean.managedBean.pmUser)}"
+		     icon="ui-icon-save" style="float:right;" />			  					  		  
 						
 	</p:panel>
 </ui:composition>
