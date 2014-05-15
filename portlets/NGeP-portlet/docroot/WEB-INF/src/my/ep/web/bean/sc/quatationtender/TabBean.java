@@ -2,13 +2,12 @@ package my.ep.web.bean.sc.quatationtender;
 
 import java.util.List;
 
-import org.primefaces.model.DualListModel;
-
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+
+import org.primefaces.model.DualListModel;
 
 public class TabBean {
 	private String titleName;

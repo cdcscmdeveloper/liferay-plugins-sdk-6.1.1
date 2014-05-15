@@ -11,7 +11,7 @@
 		<div style="width: 100%">
 			<p:pickList id="appId"  value="#{requestNoteBackingBean.managedBean.approvalUsers}" var="approverUser"
 				showTargetControls="true" itemLabel="#{approverUser.userName}"
-				itemValue="#{approverUser}" converter="approverConverter">
+				itemValue="#{approverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available Aprover</f:facet>
 				<f:facet name="targetCaption">Aprover List Name</f:facet>
 			</p:pickList>

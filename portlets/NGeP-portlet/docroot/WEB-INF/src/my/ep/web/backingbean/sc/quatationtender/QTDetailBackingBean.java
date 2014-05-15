@@ -1773,30 +1773,30 @@ public class QTDetailBackingBean extends
 					qtApproval.setScQtApprovalDtls(qtApprovalRequests);
 
 					// BUDGET_APPROVAL
-					if (qtApproval.getApprovalCategory().getParameterId()
-							.equals(754l)) {
+					if (qtApproval.getApprovalCategory().getParameterCode()
+							.equals(ParameterConst.APPROVAL_CATEGORY_BUDGET)) {
 						
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, approverSettingDtls(
 										RoleCode.BUDGET_APPROVER, qtApproval)));
 
 					} else if (qtApproval.getApprovalCategory()
-							.getParameterId().equals(755l)) {
+							.getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_BPK)) {
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, null));
 					} else if (qtApproval.getApprovalCategory()
-							.getParameterId().equals(756l)) {
+							.getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
 						DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
 								RoleCode.APPROVER, qtApproval);
 
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, ptjApprovals));
 					} else if (qtApproval.getApprovalCategory()
-							.getParameterId().equals(757l)) {
+							.getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, null));
 					} else if (qtApproval.getApprovalCategory()
-							.getParameterId().equals(758l)) {
+							.getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, approverSettingDtls(
 										RoleCode.APPROVER, qtApproval)));
@@ -2472,18 +2472,28 @@ public class QTDetailBackingBean extends
 		if (null != approval) {
 			if (null != approval.getApproverSettings()
 					&& !approval.getApproverSettings().isEmpty()) {
-
-				for (ScQtApproverSettings scQtApproverSettings : approval
-						.getApproverSettings()) {
-					for (PmUser pmUser : approvers) {
-						if (!scQtApproverSettings.getApprover().getUserId()
+				boolean isApproverExists;
+				
+				for (PmUser pmUser : approvers) {
+					isApproverExists = false;
+					
+					for (ScQtApproverSettings scQtApproverSettings : approval
+							.getApproverSettings()) {
+						if (scQtApproverSettings.getApprover().getUserId()
 								.equals(pmUser.getUserId())) {
-							ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
-							qtApproverSettings.setApprover(pmUser);
-							qtApproverSettings.setQtApproval(approval);
-							availableApprovers.add(qtApproverSettings);
+							isApproverExists = true;
+							
+							break;
 						}
 					}
+					
+					if (!isApproverExists) {
+						ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
+						qtApproverSettings.setApprover(pmUser);
+						qtApproverSettings.setQtApproval(approval);
+						availableApprovers.add(qtApproverSettings);							
+					}
+					
 				}
 				selectedApprovers = approval.getApproverSettings();
 			} else {

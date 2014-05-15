@@ -221,7 +221,7 @@
 					value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
 					var="approverUser" showTargetControls="true"
 					itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
-					converter="approverConverter">
+					converter="approverPickListConverter">
 					<f:facet name="sourceCaption">Available Approver </f:facet>
 					<f:facet name="targetCaption">Approver List Name</f:facet>
 			</p:pickList>

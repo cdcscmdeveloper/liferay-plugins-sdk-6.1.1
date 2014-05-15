@@ -87,11 +87,6 @@
 		</navigation-case>
 	</navigation-rule>
 	
-	
-	<converter>
-		<converter-id>approverConverter</converter-id>
-		<converter-class>my.ep.web.sc.converter.ApproverPickListConverter</converter-class>
-	</converter>
 	<converter>
 		<converter-id>procurementTypeConverter</converter-id>
 		<converter-class>my.ep.web.sc.converter.ProcumentTypeConverter</converter-class>

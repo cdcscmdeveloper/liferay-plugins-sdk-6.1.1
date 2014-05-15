@@ -12,7 +12,7 @@
 			<p:pickList id="budgetapprover" value="#{budgetList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.approver.userName}" itemValue="#{approverUser}"
-				converter="approverConverter">
+				converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>

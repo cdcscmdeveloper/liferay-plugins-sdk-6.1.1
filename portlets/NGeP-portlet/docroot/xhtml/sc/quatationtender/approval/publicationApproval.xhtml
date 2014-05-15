@@ -12,7 +12,7 @@
 				value="#{approvalBackingBean.managedBean.publicationApprovalUsers}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.userName}" itemValue="#{publicationUser}"
-				converter="approverConverter">
+				converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>
