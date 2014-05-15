@@ -9,11 +9,14 @@ import javax.faces.bean.SessionScoped;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 
 /**
@@ -31,7 +34,7 @@ public class UserprofileManagedBean extends BaseManagedBean {
 	
 	private static final Logger log= EpLogger.getLogger(UserprofileManagedBean.class);	
 	
-	private PmUser pmUser;
+	private PmUser pmUser = new PmUser();
 	
 	private PmAddress pmAddress;
 	
@@ -60,6 +63,15 @@ public class UserprofileManagedBean extends BaseManagedBean {
 	private List<PmUser> users;
 
 	private List<PmUserGroup> usersGroup;
+	
+	// list of location
+	private List<PmState> states;
+	
+	private List<PmDivision> divisions;
+	
+	private List<PmDistrict> districts;
+	
+	private List<PmCity> citys;	
 	
 	public UserprofileManagedBean(){
 		log.info("inside ");		
@@ -201,8 +213,39 @@ public class UserprofileManagedBean extends BaseManagedBean {
 
 	public void setUserGroupStatus(String userGroupStatus) {
 		this.userGroupStatus = userGroupStatus;
+	}
+
+	public List<PmState> getStates() {
+		return states;
+	}
+
+	public void setStates(List<PmState> states) {
+		this.states = states;
+	}
+
+	public List<PmDistrict> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<PmDistrict> districts) {
+		this.districts = districts;
+	}
+
+	public List<PmCity> getCitys() {
+		return citys;
+	}
+
+	public void setCitys(List<PmCity> citys) {
+		this.citys = citys;
+	}
+
+	public List<PmDivision> getDivisions() {
+		return divisions;
+	}
+
+	public void setDivisions(List<PmDivision> divisions) {
+		this.divisions = divisions;
 	}	
-	
-	
+		
 
 }
