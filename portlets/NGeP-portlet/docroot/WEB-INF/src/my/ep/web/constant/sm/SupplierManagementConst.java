@@ -109,6 +109,7 @@ public class SupplierManagementConst {
 	public static final String RES_ADD = "R";
 	public static final int DEFAULT_REV_NO = 1;
 	public static final String PROF_SERVICE = "P";
+	public static final String SPECIAL_SERVICE = "S";
 	public static final int FIRST_USER_AUTHO = 1;
 	public static final int FIRST_USER_CONT_SIGNER = 1;
 	public static final boolean FIRST_USER_CONT_PERSON = true;
@@ -236,6 +237,14 @@ public class SupplierManagementConst {
 
 	public String getPERSONNEL_TYPE_STAFF() {
 		return PERSONNEL_TYPE_STAFF;
+	}
+
+	public static String getProfService() {
+		return PROF_SERVICE;
+	}
+
+	public static String getSpecialService() {
+		return SPECIAL_SERVICE;
 	}
 
 }
