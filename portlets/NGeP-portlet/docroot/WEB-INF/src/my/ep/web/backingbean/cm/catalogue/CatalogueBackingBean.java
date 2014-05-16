@@ -774,7 +774,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			Double minOrder;
 			Double maxOrder;
 			Double leadTime;
-			String paymentTerm;
 			//			Map map = new HashMap();
 
 			Row row = rowIterator.next();
@@ -909,10 +908,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						catalogItem.setLeadTime(new BigDecimal(leadTime));
 					}
 
-					if(row.getCell(19)!=null && !row.getCell(19).toString().isEmpty()){
-						paymentTerm = row.getCell(19).toString();
-						catalogItem.setPaymentTerms(paymentTerm);
-					}
+					
 				}	
 				
 				rowNum++;
@@ -1116,7 +1112,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			dataLs.add(catalog.getMinOrder());
 			dataLs.add(catalog.getMaxOrder());
 			dataLs.add(catalog.getLeadTime());
-			dataLs.add(catalog.getPaymentTerms());
+
 			
 			addCellToRow(product, no++, dataLs, catalogCellStyle);
 
