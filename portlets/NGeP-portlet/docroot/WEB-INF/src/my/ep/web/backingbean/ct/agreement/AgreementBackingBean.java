@@ -40,6 +40,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -271,6 +272,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSignAgencyWitness());
 			this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSupplierWitness());
 		 
+			this.getManagedBean().getCtContract().getCurrentContractVer().setDocType(ContractConst.DOC_TYPE_AGREEMENT);
       		this.getManagedBean().getCtContract().getCurrentAgreement().setCtContract(this.getManagedBean().getCtContract());
             
       		if(isApprover()) {
@@ -284,7 +286,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
  		    reqDTO.setUserMap(getManagedBean().getUserMap());
  		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
  			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-	
+	        
 			reqDTO.setAgreement(this.getManagedBean().getCtContract().getCurrentAgreement());
 		
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
@@ -300,8 +302,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						messageId = MessageConst.INFO_700007;
 				 }
 				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-					MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
-					this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+					MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCtContract().getCurrentContractVer().getDocType()), 
+					this.getManagedBean().getCtContract().getContractNo()}, 
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { } 
 				  }else {
