@@ -8,8 +8,10 @@ import javax.faces.bean.SessionScoped;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -33,133 +35,86 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
 	private List<ScQtProposalChecklist> financeCheckDetailsList;
 	private List<ScQtProposalChecklist> selectedCheckDetails;
-	
+
+	private ScQtCheckList scQtCheckList;
+
+	// Tab Menu
+	private int prepareActiveIndex;
+
 	private ScQtProposalChecklist selectDetails;
-	public boolean checkStatus=true;
-	
-	//payLoad object Added By Vidyasagar.
+	public boolean checkStatus = true;
+
+	// payLoad object Added By Vidyasagar.
 	private Object proposalData;
 	private String supplierId;
-	
-	//private ScAttachment scAttachment = new ScAttachment();
-	private List<ScAttachment> scAttachmentList; 
-	
+
+	// private ScAttachment scAttachment = new ScAttachment();
+	private List<ScAttachment> scAttachmentList;
+
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-	
+
+	// Non-Federal Government
+	private List<ScQtPRPExperience> scQtPRPExperiences;
+	private List<ScQtPRPExperience> selectedPRPExperiences;
+
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
 
-	/**
-	 * @return the checkStatus
-	 */
 	public boolean isCheckStatus() {
 		return checkStatus;
 	}
 
-	/**
-	 * @param checkStatus the checkStatus to set
-	 */
 	public void setCheckStatus(boolean checkStatus) {
 		this.checkStatus = checkStatus;
 	}
 
-	/**
-	 * @return the selectDetails
-	 */
 	public ScQtProposalChecklist getSelectDetails() {
 		return selectDetails;
 	}
 
-	/**
-	 * @param selectDetails the selectDetails to set
-	 */
 	public void setSelectDetails(ScQtProposalChecklist selectDetails) {
 		this.selectDetails = selectDetails;
 	}
 
-	/**
-	 * @return the scAttachmentList
-	 */
 	public List<ScAttachment> getScAttachmentList() {
 		return scAttachmentList;
 	}
 
-	/**
-	 * @param scAttachmentList the scAttachmentList to set
-	 */
 	public void setScAttachmentList(List<ScAttachment> scAttachmentList) {
 		this.scAttachmentList = scAttachmentList;
 	}
 
-	/**
-	 * @return the qtProposalChecklist
-	 */
 	public ScQtProposalChecklist getQtProposalChecklist() {
 		return qtProposalChecklist;
 	}
 
-	/**
-	 * @param qtProposalChecklist the qtProposalChecklist to set
-	 */
 	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
 		this.qtProposalChecklist = qtProposalChecklist;
 	}
 
-/*	*//**
-	 * @return the scAttachment
-	 *//*
-	public ScAttachment getScAttachment() {
-		return scAttachment;
-	}
-
-	*//**
-	 * @param scAttachment the scAttachment to set
-	 *//*
-	public void setScAttachment(ScAttachment scAttachment) {
-		this.scAttachment = scAttachment;
-	}
-*/
-	/**
-	 * @return the selectedCheckDetails
-	 */
 	public List<ScQtProposalChecklist> getSelectedCheckDetails() {
 		return selectedCheckDetails;
 	}
 
-	/**
-	 * @param selectedCheckDetails the selectedCheckDetails to set
-	 */
 	public void setSelectedCheckDetails(
 			List<ScQtProposalChecklist> selectedCheckDetails) {
 		this.selectedCheckDetails = selectedCheckDetails;
 	}
 
-	/**
-	 * @return the financeCheckDetailsList
-	 */
 	public List<ScQtProposalChecklist> getFinanceCheckDetailsList() {
 		return financeCheckDetailsList;
 	}
 
-	/**
-	 * @param financeCheckDetailsList the financeCheckDetailsList to set
-	 */
 	public void setFinanceCheckDetailsList(
 			List<ScQtProposalChecklist> financeCheckDetailsList) {
 		this.financeCheckDetailsList = financeCheckDetailsList;
 	}
 
-	/**
-	 * @return the tecCheckDetailsList
-	 */
 	public List<ScQtProposalChecklist> getTecCheckDetailsList() {
 		return tecCheckDetailsList;
 	}
 
-	/**
-	 * @param tecCheckDetailsList the tecCheckDetailsList to set
-	 */
 	public void setTecCheckDetailsList(
 			List<ScQtProposalChecklist> tecCheckDetailsList) {
 		this.tecCheckDetailsList = tecCheckDetailsList;
@@ -197,18 +152,45 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.supplierId = supplierId;
 	}
 
-	/**
-	 * @return the templateSpecBean
-	 */
 	public TemplateSpecBean getTemplateSpecBean() {
 		return templateSpecBean;
 	}
 
-	/**
-	 * @param templateSpecBean the templateSpecBean to set
-	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
+	}
+
+	public ScQtCheckList getScQtCheckList() {
+		return scQtCheckList;
+	}
+
+	public void setScQtCheckList(ScQtCheckList scQtCheckList) {
+		this.scQtCheckList = scQtCheckList;
+	}
+
+	public int getPrepareActiveIndex() {
+		return prepareActiveIndex;
+	}
+
+	public void setPrepareActiveIndex(int prepareActiveIndex) {
+		this.prepareActiveIndex = prepareActiveIndex;
+	}
+
+	public List<ScQtPRPExperience> getScQtPRPExperiences() {
+		return scQtPRPExperiences;
+	}
+
+	public void setScQtPRPExperiences(List<ScQtPRPExperience> scQtPRPExperiences) {
+		this.scQtPRPExperiences = scQtPRPExperiences;
+	}
+
+	public List<ScQtPRPExperience> getSelectedPRPExperiences() {
+		return selectedPRPExperiences;
+	}
+
+	public void setSelectedPRPExperiences(
+			List<ScQtPRPExperience> selectedPRPExperiences) {
+		this.selectedPRPExperiences = selectedPRPExperiences;
 	}
 
 }

@@ -36,7 +36,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType;
@@ -60,37 +60,52 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class SPDetailBackingBean extends
 		SourcingBaseBackingBean<SPDetailManagedBean> {
+
+	// Technical Proposal
+	private static final String NAV_TO_STANDARD_PRODUCT_PAGE = "/xhtml/sc/supplierproposal/technicalSpecification.xhtml";
+	private static final String NAV_TO_NON_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierproposal/technicalNonFederalGovt.xhtml";
+	private static final String NAV_TO_FEDERAL_GOVT_PAGE = "/xhtml/sc/supplierproposal/technicalFederalGovt.xhtml";
+
+	// Financial Proposal
+	private static final String NAV_TO_SUPPLIER_DETAILS_PAGE = "/xhtml/sc/supplierproposal/supplierDetails.xhtml";
+	private static final String NAV_TO_CREDIT_FACILITIES_PAGE = "/xhtml/sc/supplierproposal/creditFacilities.xhtml";
+	private static final String NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialFederalGovt.xhtml";
+	private static final String NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialNonFederalGovt.xhtml";
+
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
-	private IQTProposalSO proposalSO = null;
-
 	public SPDetailBackingBean() {
-		IQTProposalSO proposalSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
-		this.proposalSO = proposalSO;
-
-		if (getManagedBean().getQtProposal() == null) {
-			retrieveTechnicalProposalList(3l);
-		}
-
 		log.info("inside constructor");
 
 		getManagedBean().getTemplateSpecBean().setSelectedSpecQuestion(
 				new TplSpecQuestion());
-
 	}
 
 	@PostConstruct
 	public void init() {
+		try {
+			if (this.getManagedBean().getTecCheckDetailsList() == null) {
+				retrieveTechnicalProposalList();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
 	}
 
 	/**
 	 * retrieving Technical Proposal CheckList
 	 */
-	public void retrieveTechnicalProposalList(Long supplierId) {
+	public void retrieveTechnicalProposalList() {
 		debugLogger("retrieveTechnicalProposalList");
-
+		Long supplierId = 1l;
+		this.getManagedBean().setPrepareActiveIndex(0);
 		IQTProposalSO proposalSO = null;
 
 		try {
@@ -107,13 +122,60 @@ public class SPDetailBackingBean extends
 			List<ScQtProposalChecklist> tecCheckDetailsList = resDTO
 					.getTecChecklistResultBean().getResultList();
 			System.out.println("Technical list: " + tecCheckDetailsList.size());
+			System.out.println("Doc Definition Key : "
+					+ tecCheckDetailsList.get(0).getScQtCheckList()
+							.getScQtDoc().getDocument().getDocDefinitionKey());
+			/*
+			 * // Financial Check List List<ScQtProposalChecklist>
+			 * finCheckDetailsList = resDTO
+			 * .getFinChecklistResultBean().getResultList();
+			 * System.out.println("Financial list: " +
+			 * finCheckDetailsList.size());
+			 */
+
+			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			this.getManagedBean().setTecCheckDetailsList(tecCheckDetailsList);
+			/*
+			 * this.getManagedBean().setFinanceCheckDetailsList(
+			 * finCheckDetailsList);
+			 */
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+		}
+	}
+
+	/**
+	 * retrieving Financial Proposal CheckList
+	 */
+	public void retrieveFinancialProposalList() {
+		debugLogger("retrieveFinancialProposalList");
+		Long supplierId = 1l;
+		this.getManagedBean().setPrepareActiveIndex(1);
+		IQTProposalSO proposalSO = null;
+
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setQtSupplierId(supplierId);
+
+			ProposalResDTO resDTO = proposalSO
+					.retrieveProposalDtlByQtSupplierId(reqDTO);
+
 			// Financial Check List
 			List<ScQtProposalChecklist> finCheckDetailsList = resDTO
 					.getFinChecklistResultBean().getResultList();
 			System.out.println("Financial list: " + finCheckDetailsList.size());
-
+			System.out.println("Doc Definition Key : "
+					+ finCheckDetailsList.get(0).getScQtCheckList()
+							.getScQtDoc().getDocument().getDocDefinitionKey());
 			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
-			this.getManagedBean().setTecCheckDetailsList(tecCheckDetailsList);
+			// this.getManagedBean().setTecCheckDetailsList(tecCheckDetailsList);
 			this.getManagedBean().setFinanceCheckDetailsList(
 					finCheckDetailsList);
 		} catch (Exception ex) {
@@ -125,11 +187,9 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-		log.info(message);
+	public void retrieveDeclarationList() {
+		debugLogger("retrieveDeclarationList");
+		this.getManagedBean().setPrepareActiveIndex(2);
 	}
 
 	/**
@@ -137,8 +197,11 @@ public class SPDetailBackingBean extends
 	 */
 	public void saveSPDetailsAction() {
 		debugLogger("saveSPDetailsAction");
-
+		IQTProposalSO proposalSO = null;
 		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
 			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
@@ -189,14 +252,14 @@ public class SPDetailBackingBean extends
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 
-		ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
-				.getScQtProposalChecklistAttachment();
-		if (null == attachment) {
-			attachment = new ScQtProposalChecklistAttachment();
-			attachment.setScQtProposalChecklist(scQtProposalChecklist);
-		}
-		uploadAttachment(event.getFile(), attachment);
-		scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+		/*
+		 * ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
+		 * .getScQtProposalChecklistAttachment(); if (null == attachment) {
+		 * attachment = new ScQtProposalChecklistAttachment();
+		 * attachment.setScQtProposalChecklist(scQtProposalChecklist); }
+		 * uploadAttachment(event.getFile(), attachment);
+		 * scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+		 */
 
 	}
 
@@ -254,12 +317,12 @@ public class SPDetailBackingBean extends
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-		TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
+		TemplateSpecBean templateSpecBean = getManagedBean()
+				.getTemplateSpecBean();
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
 		templateSpecBean.setSpecMaster(specMaster);
-		templateSpecBean.setContentType(
-				TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
 		/* Long userId = 1L; */
@@ -269,8 +332,7 @@ public class SPDetailBackingBean extends
 		registrationReqDTO.setSupplierId(userId);
 		RegistrationResDTO registrationResDTO = registrationSO
 				.retrieveSuppOnlineAcc(registrationReqDTO);
-		templateSpecBean.setSupplier(
-				registrationResDTO.getSmSupp());
+		templateSpecBean.setSupplier(registrationResDTO.getSmSupp());
 
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 	}
@@ -278,45 +340,36 @@ public class SPDetailBackingBean extends
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
 		debugLogger("downloadSPFile");
-		ScQtProposalChecklistAttachment checklistAttachment = scQtProposalChecklist
-				.getScQtProposalChecklistAttachment();
-		System.out.println("File Name : " + checklistAttachment.getFilePath());
-
-		File file = new File(checklistAttachment.getFilePath());
-		InputStream input = new FileInputStream(file);
-
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ checklistAttachment.getFileName() + "\"");
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		if (checklistAttachment.getFilePath() != null) {
-
-			try {
-				URLConnection uc = new URL(checklistAttachment.getFilePath())
-						.openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(checklistAttachment.getFilePath());
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-			input.close();
-		} else {
-			// out.write(attachment.getFileByte());
-		}
-		out.flush();
-		out.close();
+		/*
+		 * ScQtProposalChecklistAttachment checklistAttachment =
+		 * scQtProposalChecklist .getScQtProposalChecklistAttachment();
+		 * System.out.println("File Name : " +
+		 * checklistAttachment.getFilePath());
+		 * 
+		 * File file = new File(checklistAttachment.getFilePath()); InputStream
+		 * input = new FileInputStream(file);
+		 * 
+		 * PortletResponse portletResponse = (PortletResponse) FacesContext
+		 * .getCurrentInstance().getExternalContext().getResponse();
+		 * HttpServletResponse res = com.liferay.portal.util.PortalUtil
+		 * .getHttpServletResponse(portletResponse);
+		 * res.setHeader("Content-Disposition", "attachment; filename=\"" +
+		 * checklistAttachment.getFileName() + "\"");
+		 * res.setHeader("Content-Transfer-Encoding", "binary");
+		 * res.setContentType("application/octet-stream"); res.flushBuffer();
+		 * OutputStream out = res.getOutputStream(); if
+		 * (checklistAttachment.getFilePath() != null) {
+		 * 
+		 * try { URLConnection uc = new URL(checklistAttachment.getFilePath())
+		 * .openConnection(); input = new
+		 * BufferedInputStream(uc.getInputStream()); } catch (Exception e) { //
+		 * Cannot open connection, maybe local file input = new
+		 * FileInputStream(checklistAttachment.getFilePath()); } byte[] buffer =
+		 * new byte[4096]; int bytesRead; while ((bytesRead =
+		 * input.read(buffer)) != -1) { out.write(buffer, 0, bytesRead); buffer
+		 * = new byte[4096]; } input.close(); } else { //
+		 * out.write(attachment.getFileByte()); } out.flush(); out.close();
+		 */
 
 	}
 
@@ -336,7 +389,7 @@ public class SPDetailBackingBean extends
 
 			}
 			dataType.setSupplier(new FacesScopes().getUserScreenName());
-			//Calendar c = Calendar.getInstance(); // gives u calendar with
+			// Calendar c = Calendar.getInstance(); // gives u calendar with
 			Calendar calendar = Calendar.getInstance();
 
 			// Set the time for the notification to occur.
@@ -446,5 +499,201 @@ public class SPDetailBackingBean extends
 
 		reqDTO.setScQtProposal(scQtProposal);
 		return reqDTO;
+	}
+
+	public String prepareTechnicalAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareTechnicalAction");
+
+		if ("TS".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
+				.getDefinationType().getParameterCode())) {
+			ScQtCheckList scQtCheckList = scQtProposalChecklist
+					.getScQtCheckList();
+			ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
+			try {
+				TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+				TemplateSpecBean templateSpecBean = getManagedBean()
+						.getTemplateSpecBean();
+				TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
+
+				templateSpecBean.setSpecMaster(specMaster);
+				templateSpecBean
+						.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+				templateSpecBean.setSupplier(scQtProposalChecklist
+						.getScQtProposal().getScQtSupplier().getSmSupplier());
+				templateSpecBackingBean
+						.retrieveTemplateSpecMaster(templateSpecBean);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return NAV_TO_STANDARD_PRODUCT_PAGE + "?faces-redirect=true";
+		} else {
+			if ("TG".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
+					.getScQtDoc().getDocument().getDocDefinitionKey())) {
+				debugLogger("prepareFederalGovtAction");
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+
+			} else if ("TN".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+				debugLogger("prepareNonFederalGovtAction");
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_NON_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+			}
+
+		}
+		return null;
+	}
+
+	public String prepareTechnicalViewAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareTechnicalViewAction");
+		return null;
+	}
+
+	public String prepareFinancialAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareFinancialAction");
+		if ("TS".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
+				.getDefinationType().getParameterCode())) {
+
+		} else {
+			if ("FG".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
+					.getScQtDoc().getDocument().getDocDefinitionKey())) {
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE
+						+ "?faces-redirect=true";
+			} else if ("FN".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE
+						+ "?faces-redirect=true";
+			} else if ("CF".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_CREDIT_FACILITIES_PAGE + "?faces-redirect=true";
+			} else if ("CH".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+
+			} else if ("BS".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+
+			} else if ("AL".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+
+			} else if ("SD".equalsIgnoreCase(scQtProposalChecklist
+					.getScQtCheckList().getScQtDoc().getDocument()
+					.getDocDefinitionKey())) {
+				ScQtCheckList scQtCheckList = scQtProposalChecklist
+						.getScQtCheckList();
+				this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+				return NAV_TO_SUPPLIER_DETAILS_PAGE + "?faces-redirect=true";
+			}
+		}
+		return null;
+	}
+
+	public void addNonFederalGovtExperience() {
+		debugLogger("addNonFederalGovtExperience");
+		ScQtPRPExperience prpExperience = new ScQtPRPExperience();
+		try {
+			List<ScQtPRPExperience> experienceList = this.getManagedBean().getScQtPRPExperiences();
+			if(null == experienceList) {
+				experienceList = new ArrayList<ScQtPRPExperience>();
+			}
+			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
+				scQtPRPExperience.setBrandNew(false);
+			}
+			experienceList.add(prpExperience);
+			this.getManagedBean().setScQtPRPExperiences(experienceList);
+			System.out.println("List Size : " + getManagedBean().getScQtPRPExperiences().size());
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	public void deleteNonFederalGovtExperience() {
+		debugLogger("deleteNonFederalGovtExperience");
+		List<ScQtPRPExperience> experienceList = this.getManagedBean().getScQtPRPExperiences();
+		List<ScQtPRPExperience> selectedExperienceList = this.getManagedBean().getSelectedPRPExperiences();
+		if(experienceList.size() == selectedExperienceList.size()) {
+			experienceList.clear();
+		} else {
+			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
+				experienceList.remove(scQtPRPExperience);
+			}
+		}
+	}
+	
+	public String supplierProposalBackAction() {
+		debugLogger("supplierProposalBackAction");
+		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
+	}
+
+	public String prepareNonFederalGovtAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareNonFederalGovtAction");
+		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+		this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+		return NAV_TO_NON_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+	}
+
+	public String prepareFederalGovtAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareFederalGovtAction");
+		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+		this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+		return NAV_TO_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+	}
+
+	public String prepareSupplierDetailsAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareSupplierDetailsAction");
+		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+		this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+		return NAV_TO_SUPPLIER_DETAILS_PAGE + "?faces-redirect=true";
+	}
+
+	public String prepareCreditFacilitiesAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareCreditFacilitiesAction");
+		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+		this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+		return NAV_TO_CREDIT_FACILITIES_PAGE + "?faces-redirect=true";
+	}
+
+	public String prepareCompanyExperienceGovtAction(
+			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("prepareCompanyExperienceGovtAction");
+		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+		this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+		return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE + "?faces-redirect=true";
 	}
 }
