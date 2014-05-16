@@ -121,6 +121,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -141,7 +142,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private boolean checkFlg = false;
 	private boolean displayItemPnl;
 	private boolean selectedAllChargeItem;
+	private String className="@(.myClassName)";
 	
+	
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	// bulk charge popup
 	private Long pmPrjSetia;
 	private Long pmPrgActivity;
@@ -258,8 +275,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		//get this lists for manual Address dropdowns
 		retrieveCountryList();
 		
-		//Populate Charge Line Items
-		getManagedBean().populateChargeLineData();
+		
 		//getUserProfiles();
 		
 		//chargeline dropdown
@@ -1805,6 +1821,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 */
 	public static void setSubSetiaCodeMap(Map<Long, String> subSetiaCodeMap) {
 		PurchaseRequestBackingBean.subSetiaCodeMap = subSetiaCodeMap;
+	}
+	
+	public void onTabChange(TabChangeEvent tevent){
+		if("chargeLineTabId".equals(tevent.getTab().getId())){
+		 // Call chargege line specific data
+			//Populate Charge Line Items
+		getManagedBean().populateChargeLineData();	
+		setClassName("@(.chargeLinePnlClass)");
+		}
 	}
 	
 }
