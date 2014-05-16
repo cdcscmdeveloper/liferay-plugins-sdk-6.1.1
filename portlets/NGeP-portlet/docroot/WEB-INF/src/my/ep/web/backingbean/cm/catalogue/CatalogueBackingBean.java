@@ -762,7 +762,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			List<CmSupplierItem> catItems = new ArrayList<CmSupplierItem>();
 
 			Double supplierItemId = new Double(0);
-			String itemcode = null;
 			Double price;
 			Date startDate = null;
 			Date endDate = null;
@@ -775,7 +774,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			Double minOrder;
 			Double maxOrder;
 			Double leadTime;
-			Double paymentTerm;
+			String paymentTerm;
 			//			Map map = new HashMap();
 
 			Row row = rowIterator.next();
@@ -787,17 +786,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 				row = rowIterator.next();
 
-				boolean rowEmpty = true;
-
-				for(int cN = 0; cN < row.getLastCellNum(); cN++){
-					if(row.getCell(cN)!=null && !row.getCell(cN).toString().isEmpty()){
-						rowEmpty = false;
-					}
-				}
-
-				if(rowEmpty){
-
-				} else if(row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty()){
+				if((row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty()) && (row.getCell(0)!=null && !row.getCell(0).toString().isEmpty())){
 					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum + "\n");
 					count++;
 				} else {
@@ -807,9 +796,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						System.out.println("Supp Item Id");
 					}
 					
-					if(row.getCell(1)!=null){
-						itemcode =  row.getCell(1).toString();
-					}
 
 					CmSupplierItem catalogItem = new CmSupplierItem();
 
@@ -830,20 +816,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						cmStandardPricing = catalogItem.getCmStandardPricing();
 					}
 
-					/*if(catalogItem.getCmPricings() != null && catalogItem.getCmPricings().size() > 0){
-						for(CmPricing cmPricing : catalogItem.getCmPricings()){
-							if(cmPricing.getPricingType().equalsIgnoreCase("01")){
-								cmStandardPricing = cmPricing;
-							}
-						}
-					}*/
 
 					if(cmStandardPricing.getPricingType() == null){
 						cmStandardPricing = new CmStandardPricing();
-						cmStandardPricing.setCmSupplierItem(catalogItem);
-						//List<CmPricing> cmPricings = new ArrayList<CmPricing>();
-						//cmPricings.add(cmStandardPricing);
-						//catalogItem.setCmPricings(cmPricings);
+						cmStandardPricing.setCmSupplierItem(catalogItem);			
 						catalogItem.setCmStandardPricing(cmStandardPricing);
 					}
 
@@ -934,11 +910,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					}
 
 					if(row.getCell(19)!=null && !row.getCell(19).toString().isEmpty()){
-						paymentTerm =  row.getCell(19).getNumericCellValue();
-						catalogItem.setPaymentTerms(paymentTerm.toString());
+						paymentTerm = row.getCell(19).toString();
+						catalogItem.setPaymentTerms(paymentTerm);
 					}
 				}	
-				//				map.put(name, desc);
+				
 				rowNum++;
 			}
 
@@ -963,10 +939,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueResDTO resDTO  = catalogueSO.updateSupplierItem(reqDTO);
 
 
-			for(CmSupplierItem cmSupplierItem : cmSupplierItems){
+			/*for(CmSupplierItem cmSupplierItem : cmSupplierItems){
 				System.out.println("\nItem Code:" + cmSupplierItem.getCmItem().getExtensionCode());
 				System.out.println("\nItem Desc:" + cmSupplierItem.getCmItem().getItemName());
-			}
+			}*/
 
 			if(count > 0){
 				System.out.println(invalidDataMsg);
@@ -1035,10 +1011,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			CmPricing cmPricing = new CmPricing();
 			for(CmPricing pricing : catalog.getCmPricings()){
+			
 				if(pricing.getPricingType().equalsIgnoreCase("01")){
 					cmPricing = pricing;
 				}
 			}
+			
 			if(cmPricing.getPrice() != null)
 				dataLs.add(cmPricing.getPrice());
 			else
