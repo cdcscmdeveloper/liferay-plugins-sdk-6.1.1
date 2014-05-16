@@ -110,7 +110,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -509,12 +512,13 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().isApproverUser()) {
 				setPoOrApprvrSectionReview();
 			}
+
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
 			if (validateBeforeSave(applType, pageType)) {
 				// Save or update to DB
 
-				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-						.getInstance().getServiceObject("sm",
-								IMofRegistrationSO.class);
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -782,7 +786,134 @@ public class SmApplicationBackingBean extends
 			System.out.println("******** Before save cert size ******"
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
+		case "PersonnelInfo":
+			int mgmtCount = 0;
+			int staffCount = 0;
+			int directorCount = 0;
+			int profCount = 0;
+			int semiProfCount = 0;
 
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				System.out.println("**** EPF Value --- >>>> " + per.getEpfNo());
+				if (getManagedBean().getSmAppl().getSupplierType()
+						.equalsIgnoreCase("K")) {
+					if (per.isDirector() || per.isHigherManagement()) {
+						directorCount = directorCount + 1;
+					} else if (per.getStaffRoleFlg() == 834) {
+						mgmtCount = mgmtCount + 1;
+					} else if (per.getStaffRoleFlg() == 835) {
+						staffCount = staffCount + 1;
+					}
+				}
+				if (getManagedBean().getSmAppl().getSupplierType()
+						.equalsIgnoreCase("J")) {
+					if (per.getStaffRoleFlg() == 833 && per.getEpfNo() != null) {
+						// for (SmStaffAcademic aca : per.getSmStaffAcademics())
+						// {
+						// if (aca.getQualificationLevelId() == 123) {
+						// staffCount = staffCount + 1;
+						// break;
+						// }
+						// }
+						staffCount = staffCount + 1;
+
+					} else if (per.getStaffRoleFlg() == 831
+							&& per.getEpfNo() != null) {
+						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
+							if (aca.getQualificationLevelId() >= 83
+									&& aca.getQualificationLevelId() <= 85) {
+								profCount = profCount + 1;
+								break;
+							}
+						}
+
+					} else if (per.getStaffRoleFlg() == 832
+							&& per.getEpfNo() != null) {
+						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
+							if (aca.getQualificationLevelId() >= 83
+									&& aca.getQualificationLevelId() <= 86) {
+								semiProfCount = semiProfCount + 1;
+								break;
+							}
+						}
+					}
+				}
+
+			}
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equalsIgnoreCase("J")) {
+				if (semiProfCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Semi Professional is required : ",
+											"At least one Semi-Professional  (permanent staff who contributed for EPF) staff with at least Diploma is required"));
+					return false;
+				}
+				if (profCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Professional is required : ",
+											"At least one Professional (permanent staff who contributed for EPF) staff with at least Bachelor Degree is required"));
+					return false;
+				}
+				if (staffCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Clerical Staff is required : ",
+											"At least one Clerical Staff (permanent staff who contributed for EPF) staff with at least SijilPelajaran Malaysia or equivalent certificate is required"));
+					return false;
+				}
+			}
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equalsIgnoreCase("K")) {
+				if (directorCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Higher Management or Director is required : ",
+											"Please add atleast one user with role Director or Higher Management"));
+					return false;
+				}
+				if (mgmtCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Management Staff is required : ",
+											"Please add atleast one user with role Management"));
+					return false;
+				}
+				if (staffCount < 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Staff is required : ",
+											"Please add atleast one user with role Staff"));
+					return false;
+				}
+			}
+			break;
 		case "SupportingDocs":
 			if (getManagedBean().isSupplierUser()) {
 				System.out.println(" ** For Suporting Docs ** ");
@@ -982,31 +1113,25 @@ public class SmApplicationBackingBean extends
 
 	public void assignPersonnelPrivilege(AjaxBehaviorEvent e) {
 		System.out.println("**** Enter peronnel privilege ******");
-		if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == null
-				|| getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 0) {
-			getManagedBean().getSelectedPersonnel().setSoftcertFlg(null);
-			getManagedBean().getSelectedPersonnel().setContractSignerFlg(null);
+		if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 0) {
+			getManagedBean().getSelectedPersonnel().setSoftcertFlg(0);
+			getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
 		}
 
-		if (getManagedBean().getSelectedPersonnel().getSoftcertFlg() == null
-				|| getManagedBean().getSelectedPersonnel().getSoftcertFlg() == 0) {
-			getManagedBean().getSelectedPersonnel().setContractSignerFlg(null);
+		if (getManagedBean().getSelectedPersonnel().getSoftcertFlg() == 0) {
+			getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
 		}
 	}
 
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		System.out.println("**** Enter Share Holder privilege ******");
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == null
-				|| getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
-			getManagedBean().getSelectedShareHolder().setSoftcertFlg(null);
-			getManagedBean().getSelectedShareHolder()
-					.setContractSignerFlg(null);
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
+			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
 
-		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == null
-				|| getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
-			getManagedBean().getSelectedShareHolder()
-					.setContractSignerFlg(null);
+		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
 	}
 
@@ -1556,16 +1681,33 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewCategoryCode() {
-		SmSupplierCategory categ = new SmSupplierCategory();
-		categ.setRevNo(1);
-		if (getManagedBean().getSmAppl().getApplCategoryType()
-				.equalsIgnoreCase("S")) {
-			categ.setSpecialCategory(true);
+		boolean validCatCode = true;
+		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == 30) {
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"Max Limit Reached : ",
+									"Only 30 Category Codes can be add. Please contact administrator to exceed the limit"));
+			validCatCode = false;
 		}
-		categ.setSmAppl(getManagedBean().getSmAppl());
-		categ.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
-		getManagedBean().setSelectedCategory(categ);
-		resetSelectedCategoryParams();
+
+		if (validCatCode) {
+			SmSupplierCategory categ = new SmSupplierCategory();
+			categ.setRevNo(1);
+			if (getManagedBean().getSmAppl().getApplCategoryType()
+					.equalsIgnoreCase("S")) {
+				categ.setSpecialCategory(true);
+			}
+			categ.setSmAppl(getManagedBean().getSmAppl());
+			categ.setSupplierType(getManagedBean().getSmAppl()
+					.getSupplierType());
+			getManagedBean().setSelectedCategory(categ);
+			resetSelectedCategoryParams();
+			RequestContext.getCurrentInstance().execute("regCatDialog.show()");
+		}
 	}
 
 	public void saveSelectedCategory() {
@@ -1968,32 +2110,75 @@ public class SmApplicationBackingBean extends
 	// manufacturer end
 
 	// -- Process Share Holder Personnel Start
-	public void addOrUpdateShareHolderToSmAppl() throws ParseException {
+	public void addOrUpdateShareHolderToSmAppl(String fromPage)
+			throws ParseException {
+		boolean validShrHldr = true;
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase("J")
+				&& getManagedBean().getSelectedShareHolder()
+						.getWorkExperienceYear() < 5) {
+			System.out
+					.println(" ******* This is a failure condition ********* "
+							+ getManagedBean().getSelectedShareHolder()
+									.getWorkExperienceYear());
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									"Insufficient Experience : ",
+									"The equity owner must have a minimum of 5 years work experience"));
+			validShrHldr = false;
+		}
+		// if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() ==
+		// 1) {
+		// validShrHldr = validateAuthPersonLimit();
+		// }
+		if (validShrHldr) {
+			if (getManagedBean().getSmAppl().getSmPersonnels()
+					.contains(getManagedBean().getSelectedShareHolder())) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmPersonnels()
+						.set(getManagedBean()
+								.getSmAppl()
+								.getSmPersonnels()
+								.indexOf(
+										getManagedBean()
+												.getSelectedShareHolder()),
+								getManagedBean().getSelectedShareHolder());
+				getManagedBean().getSmapplShareHolders().set(
+						getManagedBean().getSmapplShareHolders().indexOf(
+								getManagedBean().getSelectedShareHolder()),
+						getManagedBean().getSelectedShareHolder());
+				System.out.println(" **** THIS IS AN UPDATE Personnel ******");
+			} else {
 
-		if (getManagedBean().getSmAppl().getSmPersonnels()
-				.contains(getManagedBean().getSelectedShareHolder())) {
-			getManagedBean()
-					.getSmAppl()
-					.getSmPersonnels()
-					.set(getManagedBean().getSmAppl().getSmPersonnels()
-							.indexOf(getManagedBean().getSelectedShareHolder()),
-							getManagedBean().getSelectedShareHolder());
-			getManagedBean().getSmapplShareHolders().set(
-					getManagedBean().getSmapplShareHolders().indexOf(
-							getManagedBean().getSelectedShareHolder()),
-					getManagedBean().getSelectedShareHolder());
-			System.out.println(" **** THIS IS AN UPDATE Personnel ******");
-		} else {
+				getManagedBean().getSmAppl().getSmPersonnels()
+						.add(getManagedBean().getSelectedShareHolder());
+				getManagedBean().getSmapplShareHolders().add(
+						getManagedBean().getSelectedShareHolder());
+			}
 
-			getManagedBean().getSmAppl().getSmPersonnels()
-					.add(getManagedBean().getSelectedShareHolder());
-			getManagedBean().getSmapplShareHolders().add(
-					getManagedBean().getSelectedShareHolder());
+			if (fromPage.equalsIgnoreCase("captialInfo")) {
+				RequestContext.getCurrentInstance().execute(
+						"shareHolderDialog.hide()");
+			}
+			if (fromPage.equalsIgnoreCase("personnelInfo")) {
+				RequestContext.getCurrentInstance().execute(
+						"perShareHolderDialog.hide()");
+			}
+
 		}
 
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+		if (shareHolderBean.getAuthorizedFlg() == 1) {
+			getManagedBean().setAuthPerCount(0);
+		} else {
+			getManagedBean().setAuthPerCount(getAuthUserCount());
+		}
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 	}
 
@@ -2056,7 +2241,7 @@ public class SmApplicationBackingBean extends
 				+ "** Id ***"
 				+ getManagedBean().getSelectedShareHolder().getPersonnelId());
 		if (shareHolderBean.isEquityOwner()) {
-			addOrUpdateShareHolderToSmAppl();
+			addOrUpdateShareHolderToSmAppl("addrPage");
 		} else {
 			addOrUpdatePersonnelToSmAppl();
 		}
@@ -2064,7 +2249,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewShareHolder() {
 		System.out.println("********* assignNewShareHolder *****");
-
+		getManagedBean().setAuthPerCount(getAuthUserCount());
 		SmPersonnel shr = new SmPersonnel();
 		shr.setEquityOwner(true);
 		setDefaultPersonnelValues(shr);
@@ -2345,30 +2530,49 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdatePersonnelToSmAppl() throws ParseException {
 		System.out.println("*** The personnel Info ****"
 				+ getManagedBean().getSelectedPersonnel().getName());
-		if (getManagedBean().getSmAppl().getSmPersonnels()
-				.contains(getManagedBean().getSelectedPersonnel())) {
-			getManagedBean()
-					.getSmAppl()
-					.getSmPersonnels()
-					.set(getManagedBean().getSmAppl().getSmPersonnels()
-							.indexOf(getManagedBean().getSelectedPersonnel()),
-							getManagedBean().getSelectedPersonnel());
+		boolean validPer = true;
+		// if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 1)
+		// {
+		// validPer = validateAuthPersonLimit();
+		// }
+		if (validPer) {
+			if (getManagedBean().getSmAppl().getSmPersonnels()
+					.contains(getManagedBean().getSelectedPersonnel())) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmPersonnels()
+						.set(getManagedBean()
+								.getSmAppl()
+								.getSmPersonnels()
+								.indexOf(
+										getManagedBean().getSelectedPersonnel()),
+								getManagedBean().getSelectedPersonnel());
 
-			System.out.println(" **** THIS IS AN UPDATE Personnel ******");
-		} else {
+				System.out.println(" **** THIS IS AN UPDATE Personnel ******");
+			} else {
 
-			getManagedBean().getSmAppl().getSmPersonnels()
-					.add(getManagedBean().getSelectedPersonnel());
+				getManagedBean().getSmAppl().getSmPersonnels()
+						.add(getManagedBean().getSelectedPersonnel());
+			}
+
+			RequestContext.getCurrentInstance()
+					.execute("directorDialog.hide()");
 		}
 	}
 
 	public void assignSelPersonnel(SmPersonnel shareHolderBean) {
+		if (shareHolderBean.getAuthorizedFlg() == 1) {
+			getManagedBean().setAuthPerCount(0);
+		} else {
+			getManagedBean().setAuthPerCount(getAuthUserCount());
+		}
 		getManagedBean().setSelectedPersonnel(shareHolderBean);
 	}
 
 	public void assignNewPersonnel(String personelType) {
 		System.out.println("******* ADD NEW Personnel *************"
 				+ personelType);
+		getManagedBean().setAuthPerCount(getAuthUserCount());
 
 		SmPersonnel personnel = new SmPersonnel();
 		personnel.setEquityOwner(false);
@@ -4171,16 +4375,16 @@ public class SmApplicationBackingBean extends
 		shr.setRevNo(1);
 		shr.setSmAppl(getManagedBean().getSmAppl());
 		// shr.setEquityOwner(true);
-		shr.setBumiFlg(0);
-		shr.setMuslimFlg(0);
-		shr.setAuthorizedFlg(0);
-		shr.setContractSignerFlg(0);
-		shr.setSoftcertFlg(0);
-		shr.setProfFlg(0);
-		shr.setSemiProfFlg(0);
-		shr.setClericalFlg(0);
+		// shr.setBumiFlg(0);
+		// shr.setMuslimFlg(0);
+		// shr.setAuthorizedFlg(0);
+		// shr.setContractSignerFlg(0);
+		// shr.setSoftcertFlg(0);
+		// shr.setProfFlg(0);
+		// shr.setSemiProfFlg(0);
+		// shr.setClericalFlg(0);
 		shr.setPmCountry(new PmCountry());
-		// shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		// shr.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		// SmPersonnelBranch pbr = new SmPersonnelBranch();
 		// pbr.setSmPersonnel(shr);
@@ -4250,6 +4454,49 @@ public class SmApplicationBackingBean extends
 					.add(getManagedBean().getPoSecReview());
 		}
 
+	}
+
+	private boolean validateAuthPersonLimit() {
+		boolean validAuthPerCount = true;
+		int authPerCount = 0;
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (per.getAuthorizedFlg() == 1) {
+				authPerCount++;
+			}
+		}
+		if (authPerCount == 2) {
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"Max limit exceed : ",
+									"You already have 5 authorized users. Please un authorise the user in Priviliges section"));
+			validAuthPerCount = false;
+		}
+		return validAuthPerCount;
+	}
+
+	private int getAuthUserCount() {
+		int authPerCount = 0;
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (per.getAuthorizedFlg() == 1) {
+				authPerCount++;
+			}
+			// if (per.getSmPersonnelAddresses().isEmpty()) {
+			// System.out
+			// .println("****** There is record without address ********* ");
+			// FacesContext.getCurrentInstance().addMessage(
+			// null,
+			// new FacesMessage(FacesMessage.SEVERITY_ERROR,
+			// "Address Missing : ",
+			// "Please provide the address details for "
+			// + per.getName()
+			// + " before adding a new user"));
+			// }
+		}
+		return authPerCount;
 	}
 
 }

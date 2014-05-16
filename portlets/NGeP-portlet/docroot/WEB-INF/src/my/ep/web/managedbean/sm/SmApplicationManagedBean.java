@@ -172,13 +172,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmRelatedCompany> selectedPersRelatedCompanies;
 	private List<SmStaffAcademic> selectedPersAcademics;
 
-//	private SmPersonnelAddress personnelPermAddr;
-//
-//	private SmPersonnelAddress personnelMailAddr;
-//
-//	private SmPersonnelAddress personnelOffAddr;
-//
-//	private SmPersonnelAddress personnelResdAddr;
+	// private SmPersonnelAddress personnelPermAddr;
+	//
+	// private SmPersonnelAddress personnelMailAddr;
+	//
+	// private SmPersonnelAddress personnelOffAddr;
+	//
+	// private SmPersonnelAddress personnelResdAddr;
 
 	// private SmStaffAcademic personnelAcademics;
 	// Bank Info
@@ -216,6 +216,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean testBlock;
 
 	private int maxReviewCount;
+
+	private int authPerCount;
 
 	private SmApplSectionReview poSecReview;
 
@@ -309,7 +311,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
 	List<PmReasonDesc> reasonDescList;
-	
+
 	private Long[] reasonId;
 
 	public SmApplicationManagedBean() {
@@ -416,14 +418,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
 		selectedPersProfBodies = new ArrayList<SmAssociationBody>();
 		selectedPersRelatedCompanies = new ArrayList<SmRelatedCompany>();
-//		personnelMailAddr = new SmPersonnelAddress();
-//		personnelMailAddr.setSmAddress(defaultAddr);
-//		personnelPermAddr = new SmPersonnelAddress();
-//		personnelPermAddr.setSmAddress(defaultAddr);
-//		personnelResdAddr = new SmPersonnelAddress();
-//		personnelResdAddr.setSmAddress(defaultAddr);
-//		personnelOffAddr = new SmPersonnelAddress();
-//		personnelOffAddr.setSmAddress(defaultAddr);
+		// personnelMailAddr = new SmPersonnelAddress();
+		// personnelMailAddr.setSmAddress(defaultAddr);
+		// personnelPermAddr = new SmPersonnelAddress();
+		// personnelPermAddr.setSmAddress(defaultAddr);
+		// personnelResdAddr = new SmPersonnelAddress();
+		// personnelResdAddr.setSmAddress(defaultAddr);
+		// personnelOffAddr = new SmPersonnelAddress();
+		// personnelOffAddr.setSmAddress(defaultAddr);
 
 		selectedPersonnel
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
@@ -847,21 +849,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedPersonnel = selectedPersonnel;
 	}
 
-//	public SmPersonnelAddress getPersonnelPermAddr() {
-//		return personnelPermAddr;
-//	}
-//
-//	public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
-//		this.personnelPermAddr = personnelPermAddr;
-//	}
-//
-//	public SmPersonnelAddress getPersonnelMailAddr() {
-//		return personnelMailAddr;
-//	}
-//
-//	public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
-//		this.personnelMailAddr = personnelMailAddr;
-//	}
+	// public SmPersonnelAddress getPersonnelPermAddr() {
+	// return personnelPermAddr;
+	// }
+	//
+	// public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
+	// this.personnelPermAddr = personnelPermAddr;
+	// }
+	//
+	// public SmPersonnelAddress getPersonnelMailAddr() {
+	// return personnelMailAddr;
+	// }
+	//
+	// public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
+	// this.personnelMailAddr = personnelMailAddr;
+	// }
 
 	// public SmStaffAcademic getPersonnelAcademics() {
 	// return personnelAcademics;
@@ -1818,6 +1820,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setReasonId(Long[] reasonId) {
 		this.reasonId = reasonId;
+	}
+
+	public int getAuthPerCount() {
+		return authPerCount;
+	}
+
+	public void setAuthPerCount(int authPerCount) {
+		this.authPerCount = authPerCount;
 	}
 
 }
