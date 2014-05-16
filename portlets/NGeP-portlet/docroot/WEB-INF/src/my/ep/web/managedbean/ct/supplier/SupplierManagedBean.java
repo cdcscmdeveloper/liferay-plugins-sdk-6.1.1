@@ -34,10 +34,11 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String[] action;
 	private String taskName;
     private String chkMenuOrTxtBox;;
-	private Date endDate;
+	private Date effDate;
 	private String loaNo;
-	private Date startDate;
-	private Long contractNo;
+	private Date expDate;
+	private Date loaDate;
+	private String contractNo;
 	private String contractName;
 	private String loginUser;
 	private int selectedIndex;
@@ -53,6 +54,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private List<PmFinancialAcc>  financialAccList;
 	private String accountNo="";
 	private boolean removeFactoring;
+	private Long loaId;
 	
 	public SupplierManagedBean(){
 		
@@ -66,11 +68,11 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.action = action;
 	}
 	
-	public Long getContractNo() {
+	public String getContractNo() {
 		return contractNo;
 	}
 	
-	public void setContractNo(Long contractNo) {
+	public void setContractNo(String contractNo) {
 		this.contractNo = contractNo;
 	}
 	
@@ -154,14 +156,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.taskName = taskName;
 	}
 
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
 	public String getLoaNo() {
 		return loaNo;
 	}
@@ -170,12 +164,28 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.loaNo = loaNo;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public Date getEffDate() {
+		return effDate;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setEffDate(Date effDate) {
+		this.effDate = effDate;
+	}
+
+	public Date getExpDate() {
+		return expDate;
+	}
+
+	public void setExpDate(Date expDate) {
+		this.expDate = expDate;
+	}
+
+	public Date getLoaDate() {
+		return loaDate;
+	}
+
+	public void setLoaDate(Date loaDate) {
+		this.loaDate = loaDate;
 	}
 
 	public String getContractName() {
@@ -234,5 +244,15 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setUploadFiles(CtFactoring uploadFiles) {
 		this.uploadFiles = uploadFiles;
+	}
+
+	public Long getLoaId() {
+		return loaId;
+	}
+
+	public void setLoaId(Long loaId) {
+		this.loaId = loaId;
 	}	
+	
+	
 }

@@ -32,13 +32,17 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -47,22 +51,29 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
-import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -248,7 +259,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 		   reqDTO = new ContractReqDTO();
 		   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-		   reqDTO.setContractId(this.getManagedBean().getContractNo());
+		  // reqDTO.setContractId(this.getManagedBean().getContractNo());
 		   ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
 		   if(resDTO.isSuccessful()){
 			  this.getManagedBean().setCtContract(resDTO.getContract());
@@ -409,35 +420,55 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		ContractSupplierReqDTO reqDTO = null;	
 		try{
 			 reqDTO = new ContractSupplierReqDTO();
-			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
-			 
-		   	 FacesScopes facesScopes = new FacesScopes();
-			 reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			 reqDTO.setOutcome(action);
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class); 
+		   	 reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			
+		   	 reqDTO.setOutcome(action);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			 reqDTO.setSupplierUser(getFacesScopes().getUserSessionBean());
+			 
+			 this.getManagedBean().getFactoring().setCtContract(this.getManagedBean().getCtContract());
+			 this.getManagedBean().getFactoring().setSmSupplier(this.getManagedBean().getCtContract().getSmSupplier());
+			 this.getManagedBean().getFactoring().setLoa(this.getManagedBean().getCtContract().getLoa());
+			 reqDTO.setFactoring(this.getManagedBean().getFactoring());
+			 this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+			 
+			 reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
+			 reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
-			 if(resDTO.isSuccessful()) {
+			  if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Factoring Request. : "));
-					// save action with task ID not null will remain in the same page
-					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
-						(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
-						renewSesionObject();
-						return "/xhtml/shared/acknowledge.xhtml";
+					String messageId = MessageConst.INFO_700005;
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+						messageId = MessageConst.INFO_700025;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						messageId = MessageConst.INFO_700007;
 					}
-				} else {
-					throw new EpException("Failed.");
-				}
-				
-			} catch (Exception e) {
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getDocType()), 
+									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+						renewSesionObject();
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				  }else {
+						throw new EpException("Failed.");
+				  }
+			  }catch (Exception e) {
+				log.error("Exception>>", e);
 				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Factoring Request save failed."));
-			}finally{
-			supplierSO = null;
-			reqDTO = null;
-		}
+				if(e instanceof EpException) {
+					EpException ep = (EpException) e;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				}
+			  }finally {
+				  supplierSO = null;
+			  }
 		
 		return null;
 	}
@@ -555,6 +586,32 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	   
 	   this.getManagedBean().setAccountNo(null);
    }
+   
+   public void setActionListener(){
+	   IContractSO contractSO = null;
+       ContractReqDTO reqDTO = null;	
+		try{
+		
+		   reqDTO = new ContractReqDTO();
+		   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+		   reqDTO.setLoaId(this.getManagedBean().getLoaId());
+		   ContractResDTO resDTO = contractSO.retrieveContractByLoaId(reqDTO);
+		   if(resDTO.getContract() != null && resDTO.isSuccessful()){
+			  this.getManagedBean().setLoaDate(resDTO.getContract().getLoa().getAckDate());
+			  this.getManagedBean().setContractNo(resDTO.getContract().getContractNo());
+			  this.getManagedBean().setContractName(resDTO.getContract().getContractName());
+			  this.getManagedBean().setEffDate(resDTO.getContract().getLatestContractVer().getCtContractValue().getEffDate());
+			  this.getManagedBean().setExpDate(resDTO.getContract().getLatestContractVer().getCtContractValue().getExpDate());
+			  this.getManagedBean().setCtContract(resDTO.getContract());
+		   }else{
+			   
+		   }
+		 }catch (Exception ex) {
+			log.error("Exception", ex);
+		}finally {
+			// resetObjectConditions();
+		}
+	 }/* Function End */
     
     public void fileUpload(FileUploadEvent event) throws Exception {
 	    UploadedFile item = event.getFile();
@@ -610,6 +667,35 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
+    public SelectItem[]  getSupplierLoaDropdown(){
+    	 SelectItem[] items = null;  
+    	 IQTAwardSO qtAwardSO = null;
+    	 AwardSupplierReqDTO reqDTO = null;		
+	     try{
+	    	 
+	    	 ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+	    	 SupplierSearchReqDTO reqDTO1 = new SupplierSearchReqDTO();
+	    	 reqDTO1.setUserId(45L);
+	 		 SupplierSearchResDTO resDTO1 = supplierSearchSO.retriveSupplierProfiles(reqDTO1);
+	 		 List<SmSupplier> supplier = resDTO1.getResultBean().getResultList();
+	 		
+	    	  int i = 1;
+	    	  reqDTO = new AwardSupplierReqDTO();
+	    	  qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject("sc", IQTAwardSO.class);
+	    	  reqDTO.setSupplierId(296l);
+	    	  AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+	    	  List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
+	    	  items = new SelectItem[list.size()+1];
+			  items[0] = new SelectItem(null, "- Select One -");
+			  for(ScLoa loa : list) {
+				     items[i++] = new SelectItem(loa.getLoaId(), loa.getLoaNo());
+			   }
+			 }catch (Exception e) {
+		    	   e.printStackTrace();
+		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		     }
+		return items;
+    }
     
     public List<SelectItem> getPopulateBankAccountList() {
 		return populateBankAccountList;
