@@ -59,7 +59,7 @@
 				<td rowspan="3"><p:inputTextarea cols="50" rows="6"
 						style=" margin-bottom:5px;"
 						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
-				<td style="width: 109px;"><p:outputLabel
+				<td style="width: 119px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
@@ -73,7 +73,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.flRequest.createdDate}">
+				<td><p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</p:inputText></td>
@@ -83,7 +83,11 @@
 				<td><p:inputText size="12" disabled="true" value="10"/> <p:spacer
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"  value="#{flOrderBB.managedBean.flRequest.approvedDate}"/></td>
+				<td>
+					<p:inputText size="25" disabled="true"  value="#{flOrderBB.managedBean.flRequest.approvedDate}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
@@ -93,10 +97,12 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
-				<td><p:selectOneRadio>
+				<td>
+					<p:selectOneRadio value="#{flOrderBB.managedBean.fulfilmentOrder.factored}" >
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
@@ -172,7 +178,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true">
+	<p:panel header="FACTORING DETAILS" toggleable="true" >
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 117px;"><p:outputLabel

@@ -18,7 +18,9 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -101,20 +103,24 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_700011;
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_700011, 
-								new String[]{getParameterDesc(flRequest.getDocType(), ParameterConst.DOCTYPE_PURCHASE_REQUEST), flRequest.getDocNo()}, 
+						MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getFulfilmentOrder().getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
-				//return "/xhtml/shared/acknowledge.xhtml";
 			}	
 			else {
 				throw new EpException("Failed.");
@@ -262,7 +268,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 		
 	}
-
+	
+	private IFulfilmentOrderSO getFulfilmentOrderSO() {
+		return (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+	}
+	
 	public void preRenderViewPR() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -286,14 +296,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		Object obj = res.getPojo();
 		if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
 			System.out.println("Process name is NUll");
-		}	
-		else if (FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())){
-			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+		} else if (FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())) {
 			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-
 			//flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
-			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
+			
+			FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 			getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
@@ -301,22 +309,16 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
 			combineSupAddress(resDTO.getFlFulfilmentRequest());
-		}else {
+		} else {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
-			//System.out.println("req id from BPM::::::: "+flPurchaseOrd.getOrderDetails().getRequestId());
-			//System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getOrderDetails().getReqDocNo());
-			//flp.getOrderDetails().setReqDocNo
-			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
-			//flReqDTO.setSelectedApprovers(flPurchaseOrd..getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			
 			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
 			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
 				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
 			}else{
@@ -326,9 +328,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-			//System.out.println("doc type::::: "+resDTO.getFlFulfilmentRequest().getDocType());
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
+			flReqDTO.setFlOrderId(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+			resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
+			getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 		}  
 	}
 	

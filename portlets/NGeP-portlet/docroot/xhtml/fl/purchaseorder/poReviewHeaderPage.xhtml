@@ -7,7 +7,6 @@
 
 	<table style="width: 99%;" class="header-info">
 		<tr style="margin-button: 10px;">
-
 			<td>
 				<h6>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.no']} " />
@@ -18,17 +17,17 @@
 					<p:inputText size="20"
 						value="#{flOrderBB.managedBean.flRequest.docNo}" disabled="true" />
 				</h6>
-
 			</td>
-			<td><h6>
-					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.order.no']} " />
-				</h6></td>
 			<td>
 				<h6>
-					<p:inputText value="RNPTJ00142020200" disabled="true" size="20" />
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.order.no']} " />
 				</h6>
 			</td>
-
+			<td>
+				<h6>
+					<p:inputText value="#{flOrderBB.managedBean.fulfilmentOrder.docNo}" disabled="true" size="20" />
+				</h6>
+			</td>
 			<td>
 				<h6>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
@@ -48,7 +47,7 @@
 			<td>
 				<h6>
 					<p:inputText size="20"
-						value="#{purchaseRequestBackingBean.getStatusDescById(flOrderBB.managedBean.flRequest.status.statusId)}"
+						value="#{purchaseRequestBackingBean.getStatusDescById(flOrderBB.managedBean.fulfilmentOrder.status.statusId)}"
 						disabled="true" />
 				</h6>
 			</td>
