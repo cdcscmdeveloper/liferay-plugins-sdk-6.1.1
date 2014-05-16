@@ -62,7 +62,7 @@
 			<p:selectOneMenu style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
 			   rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
 			   <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
-			    <p:ajax event="change"  process="@this" update="loaId,headerDetails" listener="#{supplierBackingBean.setActionListener()}"/> 
+			    <p:ajax event="change"  process="@this" update="loaId" listener="#{supplierBackingBean.setActionListener()}"/> 
 		     </p:selectOneMenu>
 			          <p:inputText  style="width:200px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
