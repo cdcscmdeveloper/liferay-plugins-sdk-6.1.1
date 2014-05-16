@@ -281,8 +281,7 @@
 
 
 
-	<p:dialog width="1050px" height="500px"
-		header="Higher Management/Director Information"
+	<p:dialog width="1050px" height="500px" header="Personnel Information"
 		widgetVar="directorDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="directorDialog">
 
@@ -291,8 +290,9 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
-				oncomplete="directorDialog.hide();" update=":form:tt:personDt" />
-			<p:commandButton value="Cancel" onclick="directorDialog.hide();" />
+				update=":form:tt:personDt" />
+			<p:commandButton value="Cancel" onclick="directorDialog.hide();"
+				immediate="true" />
 		</div>
 	</p:dialog>
 
@@ -306,11 +306,10 @@
 			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderInfoPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Save"
-				oncomplete="perShareHolderDialog.hide();"
-				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+				action="#{backingBean.addOrUpdateShareHolderToSmAppl('personnelInfo')}"
 				update=":form:tt:personDt" />
 			<p:commandButton value="Cancel"
-				onclick="perShareHolderDialog.hide();" />
+				onclick="perShareHolderDialog.hide();" immediate="true" />
 		</div>
 	</p:dialog>
 

@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+	<p:messages id="shrPerMsg" showSummary="true" showDetail="true"
+		autoUpdate="true" closable="true" />
 	<p:panel header="Personnel Info" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -125,8 +126,9 @@
 
 		</table>
 	</p:panel>
-	<p:panel header="Shareholer Priviliges" toggleable="true"
-		id="perShrPrivPanel">
+	<p:panel header="Shareholder Priviliges" toggleable="true"
+		id="perShrPrivPanel"
+		rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' or backingBean.managedBean.authPerCount lt '5'}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="Is this an authorized personnel ? " /></td>
@@ -164,7 +166,17 @@
 		</table>
 
 	</p:panel>
+	<p:panel header="Shareholder Priviliges" toggleable="true"
+		id="perShrPrivPanel1"
+		rendered="#{backingBean.managedBean.authPerCount eq '5'}">
+		<table>
+			<tr>
+				<td><h:outputText
+						value="You have already registered 5 authotized user.This record can only be added as a normal user" /></td>
+			</tr>
+		</table>
 
+	</p:panel>
 	<p:panel header="Share Details" toggleable="true">
 		<table style="width: 100%">
 			<tr>

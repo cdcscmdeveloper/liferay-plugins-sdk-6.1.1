@@ -130,10 +130,11 @@
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 		<div align="right" style="padding-top: 10px;">
-			<p:commandButton value="Save" oncomplete="shareHolderDialog.hide();"
-				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateShareHolderToSmAppl('captialInfo')}"
 				update=":form:tt:shrPerDt" />
-			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();"
+				immediate="true" />
 		</div>
 	</p:dialog>
 	<p:dialog width="1050px" height="500px"
