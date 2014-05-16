@@ -35,7 +35,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -49,8 +49,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmImage;
@@ -160,12 +160,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		ICodificationSO codificationSO = (ICodificationSO)BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 
-		IRegistrationSO smSO = (IRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm",IRegistrationSO.class);
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-		RegistrationReqDTO smReqDTO = new RegistrationReqDTO();
-		smReqDTO.setSupplierId(new Long(1));
-
-		RegistrationResDTO smResDTO = smSO.retrieveSuppOnlineAcc(smReqDTO);
+		System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
+		supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+		
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+		
+		System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
 
 		CodificationBackingBean bb = new CodificationBackingBean();
 
@@ -218,7 +221,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 						supplierItem.setCmItem(item);
 						supplierItem.setItemStatus("D");
-						supplierItem.setSmSupplier(smResDTO.getSmSupp());
+						supplierItem.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 						supplierItem.setRecordStatus(true);
 						reqDTO.getSupplierItem().add(supplierItem);
 					}
@@ -251,7 +254,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 					supplierItem.setCmItem(codeResDTO.getCmItem());
 					supplierItem.setItemStatus("D");
-					supplierItem.setSmSupplier(smResDTO.getSmSupp());
+					supplierItem.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 					supplierItem.setRecordStatus(true);
 					reqDTO.getSupplierItem().add(supplierItem);
 				}
