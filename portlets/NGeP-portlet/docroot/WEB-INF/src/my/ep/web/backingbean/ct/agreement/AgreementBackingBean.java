@@ -214,7 +214,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					   this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
 				 }else if(ctAgreementParty.getAgreementPartyType().getParameterId() .equals(retrieveParameterByCodeType(
 					ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId())){
-					   this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
+					   this.getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
 				 }else{
 					 this.getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
 				 }
@@ -231,14 +231,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		  
-		   if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)){
-			  if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME) ||
+		 	  if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME) ||
 				  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)){
-				  this.getManagedBean().setUploadFinalAgreement("Upload");
+				  this.getManagedBean().setUploadFinalAgreement(true);
 			   }
 			  FacesContext fc = FacesContext.getCurrentInstance();
 			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_AGREEMENT);   
-		    }
+		 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -453,15 +452,25 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 	    	 }i++;
 	     }
 	}
+
+    public void uploadStampedPage(FileUploadEvent event) throws Exception{
+    	UploadedFile item = event.getFile();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		this.getManagedBean().getCtContract().getCurrentAgreement().setStampedPageName(item.getFileName());
+	    this.getManagedBean().getCtContract().getCurrentAgreement().setStampedPagePath(filePath);
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+    }
 	
-	public void uploadDocument(FileUploadEvent event) throws Exception{
+	public void uploadSignedPage(FileUploadEvent event) throws Exception{
 		UploadedFile item = event.getFile();
 		String filePath = "C:/projects/uploads/"+item.getFileName();
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		this.getManagedBean().getCtContract().getCurrentAgreement().setSignedPageName(item.getFileName());
+	    this.getManagedBean().getCtContract().getCurrentAgreement().setSignedPagePath(filePath);
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-	    this.getManagedBean().getCtContract().getCurrentAgreement().setFileName(item.getFileName());
-	    this.getManagedBean().getCtContract().getCurrentAgreement().setFilePath(filePath);
 	}
 	
 	public void downloadFile(String filePath) throws IOException {

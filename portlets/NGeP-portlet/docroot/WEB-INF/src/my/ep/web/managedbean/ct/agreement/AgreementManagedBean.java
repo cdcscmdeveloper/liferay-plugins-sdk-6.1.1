@@ -32,7 +32,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private Long ministryProfileId;
 	private Long departmentProfileId;
 	private String agreementType ="";
-	private String uploadFinalAgreement;
+	private boolean uploadFinalAgreement;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -207,11 +207,11 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 
-	public String getUploadFinalAgreement() {
+	public boolean isUploadFinalAgreement() {
 		return uploadFinalAgreement;
 	}
 
-	public void setUploadFinalAgreement(String uploadFinalAgreement) {
+	public void setUploadFinalAgreement(boolean uploadFinalAgreement) {
 		this.uploadFinalAgreement = uploadFinalAgreement;
 	}
 

@@ -83,7 +83,11 @@
              <ui:include src="/xhtml/ct/agreement/agencySignerWitnes.xhtml"/>  
               <ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml"/>  
         </p:tab> 
-        <p:tab id="approverSetting" title="Approver Setting">
+        <p:tab id="signedDetail" title="Signed Details" 
+           rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
+             <ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml"/>  
+        </p:tab> 
+        <p:tab id="approverSetting" title="Approver Setting" rendered="#{!agreementBackingBean.isApprover()}">
              <ui:include src="/xhtml/ct/agreement/approverSetting.xhtml"/>  
         </p:tab> 
 	</p:tabView>
