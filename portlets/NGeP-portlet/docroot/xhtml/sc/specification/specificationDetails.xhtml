@@ -13,13 +13,15 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td rowspan="3" valign="top" style="width:145px;"><h:outputLabel value="Title" /></td>
-				<td rowspan="3" style="width:100px;"><p:inputTextarea readonly="true" rows="4"
-						cols="50" 
+				<td rowspan="3" valign="top" style="width: 145px;"><h:outputLabel
+						value="Title" /></td>
+				<td rowspan="3" style="width: 100px;"><p:inputTextarea
+						readonly="true" rows="4" cols="50"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
-			
-				<td style="width:200px;"><h:outputLabel value="Quotation/Tender Type" /></td>
+
+				<td style="width: 200px;"><h:outputLabel
+						value="Quotation/Tender Type" /></td>
 				<td><p:inputText readonly="true" value="Open"
 						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
 						disabled="true"></p:inputText> <p:inputText readonly="true"
@@ -70,17 +72,18 @@
 						value="Two Tier"
 						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}"
 						readonly="true" disabled="true"></p:inputText></td>
-				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
+				<td><h:outputLabel
+						value="*#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 				<!-- update=":form:businessSpecId:recommendationid" -->
-				<td><p:selectOneRadio id="techEvaluation" required="true" label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
+				<td><p:selectOneRadio id="techEvaluation" required="true"
+						label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
 						value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="specDetails"></p:ajax>
-					</p:selectOneRadio>
-					<p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
-					</td>
+					</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
+				</td>
 			</tr>
 
 			<tr>
@@ -88,7 +91,10 @@
 				</td>
 				<td><p:inputText readonly="true"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
-						disabled="true"></p:inputText></td>
+						disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
 
 
 
@@ -102,19 +108,21 @@
 			</tr>
 			<tr>
 
-				
+
 				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" required="true" label="#{lbl['lbl.sc.spec.max.proposal']}"
-						value="#{specificationBackingBean.managedBean.scQt.maxProposal}" style="text-align:right;"></p:inputText>
-						<p:message id="maxProposal" for="proposalId" display="icon"></p:message>
-						</td>
+				<td><p:inputText id="proposalId" required="true"
+						label="#{lbl['lbl.sc.spec.max.proposal']}"
+						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
+						style="text-align:right;"></p:inputText> <p:message
+						id="maxProposal" for="proposalId" display="icon"></p:message></td>
 			</tr>
 
 
 
 			<tr>
 				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
-				<td><p:selectOneMenu required="true" id="fulfilId" label="#{lbl['lbl.sc.spec.ful.type']}"
+				<td><p:selectOneMenu required="true" id="fulfilId"
+						label="#{lbl['lbl.sc.spec.ful.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="margin-bottom:5px;">
 						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
@@ -126,9 +134,8 @@
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="progressive,frequency,businessSpecId"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
-					</p:selectOneMenu>
-					<p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
-					</td>
+					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
+				</td>
 
 
 
@@ -136,13 +143,12 @@
 
 
 				<td><h:outputLabel
-						value="*#{lbl['lbl.sc.spec.complete.period']}"
-						escape="false" /></td>
-				<td><p:inputText id="contract" required="true" label="#{lbl['lbl.sc.spec.complete.period']}"
-						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" style="text-align:right;"/>
-						<h:outputText value="(Month)"/>
-						<p:message id="completion" for="contract" display="icon"></p:message>
-						</td>
+						value="*#{lbl['lbl.sc.spec.complete.period']}" escape="false" /></td>
+				<td><p:inputText id="contract" required="true"
+						label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
+						style="text-align:right;" /> <h:outputText value="(Month)" /> <p:message
+						id="completion" for="contract" display="icon"></p:message></td>
 
 			</tr>
 

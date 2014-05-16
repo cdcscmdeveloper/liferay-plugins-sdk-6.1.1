@@ -11,7 +11,8 @@
 		<table style="width: 100%" border="0">
 			<tr>
 				<td><h:outputLabel value="Title" /></td>
-				<td colspan="3"><p:inputTextarea readonly="true" rows="2" cols="143" style="margin-bottom:5px;"
+				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
+						cols="143" style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
 			</tr>
@@ -21,83 +22,85 @@
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}"
 						readonly="true" disabled="true"></p:inputText></td>
-						<td><h:outputLabel value="*#{lbl['lbl.sc.spec.est.price']}" /></td>
-				<td><p:inputText size="35" style="text-align:right" id="estPrice" required="true" label="#{lbl['lbl.sc.spec.est.price']}"
-						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"></p:inputText>
-						<p:message id="priceMsg" for="estPrice" display="icon" />
-						</td>
-						
+				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.est.price']}" /></td>
+				<td><p:inputText size="35" style="text-align:right"
+						id="estPrice" required="true"
+						label="#{lbl['lbl.sc.spec.est.price']}"
+						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText> <p:message id="priceMsg" for="estPrice" display="icon" /></td>
+
 			</tr>
-			
+
 			<tr>
-				
+
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea rows="2" cols="143"
 						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
 
 			</tr>
-			
-				
-					
-						<tr>
-							<td style="width: 17%"><h:outputLabel 
-									value="*#{lbl['lbl.sc.spec.qut.tender.type']}"/></td>
-							<td><ui:fragment
-									rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
-									<p:selectOneMenu
-										value="#{specificationBackingBean.managedBean.scQt.qtType}"
-										disabled="true" style="width:30%">
-										<f:selectItems
-											value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
-											var="parameter" itemLabel="#{parameter.codeName}"
-											itemValue="#{parameter.pmParameter.parameterCode}" />
-										<p:ajax event="change" update="suppQualSpec"
-											listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
-									</p:selectOneMenu>
-								</ui:fragment> <ui:fragment
-									rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 
-									<p:selectOneRadio required="true" id="tenderType" label="*#{lbl['lbl.sc.spec.qut.tender.type']}"
-										value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
-										<f:selectItems
-											value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
-											var="parameter" itemLabel="#{parameter.codeName}"
-											itemValue="#{parameter.pmParameter.parameterCode}" />
-										<p:ajax event="change" update="suppQualSpec"
-											listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
-									</p:selectOneRadio>
-									<p:message id="tenderMsg" for="tenderType" display="icon" />
-								</ui:fragment></td>
-								</tr>
-								<tr>
-							<ui:fragment
-								rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-								<td><h:outputLabel   value="*#{lbl['lbl.sc.spec.opn.for']}" /></td>
-								<td><p:selectOneRadio required="true" id="openFor"  label="#{lbl['lbl.sc.spec.opn.for']}"
-										value="#{specificationBackingBean.managedBean.scQt.openFor}">
-
-										<f:selectItem itemLabel="Bumiputra" itemValue="B" />
-										<f:selectItem itemLabel="All" itemValue="A" />
-									</p:selectOneRadio>
-									<p:message id="openMsg" for="openFor" display="icon" />
-									</td>
-							</ui:fragment>
-						</tr>
-					
 
 			<tr>
-				<td><h:outputLabel 
+				<td style="width: 17%"><h:outputLabel
+						value="*#{lbl['lbl.sc.spec.qut.tender.type']}" /></td>
+				<td><ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
+						<p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.scQt.qtType}"
+							disabled="true" style="width:30%">
+							<f:selectItems
+								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
+								var="parameter" itemLabel="#{parameter.codeName}"
+								itemValue="#{parameter.pmParameter.parameterCode}" />
+							<p:ajax event="change" update="suppQualSpec"
+								listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
+						</p:selectOneMenu>
+					</ui:fragment> <ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+
+						<p:selectOneRadio required="true" id="tenderType"
+							label="*#{lbl['lbl.sc.spec.qut.tender.type']}"
+							value="#{specificationBackingBean.managedBean.scQt.qtType}">
+
+							<f:selectItems
+								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
+								var="parameter" itemLabel="#{parameter.codeName}"
+								itemValue="#{parameter.pmParameter.parameterCode}" />
+							<p:ajax event="change" update="suppQualSpec"
+								listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
+						</p:selectOneRadio>
+						<p:message id="tenderMsg" for="tenderType" display="icon" />
+					</ui:fragment></td>
+			</tr>
+			<tr>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+					<td><h:outputLabel value="*#{lbl['lbl.sc.spec.opn.for']}" /></td>
+					<td><p:selectOneRadio required="true" id="openFor"
+							label="#{lbl['lbl.sc.spec.opn.for']}"
+							value="#{specificationBackingBean.managedBean.scQt.openFor}">
+
+							<f:selectItem itemLabel="Bumiputra" itemValue="B" />
+							<f:selectItem itemLabel="All" itemValue="A" />
+						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
+				</ui:fragment>
+			</tr>
+
+
+			<tr>
+				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.evaluation.type']}" /></td>
-				<td><p:selectOneRadio required="true" id="evalType" label=" #{lbl['lbl.sc.spec.evaluation.type']}"
+				<td><p:selectOneRadio required="true" id="evalType"
+						label=" #{lbl['lbl.sc.spec.evaluation.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
 						<f:selectItem itemLabel="One Tier" itemValue="1" />
 						<f:selectItem itemLabel="Two Tier" itemValue="2" />
-					</p:selectOneRadio>
-					<p:message id="evalMsg" for="evalType" display="icon" />
-					</td>
-					</tr>
-					<tr>
+					</p:selectOneRadio> <p:message id="evalMsg" for="evalType" display="icon" /></td>
+			</tr>
+			<tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 					<td><h:outputLabel value="Zone/Location" /></td>
@@ -107,8 +110,7 @@
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
 							<p:ajax event="change" partialSubmit="true"
-								update="generalLocationList"
-								process="@this"></p:ajax>
+								update="generalLocationList" process="@this"></p:ajax>
 						</p:selectOneRadio></td>
 				</ui:fragment>
 			</tr>
@@ -116,18 +118,17 @@
 
 				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.peocure.category']}" /></td>
-				<td><p:selectOneMenu id="procCategory" required="true" label="#{lbl['lbl.sc.spec.peocure.category']}"
+				<td><p:selectOneMenu id="procCategory" required="true"
+						label="#{lbl['lbl.sc.spec.peocure.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.procurementChange}"></p:ajax>
-					</p:selectOneMenu>
-						<p:message id="titleMsg" for="procCategory" display="icon" />
-					</td>
+					</p:selectOneMenu> <p:message id="titleMsg" for="procCategory" display="icon" /></td>
 			</tr>
-			
-			
+
+
 		</table>
 
 	</p:panel>
@@ -203,8 +204,8 @@
 			</div>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="600" position="top"
-		height="400">
+	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true"
+		width="600" position="top" height="400">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 
@@ -219,44 +220,44 @@
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel
 							value="Zone Location" /></TD>
-					<TD width="80%"><p:panel></p:panel> 
-					<div style="height: 300px; overflow-y: scroll;">
-					<p:tree 
-							id="treeZoneGeneralPopup"
-							value="#{specificationBackingBean.managedBean.rootZoanlTree}"
-							var="location"
-							selection="#{specificationBackingBean.managedBean.selectedGeneralTreeNodes}"
-							selectionMode="checkbox">
-							<p:treeNode type="state">
-								<h:outputText value="#{location.pmState.stateName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.pmDivision.divisionName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.pmDistrict.districtName}" />
-							</p:treeNode>
-							<p:treeNode type="city">
-								<h:outputText value="#{pmCity.cityName}" />
-							</p:treeNode>
-						</p:tree>
-						</div>
-						</TD>
+					<TD width="80%"><p:panel></p:panel>
+						<div style="height: 300px; overflow-y: scroll;">
+							<p:tree id="treeZoneGeneralPopup"
+								value="#{specificationBackingBean.managedBean.rootZoanlTree}"
+								var="location"
+								selection="#{specificationBackingBean.managedBean.selectedGeneralTreeNodes}"
+								selectionMode="checkbox">
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
+								<p:treeNode type="city">
+									<h:outputText value="#{pmCity.cityName}" />
+								</p:treeNode>
+							</p:tree>
+						</div></TD>
 				</TR>
 
 			</table>
 		</p:panel>
-		
+
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();" icon="ui-icon-cancel"/>
+			style="float:right;" onclick="ZoneGeneral.hide();"
+			icon="ui-icon-cancel" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
-			update="@this, zoneGeneralDataTable,zonePopupGeneral" icon="ui-icon-accept"
+			update="@this, zoneGeneralDataTable,zonePopupGeneral"
+			icon="ui-icon-accept"
 			action="#{specificationBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
-				
+
 	</p:dialog>
 
 

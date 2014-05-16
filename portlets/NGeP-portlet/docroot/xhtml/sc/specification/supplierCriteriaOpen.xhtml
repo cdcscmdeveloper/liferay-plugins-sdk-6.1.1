@@ -98,10 +98,15 @@
 			</tr>
 			<tr>
 				<td style="width: 150px"><p:outputLabel
-						value="#{lbl['lbl.so.paidup']}" rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}"/></td>
-				<td><p:inputText size="30" rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}"
+						value="#{lbl['lbl.so.paidup']}"
+						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}" /></td>
+				<td><p:inputText size="30"
+						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}"
 						value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-						style="margin-right:5px;text-align:right;" /></td>
+						style="margin-right:5px;text-align:right;">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
 			</tr>
 
 
@@ -121,7 +126,10 @@
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-								style="margin-right:5px;text-align:right;" /></td>
+								style="margin-right:5px;text-align:right;">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
 					</tr>
 					<tr>
 						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -191,7 +199,10 @@
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-								style="margin-right:5px;text-align:right;" /></td>
+								style="margin-right:5px;text-align:right;">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									</p:inputText></td>
 					</tr>
 
 					<tr>
