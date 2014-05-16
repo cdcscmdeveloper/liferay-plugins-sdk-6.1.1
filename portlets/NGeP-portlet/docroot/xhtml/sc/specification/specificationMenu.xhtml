@@ -32,8 +32,10 @@
 		<p:tab title="Financial Specification">
 			<ui:include src="financialSpecification.xhtml"></ui:include>
 		</p:tab>
+		
+		
 
-		<p:tab title="Approval">
+		<p:tab title="Approval" rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
 			<ui:include src="approvalBusinessOwner.xhtml"></ui:include>
 		</p:tab>
 
