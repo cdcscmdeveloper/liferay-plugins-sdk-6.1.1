@@ -2570,6 +2570,13 @@ important
 
 }
 
+.ui-icon-acknowledge {
+	background-image: url(#{ resource [ 'ep/images/design:ackno.png' ]}) !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
+}
+
 .ui-icon-action {
 	background-image: url(#{ resource [ 'ep/images/design:action.png' ]
 }
