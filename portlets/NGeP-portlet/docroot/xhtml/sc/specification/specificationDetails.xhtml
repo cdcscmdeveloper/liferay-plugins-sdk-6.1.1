@@ -105,7 +105,7 @@
 				
 				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputText id="proposalId" required="true" label="#{lbl['lbl.sc.spec.max.proposal']}"
-						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"></p:inputText>
+						value="#{specificationBackingBean.managedBean.scQt.maxProposal}" style="text-align:right;"></p:inputText>
 						<p:message id="maxProposal" for="proposalId" display="icon"></p:message>
 						</td>
 			</tr>
@@ -139,7 +139,7 @@
 						value="*#{lbl['lbl.sc.spec.complete.period']}"
 						escape="false" /></td>
 				<td><p:inputText id="contract" required="true" label="#{lbl['lbl.sc.spec.complete.period']}"
-						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" />
+						value="#{specificationBackingBean.managedBean.scQt.contractDuration}" style="text-align:right;"/>
 						<h:outputText value="(Month)"/>
 						<p:message id="completion" for="contract" display="icon"></p:message>
 						</td>

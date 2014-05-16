@@ -24,7 +24,7 @@
 			<h:outputText value="Pending" size="50"></h:outputText>
 			</p:column>
 			<p:column headerText="Created By" style="width:20%">
-				<h:outputText value="#{technicalSpec.createdBy}" size="50"></h:outputText>
+				<h:outputText value="#{specificationBackingBean.retriveUserName(technicalSpec.createdBy)}" size="50"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
