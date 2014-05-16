@@ -17,6 +17,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -25,6 +26,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -261,5 +264,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			 msgCode=MessageConst.INFO_700013;
 		 }
 		return msgCode;
+	}
+	
+	public String retriveUserName(Long userId){
+		IUserSO userSo=null;
+		String userName="";
+		try{
+			userSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTo=new UserReqDTO();
+			reqDTo.setUserId(userId);
+			UserResDTO resDTO=userSo.retrieveUserByUserId(reqDTo);
+			if(resDTO.isSuccessful()==true){
+			PmUser user=resDTO.getPmUser();
+			userName=user.getUserName();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return userName;
 	}
 }
