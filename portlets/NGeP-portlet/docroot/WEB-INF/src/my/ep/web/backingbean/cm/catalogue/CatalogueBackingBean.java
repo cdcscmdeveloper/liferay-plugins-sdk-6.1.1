@@ -796,13 +796,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 
 				if(rowEmpty){
-					if(rowIterator.hasNext())
-						row = rowIterator.next();
-				} else if(row.getCell(7) == null || row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty()){
+
+				} else if(row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty()){
 					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum + "\n");
 					count++;
-					if(rowIterator.hasNext())
-						row = rowIterator.next();
 				} else {
 
 					if(row.getCell(0)!=null){
@@ -811,8 +808,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					}
 					
 					if(row.getCell(1)!=null){
-						itemcode =  row.getCell(1).getStringCellValue();
-						log.debug("Item Code:" + itemcode);
+						itemcode =  row.getCell(1).toString();
 					}
 
 					CmSupplierItem catalogItem = new CmSupplierItem();
@@ -853,7 +849,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 					if(row.getCell(7)!=null){
 						price = row.getCell(7).getNumericCellValue();
-						log.debug("price:"+price);
 						cmStandardPricing.setPrice(new BigDecimal(price));
 					}
 
@@ -862,7 +857,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 							startDate = row.getCell(8).getDateCellValue();
 						else if(row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING)
 							startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
-						log.debug("start date:"+startDate);
 						cmStandardPricing.setStartDate(startDate);
 					}
 
@@ -871,19 +865,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 							endDate =  row.getCell(9).getDateCellValue();
 						else if(row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING)
 							endDate =  new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
-						log.debug("end date:"+endDate);
 						cmStandardPricing.setEndDate(endDate);
 					}
 
-					if(row.getCell(10)!=null){
-						additionalItemDesc =  row.getCell(10).getStringCellValue();
-						log.debug("addnl desc:"+additionalItemDesc);
+					if(row.getCell(10)!=null && !row.getCell(10).toString().isEmpty()){
+						additionalItemDesc =  row.getCell(10).toString();
 						catalogItem.setItemDesc(additionalItemDesc);
 					}
 
 					if(row.getCell(11)!=null&& !row.getCell(11).toString().isEmpty()){
 						frequency =  row.getCell(11).getNumericCellValue();
-						log.debug("Frequency:"+frequency);
 						catalogItem.setFrequency(new BigDecimal(frequency));
 					}
 
@@ -894,7 +885,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						UomResDTO resDTO = uomSO.retrieveUomList();
 						List<PmUom> uomList = resDTO.getPmUomList();
 
-						uom =  row.getCell(12).getStringCellValue();
+						uom =  row.getCell(12).toString();
 						PmUom pmUom = new PmUom();
 						for(PmUom u : uomList){
 							if(u.getUomName() != null && u.getUomName().equalsIgnoreCase(uom)){
@@ -912,45 +903,38 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						}
 					}
 
-					if(row.getCell(13)!=null){
-						modelNo =  row.getCell(13).getStringCellValue();
-						log.debug("Model No:"+modelNo);
+					if(row.getCell(13)!=null  && !row.getCell(13).toString().isEmpty()){
+						modelNo =  row.getCell(13).toString();
 						catalogItem.setModelNumber(modelNo);
 					}
 
-					if(row.getCell(14)!=null){
-						skuNo =  row.getCell(14).getStringCellValue();
-						log.debug("Sku No:"+skuNo);
+					if(row.getCell(14)!=null  && !row.getCell(14).toString().isEmpty()){
+						skuNo =  row.getCell(14).toString();
 						catalogItem.setSkuNumber(skuNo);
 					}
 
-					if(row.getCell(15)!=null){
-						manfPartNo =  row.getCell(15).getStringCellValue();
-						log.debug("Manufacturer Part No:"+manfPartNo);
+					if(row.getCell(15)!=null && !row.getCell(15).toString().isEmpty()){
+						manfPartNo =  row.getCell(15).toString();
 						catalogItem.setManufacturer(manfPartNo);
 					}
 
 					if(row.getCell(16)!=null && !row.getCell(16).toString().isEmpty()){
 						minOrder =  row.getCell(16).getNumericCellValue();
-						log.debug("Min Order:"+minOrder);
 						catalogItem.setMinOrder(minOrder.intValue());
 					}
 
 					if(row.getCell(17)!=null && !row.getCell(17).toString().isEmpty()){
 						maxOrder =  row.getCell(17).getNumericCellValue();
-						log.debug("Max Order:"+maxOrder);
 						catalogItem.setMaxOrder(maxOrder.intValue());
 					}
 
 					if(row.getCell(18)!=null && !row.getCell(18).toString().isEmpty()){
 						leadTime =  row.getCell(18).getNumericCellValue();
-						log.debug("Lead Time:"+leadTime);
 						catalogItem.setLeadTime(new BigDecimal(leadTime));
 					}
 
 					if(row.getCell(19)!=null && !row.getCell(19).toString().isEmpty()){
 						paymentTerm =  row.getCell(19).getNumericCellValue();
-						log.debug("Payment Terms:"+paymentTerm);
 						catalogItem.setPaymentTerms(paymentTerm.toString());
 					}
 				}	
