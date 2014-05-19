@@ -82,14 +82,14 @@
 							<td><p:inputText size="10" disabled="true" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
-				<td><p:inputText size="35" value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" disabled="true" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td> 
+				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td>
+				<td><p:inputText size="35" value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" disabled="true" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td> 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
-				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
-				<td style="width: 100px;"><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
-				<td><p:inputText size="35" rendered="#{!danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td>
+				<td><p:inputText size="35" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td>
+				<td style="width: 100px;"><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td>
+				<td><p:inputText size="35" rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
@@ -121,7 +121,7 @@
 		</table>
 	</p:panel>
 	
-	<p:panel header="FACTORING DETAIL" toggleable="true" rendered="#{danBackingBean.managedBean.adjustment.flFulfilmentOrder.isFactored}">
+	<p:panel header="FACTORING DETAIL" toggleable="true" rendered="#{danBackingBean.managedBean.adjustment.flOrder.factored}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>

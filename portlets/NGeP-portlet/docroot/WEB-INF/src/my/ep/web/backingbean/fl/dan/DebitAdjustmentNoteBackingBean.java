@@ -4,6 +4,8 @@
 package my.ep.web.backingbean.fl.dan;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +22,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
+import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -28,6 +31,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -116,13 +121,33 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
 
 			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
-			FlAdjustment adjust = resDTO.getAdjustment();
-
+			FlAdjustment adjustment = resDTO.getAdjustment();
+			populateChargeLineTree(adjustment);
 			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
-			danBB.getManagedBean().setAdjustment(adjust);
+			danBB.getManagedBean().setAdjustment(adjustment);
 			danBB.getManagedBean().setTaskId(taskId);
 			danBB.getManagedBean().setOutComes(res.getAction());
 
 		}
+	}
+	
+	private void populateChargeLineTree(FlAdjustment adjustment) {
+		Map<Long, TreeNode> chargeLineMap = new HashMap<Long, TreeNode>();
+		
+		TreeNode root = getManagedBean().getDanChargeLineTree();
+		TreeNode parent = null;
+		TreeNode child = null;
+		for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
+			if(chargeLineMap.containsKey(adjustmentItem.getFlItem().getCmItem().getItemId())){
+				parent = chargeLineMap.get(adjustmentItem.getFlItem().getCmItem().getItemId());
+				child = new DefaultTreeNode(adjustmentItem, parent);
+			}else{
+				parent = new DefaultTreeNode(adjustmentItem,root);
+				child = new DefaultTreeNode(adjustmentItem,parent);
+				chargeLineMap.put(adjustmentItem.getFlItem().getCmItem().getItemId(),parent);
+			}
+			
+		}
+		
 	}
 }
