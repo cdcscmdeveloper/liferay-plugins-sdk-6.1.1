@@ -53,6 +53,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean prepareLOA;
 	private boolean signOffDecision;
 	private boolean signUpdateDecision;
+	private String ackFA;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -575,6 +576,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setWitnessHeader(String witnessHeader) {
 		this.witnessHeader = witnessHeader;
+	}
+
+	public String getAckFA() {
+		return ackFA;
+	}
+
+	public void setAckFA(String ackFA) {
+		this.ackFA = ackFA;
 	}
 
 }

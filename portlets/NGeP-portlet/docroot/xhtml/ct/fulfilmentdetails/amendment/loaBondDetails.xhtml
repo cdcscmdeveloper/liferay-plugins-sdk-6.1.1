@@ -13,7 +13,7 @@
 			 </h:commandLink>					
 			<p:outputLabel value="Bond Response Due Date"/>
 			<h:panelGrid columns="3">
-			   <p:inputText  style="width:120px;"
+			   <p:calendar  size="18" id="dueDate" pattern="#{CommonConstants.DATE_FORMAT_TYPE_DATE}" 
 			     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}"/>
 			    <p:spacer width="1"/>
 			    <p:inputText style="width:40px;"/>

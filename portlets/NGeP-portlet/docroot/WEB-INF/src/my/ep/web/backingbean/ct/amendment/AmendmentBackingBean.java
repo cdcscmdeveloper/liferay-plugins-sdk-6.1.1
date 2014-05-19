@@ -188,7 +188,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
@@ -238,9 +238,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)){
 		    	  this.getManagedBean().setMemberSignOff(false);
 		    	  this.getManagedBean().setPbConfirmMeeting(true);
-		    }
-		    
-		    if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)){
+		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+		    	  this.getManagedBean().setAckFA("Ack");
+		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)){
 		        this.getManagedBean().setAction(res.getAction());
 		        this.getManagedBean().setSignOffDecision(true);
 			 }
@@ -311,7 +311,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        reqDTO.setOutcome(action);
 	        reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	        
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 	      
 			if(this.getManagedBean().getCtItemList().size() > 0 && this.getManagedBean().getCtItemList() != null){
@@ -322,9 +322,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
-	            if(!this.getManagedBean().getContractVer().getCtContractValue().isConcession() || !this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
-	            	ChkComplyAP201Rule();
-	            }
+	            ChkComplyAP201Rule();	
 	        }   
 	        
 	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
@@ -332,9 +330,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        }
 	        
 	        if(this.getManagedBean().isPrepareLOA()){
-	        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null){
+	        	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null)
 	        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
-	        	}
 	        	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(this.getManagedBean().getScLoaWitness());
 	        }
 	        
@@ -342,9 +339,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(this.getManagedBean().getTaskName())){
 	        	  reqDTO.setTaskName(this.getManagedBean().getTaskName());
 	        }
-	     
-	        //this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
-	        this.getManagedBean().getContractVer().getCtPerformanceBonds().get(0).getFinancialOrg().setFinancialOrgId(1L);
+	    
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 	        reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 	        

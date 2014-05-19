@@ -68,22 +68,23 @@
 				</tr>
 			</table>	 
 	</p:panel>
-	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
-	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
+	<p:tabView id="tabview" value="Amendment" dynamic="true" orientation="left" >
+	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" rendered="#{amendmentBackingBean.managedBean.ackFA == null}">
 	     <ui:include src="fulfilmentDetails.xhtml"/>
 	     <ui:include src="quotationTender.xhtml"/>
 	     <ui:include src="supplierDetails.xhtml"/>
 	     <ui:include src="performanceBond.xhtml"/>
       </p:tab>
-       <p:tab title="Amendment Details">
+       <p:tab title="Amendment Details" rendered="#{amendmentBackingBean.managedBean.ackFA == null}">
           <ui:include src="amendmentDetails.xhtml"/>
           <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
        </p:tab>
        <p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}"
-			    rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}">
+			    rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing 
+			      and amendmentBackingBean.managedBean.ackFA == null}">
 				 <ui:include src="zone.xhtml" />
 			</p:tab>
-	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
+	   <p:tab title="#{lbl['lbl.ct.menu.item']}" rendered="#{amendmentBackingBean.managedBean.ackFA == null}">
 	      <ui:include src="item.xhtml" />
        </p:tab>
        
@@ -99,11 +100,18 @@
 	      <ui:include src="pbqcc/signOffpbqcc.xhtml"/>
        </p:tab>
        
-       <p:tab title="Loa Details" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
+       <p:tab title="LOA Details" 
+         rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA == 'Ack'}">
           <ui:include src="supplier/supplierforloa.xhtml" />
-	      <ui:include src="loaDetails.xhtml" />
+          <c:if test="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+             <ui:include src="supplier/paymentdetails.xhtml" />
+          </c:if>
+           <c:if test="#{amendmentBackingBean.managedBean.prepareLOA}">
+	         <ui:include src="loaDetails.xhtml" />
+	       </c:if>
 	      <ui:include src="witnessDetails.xhtml" />
        </p:tab>
+       
        <p:tab title="Performance Bond" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
 	      <ui:include src="loaBondDetails.xhtml" />
        </p:tab>
@@ -115,6 +123,9 @@
         <p:tab title="Letter Of Acceptance" rendered="#{amendmentBackingBean.managedBean.letterOfAcceptance}">
          <ui:include src="letterOfAcceptance.xhtml"/>
        </p:tab>  
+        <p:tab title="Declaration" 
+         rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+         </p:tab>
 	</p:tabView>
    </ui:define>  
 </ui:composition>
