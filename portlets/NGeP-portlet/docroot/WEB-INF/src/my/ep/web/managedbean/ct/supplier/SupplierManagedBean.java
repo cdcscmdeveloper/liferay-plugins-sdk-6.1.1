@@ -56,7 +56,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String accountNo="";
 	private boolean removeFactoring;
 	private Long loaId;
-	private Long contractId;
+	private Long contractVerId;
 	private SmSupplierBank supplierBank;
 	private String supplierAddress;
 	private String supplierBankAddress;
@@ -259,14 +259,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.loaId = loaId;
 	}
 
-	public Long getContractId() {
-		return contractId;
-	}
-
-	public void setContractId(Long contractId) {
-		this.contractId = contractId;
-	}
-
 	public SmSupplierBank getSupplierBank() {
 		return supplierBank;
 	}
@@ -289,6 +281,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setSupplierBankAddress(String supplierBankAddress) {
 		this.supplierBankAddress = supplierBankAddress;
+	}
+
+	public Long getContractVerId() {
+		return contractVerId;
+	}
+
+	public void setContractVerId(Long contractVerId) {
+		this.contractVerId = contractVerId;
 	}	
 	
 	

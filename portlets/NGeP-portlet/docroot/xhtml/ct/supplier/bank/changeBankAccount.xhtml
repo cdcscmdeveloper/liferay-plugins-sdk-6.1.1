@@ -26,8 +26,8 @@
 	    			</td>
 	    		</tr>
 	    	</table>
-	    	<table style="width: 99%; margin-left: 25px;" class="header-info">
-				<tr style="margin-button: 10px;">
+	    	<table style="width: 99%; margin-left: 0px;" class="header-info">
+				<tr style="margin-button: 0px;">
 				     <td>	
 							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 					</td>
@@ -63,7 +63,7 @@
         <p:outputPanel id="ChangeBankAcc">
             <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
                 <h:outputLabel for="contractId" value="Contract No." />
-			    <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractId}" 
+			    <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractVerId}" 
 			       style="width:210px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
 			       <f:selectItem itemLabel="-Select One-" itemValue="null" />
 				       <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
