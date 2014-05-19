@@ -352,6 +352,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_TERMINATION_NOTICE);	
 			} else if(getManagedBean().isRemedy()) {
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_REMEDY_NOTICE);
+			} else if (getManagedBean().isMutualTermination()) {
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_MUTUAL_TERMINATION_NOTICE);
 			}
 			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			getManagedBean().setEditorValue("");
@@ -376,6 +378,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					valuesMap.put("PTJ_ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 					valuesMap.put("TEL_NO", pmAddressType.getPmAddress().getPhoneNo());
 					valuesMap.put("FAX_NO", pmAddressType.getPmAddress().getFaxNo());
+					valuesMap.put("EMAIL", pmAddressType.getPmAddress().getEmail());
 				}
 				if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
 					valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
@@ -401,7 +404,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					terminationReason.append("<BR/>");
 				}
 				valuesMap.put("REASON_LIST", terminationReason.toString());
-				valuesMap.put("REMEDY_PERIOD",Integer.toString(getManagedBean().getContractVer().getCtTermination().getRemedyPeriod()));
+				if(getManagedBean().isRemedy()) {
+					valuesMap.put("REMEDY_START_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
+					valuesMap.put("REMEDY_END_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
+					valuesMap.put("TERMINATE_EFF_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()));
+				}
 				if(getManagedBean().getContractVer().getApprover()!=null) {
 					valuesMap.put("APPROVER_NAME", getManagedBean().getContractVer().getApprover().getUserName());
 					valuesMap.put("APPROVER_DESIGNATION", getManagedBean().getContractVer().getApprover().getDesignation());
@@ -420,7 +427,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					valuesMap.put("RECOMMEDED_AGENCY", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
 				}		
 				if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
-					valuesMap.put("RECOMMEDED_AGENCY_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
+					valuesMap.put("RECOMMENDED_AGENCY_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
 				}			
 				// End of Extra For Termination Notice
 				StrSubstitutor sub = new StrSubstitutor(valuesMap);
