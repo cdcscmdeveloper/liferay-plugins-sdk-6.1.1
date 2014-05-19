@@ -26,6 +26,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -105,6 +106,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Long meetingStatusId;
 	private ScLoaWitness scLoaWitness = new ScLoaWitness();
 	private String witnessHeader;
+	
+	private SmSupplierBank supplierBank;
+	private String supplierBankAddress;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -584,6 +588,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setAckFA(String ackFA) {
 		this.ackFA = ackFA;
+	}
+
+	public SmSupplierBank getSupplierBank() {
+		return supplierBank;
+	}
+
+	public void setSupplierBank(SmSupplierBank supplierBank) {
+		this.supplierBank = supplierBank;
+	}
+
+	public String getSupplierBankAddress() {
+		return supplierBankAddress;
+	}
+
+	public void setSupplierBankAddress(String supplierBankAddress) {
+		this.supplierBankAddress = supplierBankAddress;
 	}
 
 }

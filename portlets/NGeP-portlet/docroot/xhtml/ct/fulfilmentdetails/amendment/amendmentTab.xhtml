@@ -103,10 +103,10 @@
        <p:tab title="LOA Details" 
          rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA == 'Ack'}">
           <ui:include src="supplier/supplierforloa.xhtml" />
-          <c:if test="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+          <c:if test='#{amendmentBackingBean.managedBean.ackFA eq "Ack"}'>
              <ui:include src="supplier/paymentdetails.xhtml" />
           </c:if>
-           <c:if test="#{amendmentBackingBean.managedBean.prepareLOA}">
+           <c:if test='#{amendmentBackingBean.managedBean.prepareLOA}'>
 	         <ui:include src="loaDetails.xhtml" />
 	       </c:if>
 	      <ui:include src="witnessDetails.xhtml" />

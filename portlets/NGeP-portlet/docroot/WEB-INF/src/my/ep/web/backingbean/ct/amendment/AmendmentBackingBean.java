@@ -85,6 +85,8 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -125,7 +127,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private CtCommitteeMember[] selectedCommitteMembers;
 	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
-
+	private List<SelectItem> populateBankAccountList;
+	
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
 			 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
@@ -988,6 +991,71 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 			return null;
 		}
+		
+		 public List<SelectItem> getPopulateBankAccountList() {
+	         populateBankAccountList = null;
+	    	 if(this.getManagedBean().getCtContract() != null){
+	    	   if(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
+	    	     && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+	    		 populateBankAccountList = new ArrayList<SelectItem>();
+			     List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
+				 for(SmSupplierBank obj : supplierBank) {
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(),obj.getAccountNo()));
+				 }      
+	    	   }
+	     }return populateBankAccountList;
+	 }
+		 
+		 public void changeAccountActionListener(){
+			 if(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
+			    	    && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+				 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
+					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBankAccountNo())){
+						 this.getManagedBean().setSupplierBank(supplierBank);
+						 if(supplierBank.getSmAddress() != null)
+						    CombineBankAddress(supplierBank.getSmAddress());
+					 }
+				 }
+			 }
+		  }
+		 
+		 public void CombineBankAddress(SmAddress smAddress){
+		    	
+		    	StringBuilder address = new StringBuilder();
+		    	String strSpace =", ";
+		    	if(smAddress.getAddress1() != null){
+		    		address.append(smAddress.getAddress1());
+		    		address.append(strSpace);
+		    	
+		    	}if(smAddress.getAddress2() != null){
+		    		address.append(smAddress.getAddress2());
+		    		address.append(strSpace);
+		    	
+		    	}if(smAddress.getAddress3() != null){
+		    		address.append(smAddress.getAddress3());
+		    		address.append(strSpace);
+		    	
+		    	}if(smAddress.getAddress4() != null){
+		    		address.append(smAddress.getAddress4());
+		    		address.append(strSpace);
+		    		
+		    	}if(smAddress.getPmDistrict().getDistrictName() != null){
+		    		address.append(smAddress.getPmDistrict().getDistrictName());
+		    		address.append(strSpace);
+		    	
+		    	}if(smAddress.getPmState().getStateName() != null){
+		    		address.append(smAddress.getPmState().getStateName());
+		    		address.append(strSpace);
+		    	
+		    	}if(smAddress.getPmCountry().getCountryName() != null){
+		    		address.append(smAddress.getPmCountry().getCountryName());
+		    		address.append("\n");
+		    	}if(smAddress.getPostcode() != null){
+		    		address.append(smAddress.getPostcode());
+		    	}
+		    	
+		    	this.getManagedBean().setSupplierAddress(address.toString());
+		    }
 		
 		public SelectItem[] getMeetingStatusDropdown(){
 			SelectItem[] items = null;     

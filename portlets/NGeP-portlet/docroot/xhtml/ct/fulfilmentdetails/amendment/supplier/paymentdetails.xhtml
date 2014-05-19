@@ -7,21 +7,27 @@
 	 <p:panel id="paymentDetails" header="PAYMENTS DETAILS" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 			<p:outputLabel value="Account No"/>
-			<p:selectOneMenu style="width:180px;margin-bottom: 5px;" >
-			   <f:selectItem itemLabel="--" itemValue=""/>
+			<p:selectOneMenu  style="width:210px; margin-bottom: 5px;" 
+			   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBankAccountNo}">
+			   <f:selectItem itemLabel="-Select One-" itemValue=""/>
+			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>
+			    <p:ajax event="change" process="@this" update="paymentDetails" listener="#{amendmentBackingBean.changeAccountActionListener}"/>
 			</p:selectOneMenu>
 			<p:outputLabel value="Bank Name"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			    value="#{amendmentBackingBean.managedBean.supplierBank.pmFinancialOrg.finOrgName}"/>
 			<p:outputLabel value="Bank Branch"/>
-			<p:inputText style="width:170px;"/>
+			<p:inputText style="width:170px;"
+			   value="#{amendmentBackingBean.managedBean.supplierBank.smSupplierBranch.branchName}"/>
 			 <h:panelGroup>
-            <div style="height: 90px; vertical-align:top;">
-                <p:outputLabel for="payBankAddress" value="Bank Address " />
+            <div style="height: 70px; vertical-align:top;">
+                <p:outputLabel for="payBankAddress" value="Bank Address" />
             </div>
            </h:panelGroup>
            <h:panelGrid>
              <p:inputTextarea id="payBankAddress" disabled="true"
-                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
+                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" 
+                value="#{amendmentBackingBean.managedBean.supplierBankAddress}"/>
            </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>	
