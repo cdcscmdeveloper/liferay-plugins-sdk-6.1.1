@@ -69,11 +69,6 @@
 						rendered="#{bankBean.accountPurpose eq 'B'}" />
 				</p:column>
 
-				<p:column headerText="Payment Account"
-					style="text-align: center;width: 15%">
-					<p:selectBooleanCheckbox />
-				</p:column>
-
 				<p:column headerText="Action">
 					<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
 						update=":form:tt:sfieldset" style="padding-right :5px;">

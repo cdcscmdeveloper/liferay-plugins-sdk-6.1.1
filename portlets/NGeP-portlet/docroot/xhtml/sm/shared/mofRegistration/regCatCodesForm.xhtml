@@ -153,6 +153,8 @@
 	<p:dialog width="750px" header="Category Code Information"
 		widgetVar="regCatDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="regCatDialog">
+		<p:messages id="regCatCodeMsg" showSummary="true" showDetail="true"
+			autoUpdate="true" closable="true" />
 		<p:outputPanel id="catPanel">
 			<table style="width: 100%">
 
@@ -213,8 +215,7 @@
 					<td colspan="2">
 						<div align="right">
 							<p:commandButton value="Save"
-								action="#{backingBean.saveSelectedCategory}"
-								oncomplete="regCatDialog.hide();" type="submit"
+								action="#{backingBean.saveSelectedCategory}" type="submit"
 								partialSubmit="true" process="regCatDialog"
 								update=":form:tt:catDt, :form" />
 							<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />

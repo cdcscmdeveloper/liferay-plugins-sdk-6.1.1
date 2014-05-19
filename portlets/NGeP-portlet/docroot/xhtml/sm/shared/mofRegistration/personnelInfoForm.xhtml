@@ -251,7 +251,28 @@
 					action="#{backingBean.deleteSelectedPersonnel}"
 					update=":form:tt:personDt" />
 			</div>
+			<p:panel id="persBranMapInfo">
+				<p:dataTable var="branch" id="perBrDt"
+					value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+					rowIndexVar="index">
+					<ac:paginator for="perBrDt" />
 
+
+					<p:column headerText="Branch Name">
+						<h:outputText value="#{branch.branchName}" />
+					</p:column>
+					<p:column headerText="Point Of Contact">
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="brnPerVal" value="#{branch.smPersonnel.personnelId}">
+							<f:selectItems
+								value="#{backingBean.managedBean.smAppl.smPersonnels}"
+								var="brPerBean" itemLabel="#{brPerBean.name}"
+								itemValue="#{brPerBean.personnelId}" />
+						</p:selectOneMenu>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
@@ -325,11 +346,9 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.selectedShareHolder)}"
 				oncomplete="perShareHolderAddrDialog.hide();"
-				update=":form:tt:personDt" />
+				update=":form:tt:personDt,:form:tt:perBrDt" />
 			<p:commandButton value="Cancel"
 				onclick="perShareHolderAddrDialog.hide();" />
 		</div>
 	</p:dialog>
-
-
 </ui:composition>

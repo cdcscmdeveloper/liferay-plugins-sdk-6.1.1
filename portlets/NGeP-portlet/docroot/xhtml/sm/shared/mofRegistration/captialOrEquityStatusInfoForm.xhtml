@@ -47,12 +47,18 @@
 					<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>
 					<td style="width: 58%;"><p:inputText
 							title="This field is applicable for companies of type ROC Only"
-							size="10" /></td>
+							size="10"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}">
+							<p:ajax event="blur" update=":form:tt:capInfPan"
+								listener="#{backingBean.calculateCapital}" />
+						</p:inputText></td>
 
 					<td><p:outputLabel value="* Paid-Up Capital (RM.)" /></td>
 					<td><p:inputText
 							title="This field is applicable for companies of type ROC Only"
-							size="10" /></td>
+							size="10"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
+							readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
@@ -82,93 +88,118 @@
 								</f:facet>
 								<p:row>
 									<p:column>Bumiputera</p:column>
-									<!-- <p:column>
-									<p:inputText id="bumiMem" />
-								</p:column> -->
+
 									<p:column>
-										<p:inputText id="bumiAmt" />
+										<p:inputText id="bumiAmt"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true" id="bumiPerc"
-											title="Auto calculated / populated value" />
+										<p:inputText readonly="true" id="bumiPerc"
+											disabled="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>Non Bumiputera</p:column>
-									<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
+
 									<p:column>
-										<p:inputText label="0.00" />
+										<p:inputText id="nomBumAmt"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
+										<p:inputText disabled="true" readonly="true" id="nonBumPer"
+											size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>Non - Malaysian</p:column>
-									<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
 									<p:column>
-										<p:inputText label="0.00" />
+										<p:inputText
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}"
+											id="frgAmt">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
+										<p:inputText disabled="true" readonly="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}"
+											id="frgAmter" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>Equity Government / UT Agency</p:column>
-									<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
+
 									<p:column>
-										<p:inputText label="0.00" />
+										<p:inputText
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
+											id="gvtUtAmt">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
+										<p:inputText disabled="true" readonly="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}"
+											id="gvtUtPer" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>Government equity</p:column>
-									<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
+
 									<p:column>
-										<p:inputText label="0.00" />
+										<p:inputText
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}"
+											id="gvtEquAmt">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>Local Company</p:column>
-									<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-									<p:column>
-										<p:inputText label="0.00" />
-									</p:column>
-									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
+										<p:inputText disabled="true" readonly="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}"
+											id="gvtEquPer" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>Foreign Company</p:column>
-									<!-- 	<p:column>
-									<p:inputText />
-								</p:column> -->
+
 									<p:column>
-										<p:inputText label="0.00" />
+										<p:inputText
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}"
+											id="lclAmt">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText label="0.00" readonly="true"
-											title="Auto calculated / populated value" />
+										<p:inputText disabled="true" readonly="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}"
+											id="lclAmtPer" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Local Company</p:column>
+
+									<p:column>
+										<p:inputText
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}"
+											id="frgCmpAmt">
+											<p:ajax event="blur" update=":form:tt:capInfPan"
+												listener="#{backingBean.calculateCapital}" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText disabled="true" readonly="true" size="10"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}"
+											id="frgCmpPer" />
 									</p:column>
 								</p:row>
 							</p:panelGrid>

@@ -110,14 +110,14 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.designation}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Branch Associated" /></td>
+				<!-- <td><p:outputLabel value="* Branch Associated" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+						<f:selectItem itemLabel="Select One" itemValue="1" />
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 							var="supBean" itemLabel="#{supBean.branchName}"
 							itemValue="#{supBean.branchName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu></td> -->
 
 			</tr>
 
@@ -197,7 +197,7 @@
 	</p:panel>
 	<p:panel header="Shareholer Priviliges" toggleable="true"
 		id="mngmtPrivPanel1"
-		rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal and backingBean.managedBean.smAppl.supplierType eq 'K' and backingBean.managedBean.authPerCount eq '5')}">
+		rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal and backingBean.managedBean.smAppl.supplierType eq 'K' and backingBean.managedBean.authPerCount eq '5'}">
 		<table>
 			<tr>
 				<td><h:outputText
