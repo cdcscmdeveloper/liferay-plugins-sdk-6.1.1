@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -496,10 +497,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void updateSmAppl(String applType, String pageType) {
+		boolean valid = false;
+		boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
 		System.out.println(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
+		List<SmPersonnel> perList = new ArrayList<SmPersonnel>();
 		try {
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
@@ -516,7 +520,9 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-			if (validateBeforeSave(applType, pageType)) {
+			valid = validateBeforeSave(applType, pageType);
+
+			if (valid) {
 				// Save or update to DB
 
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -529,6 +535,9 @@ public class SmApplicationBackingBean extends
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 			}
+			if (valid) {
+				retriveLatestApplAfterUpdate(pageType);
+			}
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
@@ -539,59 +548,94 @@ public class SmApplicationBackingBean extends
 							"Please contact administrator"));
 
 			getManagedBean().setTabActiveIndex(currentTab);
+			isError = true;
+			valid = false;
+			retriveLatestApplAfterUpdate(pageType);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	private void retriveLatestApplAfterUpdate(String pageType) {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofRegistrationSO.class);
+		try {
+
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
 			System.out.println("********* Final Block Id *****"
 					+ finReqDto.getApplId());
-			try {
+			System.out.println("***** Its a valid ************");
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveCurrentDraftApplication(finReqDto);
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			setApplicationFailities(getManagedBean().getSmAppl()
+					.getSmFacilities());
 
-				MofRegistrationResDTO resDTO = mofRegistrationSO
-						.retrieveCurrentDraftApplication(finReqDto);
-				getManagedBean().setSmAppl(resDTO.getSmAppl());
-				setApplicationFailities(getManagedBean().getSmAppl()
-						.getSmFacilities());
-				if (getManagedBean().getSmAppl().getSmPersonnels() != null
-						&& !getManagedBean().getSmAppl().getSmPersonnels()
-								.isEmpty()) {
-					setApplicationShareHolders(getManagedBean().getSmAppl()
-							.getSmPersonnels());
-				}
-				System.out
-						.println(" ***** Business  Type After in finally block *********"
-								+ getManagedBean().getSmAppl().getSmSupplier()
-										.getBusinessType());
-				// TODO Remove later the hard code value
-				// 1-ROB,2-ROC,3-ROS
-				if (getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase("N")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("1");
-				} else if (getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase("A")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("2");
-				} else if (getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase("R")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("3");
-				} else {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("1");
-				}
-
-				if (getManagedBean().isPoUser()) {
-					setDefaultPoReviewSection();
-				}
-				if (getManagedBean().isApproverUser()) {
-					setDefaultApproverReviewSection();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (getManagedBean().getSmAppl().getSmPersonnels() != null
+					&& !getManagedBean().getSmAppl().getSmPersonnels()
+							.isEmpty()) {
+				setApplicationShareHolders(getManagedBean().getSmAppl()
+						.getSmPersonnels());
 			}
+			System.out
+					.println(" ***** Business  Type After in finally block *********"
+							+ getManagedBean().getSmAppl().getSmSupplier()
+									.getBusinessType());
+			// TODO Remove later the hard code value
+			// 1-ROB,2-ROC,3-ROS
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase("N")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("1");
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase("A")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("2");
+			} else if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase("R")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("3");
+			} else {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("1");
+			}
+
+			if (getManagedBean().isPoUser()) {
+				setDefaultPoReviewSection();
+			}
+			if (getManagedBean().isApproverUser()) {
+				setDefaultApproverReviewSection();
+			}
+
+			if (pageType.equalsIgnoreCase("CapitalInfo")) {
+				System.out.println(" ****8 This is capital ********* ");
+				for (int i = 0; i < getManagedBean().getSmAppl()
+						.getSmSupplierBranches().size(); i++) {
+					SmSupplierBranch br = getManagedBean().getSmAppl()
+							.getSmSupplierBranches().get(i);
+					if (br.getSmPersonnel() == null) {
+						System.out
+								.println(" **** This is null personnel ******** ");
+						br.setSmPersonnel(new SmPersonnel());
+						getManagedBean().getSmAppl().getSmSupplierBranches()
+								.set(i, br);
+
+					}
+				}
+			}
+
+			System.out.println("***** After final ****"
+					+ getManagedBean().getSmAppl().getSmPersonnels().size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			mofRegistrationSO = null;
 		}
+
 	}
 
 	private void setSmApplRejectionReasons() {
@@ -748,6 +792,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private Boolean validateBeforeSave(String applType, String pageType) {
+		System.out.println("******* Page Type ********" + pageType);
 		switch (pageType) {
 		case "BasicInfo":
 			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
@@ -786,6 +831,26 @@ public class SmApplicationBackingBean extends
 			System.out.println("******** Before save cert size ******"
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
+		case "CapitalInfo":
+			if (getManagedBean()
+					.getSmAppl()
+					.getSmCompanyBasic()
+					.getPaidUpCapital()
+					.compareTo(
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getAuthorizedCapital()) > 0) {
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"Invalid Paidup Capital  : ",
+										"Paid-up capital cannot exceed authorized capital.Re enter the amounts "));
+				return false;
+
+			}
+			break;
 		case "PersonnelInfo":
 			int mgmtCount = 0;
 			int staffCount = 0;
@@ -800,15 +865,19 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase("K")) {
 					if (per.isDirector() || per.isHigherManagement()) {
 						directorCount = directorCount + 1;
-					} else if (per.getStaffRoleFlg() == 834) {
+					} else if (per.getStaffRoleFlg() != null
+							&& per.getStaffRoleFlg() == 834) {
 						mgmtCount = mgmtCount + 1;
-					} else if (per.getStaffRoleFlg() == 835) {
+					} else if (per.getStaffRoleFlg() != null
+							&& per.getStaffRoleFlg() == 835) {
 						staffCount = staffCount + 1;
 					}
 				}
 				if (getManagedBean().getSmAppl().getSupplierType()
 						.equalsIgnoreCase("J")) {
-					if (per.getStaffRoleFlg() == 833 && per.getEpfNo() != null) {
+					if (per.getStaffRoleFlg() != null
+							&& per.getStaffRoleFlg() == 833
+							&& per.getEpfNo() != null) {
 						// for (SmStaffAcademic aca : per.getSmStaffAcademics())
 						// {
 						// if (aca.getQualificationLevelId() == 123) {
@@ -816,9 +885,11 @@ public class SmApplicationBackingBean extends
 						// break;
 						// }
 						// }
+						System.out.println("*** is staff **** ");
 						staffCount = staffCount + 1;
 
-					} else if (per.getStaffRoleFlg() == 831
+					} else if (per.getStaffRoleFlg() != null
+							&& per.getStaffRoleFlg() == 831
 							&& per.getEpfNo() != null) {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
@@ -828,7 +899,8 @@ public class SmApplicationBackingBean extends
 							}
 						}
 
-					} else if (per.getStaffRoleFlg() == 832
+					} else if (per.getStaffRoleFlg() != null
+							&& per.getStaffRoleFlg() == 832
 							&& per.getEpfNo() != null) {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
@@ -912,6 +984,28 @@ public class SmApplicationBackingBean extends
 											"Please add atleast one user with role Staff"));
 					return false;
 				}
+			}
+			break;
+		case "BankInfo":
+			int payAccCnt = 0;
+
+			for (SmSupplierBank bank : getManagedBean().getSmAppl()
+					.getSmSupplierBanks()) {
+				if (bank.getAccountPurpose().equalsIgnoreCase("P")
+						|| bank.getAccountPurpose().equalsIgnoreCase("B")) {
+					payAccCnt++;
+					break;
+				}
+			}
+			if (payAccCnt == 0) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"Payment Bank is required : ",
+										"Please add atleast one bank account with purpose payment"));
+				return false;
 			}
 			break;
 		case "SupportingDocs":
@@ -1713,32 +1807,90 @@ public class SmApplicationBackingBean extends
 	public void saveSelectedCategory() {
 		// System.out.println(" ******* Save From Selection ****"
 		// + getManagedBean().getSelectedCategory().getCategoryType());
-		for (PmCategoryL1 catL1 : getManagedBean().getSupplierParentCatList()) {
-			if (catL1.getCategoryL1Id().equals(
-					getManagedBean().getSelectedCategory().getPmCategoryL1()
-							.getCategoryL1Id())) {
-				getManagedBean().getSelectedCategory().setPmCategoryL1(catL1);
-				break;
+		boolean validCat = true;
+		if (getManagedBean().getSelectedCategory().getPmCategoryL1()
+				.getCategoryL1Id().equals(21)
+				&& getManagedBean().getSmAppl().getSupplierType()
+						.equalsIgnoreCase("J")) {
+			int prfCnt = 0;
+			int semPrfCnt = 0;
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (per.getStaffRoleFlg() == 831
+						&& per.getWorkExperienceYear() >= 5) {
+					prfCnt = prfCnt + 1;
+
+				} else if (per.getStaffRoleFlg() == 832
+						&& per.getWorkExperienceYear() >= 5) {
+
+					semPrfCnt = semPrfCnt + 1;
+
+				}
+				if (prfCnt > 0 && semPrfCnt > 0) {
+					break;
+				}
 			}
-		}
-		for (PmCategoryL2 catL2 : getManagedBean().getSupplierChildCatList()) {
-			if (catL2.getCategoryL2Id().equals(
-					getManagedBean().getSelectedCategory().getPmCategoryL2()
-							.getCategoryL2Id())) {
-				getManagedBean().getSelectedCategory().setPmCategoryL2(catL2);
-				break;
+			if (semPrfCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid semi professional staff is required : ",
+										"At least one semi professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
 			}
-		}
-		for (PmCategoryL3 catL3 : getManagedBean().getSupplierSubChildCatList()) {
-			if (catL3.getCategoryL3Id().equals(
-					getManagedBean().getSelectedCategory().getPmCategoryL3()
-							.getCategoryL3Id())) {
-				getManagedBean().getSelectedCategory().setPmCategoryL3(catL3);
-				break;
+			if (prfCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid professional staff is required : ",
+										"At least one professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
 			}
+
 		}
-		getManagedBean().getSmAppl().getSmSupplierCategories()
-				.add(getManagedBean().getSelectedCategory());
+		if (validCat) {
+			for (PmCategoryL1 catL1 : getManagedBean()
+					.getSupplierParentCatList()) {
+				if (catL1.getCategoryL1Id().equals(
+						getManagedBean().getSelectedCategory()
+								.getPmCategoryL1().getCategoryL1Id())) {
+					getManagedBean().getSelectedCategory().setPmCategoryL1(
+							catL1);
+					break;
+				}
+			}
+			for (PmCategoryL2 catL2 : getManagedBean()
+					.getSupplierChildCatList()) {
+				if (catL2.getCategoryL2Id().equals(
+						getManagedBean().getSelectedCategory()
+								.getPmCategoryL2().getCategoryL2Id())) {
+					getManagedBean().getSelectedCategory().setPmCategoryL2(
+							catL2);
+					break;
+				}
+			}
+			for (PmCategoryL3 catL3 : getManagedBean()
+					.getSupplierSubChildCatList()) {
+				if (catL3.getCategoryL3Id().equals(
+						getManagedBean().getSelectedCategory()
+								.getPmCategoryL3().getCategoryL3Id())) {
+					getManagedBean().getSelectedCategory().setPmCategoryL3(
+							catL3);
+					break;
+				}
+			}
+			getManagedBean().getSmAppl().getSmSupplierCategories()
+					.add(getManagedBean().getSelectedCategory());
+
+			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
+
+		}
 	}
 
 	// TODO needs many validations and SO retrieve the PMcat1,2,3 details - To
@@ -2130,6 +2282,7 @@ public class SmApplicationBackingBean extends
 									"The equity owner must have a minimum of 5 years work experience"));
 			validShrHldr = false;
 		}
+		validShrHldr = checkValidUser(getManagedBean().getSelectedShareHolder());
 		// if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() ==
 		// 1) {
 		// validShrHldr = validateAuthPersonLimit();
@@ -2535,6 +2688,7 @@ public class SmApplicationBackingBean extends
 		// {
 		// validPer = validateAuthPersonLimit();
 		// }
+		validPer = checkValidUser(getManagedBean().getSelectedPersonnel());
 		if (validPer) {
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedPersonnel())) {
@@ -2555,6 +2709,7 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedPersonnel());
 			}
 
+			// updateSmAppl(getManagedBean().getSmAppl().getApplType(),"Def");
 			RequestContext.getCurrentInstance()
 					.execute("directorDialog.hide()");
 		}
@@ -4499,4 +4654,230 @@ public class SmApplicationBackingBean extends
 		return authPerCount;
 	}
 
+	public void calculateCapital() {
+		try {
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getBumiEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setBumiEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getNonBumiEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setNonBumiEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getGovtEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getGovtUnitrustEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtUnitrustEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getForeignCompanyEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setForeignCompanyEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getForeignerEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setForeignerEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getLocalCompanyEquity() == null) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setLocalCompanyEquity(new BigDecimal(0));
+			}
+			getManagedBean()
+					.getSmAppl()
+					.getSmCompanyBasic()
+					.setPaidUpCapital(
+							getManagedBean()
+									.getSmAppl()
+									.getSmCompanyBasic()
+									.getBumiEquity()
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getNonBumiEquity())
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getLocalCompanyEquity())
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getForeignCompanyEquity())
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getForeignerEquity())
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getGovtEquity())
+									.add(getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getGovtUnitrustEquity()));
+			System.out.println("**** Paid up capital ****** "
+					+ getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital());
+			if (getManagedBean()
+					.getSmAppl()
+					.getSmCompanyBasic()
+					.getPaidUpCapital()
+					.compareTo(
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getAuthorizedCapital()) <= 0) {
+				BigDecimal mul = new BigDecimal(100);
+
+				if (getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setBumiPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getBumiEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setNonBumiPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getNonBumiEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setForiegnerPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getForeignerEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setGovtUTPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getGovtUnitrustEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setGovtEquityPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getGovtEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setForiegnCompPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getForeignCompanyEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+					getManagedBean()
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.setLocalCompPercent(
+									getManagedBean()
+											.getSmAppl()
+											.getSmCompanyBasic()
+											.getLocalCompanyEquity()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+				}
+
+			} else {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"Invalid Paidup Capital  : ",
+										"Paid-up capital cannot exceed authorized capital.Re enter the amounts "));
+			}
+		} catch (NumberFormatException ne) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Invalid Value  : ", "Please enter numbers only "));
+
+			ne.printStackTrace();
+		}
+	}
+
+	private boolean checkValidUser(SmPersonnel pers) {
+		boolean validUser = true;
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (pers.getPersonnelId() == null && pers.equals(per)) {
+				System.out.println("****** Same obj before save ");
+			} else if (pers.getPersonnelId() != null
+					&& pers.getPersonnelId().equals(per.getPersonnelId())) {
+				System.out.println("**** Same obj without id ******");
+			} else if (per.getIdentificationNo().equalsIgnoreCase(
+					pers.getIdentificationNo())) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Invalid User  : ",
+								"The user with the specified IC/Passport num : '"
+										+ pers.getIdentificationNo()
+										+ "' already exists."));
+				validUser = false;
+			}
+		}
+		return validUser;
+	}
 }
