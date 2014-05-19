@@ -64,8 +64,9 @@
 			   <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
 			    <p:ajax event="change"  process="@this" update="loaId" listener="#{supplierBackingBean.setActionListener()}"/> 
 		     </p:selectOneMenu>
-			          <p:inputText  style="width:200px;" disabled="true"
-			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
+			 <p:inputText  style="width:200px;" disabled="true" 
+			    value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
+			    rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"/>
 		       <p:outputLabel value="LOA Date" />
 		       <p:inputText style="width:200px;" disabled="true"
 		         value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.loaDate)}"/> 

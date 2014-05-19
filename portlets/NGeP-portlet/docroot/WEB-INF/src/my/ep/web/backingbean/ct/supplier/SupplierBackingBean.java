@@ -33,7 +33,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -53,8 +52,6 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -66,8 +63,10 @@ import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -97,15 +96,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private List<SelectItem> populateContractList;
-	private List<SelectItem> populateLoaList;
 	private List<SelectItem> populateBankAccountList;
-	private List<SmSupplierBank> smSupplierBank;
 	private List<CtContract> dbContractList;
 	ContractBackingBean ctBB = null;
 	
 	public SupplierBackingBean(){
 	   if(this.getManagedBean().getAction() == null) 
-	 	   this.getManagedBean().setAction(new String[]{"Save", "Submit"});
+	 	   this.getManagedBean().setAction(new String[]{"Submit"});
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -118,13 +115,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    
 		ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		
 		if(this.getManagedBean().getFactoring() == null){
 		   this.getManagedBean().setFactoring(new CtFactoring());
 		   if(this.getManagedBean().getFactoring().getFinancialOrg() == null){
 		      this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-		      this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
-		   
 		   }if(this.getManagedBean().getFactoring().getFinancialBranchId() == null)
 			   this.getManagedBean().getFactoring().setFinancialBranchId(new PmFinancialBranch());
 		}
@@ -170,7 +164,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
     		}
 
-    		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+    		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
     		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
     		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
     		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
@@ -180,39 +174,38 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     			this.getManagedBean().setFactoring(resDTO.getCtContractVer().getCtContract().getCtFactoring());
     			this.getManagedBean().setRemoveFactoring(true);
     		}
+    		
+    		this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			ContractBackingBean ctBB = new ContractBackingBean();
+		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+    		
     		if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)){
-    			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_BANK_ACCOUNT);
-    	
     		}else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)){
-    			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_FACTORING);
-    		
     		}else{
-    		
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
     		}
-          } catch(Exception e){
+          }catch(Exception e){
     			e.printStackTrace();
-    		}
-
-    	}
+    	  }
+      }
     
-    /* Function to populate list of country */
-	public List<SelectItem> getPopulateContractList() {
+      /* Function to populate list of country */
+	  public List<SelectItem> getPopulateContractList() {
 
 		IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
-		
 		try{
 			 reqDTO = new ContractSupplierReqDTO();
-			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
 			 reqDTO.setSupplierUser(getFacesScopes().getUserSessionBean());
+			 reqDTO.getSupplierUser().setUserId(27l);
 			 ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-		     
 			 if(resDTO.getContractList()!= null && !resDTO.getContractList().isEmpty()) {
 				populateContractList = new ArrayList<SelectItem>();
 				dbContractList = resDTO.getContractList();
@@ -224,30 +217,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			supplierSO = null;
 		}
 		return populateContractList;
-	}
-	
-	/* Function to populate list of country */
-	public List<SelectItem> getPopulateLoaList() {
-
-		IContractSupplierSO supplierSO = null;
-		ContractSupplierReqDTO reqDTO = null;	
-		try{
-			
-			reqDTO = new ContractSupplierReqDTO();
-			supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserLonginId(facesScopes.getUserSessionBean().getUserId());
-			ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-		         
-			if (resDTO.getContractList()!= null && !resDTO.getContractList().isEmpty()) {
-				populateContractList = new ArrayList<SelectItem>();
-				dbContractList = resDTO.getContractList();
-				for (CtContract obj : dbContractList) {
-					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(),obj.getContractNo()));
-			    }      
-		    }
-		 }finally {}
-		return populateLoaList;
 	 }
 
 	 /* Function to populate state value */
@@ -256,15 +225,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		IContractSO contractSO = null;
         ContractReqDTO reqDTO = null;	
 		try{
-		
 		   reqDTO = new ContractReqDTO();
-		   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-		  // reqDTO.setContractId(this.getManagedBean().getContractNo());
+		   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		   reqDTO.setContractId(this.getManagedBean().getContractId());
 		   ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
 		   if(resDTO.isSuccessful()){
 			  this.getManagedBean().setCtContract(resDTO.getContract());
 			  this.getManagedBean().setContractVer(resDTO.getContract().getLatestContractVer()); 
-			  changeAccountActionListener();
+			  CombineSupAddress();
 		   }
 		 }catch (Exception ex) {
 			log.error("Exception", ex);
@@ -273,52 +241,31 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 	 }/* Function End */
     
+	 public List<SelectItem> getPopulateBankAccountList() {
+	         populateBankAccountList = null;
+	    	 if(this.getManagedBean().getCtContract() != null){
+	    	   if(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
+	    	     && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+	    		 populateBankAccountList = new ArrayList<SelectItem>();
+			     List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
+				 for(SmSupplierBank obj : supplierBank) {
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(),obj.getAccountNo()));
+				 }      
+	    	   }
+	     }return populateBankAccountList;
+	 }
+	 
 	 public void changeAccountActionListener(){
-		
-		IMofRegistrationSO iMofRegistrationSO = null;
-    	MofRegistrationReqDTO reqDTO = null;	
-		try{
-		
-			 reqDTO = new MofRegistrationReqDTO();
-	    	 reqDTO.setSupplierId(this.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
-	    	 iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-	    	 MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
-	    	 List<SmSupplierBank> smSupplierBanks = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
-	         if(smSupplierBanks != null && !smSupplierBanks.isEmpty()) {
-		    	populateBankAccountList = new ArrayList<SelectItem>();
-		    	for(SmSupplierBank obj : smSupplierBanks) {
-					populateBankAccountList.add(new SelectItem(obj.getSupplierBankId(), obj.getAccountNo()));
-				}      
-		     }
-		 }catch (Exception ex) {
-			log.error("Exception", ex);
-		 }finally {
-			// resetObjectConditions();
+		 if(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
+		    	    && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+			 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
+				 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getAccountNo())){
+					 this.getManagedBean().setSupplierBank(supplierBank);
+					 if(supplierBank.getSmAddress() != null)
+					    CombineBankAddress(supplierBank.getSmAddress());
+				 }
+			 }
 		 }
-	  }
-	
-	  public SelectItem[] getBankAccountList(){
-		
-		  SelectItem[] items = null;   
-		  IMofRegistrationSO iMofRegistrationSO = null;
-    	  MofRegistrationReqDTO reqDTO = null;
-	      try{
-	    	    int i = 1;
-	    		reqDTO = new MofRegistrationReqDTO();
-	    		reqDTO.setSupplierId(this.getManagedBean().getCtContract().getSmSupplier().getSupplierId());
-	    		iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-	    		MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
-	    		List<SmSupplierBank> smSupplierBanks = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
-	    		items = new SelectItem[smSupplierBanks.size()+1];
-			    items[0] = new SelectItem(null, "- Select One -");
-			    for(SmSupplierBank bankList : smSupplierBanks) {
-				     items[i++] = new SelectItem(bankList.getSupplierBankId(), bankList.getAccountNo());
-			       }
-			 }catch (Exception e) {
-		    	   e.printStackTrace();
-		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		     }
-		return items;
 	  }
      
 	  public String saveChangeBankRequest(String action){
@@ -327,94 +274,69 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		try{
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-            this.getManagedBean().getCtContract().getLatestContractVer().setDocType(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
-            reqDTO.setCtContract(this.getManagedBean().getCtContract());
+	   	    reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+	   	    reqDTO.setOutcome(action);
+	   	    reqDTO.setTaskId(this.getManagedBean().getTaskId());
+	   	    reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
+	   	    reqDTO.setUserRole(getUserRole());
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+            
+			this.getManagedBean().getCtContract().getLatestContractVer().setDocType(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
+			this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().setSupplierBankAccountNo(this.getManagedBean().getAccountNo());
+		    reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getCtContract().getLatestContractVer());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			reqDTO.setToken(token);
 			
-			 reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
-		    if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Change Bank Account. : "));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-				    renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
-				}
-			 }else{
-			   throw new EpException("Failed.");
-			 }
-		  }catch (Exception e) {
-			  log.error("Exception>>", e);
-			  e.printStackTrace();
-			  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		  } finally {
-			  contractSO = null;
-		  }
-		return null;
-	  }
-     
-      public String saveTerminationRequest(String outcome){
-     	
-     	 System.out.println("inside supplier termination Log >>>>>>>>>>>>>>>>>>");
-     	 IContractSO contractSO = null;
-      	 ContractReqDTO reqDTO = null;	
-     	 ContractResDTO resDTO = null;
- 		
-     	 try{
- 			
- 			 reqDTO = new ContractReqDTO();
- 			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
- 			 String token = getFacesScopes().getBPMAuthenticationCtxToken();
- 			 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-  			
- 			 reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
-			 reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-			 resDTO = contractSO.objCloneSupplierTerminationReq(reqDTO);
-			 reqDTO.setCtContractVer(resDTO.getCtContractVer());
- 		
- 			 reqDTO.setToken(token);
-			 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 reqDTO.setFromSupplier(true);
-			 reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
-			 reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-			 reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-			 
-			 resDTO = contractSO.saveContractVer(reqDTO);
- 			 
 			 if(resDTO.isSuccessful()) {
- 					log.info("Record saved successfully");
- 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Termination. : "));
-					// save action with task ID not null will remain in the same page
-					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
-						(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 	 						
- 						renewSesionObject();
- 						return "/xhtml/shared/acknowledge.xhtml";
- 					}
- 				} else {
- 					throw new EpException("Failed.");
- 				}
- 				
- 			} catch (Exception e) {
- 				e.printStackTrace();
- 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Termination save failed."));
- 			}finally{
- 	 
- 		   contractSO = null;
- 		   reqDTO = null;
- 		}
- 		
- 		return null;		
-     }
-	
+					log.info("Record saved successfully");
+					String messageId = MessageConst.INFO_700005;
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+						messageId = MessageConst.INFO_700025;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						messageId = MessageConst.INFO_700007;
+					}
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
+									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+						renewSesionObject();
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					} 
+				  }else {
+						throw new EpException("Failed.");
+				  }
+			  }catch (Exception e) {
+				log.error("Exception>>", e);
+				e.printStackTrace();
+				if(e instanceof EpException) {
+					EpException ep = (EpException) e;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				}
+			  }finally {
+				contractSO = null;
+			  }
+		return null;
+	 }
+     
+	private String getUserRole() {		
+			if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
+				return RoleCode.MIN_CONTRACT_ADMIN.value();
+			else if(getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
+				return RoleCode.CT_APPROVER.value();
+			else if(getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_USER.value()))
+				return RoleCode.SUPPLIER_USER.value();
+			else
+				return null;
+	}
+	  
+      
     public String saveFactoringRequest(String action){
     	IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
@@ -472,30 +394,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 		return null;
 	}
-        
-    public void retrieveSupplierProfile(Long supplierId){
-    	
-    	IMofRegistrationSO iMofRegistrationSO = null;
-    	MofRegistrationReqDTO reqDTO = null;
-    	try{
-    		reqDTO = new MofRegistrationReqDTO();
-    		reqDTO.setSupplierId(supplierId);
-    		iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-    		MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
-    		this.getManagedBean().getCtContract().setSmSupplier(resDTO.getSmSupplier());
-    	
-    		if (resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks() != null && !resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
-    			populateBankAccountList = new ArrayList<SelectItem>();
-    			smSupplierBank = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
-				for (SmSupplierBank obj : smSupplierBank) {
-					populateBankAccountList.add(new SelectItem(obj.getSupplierBankId(), obj.getAccountNo()));
-			    }      
-    		}
-    	}catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-    }
     
     public SelectItem[] retrieveFinancialOrgList() throws NamingException {
 		
@@ -697,9 +595,83 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return items;
     }
     
-    public List<SelectItem> getPopulateBankAccountList() {
-		return populateBankAccountList;
-	}
+   
+    
+    public void CombineSupAddress(){
+    	
+    	StringBuilder address = new StringBuilder();
+    	String strSpace =", ";
+    	if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress1() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress1());
+    		address.append(strSpace);
+    	
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress2() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress2());
+    		address.append(strSpace);
+    	
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress3() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress3());
+    		address.append(strSpace);
+    	
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress4() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress4());
+    		address.append(strSpace);
+    		
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName());
+    		address.append(strSpace);
+    	
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName());
+    		address.append(strSpace);
+    	
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmCountry().getCountryName() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmCountry().getCountryName());
+    		address.append("\n");
+    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPostcode() != null){
+    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPostcode());
+    	}
+    	
+    	this.getManagedBean().setSupplierAddress(address.toString());
+    }
+    
+    public void CombineBankAddress(SmAddress smAddress){
+    	
+    	StringBuilder address = new StringBuilder();
+    	String strSpace =", ";
+    	if(smAddress.getAddress1() != null){
+    		address.append(smAddress.getAddress1());
+    		address.append(strSpace);
+    	
+    	}if(smAddress.getAddress2() != null){
+    		address.append(smAddress.getAddress2());
+    		address.append(strSpace);
+    	
+    	}if(smAddress.getAddress3() != null){
+    		address.append(smAddress.getAddress3());
+    		address.append(strSpace);
+    	
+    	}if(smAddress.getAddress4() != null){
+    		address.append(smAddress.getAddress4());
+    		address.append(strSpace);
+    		
+    	}if(smAddress.getPmDistrict().getDistrictName() != null){
+    		address.append(smAddress.getPmDistrict().getDistrictName());
+    		address.append(strSpace);
+    	
+    	}if(smAddress.getPmState().getStateName() != null){
+    		address.append(smAddress.getPmState().getStateName());
+    		address.append(strSpace);
+    	
+    	}if(smAddress.getPmCountry().getCountryName() != null){
+    		address.append(smAddress.getPmCountry().getCountryName());
+    		address.append("\n");
+    	}if(smAddress.getPostcode() != null){
+    		address.append(smAddress.getPostcode());
+    	}
+    	
+    	this.getManagedBean().setSupplierAddress(address.toString());
+    }
 
 	public void setPopulateBankAccountList(List<SelectItem> populateBankAccountList) {
 		this.populateBankAccountList = populateBankAccountList;

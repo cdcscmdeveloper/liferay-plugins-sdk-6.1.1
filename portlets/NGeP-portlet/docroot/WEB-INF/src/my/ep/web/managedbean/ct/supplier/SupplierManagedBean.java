@@ -17,6 +17,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -55,6 +56,10 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String accountNo="";
 	private boolean removeFactoring;
 	private Long loaId;
+	private Long contractId;
+	private SmSupplierBank supplierBank;
+	private String supplierAddress;
+	private String supplierBankAddress;
 	
 	public SupplierManagedBean(){
 		
@@ -252,6 +257,38 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setLoaId(Long loaId) {
 		this.loaId = loaId;
+	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+
+	public SmSupplierBank getSupplierBank() {
+		return supplierBank;
+	}
+
+	public void setSupplierBank(SmSupplierBank supplierBank) {
+		this.supplierBank = supplierBank;
+	}
+
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	public String getSupplierBankAddress() {
+		return supplierBankAddress;
+	}
+
+	public void setSupplierBankAddress(String supplierBankAddress) {
+		this.supplierBankAddress = supplierBankAddress;
 	}	
 	
 	
