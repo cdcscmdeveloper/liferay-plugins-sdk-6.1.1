@@ -975,12 +975,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename="+"testing22.xlsx");
+		response.setHeader("Content-Disposition", "attachment; filename="+"Catalogue-offline-template.xlsx");
 		response.flushBuffer();
 
-
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/excelUpload");
+		System.out.println("tempDir"+tempDir);
 		//Read Excel document first
-		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File(tempDir+"\\Catalogue-offline-template.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
@@ -1228,7 +1229,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/images");
 
 
-		//		String tempDir = "C://image//";
+		//String tempDir = "C://image//";
 
 		UploadedFile item = event.getFile();
 
