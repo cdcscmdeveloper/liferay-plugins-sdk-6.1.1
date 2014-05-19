@@ -774,6 +774,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			Double minOrder;
 			Double maxOrder;
 			Double leadTime;
+			Double paymentTerm;
 			//			Map map = new HashMap();
 
 			Row row = rowIterator.next();
@@ -827,19 +828,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						cmStandardPricing.setPrice(new BigDecimal(price));
 					}
 
-					if(row.getCell(8)!=null){
+					if(row.getCell(8)!=null && !row.getCell(8).toString().isEmpty()){
 						if(row.getCell(8).getCellType() == Cell.CELL_TYPE_NUMERIC)
 							startDate = row.getCell(8).getDateCellValue();
 						else if(row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING)
-							startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
+							startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).toString());
 						cmStandardPricing.setStartDate(startDate);
 					}
 
-					if(row.getCell(9)!=null){
+					if(row.getCell(9)!=null && !row.getCell(9).toString().isEmpty()){
 						if(row.getCell(9).getCellType() == Cell.CELL_TYPE_NUMERIC)
 							endDate =  row.getCell(9).getDateCellValue();
 						else if(row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING)
-							endDate =  new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
+							endDate =  new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).toString());
 						cmStandardPricing.setEndDate(endDate);
 					}
 
@@ -908,9 +909,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						catalogItem.setLeadTime(new BigDecimal(leadTime));
 					}
 
-					
+					if(row.getCell(19)!=null && !row.getCell(19).toString().isEmpty()){
+						paymentTerm =  row.getCell(19).getNumericCellValue();
+						catalogItem.setPaymentTerms(paymentTerm.toString());
+					}
 				}	
-				
+				//				map.put(name, desc);
 				rowNum++;
 			}
 
@@ -1112,7 +1116,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			dataLs.add(catalog.getMinOrder());
 			dataLs.add(catalog.getMaxOrder());
 			dataLs.add(catalog.getLeadTime());
-
+			dataLs.add(catalog.getPaymentTerms());
 			
 			addCellToRow(product, no++, dataLs, catalogCellStyle);
 
