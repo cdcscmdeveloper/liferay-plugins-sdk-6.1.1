@@ -100,12 +100,19 @@ public class EvaluationBackingBean extends
 	@PostConstruct
 	public void init() throws IOException {
 		try {
-
+            if(this.getManagedBean().getScQtMeetings()==null){
 			retriveDetails();
+            }
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void summaryChange(AjaxBehaviorEvent event){
+	String view=(String)event.getComponent().getAttributes().get("value");
+
+	this.getManagedBean().setSummaryViewBy(view);
 	}
 
 	public String retriveDetails() {
@@ -389,10 +396,9 @@ public class EvaluationBackingBean extends
 	}
 
 	public String evaluationBackaction() {
-		if (this.getManagedBean().getTabActiveIndex() == 1) {
+		
 			return "evaluationstage1view.xhtml";
-		}
-		return null;
+		
 	}
 
 	
@@ -578,8 +584,9 @@ public class EvaluationBackingBean extends
 	public String viewTechnicalEvaluation(ScQtCheckList checklist){
 		IQTEvaluationSO evaluationSo=null;
 		EvaluationResDTO resDTO=null;
+		this.getManagedBean().setScQtChecklist(checklist);
 		try{
-			this.getManagedBean().setScQtChecklist(checklist);
+			/*this.getManagedBean().setScQtChecklist(checklist);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -596,22 +603,122 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setComplianceTechnicalProposalCheckList(
 						resDTO
 						.getComplianceResultBean().getResultList());
+			}*/
+			if(184==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "technicalEvaluationStgView.xhtml";
+			}
+			if(185==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				//return "technicalSpecEvaluation.xhtml";
+				return "productServiceTechScoreSpec.xhtml";
+			}
+			else{
+				return "standardEvaluationTechList.xhtml";
+				//return "techGovCompanyExperience.xhtml";
+				//return "techPrivateCompanyExperience.xhtml";
+				//return "senariTechnical.xhtml";
+				//return "bilanganPerjaka.xhtml";
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	return "technicalEvaluationStgView.xhtml";
+	return null;
 	}
 	
 	public String evaluateTechnicalEvaluation(ScQtCheckList checklist){
 		try{
 			this.getManagedBean().setScQtChecklist(checklist);
+			if(184==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "technicalEvaluationEvaluateDocument.xhtml";	
+			}
+			if(185==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				//return "technicalSpecEvaluation.xhtml";
+				return "productServiceTechScoreSpec.xhtml";
+			}else{
+				return "standardEvaluationTechList.xhtml";
+				//return "techGovCompanyExperience.xhtml";
+				//return "techPrivateCompanyExperience.xhtml";
+				//return "senariTechnical.xhtml";
+				//return "bilanganPerjaka.xhtml";
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	return "technicalEvaluationEvaluateDocument.xhtml";
+	return null;
 	}
 	
+	
+	
+	public String viewfinacialEvaluation(ScQtCheckList checklist){
+		IQTEvaluationSO evaluationSo=null;
+		EvaluationResDTO resDTO=null;
+		this.getManagedBean().setScQtChecklist(checklist);
+		try{
+			/*this.getManagedBean().setScQtChecklist(checklist);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setCheckListId(checklist.getQtChecklistId());
+			resDTO = evaluationSo.retrieveComplianceDtls(reqDTO);
+			if (resDTO.getComplianceResultBean().getResultList() != null
+					&& resDTO.getComplianceResultBean().getResultList()
+							.isEmpty()) {
+				this.getManagedBean().setComplianceTechnicalProposalCheckList(
+						new ArrayList<ScQtProposalChecklist>());
+
+			} else {
+				
+				this.getManagedBean().setComplianceTechnicalProposalCheckList(
+						resDTO
+						.getComplianceResultBean().getResultList());
+			}*/
+			if(184==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "technicalEvaluationStgView.xhtml";
+			}
+			if(185==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "evaluationFinancialSpec.xhtml";
+			}
+			else{
+				return "standardEvaluationFinList.xhtml";
+				//return "standardEvaluationFinList.xhtml";
+				//return "finGovCompanyExperience.xhtml";
+				//return "finPrivateCompanyExperience.xhtml";
+				//return "bankStatement.xhtml";
+				//return "cashOnHand.xhtml";
+				//return "creditFacility.xhtml";
+				//return "assetsLiabilities.xhtml";
+				//return "paidUpCapital.xhtml";
+				//return "supplierInfo.xhtml";
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	return null;
+	}
+	
+	public String evaluatefinancialEvaluation(ScQtCheckList checklist){
+		try{
+			this.getManagedBean().setScQtChecklist(checklist);
+			if(184==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "financialEvaluationEvaluationDocument.xhtml";	
+			}
+			if(185==this.getManagedBean().getScQtChecklist().getDefinationType().getParameterId()){
+				return "evaluationFinancialSpec.xhtml";
+			}else{
+				return "standardEvaluationFinList.xhtml";	
+				//return "finGovCompanyExperience.xhtml";
+				//return "finPrivateCompanyExperience.xhtml";
+				//return "bankStatement.xhtml";
+				//return "cashOnHand.xhtml";
+				//return "creditFacility.xhtml";
+				//return "assetsLiabilities.xhtml";
+				//return "paidUpCapital.xhtml";
+				//return "supplierInfo.xhtml";
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	return null;
+	}
 
 	public void reportDownLoadZipFile() throws IOException {
 		List<File> files = new ArrayList<File>();
@@ -802,10 +909,7 @@ public class EvaluationBackingBean extends
 			ScQtMeeting meeting = new ScQtMeeting();
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
-
-			meeting.setChangedBy(1L);
-			meeting.setCreatedBy(1L);
-			meeting.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			 setUserDetails(meeting);
 			IStatusSO statussO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
@@ -835,17 +939,15 @@ public class EvaluationBackingBean extends
 			if (null == meetingAttendanceList) {
 				meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
 			}
-              System.out.println("======enter addTurutDetails method===");
+             
 			ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
-			meeting.setCreatedBy(1L);
-			meeting.setChangedBy(1L);
-			meeting.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			 setUserDetails(meeting);
 			meetingAttendanceList.add(meeting);
 
 			this.getManagedBean().setMeetingAttendanceList(
 					meetingAttendanceList);
-           System.out.println("====addTurutDetails==="+this.getManagedBean().getMeetingAttendanceList().size());
+           
 		} catch (Exception e) {
 			// e.printStackTrace();
 			throw new IllegalArgumentException();
@@ -914,20 +1016,20 @@ public class EvaluationBackingBean extends
 			}
 			
 
-			if (this.getManagedBean().getQtCommitteeRemarks() != null
-					&& !this.getManagedBean().getQtCommitteeRemarks().isEmpty()) {
-				for (ScQtCommitteRemarks remarks : this.getManagedBean()
-						.getQtCommitteeRemarks()) {
-
-					if (remarks.getRemark() == null || "".equals(remarks.getRemark()) ) {
-						this.getManagedBean().getQtCommitteeRemarks()
-								.remove(remarks);
+		
+		List<ScQtCommitteRemarks> remarksList=	this.getManagedBean().getQtCommitteeRemarks();
+			List<ScQtCommitteRemarks> committeeRemarks = null;
+			if (isNotNullOREmpty(remarksList)) {
+				committeeRemarks = new ArrayList<ScQtCommitteRemarks>();
+				for (ScQtCommitteRemarks remarks : remarksList) {
+					if (remarks.getRemark() != null && "" != remarks.getRemark()) {
+						committeeRemarks.add(remarks);
 					}
 
-					qtCommittee.setQtCommitteRemarks(this.getManagedBean()
-							.getQtCommitteeRemarks());
 				}
+
 			}
+			qtCommittee.setQtCommitteRemarks(committeeRemarks);
 			metReqDtO.setScQtCommitte(qtCommittee);
 			meetingso.saveQTDtl(metReqDtO);
 			FacesContext.getCurrentInstance().addMessage(
@@ -1036,6 +1138,11 @@ public class EvaluationBackingBean extends
 
 	public void removeFile() {
 		this.getManagedBean().setFileName(new String());
+	}
+	
+	public void reportUpload(){
+		System.out.println("yeye7348445459");
+		
 	}
 
 	/**
