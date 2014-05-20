@@ -110,7 +110,7 @@
 							style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
 
 							<div style="text-align: right;">
-								<p:commandButton
+								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}"
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} ) "></p:commandButton>
 								<p:commandButton value="#{lbl['lbl.sc.sq']}"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false)}"
@@ -158,7 +158,7 @@
 									<p:ajax event="toggleSelect"
 										update="@(.ui-button[id$=compareButton])" />
 
-									<p:column headerText="Image" width="80px;">
+									<p:column headerText="#{lbl['lbl.cm.image']}" width="80px;">
 										<p:graphicImage value="/images/#{supplierItem.imagePath}"
 											height="80" width="80" />
 
