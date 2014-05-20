@@ -81,9 +81,9 @@
 						<p:column headerText="Business Type" />
 						<p:column headerText="Category Type" />
 						<p:column headerText="PO Action"
-							rendered="#{backingBean.managedBean.poUser}" />
+							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 						<p:column headerText="Remarks"
-							rendered="#{backingBean.managedBean.poUser}" />
+							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
@@ -104,13 +104,24 @@
 					<h:outputText value="Special" rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:selectOneRadio layout="pageDirection" id="catPoAppr">
-						<f:selectItem itemLabel="Approve" itemValue="true" />
-						<f:selectItem itemLabel="Reject" itemValue="false" />
+					<p:selectOneRadio layout="pageDirection" id="catPoAppr"
+						value="#{catBean.poDecFlg}">
+						<f:selectItem itemLabel="Approve" itemValue="1" />
+						<f:selectItem itemLabel="Reject" itemValue="0" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:inputTextarea />
+					<p:inputTextarea value="#{catBean.poRemarks}" />
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.approverUser}">
+					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+						value="#{catBean.apprvrDecFlg}">
+						<f:selectItem itemLabel="Approve" itemValue="1" />
+						<f:selectItem itemLabel="Reject" itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.approverUser}">
+					<p:inputTextarea value="#{catBean.approverRemarks}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -153,9 +164,10 @@
 	<p:dialog width="750px" header="Category Code Information"
 		widgetVar="regCatDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="regCatDialog">
-		<p:messages id="regCatCodeMsg" showSummary="true" showDetail="true"
-			autoUpdate="true" closable="true" />
+
 		<p:outputPanel id="catPanel">
+			<p:messages id="regCatCodeMsg" showSummary="true" showDetail="true"
+				autoUpdate="true" closable="true" />
 			<table style="width: 100%">
 
 				<tr>
@@ -217,7 +229,7 @@
 							<p:commandButton value="Save"
 								action="#{backingBean.saveSelectedCategory}" type="submit"
 								partialSubmit="true" process="regCatDialog"
-								update=":form:tt:catDt, :form" />
+								update=":form:tt:catDt" />
 							<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
 						</div>
 					</td>

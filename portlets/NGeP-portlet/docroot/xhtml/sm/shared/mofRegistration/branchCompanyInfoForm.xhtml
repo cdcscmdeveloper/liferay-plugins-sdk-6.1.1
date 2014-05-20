@@ -44,23 +44,34 @@
 			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
+
 			<p:dataTable var="branchBean" id="dt"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
 				rowKey="#{branchBean}" rowIndexVar="index">
 				<ac:paginator for="dt" />
 
-				<p:column selectionMode="multiple" width="5%" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column selectionMode="multiple" width="5%" />
+						<p:column headerText="Branch Name" />
+						<p:column headerText="Address" />
+						<p:column headerText="Action" />
+						<p:column headerText="Status" />
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple" width="5%"
+					rendered="#{branchBean.recordStatus}" />
 
-				<p:column headerText="Branch Name">
+				<p:column rendered="#{branchBean.recordStatus}">
 					<h:outputText value="#{branchBean.branchName}" />
 				</p:column>
 
-				<p:column headerText="Address">
+				<p:column rendered="#{branchBean.recordStatus}">
 					<h:outputText
 						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 				</p:column>
-				<p:column headerText="Action">
+				<p:column rendered="#{branchBean.recordStatus}">
 					<p:commandLink id="selectButton" update=":form:tt:display"
 						oncomplete="banchDialog.show();"
 						action="#{backingBean.assignSelBranch(branchBean,index)}">
@@ -68,9 +79,12 @@
 							value="/resources/ep/images/design/edit.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
-
+				</p:column>
+				<p:column rendered="#{branchBean.recordStatus}">
+					<h:outputText value="#{branchBean.recordStatus}" />
 				</p:column>
 			</p:dataTable>
+
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add"

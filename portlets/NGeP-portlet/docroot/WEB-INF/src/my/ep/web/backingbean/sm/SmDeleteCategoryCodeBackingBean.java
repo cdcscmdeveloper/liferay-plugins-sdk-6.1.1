@@ -61,7 +61,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 			}
 			System.out.println("Retrieved Value ==="
 					// + smApplSupplier.getSupplierName() + " ==== tax num == "
-					+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
+					//+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
 					+ smApplSupplier.getEstablishDate());
 			System.out.println("******** SIZE ********** "
 					+ smApplSupplier.getSmAppls().size());
@@ -80,7 +80,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 				sublvl1.setCategoryL3Code(String.valueOf(i + 1));
 				sublvl1.setCategoryName("Sub - Child" + (i + 1));
 				SmSupplierCategory cat = new SmSupplierCategory();
-				cat.setSupplierCategoryId((i + 1));
+				//cat.setSupplierCategoryId((i + 1));
 				if (i % 3 == 0) {
 					cat.setSpecialCategory(true);
 				} else {

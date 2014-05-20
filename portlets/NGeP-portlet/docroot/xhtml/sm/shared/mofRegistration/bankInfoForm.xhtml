@@ -293,10 +293,10 @@
 				<tr>
 					<td><p:outputLabel value="* Associated Branch"
 							id="banBranchLbl"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P'}" /></td>
+							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" /></td>
 					<td><p:selectOneMenu showCheckbox="true"
 							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P'}"
+							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}"
 							value="#{backingBean.managedBean.selectedBank.smSupplierBranch.supplierBranchId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems

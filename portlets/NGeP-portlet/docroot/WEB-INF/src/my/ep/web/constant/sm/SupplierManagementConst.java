@@ -60,6 +60,7 @@ public class SupplierManagementConst {
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 18;
 	public static final int ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
+	public static final int RECORD_DELETED = 1;
 
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
@@ -245,6 +246,10 @@ public class SupplierManagementConst {
 
 	public static String getSpecialService() {
 		return SPECIAL_SERVICE;
+	}
+
+	public static int getRECORD_DELETED() {
+		return RECORD_DELETED;
 	}
 
 }
