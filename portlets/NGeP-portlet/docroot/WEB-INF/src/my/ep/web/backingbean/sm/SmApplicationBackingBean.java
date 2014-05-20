@@ -82,6 +82,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -156,45 +157,84 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
 			if (!fromBpm) {
+				
+				boolean cannotRenewAlertMsg = false;
+				
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
+				} else if (applicationType.equalsIgnoreCase("R")) {
+					
+					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+							.getInstance().getServiceObject("sm",
+									IMofRegistrationSO.class);
+					
+					reqDto.setSupplierId((long) 27);
+					resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
+					
+					if(resDto.getSmSupplier() != null){
+						
+						SmSupplier smSupplier = resDto.getSmSupplier();
+						List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
+						
+						for(SmMofAccount account : accounts){
+							if(account.getSupplierType().equalsIgnoreCase(smSupplier.getSmAppl().getSupplierType())){
+								
+								long diff = account.getExpDate().getTime() - (new Date()).getTime();
+								long diffDays = diff / (24 * 60 * 60 * 1000);
+								
+								if(diffDays > 90){
+									cannotRenewAlertMsg = true;
+								}
+							}
+						}
+					}
 				}
-				resDto = cloneSmApplicationDraft((long) 27, applicationType,
-						smAppl.getSupplierType());
-				if (resDto.isErrorCaued()) {
+				if(cannotRenewAlertMsg){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
+									""));		
 					return setExceptionNavigationForAppl(applicationType);
-
+				} else {
+				
+					resDto = cloneSmApplicationDraft((long) 27, applicationType,
+							smAppl.getSupplierType());
+					if (resDto.isErrorCaued()) {
+						return setExceptionNavigationForAppl(applicationType);
+	
+					}
+					smApplSupplier = resDto.getSmSupplier();
+	
+					resDto = retriveLatestDraftApplication(smApplSupplier,
+							applicationType);
+					if (resDto.isErrorCaued()) {
+						return setExceptionNavigationForAppl(applicationType);
+					}
+	
+					smAppl = resDto.getSmAppl();
+	
+					System.out.println("Retrieved Value ==="
+							+ smAppl.getSmCompanyBasic().getIncomeTaxNo()
+							+ " === EST DATE ==== "
+							+ smApplSupplier.getEstablishDate());
+					System.out
+							.println("******** Latest Cloned Draft Copy is ******"
+									+ smAppl.getApplId()
+									+ "--- Basic info ---"
+									+ smAppl.getSmCompanyBasic()
+											.getCompanyBasicId() + " --- "
+									+ smAppl.getSmCompanyBasic().getCompanyName()
+									+ " --- Supplier Type ---"
+									+ smAppl.getSupplierType());
+					System.out
+							.println("******** After clone the basic address list *******"
+									+ smAppl.getSmCompanyBasic());
+					// TODO Set default not null values -- End insert appl ---
+					// TODo Remove hard code later
+					smAppl.setApplCategoryType(null);
 				}
-				smApplSupplier = resDto.getSmSupplier();
-
-				resDto = retriveLatestDraftApplication(smApplSupplier,
-						applicationType);
-				if (resDto.isErrorCaued()) {
-					return setExceptionNavigationForAppl(applicationType);
-				}
-
-				smAppl = resDto.getSmAppl();
-
-				System.out.println("Retrieved Value ==="
-						+ smAppl.getSmCompanyBasic().getIncomeTaxNo()
-						+ " === EST DATE ==== "
-						+ smApplSupplier.getEstablishDate());
-				System.out
-						.println("******** Latest Cloned Draft Copy is ******"
-								+ smAppl.getApplId()
-								+ "--- Basic info ---"
-								+ smAppl.getSmCompanyBasic()
-										.getCompanyBasicId() + " --- "
-								+ smAppl.getSmCompanyBasic().getCompanyName()
-								+ " --- Supplier Type ---"
-								+ smAppl.getSupplierType());
-				System.out
-						.println("******** After clone the basic address list *******"
-								+ smAppl.getSmCompanyBasic());
-				// TODO Set default not null values -- End insert appl ---
-				// TODo Remove hard code later
-				smAppl.setApplCategoryType(null);
 			} else {
 				System.out
 						.println("******* This is PO or Approver from BPM ************");
