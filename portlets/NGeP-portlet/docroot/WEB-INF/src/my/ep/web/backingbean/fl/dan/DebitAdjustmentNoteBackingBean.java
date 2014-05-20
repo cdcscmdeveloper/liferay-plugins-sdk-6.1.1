@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.dan;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.ChargeLineVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
@@ -133,21 +135,38 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	
 	private void populateChargeLineTree(FlAdjustment adjustment) {
 		Map<Long, TreeNode> chargeLineMap = new HashMap<Long, TreeNode>();
-		
+
 		TreeNode root = getManagedBean().getDanChargeLineTree();
+		root = new DefaultTreeNode("root", null);
 		TreeNode parent = null;
 		TreeNode child = null;
+		BigDecimal sumOrderedAmt = new BigDecimal(0);
+		BigDecimal sumInvoiceAmt = new BigDecimal(0);
+		BigDecimal sumDanAmt = new BigDecimal(0);
+		
+		
 		for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
 			if(chargeLineMap.containsKey(adjustmentItem.getFlItem().getCmItem().getItemId())){
 				parent = chargeLineMap.get(adjustmentItem.getFlItem().getCmItem().getItemId());
-				child = new DefaultTreeNode(adjustmentItem, parent);
+				child = new DefaultTreeNode(
+						new ChargeLineVO("","","",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),parent);
+				
+				ChargeLineVO chargeLineVO = (ChargeLineVO)parent.getData();
+				sumOrderedAmt = chargeLineVO.getOrderedAmt().add(adjustmentItem.getFlInvoiceItem().getOrderedAmt());
+				sumInvoiceAmt = chargeLineVO.getInvoiceAmt().add(adjustmentItem.getFlInvoiceItem().getInvAmt());
+				sumDanAmt = chargeLineVO.getDanAmt().add(adjustmentItem.getAdjustedAmt());
+				chargeLineVO.setOrderedAmt(sumOrderedAmt);
+				chargeLineVO.setInvoiceAmt(sumInvoiceAmt);
+				chargeLineVO.setDanAmt(sumDanAmt);
 			}else{
-				parent = new DefaultTreeNode(adjustmentItem,root);
-				child = new DefaultTreeNode(adjustmentItem,parent);
+				parent = new DefaultTreeNode(
+						new ChargeLineVO(adjustmentItem.getFlItem().getCmItem().getExtensionCode(),adjustmentItem.getFlItem().getCmItem().getItemName(),"",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),root);
+				child = new DefaultTreeNode(
+						new ChargeLineVO("","","",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),parent);
 				chargeLineMap.put(adjustmentItem.getFlItem().getCmItem().getItemId(),parent);
 			}
-			
 		}
-		
+		getManagedBean().setDanChargeLineTree(root);
 	}
+
 }
