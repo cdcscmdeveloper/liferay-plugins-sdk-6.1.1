@@ -93,6 +93,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int evaluatioStageActiveIndex;
 	private List<ScQtCheckList> evaluationStgTechnicalCheckList;
 	private List<ScQtCheckList> evaluationStgfinancialCheckList;
+	private String summaryViewBy;
 	
 
 	
@@ -1029,6 +1030,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationStgfinancialCheckList(
 			List<ScQtCheckList> evaluationStgfinancialCheckList) {
 		this.evaluationStgfinancialCheckList = evaluationStgfinancialCheckList;
+	}
+
+	/**
+	 * @return the summaryViewBy
+	 */
+	public String getSummaryViewBy() {
+		return summaryViewBy;
+	}
+
+	/**
+	 * @param summaryViewBy the summaryViewBy to set
+	 */
+	public void setSummaryViewBy(String summaryViewBy) {
+		this.summaryViewBy = summaryViewBy;
 	}
 
 	
