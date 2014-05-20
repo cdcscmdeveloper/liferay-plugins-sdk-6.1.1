@@ -208,9 +208,7 @@ public class EvaluationMeetingBackingBean extends
 
 		remark = new ScQtCommitteRemarks();
 		List<ScQtRemark> qtRemarkList = new ArrayList<ScQtRemark>();
-		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		remark.setChangedBy(remark.getCreatedBy());
+		 setUserDetails(remark);
 		remark.setCreatedUser(facesScopes.getUserSessionBean());
 		remark.setScQtCommittee(this.getManagedBean().getScQtCommittee());
 		PmStatus status = new PmStatus();
@@ -239,10 +237,9 @@ public class EvaluationMeetingBackingBean extends
 			ScQtMeeting meeting = new ScQtMeeting();
 
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
+			setUserDetails(meeting);
 			meetingList.add(meeting);
-			meeting.setChangedBy(1L);
-			meeting.setCreatedBy(1L);
-			meeting.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			
 			IStatusSO statussO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
@@ -348,9 +345,10 @@ public class EvaluationMeetingBackingBean extends
 			member.setAccessRight("E");
 			member.setScCommittee(this.getManagedBean().getScQtCommittee()
 					.getScCommittee());
-			member.setCreatedBy(1L);
-			member.setChangedBy(1L);
-			member.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			setUserDetails(member);
+			//member.setCreatedBy(1L);
+			//member.setChangedBy(1L);
+			//member.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			// member.setPmOrgProfile(scQt.getPmOrgProfile());
 
 			// member.setScCommittee(scCommittee);
@@ -363,9 +361,10 @@ public class EvaluationMeetingBackingBean extends
 			user.setGrade(member.getGrade());
 			user.setPMP(member.isPNP());
 			user.setEmail(member.getEmail());
-			user.setChangedBy(1L);
-			user.setCreatedBy(1L);
-			user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			setUserDetails(user);
+			//user.setChangedBy(1L);
+			//user.setCreatedBy(1L);
+			//user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 			// Identification Code
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -507,19 +506,24 @@ public class EvaluationMeetingBackingBean extends
 				qtCommittee.setCommitteeActivities(scQtCommitteeActivity);
 			}
 
-			List<ScQtCommitteRemarks> committeeRemarks = this.getManagedBean()
-					.getQtCommitteeRemarks();
 			
-			if (committeeRemarks != null && !committeeRemarks.isEmpty()) {
-				for (ScQtCommitteRemarks remarks : committeeRemarks) {
-					
-					if (remarks.getRemark() == null) {
-						committeeRemarks.remove(remarks);
-					} 
-					
-					qtCommittee.setQtCommitteRemarks(committeeRemarks);
+			
+			
+			List<ScQtCommitteRemarks> remarksList=	this.getManagedBean()
+					.getQtCommitteeRemarks();
+			List<ScQtCommitteRemarks> committeeRemarks = null;
+			if (isNotNullOREmpty(remarksList)) {
+				committeeRemarks = new ArrayList<ScQtCommitteRemarks>();
+				for (ScQtCommitteRemarks remarks : remarksList) {
+					if (remarks.getRemark() != null && "" != remarks.getRemark()) {
+						committeeRemarks.add(remarks);
+					}
+
 				}
+
 			}
+			qtCommittee.setQtCommitteRemarks(committeeRemarks);
+			qtCommittee.setQtCommitteRemarks(committeeRemarks);
 			qtCommittee.setMeetingAttendances(null);
 			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
