@@ -935,7 +935,7 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase("J")) {
 					if (per.getStaffRoleFlg() != null
 							&& per.getStaffRoleFlg() == 833
-							&& per.getEpfNo() != null) {
+							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						// for (SmStaffAcademic aca : per.getSmStaffAcademics())
 						// {
 						// if (aca.getQualificationLevelId() == 123) {
@@ -948,7 +948,7 @@ public class SmApplicationBackingBean extends
 
 					} else if (per.getStaffRoleFlg() != null
 							&& per.getStaffRoleFlg() == 831
-							&& per.getEpfNo() != null) {
+							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
 									&& aca.getQualificationLevelId() <= 85) {
@@ -959,7 +959,7 @@ public class SmApplicationBackingBean extends
 
 					} else if (per.getStaffRoleFlg() != null
 							&& per.getStaffRoleFlg() == 832
-							&& per.getEpfNo() != null) {
+							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
 									&& aca.getQualificationLevelId() <= 86) {
@@ -1866,52 +1866,15 @@ public class SmApplicationBackingBean extends
 		// System.out.println(" ******* Save From Selection ****"
 		// + getManagedBean().getSelectedCategory().getCategoryType());
 		boolean validCat = true;
+		System.out.println("***** cat id ********"
+				+ getManagedBean().getSelectedCategory().getPmCategoryL1()
+						.getCategoryL1Id());
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1()
-				.getCategoryL1Id().equals(21)
-				&& getManagedBean().getSmAppl().getSupplierType()
-						.equalsIgnoreCase("J")) {
-			int prfCnt = 0;
-			int semPrfCnt = 0;
-			for (SmPersonnel per : getManagedBean().getSmAppl()
-					.getSmPersonnels()) {
-				if (per.getStaffRoleFlg() == 831
-						&& per.getWorkExperienceYear() >= 5) {
-					prfCnt = prfCnt + 1;
-
-				} else if (per.getStaffRoleFlg() == 832
-						&& per.getWorkExperienceYear() >= 5) {
-
-					semPrfCnt = semPrfCnt + 1;
-
-				}
-				if (prfCnt > 0 && semPrfCnt > 0) {
-					break;
-				}
-			}
-			if (semPrfCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid semi professional staff is required : ",
-										"At least one semi professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
-				validCat = false;
-			}
-			if (prfCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid professional staff is required : ",
-										"At least one professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
-				validCat = false;
-			}
-
+				.getCategoryL1Id() == 21) {
+			System.out.println("****** Selected ICT ************");
+			validCat = validateIctCatCode();
 		}
+
 		if (validCat) {
 			for (PmCategoryL1 catL1 : getManagedBean()
 					.getSupplierParentCatList()) {
@@ -3989,6 +3952,7 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			System.out
 					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			e.printStackTrace();
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
 			return resDTO;
@@ -4695,7 +4659,7 @@ public class SmApplicationBackingBean extends
 		int authPerCount = 0;
 		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
 			if (per.getAuthorizedFlg() == 1) {
-				authPerCount++;
+				authPerCount = authPerCount + 1;
 			}
 			// if (per.getSmPersonnelAddresses().isEmpty()) {
 			// System.out
@@ -4937,5 +4901,151 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return validUser;
+	}
+
+	private boolean validateIctCatCode() {
+		boolean validCat = true;
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase("J")) {
+			int prfCnt = 0;
+			int semPrfCnt = 0;
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (per.getStaffRoleFlg() != null
+						&& per.getStaffRoleFlg() == 831
+						&& per.getWorkExperienceYear() >= 5) {
+					prfCnt = prfCnt + 1;
+
+				} else if (per.getStaffRoleFlg() != null
+						&& per.getStaffRoleFlg() == 832
+						&& per.getWorkExperienceYear() >= 5) {
+
+					semPrfCnt = semPrfCnt + 1;
+
+				}
+				if (prfCnt > 0 && semPrfCnt > 0) {
+					break;
+				}
+			}
+			if (semPrfCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid semi professional staff is required : ",
+										"At least one semi professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
+			}
+			if (prfCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid professional staff is required : ",
+										"At least one professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
+			}
+
+		}
+
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase("K")) {
+			System.out.println("***** Validate ICT For contractor ********");
+
+			int ownrCnt = 0;
+			int stfCnt = 0;
+			int dirCnt = 0;
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (per.isEquityOwner() && per.getEpfNo() != null
+						&& per.getEpfNo() != "") {
+					ownrCnt = ownrCnt + 1;
+
+				} else if (per.isDirector() && per.getEpfNo() != null
+						&& per.getEpfNo() != "") {
+					dirCnt = dirCnt + 1;
+
+				} else if (per.getStaffRoleFlg() != null
+						&& per.getStaffRoleFlg() == 835
+						&& per.getEpfNo() != null && per.getEpfNo() != "") {
+
+					stfCnt = stfCnt + 1;
+
+				}
+				if (stfCnt > 0 && dirCnt > 0 && ownrCnt > 0) {
+					break;
+				}
+			}
+			if (stfCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid staff is required : ",
+										"At least one staff with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
+			}
+			if (ownrCnt < 1) {
+				System.out.println("****** No OWNER ********** ");
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid owner is required : ",
+										"At least one equity owner with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
+			}
+			if (dirCnt < 1) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Valid director is required : ",
+										"At least one director with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
+				validCat = false;
+			}
+
+		}
+		if (validCat) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (getManagedBean().getSelectedCategory().getPmCategoryL3()
+						.getCategoryL3Id() != 99
+						&& getManagedBean().getSelectedCategory()
+								.getPmCategoryL3().getCategoryL3Id() == cat
+								.getPmCategoryL3().getCategoryL3Id()
+						&& getManagedBean().getSelectedCategory()
+								.getPmCategoryL2().getCategoryL2Id() == cat
+								.getPmCategoryL2().getCategoryL2Id()
+						&& getManagedBean().getSelectedCategory()
+								.getPmCategoryL1().getCategoryL1Id() == cat
+								.getPmCategoryL1().getCategoryL1Id()) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Already Exists : ",
+											"The requested category already exists.Please select another category."));
+					validCat = false;
+					break;
+
+				}
+			}
+		}
+
+		return validCat;
+
 	}
 }
