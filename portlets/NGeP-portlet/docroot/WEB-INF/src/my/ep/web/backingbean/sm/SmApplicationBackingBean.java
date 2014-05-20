@@ -158,46 +158,29 @@ public class SmApplicationBackingBean extends
 
 			if (!fromBpm) {
 				
-				boolean cannotRenewAlertMsg = false;
+				int cannotRenewAlertMsg = 0;
 				
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
 				} else if (applicationType.equalsIgnoreCase("R")) {
-					
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-							.getInstance().getServiceObject("sm",
-									IMofRegistrationSO.class);
-					
-					reqDto.setSupplierId((long) 27);
-					resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
-					
-					if(resDto.getSmSupplier() != null){
-						
-						SmSupplier smSupplier = resDto.getSmSupplier();
-						List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
-						
-						for(SmMofAccount account : accounts){
-							if(account.getSupplierType().equalsIgnoreCase(smSupplier.getSmAppl().getSupplierType())){
-								
-								long diff = account.getExpDate().getTime() - (new Date()).getTime();
-								long diffDays = diff / (24 * 60 * 60 * 1000);
-								
-								if(diffDays > 90){
-									cannotRenewAlertMsg = true;
-								}
-							}
-						}
-					}
+					cannotRenewAlertMsg = validateBeforeRenewal((long) 27);
 				}
-				if(cannotRenewAlertMsg){
+				if(cannotRenewAlertMsg == 1){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
 									"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
 									""));		
 					return setExceptionNavigationForAppl(applicationType);
-				} else {
+				} else if(cannotRenewAlertMsg == 2){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									"Cannot renew as account is no longer active. Please register anew.",
+									""));		
+					return setExceptionNavigationForAppl(applicationType);
+				}else {
 				
 					resDto = cloneSmApplicationDraft((long) 27, applicationType,
 							smAppl.getSupplierType());
@@ -380,6 +363,41 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	private int validateBeforeRenewal(Long supplierId){
+		
+		int result = 0;
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						IMofRegistrationSO.class);
+		
+		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		
+		reqDto.setSupplierId(supplierId);
+		resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
+		
+		if(resDto.getSmSupplier() != null){
+			
+			SmSupplier smSupplier = resDto.getSmSupplier();
+			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
+			
+			for(SmMofAccount account : accounts){
+				if(account.getSupplierType().equalsIgnoreCase(smSupplier.getSmAppl().getSupplierType())){
+					
+					long diff = account.getExpDate().getTime() - (new Date()).getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000);
+					
+					if(diffDays > 90){
+						result = 1;
+					} else if(diffDays < -365){
+						result = 2;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
 	// TODO Remove the method added only for demo purpose
 	public void assignTaskListSampleForDemo(String bpmApplType) {
 
