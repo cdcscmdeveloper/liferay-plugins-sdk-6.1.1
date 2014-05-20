@@ -17,9 +17,9 @@
 				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset"
 				update="taskListId"></p:commandButton>
 		</div>
-	<div style="text-align: left; margin-right: 2px;margin-top:8px; float: right;width: 150px;">
+	<div style="text-align: left; margin-right: 5px;margin-top:8px; float: right;">
 
-			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.viewBy}">
+			<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.viewBy}">
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}"
@@ -37,7 +37,7 @@
 		<p:spacer width="2px"></p:spacer>
 		<div style="text-align: left; margin-right: 20px;margin-top:8px; float: right;width: 150px;">
 
-			<p:selectOneMenu
+			<p:selectOneMenu style="width: 150px;"
 				value="#{bpmTasklistBackingBean.managedBean.assignment}">
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.me.n.my.group']}"
 					itemValue="ALL"></f:selectItem>
