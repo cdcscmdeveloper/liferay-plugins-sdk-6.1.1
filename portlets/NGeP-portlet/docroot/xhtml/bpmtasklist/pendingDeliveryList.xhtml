@@ -10,13 +10,14 @@
 	<h:panelGroup id="pendingDeliveryListID" >
 
 
-
-		<div style="text-align: left; float: left;">
+ <div class="tabmenu-button-wrapper">
+ 
+		<div style="text-align: left; float: right;margin-right: 2px;">
 			<p:commandButton action="#{bpmTasklistBackingBean.refreshPendingDeliveryList}"
 				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset"
 				update="pendingDeliveryTableId"></p:commandButton>
 		</div>
-
+</div>
 		<div class="clear"></div>
 
 		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.flFulfilmentOrderList}"

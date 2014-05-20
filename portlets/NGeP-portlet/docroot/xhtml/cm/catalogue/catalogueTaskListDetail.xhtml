@@ -1,39 +1,40 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	    <h:panelGroup id="catalogueTaskListId">
-	    <div style="text-align: left; float: left;">
-			<p:commandButton action="#{reviewCatBackingBean.refreshCatalogueList}"
-				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset"
-				update="catalogueTableId"></p:commandButton>
+	<h:panelGroup id="catalogueTaskListId">
+		<div class="tabmenu-button-wrapper">
+			<div style="text-align: left; float: right;margin-right: 2px;">
+				<p:commandButton
+					action="#{reviewCatBackingBean.refreshCatalogueList}"
+					value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset"
+					update="catalogueTableId"></p:commandButton>
+			</div>
 		</div>
-
 		<div class="clear"></div>
-			<p:remoteCommand name="reviewCat"
-				action="#{reviewCatBackingBean.navigateToCatalogDet}" />
+		<p:remoteCommand name="reviewCat"
+			action="#{reviewCatBackingBean.navigateToCatalogDet}" />
 
-			<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId"
-				value="#{reviewCatBackingBean.managedBean.reviewSupplierItems}"
-				var="review" selectionMode="single"
-				selection="#{reviewCatBackingBean.managedBean.selectedReviewCat}">
+		<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId"
+			value="#{reviewCatBackingBean.managedBean.reviewSupplierItems}"
+			var="review" selectionMode="single"
+			selection="#{reviewCatBackingBean.managedBean.selectedReviewCat}">
 
-				<p:ajax event="rowSelect" oncomplete="reviewCat();" />
+			<p:ajax event="rowSelect" oncomplete="reviewCat();" />
 
-				<p:column>
-					<f:facet name="header">
+			<p:column>
+				<f:facet name="header">
 						#{lbl['lbl.cm.item.name']}
 					</f:facet>
 			
 			#{review.cmItem.itemName}
 
 		</p:column>
-				<p:column>
-					<f:facet name="header">
+			<p:column>
+				<f:facet name="header">
 						Supplier Name
 					</f:facet>
 			
@@ -41,14 +42,14 @@
 
 		</p:column>
 
-				<p:column>
-					<f:facet name="header">
+			<p:column>
+				<f:facet name="header">
 						Submitted Date
 					</f:facet>
 			
 			#{review.changedDate}
 
 		</p:column>
-			</p:dataTable>
-</h:panelGroup>
+		</p:dataTable>
+	</h:panelGroup>
 </ui:composition>
