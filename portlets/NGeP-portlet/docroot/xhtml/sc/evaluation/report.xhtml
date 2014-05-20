@@ -7,9 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!--  <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" />  -->
+<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml" />
 
-
-	<p:panel header="#{lbl['lbl.sc.eva.report.contents']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.eva.report.contents']}"
+		toggleable="true">
 		<p:dataTable id="evaluationreport" width="100%" cellpadding="1"
 			rowIndexVar="rowIndex"
 			value="#{evaluationBackingBean.managedBean.evaluationReportListItems}"
@@ -22,7 +23,8 @@
 						headerText="#{lbl['lbl.sc.eva.report.content']}">
 					</p:column>
 					<p:column colspan="1" rendered="true"
-						style="text-align:left; vertical-align:top;" headerText="#{lbl['lbl.sc.eva.report.type']}">
+						style="text-align:left; vertical-align:top;"
+						headerText="#{lbl['lbl.sc.eva.report.type']}">
 					</p:column>
 					<p:column colspan="1" rendered="true"
 						style="text-align:left; vertical-align:top;"
@@ -43,7 +45,8 @@
 					<h:outputText value="Appendix"></h:outputText>
 				</p:column>
 				<p:column>
-					<p:commandLink ajax="false" value="#{lbl['lbl.sc.eva.report.download']}"
+					<p:commandLink ajax="false"
+						value="#{lbl['lbl.sc.eva.report.download']}"
 						actionListener="#{evaluationBackingBean.reportDownLoad}">
 
 					</p:commandLink>
@@ -52,7 +55,8 @@
 			</p:subTable>
 		</p:dataTable>
 		<div align="right" style="width: 80%">
-			<p:commandButton ajax="false" value="#{lbl['lbl.sc.eva.report.download.all']}"
+			<p:commandButton ajax="false"
+				value="#{lbl['lbl.sc.eva.report.download.all']}"
 				actionListener="#{evaluationBackingBean.reportDownLoadZipFile}" />
 
 		</div>
@@ -67,20 +71,21 @@
 
 			<h:panelGroup>
 
-
-				<p:commandButton oncomplete="reportDlg.show();"
-					icon="iconAttachment" update="report" value="Attach file(s)" />
+				
+				<p:commandButton onclick="uploadDlg.show();return false;" ajax="false" process="@this" partialSubmit="true"
+					icon="iconAttachment" update="reportMangaFile" 
+					value="Attach file(s)" actionListener="#{evaluationBackingBean.reportUpload}"/>
 
 			</h:panelGroup>
-		</h:panelGrid>
-
-		<h:panelGrid columns="3" id="report">
+			
+			
+			<h:panelGrid columns="3" id="evaluationReport">
 
 			<p:spacer width="40"></p:spacer>
-			<p:outputLabel id="reportfile"
+			<p:outputLabel id="evauploadfile"
 				value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
 			<p:commandLink actionListener="#{evaluationBackingBean.removeFile}"
-				process="@this,report" update="reportfile" partialSubmit="true"
+				process="@this,evaluationReport" update="evaluationReport" partialSubmit="true"
 				style="width:40%;">
 				<p:graphicImage library="ep/images/design" name="delete.png"
 					value="/resources/ep/images/design/delete.png" />
@@ -88,6 +93,9 @@
 			</p:commandLink>
 
 		</h:panelGrid>
+		</h:panelGrid>
+
+
 
 	</p:panel>
 

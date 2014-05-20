@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+		toggleable="true">
+
+		<p:dataTable var="prefQualSupplier" id="prefQualSupplierId"
+			editable="true" rowIndexVar="index" rowKey="#{qualifiedSupplier}">
+			<ac:paginator for="prefQualSupplierId" />
+
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.ranking']}"
+				style="width:10%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+				style="width:10%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
+				style="width:20%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
+				style="width:20%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
+				style="width:15%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
+				style="width:25%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+
+		</p:dataTable>
+
+
+	</p:panel>
+
+	<p:panel>
+		<table>
+
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+			</tr>
+
+		</table>
+	</p:panel>
+
+
+
+	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+		toggleable="true">
+
+		<p:dataTable var="disQualifiedSupplier" id="prefDisQualSupId"
+			editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+			<ac:paginator for="prefDisQualSupId" />
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+				style="width:15%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
+				style="width:25%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
+				style="width:20%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
+				style="width:15%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
+				style="width:25%">
+
+				<h:outputText></h:outputText>
+
+
+			</p:column>
+
+
+		</p:dataTable>
+
+
+	</p:panel>
+
+	<p:panel>
+		<table>
+
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+			</tr>
+
+		</table>
+	</p:panel>
+
+
+</ui:composition>

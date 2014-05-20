@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:right;" />
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save" />
+
+
+
+		</div>
+
+
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td style="width: 100px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<p:panel>
+
+			<p:tabView id="supplietrtabView" dynamic="true">
+
+				<p:tab id="tab1" title="#{lbl['lbl.sc.spec.tabs.title']}"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/supplierDetails.xhtml" />
+				</p:tab>
+
+
+
+				<p:tab id="tab2" title="Branch/Assocs"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/branchInfo.xhtml" />
+				</p:tab>
+
+				<p:tab id="tab3" title="Capital Info"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/capitalInfo.xhtml" />
+
+
+				</p:tab>
+
+				<p:tab id="tab4" title="Personnel"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/personnelInfo.xhtml" />
+
+
+				</p:tab>
+
+				<p:tab id="tab5" title="Bank Info"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/bankInfo.xhtml" />
+
+				</p:tab>
+
+				<p:tab id="tab6" title="Category Codes"
+					styleClass="noBorders tr,noBorders td">
+					<ui:include src="/xhtml/sc/specification/category.xhtml" />
+
+				</p:tab>
+
+			</p:tabView>
+		</p:panel>
+	</ui:define>
+
+
+
+
+
+</ui:composition>

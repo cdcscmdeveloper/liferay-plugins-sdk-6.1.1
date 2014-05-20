@@ -1,0 +1,202 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save"
+				action="#{evaluationBackingBean.saveComplianceSample}" />
+		</div>
+
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td style="width: 100px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+			toggleable="true">
+			<p:dataTable var="assetLiability" id="evaluateAssetsId"
+				rowIndexVar="index" style="width:100%" rowKey="#{creditFacility}">
+				<ac:paginator for="evaluateAssetsId" />
+
+
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+					style="width:90%">
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+					style="width:10%">
+
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.spec.asset.assets']}" toggleable="true">
+			<p:dataTable id="assetsCode" rowIndexVar="index" var="factory">
+				<ac:paginator for="assetsCode"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.assets']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.type']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.doc.ref.num']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.amount']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+
+			</p:dataTable>
+
+
+		</p:panel>
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+			<h:outputLabel value="#{lbl['lbl.sc.spec.asst.tot.fix.assets']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+		</h:panelGrid>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.liabilities']}" toggleable="true">
+			<p:dataTable id="liabilitiesCode" rowIndexVar="index" var="factory">
+				<ac:paginator for="liabilitiesCode"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.type']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.desc']}">
+					<p:inputText></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.doc.ref.num']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.amount']}">
+					<p:inputText></p:inputText>
+				</p:column>
+
+
+
+			</p:dataTable>
+
+
+		</p:panel>
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.cur']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.fix']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+		</h:panelGrid>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.asset.summary']}"
+			toggleable="true">
+
+			<p:panelGrid style="margin-top:20px;width:100%;">
+				<f:facet name="header">
+
+					<p:row>
+						<p:column colspan="1"></p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.current']}</p:column>
+						<p:column colspan="1">#{lbl['lbl.sc.spec.fixed']}</p:column>
+						<p:column>#{lbl['lbl.sc.spec.total.asset']}</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.asset']}</p:column>
+					<p:column style="font-weight: bold;">1000</p:column>
+
+					<p:column colspan="1" style="font-weight: bold;">2000</p:column>
+					<p:column colspan="1" style="font-weight: bold;">3000</p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.liability']}</p:column>
+					<p:column style="font-weight: bold;">2000</p:column>
+
+					<p:column colspan="1" style="font-weight: bold;">3000</p:column>
+					<p:column colspan="1" style="font-weight: bold;">5000</p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;"></p:column>
+					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.rotational.capital']}</p:column>
+
+					<p:column colspan="1" style="font-weight: bold;">#{lbl['lbl.sc.spec.fixed.capital']}</p:column>
+					<p:column colspan="1" style="font-weight: bold;">#{lbl['lbl.sc.spec.net.amount']}</p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column style="font-weight: bold;"></p:column>
+					<p:column style="font-weight: bold;">1000</p:column>
+
+					<p:column colspan="1" style="font-weight: bold;">1000</p:column>
+					<p:column colspan="1" style="font-weight: bold;">2000</p:column>
+
+				</p:row>
+			</p:panelGrid>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.eva.auto.score']}"></h:outputLabel></td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+
+		</p:panel>
+
+
+
+
+		<h:panelGroup id="assetLiabilityAmount">
+			<ui:param name="scoringPnlId" value="evaassetLiabilityAmountId" />
+			<ui:param name="scoringPnlName"
+				value="#{lbl['lbl.sc.eva.score.net.tot.amount']}"></ui:param>
+			<ui:include src="evaluationScoring.xhtml"></ui:include>
+		</h:panelGroup>
+
+
+
+
+	</ui:define>
+</ui:composition>

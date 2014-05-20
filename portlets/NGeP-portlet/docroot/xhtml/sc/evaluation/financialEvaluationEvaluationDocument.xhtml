@@ -15,7 +15,7 @@
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" />
+				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" />
@@ -25,9 +25,9 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:selectOneMenu disabled="true">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
-						</p:selectOneMenu></td>
+					<td><p:inputTextarea
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -35,42 +35,40 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="complianceTechnicalSupplier"
-				id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
+			<p:dataTable var="evaFinSupplier"
+				id="evaluateFinSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
-				<ac:paginator for="complianceTechnicalSupplier" />
+				<ac:paginator for="evaluateFinSupplier" />
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
-					style="width:30%">
+					style="width:20%">
 
 					<h:outputText></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}" style="width:10%">
 					<h:outputText></h:outputText>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:15%">
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}">
-					<h:outputText></h:outputText>
-				</p:column>
-				
-					<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}" style="width:15%">
 					<h:outputText></h:outputText>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}">
+				
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}" style="width:15%">
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}">
-					<p:inputTextarea></p:inputTextarea>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}" style="width:25%">
+					<p:inputTextarea rows="2" cols="40"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

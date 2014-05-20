@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save"
+				action="#{evaluationBackingBean.saveComplianceSample}" />
+		</div>
+
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td style="width: 100px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}" toggleable="true">
+			<p:dataTable var="bankList" id="bankStatemnt"
+				rowIndexVar="index" style="width:100%"
+				rowKey="#{bankList}">
+				<ac:paginator for="bankStatemnt" />
+
+
+				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+					style="width:90%">
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+					style="width:10%">
+
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+
+
+
+		<p:panel header="#{lbl['lbl.sc.eva.bank.statements']}" toggleable="true">
+			<h:panelGrid>
+					<h:outputLabel value="* #{lbl['lbl.sc.spec.bank.statement.month']}"></h:outputLabel>
+				</h:panelGrid>
+				<p:dataTable id="specbank" var="banking"
+					 style="width:100%" rowIndexVar="index"
+					rowKey="#{banking}">
+
+					<p:column headerText="#{lbl['lbl.sc.spec.month']}"
+						style="width:50%">
+						<h:outputText></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.amount']}"
+						style="width:50%">
+						<h:outputText></h:outputText>
+					</p:column>
+				</p:dataTable>
+
+
+
+
+			<table>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+					</tr>
+					<tr>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.avg.bank.statements']}" /></td>
+					<td style="width: 200px;"><p:inputText readonly="true" disabled="true"></p:inputText></td>
+					<td ><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				</tr>
+
+
+			</table>
+
+
+		</p:panel>
+
+
+
+
+
+		<h:panelGroup id="statementsBank">
+			<ui:param name="scoringPnlId" value="bankStatementId" />
+			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.eva.score.avg.bank.statements']}"></ui:param>
+			<ui:include src="evaluationScoring.xhtml"></ui:include>
+		</h:panelGroup>
+
+	</ui:define>
+</ui:composition>

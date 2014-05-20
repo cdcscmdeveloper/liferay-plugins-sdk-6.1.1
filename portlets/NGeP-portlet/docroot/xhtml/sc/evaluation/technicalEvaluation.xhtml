@@ -16,7 +16,7 @@
 		toggleable="true">
 
 		<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
-			editable="true" rowIndexVar="index" style="width:1000px;"
+			editable="true" rowIndexVar="index" 
 			rowKey="#{technicalEvaluate}" value="#{evaluationBackingBean.managedBean.evaluationStgTechnicalCheckList}">
 			<ac:paginator for="technicalEvaluation" />
 
@@ -51,11 +51,11 @@
 				style="width:10%">
            
 				<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false'}">
-				<p:commandButton value="View"
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 					process="@this" partialSubmit="true" action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate)}"/>
 					</ui:fragment>
 					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
-					<p:commandButton value="Evaluate" action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate)}"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate)}"
 					process="@this" partialSubmit="true" />
 					</ui:fragment>
 

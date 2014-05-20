@@ -7,42 +7,45 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.eva.committee']}" widgetVar="evaluationreminder" modal="true"
-		width="600" height="400">
-		<p:panel header="#{lbl['lbl.sc.eva.committee']}" toggleable="true">
+	<p:dialog header="#{lbl['lbl.sc.eva.reminder']}"
+		widgetVar="evaluationreminder" position="top" width="600" height="400">
+		<p:panel>
 			<p:dataTable id="evaluationcommitteereminder" var="reminderpopup"
-				 editable="true">
-               <ac:paginator for="evaluationcommitteereminder" />
-				<p:column headerText="#{lbl['lbl.sc.eva.committee.name']}" style="width:100%">
+				editable="true">
+				<ac:paginator for="evaluationcommitteereminder" />
+				<p:column headerText="#{lbl['lbl.sc.eva.reminder.name']}"
+					style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.eva.committee.details']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.eva.reminder.dtls']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
-				
-						<h:outputLabel value="#{lbl['lbl.sc.eva.committee.subject']}" />
-				
-						<p:inputText size="50"></p:inputText>
-				
-						<h:outputLabel value="#{lbl['lbl.sc.eva.committee.message']}" />
-					
-						<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
-					
+
+				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.subject']}" />
+
+				<p:inputText size="50"></p:inputText>
+
+				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.message']}" />
+
+				<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
+
 			</h:panelGrid>
 		</p:panel>
 
-<div align="right">
-	<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}" style="float:right;"
-			onclick="evaluationreminder.hide();" icon="ui-icon-cancel"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}" style="float:right;"
-			onclick="evaluationreminder.hide();" icon="ui-icon-mail"></p:commandButton>
-				
-			
-</div>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+				style="float:right;" onclick="evaluationreminder.hide();"
+				icon="ui-icon-cancel"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}"
+				style="float:right;" onclick="evaluationreminder.hide();"
+				icon="ui-icon-mail"></p:commandButton>
+
+
+		</div>
 
 	</p:dialog>
 </ui:composition>

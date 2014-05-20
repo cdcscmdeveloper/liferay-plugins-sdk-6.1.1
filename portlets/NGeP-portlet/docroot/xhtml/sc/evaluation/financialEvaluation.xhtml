@@ -7,24 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
-			icon="ui-icon-save" />
+	<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+		style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
+		icon="ui-icon-save" />
 
-<p:spacer height="40"></p:spacer>
+	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="financialEval" id="financialEvaluation" value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
-			editable="true" rowIndexVar="index" style="width:1000px;"
-			rowKey="#{financialEval}">
+		<p:dataTable var="financialEval" id="financialEvaluation"
+			value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
+			editable="true" rowIndexVar="index" rowKey="#{financialEval}">
 			<ac:paginator for="financialEvaluation" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
 				style="width:70%">
 
-			<h:outputText value="#{financialEval.title}"></h:outputText>
+				<h:outputText value="#{financialEval.title}"></h:outputText>
 
 
 			</p:column>
@@ -32,7 +32,7 @@
 				style="width:20%">
 
 
-			<h:outputText
+				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(financialEval.definationType)}"></h:outputText>
 
 
@@ -40,14 +40,15 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
-                <ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
-				<p:commandButton value="View"
-					process="@this" partialSubmit="true" />
-					</ui:fragment>
-					<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
-					<p:commandButton value="Evaluate"
-					process="@this" partialSubmit="true" />
-					</ui:fragment>
+				<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
+					<p:commandButton value="View" process="@this" partialSubmit="true"
+						action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
+					<p:commandButton value="Evaluate" process="@this"
+						partialSubmit="true"
+						action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
+				</ui:fragment>
 
 
 			</p:column>

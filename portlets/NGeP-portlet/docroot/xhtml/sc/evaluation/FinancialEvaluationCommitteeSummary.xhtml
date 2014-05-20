@@ -5,104 +5,54 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	
-	<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
-			icon="ui-icon-save" />
-	
-	
 	<p:panel>
-	<table style="width: 50%">
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.summary.view.by']}" /></td>
-				<td><p:selectOneMenu>
-				
-				<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
-				<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
-				<f:selectItem itemLabel="Preference Margin" itemValue="M"></f:selectItem>
-				</p:selectOneMenu></td>
-			</tr>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+				action="#{evaluationBackingBean.saveMeetingDtls}"
+				icon="ui-icon-save" />
 
-		</table>
-	
+		</div>
 	</p:panel>
-
-
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
-		toggleable="true">
-
-		<p:dataTable var="finEvaluationqualifiedSupplier" id="finEvaluationqualifiedSupplier"
-			editable="true" rowIndexVar="index" style="width:1000px;"
-			rowKey="#{qualifiedSupplier}">
-			<ac:paginator for="finEvaluationqualifiedSupplier" />
-
-
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
-
-				<p:inputText size="70"></p:inputText>
-
-
-			</p:column>
-
-
-		</p:dataTable>
-
-
-	</p:panel>
-
 	<p:panel>
 		<table>
 
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.eva.summary.view.by']}" /></td>
+				<td><p:selectOneMenu
+						value="#{evaluationBackingBean.managedBean.summaryViewBy}">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
+						<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
+						<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
+						<f:selectItem itemLabel="Preference Margin" itemValue="M"></f:selectItem>
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{evaluationBackingBean.summaryChange}"
+							update="@([id$=viewSummary])"></p:ajax>
+					</p:selectOneMenu></td>
 			</tr>
 
 		</table>
-	</p:panel>
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
-		toggleable="true">
+		<h:panelGroup id="viewSummary">
 
-		<p:dataTable var="disQualifiedSupplier"
-			id="finEvaluationDisQualifiedSupplier" editable="true"
-			rowIndexVar="index" style="width:1000px;"
-			rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="finEvaluationDisQualifiedSupplier" />
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'P'}">
+				<ui:include src="summaryPackage.xhtml"></ui:include>
+			</ui:fragment>
 
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'I'}">
+				<ui:include src="summaryItem.xhtml"></ui:include>
+			</ui:fragment>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
-
-				<p:inputText size="70"></p:inputText>
-
-
-			</p:column>
-
-
-		</p:dataTable>
-
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'M'}">
+				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
+			</ui:fragment>
+		</h:panelGroup>
 
 	</p:panel>
-
-	<p:panel>
-		<table>
-
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
-			</tr>
-
-		</table>
-	</p:panel>
-
 
 </ui:composition>

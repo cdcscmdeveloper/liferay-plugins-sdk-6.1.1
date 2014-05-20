@@ -47,20 +47,20 @@
 				<ac:paginator for="sampleItemId" />
 
 
-				<p:column headerText="Item" style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.item']}" style="width:35%">
 
 					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="Label Extension No" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}" style="width:10%">
 					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
 
 				</p:column>
 
 
 
-				<p:column headerText="Submission Status" style="width:20%">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:20%">
 					<p:selectOneMenu
 						value="#{sampleItem. submissionStatus.parameterId}">
 						<f:selectItem itemLabel="Hantar dan Mematuhi" itemValue="1"></f:selectItem>
@@ -85,7 +85,7 @@
 				<ac:paginator for="itemSpecId" />
 
 
-				<p:column headerText="Specification" style="width:50%">
+				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}" style="width:50%">
 
 					<h:outputText value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
 				</p:column>
