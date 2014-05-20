@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletCategory;
@@ -44,8 +43,6 @@ import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.service.permission.GroupPermissionUtil;
-import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -133,19 +130,19 @@ public class EpPortletUtil {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			PermissionChecker permissionChecker = themeDisplay
 					.getPermissionChecker();
-			List<Layout> layouts = themeDisplay.getUnfilteredLayouts();
-			Group group = themeDisplay.getLayout().getGroup();
-			Locale locale = themeDisplay.getLocale();
+			List<Layout> layouts = themeDisplay.getLayouts();
+			//Group group = themeDisplay.getLayout().getGroup();
+			Locale locale = themeDisplay.getLocale();/*
 			boolean hasViewStagingPermission = (group.isStagingGroup() || group
 					.isStagedRemotely())
 					&& GroupPermissionUtil.contains(permissionChecker,
-							group.getGroupId(), ActionKeys.VIEW_STAGING);
+							group.getGroupId(), ActionKeys.VIEW_STAGING);*/
 
 			for (Layout mainLayout : layouts) {
 				if (mainLayout.getFriendlyURL().equals("/my-application")) {
-					for (Layout layout : mainLayout.getChildren()) {
-						if (/*layout.isHidden()
-								&& */(isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
+					for (Layout layout : mainLayout.getChildren(permissionChecker)) {
+						if (!layout.isHidden()/*
+								&& (isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)*/) {
 
 							menuBean = toMenuBean(permissionChecker, layout, locale);
 
@@ -408,8 +405,8 @@ public class EpPortletUtil {
 				PortalUtil.getLayoutFriendlyURL(layout, getThemeDisplay()));
 
 		List<MenuBean> childs = new ArrayList<MenuBean>();
-		for (Layout child : layout.getChildren()) {
-			if (isViewableLayout(permissionChecker, child)) {
+		for (Layout child : layout.getChildren(permissionChecker)) {
+			if (/*isViewableLayout(permissionChecker, child)*/!child.isHidden()) {
 				childs.add(toMenuBean(permissionChecker, child, locale));
 			}
 		}
@@ -418,13 +415,13 @@ public class EpPortletUtil {
 		return menuBean;
 	}
 
-	private static boolean isViewableLayout(
+	/*private static boolean isViewableLayout(
 			PermissionChecker permissionChecker, Layout layout)
 			throws PortalException, SystemException {
 
 		return LayoutPermissionUtil.contains(permissionChecker, layout, false,
 				ActionKeys.VIEW);
-	}
+	}*/
 
 	private static void handleException(Exception e) {
 		e.printStackTrace();
