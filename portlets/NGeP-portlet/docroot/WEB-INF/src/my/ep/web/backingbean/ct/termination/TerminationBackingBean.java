@@ -187,7 +187,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
-					
+			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
+			if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
+				throw new EpException("ERR-700044");
+			}
+			 
 			reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
@@ -218,13 +222,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String messageId = MessageConst.INFO_700005;
+				String messageId = MessageConst.INFO_700046;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
+					messageId = MessageConst.INFO_700045;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
 					messageId = MessageConst.INFO_700026;
 				}
@@ -260,7 +264,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			e.printStackTrace();
 			if(e instanceof EpException) {
 				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
@@ -530,5 +534,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 }
 	    return items;
 	}
+    
+    public void lodgeComplaint() {
+    	getManagedBean().getContractVer().getCtTermination().setComplaintLodged(true);
+    	//TODO Call SM API to trigger a task for complaint.
+    }
 
 }

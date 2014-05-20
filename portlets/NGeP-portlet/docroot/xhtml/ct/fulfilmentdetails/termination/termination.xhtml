@@ -126,6 +126,8 @@
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
           		rendered="#{terminationBackingBean.managedBean.remedy}" 
                 id="calItem4" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />
+		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />                
 		  <p:outputLabel value="* Last Remedy File No." rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" style="width:170px;"
                rendered="#{terminationBackingBean.managedBean.termination}"/>
@@ -133,13 +135,11 @@
           <p:calendar id="calItem6" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
               showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" 
               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />
-		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />
-		  <p:outputLabel value="* Remedy Start Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:outputLabel value="* Last Remedy Start Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"
           		rendered="#{terminationBackingBean.managedBean.termination}" 
                 id="calItem7" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:outputLabel value="* Remedy End Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  <p:outputLabel value="* Last Remedy End Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
           		rendered="#{terminationBackingBean.managedBean.termination}" 
                 id="calItem8" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 

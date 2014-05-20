@@ -26,7 +26,17 @@
           <p:outputLabel id="rDate" value="Received Date" /> 
           <p:calendar for="rDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
              id="calRecievedDate" size="24" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-          <f:verbatim/><f:verbatim/>
+          <f:verbatim/><f:verbatim/>   
+          <f:verbatim rendered="#{terminationBackingBean.managedBean.termination}" />
+		  <p:commandButton id="lodgeComplaintBtn" value="Lodge Complaint" onclick="confirmation.show()"
+		  	rendered="#{terminationBackingBean.managedBean.termination}"
+		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
 		</h:panelGrid>
+	    <p:confirmDialog message="Are you sure to lodge a complaint to #{terminationBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}?"
+	    	header="Lodge a Complaint" severity="alert" widgetVar="confirmation">
+	        <p:commandButton value="Yes" update="lodgeComplaintBtn" oncomplete="confirmation.hide()" 
+	        	actionListener="#{terminationBackingBean.lodgeComplaint}" />
+	        <p:commandButton value="No" onclick="confirmation.hide()" type="button" />
+	    </p:confirmDialog>		
      </p:panel>      
 </ui:composition>
