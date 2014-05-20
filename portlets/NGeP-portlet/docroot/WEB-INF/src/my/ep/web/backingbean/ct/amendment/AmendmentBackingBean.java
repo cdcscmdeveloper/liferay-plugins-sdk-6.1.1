@@ -938,7 +938,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			   UserReqDTO reqDTO = new UserReqDTO();
 			   reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());	
-			   reqDTO.setOrgProfileId(this.getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			 //  reqDTO.setOrgProfileId(this.getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			   UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 				List<PmUser> list = resDTO.getUserList();
 			   items = new SelectItem[list.size()+1];
