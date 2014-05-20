@@ -575,6 +575,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public String backToPervious() {
 		log.info("backToPervious");
+		getManagedBean().setOrgProfileId(null);
 		return "catalogueSearch";
 	}
 
@@ -929,6 +930,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					if(defaultResDTO.getPurchaseInDefaultDtl() != null){
 						ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
 						requestItem.setPurchaseInDefault(purchaseInDefault);
+					} else {
+						requestItem.setPurchaseInDefault(null);
 					}
 					
 					requestSupplierItem.setRequestNoteItem(requestItem);

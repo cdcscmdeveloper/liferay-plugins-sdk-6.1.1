@@ -68,7 +68,7 @@
 						update=":form:itemDtlPopup"
 						oncomplete="itemDtlPopup.show();" />
 					<p:spacer width="2px;"/>
-					<c:if test="#{(requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault ne 'null')}" >
+					<c:if test="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}" >
 					     <p:commandLink actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}">
 							<p:graphicImage value="/resources/ep/images/design/document.png"
 								height="15px" width="15px" />
