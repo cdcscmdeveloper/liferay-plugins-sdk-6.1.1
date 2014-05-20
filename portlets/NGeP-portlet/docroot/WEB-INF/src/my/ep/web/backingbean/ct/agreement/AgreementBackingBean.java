@@ -264,6 +264,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setLoginPmUSer(getFacesScopes().getUserSessionBean());
+			reqDTO.setDocType(ContractConst.DOC_TYPE_AGREEMENT);
 			
 			if(this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().size() > 0)
 				this.getManagedBean().getCtContract().getCurrentAgreement().getCtSignParties().clear();
@@ -288,7 +289,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
  			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 	        
 			reqDTO.setAgreement(this.getManagedBean().getCtContract().getCurrentAgreement());
-		
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			
 			 if(resDTO.isSuccessful()) {
