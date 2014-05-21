@@ -1,94 +1,120 @@
-<ui:composition	
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	
-	
-	<p:panel>
-		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
-    </p:panel>
-	
-	<p:panel header="SEARCH" toggleable="true">
-		
-	<h:panelGrid id="search" columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-
-	<h:outputLabel value="#{lbl['lbl.sc.committe.comnno']}"></h:outputLabel>
-	<p:inputText value="#{committeBackingBean.managedBean.committeNo}" size="22"></p:inputText>
-		
-	<h:outputLabel value="#{lbl['lbl.sc.committe.qtntenderno']}"></h:outputLabel>
-	<p:inputText value="#{committeBackingBean.managedBean.qtNo}" size="22"></p:inputText>
-	
-	<h:outputLabel value="#{lbl['lbl.sc.committe.comtype']}" ></h:outputLabel>
-
-	 <p:selectOneMenu value="#{committeBackingBean.managedBean.selectedCommitte}" style="width:160px">  
-            <f:selectItems value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
-      </p:selectOneMenu> 
-         
-	<h:outputLabel value="#{lbl['lbl.sc.committe.datecreated']}"></h:outputLabel>
-	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
-				 showOn="button" size="22" />
-	
-	<h:outputLabel value="#{lbl['lbl.sc.committe.recordstatus']}" ></h:outputLabel>
-
-	 <p:selectOneMenu value="#{committeBackingBean.managedBean.status}" style="width:160px">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Active" itemValue="1" /> 
-            <f:selectItem itemLabel="Non-Active" itemValue="2" />  
-     </p:selectOneMenu> 
-     	 
-    </h:panelGrid>
-	<p:commandButton value="Search" style="float:right;" action="#{committeBackingBean.sarchQtCommitte}"
-			update="searchCommitte" icon="ui-icon-search" />
-    <br/>
-	<br/>
-	</p:panel>
-	
-	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchCommitte" value="#{committeBackingBean.managedBean.qtcommittees}" var="committe" editable="true">
- 			<ac:paginator for="searchCommitte" />
-    <p:ajax event="rowEdit" listener="#{committeBackingBean.goToMaintainceAction}" />  
-    <p:ajax event="rowEditCancel"/> 
-				
- 
-        <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}" > 
-        <h:outputText value="#{committe.scCommittee.committeeType}"/>
-        </p:column>
-         <p:column headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}" > 
-         <p:commandLink action="#{committeBackingBean.showQtDetailAction(committe.scQt.qtId)}"
-						style="margin-right:20px;" ajax1="false" oncomplete="screen5.show()" update="@(.qtCount)">
-        <h:outputText value="#{committe.scQt.qtNo}"/>   
-        </p:commandLink>
-    </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}" > 
-        <h:outputText value="#{committe.scCommittee.createdDate}"/>  
-    </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comstatus']}" > 
-         <h:outputText value="#{committe.scCommittee.approvalStatus}"/>  
-    </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"> 
-        <h:outputText value="#{committe.scCommittee.recordStatus}"/>
-    </p:column>
-    <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
-    <p:commandLink action="#{committeBackingBean.goToMaintainceAction(committe)}">
-     <p:graphicImage library="ep/images/design" name="edit.png"
-      value="/resources/ep/images/design/edit.png" />
-    </p:commandLink>
-    </p:column>
-     </p:dataTable>
-	</p:panel>
-	
-	<p:panel>
-	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-
-      <p:commandButton value="Add" style="float:right;" action="#{committeBackingBean.newCommitteeAction}" ajax="false"
-       	 icon="ui-icon-add" />
-	 </h:panelGrid>
+	<p:panel header="#{lbl['lbl.so.searchqtn']}" toggleable="true"
+		id="qtsearchid">
+		<table>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.committe.title']}" /></td>
+				<td colspan="3"><p:inputTextarea
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
+						cols="120" rows="2" style=" margin-bottom:5px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.committe.qtntenderno']}" /></td>
+				<td><p:inputText
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.committe.datecreated']}" /></td>
+				<td><p:calendar
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.fromCreatedDate}"
+						id="crdateFrm" showOn="button" size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.committe.recordstatus']}" /></td>
+				<td><p:selectOneMenu
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtStatus}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItem itemLabel="Active" itemValue="1" />
+						<f:selectItem itemLabel="Non-Active" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.committe.comtyep']}" /></td>
+				<td><p:selectOneMenu
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.committeeType}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.scCommitteeType)}" />
+					</p:selectOneMenu></td>
+				<td />
+				<td />
+			</tr>
+		</table>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+				action="#{committeBackingBean.searchQTAction}" update="searchQTs"
+				icon="ui-icon-search" process="@this, qtsearchid" />
+			<p:commandButton value="#{lbl['lbl.so.reset']}"
+				action="#{committeBackingBean.resetSearchDetails}"
+				update="qtsearchid" icon="ui-icon-reset" resetValues="true"
+				partialSubmit="true" process="@this" />
+		</div>
 	</p:panel>
 
+	<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+		<p:dataTable id="searchQTs"
+			value="#{committeBackingBean.managedBean.searchQTDataModel}"
+			var="scqtcommittee" rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="searchQTs" />
+
+			<p:column
+				headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}"
+				style="width:15%;">
+				<h:outputText value="#{scqtcommittee.scQt.qtNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.title']}">
+				<h:outputText value="#{scqtcommittee.scQt.qtTitle}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}"
+				style="width:15%;">
+				<h:outputText value="#{scqtcommittee.scCommittee.committeeType}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}"
+				style="width:10%;">
+				<h:outputText value="#{scqtcommittee.scQt.createdDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"
+				style="width:10%">
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}"
+				style="width:6%">
+				<p:commandLink action="#{committeBackingBean.editAction(scqtcommittee)}"
+					style="margin-right:20px;" partialSubmit="true" process="@this">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
 </ui:composition>

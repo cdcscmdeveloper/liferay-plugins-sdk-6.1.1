@@ -3,119 +3,167 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<p:dialog id="Clone" header="Clone Committe" widgetVar="clonecommittee"
+		width="950" height="600" position="top">
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
+			id="searchpnlid">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+							size="92" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+					<td><p:inputText
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+					<td><p:selectOneMenu
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+					<td><p:calendar
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							size="30" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+					<td><p:calendar
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
+							size="30" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Active" itemValue="1" />
+							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					style="float:right;" action="#{committeBackingBean.resetClone}"
+					update="searchpnlid" icon="ui-icon-reset" resetValues="true"
+					partialSubmit="true" process="@this" />
 
-	<p:dialog id="Clone" header="Clone Committe" widgetVar="screen2"
-		modal="true">
-		<p:panel>
-			<p:panelGrid id="search" columns="4" styleClass="noBorders tr,noBorders td">
-
-
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comno']}" ></h:outputLabel>
-
-				<p:inputText value="#{committeBackingBean.managedBean.committeNo}" size="28"></p:inputText>
-
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.qtntender']}"></h:outputLabel>
-				<p:inputText value="#{committeBackingBean.managedBean.qtNo}" size="28"></p:inputText>
-
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comtype']}"></h:outputLabel>
-
-				<p:selectOneMenu size="28"
-					value="#{committeBackingBean.managedBean.selectedCommitte}">
-					<f:selectItems
-						value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
-				</p:selectOneMenu>
-
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.datecreated']}"></h:outputLabel>
-				<p:calendar value="#{committeBackingBean.managedBean.createdDt}" size="28"
-					showOn="button" />
-
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comstatus']}" ></h:outputLabel>
-
-				<p:selectOneMenu style="width:192px"
-					value="#{committeBackingBean.managedBean.status}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="Active" itemValue="1" />
-					<f:selectItem itemLabel="Non-Active" itemValue="2" />
-				</p:selectOneMenu>
-
-			</p:panelGrid>
-			<p:commandButton value="Search" style="float:right;" icon="ui-icon-search"
-				action="#{committeBackingBean.cloneSearchCommitteAction}"
-				update="@(.cloneResults)" partialSubmit="true" process="@parent"/>
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					style="float:right;" icon="ui-icon-search"
+					action="#{committeBackingBean.cloneSearchCommitteAction}"
+					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
+			</div>
 			<br />
 			<br />
 		</p:panel>
-
-		<p:panel header="Results" toggleable="true">
+		<p:spacer height="3" />
+		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitte"
-				value="#{committeBackingBean.managedBean.cloneSearchCommittes}"
-				var="committe" styleClass="cloneResults">
+				value="#{committeBackingBean.managedBean.cloneCommitteeTenderList}"
+				selection="#{committeBackingBean.managedBean.selectedCloneCommitteeTender}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				styleClass="cloneResults">
 
+				<ac:paginator for="clonesearchCommitte" />
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.comtype']}">
-					<h:outputLabel value="#{committe.scCommittee.committeeType}"></h:outputLabel>
-				</p:column>
+				<p:ajax event="rowSelect" update=":form:committeelistid"
+					listener="#{committeBackingBean.onRowCloneAction}" />
+
 				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+					<h:outputText value="#{scQt.qtNo}" />
+				</p:column>
 
-					<h:outputLabel value="#{committe.scQt.qtNo}"></h:outputLabel>
+				<p:column headerText="#{lbl['lbl.so.title']}">
+					<h:outputText value="#{scQt.qtTitle}" />
+				</p:column>
 
+				<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<h:outputText
+						value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.datecreated']}">
-					<h:outputLabel value="#{committe.scCommittee.createdDate}"></h:outputLabel>
+
+				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<h:outputText value="#{scQt.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.appstatus']}">
-					<h:outputLabel value="#{committe.scCommittee.approvalStatus}"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.recstatus']}">
-					<h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.action']}">
-					<p:commandButton value="ClONE" style="float:right;" 
-						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}" partialSubmit="true" process="@this" update="@(.cloneCommitteMembers)"
-						 />
+
+				<p:column headerText="#{lbl['lbl.so.bo.status']}">
+					<h:outputText
+						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<p:panel id="cloneCommitteMembers" header="Committee"
+			toggleable="true">
+			<p:dataTable id="committeelistid"
+				value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
+				var="member" rowKey="#{member.committeeMemberId}"
+				selection="#{committeBackingBean.managedBean.selectedCloneCommitteMemebers}"
+				styleClass="cloneResults,cloneCommitteMembers">
 
-		<p:panel id="cloneCommitteMembers" header="Clone Committee Result" toggleable="true">
-			
-				<p:dataTable 
-					value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
-					var="member" rowKey="#{member.committeeMemberId}"
-					selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}" styleClass="cloneResults,cloneCommitteMembers">
-					
-					<p:column selectionMode="multiple"></p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.name']}">
-						<h:outputLabel value="#{member.memberName}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.ministry']}">
-						<!--  <h:outputLabel value="#{member.pmOrgProfile.ministry}" />   -->
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.division']}">
-						<!-- <h:outputLabel value="#{member.pmOrgProfile.division}" />  -->
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.designation']}">
-						<!-- <h:outputLabel value="#{member.pmOrgProfile.designation}" />   -->
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
-					<h:outputLabel value="#{memberR.memberRole}" />
+				<p:column selectionMode="multiple" style="width:2%" />
+				
+				<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<h:outputText value="#{member.committeeMemberId}" />
+					<h:outputText value="#{member.memberName}" />
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+					<h:outputText value="#{member.icPassport}" />
+				</p:column>
 
-				</p:dataTable>
-				<p:commandButton value="Cancel" style="float:right;" icon="ui-icon-cancel"
-					onclick="screen2.hide();"></p:commandButton>
-				<p:commandButton value="Clone" style="float:right;"
-					action="#{committeBackingBean.addCloneCommitteeMembersAction}"
-					oncomplete="screen2.hide();" update="committeMember" icon="ui-icon-clone"></p:commandButton>
-			
+				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+					<h:outputText value="#{member.designation}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.email']}">
+					<h:outputText
+						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+					<h:outputText value="#{member.grade}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+					<h:outputText value="#{member.PNP ? 'Yes' : 'No'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.role']}">
+					<h:outputText
+						value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, member.memberRole)}" />
+				</p:column>
+
+			</p:dataTable>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+					actionListener="#{committeBackingBean.addCloneCommitteeMembersAction}"
+					onclick="clonecommittee.hide();" update="@(.scMemberDtl)"
+					icon="ui-icon-check" />
+
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					icon="ui-icon-cancel" onclick="clonecommittee.hide();" />
+			</div>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

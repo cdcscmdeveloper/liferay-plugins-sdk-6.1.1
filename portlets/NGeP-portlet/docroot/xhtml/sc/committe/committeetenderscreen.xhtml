@@ -5,41 +5,46 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+		<p:dataTable value="#{committeBackingBean.managedBean.scQt}" var="qt">
 
-	<p:dialog header="Search Qtn/Tender" widgetVar="screen5" modal="true"  styleClass="qtCount"> 
-<p:panel>
-<h:panelGroup  style="width:100%;">
-				<p:dataTable value="#{committeBackingBean.managedBean.scQt}" var="qt" >
-								 
+			<p:column headerText="#{lbl['lbl.so.qtnno']}" style="width:15%">
+				<h:outputText value="#{qt.qtNo}" />
+			</p:column>
 
-					<p:column headerText="Qtn/Tender No" style="width:2px">
-					  <p:outputLabel value="#{qt.qtNo}" />
-					</p:column>
+			<p:column headerText="#{lbl['lbl.so.title']}" style="width:10px;">
 
-					<p:column headerText="Title" style="width:10px;">
-				     
-                        <h:outputText value="#{qt.qtTitle}" />
-                      
-					</p:column>
+				<h:outputText value="#{qt.qtTitle}" />
 
-					<p:column headerText="Procurement Mode" style="width:5px">  
-                        <h:outputText value="#{qt.procurementMode}" />  
-                    </p:column>
-                    
-					<p:column headerText="Date Created" style="width:5px">  
-                        <h:outputText value="#{qt.createdDate}" />  
-                    </p:column>                       
-                      
-		            
-            
-		       </p:dataTable>	
-			</h:panelGroup>	
-		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-				<h:outputLabel value="Total: " />
-                <p:inputText value="#{committeBackingBean.managedBean.scQt.size()}" readonly="true"></p:inputText>
+			</p:column>
 
-		</p:panelGrid>	
-		<p:commandButton value="CANCEL"  style="float:right;" onclick="screen5.hide();"></p:commandButton>
-		</p:panel>
-	</p:dialog>
+			<p:column headerText="#{lbl['lbl.so.procmode']}" style="width:10%">
+				<c:if test="${qt.procurementMode ne null}">
+					<h:outputText
+						value="#{committeBackingBean.getParameterDesc(qt.procurementMode)}" />
+				</c:if>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:10%">
+				<h:outputText value="#{qt.createdDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.status']}" style="width:10%">
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="3" />
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 2px"><p:outputLabel value="Total" /></td>
+				<td colspan="3"><p:inputText
+						value="#{committeBackingBean.managedBean.scQt.size()}"
+						readonly="true" /></td>
+			</tr>
+		</table>
+
+	</p:panel>
 </ui:composition>

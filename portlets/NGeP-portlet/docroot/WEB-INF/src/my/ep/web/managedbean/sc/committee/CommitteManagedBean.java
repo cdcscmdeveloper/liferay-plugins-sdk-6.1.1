@@ -1,8 +1,6 @@
-/**
- * 
- */
 package my.ep.web.managedbean.sc.committee;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +13,11 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -30,31 +31,32 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class CommitteManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = EpLogger
+			.getLogger(CommitteManagedBean.class);
+
+	private ScQt qt;
 
 	private String outComes[];
 
 	private String taskId;
 
-	private static final Logger log = EpLogger
-			.getLogger(CommitteManagedBean.class);
-
 	private List<ScQtCommittee> qtcommittees;
-
 	private ScQtCommittee qtCommittee;
 
 	private String selectedCommitte;
 
 	private List<SelectItem> committeType;
 
-	private String profileSelction;
+	private ScCommitteeMember committeMember = new ScCommitteeMember();
 
-	private ScCommitteeMember committeMember;
+	private List<ScCommitteeMember> committeMembers;
+	private List<ScCommitteeMember> selectedCommitteMemebers;
 
-	private List<ScCommitteeMember> committemembers;
+	// clone committee
+	private List<ScCommitteeMember> cloneCommitteMemebers;
+	private List<ScCommitteeMember> selectedCloneCommitteMemebers;
 
 	private List<PmOrgProfile> minstryList;
 
@@ -63,14 +65,13 @@ public class CommitteManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> deptList;
 
 	private ScCommittee scCommittee;
+	private List<ScCommitteeRemark> scCommitteeRemarksList;
 
 	private List<SelectItem> selections;
 
 	private List<SelectItem> userTypes;
 
 	private List<SelectItem> roles;
-
-	private String userSelection;
 
 	private String icType;
 
@@ -93,395 +94,141 @@ public class CommitteManagedBean extends BaseManagedBean {
 	private List<ScQtCommittee> cloneSearchCommittes;
 	private ScQtCommittee selectedCloneCommittee;
 
-	private List<ScCommitteeMember> cloneCommitteMemebers;
-	private List<ScCommitteeMember> selectedCommitteMemebers;
-
 	private List<SelectItem> approvalStatus;
 
-	private boolean ecType;
-
-	private boolean tecType;
-
 	// Search properties
-
-	private String committeNo = null;
-
-	private String qtNo = null;
-
-	private Date createdDt;
-
-	private String status;
-
 	private String title = null;
+	private String committeNo = null;
+	private Date createdDt;
+	private String status;
+	private String committeeType;
+	private String qtNo = null;
 	private String procurementMode;
 	private Date createdDtFrom;
 	private Date createdDtTo;
 
 	private boolean isEditable = true;
 
-	private String evaluationType = "2";
-	
-	private List<ScCommitteeMember> specificationCommitteList;
-	private List<ScCommitteeMember> selectSpecificationCommitteeList;
-	
-	private List<ScCommitteeMember> openingCommitteList;
-	private List<ScCommitteeMember> selectOpeningCommitteeList;
-	
-	private List<ScCommitteeMember> evaluationCommitteList;
-	private List<ScCommitteeMember> selectEvaluationCommitteeList;
-	
-	private List<ScCommitteeMember> techEvaluationCommitteList;
-	private List<ScCommitteeMember> selectTechEvaluationCommitteeList;
-	
-	private List<ScCommitteeMember> finEvaluationCommitteList;
-	private List<ScCommitteeMember> selectFinEvaluationCommitteeList;
-	
+	// Search Committee
+	private IPagingDataModel<ScQtCommittee> searchQTDataModel;
+
+	private QtnTenderSearchBean qtnTenderSearchBean;
+	private QtnTenderSearchBean cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+	private List<ScQt> qtnTenderList = new ArrayList<ScQt>();
+	private List<ScQt> cloneCommitteeTenderList = new ArrayList<ScQt>();
+	private ScQt selectedCloneCommitteeTender;
+
 	private TreeNode committeeNode;
-	private TreeNode searchcommitteeNode;
-	
+
 	private List<ScCommitteeMember> scCommitteeMemberList;
-	
+
 	private String name = null;
 	private String identificationNo = null;
 	private String identificationType;
-	
-	
+
+	private SelectItem[] roleTypes; // Role type drop down
+
+	private String headerTitle;
+
 	public CommitteManagedBean() {
 		log.info("inside ");
+
+		qtnTenderSearchBean = new QtnTenderSearchBean();
 	}
 
-	/**
-	 * @return the name
-	 */
+	public SelectItem[] getRoleTypes() {
+		return roleTypes;
+	}
+
+	public void setRoleTypes(SelectItem[] roleTypes) {
+		this.roleTypes = roleTypes;
+	}
+
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return the selectedPmUser
-	 */
 	public List<PmUser> getSelectedPmUser() {
 		return selectedPmUser;
 	}
 
-	/**
-	 * @param selectedPmUser the selectedPmUser to set
-	 */
 	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
 		this.selectedPmUser = selectedPmUser;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return the identificationNo
-	 */
 	public String getIdentificationNo() {
 		return identificationNo;
 	}
 
-	/**
-	 * @param identificationNo the identificationNo to set
-	 */
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
 	}
 
-	/**
-	 * @return the identificationType
-	 */
 	public String getIdentificationType() {
 		return identificationType;
 	}
 
-	/**
-	 * @param identificationType the identificationType to set
-	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
 	}
 
-	/**
-	 * @return the scCommitteeMemberList
-	 */
 	public List<ScCommitteeMember> getScCommitteeMemberList() {
 		return scCommitteeMemberList;
 	}
 
-	/**
-	 * @param scCommitteeMemberList the scCommitteeMemberList to set
-	 */
 	public void setScCommitteeMemberList(
 			List<ScCommitteeMember> scCommitteeMemberList) {
 		this.scCommitteeMemberList = scCommitteeMemberList;
 	}
 
-	/**
-	 * @return the searchcommitteeNode
-	 */
-	public TreeNode getSearchcommitteeNode() {
-		return searchcommitteeNode;
-	}
-
-	/**
-	 * @param searchcommitteeNode the searchcommitteeNode to set
-	 */
-	public void setSearchcommitteeNode(TreeNode searchcommitteeNode) {
-		this.searchcommitteeNode = searchcommitteeNode;
-	}
-
-	/**
-	 * @return the committeeNode
-	 */
 	public TreeNode getCommitteeNode() {
 		return committeeNode;
 	}
 
-	/**
-	 * @param committeeNode the committeeNode to set
-	 */
 	public void setCommitteeNode(TreeNode committeeNode) {
 		this.committeeNode = committeeNode;
 	}
 
-	/**
-	 * @return the selectOpeningCommitteeList
-	 */
-	public List<ScCommitteeMember> getSelectOpeningCommitteeList() {
-		return selectOpeningCommitteeList;
-	}
-
-	/**
-	 * @param selectOpeningCommitteeList the selectOpeningCommitteeList to set
-	 */
-	public void setSelectOpeningCommitteeList(
-			List<ScCommitteeMember> selectOpeningCommitteeList) {
-		this.selectOpeningCommitteeList = selectOpeningCommitteeList;
-	}
-
-	/**
-	 * @return the selectEvaluationCommitteeList
-	 */
-	public List<ScCommitteeMember> getSelectEvaluationCommitteeList() {
-		return selectEvaluationCommitteeList;
-	}
-
-	/**
-	 * @param selectEvaluationCommitteeList the selectEvaluationCommitteeList to set
-	 */
-	public void setSelectEvaluationCommitteeList(
-			List<ScCommitteeMember> selectEvaluationCommitteeList) {
-		this.selectEvaluationCommitteeList = selectEvaluationCommitteeList;
-	}
-
-	/**
-	 * @return the selectTechEvaluationCommitteeList
-	 */
-	public List<ScCommitteeMember> getSelectTechEvaluationCommitteeList() {
-		return selectTechEvaluationCommitteeList;
-	}
-
-	/**
-	 * @param selectTechEvaluationCommitteeList the selectTechEvaluationCommitteeList to set
-	 */
-	public void setSelectTechEvaluationCommitteeList(
-			List<ScCommitteeMember> selectTechEvaluationCommitteeList) {
-		this.selectTechEvaluationCommitteeList = selectTechEvaluationCommitteeList;
-	}
-
-	/**
-	 * @return the selectFinEvaluationCommitteeList
-	 */
-	public List<ScCommitteeMember> getSelectFinEvaluationCommitteeList() {
-		return selectFinEvaluationCommitteeList;
-	}
-
-	/**
-	 * @param selectFinEvaluationCommitteeList the selectFinEvaluationCommitteeList to set
-	 */
-	public void setSelectFinEvaluationCommitteeList(
-			List<ScCommitteeMember> selectFinEvaluationCommitteeList) {
-		this.selectFinEvaluationCommitteeList = selectFinEvaluationCommitteeList;
-	}
-
-	/**
-	 * @return the selectSpecificationCommitteeList
-	 */
-	public List<ScCommitteeMember> getSelectSpecificationCommitteeList() {
-		return selectSpecificationCommitteeList;
-	}
-
-	/**
-	 * @param selectSpecificationCommitteeList the selectSpecificationCommitteeList to set
-	 */
-	public void setSelectSpecificationCommitteeList(
-			List<ScCommitteeMember> selectSpecificationCommitteeList) {
-		this.selectSpecificationCommitteeList = selectSpecificationCommitteeList;
-	}
-
-	/**
-	 * @return the evaluationCommitteList
-	 */
-	public List<ScCommitteeMember> getEvaluationCommitteList() {
-		return evaluationCommitteList;
-	}
-
-	/**
-	 * @param evaluationCommitteList the evaluationCommitteList to set
-	 */
-	public void setEvaluationCommitteList(
-			List<ScCommitteeMember> evaluationCommitteList) {
-		this.evaluationCommitteList = evaluationCommitteList;
-	}
-
-	/**
-	 * @return the techEvaluationCommitteList
-	 */
-	public List<ScCommitteeMember> getTechEvaluationCommitteList() {
-		return techEvaluationCommitteList;
-	}
-
-	/**
-	 * @param techEvaluationCommitteList the techEvaluationCommitteList to set
-	 */
-	public void setTechEvaluationCommitteList(
-			List<ScCommitteeMember> techEvaluationCommitteList) {
-		this.techEvaluationCommitteList = techEvaluationCommitteList;
-	}
-
-	/**
-	 * @return the finEvaluationCommitteList
-	 */
-	public List<ScCommitteeMember> getFinEvaluationCommitteList() {
-		return finEvaluationCommitteList;
-	}
-
-	/**
-	 * @param finEvaluationCommitteList the finEvaluationCommitteList to set
-	 */
-	public void setFinEvaluationCommitteList(
-			List<ScCommitteeMember> finEvaluationCommitteList) {
-		this.finEvaluationCommitteList = finEvaluationCommitteList;
-	}
-
-	/**
-	 * @return the openingCommitteList
-	 */
-	public List<ScCommitteeMember> getOpeningCommitteList() {
-		return openingCommitteList;
-	}
-
-	/**
-	 * @param openingCommitteList the openingCommitteList to set
-	 */
-	public void setOpeningCommitteList(List<ScCommitteeMember> openingCommitteList) {
-		this.openingCommitteList = openingCommitteList;
-	}
-
-	/**
-	 * @return the specificationCommitteList
-	 */
-	public List<ScCommitteeMember> getSpecificationCommitteList() {
-		return specificationCommitteList;
-	}
-
-	/**
-	 * @param specificationCommitteList the specificationCommitteList to set
-	 */
-	public void setSpecificationCommitteList(
-			List<ScCommitteeMember> specificationCommitteList) {
-		this.specificationCommitteList = specificationCommitteList;
-	}
-
-	/**
-	 * @return the selectedCloneCommittee
-	 */
 	public ScQtCommittee getSelectedCloneCommittee() {
 		return selectedCloneCommittee;
 	}
 
-	/**
-	 * @param selectedCloneCommittee the selectedCloneCommittee to set
-	 */
 	public void setSelectedCloneCommittee(ScQtCommittee selectedCloneCommittee) {
 		this.selectedCloneCommittee = selectedCloneCommittee;
 	}
 
-	/**
-	 * @return the evaluationType
-	 */
-	public String getEvaluationType() {
-		return evaluationType;
-	}
-
-	/**
-	 * @param evaluationType the evaluationType to set
-	 */
-	public void setEvaluationType(String evaluationType) {
-		this.evaluationType = evaluationType;
-	}
-
-	/**
-	 * @return the title
-	 */
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * @param title
-	 *            the title to set
-	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	/**
-	 * @return the procurementMode
-	 */
 	public String getProcurementMode() {
 		return procurementMode;
 	}
 
-	/**
-	 * @param procurementMode
-	 *            the procurementMode to set
-	 */
 	public void setProcurementMode(String procurementMode) {
 		this.procurementMode = procurementMode;
 	}
 
-	/**
-	 * @return the createdDtFrom
-	 */
 	public Date getCreatedDtFrom() {
 		return createdDtFrom;
 	}
 
-	/**
-	 * @param createdDtFrom
-	 *            the createdDtFrom to set
-	 */
 	public void setCreatedDtFrom(Date createdDtFrom) {
 		this.createdDtFrom = createdDtFrom;
 	}
 
-	/**
-	 * @return the createdDtTo
-	 */
 	public Date getCreatedDtTo() {
 		return createdDtTo;
 	}
 
-	/**
-	 * @param createdDtTo
-	 *            the createdDtTo to set
-	 */
 	public void setCreatedDtTo(Date createdDtTo) {
 		this.createdDtTo = createdDtTo;
 	}
@@ -518,14 +265,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.committeType = committeType;
 	}
 
-	public String getProfileSelction() {
-		return profileSelction;
-	}
-
-	public void setProfileSelction(String profileSelction) {
-		this.profileSelction = profileSelction;
-	}
-
 	public ScCommitteeMember getCommitteMember() {
 		return committeMember;
 	}
@@ -534,12 +273,12 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.committeMember = committeMember;
 	}
 
-	public List<ScCommitteeMember> getCommittemembers() {
-		return committemembers;
+	public List<ScCommitteeMember> getCommitteMembers() {
+		return committeMembers;
 	}
 
-	public void setCommittemembers(List<ScCommitteeMember> committemembers) {
-		this.committemembers = committemembers;
+	public void setCommitteMembers(List<ScCommitteeMember> committeMembers) {
+		this.committeMembers = committeMembers;
 	}
 
 	public ScCommittee getScCommittee() {
@@ -572,14 +311,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setRoles(List<SelectItem> roles) {
 		this.roles = roles;
-	}
-
-	public String getUserSelection() {
-		return userSelection;
-	}
-
-	public void setUserSelection(String userSelection) {
-		this.userSelection = userSelection;
 	}
 
 	public String getIcType() {
@@ -669,22 +400,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setCloneCommitteMemebers(
 			List<ScCommitteeMember> cloneCommitteMemebers) {
 		this.cloneCommitteMemebers = cloneCommitteMemebers;
-	}
-
-	public boolean isEcType() {
-		return ecType;
-	}
-
-	public void setEcType(boolean ecType) {
-		this.ecType = ecType;
-	}
-
-	public boolean isTecType() {
-		return tecType;
-	}
-
-	public void setTecType(boolean tecType) {
-		this.tecType = tecType;
 	}
 
 	public List<ScCommitteeMember> getSelectedCommitteMemebers() {
@@ -782,6 +497,99 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
+	}
+
+	public String getCommitteeType() {
+		return committeeType;
+	}
+
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
+	}
+
+	public QtnTenderSearchBean getQtnTenderSearchBean() {
+		return qtnTenderSearchBean;
+	}
+
+	public void setQtnTenderSearchBean(QtnTenderSearchBean qtnTenderSearchBean) {
+		this.qtnTenderSearchBean = qtnTenderSearchBean;
+	}
+
+	public List<ScQt> getQtnTenderList() {
+		return qtnTenderList;
+	}
+
+	public void setQtnTenderList(List<ScQt> qtnTenderList) {
+		this.qtnTenderList = qtnTenderList;
+	}
+
+	public IPagingDataModel<ScQtCommittee> getSearchQTDataModel() {
+		return searchQTDataModel;
+	}
+
+	public void setSearchQTDataModel(
+			IPagingDataModel<ScQtCommittee> searchQTDataModel) {
+		this.searchQTDataModel = searchQTDataModel;
+	}
+
+	public ScQt getQt() {
+		return qt;
+	}
+
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	public String getHeaderTitle() {
+		return headerTitle;
+	}
+
+	public void setHeaderTitle(String headerTitle) {
+		this.headerTitle = headerTitle;
+	}
+
+	public List<ScCommitteeRemark> getScCommitteeRemarksList() {
+		return scCommitteeRemarksList;
+	}
+
+	public void setScCommitteeRemarksList(
+			List<ScCommitteeRemark> scCommitteeRemarksList) {
+		this.scCommitteeRemarksList = scCommitteeRemarksList;
+	}
+
+	public QtnTenderSearchBean getCloneQtnTenderSearchBean() {
+		return cloneQtnTenderSearchBean;
+	}
+
+	public void setCloneQtnTenderSearchBean(
+			QtnTenderSearchBean cloneQtnTenderSearchBean) {
+		this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
+	}
+
+	public List<ScQt> getCloneCommitteeTenderList() {
+		return cloneCommitteeTenderList;
+	}
+
+	public void setCloneCommitteeTenderList(List<ScQt> cloneCommitteeTenderList) {
+		this.cloneCommitteeTenderList = cloneCommitteeTenderList;
+	}
+
+	public ScQt getSelectedCloneCommitteeTender() {
+		return selectedCloneCommitteeTender;
+	}
+
+	public void setSelectedCloneCommitteeTender(
+			ScQt selectedCloneCommitteeTender) {
+		this.selectedCloneCommitteeTender = selectedCloneCommitteeTender;
+	}
+
+	public List<ScCommitteeMember> getSelectedCloneCommitteMemebers() {
+		return selectedCloneCommitteMemebers;
+	}
+
+	public void setSelectedCloneCommitteMemebers(
+			List<ScCommitteeMember> selectedCloneCommitteMemebers) {
+		this.selectedCloneCommitteMemebers = selectedCloneCommitteMemebers;
 	}
 
 }
