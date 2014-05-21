@@ -609,9 +609,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	 /**
 	  * Page navigation to catalogue search page in Purchase in default
 	  */
-	 public String backToPervious() {
+	 public void backToPervious() {
 		 log.info("backToPervious");
-		 return "catalogueSearch";
+		 FacesContext fc = FacesContext.getCurrentInstance();
+		 if(getManagedBean().getPageNavToRequestNote() != null){
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
+		 } else {
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
+		 }
 	 }		
 	 private void debugLogger(Object message) {
 		 if (log.isDebugEnabled()) {

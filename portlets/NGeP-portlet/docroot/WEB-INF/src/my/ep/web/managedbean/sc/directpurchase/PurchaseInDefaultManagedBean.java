@@ -52,6 +52,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private String pidStatus;
 	private boolean requisitionerFlag;
 	private boolean approverFlag;
+	private String pageNavToRequestNote;
 	
 	private List<PmOrgProfile> ptjDropdown;
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
@@ -320,5 +321,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
 
+	/**
+	 * @return the pageNavToRequestNote
+	 */
+	public String getPageNavToRequestNote() {
+		return pageNavToRequestNote;
+	}
+
+	/**
+	 * @param pageNavToRequestNote the pageNavToRequestNote to set
+	 */
+	public void setPageNavToRequestNote(String pageNavToRequestNote) {
+		this.pageNavToRequestNote = pageNavToRequestNote;
+	}
+
+	
 	
 }
