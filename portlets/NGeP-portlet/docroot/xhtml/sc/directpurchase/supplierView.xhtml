@@ -3,43 +3,54 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel id="suppDtl" header="SUPPLIER DETAILS"
+	<p:panel id="suppViewDtl" header="SUPPLIER DETAILS"
 		toggleable="true">
 		<p:spacer height="10px" />
 		<table style="width: 100%;">
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.ep.no']}" /></td>
-				<td><p:inputText disabled="true" /></td>
+				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}"/></td>
 
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.supp.view.supp.name']}" /></td>
-				<td><p:inputText disabled="true"  size="55"/></td>
+				<td><p:inputText disabled="true"  size="55" value="#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}"/></td>
 			</tr>
 
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.mof.no']}" /></td>
-				<td><p:inputText disabled="true" /></td>
+				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}"/></td>
 			</tr>
 	  </table>
 	</p:panel>
 
-	<p:panel id="itemSpecsId" header="ITEM SPECS" toggleable="true">
-		<p:spacer height="10px" />
+	<p:panel id="tplSpecId" header="ITEM SPECS" toggleable="true">
+		<p:spacer height="5px" />
 		<table style="width: 100%;">
+		   <tr>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.sq.supp.view.panel']}" /></td>
+				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.isPanel}" disabled="true">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.no']}" itemValue="0" />
+					</p:selectOneRadio></td>
+		   </tr>
+		
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.title']}" /></td>
-				<td><p:inputText disabled="true" size="91" /></td>
-			</tr>
+				<td><p:inputText disabled="true" size="91"  value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"/></td>
+		   </tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.desc']}" /></td>
 				<td colspan="3"><p:inputTextarea disabled="true" rows="3"
 						cols="93" style="margin-bottom: 5px;" /></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.zonal']}" /></td>
-				<td><p:selectOneRadio id="panel">
+				<td style="width: 200px;">
+				<p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.zonal']}" /></td>
+				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.isPanel}" disabled="true">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.yes']}"
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.no']}"
@@ -48,150 +59,49 @@
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.start.date']}" /></td>
-				<td><p:inputText disabled="true" /></td>
+				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.end.date']}" /></td>
-				<td><p:inputText disabled="true" /></td>
+				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.no.of.quote']}" /></td>
-				<td><p:selectOneRadio>
+				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}" disabled="true">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.single']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.multiple']}" itemValue="0" />
 					</p:selectOneRadio></td>
 			</tr>
 
 		</table>
+		<p:spacer height="5px" />
+
+		<ac:templateSpec
+			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
+			title="PRODUCT LIST" />
+
+		<p:spacer height="25px" />
+		<ac:templateSpec
+			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
+			title="SERVICE LIST" />
+
 	</p:panel>
-   <p:panel id="suppViewProd" header="PRODUCT LIST" toggleable="true">
-	 <p:spacer height="5px" />
-		<p:dataTable id="prodDataTable">
-            <p:column headerText="#{lbl['lbl.sc.sq.zone']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-		  <p:column headerText="#{lbl['lbl.sc.sq.item']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-		  <p:column headerText="#{lbl['lbl.sc.sq.specification']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-		  <p:column headerText="#{lbl['lbl.sc.sq.uom']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-		  <p:column headerText="#{lbl['lbl.sc.sq.qty']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			  <p:column headerText="#{lbl['lbl.sc.sq.from.qty']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-             <p:column headerText="#{lbl['lbl.sc.sq.to.qty']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-			  <p:column headerText="#{lbl['lbl.sc.sq.delivery.term']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-		  <p:column headerText="#{lbl['lbl.sc.sq.estimated.val']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			  <p:column headerText="#{lbl['lbl.sc.sq.unit.price']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			  <p:column headerText="#{lbl['lbl.sc.sq.tot.amount']}" style="width:10%">
-				<h:outputText/>
-			</p:column> 
-
-          <p:column headerText="#{lbl['lbl.sc.sq.ranking']}" style="width:10%">
-				<h:outputText/>
-			</p:column> 
-		</p:dataTable>
-	</p:panel>
-    <p:panel id="suppViewService" header="SERVICE LIST" toggleable="true">
-		<p:dataTable id="ServiceDataTable">
-           <p:column headerText="#{lbl['lbl.sc.sq.zone']}"  style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-		   <p:column headerText="#{lbl['lbl.sc.sq.item']}"  style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-		   <p:column headerText="#{lbl['lbl.sc.sq.specification']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-
-           <p:column headerText="#{lbl['lbl.sc.sq.fulfill.type']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.sq.uom']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-		   <p:column headerText="#{lbl['lbl.sc.sq.frequency.per.uom']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.sq.no.uom.per.day']}" style="width:10%">
-				<h:outputText/>
-			</p:column> 
-
-            <p:column headerText="#{lbl['lbl.sc.sq.no.uom.per.month']}" style="width:10%">
-				<h:outputText/>
-			</p:column> 
-			
-           	<p:column headerText="#{lbl['lbl.sc.sq.duration.month']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.sq.qty']}" style="width:10%">
-				<h:outputText/>
-			</p:column> 
-			
-		   <p:column headerText="#{lbl['lbl.sc.sq.estimated.val']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			  <p:column headerText="#{lbl['lbl.sc.sq.unit.price']}" style="width:10%">
-				<h:outputText/>
-			</p:column>
-			
-			  <p:column headerText="#{lbl['lbl.sc.sq.tot.amount']}">
-				<h:outputText/>
-			</p:column> 
-
-          <p:column headerText="#{lbl['lbl.sc.sq.ranking']}">
-				<h:outputText/>
-			</p:column> 
-
-		</p:dataTable>
-		
-	</p:panel>
-	<p:panel label="REMARKs" header="REMARKS" id="rmkId" toggleable="true" toggleSpeed="500">
+	
+	<p:panel label="REMARKs" header="REMARKS" id="suppRmkId" toggleable="true" toggleSpeed="500">
 	 <table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>
 			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.requestNote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" style="vertical-align: top;" align="left">
-								<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
+								<h:graphicImage value="#{simpleQuoteBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
 							</td>
 							<td width="5"></td>
 							<td>
 								<h:outputText value="#{remarkVar.user.userName}"/>,
-								<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 								</h:outputText>
 							</td>
