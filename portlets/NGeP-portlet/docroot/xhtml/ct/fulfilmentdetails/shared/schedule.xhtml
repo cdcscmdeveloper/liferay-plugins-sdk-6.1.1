@@ -23,7 +23,7 @@
 	            <ac:paginator for="tableSchedule" />
 	            <p:column selectionMode="multiple" style="width:2%;"/>
 		         <p:column style="width:20%;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
-		           <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
+		           <p:inputText value="#{schedVar.scheduleNo}" styleClass="ppRightBtn" />
 		       </p:column> 
 		       <p:column style="width:25%;" headerText="Start Period">
 		           <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:45%;"> 
@@ -105,10 +105,10 @@
 		       <ac:paginator for="tableProgress" />
 		       <p:column selectionMode="multiple" style="width:2%;"/> 
                <p:column style="width:7%;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
-                 <p:inputText value="#{ProgVar.phase}" style="width:90%;" />
+                 <p:inputText value="#{ProgVar.phaseNo}" style="width:90%;" styleClass="ppRightBtn" />
                </p:column>
 		       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
-		          <p:inputText style="width:95%;"/>
+		          <p:inputText value="#{ProgVar.phaseDesc}" style="width:95%;"/>
 		       </p:column>
                 <p:column style="width:23%;" headerText="Start Period" >
 		      <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:50%;"> 

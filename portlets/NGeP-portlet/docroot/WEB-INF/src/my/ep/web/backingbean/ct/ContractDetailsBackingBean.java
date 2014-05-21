@@ -954,9 +954,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public void addScheduleDetails(){
 		CtSchedule ctSchedules = new CtSchedule();
-		int count = this.getManagedBean().getContractVer().getCtSchedules().size()-1;
-		count = count+1;
-		ctSchedules.setScheduleNo("S"+count);
+		ctSchedules.setScheduleNo(getManagedBean().getContractVer().getCtSchedules().size()+1);
 		if(ctSchedules.getScheduleType() == null)
 			ctSchedules.setScheduleType(new PmParameter());
 		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
@@ -972,6 +970,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 	public void addFrequencyDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
+		ctProgressivePayment.setPhaseNo(getManagedBean().getContractVer().getCtProgressivePayments().size()+1);
 		this.getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
 	}
 
