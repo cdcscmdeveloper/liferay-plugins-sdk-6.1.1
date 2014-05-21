@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -149,7 +148,7 @@ public class EvaluationMeetingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			if (this.getManagedBean().getScQtMeetings() == null) {
 				reqDTO.setQtId(146L);
-				reqDTO.setMeetingType("SC");
+				reqDTO.setCommitteType("SC");
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 
 				if (resDTO.getMeetingDtls() != null) {

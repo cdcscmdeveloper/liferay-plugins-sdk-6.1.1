@@ -5,10 +5,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -65,14 +65,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> disQualifiedSupplist;
 	private List<ScQtCommitteeActivity> committeeSignOffMemberlist;
 
-	private List<ScQtItem> itemPreSummarylist; // for Item List in Summary
-	private List<ScQtItem> itemSuppFinalizationlist; // for Item List in
+	private List<ScRequestItem> itemPreSummarylist; // for Item List in Summary
+	private List<ScRequestItem> itemSuppFinalizationlist; // for Item List in
 														// Supplier Finalization
 	private List<ScQtEvaluationResult> recommendedSuppList; // for Recommended
 															// Supplier Listing
-	private List<ScQtItem> selectedItemsSummary; // for Selected Items in
+	private List<ScRequestItem> selectedItemsSummary; // for Selected Items in
 													// Summary
-	private List<ScQtItem> selectedItemsSuppFinalization; // for Selected Items
+	private List<ScRequestItem> selectedItemsSuppFinalization; // for Selected Items
 															// in Supplier
 															// Finalization
 	private List<ScQtEvaluationResult> shortlistedSuppList; // for
@@ -667,7 +667,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the itemPreSummarylist
 	 */
-	public List<ScQtItem> getItemPreSummarylist() {
+	public List<ScRequestItem> getItemPreSummarylist() {
 		return itemPreSummarylist;
 	}
 
@@ -675,14 +675,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param itemPreSummarylist
 	 *            the itemPreSummarylist to set
 	 */
-	public void setItemPreSummarylist(List<ScQtItem> itemPreSummarylist) {
+	public void setItemPreSummarylist(List<ScRequestItem> itemPreSummarylist) {
 		this.itemPreSummarylist = itemPreSummarylist;
 	}
 
 	/**
 	 * @return the itemSuppFinalizationlist
 	 */
-	public List<ScQtItem> getItemSuppFinalizationlist() {
+	public List<ScRequestItem> getItemSuppFinalizationlist() {
 		return itemSuppFinalizationlist;
 	}
 
@@ -691,14 +691,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 *            the itemSuppFinalizationlist to set
 	 */
 	public void setItemSuppFinalizationlist(
-			List<ScQtItem> itemSuppFinalizationlist) {
+			List<ScRequestItem> itemSuppFinalizationlist) {
 		this.itemSuppFinalizationlist = itemSuppFinalizationlist;
 	}
 
 	/**
 	 * @return the selectedItemsSummary
 	 */
-	public List<ScQtItem> getSelectedItemsSummary() {
+	public List<ScRequestItem> getSelectedItemsSummary() {
 		return selectedItemsSummary;
 	}
 
@@ -706,14 +706,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param selectedItemsSummary
 	 *            the selectedItemsSummary to set
 	 */
-	public void setSelectedItemsSummary(List<ScQtItem> selectedItemsSummary) {
+	public void setSelectedItemsSummary(List<ScRequestItem> selectedItemsSummary) {
 		this.selectedItemsSummary = selectedItemsSummary;
 	}
 
 	/**
 	 * @return the selectedItemsSuppFinalization
 	 */
-	public List<ScQtItem> getSelectedItemsSuppFinalization() {
+	public List<ScRequestItem> getSelectedItemsSuppFinalization() {
 		return selectedItemsSuppFinalization;
 	}
 
@@ -722,7 +722,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 *            the selectedItemsSuppFinalization to set
 	 */
 	public void setSelectedItemsSuppFinalization(
-			List<ScQtItem> selectedItemsSuppFinalization) {
+			List<ScRequestItem> selectedItemsSuppFinalization) {
 		this.selectedItemsSuppFinalization = selectedItemsSuppFinalization;
 	}
 

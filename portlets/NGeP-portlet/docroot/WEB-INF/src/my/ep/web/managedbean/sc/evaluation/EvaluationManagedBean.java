@@ -6,6 +6,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -14,7 +15,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
@@ -54,7 +54,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> disQualifiedList;
 	private ScQtEvaluationResult scQtEvaluationResult;
 	private int tabActiveIndex;
-	private List<ScQtItem> scQtItemList;
+	private List<ScRequestItem> scQtItemList;
 	
 	private ScQtCommitteeActivity commiteeActivity;
 	private ScQt scqt;
@@ -425,7 +425,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scQtItemList
 	 */
-	public List<ScQtItem> getScQtItemList() {
+	public List<ScRequestItem> getScQtItemList() {
 		return scQtItemList;
 	}
 
@@ -433,7 +433,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 * @param scQtItemList
 	 *            the scQtItemList to set
 	 */
-	public void setScQtItemList(List<ScQtItem> scQtItemList) {
+	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
 		this.scQtItemList = scQtItemList;
 	}
 

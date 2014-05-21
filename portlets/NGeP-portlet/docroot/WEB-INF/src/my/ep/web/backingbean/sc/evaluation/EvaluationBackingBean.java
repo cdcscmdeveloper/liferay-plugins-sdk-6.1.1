@@ -127,7 +127,7 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			if (this.getManagedBean().getScQtMeetings() == null) {
 				reqDTO.setQtId(146L);
-				reqDTO.setMeetingType("SC");
+				reqDTO.setCommitteType("SC");
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 
 				if (resDTO.getMeetingDtls() != null) {
@@ -172,7 +172,7 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			if (this.getManagedBean().getCommitteeMemberList() == null) {
 				reqDTO.setQtId(146L);
-				reqDTO.setMeetingType("SC");
+				reqDTO.setCommitteType("SC");
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 
 				if (resDTO.getCommitteMembers() != null

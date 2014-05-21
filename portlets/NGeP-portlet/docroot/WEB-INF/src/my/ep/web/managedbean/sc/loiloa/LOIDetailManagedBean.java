@@ -8,13 +8,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -60,7 +60,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public String Address;
 
 	
-	private List<ScQtItem> scQtItemList;
+	private List<ScRequestItem> scQtItemList;
 	
 	private List<PmOrgProfile> userMinistryList;
 	private List<PmOrgProfile> userDepartmentList;
@@ -215,14 +215,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scQtItemList
 	 */
-	public List<ScQtItem> getScQtItemList() {
+	public List<ScRequestItem> getScQtItemList() {
 		return scQtItemList;
 	}
 
 	/**
 	 * @param scQtItemList the scQtItemList to set
 	 */
-	public void setScQtItemList(List<ScQtItem> scQtItemList) {
+	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
 		this.scQtItemList = scQtItemList;
 	}
 

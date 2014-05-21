@@ -394,7 +394,7 @@ public class TemplateMaintenanceBackingBean extends
 			specMaster.setTemplateTypeCode(parameter);
 			specMaster.setProcessType("SS");
 			specMaster.setOrgProfile(profileRes.getPmOrgProfile());
-			specMaster.setDurationMonth(12);
+			//specMaster.setDurationMonth(12);
 			specMaster.setTemplateStatus("D");
 			specMaster.setScQtDocs(null);
 			specMaster.setChangedBy(2L);
@@ -422,8 +422,8 @@ public class TemplateMaintenanceBackingBean extends
 
 			if (checkList.getQtChecklistId() == null) {
 
-				checkList.setDocType("0");
-				checkList.setChecklistType("TS");
+			/*	checkList.setDocType("0");
+				checkList.setChecklistType("TS");*/
 				checkList.setChecklistSeq(1);
 				checkList.setRecordStatus(this.getManagedBean().getScqtDoc()
 						.isRecordStatus());

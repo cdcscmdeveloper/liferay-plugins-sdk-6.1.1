@@ -203,8 +203,8 @@ public class SourcingTemplateDocBackingBean extends
 
 			if (checkList.getQtChecklistId() == null) {
 
-				checkList.setDocType("0");
-				checkList.setChecklistType("TD");
+				//checkList.setDocType("0");
+				//checkList.setChecklistType("TD");
 				checkList.setChecklistSeq(1);
 				checkList.setRecordStatus(this.getManagedBean().getScQtDoc()
 						.isRecordStatus());

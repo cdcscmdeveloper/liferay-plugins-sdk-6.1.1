@@ -16,16 +16,15 @@ import my.ep.dto.sc.quationtender.EvaluationReportResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.LocationSingleton;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -88,7 +87,7 @@ public class SupplierFinalizationBackingBean extends
 					.getScQtCriterias().getScQtZoneCriterias();*/
 			///this.getManagedBean().setZonelist(zonelist);
 
-			List<ScQtItem> itemlist = resDTO.getItemResultBean()
+			List<ScRequestItem> itemlist = resDTO.getItemResultBean()
 					.getResultList();
 			this.getManagedBean().setItemSuppFinalizationlist(itemlist);
 
@@ -293,8 +292,8 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			SuppFinalizationResDTO resDTO = suppFinalizationSO
 					.retrieveSuppFinalizationDtl(reqDTO);
-			meetingDetails.setScQt(resDTO.getScQt());
-			meetingDetails.setMeetingType("QC");
+		//	meetingDetails.setScQt(resDTO.getScQt());
+		//	meetingDetails.setMeetingType("QC");
 			meetingDtllist.add(meetingDetails);
 			this.getManagedBean().setMeetingDetails(meetingDtllist);
 		} catch (Exception e) {
@@ -324,7 +323,7 @@ public class SupplierFinalizationBackingBean extends
 			/*this.getManagedBean().setZonelist(zoneList);
 			getManagedBean().setZoneItemList(zoneList);*/
 
-			List<ScQtItem> itemlist = resDTO.getItemResultBean()
+			List<ScRequestItem> itemlist = resDTO.getItemResultBean()
 					.getResultList();
 			System.out.println("itemlist: " + itemlist.size());
 			this.getManagedBean().setItemPreSummarylist(itemlist);
@@ -379,8 +378,8 @@ public class SupplierFinalizationBackingBean extends
 
 	public void getZoneByItemDtl(SelectEvent selectEvent) {
 		debugLogger("getZoneByItemDtl");
-		ScQtItem item = (ScQtItem) selectEvent.getObject();
-		System.out.println("Item Id : " + item.getQtItemId() + "Item Name : "
+		ScRequestItem item = (ScRequestItem) selectEvent.getObject();
+		System.out.println("Item Id : " + item.getRequestNoteItemId() + "Item Name : "
 				+ item.getItemName());
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {

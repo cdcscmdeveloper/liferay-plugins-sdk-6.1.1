@@ -171,8 +171,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			SPDetailBackingBean backingBean = new SPDetailBackingBean();
 			backingBean.getManagedBean().setProposalData(proposalDateType);
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-			backingBean.retrieveTechnicalProposalList(proposalDateType
-					.getQtId().longValue());
+		//	backingBean.retrieveTechnicalProposalList(proposalDateType
+			//		.getQtId().longValue());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()

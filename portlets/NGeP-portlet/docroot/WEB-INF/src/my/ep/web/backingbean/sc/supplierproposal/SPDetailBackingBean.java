@@ -39,9 +39,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType;
-import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationPortType;
-import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationServiceLocator;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -374,62 +371,7 @@ public class SPDetailBackingBean extends
 	}
 
 	public String createProposal() {
-		ProposalPreparationServiceLocator locator = new ProposalPreparationServiceLocator();
-		// locator.setSiteVisitPortEndpointAddress("http://192.168.120.17:8001/soa-infra/services/default/Sourcing/SiteVisit.service");
-
-		SC_SiteVisitProposal_DataType dataType = new SC_SiteVisitProposal_DataType();
-		System.out.println(dataType);
-		String qtno = this.getManagedBean().getSupplierId();
-
-		try {
-			if (qtno == null) {
-				throw new EpException("");
-			} else {
-				dataType.setQt_id(new Integer(qtno));
-
-			}
-			dataType.setSupplier(new FacesScopes().getUserScreenName());
-			// Calendar c = Calendar.getInstance(); // gives u calendar with
-			Calendar calendar = Calendar.getInstance();
-
-			// Set the time for the notification to occur.
-			calendar.set(Calendar.YEAR, 2013);
-			calendar.set(Calendar.MONTH, 12);
-			calendar.set(Calendar.DAY_OF_MONTH, 13);
-			calendar.set(Calendar.HOUR_OF_DAY, 10);
-			calendar.set(Calendar.MINUTE, 45);
-			calendar.set(Calendar.SECOND, 0); // current time
-
-			dataType.setClosing_time(calendar);
-			dataType.setApproval(true);
-
-			ProposalPreparationPortType port = locator
-					.getProposalPreparationPort();
-
-			String docnumber = "123we34";
-			port.start(dataType, docnumber);
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/shared/acknowledge.xhtml");
-		} catch (ServiceException e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process.", ""));
-		} catch (RemoteException e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process.", ""));
-		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process.", ""));
-		}
+		
 		return null;
 	}
 

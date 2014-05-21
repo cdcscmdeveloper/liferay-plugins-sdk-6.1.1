@@ -10,13 +10,13 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCurrency;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -54,7 +54,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<ScPerformanceBond> scBondDtlList;
 	private List<ScPerformanceBond> selectScBondDtlList;
 	
-	private List<ScQtItem> scQtItemList;
+	private List<ScRequestItem> scQtItemList;
 	private PmCurrency pmCurrency;
 	
 	private List<PmOrgProfile> userMinistryList;
@@ -361,14 +361,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the scQtItemList
 	 */
-	public List<ScQtItem> getScQtItemList() {
+	public List<ScRequestItem> getScQtItemList() {
 		return scQtItemList;
 	}
 
 	/**
 	 * @param scQtItemList the scQtItemList to set
 	 */
-	public void setScQtItemList(List<ScQtItem> scQtItemList) {
+	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
 		this.scQtItemList = scQtItemList;
 	}
 
