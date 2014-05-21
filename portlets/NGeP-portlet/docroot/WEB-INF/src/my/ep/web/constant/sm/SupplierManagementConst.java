@@ -61,6 +61,7 @@ public class SupplierManagementConst {
 	public static final int ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
 	public static final int RECORD_DELETED = 1;
+	public static final String COUNTRY_MALAYSIA_CODE="MY";
 
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
@@ -130,6 +131,20 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
+	//SmPersonnel Parameter for staff role 
+	
+	public static final String SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR ="KPT";
+	public static final String SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT ="JPT";
+	
+	public static final String PERSONNEL_MANAGEMENT_STAFF_CONSULTANT_PARAMCODE = "1";
+	public static final String PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE = "2";
+	public static final String PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE = "3";
+	public static final String PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE = "4";
+	
+	
+	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
+	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";

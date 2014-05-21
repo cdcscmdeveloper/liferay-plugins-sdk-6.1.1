@@ -42,6 +42,7 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.SmPersonnleCalcVO;
 
 import com.liferay.portal.model.Role;
 
@@ -314,6 +315,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private Long[] reasonId;
 
+	private SmPersonnleCalcVO personCalc;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -566,6 +569,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For CategoryCodes End
 
 		testBlock = Boolean.TRUE;
+		personCalc = new SmPersonnleCalcVO();
 		// setdefault panel names
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
@@ -1828,6 +1832,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAuthPerCount(int authPerCount) {
 		this.authPerCount = authPerCount;
+	}
+
+	public SmPersonnleCalcVO getPersonCalc() {
+		return personCalc;
+	}
+
+	public void setPersonCalc(SmPersonnleCalcVO personCalc) {
+		this.personCalc = personCalc;
 	}
 
 }

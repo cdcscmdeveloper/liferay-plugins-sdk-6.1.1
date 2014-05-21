@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -34,6 +35,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -41,6 +43,8 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -109,13 +113,12 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -157,47 +160,53 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
 			if (!fromBpm) {
-				
+
 				int cannotRenewAlertMsg = 0;
-				
+
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
 				} else if (applicationType.equalsIgnoreCase("R")) {
 					cannotRenewAlertMsg = validateBeforeRenewal((long) 27);
 				}
-				if(cannotRenewAlertMsg == 1){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
-									""));		
+				if (cannotRenewAlertMsg == 1) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
+											""));
 					return setExceptionNavigationForAppl(applicationType);
-				} else if(cannotRenewAlertMsg == 2){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Cannot renew as account is no longer active. Please register anew.",
-									""));		
+				} else if (cannotRenewAlertMsg == 2) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Cannot renew as account is no longer active. Please register anew.",
+											""));
 					return setExceptionNavigationForAppl(applicationType);
-				}else {
-				
-					resDto = cloneSmApplicationDraft((long) 27, applicationType,
-							smAppl.getSupplierType());
+				} else {
+
+					resDto = cloneSmApplicationDraft((long) 27,
+							applicationType, smAppl.getSupplierType());
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
-	
+
 					}
 					smApplSupplier = resDto.getSmSupplier();
-	
+
 					resDto = retriveLatestDraftApplication(smApplSupplier,
 							applicationType);
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
 					}
-	
+
 					smAppl = resDto.getSmAppl();
-	
+
 					System.out.println("Retrieved Value ==="
 							+ smAppl.getSmCompanyBasic().getIncomeTaxNo()
 							+ " === EST DATE ==== "
@@ -207,8 +216,10 @@ public class SmApplicationBackingBean extends
 									+ smAppl.getApplId()
 									+ "--- Basic info ---"
 									+ smAppl.getSmCompanyBasic()
-											.getCompanyBasicId() + " --- "
-									+ smAppl.getSmCompanyBasic().getCompanyName()
+											.getCompanyBasicId()
+									+ " --- "
+									+ smAppl.getSmCompanyBasic()
+											.getCompanyName()
 									+ " --- Supplier Type ---"
 									+ smAppl.getSupplierType());
 					System.out
@@ -232,7 +243,7 @@ public class SmApplicationBackingBean extends
 				System.out.println("**** LOGIN IS PO or APPROVER *******"
 						+ smAppl.getApplCategoryType());
 				// smAppl.setSupportingDocMode("O");
-				// smAppl.setSupplierType("J");
+				// smAppl.setSupplierType(SupplierManagementConst.STYPE_CONSULTANT);
 
 				if (smAppl.getSmCompanyBasic() == null) {
 					System.out.println(" **** COMPANY BAsic cannot be null");
@@ -352,6 +363,7 @@ public class SmApplicationBackingBean extends
 					setDefaultApproverReviewSection();
 				}
 			}
+			calcPersonnelListCount();
 			return setNavigationForAppl(applicationType);
 
 		} catch (Exception e) {
@@ -363,33 +375,34 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private int validateBeforeRenewal(Long supplierId){
-		
+	private int validateBeforeRenewal(Long supplierId) {
+
 		int result = 0;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm",
-						IMofRegistrationSO.class);
-		
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
 		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
-		
+
 		reqDto.setSupplierId(supplierId);
 		resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
-		
-		if(resDto.getSmSupplier() != null){
-			
+
+		if (resDto.getSmSupplier() != null) {
+
 			SmSupplier smSupplier = resDto.getSmSupplier();
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
-			
-			for(SmMofAccount account : accounts){
-				if(account.getSupplierType().equalsIgnoreCase(smSupplier.getSmAppl().getSupplierType())){
-					
-					long diff = account.getExpDate().getTime() - (new Date()).getTime();
+
+			for (SmMofAccount account : accounts) {
+				if (account.getSupplierType().equalsIgnoreCase(
+						smSupplier.getSmAppl().getSupplierType())) {
+
+					long diff = account.getExpDate().getTime()
+							- (new Date()).getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
-					
-					if(diffDays > 90){
+
+					if (diffDays > 90) {
 						result = 1;
-					} else if(diffDays < -365){
+					} else if (diffDays < -365) {
 						result = 2;
 					}
 				}
@@ -397,7 +410,7 @@ public class SmApplicationBackingBean extends
 		}
 		return result;
 	}
-	
+
 	// TODO Remove the method added only for demo purpose
 	public void assignTaskListSampleForDemo(String bpmApplType) {
 
@@ -442,7 +455,7 @@ public class SmApplicationBackingBean extends
 			bpmSmAppl.setSmSupplier(smApplSupplier);
 			// mofRegAppl.setSmAddress(smAddress);
 			// 1- For Contractor, 2 - For Consultant
-			bpmSmAppl.setSupplierType("J");
+			bpmSmAppl.setSupplierType(SupplierManagementConst.STYPE_CONSULTANT);
 			bpmSmAppl.setApplType(bpmApplType);
 			// TODO Set default not null values -- Start insert appl ---
 			// bpmSmAppl.getPmStatus().setStatusId(20001l);
@@ -890,6 +903,7 @@ public class SmApplicationBackingBean extends
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
 		case "CapitalInfo":
+			//assignEnteredStaffValues();
 			if (getManagedBean()
 					.getSmAppl()
 					.getSmCompanyBasic()
@@ -908,6 +922,7 @@ public class SmApplicationBackingBean extends
 				return false;
 
 			}
+			calcPersonnelListCount();
 			break;
 		case "PersonnelInfo":
 			int mgmtCount = 0;
@@ -919,8 +934,11 @@ public class SmApplicationBackingBean extends
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
 				System.out.println("**** EPF Value --- >>>> " + per.getEpfNo());
-				if (getManagedBean().getSmAppl().getSupplierType()
-						.equalsIgnoreCase("K")) {
+				if (getManagedBean()
+						.getSmAppl()
+						.getSupplierType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.STYPE_CONTRACTOR)) {
 					if (per.isDirector() || per.isHigherManagement()) {
 						directorCount = directorCount + 1;
 					} else if (per.getStaffRoleFlg() != null
@@ -931,8 +949,11 @@ public class SmApplicationBackingBean extends
 						staffCount = staffCount + 1;
 					}
 				}
-				if (getManagedBean().getSmAppl().getSupplierType()
-						.equalsIgnoreCase("J")) {
+				if (getManagedBean()
+						.getSmAppl()
+						.getSupplierType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.STYPE_CONSULTANT)) {
 					if (per.getStaffRoleFlg() != null
 							&& per.getStaffRoleFlg() == 833
 							&& per.getEpfNo() != null && per.getEpfNo() != "") {
@@ -972,7 +993,7 @@ public class SmApplicationBackingBean extends
 
 			}
 			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase("J")) {
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (semiProfCount < 1) {
 					FacesContext
 							.getCurrentInstance()
@@ -1008,7 +1029,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase("K")) {
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				if (directorCount < 1) {
 					FacesContext
 							.getCurrentInstance()
@@ -1647,7 +1668,8 @@ public class SmApplicationBackingBean extends
 		exp.setRevNo(1);
 		exp.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		exp.setSmAppl(getManagedBean().getSmAppl());
-		if (getManagedBean().getSmAppl().getSupplierType().equals("J")) {
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			exp.setProcurementModeId(new BigDecimal(0));
 		}
 		getManagedBean().setSelectedCompanyExperience(exp);
@@ -2287,7 +2309,7 @@ public class SmApplicationBackingBean extends
 			throws ParseException {
 		boolean validShrHldr = true;
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase("J")
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder()
 						.getWorkExperienceYear() < 5) {
 			System.out
@@ -2341,6 +2363,7 @@ public class SmApplicationBackingBean extends
 			if (fromPage.equalsIgnoreCase("personnelInfo")) {
 				RequestContext.getCurrentInstance().execute(
 						"perShareHolderDialog.hide()");
+				calcPersonnelListCount();
 			}
 
 		}
@@ -2442,6 +2465,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmapplShareHolders().remove(shr);
 			}
 			getManagedBean().getSelectedShareHolders().clear();
+			calcPersonnelListCount();
 		} else {
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
@@ -2731,6 +2755,7 @@ public class SmApplicationBackingBean extends
 			}
 
 			// updateSmAppl(getManagedBean().getSmAppl().getApplType(),"Def");
+			calcPersonnelListCount();
 			RequestContext.getCurrentInstance()
 					.execute("directorDialog.hide()");
 		}
@@ -2973,6 +2998,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmPersonnels().remove(per);
 			}
 			getManagedBean().getSelectedPersonnels().clear();
+			calcPersonnelListCount();
 		} else {
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
@@ -3618,13 +3644,14 @@ public class SmApplicationBackingBean extends
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
 		System.out.println("****  getStaffList *********" + supplierType);
 		SmAppl app = getManagedBean().getSmAppl();
-		if (supplierType.equals("K")) {
+		if (supplierType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			SmStaffTotal stf = new SmStaffTotal();
 			stf.setRevNo(new BigDecimal(1));
 			stf.setStaffCategory("C");
 			stf.setSmAppl(app);
 			staffList.add(stf);
-		} else if (supplierType.equals("J")) {
+		} else if (supplierType
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
 			stf1.setStaffCategory("P");
 			stf1.setSmAppl(app);
@@ -3650,6 +3677,26 @@ public class SmApplicationBackingBean extends
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
+	}
+
+	private PmCountry retrievePmCountryById(Long countryId) {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryId(countryId);
+		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
+
+		return resDTO.getPmCountry();
+	}
+
+	private PmParameter retrievePmParameterById(Long paramId) {
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(paramId);
+		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
+
+		return resDTO.getPmParameter();
 	}
 
 	private void retrieveParentCategoryList() {
@@ -4006,7 +4053,8 @@ public class SmApplicationBackingBean extends
 			break;
 
 		}
-		if (supplierType.equalsIgnoreCase("J")) {
+		if (supplierType
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 			i = i + 1;
 		}
 		return i;
@@ -4898,6 +4946,7 @@ public class SmApplicationBackingBean extends
 										+ pers.getIdentificationNo()
 										+ "' already exists."));
 				validUser = false;
+				break;
 			}
 		}
 		return validUser;
@@ -4906,7 +4955,7 @@ public class SmApplicationBackingBean extends
 	private boolean validateIctCatCode() {
 		boolean validCat = true;
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase("J")) {
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 			int prfCnt = 0;
 			int semPrfCnt = 0;
 			for (SmPersonnel per : getManagedBean().getSmAppl()
@@ -4953,7 +5002,7 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase("K")) {
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			System.out.println("***** Validate ICT For contractor ********");
 
 			int ownrCnt = 0;
@@ -5047,5 +5096,257 @@ public class SmApplicationBackingBean extends
 
 		return validCat;
 
+	}
+
+	private void assignEnteredStaffValues() {
+		for (SmStaffTotal stf : getManagedBean().getSmAppl().getSmStaffTotals()) {
+			if (stf.getStaffCategory().equalsIgnoreCase("C")
+					|| stf.getStaffCategory().equalsIgnoreCase("L")) {
+				getManagedBean().getPersonCalc().setStfBumiActCnt(
+						stf.getTotalBumi());
+				getManagedBean().getPersonCalc().setStfFrgActCnt(
+						stf.getTotalForeigner());
+				getManagedBean().getPersonCalc().setStfNonBumiActCnt(
+						stf.getTotalNonBumi());
+			} else if (stf.getStaffCategory().equalsIgnoreCase("P")) {
+				getManagedBean().getPersonCalc().setProfBumiActCnt(
+						stf.getTotalBumi());
+				getManagedBean().getPersonCalc().setProfFrgActCnt(
+						stf.getTotalForeigner());
+				getManagedBean().getPersonCalc().setProfNonBumiActCnt(
+						stf.getTotalNonBumi());
+			} else if (stf.getStaffCategory().equalsIgnoreCase("S")) {
+				getManagedBean().getPersonCalc().setSemiBumiActCnt(
+						stf.getTotalBumi());
+				getManagedBean().getPersonCalc().setSemiFrgActCnt(
+						stf.getTotalForeigner());
+				getManagedBean().getPersonCalc().setSemiNonBumiActCnt(
+						stf.getTotalNonBumi());
+			}
+		}
+	}
+
+	private void calcPersonnelListCount() {
+		resetAllPersonnelCount();
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			calcSumUpByPersonnel(per);
+		}
+
+	}
+
+	private void calcSumUpByPersonnel(SmPersonnel per) {
+		if (per.getPmCountry().getCountryCode() == null
+				|| per.getPmCountry().getCountryCode() == "") {
+			per.setPmCountry(retrievePmCountryById(per.getPmCountry()
+					.getCountryId()));
+		}
+		PmParameter param = null;
+		if (per.getPmStaffRole() != null
+				&& per.getPmStaffRole().getPmParameterType() != null) {
+			param = per.getPmStaffRole();
+
+		} else if (per.getStaffRoleFlg() != null) {
+			param = new PmParameter();
+			param = retrievePmParameterById(per.getStaffRoleFlg());
+		}
+
+		if (per.isEquityOwner() || per.isDirector()) {
+			setDirectorCount(per);
+		} 
+		if (per.isHigherManagement()) {
+			setHigherMngmtCount(per);
+		} else if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE)) {
+				// management
+				setManagementCount(per);
+			} else if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE)) {
+				// staff
+				setStaffEnteredCount(per);
+
+			}
+		} else if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_MANAGEMENT_STAFF_CONSULTANT_PARAMCODE)) {
+				// managment
+				setManagementCount(per);
+
+			} else if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE)) {
+				// prof
+				setProfEnteredCount(per);
+			} else if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE)) {
+				// semi
+				setSemiProfEnteredCount(per);
+			} else if (per.getStaffRoleFlg() != null
+					&& param != null
+					&& param.getPmParameterType()
+							.getParameterType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+					&& param.getParameterCode()
+							.equals(SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE)) {
+				// staff
+				setStaffEnteredCount(per);
+			}
+
+		}
+
+	}
+
+	private void setManagementCount(SmPersonnel per) {
+		// managment
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc().setMngtBumiCnt(
+						getManagedBean().getPersonCalc().getMngtBumiCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc()
+						.setMngtNonBumiCnt(
+								getManagedBean().getPersonCalc()
+										.getMngtNonBumiCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setMngtFrgCnt(
+					getManagedBean().getPersonCalc().getMngtFrgCnt() + 1);
+		}
+
+	}
+
+	private void setStaffEnteredCount(SmPersonnel per) {
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc()
+						.setStfBumiEnterCnt(
+								getManagedBean().getPersonCalc()
+										.getStfBumiEnterCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc().setStfNonBumiEnterCnt(
+						getManagedBean().getPersonCalc()
+								.getStfNonBumiEnterCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setStfFrgEnterCnt(
+					getManagedBean().getPersonCalc().getStfFrgEnterCnt() + 1);
+		}
+	}
+
+	private void setSemiProfEnteredCount(SmPersonnel per) {
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc()
+						.setSemiBumiEnterCnt(
+								getManagedBean().getPersonCalc()
+										.getSemiBumiEnterCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc().setSemiNonBumiEnterCnt(
+						getManagedBean().getPersonCalc()
+								.getSemiNonBumiEnterCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setSemiFrgEnterCnt(
+					getManagedBean().getPersonCalc().getSemiFrgEnterCnt() + 1);
+		}
+	}
+
+	private void setProfEnteredCount(SmPersonnel per) {
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc()
+						.setProfBumiEnterCnt(
+								getManagedBean().getPersonCalc()
+										.getProfBumiEnterCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc().setProfNonBumiEnterCnt(
+						getManagedBean().getPersonCalc()
+								.getProfNonBumiEnterCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setProfFrgEnterCnt(
+					getManagedBean().getPersonCalc().getProfFrgEnterCnt() + 1);
+		}
+	}
+
+	private void setHigherMngmtCount(SmPersonnel per) {
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc()
+						.setHghMngBumiCnt(
+								getManagedBean().getPersonCalc()
+										.getHghMngBumiCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc()
+						.setHghMngNonBumiCnt(
+								getManagedBean().getPersonCalc()
+										.getHghMngNonBumiCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setHghMngFrgCnt(
+					getManagedBean().getPersonCalc().getHghMngFrgCnt() + 1);
+		}
+	}
+
+	private void setDirectorCount(SmPersonnel per) {
+
+		if (per.getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			if (per.getBumiFlg() == 1) {
+				getManagedBean().getPersonCalc().setBodBumiCnt(
+						getManagedBean().getPersonCalc().getBodBumiCnt() + 1);
+			} else {
+				getManagedBean().getPersonCalc()
+						.setBodNonBumiCnt(
+								getManagedBean().getPersonCalc()
+										.getBodNonBumiCnt() + 1);
+			}
+		} else {
+			getManagedBean().getPersonCalc().setBodFrgCnt(
+					getManagedBean().getPersonCalc().getBodFrgCnt() + 1);
+		}
+
+	}
+
+	private void resetAllPersonnelCount() {
+		getManagedBean().setPersonCalc(new SmPersonnleCalcVO());
+		assignEnteredStaffValues();
 	}
 }
