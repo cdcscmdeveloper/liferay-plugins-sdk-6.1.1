@@ -1228,7 +1228,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/images");
 
 
-		//String tempDir = "C://image//";
+		//String tempDir = "C://image//test//";
 
 		UploadedFile item = event.getFile();
 
@@ -1261,7 +1261,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		try {	
 
-
+			/*String tempDir = "C://image//test";
+			 File dir = new File(tempDir);
+			 
+			 System.out.println(" dir.exists()"+ dir.exists());
+			 
+			 if(dir.exists()){
+				 
+			 }else{
+				 //dir.mkdirs(); 
+				 boolean wasDirecotyMade = dir.mkdirs();
+				 System.out.println("wasDirecotyMade"+wasDirecotyMade);
+			 }*/
+			
 
 
 			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(imageObj.getTempPath()));
