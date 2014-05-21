@@ -40,6 +40,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -332,14 +333,18 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			System.out.println(" Role ===  >> " + r.getName());
 			roleNames.add(r.getName());
 		}
-		if (sc.hasRoleUser("UPS_PO_HQ")) {
+		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
+				|| sc.hasRoleUser(SupplierManagementConst.PO_SA)
+				|| sc.hasRoleUser(SupplierManagementConst.PO_SK)) {
 			setPoUser(true);
 			System.out.println("  *** LOGGED IN USER IS PO ****");
-		} else if (sc.hasRoleUser("UPS_APPROVER_HQ")) {
+		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_SA)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_SK)) {
 			setApproverUser(true);
 			System.out.println("  *** LOGGED IN USER IS APPROVER ****");
-		} else if (sc.hasRoleUser("SUPPLIER_ADMIN")
-				|| sc.hasRoleUser("SUPPLIER_USER")) {
+		} else if (sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
 			setSupplierUser(true);
 			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
 		} else {
@@ -588,7 +593,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deleteCategoryList;
 	}
 
-	public void setDeleteCategoryList(List<SmSupplierCategory> deleteCategoryList) {
+	public void setDeleteCategoryList(
+			List<SmSupplierCategory> deleteCategoryList) {
 		this.deleteCategoryList = deleteCategoryList;
 	}
 

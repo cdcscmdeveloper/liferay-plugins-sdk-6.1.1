@@ -903,7 +903,7 @@ public class SmApplicationBackingBean extends
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
 		case "CapitalInfo":
-			//assignEnteredStaffValues();
+			// assignEnteredStaffValues();
 			if (getManagedBean()
 					.getSmAppl()
 					.getSmCompanyBasic()
@@ -1886,14 +1886,16 @@ public class SmApplicationBackingBean extends
 
 	public void deleteSelectedCategoryCodes() {
 		if (getManagedBean().getDeleteCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean().getDeleteCategoryList();
-			
-			for(SmSupplierCategory category : categories){
-				getManagedBean().getSmAppl().getSmSupplierCategories().remove(category);
+			List<SmSupplierCategory> categories = getManagedBean()
+					.getDeleteCategoryList();
+
+			for (SmSupplierCategory category : categories) {
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.remove(category);
 			}
 		}
 	}
-	
+
 	public void saveSelectedCategory() {
 		// System.out.println(" ******* Save From Selection ****"
 		// + getManagedBean().getSelectedCategory().getCategoryType());
@@ -3177,13 +3179,18 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 
 			// TODO Remove the hard code later
-			reqDTO.setOutcome("SUBMIT");
+			reqDTO.setOutcome(SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
 			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
 			reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
 			reqDTO.setAppType(bpmAppl.getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setSmAppl(bpmAppl);
 			reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+					.getSupplierType().toUpperCase());
+			reqDTO.setBaseOfficeState(getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+					.getSmAddress().getPmState().getStateName().toUpperCase());
 
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 					.equalsIgnoreCase("O")) {
@@ -5162,7 +5169,7 @@ public class SmApplicationBackingBean extends
 
 		if (per.isEquityOwner() || per.isDirector()) {
 			setDirectorCount(per);
-		} 
+		}
 		if (per.isHigherManagement()) {
 			setHigherMngmtCount(per);
 		} else if (getManagedBean().getSmAppl().getSupplierType()
