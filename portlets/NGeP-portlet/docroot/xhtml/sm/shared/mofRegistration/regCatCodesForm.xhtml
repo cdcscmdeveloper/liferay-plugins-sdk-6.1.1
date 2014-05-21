@@ -71,7 +71,8 @@
 			<p:dataTable var="catBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
-				id="catDt" rendered="#{!(backingBean.managedBean.smAppl.applType == 'R')}">
+				id="catDt"
+				rendered="#{!(backingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
 				<p:columnGroup type="header">
 
@@ -127,8 +128,9 @@
 			<p:spacer height="2px;" />
 			<p:dataTable var="catBeanR"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
-				rowKey="#{catBeanR}" rowIndexVar="index"
-				id="catDtR" rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}" selection="#{backingBean.managedBean.deleteCategoryList}" selectionMode="multiple">
+				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
+				rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
+				selection="#{backingBean.managedBean.deleteCategoryList}">
 				<ac:paginator for="catDtR" />
 				<p:columnGroup type="header">
 
@@ -159,8 +161,10 @@
 					<h:outputText value=" -- TBC -- " />
 				</p:column>
 				<p:column>
-					<h:outputText value="Normal" rendered="#{!catBeanR.specialCategory}" />
-					<h:outputText value="Special" rendered="#{catBeanR.specialCategory}" />
+					<h:outputText value="Normal"
+						rendered="#{!catBeanR.specialCategory}" />
+					<h:outputText value="Special"
+						rendered="#{catBeanR.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR">
@@ -189,10 +193,11 @@
 					action="#{backingBean.assignNewCategoryCode}"
 					update=":form:tt:regCatDialog, :form:tt:catDtR"
 					disabled="#{backingBean.managedBean.smAppl.applCategoryType == null}" />
-			
+
 				<p:commandButton value="Delete"
 					action="#{backingBean.deleteSelectedCategoryCodes}"
-					update=":form:tt:catDtR" rendered="#{(backingBean.managedBean.smAppl.applType == 'R')}"/>
+					update=":form:tt:catDtR"
+					rendered="#{(backingBean.managedBean.smAppl.applType == 'R')}" />
 			</div>
 
 			<br />
