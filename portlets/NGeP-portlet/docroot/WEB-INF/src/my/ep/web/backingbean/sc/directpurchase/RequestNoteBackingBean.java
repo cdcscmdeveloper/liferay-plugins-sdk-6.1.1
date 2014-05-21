@@ -975,8 +975,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		log.info("showPurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
 		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
 	 try{
-		if(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault().getPurchaseInDefaultId() != null){
+		if(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault() != null){
 			// Purchase In Default	
 		     purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
@@ -984,7 +986,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			purchaseInDefaultReqDTO.setFetchSubEntity(true);
 			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
 			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
-			PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
+			
 			if(purchaseInDefault != null){
 				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
@@ -1000,11 +1002,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
 				
 				// disable all for pid view
-				purchaseInDefaultBackingBean.getManagedBean().setApproverFlag(true);
-			}
+				purchaseInDefaultBackingBean.getManagedBean().setApproverFlag(Boolean.TRUE);
+				
+				// TODO current page url for page navigation from pid to request note
+				purchaseInDefaultBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
+			} 
 		}
-         
-		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
 	} catch (Exception ex) {
 		FacesContext.getCurrentInstance().addMessage(
@@ -1016,5 +1019,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		purchaseInDefaultSO = null;
 	}
 	}
+	
+
+	public String cancel() {
+		log.info("cancel");
+		// clear request note data
+		 super.renewSesionObject();
+		return "catalogueSearch";
+	}
+
 
 }
