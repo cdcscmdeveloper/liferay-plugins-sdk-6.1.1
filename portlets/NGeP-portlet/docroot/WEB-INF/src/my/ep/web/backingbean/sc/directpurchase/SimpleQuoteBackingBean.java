@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -41,6 +42,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
@@ -76,6 +79,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -168,6 +172,8 @@ public class SimpleQuoteBackingBean extends
 				//scQuote.setScRequestListSupplierItems(scRequestSupplierItems);
 			}
 		}
+		
+		
 		// TODO check flag for panel item or non contract item
 		if(itemPanelFlag){
 			getManagedBean().setIsPanel(1);
@@ -177,12 +183,50 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setIsPanel(0);
 			getManagedBean().setIsZonal(0);
 			scQuote.setMultipleQuote(Boolean.TRUE);
+			
+			if (getManagedBean().getCmSupplierItem() != null) {
+				// TODO check flag for panel item or non contract item
+				String ItemCode = getManagedBean().getCmSupplierItem().getCmItem().getExtensionCode();
+				CharSequence charSeq = ItemCode.subSequence(0, 2);
+				Integer icode = Integer.valueOf(charSeq.toString());
+
+				// TODO checking first two digits in itemCode whether service or product
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlFirstTime(quoteReqDTO);
+				for (ScQuoteDoc quoteDoc : quoteResDTO.getQuoteDocs()) {
+					//if (icode > ParameterConst.PRODUCT_OR_SERVICE) { // for service
+						//if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
+							TemplateSpecBean serviceTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
+							TplSpecMaster serviceTpl =  quoteDoc.getSpecMaster();
+							List<TplSpecQuestion> tplSpecQuestions = new ArrayList<TplSpecQuestion>();
+							TplSpecQuestion specQuestion = new TplSpecQuestion();
+							specQuestion.setClItem(getManagedBean().getCmSupplierItem().getCmItem().getItemName());
+							tplSpecQuestions.add(specQuestion);
+							serviceTpl.setTplSpecQuestions(tplSpecQuestions);
+							serviceTemplateSpecBean.setSpecMaster(serviceTpl);
+							getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
+					  
+				 // } else if (icode < ParameterConst.PRODUCT_OR_SERVICE) { // product
+					  //if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
+						  TemplateSpecBean productTemplateSpecBean = getManagedBean().getProductTemplateSpecBean();
+						  TplSpecMaster prodTpl = quoteDoc.getSpecMaster();
+						  List<TplSpecQuestion> serviceQuestions = new ArrayList<TplSpecQuestion>();
+						  TplSpecQuestion serviceQuestion = new TplSpecQuestion();
+						  specQuestion.setClItem(getManagedBean().getCmSupplierItem().getCmItem().getItemName());
+						  serviceQuestions.add(serviceQuestion);
+						  prodTpl.setTplSpecQuestions(serviceQuestions);
+						  productTemplateSpecBean.setSpecMaster(prodTpl);
+						  getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
+					 // }
+				 // }
+			//}
 		}
+	}}
 		// WorkFlow Status
 		List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 		ScSQWorkFlowStatus workFlowStatus = new ScSQWorkFlowStatus();
 		workFlowStatus.setQuote(scQuote);
-		/*PmStatus status = new PmStatus();
+		PmStatus status = new PmStatus();
 		status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		if (status != null) {
@@ -190,7 +234,7 @@ public class SimpleQuoteBackingBean extends
 			StatusResDTO statusResDTO = iStatusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-		}*/
+		}
 		workFlowStatus.setCurrent(Boolean.TRUE);
 		workFlowStatuses.add(workFlowStatus);
 		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
@@ -240,7 +284,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// location level by default - district 
 		getManagedBean().setLocationLevel(3);
-
+		
 		return "simpleQuote";
 	}
 
@@ -257,6 +301,7 @@ public class SimpleQuoteBackingBean extends
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 			quote.setQuoteNo(quoteSO.generateQuoteNo());
+			
 			ScRequestItem requestItem = new ScRequestItem();
 			List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 			requestItems.add(requestItem);
@@ -265,6 +310,8 @@ public class SimpleQuoteBackingBean extends
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 			requestNote.setPmOrgProfile(ptjNameEvent());
+			requestNote.setWorkFlowStatuses(null);
+			requestNote.setQuote(quote);
 			quote.setRequestItems(requestItems);
 			quote.setRequestNote(requestNote);
 			quote.setCreatedDate(DateUtils.getCurrentDate());
@@ -277,6 +324,7 @@ public class SimpleQuoteBackingBean extends
 			quoteSupplier.setQuote(quote);
 			suppliers.add(quoteSupplier);
 			quote.setScQuoteSuppliers(suppliers);
+			
 			quote.setProcurementType(getManagedBean().getProcurementType());
 			quote.setIsPanel(getManagedBean().getIsPanel());
 			quote.setIsZonal(getManagedBean().getIsZonal());
@@ -311,7 +359,7 @@ public class SimpleQuoteBackingBean extends
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
-				quoteDoc.setSpecMaster((getManagedBean().getProductTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
 				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
@@ -321,7 +369,7 @@ public class SimpleQuoteBackingBean extends
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
-				quoteDoc.setSpecMaster((getManagedBean().getServiceTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
 				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
@@ -370,12 +418,7 @@ public class SimpleQuoteBackingBean extends
 							IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
-			/*ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
-			quoteSupplier.setSmSupplier(getManagedBean().getCmSupplierItem().getSmSupplier());
-			quoteSupplier.setQuote(quote);
-			suppliers.add(quoteSupplier);
-			quote.setScQuoteSuppliers(suppliers);*/
+			List<ScQuoteSupplier> suppliers = quote.getScQuoteSuppliers();
 			
 			quote.setProcurementType(getManagedBean().getProcurementType());
 			quote.setIsPanel(getManagedBean().getIsPanel());
@@ -389,7 +432,9 @@ public class SimpleQuoteBackingBean extends
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
+			requestNote.setWorkFlowStatuses(null);
 			requestNote.setPmOrgProfile(ptjNameEvent());
+			requestNote.setQuote(quote);
 			quote.setRequestNote(requestNote);
 			quote.setCreatedDate(DateUtils.getCurrentDate());
 			//zone
@@ -414,7 +459,6 @@ public class SimpleQuoteBackingBean extends
 			}
 			if(suppliers != null){
 				quote.setScQuoteSuppliers(suppliers);
-
 			}
 			
 			//remarks
@@ -424,7 +468,7 @@ public class SimpleQuoteBackingBean extends
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 				ScQuoteDoc quoteDoc = new ScQuoteDoc();
-				quoteDoc.setSpecMaster((getManagedBean().getProductTemplateSpecBean().getSpecMaster()));
+				quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
 				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
 				quote.setQuoteDocs(quoteDocs);
@@ -437,7 +481,7 @@ public class SimpleQuoteBackingBean extends
 				quoteDoc.setSpecMaster((getManagedBean().getServiceTemplateSpecBean().getSpecMaster()));
 				quoteDoc.setQuote(getManagedBean().getScQuote());
 				quoteDocs.add(quoteDoc);
-				quote.setQuoteDocs(quoteDocs);
+				//quote.setQuoteDocs(quoteDocs);
 			}
 
 			 FacesScopes facesScopes = new FacesScopes();
@@ -1462,8 +1506,11 @@ public class SimpleQuoteBackingBean extends
 		// Business Nature Criteria
 		if(getManagedBean().getBusinessNatureCriterias() != null){
 			for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
-				busiNatureCriteria.append(natureQuoteCriteria.getBusinessNature().getBusinessNatureId())
-				.append(",");
+				if(natureQuoteCriteria.getBusinessNature() !=null){
+					busiNatureCriteria.append(natureQuoteCriteria.getBusinessNature().getBusinessNatureId())
+					.append(",");
+				}
+				
 			}
 		}
 		
@@ -1527,11 +1574,13 @@ public class SimpleQuoteBackingBean extends
 	
 	
 	/**
-	 * render the view base on the task id
+	 * render the view based on the task id
 	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
 			this.getManagedBean().setTaskId(taskId);
@@ -1568,6 +1617,7 @@ public class SimpleQuoteBackingBean extends
 
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				scQuote.setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+				// remarks
 				List<ScSQRemark> results= new ArrayList<ScSQRemark>();
 				if(scQuote.getRemarks() != null){
 					for (ScSQRemark remark : scQuote.getRemarks()) {
@@ -1579,20 +1629,149 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 				scQuote.setRemarks(results);
-				getManagedBean().setProcessName(res.getProcessName());
-				getManagedBean().setOutComes(res.getAction());
-				getManagedBean().setScQuote(scQuote);
-				getManagedBean().setDurationDropdown(ParameterConst.SQ_DURATION_DAY);
-				getManagedBean().setIsPanel(scQuote.getIsPanel());
-				getManagedBean().setIsZonal(scQuote.getIsZonal());
-				getManagedBean().setProcurementType(scQuote.getProcurementType());
-				getManagedBean().setDuration(0);
-				durationEvent();
-				getCurrentStatus(res.getDocStatus().longValue()); 
-				getManagedBean().setPmOrgProfile(null);
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
+                // service and product
+				if(scQuote.getQuoteDocs() != null){
+					for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
+						TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
+						if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+							productTplSpecBean.setSpecMaster(specMaster);
+							getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+							// service Tpl Spe
+						} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+							serviceTplSpecBean.setSpecMaster(specMaster);
+							getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+						}
+					}
+				}
+			getManagedBean().setProcessName(res.getProcessName());
+			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setScQuote(scQuote);
+			getManagedBean().setDurationDropdown(ParameterConst.SQ_DURATION_DAY);
+			getManagedBean().setIsPanel(scQuote.getIsPanel());
+			getManagedBean().setIsZonal(scQuote.getIsZonal());
+			getManagedBean().setProcurementType(scQuote.getProcurementType());
+			getManagedBean().setDuration(0);
+			getManagedBean().setPtjName(scQuote.getRequestNotes().getPmOrgProfile().getOrgName());
+			
+			// business nature details
+			IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IBusinessNatureSO.class);
+			BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+			 List<PmBusinessNature>	businessNatures = new ArrayList<PmBusinessNature>();
+			if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() > 0){
+				for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : scQuote.getBusinessNatureCriterias()) {
+					businessNatureReqDTO.setBusinessNatureId(Long.valueOf(natureQuoteCriteria.getCriteriaValue()).longValue());
+					//BusinessNatureResDTO resDTO = businessNatureSO.retrieveBusinessNatureById(businessNatureReqDTO);
+					//businessNatures.add(resDTO.getBusinessNature());
+				}
 			}
+			
+			if(businessNatures !=null && businessNatures.size() > 0){
+				businessNatureListener(businessNatures);
+			}
+			
+			initializeRemarks(scQuote);
+			getCurrentStatus(res.getDocStatus().longValue()); 
+			getManagedBean().setPmOrgProfile(null);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
 		}
 	}
+	}
+	
+	
+	/**
+	 * render the suppliver view based on the task id
+	 */
+	public void supplierView() {
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+		String taskId = originalServletRequest.getParameter("taskId");
+		if (StringUtils.isNotBlank(taskId)) {
+			this.getManagedBean().setTaskId(taskId);
+			log.info("taskId : " + taskId);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			this.getManagedBean().setOutComes(res.getAction());
+			this.getManagedBean().setProcessName(res.getProcessName());
+			Object obj = res.getPojo();
+			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
+			String	dpMode	=	directPurchaseDataType.getDpMode();
+
+			if(ParameterConst.REQUEST_NOTE_SQ.equalsIgnoreCase(dpMode)){ 
+				// Simple Quote
+			
+				// TODO based on status pending submission or supplier resp
+				if(((Long)(long)res.getDocStatus()).equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+					getManagedBean().setTaskId(null);
+				}else{
+					getManagedBean().setTaskId(taskId);
+				}
+
+				IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
+				quoteReqDTO.setQuoteId(quoteId);
+				quoteReqDTO.setFetchSubEntity(true);
+				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
+
+				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				scQuote.setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+				// remarks
+				List<ScSQRemark> results= new ArrayList<ScSQRemark>();
+				if(scQuote.getRemarks() != null){
+					for (ScSQRemark remark : scQuote.getRemarks()) {
+						remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+						remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+						remark.setChangedBy(remark.getCreatedBy());
+						remark.setUser(facesScopes.getUserSessionBean());
+						results.add(remark);
+					}
+				}
+				scQuote.setRemarks(results);
+                // service and product
+				if(scQuote.getQuoteDocs() != null){
+					for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
+						TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
+						if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+							productTplSpecBean.setSpecMaster(specMaster);
+							getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+							// service Tpl Spe
+						} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+							serviceTplSpecBean.setSpecMaster(specMaster);
+							getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+						}
+					}
+				}
+			getManagedBean().setProcessName(res.getProcessName());
+			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setScQuote(scQuote);
+			getManagedBean().setDurationDropdown(ParameterConst.SQ_DURATION_DAY);
+			getManagedBean().setIsPanel(scQuote.getIsPanel());
+			getManagedBean().setIsZonal(scQuote.getIsZonal());
+			getManagedBean().setProcurementType(scQuote.getProcurementType());
+			getManagedBean().setDuration(0);
+			getManagedBean().setPtjName(scQuote.getRequestNotes().getPmOrgProfile().getOrgName());
+			initializeRemarks(scQuote);
+			getCurrentStatus(res.getDocStatus().longValue()); 
+			getManagedBean().setPmOrgProfile(null);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");
+		}
+	}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
