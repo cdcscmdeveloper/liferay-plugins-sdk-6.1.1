@@ -161,33 +161,15 @@ public class SmApplicationBackingBean extends
 
 			if (!fromBpm) {
 
-				int cannotRenewAlertMsg = 0;
+				boolean cannotRenewAlertMsg = false;
 
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
-				} else if (applicationType.equalsIgnoreCase("R")) {
-					cannotRenewAlertMsg = validateBeforeRenewal((long) 27);
+				} else if (applicationType.equalsIgnoreCase("R") || applicationType.equalsIgnoreCase("A")) {
+					cannotRenewAlertMsg = validateBeforeRenewal((long) 27, applicationType);
 				}
-				if (cannotRenewAlertMsg == 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
-											""));
-					return setExceptionNavigationForAppl(applicationType);
-				} else if (cannotRenewAlertMsg == 2) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Cannot renew as account is no longer active. Please register anew.",
-											""));
+				if (cannotRenewAlertMsg) {
 					return setExceptionNavigationForAppl(applicationType);
 				} else {
 
@@ -375,9 +357,9 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private int validateBeforeRenewal(Long supplierId) {
+	private boolean validateBeforeRenewal(Long supplierId, String applicationType) {
 
-		int result = 0;
+		boolean result = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 
@@ -400,10 +382,40 @@ public class SmApplicationBackingBean extends
 							- (new Date()).getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
 
-					if (diffDays > 90) {
-						result = 1;
-					} else if (diffDays < -365) {
-						result = 2;
+					if(applicationType.equalsIgnoreCase("R")){
+					
+						if (diffDays > 90) {
+							result = true;
+							FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
+											""));
+	//						throw new EpException(MessageConst.EP_MAJ_00001);
+						} else if (diffDays < -365) {
+							result = true;
+							FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Cannot renew as account is no longer active. Please register a new account.",
+											""));
+						} 
+					} else if (smSupplier.getSmAppl().getApplType().equalsIgnoreCase("A") && diffDays < 90) {
+						result = true;
+						FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Cannot add new category codes as account is nearing expiry.",
+										""));
 					}
 				}
 			}
