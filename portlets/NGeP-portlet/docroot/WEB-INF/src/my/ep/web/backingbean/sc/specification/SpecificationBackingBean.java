@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
@@ -31,7 +32,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -61,8 +61,6 @@ import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -160,7 +158,6 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.jasper.tagplugins.jstl.core.Catch;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -445,14 +442,6 @@ public class SpecificationBackingBean extends
 										new FacesScopes().getUserLocale())));
 			}
 
-		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			e.printStackTrace();
 		} finally {
 			detailSO = null;
 		}
@@ -478,14 +467,6 @@ public class SpecificationBackingBean extends
 										new FacesScopes().getUserLocale())));
 			}
 
-		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			e.printStackTrace();
 		} finally {
 			detailSO = null;
 		}
@@ -664,8 +645,8 @@ public class SpecificationBackingBean extends
 
 						));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			qtTemplateSO = null;
 		}
 
 	}
@@ -689,9 +670,8 @@ public class SpecificationBackingBean extends
 			saveTempleateSpecDtls(finanicalScQtDoc, "2");
 			retriveTechnicalSpecification();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			// throw new IllegalArgumentException();
+		} finally {
+			
 		}
 		if (null == processName || "".equals(processName)) {
 			return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
@@ -783,9 +763,11 @@ public class SpecificationBackingBean extends
 	}
 
 	public void retriveBusinessOwnerQualificationCriteri() {
+		IQTDetailSO QtDetailsSO;
+		
 		try {
 
-			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+			QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -844,8 +826,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			QtDetailsSO = null;
 		}
 	}
 
@@ -882,8 +864,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSO = null;
 		}
 
 	}
@@ -922,8 +904,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSO = null;
 		}
 
 	}
@@ -960,18 +942,18 @@ public class SpecificationBackingBean extends
 
 			initializeRemarks();
 
-		} catch (Exception e) {
-
 		} finally {
-
+			qtDetailSO = null;
 		}
 	}
 
 	public void initializeRemarks() {
+		IStatusSO iStatusSO;
+		
 		try {
 
 			FacesScopes facesScopes = new FacesScopes();
-			IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
+			iStatusSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
 			ScQtRemark remark = null;
@@ -997,8 +979,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().getScQtRemarksList().add(remark);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			iStatusSO = null;
 		}
 	}
 
@@ -1025,8 +1007,8 @@ public class SpecificationBackingBean extends
 			 * 
 			 * }
 			 */
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 
@@ -1089,10 +1071,8 @@ public class SpecificationBackingBean extends
 						.setScQtCheckSt2techProposal(checkListList);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-
+			specSo = null;
 		}
 	}
 
@@ -1152,10 +1132,8 @@ public class SpecificationBackingBean extends
 						checkListList);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-
+			specSo = null;
 		}
 	}
 
@@ -1265,8 +1243,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalScoring(checklist);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 		return "weightageGroup.xhtml";
 	}
@@ -1453,8 +1431,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setFinancialScoring(localChecklist);
 
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 		return "financialScoring.xhtml";
 
@@ -1531,8 +1509,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 		return "recomondation.xhtml";
 	}
@@ -1781,8 +1759,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 
 	}
@@ -1831,8 +1809,8 @@ public class SpecificationBackingBean extends
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 	}
 
@@ -1852,8 +1830,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setStateList(resDto.getStateList());
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			stateSo = null;
 		}
 
 	}
@@ -1884,10 +1862,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setDistrictList(resDto.getDistrictList());
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-
+			districtSo = null;
 		}
 
 	}
@@ -1906,10 +1882,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setMinistryList(
 						resDTO.getOrgProfileList());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-
+			orgProfileSO = null;
 		}
 	}
 
@@ -1932,8 +1906,8 @@ public class SpecificationBackingBean extends
 						resDTO.getOrgProfileList());
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			orgProfileSO = null;
 		}
 
 	}
@@ -1956,8 +1930,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			orgProfileSO = null;
 		}
 
 	}
@@ -1977,8 +1951,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCommitteeMemberList(
 					resDTO.getCommMemberResultBean().getResultList());
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			committeSO = null;
 			resDTO = null;
@@ -2562,16 +2534,17 @@ public class SpecificationBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
 	public void retriveSpecdetails(Long qtId) {
+		IQTDetailSO QtDetailsSO;
+		
 		try {
 
-			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+			QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -2622,8 +2595,8 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			QtDetailsSO = null;
 		}
 
 	}
@@ -2668,8 +2641,8 @@ public class SpecificationBackingBean extends
 				selectItems.add(new SelectItem(7, "Presentation/Demo"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 		/*
 		 * this.getManagedBean().getScQtCheckSt2techProposal().get(0)
@@ -2692,8 +2665,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setFulfilmentType(type.toString());
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -2713,8 +2686,8 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 
@@ -3218,8 +3191,8 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 
 		return null;
@@ -3645,8 +3618,8 @@ public class SpecificationBackingBean extends
 					return "paidUpCapital.xhtml?faces-redirect=true";
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			specSo = null;
 		}
 
 		return null;
@@ -3698,8 +3671,6 @@ public class SpecificationBackingBean extends
 			 * resDto.getScQtCheckList().getScQtDoc());
 			 */
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
 		}
@@ -3725,19 +3696,14 @@ public class SpecificationBackingBean extends
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 
-			try {
+			docReqDTO.setCheckListId(checklist.getQtChecklistId());
+			qtTemplateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTTemplateSO.class);
 
-				docReqDTO.setCheckListId(checklist.getQtChecklistId());
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
-
-				resDto = qtTemplateSO
-						.retriveTemplateDocDetailsByCheckListId(docReqDTO);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			resDto = qtTemplateSO
+					.retriveTemplateDocDetailsByCheckListId(docReqDTO);
+			
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
@@ -3759,8 +3725,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScqtDoc(
 					resDto.getScQtCheckList().getScQtDoc());
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
 		}
@@ -3779,19 +3743,14 @@ public class SpecificationBackingBean extends
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 
-			try {
+			docReqDTO.setCheckListId(checklist.getQtChecklistId());
+			qtTemplateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTTemplateSO.class);
 
-				docReqDTO.setCheckListId(checklist.getQtChecklistId());
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
-
-				resDto = qtTemplateSO
-						.retriveTemplateDocDetailsByCheckListId(docReqDTO);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			resDto = qtTemplateSO
+					.retriveTemplateDocDetailsByCheckListId(docReqDTO);
+	
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
@@ -3813,8 +3772,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScqtDoc(
 					resDto.getScQtCheckList().getScQtDoc());
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
 		}
@@ -3947,20 +3904,13 @@ public class SpecificationBackingBean extends
 			// qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
 			// .getSpecMasterId());
 
-			try {
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
+			qtTemplateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTTemplateSO.class);
 
-				// resDto = qtTemplateSO
-				// .retriveTemplateDocDetails(qtTemplateReqDTO);
+			// resDto = qtTemplateSO
+			// .retriveTemplateDocDetails(qtTemplateReqDTO);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
 		}
@@ -4099,20 +4049,13 @@ public class SpecificationBackingBean extends
 			// qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
 			// .getSpecMasterId());
 
-			try {
-				qtTemplateSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTTemplateSO.class);
+			qtTemplateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTTemplateSO.class);
 
-				// resDto = qtTemplateSO
-				// .retriveTemplateDocDetails(qtTemplateReqDTO);
+			// resDto = qtTemplateSO
+			// .retriveTemplateDocDetails(qtTemplateReqDTO);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			qtTemplateSO = null;
 		}
@@ -4230,9 +4173,8 @@ public class SpecificationBackingBean extends
 			// mediumCarsModel = new CarDataModel(st1additionalList);
 			this.getManagedBean().setScQtCheckSt1techAdditionalProposalList(
 					st1additionalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4253,9 +4195,8 @@ public class SpecificationBackingBean extends
 			st1financeproposalList.add(st1financeproposalList1);
 			this.getManagedBean().setScQtCheckSt1financeProposalList(
 					st1financeproposalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4277,9 +4218,8 @@ public class SpecificationBackingBean extends
 					.add(st1financeAdditionalproposalList1);
 			this.getManagedBean().setScQtCheckSt1financeAdditionalProposalList(
 					st1financeAdditionalproposalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4300,14 +4240,14 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScQtCheckSt2techAdditionalProposalList(
 					st2additionalList);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
 	public void stageTwoFiProposalAdd() {
-
+		IStatusSO statussO;
+		
 		try {
 			List<ScQtCheckList> st2financeproposalList = getManagedBean()
 					.getScQtCheckSt2financeProposalList();
@@ -4332,7 +4272,7 @@ public class SpecificationBackingBean extends
 			st2financeproposalList2.setAction(new PmParameter());
 			st2financeproposalList2.setCreatedDate(new Timestamp(System
 					.currentTimeMillis()));
-			IStatusSO statussO = BusinessDelegate.getInstance()
+			statussO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
 
@@ -4347,9 +4287,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScoringList(null);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
 					st2financeproposalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			statussO = null;
 		}
 	}
 
@@ -4370,9 +4309,8 @@ public class SpecificationBackingBean extends
 					.add(st2financeAdditionalproposalList1);
 			this.getManagedBean().setScQtCheckSt2financeAdditionalProposalList(
 					st2financeAdditionalproposalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4403,9 +4341,8 @@ public class SpecificationBackingBean extends
 			}
 			getManagedBean().setScQtCheckSt1techProposal(compilance);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			// throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4456,13 +4393,14 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScoringList(null);
 			getManagedBean().setScQtCheckSt2techProposal(compilance);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
 	public void stageTwoTechnicalAddProposal() {
+		IStatusSO statussO;
+		
 		try {
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean()
 					.getScQtCheckSt2techProposal();
@@ -4483,7 +4421,7 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList1.setAction(new PmParameter());
 			st2technicalproposalList1.setCreatedDate(new Timestamp(System
 					.currentTimeMillis()));
-			IStatusSO statussO = BusinessDelegate.getInstance()
+			statussO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
 
@@ -4500,9 +4438,8 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList.add(st2technicalproposalList1);
 			this.getManagedBean().setScQtCheckSt2techProposal(
 					st2technicalproposalList);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			statussO = null;
 		}
 	}
 
@@ -4515,13 +4452,15 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal();
 
 			setSelctValue(dropdown);
-		} catch (Exception e1) {
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 		// this.getManagedBean().getScQtChecklist().setChecklistType(dropdown);
 	}
 
 	public void stageTwoFinanceCheckList() {
+		IStatusSO statussO;
+		
 		try {
 
 			List<ScQtCheckList> compilance = this.getManagedBean()
@@ -4552,7 +4491,7 @@ public class SpecificationBackingBean extends
 				scqtlist.setCreatedDate(new Timestamp(System
 						.currentTimeMillis()));
 				scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
-				IStatusSO statussO = BusinessDelegate.getInstance()
+				statussO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStatusSO.class);
 
@@ -4567,9 +4506,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScoringList(null);
 			getManagedBean().setScQtCheckSt2financeProposalList(compilance);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			statussO = null;
 		}
 	}
 
@@ -4591,9 +4529,6 @@ public class SpecificationBackingBean extends
 					.retrieveCheckListByEvalStageAndProcurementMode(reqDTO);
 			this.getManagedBean().setStageOneComplianceList(
 					resDTO.getCheckListResultBean().getResultList());
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
 		} finally {
 			checkListSO = null;
 		}
@@ -4620,9 +4555,6 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setStageTwoTechComplianceList(
 					resDTO.getDocumentList());
-		} catch (Exception e) {
-			e.printStackTrace();
-			// throw new IllegalArgumentException();
 		} finally {
 			documentSo = null;
 		}
@@ -4633,9 +4565,6 @@ public class SpecificationBackingBean extends
 		try {
 			this.getManagedBean().setTplSpecZoneDtl(zoneDetail);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
 		} finally {
 
 		}
@@ -4654,9 +4583,8 @@ public class SpecificationBackingBean extends
 			getManagedBean().setMinistryId(null);
 			getManagedBean().setDepartmentId(null);
 			getManagedBean().setPtjId(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-
+		} finally {
+			
 		}
 	}
 
@@ -4796,8 +4724,8 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -4851,9 +4779,6 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setStageTwoFinComplianceList(
 					resDTO.getDocumentList());
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
 		} finally {
 			documentSo = null;
 		}
@@ -4882,9 +4807,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setCheckListScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4903,9 +4827,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setWarantyScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4924,9 +4847,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setTrainingScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4945,9 +4867,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setTotalEmployeeScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4966,9 +4887,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setTechnicalStaffScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -4987,9 +4907,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setPaidUpCapitalScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5008,9 +4927,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setScoringForYears(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5029,9 +4947,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setContractAmount(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5050,9 +4967,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalScoreyears(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5071,9 +4987,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalContractScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5092,9 +5007,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5113,9 +5027,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setBankStamentScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5134,9 +5047,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setCreditFacility(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5155,9 +5067,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setScoringCash(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5176,9 +5087,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setAssetScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5197,9 +5107,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setPackScoringList(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5218,9 +5127,8 @@ public class SpecificationBackingBean extends
 			checkListScore.add(score);
 			this.getManagedBean().setItemScore(checkListScore);
 
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5272,9 +5180,8 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setScheduleList(freqSchedule);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			// throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5387,9 +5294,8 @@ public class SpecificationBackingBean extends
 			 * System.out.println("===exit add score=="+ this.getManagedBean()
 			 * .getCheckListScore().size());
 			 */
-		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
+			
 		}
 	}
 
@@ -5406,8 +5312,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setRecommendationPackageTotal(
 					new BigDecimal(local));
-		} catch (Exception e) {
-			e.printStackTrace();
+		}  finally {
+			
 		}
 	}
 
@@ -5424,8 +5330,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-		} catch (Exception e) {
-			e.printStackTrace();
+		}  finally {
+			
 		}
 	}
 
@@ -5442,8 +5348,8 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
-		} catch (Exception e) {
-			e.printStackTrace();
+		}  finally {
+			
 		}
 	}
 
@@ -5597,8 +5503,8 @@ public class SpecificationBackingBean extends
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
 			// }ll
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 
@@ -5747,8 +5653,8 @@ public class SpecificationBackingBean extends
 							resDTO.getScQtCheckList());
 			// this.getManagedBean().setCollectionScoring(localList);
 			// }ll
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 
@@ -6763,8 +6669,8 @@ public class SpecificationBackingBean extends
 						.getUserName()));
 			}
 			this.getManagedBean().setComitteeUsers(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return getManagedBean().getComitteeUsers();
 	}
@@ -6789,8 +6695,8 @@ public class SpecificationBackingBean extends
 			selectItems.add(new SelectItem(11, "December"));
 
 			this.getManagedBean().setYearList(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return getManagedBean().getYearList();
 	}
@@ -6832,8 +6738,8 @@ public class SpecificationBackingBean extends
 						pmProcurement.getCategoryName()));
 			}
 			this.getManagedBean().setProcurementListDetails(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return getManagedBean().getProcurementListDetails();
 	}
@@ -6855,8 +6761,8 @@ public class SpecificationBackingBean extends
 						currency.getCurrencyName()));
 			}
 			this.getManagedBean().setCurrencyListDetails(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return getManagedBean().getCurrencyListDetails();
 	}
@@ -6924,13 +6830,8 @@ public class SpecificationBackingBean extends
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process ", " "
-
-					));
+		} finally {
+			detailSO = null;
 		}
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 
@@ -7543,8 +7444,8 @@ public class SpecificationBackingBean extends
 					paidUpScoreList.remove(scoring);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -7562,8 +7463,6 @@ public class SpecificationBackingBean extends
 			}
 			selectScoring.add(score);
 			this.getManagedBean().setSelectscoring(selectScoring);
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			evaluationSO = null;
 		}
@@ -7599,8 +7498,6 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 
 		}
@@ -7634,8 +7531,8 @@ public class SpecificationBackingBean extends
 				detailsList.add(panelItem);
 			}
 			this.getManagedBean().setPanelItemDetailsList(detailsList);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 
@@ -7677,8 +7574,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean()
 						.setTechnicalWeightageScore(techWeightage1);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -7702,8 +7599,8 @@ public class SpecificationBackingBean extends
 				BigDecimal techScore = new BigDecimal(total);
 				this.getManagedBean().setTechPoints(techScore.intValue());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -7736,8 +7633,8 @@ public class SpecificationBackingBean extends
 				BigDecimal techScore = new BigDecimal(total);
 				this.getManagedBean().setFinPoints(techScore.intValue());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -7776,8 +7673,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean()
 						.setFinancialWeightageScore(techWeightage1);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			
 		}
 
 	}
@@ -7871,8 +7768,6 @@ public class SpecificationBackingBean extends
 					// System.out.println("circular and panel type"+resDto.getCircularVerResultBean().getResultList());
 					return resDto.getCircularVerResultBean();
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
 			} finally {
 				circularSO = null;
 			}
@@ -7978,8 +7873,8 @@ public class SpecificationBackingBean extends
 					return resDto.getSearchResultBean();
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
+			} finally {
+				
 			}
 			return null;
 		}
@@ -8070,8 +7965,8 @@ public class SpecificationBackingBean extends
 					return resDto.getSearchAddressResultBean();
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
+			} finally {
+				
 			}
 			return null;
 		}
@@ -8252,9 +8147,8 @@ public class SpecificationBackingBean extends
 			scqtDocDest.getTplSpecMaster().setSpecMasterId(null);
 			scqtDocDest.getTplSpecMaster().setChangedDate(null);
 
-		} catch (Exception e) {
-
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 
@@ -8278,9 +8172,8 @@ public class SpecificationBackingBean extends
 			scqtDocDest.getTplSpecMaster().setSpecMasterId(null);
 			scqtDocDest.getTplSpecMaster().setChangedDate(null);
 			this.getManagedBean().setScqtDoc(scqtDocDest);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally {
+			
 		}
 		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
 
@@ -8317,8 +8210,8 @@ public class SpecificationBackingBean extends
 
 			checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			
 		}
 		return scqtDocDest;
 	}
@@ -8683,13 +8576,8 @@ public class SpecificationBackingBean extends
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to process ", " "
-
-					));
+		} finally {
+			qtDetailSO = null;
 		}
 		return null;
 
@@ -8833,9 +8721,12 @@ public class SpecificationBackingBean extends
 			System.out.println("=========save spec successfully==="
 					+ resDTO.getScQtDoc().getQtDocId());
 			return resDTO;
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (IllegalAccessException | InstantiationException
+				| InvocationTargetException | NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		return resDTO;
 	}
 

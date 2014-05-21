@@ -182,8 +182,9 @@ public class QTBusinessOwnerBackingBean extends
 		reqDTO.setCommitteeType("BO");
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 
@@ -204,8 +205,8 @@ public class QTBusinessOwnerBackingBean extends
 			this.getManagedBean().setCloneCommitteMemebers(commMembers);
 			System.out.println("======== list size==== : "
 					+ getManagedBean().getCloneCommitteMemebers().size());
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			committeSO = null;
 		}
 	}
 
@@ -242,30 +243,26 @@ public class QTBusinessOwnerBackingBean extends
 			searchBean.getDataFilterBeans().add(idNoSearchBean);
 		}
 		userReqDTO.setUserSearchBean(searchBean);
-
+		IUserSO userSO;
 		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDto = userSO.searchUserProfile(userReqDTO);
 			if (resDto != null) {
 				this.getManagedBean().setExternalUsers(
 						resDto.getUserResultBean().getResultList());
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			userSO = null;
 		}
 	}
 
 	public void cloneSearchCommitteAction() {
-		try {
-			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
-					.getCloneQtnTenderSearchBean();
-			List<ScQt> cloneSearchQt = retriveQtCommittes(qtnTenderSearchBean);
+		QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
+				.getCloneQtnTenderSearchBean();
+		List<ScQt> cloneSearchQt = retriveQtCommittes(qtnTenderSearchBean);
 
-			this.getManagedBean().setCloneBusinessTenderList(cloneSearchQt);
-		} catch (Exception e) {
-
-		}
+		this.getManagedBean().setCloneBusinessTenderList(cloneSearchQt);
 	}
 
 	/**
@@ -333,13 +330,6 @@ public class QTBusinessOwnerBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			dto = detailSO.getQuationTenders(reqDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), ex.getMessage()));
-
 		} finally {
 			detailSO = null;
 		}
@@ -616,14 +606,6 @@ public class QTBusinessOwnerBackingBean extends
 														new FacesScopes()
 																.getUserLocale())));
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
 		} finally {
 			detailSO = null;
 		}
@@ -696,14 +678,6 @@ public class QTBusinessOwnerBackingBean extends
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			ex.printStackTrace();
 		} finally {
 			detailSO = null;
 		}
@@ -786,6 +760,23 @@ public class QTBusinessOwnerBackingBean extends
 			} else {
 				committeeMember.setConsolidate(false);
 			}
+		}
+	}
+	
+	public boolean getConsolidateSelectAll() {
+		int selectedCount = 0;
+		List<ScCommitteeMember> scCommitteeMemberList = getManagedBean().getScCommitteeMemberList();
+		
+		if (scCommitteeMemberList != null) {
+			for (ScCommitteeMember committeeMember : scCommitteeMemberList) {
+				if (committeeMember.isSelected()) {
+					selectedCount++;
+				}
+			}
+			
+			return scCommitteeMemberList.size() == selectedCount;	
+		} else {
+			return false;
 		}
 	}
 }

@@ -319,15 +319,6 @@ public class QTDetailBackingBean extends
 														new FacesScopes()
 																.getUserLocale())));
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
 		} finally {
 			detailSO = null;
 		}
@@ -377,15 +368,6 @@ public class QTDetailBackingBean extends
 
 			}
 
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
-			ex.printStackTrace();
 		} finally {
 			detailSO = null;
 		}
@@ -663,12 +645,6 @@ public class QTDetailBackingBean extends
 				}
 			}
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), "Sorry We are unable to process."));
 		} finally {
 			detailSO = null;
 		}
@@ -1264,14 +1240,6 @@ public class QTDetailBackingBean extends
 				if (getManagedBean().getScQtBsv() == null) {
 					getManagedBean().setScQtBsv(new ScQtBsv());
 				}
-			}
-
-			catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
-								.toString(), ex.getMessage()));
 			} finally {
 				qTBriefingSO = null;
 			}
@@ -1410,8 +1378,9 @@ public class QTDetailBackingBean extends
 		reqDTO.setCommitteeType(type);
 		reqDTO.setFinalizationSecratary(true);
 		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO
@@ -1427,8 +1396,8 @@ public class QTDetailBackingBean extends
 						.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 			}
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			committeSO = null;
 		}
 		return committee;
 	}
@@ -1442,9 +1411,10 @@ public class QTDetailBackingBean extends
 		reqDTO.setCommitteeType(type);
 		reqDTO.setQtId(id);
 		CommitteResDTO resDTO = null;
-
+		ICommitteSO committeSO;
+		
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO
@@ -1471,8 +1441,8 @@ public class QTDetailBackingBean extends
 						.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 			}
 			getManagedBean().setScCommittee(committee);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			committeSO = null;
 		}
 		return committee;
 	}
@@ -1494,14 +1464,6 @@ public class QTDetailBackingBean extends
 				List<ScCommitteeMember> committeeMembersList = resDTO
 						.getCommMemberResultBean().getResultList();
 				getManagedBean().setScCommitteeMemberList(committeeMembersList);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(),
-										"Sorry We are unable to process."));
 			} finally {
 				committeSO = null;
 			}
@@ -1548,14 +1510,6 @@ public class QTDetailBackingBean extends
 				}
 				getManagedBean().setScQtDeductionList(deductionList);
 
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(),
-										"Sorry We are unable to process."));
 			} finally {
 				detailSO = null;
 			}
@@ -1613,8 +1567,10 @@ public class QTDetailBackingBean extends
 		// TODO Need to get it from front end and set it
 
 		qtReqDTO.setOutcome(outcome);
+		IQTDetailSO detailSO;
+		
 		try {
-			IQTDetailSO detailSO = BusinessDelegate.getInstance()
+			detailSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 
@@ -1645,13 +1601,8 @@ public class QTDetailBackingBean extends
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.INFO_000001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+		} finally {
+			detailSO = null;
 		}
 		return null;
 
@@ -1738,12 +1689,6 @@ public class QTDetailBackingBean extends
 				}
 			}
 			this.getManagedBean().setTabList(tabBeans);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), "Sorry We are unable to process."));
 		} finally {
 			detailSO = null;
 		}
@@ -1786,10 +1731,11 @@ public class QTDetailBackingBean extends
 	}
 
 	private void retrieveSuppQualificationTabDtl() {
-
+		IQTDetailSO QtDetailsSO;
+		
 		try {
 
-			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+			QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -1831,12 +1777,8 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), "Sorry We are unable to process."));
+		} finally {
+			QtDetailsSO = null;
 		}
 	}
 
@@ -1896,14 +1838,6 @@ public class QTDetailBackingBean extends
 							+ getManagedBean().getScQtSampleSubmissionList());
 				}
 
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(),
-										"Sorry We are unable to process."));
 			} finally {
 				detailSO = null;
 			}
@@ -1943,14 +1877,6 @@ public class QTDetailBackingBean extends
 					getManagedBean().setScQtChecklists(
 							specResDTO.getSpecResultBean().getResultList());
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(),
-										"Sorry We are unable to process."));
 			} finally {
 				iqtSpecSO = null;
 			}
@@ -2060,16 +1986,10 @@ public class QTDetailBackingBean extends
 				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
 
 				return resDTO.getQtResultBean();
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-								.toString(),
-								"Sorry we are Unable to Save the Details"));
 			} finally {
 				detailSO = null;
 			}
-			return null;
+			
 		}
 	}
 
@@ -2271,9 +2191,11 @@ public class QTDetailBackingBean extends
 	}
 
 	public void retrieveQuationTenderDetails(Long qtId) {
+		IQTDetailSO QtDetailsSO;
+		
 		try {
 
-			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+			QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -2328,8 +2250,8 @@ public class QTDetailBackingBean extends
 			}
 		}
 
-		catch (Exception e) {
-			e.printStackTrace();
+		finally {
+			QtDetailsSO = null;
 		}
 
 	}
@@ -2340,8 +2262,10 @@ public class QTDetailBackingBean extends
 		reqDTO.setQtId(qtId);
 		CommitteResDTO resDTO = null;
 		ScQtCommittee qtCommitte = null;
+		ICommitteSO committeSO;
+		
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
+			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
@@ -2367,8 +2291,8 @@ public class QTDetailBackingBean extends
 
 			}
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
+			committeSO = null;
 		}
 		return qtCommitte;
 
