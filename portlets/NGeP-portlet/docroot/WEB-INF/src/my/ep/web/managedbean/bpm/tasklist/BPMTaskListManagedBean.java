@@ -45,7 +45,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String assignment = "ALL";
 
 	private int showIndex = 0;
-
+	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -141,14 +141,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.flFulfilmentOrderList = flFulfilmentOrderList;
 	}
 
-	private IPagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
+	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 
-	public IPagingDataModel<WorklistItemVO> getTaskListDataModel() {
+	public PagingDataModel<WorklistItemVO> getTaskListDataModel() {
 		return taskListDataModel;
 	}
 
 	public void setTaskListDataModel(
-			IPagingDataModel<WorklistItemVO> taskListDataModel) {
+			PagingDataModel<WorklistItemVO> taskListDataModel) {
 		this.taskListDataModel = taskListDataModel;
 	}
 
@@ -170,7 +170,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			try {
 				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
 						+ getAssignment());
-
+				System.out.println(">>>>>>>.pageNo()="+getPageNo());
+				System.out.println(">>>>>>>.pageSize()="+getPageSize());
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 
@@ -178,7 +179,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				String token = face.getBPMAuthenticationCtxToken();
 
-				System.out.println("testing BPM auth******" + token);
+			   System.out.println("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));

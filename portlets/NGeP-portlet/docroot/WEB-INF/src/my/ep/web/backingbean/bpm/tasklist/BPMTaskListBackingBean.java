@@ -142,6 +142,8 @@ public class BPMTaskListBackingBean extends
 		System.out.println("testing BPM******");
 
 		String viewBy = "";
+//		this.getManagedBean().setViewBy("ALL");
+//		this.getManagedBean().setAssignment("ALL");
 		try{
 //			 retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 			
@@ -151,8 +153,8 @@ public class BPMTaskListBackingBean extends
 			e.printStackTrace();
 		}
 	}
-	public void retrieveWorklistItems(String status, String viewBy, String assignment) {
-		System.out.println(">>>>>>>>>>retrieveWorklistItems<<<<<<<<<<");
+//	public void retrieveWorklistItems(String status, String viewBy, String assignment) {
+		
 		
 //		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 //				.getServiceObject(IBpmSO.class);
@@ -185,7 +187,7 @@ public class BPMTaskListBackingBean extends
 //
 //
 //		return responseDTO;
-	}
+//	}
 	
 	public void navigateToDeliveryOrderURL() throws IOException, PortalException, SystemException {
 		String orderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId");
@@ -277,6 +279,9 @@ public class BPMTaskListBackingBean extends
 		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getViewBy());
 		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getAssignment());
 //		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
+//		this.getManagedBean().getTaskListDataModel().setPageNo(1);
+	
+		System.out.println(">>>>>>>>this.getManagedBean().getTaskListDataModel().pageNo()="+this.getManagedBean().getTaskListDataModel().getPageNo());
 		this.getManagedBean().getTaskListDataModel().reloadData();
 
 	}
@@ -319,8 +324,8 @@ public class BPMTaskListBackingBean extends
 	}
 	
 	public void refreshTaskList(){
-		
-		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
+		this.getManagedBean().getTaskListDataModel().reloadData();
+//		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 	}
 	
    public void refreshPendingDeliveryList(){
