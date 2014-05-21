@@ -97,6 +97,7 @@
             <portlet id="Review Purchase Inquiry"></portlet>
 		    <portlet id="Review Purchase In Default"></portlet>
 		    <portlet id="Review Simple Quote"></portlet>
+		    <portlet id="Review Supplier View"></portlet>
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
