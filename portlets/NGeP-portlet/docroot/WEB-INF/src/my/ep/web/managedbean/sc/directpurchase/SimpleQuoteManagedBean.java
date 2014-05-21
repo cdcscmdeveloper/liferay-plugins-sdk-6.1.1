@@ -71,7 +71,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
 	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
 
-	private List<SmSupplier> smSuppliers;
+	private List<SmSupplier> smSuppliers = new ArrayList<SmSupplier>();
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private String ptjName;
 
