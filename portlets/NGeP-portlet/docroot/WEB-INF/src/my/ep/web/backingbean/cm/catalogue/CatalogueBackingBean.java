@@ -28,18 +28,21 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -114,10 +117,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	public CatalogueBackingBean(){
-
-
-		//		IFavoriteSupplierSO favorSO = (IFavoriteSupplierSO)BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
-		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
 
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
@@ -904,11 +903,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 								}
 
 								//catItems.add(catalogItem);
-								
+
 								int existingIndex = cmSupplierItems.indexOf(supplierItem);
-								
+
 								this.getManagedBean().getMaintainItemList().set(existingIndex, supplierItem);
-								
+
 							}
 						}
 					} 
@@ -929,7 +928,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
-			
+
 			reqDTO.setSaveSupplierItems(this.getManagedBean().getMaintainItemList());
 			CatalogueResDTO resDTO  = catalogueSO.updateSupplierItem(reqDTO);
 
@@ -947,13 +946,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				System.out.println("Updated successfully.");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Updated successfully.", ""));
-				
+
 				reqDTO.setItemStatus("D");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 				this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(0);
-				
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -1608,13 +1607,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 			this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
-
-			/*for(CmPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricings()){
-				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			}
-			for(CmStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmStandardPricings()){
-				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			}*/
 
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -3886,7 +3878,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setTempSupplierList(null);
 		this.getManagedBean().getTempSupplierList().add(supplierItem);
 
-
+		String contractNo = "";
 		boolean flag = false;
 
 		if(this.getManagedBean().getCtRequestList()!=null && this.getManagedBean().getCtRequestList().size()>0){
@@ -3895,13 +3887,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					System.out.println("********************different Contact No.");
 
 					flag = true;
+					contractNo = item.getContractNo();
 				}
 			}
 		}
 
 		if(flag){
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Different Contact No.", ""));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"This item does not belong to Contract No." +contractNo, ""));
 
 			return "supplierItemView";
 		}else{
@@ -3963,6 +3956,54 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void deleteImage(int index){
 
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(index);
+
+	}
+
+
+	public String navigateContractRequest(){
+
+
+		IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+
+		if(this.getManagedBean().getCtRequestList()!=null && this.getManagedBean().getCtRequestList().size() >0){
+			VCmSupplierItem supplierItemView =this.getManagedBean().getCtRequestList().get(0);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(supplierItemView.getContractId());
+			System.out.println("supplierItemView.getContractId():"+supplierItemView.getContractId());
+			ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
+			if(resDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+				System.out.println("*************FULFILMENT_TYPE_ONE_OFF**************");
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," For One-Off Contract, all items from selected contract will be included in Contract Request", ""));
+				
+				
+			}else{
+				System.out.println("*************not one off**************");
+				
+			}
+			
+
+		}
+
+
+
+
+		return "contractRequestView";
+	}
+
+	public String backTocatalogueSearch(){
+
+
+		return "supplierItemView?faces-redirect=true";
+	}
+
+	public void deleteContractRequestItem(int index){
+
+		VCmSupplierItem supplierItemView =this.getManagedBean().getCtRequestList().get(index);
+
+		this.getManagedBean().getTempMap().remove(supplierItemView.getDocId());
+
+		this.getManagedBean().getCtRequestList().remove(supplierItemView);
 
 	}
 
