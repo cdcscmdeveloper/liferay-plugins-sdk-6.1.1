@@ -1884,6 +1884,16 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void deleteSelectedCategoryCodes() {
+		if (getManagedBean().getDeleteCategoryList().size() > 0) {
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteCategoryList();
+			
+			for(SmSupplierCategory category : categories){
+				getManagedBean().getSmAppl().getSmSupplierCategories().remove(category);
+			}
+		}
+	}
+	
 	public void saveSelectedCategory() {
 		// System.out.println(" ******* Save From Selection ****"
 		// + getManagedBean().getSelectedCategory().getCategoryType());

@@ -97,6 +97,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private List<SmSupplierCategory> selectedCategories;
 
+	private List<SmSupplierCategory> deleteCategoryList;
+
 	private List<PmCategoryL1> supplierParentCatList;
 
 	private List<PmCategoryL2> supplierChildCatList;
@@ -580,6 +582,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
 		this.selectedCategory = selectedCategory;
+	}
+
+	public List<SmSupplierCategory> getDeleteCategoryList() {
+		return deleteCategoryList;
+	}
+
+	public void setDeleteCategoryList(List<SmSupplierCategory> deleteCategoryList) {
+		this.deleteCategoryList = deleteCategoryList;
 	}
 
 	public List<SmSupplierCert> getSelectedCertList() {

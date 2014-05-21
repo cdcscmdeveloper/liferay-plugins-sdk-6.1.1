@@ -71,7 +71,7 @@
 			<p:dataTable var="catBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
-				id="catDt">
+				id="catDt" rendered="#{!(backingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
 				<p:columnGroup type="header">
 
@@ -125,13 +125,74 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
+			<p:dataTable var="catBeanR"
+				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+				rowKey="#{catBeanR}" rowIndexVar="index"
+				id="catDtR" rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}" selection="#{backingBean.managedBean.deleteCategoryList}" selectionMode="multiple">
+				<ac:paginator for="catDtR" />
+				<p:columnGroup type="header">
 
+					<p:row>
+						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column headerText="Category" />
+
+						<p:column headerText="Business Type" />
+						<p:column headerText="Category Type" />
+						<p:column headerText="PO Action"
+							rendered="#{backingBean.managedBean.poUser}" />
+						<p:column headerText="Remarks"
+							rendered="#{backingBean.managedBean.poUser}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column>
+					<h:outputText
+						value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column>
+					<h:outputText value=" -- TBC -- " />
+				</p:column>
+				<p:column>
+					<h:outputText value="Normal" rendered="#{!catBeanR.specialCategory}" />
+					<h:outputText value="Special" rendered="#{catBeanR.specialCategory}" />
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.poUser}">
+					<p:selectOneRadio layout="pageDirection" id="catPoApprR">
+						<f:selectItem itemLabel="Approve" itemValue="true" />
+						<f:selectItem itemLabel="Reject" itemValue="false" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.poUser}">
+					<p:inputTextarea value="#{catBean.poRemarks}" />
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.approverUser}">
+					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+						value="#{catBean.apprvrDecFlg}">
+						<f:selectItem itemLabel="Approve" itemValue="1" />
+						<f:selectItem itemLabel="Reject" itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.approverUser}">
+					<p:inputTextarea value="#{catBean.approverRemarks}" />
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
 
 			<div align="right">
 				<p:commandButton value="Add"
 					action="#{backingBean.assignNewCategoryCode}"
-					update=":form:tt:regCatDialog"
+					update=":form:tt:regCatDialog, :form:tt:catDtR"
 					disabled="#{backingBean.managedBean.smAppl.applCategoryType == null}" />
+			
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedCategoryCodes}"
+					update=":form:tt:catDtR" rendered="#{(backingBean.managedBean.smAppl.applType == 'R')}"/>
 			</div>
 
 			<br />
@@ -229,7 +290,7 @@
 							<p:commandButton value="Save"
 								action="#{backingBean.saveSelectedCategory}" type="submit"
 								partialSubmit="true" process="regCatDialog"
-								update=":form:tt:catDt" />
+								update=":form:tt:catDt, :form:tt:catDtR" />
 							<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
 						</div>
 					</td>
