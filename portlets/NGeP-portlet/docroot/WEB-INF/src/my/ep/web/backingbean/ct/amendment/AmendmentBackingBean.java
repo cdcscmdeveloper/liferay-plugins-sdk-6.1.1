@@ -227,12 +227,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		        this.getManagedBean().setMemberSignOff(true);
 		        this.getManagedBean().setWitnessHeader("AGENCY WITNESS DETAILS");
 		        ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-		        ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
-		        this.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
-		       	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null){
-		        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(new PmUser());
-		        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
-		        }		
+		        if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null){
+		        	ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
+		        	 this.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
+		        	 if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null){
+			        	//	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(new PmUser());
+			        		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
+			        }
+		        }
 		    }if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)){
 		    	  this.getManagedBean().setMemberSignOff(false);
 		    	  this.getManagedBean().setPbConfirmMeeting(true);
@@ -336,6 +338,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        if(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(this.getManagedBean().getTaskName()) ||
 	        		CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(this.getManagedBean().getTaskName())){
 	        	  reqDTO.setTaskName(this.getManagedBean().getTaskName());
+	        }else {
+	        	reqDTO.setTaskName(this.getManagedBean().getTaskName());
 	        }
 	    
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
