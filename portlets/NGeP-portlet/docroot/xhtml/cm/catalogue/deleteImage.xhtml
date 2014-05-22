@@ -19,8 +19,7 @@
 			<f:facet name="header">
 					#{lbl['lbl.cm.image']}
 				</f:facet>
-			<img src="/NGeP-portlet/images/#{cmImage.imageName}" height="100px"
-				width="100px" />
+			<img src="/NGeP-portlet/images/#{cmImage.imageName}"  style="height:150px; width:100px;" />
 		</p:column>
 		<p:column>
 			<f:facet name="header">
@@ -38,7 +37,7 @@
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.ok']}"
 			onclick="deleteImage.hide()" update=":form"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+		<p:commandButton value="#{lbl['lbl.cm.cancel']}" update=":form"
 			onclick="deleteImage.hide()"></p:commandButton>
 	</div>
 
