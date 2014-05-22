@@ -5,9 +5,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.sm.complaint.IComplaintSO;
+import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.dto.sm.complaint.ComplaintReqDTO;
+import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.sitevisit.CommonSiteVisitManagedBean;
@@ -30,16 +30,15 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
-		String bpmUsrName = new FacesScopes().getUserScreenName();
+		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+		//String bpmUsrName = new FacesScopes().getUserScreenName();
 		
+		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 		reqDTO.setTaskId(taskId);
-		reqDTO.setBpmUserName(bpmUsrName);
+		reqDTO.setToken(token);
 		
-		log.info("-------BPM USER Backing Bean-------" + bpmUsrName);
-		
-		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IComplaintSO.class);
+		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISdoReviewSO.class);
 		
 		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
 		//SMDisciplinaryActionDataType disActObj = (SMDisciplinaryActionDataType) resDTO.getPojo();
