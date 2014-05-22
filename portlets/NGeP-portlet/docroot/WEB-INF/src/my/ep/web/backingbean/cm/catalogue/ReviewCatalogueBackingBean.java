@@ -137,7 +137,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			e.printStackTrace();
 		}
 
-		return "catalogueTaskList?faces-redirect=true";
+		return "taskListView";
 
 	}
 
@@ -196,7 +196,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			e.printStackTrace();
 		}
 
-		return "catalogueTaskList?faces-redirect=true";
+		return "taskListView";
 
 	}
 
@@ -204,7 +204,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 	public String cancelToPendingApprovalItem(){
 
 
-		return "catalogueTaskList";
+		return "taskListView";
 	}
 
 
