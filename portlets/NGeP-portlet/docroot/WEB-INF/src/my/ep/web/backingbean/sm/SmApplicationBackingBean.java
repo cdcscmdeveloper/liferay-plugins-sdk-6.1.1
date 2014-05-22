@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -3242,7 +3245,8 @@ public class SmApplicationBackingBean extends
 			reqDTO.setAppType(bpmAppl.getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setSmAppl(bpmAppl);
-			reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
 					.getSupplierType().toUpperCase());
 			reqDTO.setBaseOfficeState(getManagedBean().getSmAppl()
@@ -3448,8 +3452,8 @@ public class SmApplicationBackingBean extends
 					.getSmSupplier().getSupplierId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setUserName(new FacesScopes().getUserScreenName());
-
+			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
 				reqDTO.setOnlineDoc(true);
 			} else {
@@ -3888,6 +3892,17 @@ public class SmApplicationBackingBean extends
 		System.out.println(" *** Reject List ****** "
 				+ resDTO.getReasonDescList().size());
 		this.getManagedBean().setReasonDescList(resDTO.getReasonDescList());
+	}
+
+	private void retrieveRegistrationStatusList() {
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		StatusResDTO resDTO = reqSO.retrieveRegStatusList(reqDTO);
+		System.out.println(" *** Registration status List ****** "
+				+ resDTO.getStatusDescList().size());
+		this.getManagedBean().setRegStatusDescList(resDTO.getStatusDescList());
 	}
 
 	private void retrievePmProfBodyList() {

@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -316,6 +317,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
 	List<PmReasonDesc> reasonDescList;
+	private List<PmStatusDesc> regStatusDescList;
 
 	private Long[] reasonId;
 
@@ -1879,6 +1881,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setEquiCompCapTotal(BigDecimal equiCompCapTotal) {
 		this.equiCompCapTotal = equiCompCapTotal;
+	}
+
+	public List<PmStatusDesc> getRegStatusDescList() {
+		return regStatusDescList;
+	}
+
+	public void setRegStatusDescList(List<PmStatusDesc> regStatusDescList) {
+		this.regStatusDescList = regStatusDescList;
 	}
 
 }
