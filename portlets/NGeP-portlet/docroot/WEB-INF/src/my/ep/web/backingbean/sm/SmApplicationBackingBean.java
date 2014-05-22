@@ -346,6 +346,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			calcPersonnelListCount();
+			calculateCapital();
 			return setNavigationForAppl(applicationType);
 
 		} catch (Exception e) {
@@ -2379,15 +2380,34 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmapplShareHolders().add(
 						getManagedBean().getSelectedShareHolder());
 			}
+			IMofRegistrationSO mofRegistrationSO = null;
 
+			try {
+				System.out.println("updating personnel into database");
+				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+						.getInstance().getServiceObject("sm",
+								IMofRegistrationSO.class);
+
+				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+
+				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+
+				MofRegistrationResDTO resDTO = mofRegistrationSO
+						.updateApplication(reqDto);
+				// getManagedBean().setSmAppl(resDTO.getSmAppl());
+			} finally {
+				mofRegistrationSO = null;
+				retriveLatestApplAfterUpdate("");
+			}
 			if (fromPage.equalsIgnoreCase("captialInfo")) {
 				RequestContext.getCurrentInstance().execute(
 						"shareHolderDialog.hide()");
 			}
 			if (fromPage.equalsIgnoreCase("personnelInfo")) {
+				calcPersonnelListCount();
 				RequestContext.getCurrentInstance().execute(
 						"perShareHolderDialog.hide()");
-				calcPersonnelListCount();
+
 			}
 
 		}
@@ -2778,6 +2798,25 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedPersonnel());
 			}
 
+			IMofRegistrationSO mofRegistrationSO = null;
+
+			try {
+				System.out.println("updating personnel into database");
+				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+						.getInstance().getServiceObject("sm",
+								IMofRegistrationSO.class);
+
+				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+
+				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+
+				MofRegistrationResDTO resDTO = mofRegistrationSO
+						.updateApplication(reqDto);
+				// getManagedBean().setSmAppl(resDTO.getSmAppl());
+			} finally {
+				mofRegistrationSO = null;
+				retriveLatestApplAfterUpdate("");
+			}
 			// updateSmAppl(getManagedBean().getSmAppl().getApplType(),"Def");
 			calcPersonnelListCount();
 			RequestContext.getCurrentInstance()
@@ -4628,15 +4667,8 @@ public class SmApplicationBackingBean extends
 
 		shr.setRevNo(1);
 		shr.setSmAppl(getManagedBean().getSmAppl());
-		// shr.setEquityOwner(true);
-		// shr.setBumiFlg(0);
-		// shr.setMuslimFlg(0);
-		// shr.setAuthorizedFlg(0);
-		// shr.setContractSignerFlg(0);
-		// shr.setSoftcertFlg(0);
-		// shr.setProfFlg(0);
-		// shr.setSemiProfFlg(0);
-		// shr.setClericalFlg(0);
+		shr.setBumiFlg(1);
+		shr.setMuslimFlg(1);
 		shr.setPmCountry(new PmCountry());
 		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		// shr.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
@@ -4753,42 +4785,108 @@ public class SmApplicationBackingBean extends
 		return authPerCount;
 	}
 
+	public void calculateShareHolderPercent() {
+		try {
+			if (getManagedBean().getSelectedShareHolder().getShareAmt() == null) {
+				getManagedBean().getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0));
+			}
+		} catch (NumberFormatException ne) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Invalid Value  : ", "Please enter numbers only "));
+
+			ne.printStackTrace();
+		}
+	}
+
 	public void calculateCapital() {
 		try {
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getBumiEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setBumiEquity(new BigDecimal(0));
+					.getBumiEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setBumiEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic().getBumiEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getNonBumiEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setNonBumiEquity(new BigDecimal(0));
+					.getNonBumiEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setNonBumiEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic().getNonBumiEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtEquity(new BigDecimal(0));
+					.getGovtEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setGovtEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic().getGovtEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtUnitrustEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtUnitrustEquity(new BigDecimal(0));
+					.getGovtUnitrustEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setGovtUnitrustEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getGovtUnitrustEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getForeignCompanyEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setForeignCompanyEquity(new BigDecimal(0));
+					.getForeignCompanyEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setForeignCompanyEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getForeignCompanyEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getForeignerEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setForeignerEquity(new BigDecimal(0));
+					.getForeignerEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setForeignerEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getForeignerEquity()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getLocalCompanyEquity() == null) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setLocalCompanyEquity(new BigDecimal(0));
+					.getLocalCompanyEquity() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setLocalCompanyEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getLocalCompanyEquity()
+										.setScale(2, RoundingMode.HALF_UP));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getAuthorizedCapital() != null) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setAuthorizedCapital(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getAuthorizedCapital()
+										.setScale(2, RoundingMode.HALF_UP));
 			}
 			getManagedBean()
 					.getSmAppl()
@@ -4815,7 +4913,8 @@ public class SmApplicationBackingBean extends
 											.getGovtEquity())
 									.add(getManagedBean().getSmAppl()
 											.getSmCompanyBasic()
-											.getGovtUnitrustEquity()));
+											.getGovtUnitrustEquity())
+									.setScale(2, RoundingMode.HALF_UP));
 			System.out.println("**** Paid up capital ****** "
 					+ getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getPaidUpCapital());
