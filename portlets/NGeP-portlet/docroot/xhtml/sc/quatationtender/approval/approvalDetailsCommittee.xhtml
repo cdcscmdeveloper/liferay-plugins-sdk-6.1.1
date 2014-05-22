@@ -23,7 +23,7 @@
 		<div style="width: 100%">
 			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
-				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
+				itemLabel="#{approverUser.approver.userName}" itemValue="#{approverUser}"
 				converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
