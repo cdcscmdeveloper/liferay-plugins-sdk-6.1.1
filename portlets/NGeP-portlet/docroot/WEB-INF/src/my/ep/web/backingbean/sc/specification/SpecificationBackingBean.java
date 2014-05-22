@@ -2413,7 +2413,7 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		scQt.setItemType("P");
 		PmParameter parameter = scQt.getPmProcurementCategory();
-		if (null == parameter) {
+		if (null != parameter && null == parameter.getParameterId()) {
 			scQt.setPmProcurementCategory(null);
 		}
 		if (!scQt.isZonal()) {
@@ -8650,6 +8650,7 @@ public class SpecificationBackingBean extends
 					tpl1.setChangedBy(2L);
 					tpl1.setCreatedBy(2L);
 					tpl1.setCreatedDate(timestamp);
+					tpl1.setChangedDate(null);
 					questions2.add(tpl1);
 				}
 				specMaster.setTplSpecQuestions(questions2);
@@ -8683,6 +8684,7 @@ public class SpecificationBackingBean extends
 						tpl1.setChangedBy(2L);
 						tpl1.setCreatedBy(2L);
 						tpl1.setCreatedDate(timestamp);
+						tpl1.setChangedDate(null);
 						questions2.add(tpl1);
 
 					}
