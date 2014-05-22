@@ -118,7 +118,6 @@
 		widgetVar="eqiCompDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<!-- <p:panel header="Associated Company Details"> -->
-
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Company Name" /></td>
@@ -134,15 +133,18 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Share Amount (RM.)" /></td>
-				<td><p:inputText
+				<td><p:inputText id="equiCompShrAmt"
 						value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
-						size="35" /></td>
+						size="35">
+						<p:ajax event="blur" update="equiCompShrAmt, equiCompShrPer"
+							listener="#{backingBean.calculateEquityCompanyPercent}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Share Percentage(%)" /></td>
-				<td><p:inputText
+				<td><p:inputText id="equiCompShrPer"
 						value="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}"
-						size="35" /></td>
+						size="10" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>

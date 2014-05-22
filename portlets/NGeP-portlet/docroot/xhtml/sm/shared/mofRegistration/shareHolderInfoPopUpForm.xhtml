@@ -179,13 +179,16 @@
 		</table>
 
 	</p:panel>
-	<p:panel header="Share Details" toggleable="true">
+	<p:panel header="Share Details" toggleable="true" id="shareAmtPanel">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 13%;"><p:outputLabel value="* Amount (RM.)" /></td>
 				<td style="padding-right: 42px;"><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.shareAmt}"
-						size="35" /></td>
+						size="35">
+						<p:ajax event="blur" update="shareAmtPanel"
+							listener="#{backingBean.calculateShareHolderPercent}" />
+					</p:inputText></td>
 				<td><p:outputLabel value="* Percentage(%)" /></td>
 				<td><p:inputText title="Auto Populated Value"
 						value="#{backingBean.managedBean.selectedShareHolder.sharePercentage}"
