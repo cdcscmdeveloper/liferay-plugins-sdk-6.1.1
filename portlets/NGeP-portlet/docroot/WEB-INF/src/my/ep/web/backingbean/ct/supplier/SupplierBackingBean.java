@@ -375,7 +375,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					}
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getDocType()), 
-									this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+									this.getManagedBean().getFactoring().getCtContract().getContractNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 						renewSesionObject();
@@ -585,7 +585,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    	  int i = 1;
 	    	  reqDTO = new AwardSupplierReqDTO();
 	    	  qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject("sc", IQTAwardSO.class);
-	    	  reqDTO.setSupplierId(296l);
+	    	  reqDTO.setSupplierId(1L);
 	    	  AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
 	    	  List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 	    	  items = new SelectItem[list.size()+1];
