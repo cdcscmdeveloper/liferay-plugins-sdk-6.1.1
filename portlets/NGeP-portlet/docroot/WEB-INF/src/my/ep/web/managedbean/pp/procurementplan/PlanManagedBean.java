@@ -8,11 +8,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.persistence.Transient;
 
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
@@ -20,7 +18,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 

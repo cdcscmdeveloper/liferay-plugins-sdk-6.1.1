@@ -72,7 +72,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
-import my.ep.persistence.entity.sc.quationtender.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
