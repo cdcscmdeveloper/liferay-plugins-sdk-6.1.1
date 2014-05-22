@@ -18,7 +18,7 @@
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
 
-				<p:commandButton value="Previous" style="float:left;"
+				<p:commandButton value="Previous" style="float:left;" immediate="true"
 					action="#{registrationBackingBean.returnToSignUp}" />
 
 				<p:commandButton value="Next" style="float:right;"

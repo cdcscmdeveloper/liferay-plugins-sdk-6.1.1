@@ -10,8 +10,9 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="messages"  autoUpdate="true" />
-		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
+		
 		<p:outputPanel id="outPnlRegForm">
+		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 			<c:choose>
 				<c:when
 					test="#{registrationBackingBean.managedBean.smSupp.businessType == 'A'}">

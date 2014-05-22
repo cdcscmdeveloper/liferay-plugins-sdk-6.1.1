@@ -69,7 +69,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	private SmSupplierCert[] selectedSuppCerts;
 //	private List<SmSupplierCert> smSuppCerts;
-	private Map<String, String> serviceLs;
+//	private Map<String, String> serviceLs;
+	private List<PmParameterDesc> serviceLs;
 
 	private List<PmBusinessNature> businessNatureL1;
 	private List<PmBusinessNature> businessNatureL2;
@@ -312,26 +313,34 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.profCertBodyLs = profCertBodyLs;
 	}
 
-	public Map<String, String> getServiceLs() {
-		serviceLs = new LinkedHashMap<String, String>();
+//	public Map<String, String> getServiceLs() {
+//		serviceLs = new LinkedHashMap<String, String>();
+//
+//		if (this.smSupp.getServiceCategory() != null){
+//			if (this.smSupp.getServiceCategory().equals("P")) {
+//				serviceLs.put("1", "Accountant");
+//				serviceLs.put("2", "Doctor");
+//				serviceLs.put("3", "Lawyer");
+//			} else if (this.smSupp.getServiceCategory().equals("S")) {
+//				serviceLs.put("4", "Bomoh hujan");
+//				serviceLs.put("5", "Penggali kubur");
+//				serviceLs.put("6", "Bidan");
+//				serviceLs.put("7", "Penyewaan sampan");
+//			}
+//		}
+//
+//		return this.serviceLs;
+//	}
+//
+//	public void setServiceLs(Map<String, String> serviceLs) {
+//		this.serviceLs = serviceLs;
+//	}
 
-		if (this.smSupp.getServiceCategory() != null){
-			if (this.smSupp.getServiceCategory().equals("P")) {
-				serviceLs.put("1", "Accountant");
-				serviceLs.put("2", "Doctor");
-				serviceLs.put("3", "Lawyer");
-			} else if (this.smSupp.getServiceCategory().equals("S")) {
-				serviceLs.put("4", "Bomoh hujan");
-				serviceLs.put("5", "Penggali kubur");
-				serviceLs.put("6", "Bidan");
-				serviceLs.put("7", "Penyewaan sampan");
-			}
-		}
-
-		return this.serviceLs;
+	public List<PmParameterDesc> getServiceLs() {
+		return serviceLs;
 	}
 
-	public void setServiceLs(Map<String, String> serviceLs) {
+	public void setServiceLs(List<PmParameterDesc> serviceLs) {
 		this.serviceLs = serviceLs;
 	}
 

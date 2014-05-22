@@ -4,9 +4,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -40,5 +44,15 @@ public class SmCommonUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterDescListByType(reqDTO);
 		
 		return resDTO.getParameterDescList();
+	}
+	
+	public static PmCountry retrieveCountryByCountryCode(String countryCode){
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode(countryCode);
+		
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		
+		return resDTO.getPmCountry();
 	}
 }

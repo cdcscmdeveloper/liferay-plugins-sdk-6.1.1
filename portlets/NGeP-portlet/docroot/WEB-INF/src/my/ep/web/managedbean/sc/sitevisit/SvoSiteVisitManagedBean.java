@@ -11,7 +11,7 @@ import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "svoSiteVisitMB")
+@ManagedBean(name = "svoSiteVisitMB111111")
 @SessionScoped
 public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;

@@ -41,10 +41,10 @@
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true"
 				action="#{registrationBackingBean.addProfessionalCert}"
 				update="pnlProfCert" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" immediate="true"
 				action="#{registrationBackingBean.removeProfessionalCert}"
 				update="pnlProfCert" />
 		</div>

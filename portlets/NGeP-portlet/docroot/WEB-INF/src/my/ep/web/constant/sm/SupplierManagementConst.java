@@ -100,7 +100,7 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
 
 	// Basic Registration && Account Maintenance
-	public static final String INDIVIDUAL_FLAG = "13";
+	public static final String INDIVIDUAL_FLAG = "A";
 	public static final String STYPE_CONSULTANT = "J";
 	public static final String STYPE_CONTRACTOR = "K";
 	public static final String STYPE_BASIC = "B";
@@ -118,10 +118,13 @@ public class SupplierManagementConst {
 	public static final int REG_SOFTCERT = 0;
 	public static final int REG_BUMI = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
+	public static final String SPECIAL_SERVICE_CODE = "ISS";
+	public static final String PROF_SERVICE_CODE = "IPS";
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
 	public static final String ACTIVATION_PATH = "/web/guest/supplier-user-activation?";
+	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 
 	// Site Visit Assignment
@@ -278,6 +281,13 @@ public class SupplierManagementConst {
 
 	public static int getRECORD_DELETED() {
 		return RECORD_DELETED;
+	}
+
+	/**
+	 * @return the individualFlag
+	 */
+	public static String getIndividualFlag() {
+		return INDIVIDUAL_FLAG;
 	}
 
 }

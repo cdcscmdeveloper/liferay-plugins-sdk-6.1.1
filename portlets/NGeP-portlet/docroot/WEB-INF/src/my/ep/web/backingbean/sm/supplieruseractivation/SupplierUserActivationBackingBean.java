@@ -1,29 +1,44 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
+import java.util.Date;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-
+import my.ep.biz.service.IPmSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.sm.common.spki.ISpkiSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.sm.common.spki.SpkiReqDTO;
+import my.ep.dto.sm.common.spki.SpkiResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supplieruseractivation.SupplierUserActivationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import java.util.Date;
+import org.apache.commons.id.serial.AlphanumericGenerator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+
 
 @ManagedBean(name="supplierUserActivationBackingBean")
 public class SupplierUserActivationBackingBean extends
@@ -66,17 +81,18 @@ public class SupplierUserActivationBackingBean extends
 			
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(Long.valueOf(personnelId));
-			PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
+			PersonnelResDTO resDTO = personnelSO.retrieveValidActivationPersonnel(reqDTO);
 			
-			if(resDTO.isSuccessful()) {
+			if(resDTO.getSmPersonnel() != null) {
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
 			}
 		} finally {
 			personnelSO = null;
 		}
-		log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
+		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
 		
+		FacesContext fc = FacesContext.getCurrentInstance();
 		if(personnel != null && supplierProfile != null) {
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
 				
@@ -92,7 +108,6 @@ public class SupplierUserActivationBackingBean extends
 					this.getManagedBean().setSmPersonnel(personnel);
 					
 					this.getManagedBean().setEncrpKeyStr(encryptedKey);
-					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml");
 					// display form to enter temp password
 				} else {
@@ -109,9 +124,8 @@ public class SupplierUserActivationBackingBean extends
 		}
 	}
 	
-	public void activateSupplierUser() {
+	public String activateSupplierUser() {
 		if(this.getManagedBean().isValidActivation()) {
-//			HttpServletRequest originalServletRequest = new FacesScopes().getOriginalServletRequest();
 			String personnelId = String.valueOf(this.getManagedBean().getSmPersonnel().getPersonnelId());
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
@@ -128,33 +142,72 @@ public class SupplierUserActivationBackingBean extends
 			
 			if(hashStr.equals(encrpKeyStr)){
 				System.out.println("**********Valid HASH***********");
-				RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-				reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-				IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
-				RegistrationResDTO resDTO = reqSO.createPmProfile(reqDTO);
-
-				if(resDTO.isSuccessful()){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Your account has been updated successfully.", ""));
+				
+				//Check whether profile is exist in PmOrgProfile
+				OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+				orgReqDTO.setOrgProfileId(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgReqDTO);
+				
+				if(orgResDTO.getPmOrgProfile() != null){
+					//create PmUser only
+					System.out.println("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
 				}else{
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,"PM Creation Error.", ""));
+					//Create PmOrgProfile and PmUser
+					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();
+					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+					ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
+					System.out.println("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
+					//SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
+					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
+					resDTO.setSuccessful(true);
+					if(resDTO.isSuccessful()){
+						return navigateToAck();
+//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
+//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
+//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
+						
+//						FacesContext.getCurrentInstance().addMessage(
+//								null,
+//								new FacesMessage(FacesMessage.SEVERITY_INFO,
+//										"Your account has been created successfully.", ""));
+					}else{
+						errorMsg("PM Creation Error.");
+					}
 				}
 			}else{
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid Temporary Password.", ""));
+				errorMsg("Invalid Temporary Password.");
 			}
 		} else {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,"isValidActivation.", ""));
+			errorMsg("Invalid Request.");
 		}
 		
-		//return "/xhtml/shared/acknowledge.xhtml";
+		return "/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml";
+	}
+	
+	public void errorMsg(String errMsg){
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, ""));
+	}
+	
+	public String navigateToAck(){
+//		FacesScopes fs = new FacesScopes();
+//		String server = "http://" + fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
+		//String loginUrl = "<a href='" + server + "'>" + "login" + "</a>";
+		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721001,
+		MessageUtils.BUNDLE_COMMON_MESSAGES,
+		new FacesScopes().getUserLocale())));
+
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
+	}
+	
+	public String naviToLogin(){
+		FacesScopes fs = new FacesScopes();
+		String server = "http://" + fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
+		String url = server + SupplierManagementConst.LOGIN_URL;
+		return url;
 	}
 	
 //	public static void main(String[] args) {
@@ -169,6 +222,32 @@ public class SupplierUserActivationBackingBean extends
 //		System.out.println(new Date().before(expiryDate));
 //		
 //		System.out.println(SmCommonUtil.hashString("315"));
+//	}
+	
+//	public static void main(String[] args){
+//
+//		AlphanumericGenerator generator =  new AlphanumericGenerator(false, "0003");
+//		System.out.println("***generateEpNo***" +generator.nextIdentifier());
+//
+//		
+//	}
+	
+//	public static void main(String[] args){
+//		String epNo = "eP-1400A1022";
+//		String lastEpNo = null;
+//		String newEpNo = null;
+//		
+//		if(epNo != null || epNo != ""){
+//			lastEpNo = epNo.substring(epNo.length()-4,epNo.length());
+//			//lastEpNo = epNo.substring(0,epNo.length()-4);
+//		}
+//		
+//		System.out.println("***lastEpNo***" + lastEpNo);
+//		AlphanumericGenerator generator =  new AlphanumericGenerator(false, lastEpNo != null ? lastEpNo : "0000");
+//		newEpNo = generator.nextIdentifier().toString();
+//		
+//		System.out.println("***generateEpNo***" + newEpNo);
+//		//return newEpNo;
 //	}
 	
 }

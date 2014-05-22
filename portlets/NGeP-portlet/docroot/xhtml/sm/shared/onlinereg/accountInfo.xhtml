@@ -28,7 +28,8 @@
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId"
 							required="true"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
-							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px">
+							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
+							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
 								itemValue="K" />
@@ -44,6 +45,7 @@
 				<td class="tdContent">
 					<p:selectOneMenu id="busTypeId" required="true" label="#{lbl['lbl.sm.businesscomptype']}"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}"
+						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}"
 						readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}" style="width:200px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
 						<p:ajax event="change" update="outPnlRegForm"></p:ajax>

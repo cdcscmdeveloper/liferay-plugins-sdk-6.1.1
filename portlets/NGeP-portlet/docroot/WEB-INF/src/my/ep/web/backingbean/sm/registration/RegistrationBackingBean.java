@@ -12,6 +12,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -20,6 +21,9 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
@@ -34,15 +38,19 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
 import my.ep.ntf.service.INtfSO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -61,14 +69,12 @@ import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.primefaces.event.FileUploadEvent;
 //import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 @ManagedBean(name = "registrationBackingBean")
@@ -87,12 +93,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, Object> bizNatureL5Map;
 
 	public RegistrationBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
-
+//		if (MDC.get(LogKey.USER_ID) == null) {
+//			log.info("-------MDC is NULL-----------");
+//			MDC.put(LogKey.USER_ID, 1L);
+//		}
+//
 		if (this.getManagedBean().getApplType() == null) {
 			this.getManagedBean().setApplType("M");
+		}
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
+
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
 		}
 	}
 
@@ -139,7 +155,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
 
 			this.getManagedBean().setSameAddress(false);
-			this.getManagedBean().setSmPersonnel(new SmPersonnel());
 			
 			//this.getManagedBean().setSuppBusinessNatureLs(new ArrayList<SmSupplierBusiness>());
 			smSupp.setSmSupplierBusinesses(new ArrayList<SmSupplierBusiness>());
@@ -179,6 +194,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return "";
 		}
 		
+		if(checkExistingBusinessRegNo()){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Business Registration No is exist.", ""));
+			return "";
+		}
+		
+		
+		
 		return firstUserRegistration;
 	}
 
@@ -212,27 +235,54 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String submitRegistration() {
-		log.info("----------Submit Registration-------------");
-
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
 		SmAddress smResAdd = this.getManagedBean().getSmResAdd();
-
+		
+		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
+				return "";
+			}
+		}
+		
+		if(smAppl.getSmSupplierBanks().size() < 1){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
+			return "";
+		}
+		
+		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", ""));
+			return "";
+		}
+		
+		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
+		if(isExistUserByIdentificationNo(loginID)){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", ""));
+			return "";
+		}
+		
 		if (smAppl.getApplType().equals(SupplierManagementConst.STYPE_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
 		}
 
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
-			smSuppOwner.setIdentificationType("I");
+			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			
+			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
 			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smPersonnel.setIdentificationNo(smSupp.getRegNo());
+			smPersonnel.setPmCountry(indNationality);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 		}
 
@@ -321,6 +371,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.getSmSupplierOwners().add(smSuppOwner);
 
 		/* Create Basic Account */
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
@@ -346,20 +397,32 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String updateOnlineAccount() {
+		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
+			return "";
+		}
+
+		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
+			return "";
+		}
+
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		
+
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
 		}else{
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
-		
+
 		for(SmSupplierBusiness ssb : smSupp.getSmSupplierBusinesses()){
 			ssb.setSmSupplier(smSupp);
 		}
-		
+
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
@@ -391,10 +454,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void removeSupplierBank() {
 		// this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(this.getManagedBean().getSelectedSuppBanks());
 		log.info("---removeSupplierBank---");
-		for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
-			this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(suppBank);
-			log.info("---removeSupplierBank---" + suppBank);
-			// suppBank.getPmFinancialOrg().getFinancialOrgId()
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			log.info("---removeSupplierBank 1---");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(suppBank);
+				log.info("---removeSupplierBank---" + suppBank);
+				// suppBank.getPmFinancialOrg().getFinancialOrgId()
+			}
 		}
 	}
 	
@@ -580,7 +646,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		return resDTO.getBusinessNatureList();
 	}
+	
+	private boolean checkExistingBusinessRegNo(){
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		IRegistrationSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
+		RegistrationResDTO resDTO = reqSO.findSupplierByRegNo(reqDTO);
+		
+		if(resDTO.getSmSupp() == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	public void getIndividualServiceType(){
+		System.out.println("******getIndividualServiceType******");
+		if(this.getManagedBean().getSmSupp().getServiceCategory() != null){
+			String serviceTypeParam = null;
+			System.out.println("******getIndividualServiceType******" + this.getManagedBean().getSmSupp().getServiceCategory());
+			if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE)){
+				serviceTypeParam = SupplierManagementConst.PROF_SERVICE_CODE;
+			}else if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.SPECIAL_SERVICE)){
+				serviceTypeParam = SupplierManagementConst.SPECIAL_SERVICE_CODE;
+			}
 
+			if(serviceTypeParam != null){
+				List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(serviceTypeParam, "en");
+				System.out.println("******ServiceType******" + paramDesc.size() );
+				this.getManagedBean().setServiceLs(paramDesc);
+			}
+		}
+	}
 	
 	public void populateStateByAddType(String typeAdd) {
 		if (typeAdd.equals("business")) {
@@ -635,10 +732,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public void viewOnlineAccount() {
-		log.info("--------------------viewOnlineAccount----------------");
-
+		log.info("--------------------viewOnlineAccount----------------" + MDC.get(LogKey.USER_ID));
+		
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		//846846516516
+		Long usrId = (Long)MDC.get(LogKey.USER_ID);
+		supplierSearchReqDTO.setUserId(usrId);
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+		SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+		log.info("-------smResDTO-------" + smSupp.getSupplierId());
+		
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(1);
+		reqDTO.setSupplierId(smSupp.getSupplierId());
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
@@ -690,14 +797,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}else if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF) && 
 						this.getManagedBean().getSmAppl().getSupplierType() != null){
 					if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-						System.out.println("****IS CONTRACTOR*****");
+						//System.out.println("****IS CONTRACTOR*****");
 
 						if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
 							//System.out.println("****IS not NULL or A*****" + selectItem.getValue());
 							itemList.add(selectItem);
 						}
 					}else if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-						System.out.println("****IS CONSULTANT*************"); 
+						//System.out.println("****IS CONSULTANT*************"); 
 						if(selectItem.getValue() == null || (!selectItem.getValue().equals("K") 
 								&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M"))){ 
 							itemList.add(selectItem);
@@ -780,6 +887,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String activationUrl = "http://" + fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort() + SupplierManagementConst.ACTIVATION_PATH + parameterString;
 		
 		//cntParaLst.add("<a href=\"http://google.com.my\">dadfas</a><br />Hello&lt;add&gt;World<br />");
+		System.out.println("**Activation Url="+ activationUrl);
 		
 		cntParaLst.add("<a href="+ activationUrl + ">Click to activate</a><br />");
 		cntParaLst.add(smPersonnel.getIdentificationNo());
@@ -803,11 +911,42 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().setBizIdL2(null);
 		this.getManagedBean().setBizIdL3(null);
 		this.getManagedBean().setBizIdL4(null);
+		//this.getManagedBean().setBusinessNatureL1(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL2(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
 	}
+	
+	public boolean isExistEmailInPmUser(String email){
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setEmail(email);
+		
+		UserResDTO resDTO = userSO.retrieveUserByEmail(reqDTO);
+		
+		System.out.println("*********resDTO.getUserList().size()*****" + resDTO.getUserList().size());
+		if(resDTO.getUserList().size() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public boolean isExistUserByIdentificationNo(String idNo) {
+		System.out.println("*********retrieveUserByIdentificationNo**********" + idNo);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(idNo);
+		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+		
+		if(resDTO.getPmUser() != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
 //		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
