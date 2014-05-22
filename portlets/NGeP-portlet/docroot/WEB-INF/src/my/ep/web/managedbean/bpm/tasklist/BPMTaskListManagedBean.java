@@ -43,6 +43,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String viewBy = "ALL";
 
 	private String assignment = "ALL";
+	
+	private String docType = "ALL";
 
 	private int showIndex = 0;
 	
@@ -122,6 +124,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setAssignment(String assignment) {
 		this.assignment = assignment;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 
 	public int getShowIndex() {
