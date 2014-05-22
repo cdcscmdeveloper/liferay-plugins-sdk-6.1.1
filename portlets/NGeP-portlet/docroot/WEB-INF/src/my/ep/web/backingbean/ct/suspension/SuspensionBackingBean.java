@@ -27,6 +27,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.type.pm.RoleCode;
@@ -156,18 +157,18 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
 			    for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
 				    if(ctContractItem.getChkStatusId() == 1)
-					   ctContractItem.setRecordStatus(true);
+					   ctContractItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					else
-					   ctContractItem.setRecordStatus(false);
+					   ctContractItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 				 }
 			  }
 				
 			  if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
 				 for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
 					if(ctAgency.getChkStatusId() == 1)
-					   ctAgency.setRecordStatus(true);
+					   ctAgency.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					else
-					   ctAgency.setRecordStatus(false);
+					   ctAgency.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 				 }
 			  }
 		             
