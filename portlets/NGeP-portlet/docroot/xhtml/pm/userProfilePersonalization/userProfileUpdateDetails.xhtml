@@ -15,7 +15,7 @@
 		             	    	        
 		   		<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}"></h:outputLabel>
 		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmUser.salutationCode.parameterCode}" 
-		                style="width:188px;margin-bottom:5px;" >  
+		                style="width:180px;margin-bottom:5px;" >  
             	     <f:selectItem itemLabel="Select One" itemValue="" /> 				    		            
 					 <f:selectItems
 						value="#{userprofileBackingBean.retrieveParameterDescByType(ParameterTypeConst.salutations)}"
@@ -28,7 +28,7 @@
                    
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" />
 		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmUser.identificationCode.parameterCode}"
-		                style="width:188px;margin-bottom:5px;"> 
+		                style="width:180px;margin-bottom:5px;"> 
 		           	 <f:selectItem itemLabel="Select One" itemValue="" />  	           
 					 <f:selectItems
 						value="#{userprofileBackingBean.retrieveParameterDescByType(ParameterTypeConst.identificationTypes)}"
@@ -41,7 +41,7 @@
                                   	                   
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" />
 		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmUser.pmCountry.countryId}"
-		              style="width:188px;margin-bottom:5px;">
+		              style="width:180px;margin-bottom:5px;">
             	     <f:selectItem itemValue="#{null}" itemLabel="Select One"/> 		             
 					 <f:selectItems
 						value="#{userprofileBackingBean.retrieveCountryList()}"
@@ -85,7 +85,7 @@
 					    
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.country']}" />  
 		           <p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmUser.pmCountry.countryId}" 
-		              style="width:188px;margin-bottom:5px;">
+		              style="width:180px;margin-bottom:5px;">
             	     <f:selectItem itemValue="#{null}" itemLabel="Select One"/> 		             
 					 <f:selectItems
 						value="#{userprofileBackingBean.retrieveCountryList()}"
@@ -113,7 +113,7 @@
   				
   				<h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.state']}" />  
 		           <p:selectOneMenu  
-		              style="width:188px;margin-bottom:5px;">
+		              style="width:180px;margin-bottom:5px;">
             	     <f:selectItem itemLabel="Select One" itemValue="" /> 		           
 					 <f:selectItems var="statelist"
 						value="#{userprofileBackingBean.managedBean.states}"
@@ -122,7 +122,7 @@
 				
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />  
 		           <p:selectOneMenu 
-		              style="width:188px;margin-bottom:5px;"> 
+		              style="width:180px;margin-bottom:5px;"> 
 		          	 <f:selectItem itemLabel="Select One" itemValue="" /> 
 					 <f:selectItems var="divisionlist"
 						value="#{userprofileBackingBean.managedBean.divisions}"
@@ -131,7 +131,7 @@
 	
 	            <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.district']}" /> 
 		           <p:selectOneMenu 
-		              style="width:188px;margin-bottom:5px;"> 
+		              style="width:180px;margin-bottom:5px;"> 
 		             <f:selectItem itemLabel="Select One" itemValue="" />        
             	     <f:selectItems var="districtlist"
 						value="#{userprofileBackingBean.managedBean.districts}"
@@ -140,7 +140,7 @@
 							    						    				              			    
 			    <h:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
 		           <p:selectOneMenu   
-		              style="width:188px;margin-bottom:5px;"> 
+		              style="width:180px;margin-bottom:5px;"> 
 		             <f:selectItem itemLabel="Select One" itemValue="" /> 
             	     <f:selectItems var="citylist"
 						value="#{userprofileBackingBean.managedBean.citys}"
