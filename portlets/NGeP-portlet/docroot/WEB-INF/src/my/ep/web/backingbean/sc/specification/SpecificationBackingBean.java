@@ -4511,30 +4511,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void stageOnecompilenceList() {
-		ICheckListSO checkListSO;
-		CheckListResDTO resDTO;
-		try {
-			/*
-			 * System.out.println("=====procuremt id=====" +
-			 * this.getManagedBean().getProcurementId());
-			 */
-			checkListSO = BusinessDelegate.getInstance().getServiceObject("pm",
-					ICheckListSO.class);
-			CheckListReqDTO reqDTO = new CheckListReqDTO();
-			reqDTO.setProcurementMode("134");
-			reqDTO.setDocType("1");
-			reqDTO.setEvalStage("1");
-			resDTO = checkListSO
-					.retrieveCheckListByEvalStageAndProcurementMode(reqDTO);
-			this.getManagedBean().setStageOneComplianceList(
-					resDTO.getCheckListResultBean().getResultList());
-		} finally {
-			checkListSO = null;
-		}
-
-	}
-
+	
 	public void stageTwoTechcompilenceList() {
 		IDocumentSO documentSo;
 		DocumentResDTO resDTO;
