@@ -941,7 +941,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
-		if(flRequest.getFlFulfilmentItems() != null || !flRequest.getFlFulfilmentItems().isEmpty()){
+		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
 			BigDecimal sumOrderedQty = new BigDecimal(0);
 			for(FlFulfilmentItem fulfilmentItem : flRequest.getFlFulfilmentItems()){
 				for(FlFulfilmentItemAddr itemAddress : fulfilmentItem.getFlFulfilmentItemAddr()){
