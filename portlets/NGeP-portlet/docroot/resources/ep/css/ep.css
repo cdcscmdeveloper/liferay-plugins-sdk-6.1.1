@@ -466,6 +466,11 @@ a:hover.linkButton {
 	text-align: right;
 }
 
+.columnVCenterWidth15 {
+	width: 15%;
+	text-align: right;
+}
+
 .columnWidth16 {
 	width: 16%;
 	vertical-align: top;
