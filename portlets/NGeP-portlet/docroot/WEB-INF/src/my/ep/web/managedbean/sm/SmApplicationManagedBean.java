@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -320,6 +321,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmPersonnleCalcVO personCalc;
 
+	private BigDecimal equiPerCapTotal;
+
+	private BigDecimal equiCompCapTotal;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -578,6 +583,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		testBlock = Boolean.TRUE;
 		personCalc = new SmPersonnleCalcVO();
 		// setdefault panel names
+		equiPerCapTotal = new BigDecimal(0);
+		equiCompCapTotal = new BigDecimal(0);
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
@@ -1856,6 +1863,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersonCalc(SmPersonnleCalcVO personCalc) {
 		this.personCalc = personCalc;
+	}
+
+	public BigDecimal getEquiPerCapTotal() {
+		return equiPerCapTotal;
+	}
+
+	public void setEquiPerCapTotal(BigDecimal equiPerCapTotal) {
+		this.equiPerCapTotal = equiPerCapTotal;
+	}
+
+	public BigDecimal getEquiCompCapTotal() {
+		return equiCompCapTotal;
+	}
+
+	public void setEquiCompCapTotal(BigDecimal equiCompCapTotal) {
+		this.equiCompCapTotal = equiCompCapTotal;
 	}
 
 }

@@ -166,8 +166,10 @@ public class SmApplicationBackingBean extends
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
-				} else if (applicationType.equalsIgnoreCase("R") || applicationType.equalsIgnoreCase("A")) {
-					cannotRenewAlertMsg = validateBeforeRenewal((long) 27, applicationType);
+				} else if (applicationType.equalsIgnoreCase("R")
+						|| applicationType.equalsIgnoreCase("A")) {
+					cannotRenewAlertMsg = validateBeforeRenewal((long) 27,
+							applicationType);
 				}
 				if (cannotRenewAlertMsg) {
 					return setExceptionNavigationForAppl(applicationType);
@@ -358,7 +360,8 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private boolean validateBeforeRenewal(Long supplierId, String applicationType) {
+	private boolean validateBeforeRenewal(Long supplierId,
+			String applicationType) {
 
 		boolean result = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -383,40 +386,41 @@ public class SmApplicationBackingBean extends
 							- (new Date()).getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
 
-					if(applicationType.equalsIgnoreCase("R")){
-					
+					if (applicationType.equalsIgnoreCase("R")) {
+
 						if (diffDays > 90) {
 							result = true;
 							FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
-											""));
-	//						throw new EpException(MessageConst.EP_MAJ_00001);
+									.getCurrentInstance()
+									.addMessage(
+											null,
+											new FacesMessage(
+													FacesMessage.SEVERITY_INFO,
+													"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
+													""));
+							// throw new EpException(MessageConst.EP_MAJ_00001);
 						} else if (diffDays < -365) {
 							result = true;
 							FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Cannot renew as account is no longer active. Please register a new account.",
-											""));
-						} 
-					} else if (applicationType.equalsIgnoreCase("A") && diffDays < 90) {
+									.getCurrentInstance()
+									.addMessage(
+											null,
+											new FacesMessage(
+													FacesMessage.SEVERITY_ERROR,
+													"Cannot renew as account is no longer active. Please register a new account.",
+													""));
+						}
+					} else if (applicationType.equalsIgnoreCase("A")
+							&& diffDays < 90) {
 						result = true;
 						FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Cannot add new category codes as account is nearing expiry.",
-										""));
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_ERROR,
+												"Cannot add new category codes as account is nearing expiry.",
+												""));
 					}
 				}
 			}
@@ -2493,6 +2497,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setAuthPerCount(getAuthUserCount());
 		SmPersonnel shr = new SmPersonnel();
 		shr.setEquityOwner(true);
+		shr.setShareAmt(new BigDecimal(0));
+		shr.setSharePercentage(new BigDecimal(0));
 		setDefaultPersonnelValues(shr);
 		// getManagedBean().setSelectedPersonnel(null);
 		getManagedBean().setSelectedShareHolder(shr);
@@ -4787,9 +4793,138 @@ public class SmApplicationBackingBean extends
 
 	public void calculateShareHolderPercent() {
 		try {
-			if (getManagedBean().getSelectedShareHolder().getShareAmt() == null) {
+			if (getManagedBean().getSelectedShareHolder().getShareAmt() != null) {
 				getManagedBean().getSelectedShareHolder().setShareAmt(
-						new BigDecimal(0));
+						getManagedBean().getSelectedShareHolder().getShareAmt()
+								.setScale(2, RoundingMode.HALF_UP));
+			}
+			getManagedBean().setEquiPerCapTotal(new BigDecimal(0));
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (per.isEquityOwner()
+						&& !per.getPersonnelId().equals(
+								getManagedBean().getSelectedShareHolder()
+										.getPersonnelId())) {
+					getManagedBean().setEquiPerCapTotal(
+							getManagedBean().getEquiPerCapTotal()
+									.add(per.getShareAmt())
+									.setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			getManagedBean().setEquiPerCapTotal(
+					getManagedBean()
+							.getEquiPerCapTotal()
+							.add(getManagedBean().getSelectedShareHolder()
+									.getShareAmt())
+							.setScale(2, RoundingMode.HALF_UP));
+			if (getManagedBean().getEquiPerCapTotal().compareTo(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital()) <= 0) {
+				BigDecimal mul = new BigDecimal(100);
+				if (getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+					getManagedBean().getSelectedShareHolder()
+							.setSharePercentage(
+									getManagedBean()
+											.getSelectedShareHolder()
+											.getShareAmt()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+				}
+
+			} else {
+				getManagedBean().getSelectedShareHolder().setSharePercentage(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				getManagedBean().getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Invalid Peronnel Share Amout  : ",
+										"Total of personnels share amount cannot exceed Paid-up capital.Re enter the amounts "));
+			}
+		} catch (NumberFormatException ne) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Invalid Value  : ", "Please enter numbers only "));
+
+			ne.printStackTrace();
+		}
+	}
+
+	public void calculateEquityCompanyPercent() {
+		try {
+			if (getManagedBean().getSelectedEquityCompany().getShareAmt() != null) {
+				getManagedBean().getSelectedEquityCompany().setShareAmt(
+						getManagedBean().getSelectedEquityCompany()
+								.getShareAmt()
+								.setScale(2, RoundingMode.HALF_UP));
+			}
+			getManagedBean().setEquiCompCapTotal(new BigDecimal(0));
+			for (SmEquityCompany comp : getManagedBean().getSmAppl()
+					.getSmEquityCompanies()) {
+				if (!(comp.getEquityCompanyId() == null && comp
+						.equals(getManagedBean().getSelectedEquityCompany()))
+						&& !(comp.getEquityCompanyId() != null && comp
+								.getEquityCompanyId().equals(
+										getManagedBean()
+												.getSelectedEquityCompany()
+												.getEquityCompanyId()))) {
+
+					getManagedBean().setEquiCompCapTotal(
+							getManagedBean().getEquiCompCapTotal()
+									.add(comp.getShareAmt())
+									.setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			getManagedBean().setEquiCompCapTotal(
+					getManagedBean()
+							.getEquiCompCapTotal()
+							.add(getManagedBean().getSelectedEquityCompany()
+									.getShareAmt())
+							.setScale(2, RoundingMode.HALF_UP));
+			if (getManagedBean().getEquiCompCapTotal().compareTo(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital()) <= 0) {
+				BigDecimal mul = new BigDecimal(100);
+				if (getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+					getManagedBean().getSelectedEquityCompany()
+							.setSharePercentage(
+									getManagedBean()
+											.getSelectedEquityCompany()
+											.getShareAmt()
+											.divide(getManagedBean()
+													.getSmAppl()
+													.getSmCompanyBasic()
+													.getPaidUpCapital(), 4,
+													RoundingMode.HALF_UP)
+											.multiply(mul)
+											.setScale(2, RoundingMode.HALF_UP));
+				}
+
+			} else {
+				getManagedBean().getSelectedEquityCompany().setSharePercentage(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				getManagedBean().getSelectedEquityCompany().setShareAmt(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Invalid Company Share Amout  : ",
+										"Total of companies share amount cannot exceed Paid-up capital.Re enter the amounts "));
 			}
 		} catch (NumberFormatException ne) {
 			FacesContext.getCurrentInstance().addMessage(
