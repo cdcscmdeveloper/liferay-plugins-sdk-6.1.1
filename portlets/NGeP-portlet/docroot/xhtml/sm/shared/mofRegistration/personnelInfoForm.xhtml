@@ -6,416 +6,418 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel
-		header="Composition of the Board of Directors / Management / Staff Company"
-		toggleable="true" id="stfSummaryPan"
-		rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
+	<h:panelGroup id="perDataPanGroup">
+		<p:panel
+			header="Composition of the Board of Directors / Management / Staff Company"
+			toggleable="true" id="stfSummaryPan"
+			rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
 							.businessType eq '3' }">
 
-		<br />
-		<table style="width: 100%">
-			<tr>
-				<td colspan="4"><div align="center" style="width: 98%">
-						<p:panelGrid styleClass="tablePanel"
-							rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
-							<f:facet name="header">
-
-								<p:row>
-									<p:column rowspan="2" />
-									<p:column rowspan="2">Board Of Director</p:column>
-									<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-									<p:column rowspan="2">Management</p:column>
-									<p:column colspan="2">Staff Total</p:column>
-								</p:row>
-								<p:row>
-									<p:column>Entered</p:column>
-									<p:column>Actual</p:column>
-
-								</p:row>
-							</f:facet>
-							<p:row>
-								<p:column>Bumiputera</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Non-Bumiputera</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Non-Malaysian</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
-								</p:column>
-							</p:row>
-						</p:panelGrid>
-						<p:panelGrid styleClass="tablePanel"
-							rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
-							<f:facet name="header">
-
-								<p:row>
-									<p:column rowspan="2" />
-									<p:column rowspan="2">Board Of Director</p:column>
-									<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-									<p:column rowspan="2">Management</p:column>
-									<p:column colspan="2">Prof Staff</p:column>
-									<p:column colspan="2">Semi Prof Staff</p:column>
-									<p:column colspan="2">Clerical Staff</p:column>
-								</p:row>
-								<p:row>
-									<p:column>Entered</p:column>
-									<p:column>Actual</p:column>
-									<p:column>Entered</p:column>
-									<p:column>Actual</p:column>
-									<p:column>Entered</p:column>
-									<p:column>Actual</p:column>
-
-								</p:row>
-							</f:facet>
-							<p:row>
-								<p:column>Bumiputera</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profBumiActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiBumiActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
-								</p:column>
-
-
-
-							</p:row>
-							<p:row>
-								<p:column>Non-Bumiputera</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profNonBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profNonBumiActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiNonBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiNonBumiActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
-								</p:column>
-
-							</p:row>
-							<p:row>
-								<p:column>Non-Malaysian</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profFrgEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.profFrgActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiFrgEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.semiFrgActCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
-								</p:column>
-								<p:column>
-									<h:outputText
-										value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
-								</p:column>
-							</p:row>
-						</p:panelGrid>
-
-					</div></td>
-
-			</tr>
-		</table>
-	</p:panel>
-	<p:panel
-		header=" List of Company's Board of Directors / Management / Staff"
-		toggleable="true">
-
-		<table style="width: 250px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<br />
+			<table style="width: 100%">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.poSecReview.personnelVerified}"
-							id="poPersVer">
-							<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
-								event="change"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.personnelVerified)}" />
-						</p:selectBooleanCheckbox></td>
-					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
-							title="For PO to highlight the verified section " /></td>
+					<td colspan="4"><div align="center" style="width: 98%">
+							<p:panelGrid styleClass="tablePanel"
+								rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+								<f:facet name="header">
+
+									<p:row>
+										<p:column rowspan="2" />
+										<p:column rowspan="2">Board Of Director</p:column>
+										<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
+										<p:column rowspan="2">Management</p:column>
+										<p:column colspan="2">Staff Total</p:column>
+									</p:row>
+									<p:row>
+										<p:column>Entered</p:column>
+										<p:column>Actual</p:column>
+
+									</p:row>
+								</f:facet>
+								<p:row>
+									<p:column>Bumiputera</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Non-Bumiputera</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Non-Malaysian</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid styleClass="tablePanel"
+								rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+								<f:facet name="header">
+
+									<p:row>
+										<p:column rowspan="2" />
+										<p:column rowspan="2">Board Of Director</p:column>
+										<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
+										<p:column rowspan="2">Management</p:column>
+										<p:column colspan="2">Prof Staff</p:column>
+										<p:column colspan="2">Semi Prof Staff</p:column>
+										<p:column colspan="2">Clerical Staff</p:column>
+									</p:row>
+									<p:row>
+										<p:column>Entered</p:column>
+										<p:column>Actual</p:column>
+										<p:column>Entered</p:column>
+										<p:column>Actual</p:column>
+										<p:column>Entered</p:column>
+										<p:column>Actual</p:column>
+
+									</p:row>
+								</f:facet>
+								<p:row>
+									<p:column>Bumiputera</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profBumiActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiBumiActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
+									</p:column>
+
+
+
+								</p:row>
+								<p:row>
+									<p:column>Non-Bumiputera</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profNonBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profNonBumiActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiNonBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiNonBumiActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+									</p:column>
+
+								</p:row>
+								<p:row>
+									<p:column>Non-Malaysian</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profFrgEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.profFrgActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiFrgEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.semiFrgActCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+						</div></td>
 
 				</tr>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
-							id="apprPersVer">
-							<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
-								event="change"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.personnelVerified)}" />
-						</p:selectBooleanCheckbox></td>
-					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
-							title="For Approver to highlight the verified section " /></td>
-				</tr>
-			</p:outputPanel>
-		</table>
-		<br />
-		<p:panel id="persInfPan">
-			<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
-				id="poPersBlc"
-				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
-			<p:dataTable var="person"
-				value="#{backingBean.managedBean.smAppl.smPersonnels}"
-				selection="#{backingBean.managedBean.selectedPersonnels}"
-				rowKey="#{person}" rowIndexVar="index" id="personDt">
-				<ac:paginator for="personDt" />
-				<p:column selectionMode="multiple" width="5%" />
+			</table>
+		</p:panel>
+		<p:panel
+			header=" List of Company's Board of Directors / Management / Staff"
+			toggleable="true">
 
-				<p:column headerText="Name">
-					<h:outputText value="#{person.name}" />
-				</p:column>
+			<table style="width: 250px">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.poSecReview.personnelVerified}"
+								id="poPersVer">
+								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+									event="change"
+									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.personnelVerified)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value=" Section Verified By PO: "
+								title="For PO to highlight the verified section " /></td>
 
-				<p:column headerText="Identification Num">
-					<h:outputText value="#{person.identificationNo}" />
-				</p:column>
-				<p:column headerText="Is Equity Owner">
-					<h:outputText value="Yes" rendered="#{person.equityOwner}" />
-					<h:outputText value="No" rendered="#{!person.equityOwner}" />
-				</p:column>
-				<p:column headerText="Is Authorized">
-					<h:outputText value="Yes" rendered="#{person.authorizedFlg eq '1'}" />
-					<h:outputText value="No" rendered="#{person.authorizedFlg eq '0'}" />
-				</p:column>
-				<p:column headerText="Is Cert Issued">
-					<h:outputText value="Yes" rendered="#{person.softcertFlg eq '1'}" />
-					<h:outputText value="No" rendered="#{person.softcertFlg eq '0'}" />
-				</p:column>
-				<p:column headerText="Action">
-					<p:commandLink rendered="#{!person.equityOwner}"
-						action="#{backingBean.assignSelPersonnel(person)}"
-						oncomplete="directorDialog.show();" style="padding-right:5px;"
-						update=":form:tt:directorDialog">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
+								id="apprPersVer">
+								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+									event="change"
+									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.personnelVerified)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value=" Section Verified By Approver: "
+								title="For Approver to highlight the verified section " /></td>
+					</tr>
+				</p:outputPanel>
+			</table>
+			<br />
+			<p:panel id="persInfPan">
+				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
+					id="poPersBlc"
+					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
+				<p:dataTable var="person"
+					value="#{backingBean.managedBean.smAppl.smPersonnels}"
+					selection="#{backingBean.managedBean.selectedPersonnels}"
+					rowKey="#{person}" rowIndexVar="index" id="personDt">
+					<ac:paginator for="personDt" />
+					<p:column selectionMode="multiple" width="5%" />
 
-
-					<p:commandLink oncomplete="perShareHolderDialog.show();"
-						rendered="#{person.equityOwner}"
-						action="#{backingBean.assignSelShareHolder(person)}"
-						update=":form:tt:perShareHolderDialog" style="padding-right:5px;">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-					<p:commandLink oncomplete="perShareHolderAddrDialog.show();"
-						id="PerShrAddrLnk"
-						action="#{backingBean.assignSelShareHolderAddress(person)}"
-						update=":form:tt:perShareHolderAddrDialog">
-						<p:graphicImage library="ep/images/design" name="register.png"
-							value="/resources/ep/images/design/register.png" />
-					</p:commandLink>
-					<p:tooltip for="PerShrAddrLnk">
-						<h:outputText value="Address Details" />
-					</p:tooltip>
-				</p:column>
-
-			</p:dataTable>
-			<p:spacer height="2px;" />
-			<div align="right">
-				<p:commandButton value="Add Management / Staff"
-					action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-					oncomplete="directorDialog.show();"
-					update=":form:tt:directorDialog" />
-				<ui:fragment
-					rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier.businessType eq '3'}">
-					<p:commandButton value="Add Director/Higher Management"
-						action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
-						oncomplete="directorDialog.show();"
-						update=":form:tt:directorDialog" />
-				</ui:fragment>
-				<p:commandButton value="Delete"
-					action="#{backingBean.deleteSelectedPersonnel}"
-					update=":form:tt:personDt , :form:tt:stfSummaryPan" />
-			</div>
-			<p:panel id="persBranMapInfo">
-				<p:dataTable var="branch" id="perBrDt"
-					value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-					rowIndexVar="index">
-					<ac:paginator for="perBrDt" />
-
-
-					<p:column headerText="Branch Name">
-						<h:outputText value="#{branch.branchName}" />
+					<p:column headerText="Name">
+						<h:outputText value="#{person.name}" />
 					</p:column>
-					<p:column headerText="Point Of Contact">
-						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							id="brnPerVal" value="#{branch.smPersonnel.personnelId}">
-							<f:selectItems
-								value="#{backingBean.managedBean.smAppl.smPersonnels}"
-								var="brPerBean" itemLabel="#{brPerBean.name}"
-								itemValue="#{brPerBean.personnelId}" />
-						</p:selectOneMenu>
+
+					<p:column headerText="Identification Num">
+						<h:outputText value="#{person.identificationNo}" />
+					</p:column>
+					<p:column headerText="Is Equity Owner">
+						<h:outputText value="Yes" rendered="#{person.equityOwner}" />
+						<h:outputText value="No" rendered="#{!person.equityOwner}" />
+					</p:column>
+					<p:column headerText="Is Authorized">
+						<h:outputText value="Yes"
+							rendered="#{person.authorizedFlg eq '1'}" />
+						<h:outputText value="No" rendered="#{person.authorizedFlg eq '0'}" />
+					</p:column>
+					<p:column headerText="Is Cert Issued">
+						<h:outputText value="Yes" rendered="#{person.softcertFlg eq '1'}" />
+						<h:outputText value="No" rendered="#{person.softcertFlg eq '0'}" />
+					</p:column>
+					<p:column headerText="Action">
+						<p:commandLink rendered="#{!person.equityOwner}"
+							action="#{backingBean.assignSelPersonnel(person)}"
+							oncomplete="directorDialog.show();" style="padding-right:5px;"
+							update=":form:tt:directorDialog">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+
+
+						<p:commandLink oncomplete="perShareHolderDialog.show();"
+							rendered="#{person.equityOwner}"
+							action="#{backingBean.assignSelShareHolder(person)}"
+							update=":form:tt:perShareHolderDialog" style="padding-right:5px;">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+						<p:commandLink oncomplete="perShareHolderAddrDialog.show();"
+							id="PerShrAddrLnk"
+							action="#{backingBean.assignSelShareHolderAddress(person)}"
+							update=":form:tt:perShareHolderAddrDialog">
+							<p:graphicImage library="ep/images/design" name="register.png"
+								value="/resources/ep/images/design/register.png" />
+						</p:commandLink>
+						<p:tooltip for="PerShrAddrLnk">
+							<h:outputText value="Address Details" />
+						</p:tooltip>
 					</p:column>
 
 				</p:dataTable>
+				<p:spacer height="2px;" />
+				<div align="right">
+					<p:commandButton value="Add Management / Staff"
+						action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
+						oncomplete="directorDialog.show();"
+						update=":form:tt:directorDialog" />
+					<ui:fragment
+						rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier.businessType eq '3'}">
+						<p:commandButton value="Add Director/Higher Management"
+							action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
+							oncomplete="directorDialog.show();"
+							update=":form:tt:directorDialog" />
+					</ui:fragment>
+					<p:commandButton value="Delete"
+						action="#{backingBean.deleteSelectedPersonnel}"
+						update=":form:tt:personDt , :form:tt:stfSummaryPan" />
+				</div>
+				<p:panel id="persBranMapInfo">
+					<p:dataTable var="branch" id="perBrDt"
+						value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+						rowIndexVar="index">
+						<ac:paginator for="perBrDt" />
+
+
+						<p:column headerText="Branch Name">
+							<h:outputText value="#{branch.branchName}" />
+						</p:column>
+						<p:column headerText="Point Of Contact">
+							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="brnPerVal" value="#{branch.smPersonnel.personnelId}">
+								<f:selectItems
+									value="#{backingBean.managedBean.smAppl.smPersonnels}"
+									var="brPerBean" itemLabel="#{brPerBean.name}"
+									itemValue="#{brPerBean.personnelId}" />
+							</p:selectOneMenu>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+				<br />
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+					<table style="width: 50%">
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" cols="41"
+									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" readonly="true"
+									disabled="true" cols="41"
+									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
+							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" cols="41"
+									value="#{backingBean.managedBean.apprvrSecReview.personnelRemark}" /></td>
+
+						</tr>
+					</table>
+				</p:outputPanel>
 			</p:panel>
-			<br />
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-				<table style="width: 50%">
-					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
-					</tr>
-				</table>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-				<table style="width: 100%">
-					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
-								value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.apprvrSecReview.personnelRemark}" /></td>
-
-					</tr>
-				</table>
-			</p:outputPanel>
 		</p:panel>
-	</p:panel>
-
+	</h:panelGroup>
 
 
 	<p:dialog width="1050px" height="500px" header="Personnel Information"
@@ -427,7 +429,7 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
-				update=":form:tt:personDt, :form:tt:stfSummaryPan" />
+				update=":form:tt:perDataPanGroup" />
 			<p:commandButton value="Cancel" onclick="directorDialog.hide();"
 				immediate="true" />
 		</div>
@@ -444,7 +446,7 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateShareHolderToSmAppl('personnelInfo')}"
-				update=":form:tt:personDt, :form:tt:stfSummaryPan" />
+				update=":form:tt:perDataPanGroup" />
 			<p:commandButton value="Cancel"
 				onclick="perShareHolderDialog.hide();" immediate="true" />
 		</div>

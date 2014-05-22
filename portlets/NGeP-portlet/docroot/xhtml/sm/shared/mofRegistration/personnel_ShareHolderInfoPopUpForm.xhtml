@@ -34,23 +34,28 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Race" title="For Malaysian Only" /></td>
+				<!-- <td><p:outputLabel value="* Race" title="For Malaysian Only" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One --" itemValue="1" />
+						<f:selectItem itemLabel="Select One" itemValue="1" />
 						<f:selectItem itemLabel="Melayu" itemValue="M" />
 						<f:selectItem itemLabel="Chinese" itemValue="C" />
 						<f:selectItem itemLabel="Indian" itemValue="I" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
+					</p:selectOneMenu></td> -->
 				<td><p:outputLabel value="* DOB" /></td>
 				<td><p:calendar showOn="button"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Designation" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedShareHolder.designation}"
+						size="35" /></td>
 				<td><p:outputLabel value="* Role : " /></td>
 				<td>
 					<table>
 						<tr>
-							<td><p:selectBooleanCheckbox /></td>
+							<td><p:selectBooleanCheckbox disabled="true"
+									value="#{backingBean.managedBean.selectedShareHolder.equityOwner}" /></td>
 							<td><p:outputLabel value="Equity Owner"
 									style="margin-bottom: 5px;" /></td>
 							<td><p:selectBooleanCheckbox
@@ -66,21 +71,18 @@
 					</table>
 				</td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="* Designation" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedShareHolder.designation}"
-						size="35" /></td>
-				<!-- <td><p:outputLabel value="* Branch Associated" /></td>
+			<!--<tr>
+
+				 <td><p:outputLabel value="* Branch Associated" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="Select One" itemValue="1" />
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 							var="supBean" itemLabel="#{supBean.branchName}"
 							itemValue="#{supBean.branchName}" />
-					</p:selectOneMenu></td> -->
+					</p:selectOneMenu></td> 
 
-			</tr>
+			</tr>-->
 
 			<tr>
 				<td><p:outputLabel value=" EPF No." /></td>
@@ -187,7 +189,7 @@
 				<td><p:outputLabel value="* Percentage(%)" /></td>
 				<td><p:inputText title="Auto Populated Value"
 						value="#{backingBean.managedBean.selectedShareHolder.sharePercentage}"
-						size="35" /></td>
+						size="10" readonly="true" disabled="true" /></td>
 
 			</tr>
 		</table>
