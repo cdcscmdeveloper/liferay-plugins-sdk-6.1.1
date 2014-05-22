@@ -59,42 +59,47 @@ public class SvcSiteAssignBackingBean extends
 	
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
-		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
-		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISiteAssignSO.class);
-		String bpmUsrName = new FacesScopes().getUserScreenName();
-		
-		SmSvTask svTask = this.getManagedBean().getSmSvTask();
-		svTask.setSmSvOfficers(new ArrayList<SmSvOfficer>());
-		
-		for(PmUser pmUsr : this.getManagedBean().getSvoUserList().getTarget()){
-			SmSvOfficer svOfficer = new SmSvOfficer();
-			svOfficer.setSmSvTask(svTask);
-			svOfficer.setPmUser(pmUsr);
-			svTask.getSmSvOfficers().add(svOfficer);
-		}
-		
-		//System.out.println("****************** submitSiteVisitAssignment *****" + svTask.getSmSvOfficers().get(0).getPmUser());
-		this.getManagedBean().getSmRemark().setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
-		this.getManagedBean().getSmRemark().setDocId(this.getManagedBean().getSmSvTask().getSvTaskId());
-		
-		reqDTO.setOutcome(action);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setBpmUserName(bpmUsrName);
-		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-		reqDTO.setSmSvTask(svTask);
-		reqDTO.setSmRemark(this.getManagedBean().getSmRemark());
-		SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
+		try{
+			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
+			ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISiteAssignSO.class);
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 
-		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Site Visit has been submitted.", ""));
-			return "/xhtml/sm/sitevisit/outputMsg";
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
-			return "";
+			SmSvTask svTask = this.getManagedBean().getSmSvTask();
+			svTask.setSmSvOfficers(new ArrayList<SmSvOfficer>());
+
+			for(PmUser pmUsr : this.getManagedBean().getSvoUserList().getTarget()){
+				SmSvOfficer svOfficer = new SmSvOfficer();
+				svOfficer.setSmSvTask(svTask);
+				svOfficer.setPmUser(pmUsr);
+				svTask.getSmSvOfficers().add(svOfficer);
+			}
+
+			//System.out.println("****************** submitSiteVisitAssignment *****" + svTask.getSmSvOfficers().get(0).getPmUser());
+			this.getManagedBean().getSmRemark().setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
+			this.getManagedBean().getSmRemark().setDocId(this.getManagedBean().getSmSvTask().getSvTaskId());
+
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			reqDTO.setSmSvTask(svTask);
+			reqDTO.setToken(token);
+			reqDTO.setSmRemark(this.getManagedBean().getSmRemark());
+			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Site Visit has been submitted.", ""));
+				return "/xhtml/sm/sitevisit/outputMsg";
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			}
+		}catch(Exception ex){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to process.", ""));
 		}
+
+		return null;
 	}
 	
 	public String submitSiteVisitTest (){
@@ -119,4 +124,10 @@ public class SvcSiteAssignBackingBean extends
 		
 		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
 	}
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+
 }

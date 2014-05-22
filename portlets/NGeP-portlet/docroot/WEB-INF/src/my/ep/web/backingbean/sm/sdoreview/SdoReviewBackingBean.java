@@ -32,6 +32,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 	}
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 
 	public void viewSupportingDocument() {
 		//this.getManagedBean().setAppId(1006);
@@ -67,73 +72,45 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 	
 	public String submitSDOReviewAction(String res) {
-		String bpmUsrName = new FacesScopes().getUserScreenName();
+		//String bpmUsrName = getFacesScopes.getUserScreenName();
+		try{
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
+			reqDTO.setApplId(this.getManagedBean().getAppId());
+			reqDTO.setOutcome(res);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 
-		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
-		reqDTO.setApplId(this.getManagedBean().getAppId());
-		reqDTO.setOutcome(res);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			log.info("-----------SDO----------" + reqDTO.getOutcome());
+			log.info("-----------SDO Review----------" + reqDTO.getTaskId());
 
-		log.info("-----------SDO----------" + reqDTO.getOutcome());
-		log.info("-----------SDO Review----------" + reqDTO.getTaskId());
+			//reqDTO.setBpmUserName(bpmUsrName);
+			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			reqDTO.setToken(token);
 
-		reqDTO.setBpmUserName(bpmUsrName);
-		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-		
-		SmRemark smRmk = this.getManagedBean().getSmRemark();
-		smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
-		smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());
-		
-		reqDTO.setSmRemark(smRmk);
-		SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Application has been updated successfully", ""));
-			return "/xhtml/sm/disciplinaryAction/outputMsg";
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
-			return "";
+			SmRemark smRmk = this.getManagedBean().getSmRemark();
+			smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
+			smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());
+
+			reqDTO.setSmRemark(smRmk);
+			SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Application has been updated successfully", ""));
+				return "/xhtml/sm/disciplinaryAction/outputMsg";
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			}
+		}catch(Exception ex){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to process.", ""));
 		}
-
+		
+		return null;
 	}
-
-//	public void preRenderView() {
-//		log.info("--------------SDO preRenderView--------------");
-//		HttpServletRequest servletRequest = PortalUtil
-//				.getHttpServletRequest(new FacesScopes().getRequest());
-//		HttpServletRequest originalServletRequest = PortalUtil
-//				.getOriginalServletRequest(servletRequest);
-//		String taskId = originalServletRequest.getParameter("taskId");
-//		String bpmUsrName = new FacesScopes().getUserScreenName();
-//
-//		log.info("----------------BPMUSER-------------------" + bpmUsrName);
-//		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-//		reqDTO.setTaskId(taskId);
-//		reqDTO.setBpmUserName(bpmUsrName);
-//
-//		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
-//				.getServiceObject("sm", ISdoReviewSO.class);
-//
-//		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
-//				.getBPMTaskDetails(reqDTO);
-//		this.getManagedBean().setTaskName(resDTO.getTaskName());
-//		this.getManagedBean().setBpmAction(resDTO.getAction());
-//		this.getManagedBean().setTaskId(taskId);
-//
-//		// Old BPM working set
-//		SMMOFRegDataType mofObj = (SMMOFRegDataType) resDTO.getPojo();
-//		log.info("--------------mofObj.getAppId()--------------------"+ mofObj.getDocumentId());
-//		this.getManagedBean().setAppId(mofObj.getDocumentId());
-//		// this.getManagedBean().setBpmPojo(mofObj);
-//		viewSupportingDocument();
-//	}
-
-	
-	
 }

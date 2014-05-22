@@ -129,13 +129,11 @@ public class SvoSiteVisitBackingBean extends
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
-		
-		String bpmUsrName = new FacesScopes().getUserScreenName();
-		
+		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
+		reqDTO.setToken(token);
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setBpmUserName(bpmUsrName);
 		//reqDTO.setAppType(this.getManagedBean().getAppType());
 		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
@@ -189,6 +187,11 @@ public class SvoSiteVisitBackingBean extends
 		System.out.println("*****Sv Interviewee size*****" + svTemp.getSmSvAddress().getSmSvInterviewees().size());
 	}
 	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	public void test(){
 		//		for(SmSvFinChecklist finList : this.getManagedBean().getSmSvTask().getSmSvFinChecklists()){
 		//			SmRemark rmk = this.getManagedBean().getRemarkMap().get(finList.getPmParameter().getParameterId());
@@ -207,5 +210,4 @@ public class SvoSiteVisitBackingBean extends
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		//}
 	}
-
 }
