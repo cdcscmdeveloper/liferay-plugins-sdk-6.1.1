@@ -407,7 +407,7 @@ public class SmApplicationBackingBean extends
 											"Cannot renew as account is no longer active. Please register a new account.",
 											""));
 						} 
-					} else if (smSupplier.getSmAppl().getApplType().equalsIgnoreCase("A") && diffDays < 90) {
+					} else if (applicationType.equalsIgnoreCase("A") && diffDays < 90) {
 						result = true;
 						FacesContext
 						.getCurrentInstance()
