@@ -1683,7 +1683,7 @@ public class QTDetailBackingBean extends
 							.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, approverSettingDtls(
-										RoleCode.APPROVER, qtApproval)));
+										RoleCode.BUDGET_APPROVER, qtApproval)));
 					}
 
 				}
