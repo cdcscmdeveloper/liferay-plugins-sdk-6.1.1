@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="deductionPanel" header="DEDUCTIONS" toggleable="true">
+		<p:dataTable id="deductionDataTable" var="deduction"
+			rowIndexVar="index" selectionMode="multiple" rowKey="#{deduction}"
+			lazy="true">
+			<ac:paginator for="deductionDataTable" />
+
+			<p:column headerText="Type">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Description">
+				<h:outputText style="text-align:right" />
+			</p:column>
+			<p:column headerText="Clauses">
+				<h:outputText style="text-align:right">
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Amanah">
+				<h:outputText style="text-align:right" />
+			</p:column>
+			<p:column headerText="GOSODO">
+				<h:outputText style="text-align:right" />
+			</p:column>
+			<p:column headerText="Amount (RM)">
+				<h:outputText style="text-align:right" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Add" icon="ui-icon-add" />
+			<p:commandButton id="deleteDeductionBtn" value="Delete"
+				icon="ui-icon-delete">
+			</p:commandButton>
+		</div>
+		</p:panel>
+</ui:composition>

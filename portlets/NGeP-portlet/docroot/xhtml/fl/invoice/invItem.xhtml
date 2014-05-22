@@ -6,84 +6,106 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="ITEM DETAIL" toggleable="true">
-		<ui:repeat var="address" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.flDeliveryAddresses}">
-			<h:outputText rendered="#{address.addressType != null}"
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
-				<h:outputText rendered="#{address.addressType eq null}"
-					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
-			<p:spacer height="5px"></p:spacer>
-			<p:dataTable id="invItemDt" var="item" width="100%"
-				value="#{address.flFulfilmentItemAddr}">
-				<ac:paginator for="invItemDt" />
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column rowspan="2" headerText="Type" />
-						<p:column rowspan="2" headerText="Item Code" />
-						<p:column rowspan="2" headerText="Item Name" />
-						<p:column rowspan="2" headerText="Ordered Qty." />
-						<p:column rowspan="2" headerText="Delivered Qty." />
-						<p:column rowspan="2" headerText="Recalled Qty." />
-						<p:column rowspan="2" headerText="Ordered Amt. (RM)" />
-						<p:column rowspan="2" headerText="Delivered Amt. (RM)" />
-						<p:column rowspan="2" headerText="Recalled Amt. (RM)" />
-						<p:column rowspan="2" headerText="Invoice Amt. (RM)" />
-					</p:row>
-				</p:columnGroup>
-				<p:column>
-					<p:outputLabel
-						value="#{item.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'PR'}" />
-					<h:outputText style="text-align:right"
-						value="#{item.flFulfilmentItem.qtItem.itemName}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel
-						value="#{item.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.requestNoteItemId}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'PR'}" />
-					<h:outputText style="text-align:right"
-						value="#{item.flFulfilmentItem.qtItem.itemName}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel
-						value="#{item.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'PR'}" />
-					<h:outputText style="text-align:right"
-						value="#{item.flFulfilmentItem.qtItem.itemName}"
-						rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.orderedQty}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.sumDeliveredQty}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.recalledQty}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.orderedAmt}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.sumDeliveredAmt}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{item.recalledAmt}" />
-				</p:column>
-				<p:column>
-					<p:inputText value="#{item.receivedAmt}" style="text-align:right">
-					<f:convertNumber pattern="#,#00.00" />
-						<p:ajax event="blur"
-							listener="#{invoiceBackingBean.updateNewInvoiceAmt(item)}"
-							process="@this">
-						</p:ajax>
-					</p:inputText>
-				</p:column>
-			</p:dataTable>
-			<br />
-			<br />
-		</ui:repeat>
+	<p:panel header="ITEM DETAIL" toggleable="true" styleClass="invItemPnlClass">
+
+		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
+			styleClass="invItemChange"
+			value="#{invoiceBackingBean.managedBean.chargeLineItemRoot}">
+			<p:column headerText="Item Code">
+				<h:outputText
+					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="Item Name">
+				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="UOM">
+				<h:outputText value="Unit"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="Unit &lt;br /&gt; Price (RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.unitPrice}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeReceivedQty}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Recalled &lt;br /&gt; Qty." style="text-align:right">
+				<h:outputText 
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
+					rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}"
+					rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Invoice &lt;br /&gt; Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeInvAmt}" id="invSumAmountTxt"
+					rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<p:inputText size="9" value="#{chargeLineNode.chargeInvAmt}" style="text-align:right;color: red;"  
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<p:ajax event="blur"  process="@this" partialSubmit="true" update="@(.invItemChange)"
+								listener="#{invoiceBackingBean.retrieveInvTotalAmount(chargeLineNode)}">
+					</p:ajax>
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</p:column>
+		</p:treeTable>
+		<br />
+		<br />
+		<br />
+		
+		<table style="width: 93%">
+			<tr>
+				<td style="text-align: right; font: bold; size: 10;">Grand
+					Total: <p:spacer width="10px" />
+					<h:outputText
+						value="#{invoiceBackingBean.managedBean.orderedAmtGrandTotal}">
+						<f:convertNumber pattern="#,#00.00" />
+					</h:outputText>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>

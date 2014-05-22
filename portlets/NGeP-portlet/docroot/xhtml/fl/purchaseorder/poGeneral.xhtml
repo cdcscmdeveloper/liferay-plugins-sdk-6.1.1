@@ -98,9 +98,10 @@
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
 				<td>
-					<p:selectOneRadio value="#{flOrderBB.managedBean.fulfilmentOrder.factored}" >
+					<p:selectOneRadio value="#{flOrderBB.managedBean.factoringCheck}" >
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax event="change" process="@this" listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)" partialSubmit="true" />
 					</p:selectOneRadio>
 				</td>
 			</tr>
@@ -178,7 +179,8 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true" >
+	<h:panelGroup styleClass="factStyle" id="factStyle">
+	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{flOrderBB.managedBean.factoringCheck eq 'true'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -190,7 +192,7 @@
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-				<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
+				<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;" >
 						<f:selectItem itemLabel="Select One" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -232,6 +234,7 @@
 			</tr>
 		</table>
 	</p:panel>
+	</h:panelGroup>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>

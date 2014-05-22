@@ -11,29 +11,41 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{paymentMatchBackingBean.preRenderView}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	<table style="width: 100%;">
+		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
+		<table style="width: 100%;">
 			<tr>
 				<td style="text-align: left; width: 66px;"><p:outputLabel
 						value="DOC NO:" /></td>
 				<td style="width: 70px"><p:outputLabel
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.docNo}" />
 				</td>
-				<td colspan="4" style="text-align:right;">
-				<ui:repeat var="bpmAction"
-					value="#{paymentMatchBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{bpmAction}" action="#{paymentMatchBackingBean.submitAction(bpmAction)}" process="@this"/>
-				</ui:repeat> 
-				</td>
+				<td colspan="4" style="text-align: right;"><ui:repeat
+						var="bpmAction"
+						value="#{paymentMatchBackingBean.managedBean.outComes}">
+						<p:commandButton value="#{bpmAction}"
+							action="#{paymentMatchBackingBean.submitAction(bpmAction)}"
+							process="@this" />
+					</ui:repeat></td>
 			</tr>
 		</table>
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="GENERAL">
+		<p:tabView id="pmtabs" orientation="left" dynamic="true" cache="false">
+			<p:ajax event="tabChange"
+				listener="#{paymentMatchBackingBean.onTabChange}"
+				update="#{paymentMatchBackingBean.className}"></p:ajax>
+			<p:tab id="pmGeneralTabId" title="General">
 				<ui:include src="pmGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="ITEM">
-				<ui:include src="pmItem.xhtml" />
+			<p:tab id="pmChargeLineTabId" title="Charge Line Summary">
+				<ui:include src="pmChargeLine.xhtml" />
+			</p:tab>
+			<p:tab id="pmDeductionTabId" title="Deduction">
+				<ui:include src="pmDeduction.xhtml" />
+			</p:tab>
+			<p:tab id="pmSummaryTabId" title="Payment Summary">
+				<ui:include src="pmSummary.xhtml" />
 			</p:tab>
 		</p:tabView>
 	</ui:define>

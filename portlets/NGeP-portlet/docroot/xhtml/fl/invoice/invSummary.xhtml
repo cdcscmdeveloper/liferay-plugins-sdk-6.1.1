@@ -6,23 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="INVOICE SUMMARY" toggleable="true">
+	<p:panel header="INVOICE SUMMARY" toggleable="true" styleClass="invItemSummaryPnlClass" >
 		<table>
 			<tr>
 				<td style="width:139px"><p:outputLabel value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtOri}"  disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.service.fee']}" /></td>
-				<td><p:inputText size="35" value="" disabled="true" /></td>
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.serviceCharge}" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fee.amt']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
+				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.feeAmt}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.amt.to.supplier']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
+				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}" /></td>
 			</tr>
 		</table>
 	</p:panel>

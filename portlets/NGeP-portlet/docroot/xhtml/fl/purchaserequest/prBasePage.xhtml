@@ -54,16 +54,16 @@
 		<p:spacer height="20px" />
 		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="false">
 		<p:ajax event="tabChange" listener="#{purchaseRequestBackingBean.onTabChange}" update="#{purchaseRequestBackingBean.className}"></p:ajax>
-			<p:tab id="generalTabId" title="General">
+			<p:tab id="prGeneralTabId" title="General">
 				<ui:include src="prGeneral.xhtml" />
 			</p:tab>
-			<p:tab id="doItemsTabId" title="Delivery Address and Item " >
+			<p:tab id="prItemsTabId" title="Delivery Address and Item " >
 				<ui:include src="prItem.xhtml" />
 			</p:tab>
-			<p:tab id="orderSummeryTabId" title="Order Summary">
+			<p:tab id="prOrderSummeryTabId" title="Order Summary">
 				<ui:include src="prordersummary.xhtml" />
 			</p:tab>
-			<p:tab id="chargeLineTabId" title="Charge Line Summary" >
+			<p:tab id="prChargeLineTabId" title="Charge Line Summary" >
 				<ui:include src="chargeline.xhtml" />
 			</p:tab>
 			<p:tab id="settingsTabId" title="Approval Setting"

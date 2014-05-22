@@ -11,31 +11,33 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{invoiceBackingBean.preRenderView}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	<ui:include src="/xhtml/fl/invoice/invHeaderPage.xhtml" />
-	<table style="width: 100%">
+		<f:event listener="#{invoiceBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
+		<ui:include src="/xhtml/fl/invoice/invReviewHeaderPage.xhtml" />
+		<table style="width: 100%">
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.docNo}" />
-				</td>
-				<td colspan="4" style="text-align:right;">
-				<ui:repeat var="bpmAction"
-					value="#{invoiceBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{bpmAction}" action="#{invoiceBackingBean.submitAction(bpmAction)}" process="@this" ajax="false"/>
-				</ui:repeat> </td>
+				<td colspan="4" style="text-align: right;"><ui:repeat
+						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
+						<p:commandButton value="#{bpmAction}"
+							action="#{invoiceBackingBean.submitAction(bpmAction)}"
+							process="@this" ajax="false" />
+					</ui:repeat></td>
 			</tr>
 		</table>
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="General">
+		<p:tabView id="invTab" orientation="left"  dynamic="true"
+			cache="false">
+			<p:ajax event="tabChange"
+				listener="#{invoiceBackingBean.onTabChange}"
+				update="#{invoiceBackingBean.className}"></p:ajax>
+			<p:tab title="General" id="invGeneralTabId">
 				<ui:include src="invGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Invoice Details">
+			<p:tab title="Invoice Item" id="invItemTabId">
 				<ui:include src="invItem.xhtml" />
 			</p:tab>
-			<p:tab title="Invoice Summary">
+			<p:tab title="Invoice Summary" id="invSummaryTabId">
 				<ui:include src="invSummary.xhtml" />
 			</p:tab>
 		</p:tabView>

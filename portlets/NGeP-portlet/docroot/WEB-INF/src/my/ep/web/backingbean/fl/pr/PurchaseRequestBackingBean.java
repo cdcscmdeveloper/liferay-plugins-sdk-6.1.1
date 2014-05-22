@@ -142,7 +142,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private boolean checkFlg = false;
 	private boolean displayItemPnl;
 	private boolean selectedAllChargeItem;
-	private String className="@(.myClassName)";
+	private String className="@(.myPrClassName)";
 	
 	
 	/**
@@ -790,6 +790,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId()
 			//PmVotFund pmVotFund=new PmVotFund();
 		   // pmVotFund.setVotFundId(1L);
+			
+			//Fetch flitem from list by looping item list.
 			FlFulfilmentItem fulfilmentItem =new FlFulfilmentItem();
 			
 		    flItem.setItemType(pmParameter);
@@ -810,7 +812,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		    flItem.setFlFulfilmentItem(fulfilmentItem);
 		    flItem.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItem);
+			//getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItem);
 			
 		}
 		// add  or remove items to Selected delivery address
@@ -1838,11 +1840,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void onTabChange(TabChangeEvent tevent){
-		if("chargeLineTabId".equals(tevent.getTab().getId())){
-		 // Call chargege line specific data
-			//Populate Charge Line Items
-		getManagedBean().populateChargeLineData();	
-		setClassName("@(.chargeLinePnlClass)");
+		if("prChargeLineTabId".equals(tevent.getTab().getId())){
+			getManagedBean().populateChargeLineData();	
+			setClassName("@(.prChargeLinePnlClass)");
 		}
 	}
 	
