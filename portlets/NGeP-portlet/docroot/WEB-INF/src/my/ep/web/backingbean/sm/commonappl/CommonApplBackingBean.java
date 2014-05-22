@@ -42,16 +42,16 @@ public class CommonApplBackingBean extends
 		String taskId = originalServletRequest.getParameter("taskId");
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 
-		String bpmUserName = new FacesScopes().getUserScreenName();
+		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 
 		reqDTO.setTaskId(taskId);
-		reqDTO.setBpmUserName(bpmUserName);
+		reqDTO.setToken(token);
+		//reqDTO.setBpmUserName(bpmUserName);
 
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
 
-		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
-				.getBPMTaskDetails(reqDTO);
+		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
