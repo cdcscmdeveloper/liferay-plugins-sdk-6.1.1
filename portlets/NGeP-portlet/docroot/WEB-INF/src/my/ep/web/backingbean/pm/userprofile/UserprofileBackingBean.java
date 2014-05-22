@@ -77,7 +77,7 @@ public class UserprofileBackingBean extends
 		return resDTO.getCountryList();
 
 	}
-	
+
 	public void retrievePmStateList() {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(1l);
@@ -87,7 +87,7 @@ public class UserprofileBackingBean extends
 
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
-	
+
 	public void retrievePmDistrictList() {
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setStateId(1l);
@@ -119,16 +119,35 @@ public class UserprofileBackingBean extends
 	}
 
 	private void retriveUserDtls() {
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser user = facesScopes.getUserSessionBean();
+		debugLogger("retriveUserDtls");
+		IUserSO userSO = null;
 
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		debugLogger("================1");
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser sUsers = facesScopes.getUserSessionBean();
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(sUsers.getLoginId());
+		debugLogger("================2");
+		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+		debugLogger("================3");
+		PmUser user = resDTO.getPmUser();
 		if (user != null && null != user.getUserId()) {
 			this.getManagedBean().setPmUser(user);
 			List<PmAddressType> addressType = user.getPmAddressTypes();
 
 			if (addressType != null) {
+				debugLogger("=========address type["+addressType.size()+"]");				
 				for (PmAddressType addressType2 : addressType) {
+					debugLogger("=========no address type["
+							+ addressType2.getAddressType() + "]");
 					if (addressType2.getAddressType().equalsIgnoreCase("C")) {
+						debugLogger("=========no address type CCCC");
 						this.getManagedBean().setPmAddress(
 								addressType2.getPmAddress());
 						logger.info(addressType2.getPmAddress());
@@ -136,6 +155,8 @@ public class UserprofileBackingBean extends
 						break;
 					}
 				}
+			} else {
+				debugLogger("=========no address type");
 			}
 		} else {
 			logger.debug("Unable to get the userDetails");
@@ -147,15 +168,17 @@ public class UserprofileBackingBean extends
 	}
 
 	public void updateMyProfileAction(PmUser pmUser) {
-		debugLogger("updateMyProfileAction");	
-		
+		debugLogger("updateMyProfileAction");
+
 		pmUser.setPmNotifyLog(null);
 		pmUser.setPmUserNotifications(null);
 		pmUser.setPmNotifyUser(null);
 		pmUser.setPmUserPreference(null);
-		
-//		pmUser.setSecretAnswer(null);
-//		pmUser.setOrgTypeCode(null);
+		pmUser.setPmAddressTypes(null);
+		pmUser.setPmUserOrgs(null);
+
+		// pmUser.setSecretAnswer(null);
+		// pmUser.setOrgTypeCode(null);
 
 		IUserSO userSO = null;
 		try {
@@ -163,8 +186,8 @@ public class UserprofileBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(this.getManagedBean().getPmUser());
-//			reqDTO.setPmUser(pmUser);
-			UserResDTO resDTO = userSO.saveUser(reqDTO);
+			// reqDTO.setPmUser(pmUser);
+			UserResDTO resDTO = userSO.saveMyProfile(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
