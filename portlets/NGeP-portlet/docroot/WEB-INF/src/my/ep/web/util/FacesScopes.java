@@ -333,7 +333,7 @@ public class FacesScopes {
 			if (loginId != null) {
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
-				ctxToken = bpmSO.authenticate(loginId, "welcome1");
+				ctxToken = bpmSO.authenticate(loginId);
 				portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,
 						PortletSession.APPLICATION_SCOPE);	
 			}
