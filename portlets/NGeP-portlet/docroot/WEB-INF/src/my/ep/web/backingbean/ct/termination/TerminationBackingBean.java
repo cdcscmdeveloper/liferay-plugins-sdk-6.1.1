@@ -182,14 +182,14 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 
 	 }
 	
-	 public String saveContractTermination(String action){
+	 public String saveContractTermination(String action) throws Exception{
 		
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
 			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 			if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
-				throw new EpException("ERR-700044");
+				throw new EpException(MessageConst.ERROR_750044);
 			}
 			 
 			reqDTO = new ContractReqDTO();
@@ -256,22 +256,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						this.getManagedBean().setMutualTermination(true);
 					}
 				}
-			  }else {
-					throw new EpException("Failed.");
 			  }
-		  }catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			if(e instanceof EpException) {
-				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			}
 		  }finally {
 			contractSO = null;
 		  }
-		   return null;
+		  return null;
 	 }
 	 
 	 public int retrieveParameterByTypeAndCode(String parameterCode) throws NamingException {
