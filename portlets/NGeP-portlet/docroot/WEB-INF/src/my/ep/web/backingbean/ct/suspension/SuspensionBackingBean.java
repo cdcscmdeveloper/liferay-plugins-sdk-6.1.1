@@ -108,19 +108,13 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			
 			if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
 				 for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
-					 if(ctContractItem.isRecordStatus())
-					    ctContractItem.setChkStatusId(1);
-				    else
-					 ctContractItem.setChkStatusId(0);
+					 ctContractItem.setChkStatusId(ctContractItem.getRecordStatusFlg());
 				 }
 			}
 			
 			if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
 				for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
-					 if(ctAgency.isRecordStatus())
-						 ctAgency.setChkStatusId(1);
-				    else
-				    	ctAgency.setChkStatusId(0);
+					ctAgency.setChkStatusId(ctAgency.getRecordStatusFlg());
 				 }
 			}
 			
