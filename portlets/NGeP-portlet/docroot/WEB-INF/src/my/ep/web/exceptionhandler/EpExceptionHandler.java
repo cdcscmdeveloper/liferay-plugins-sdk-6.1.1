@@ -4,6 +4,7 @@
 package my.ep.web.exceptionhandler;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.faces.FacesException;
@@ -62,9 +63,6 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
 			Throwable exception = event.getContext().getException();
 			//exception.printStackTrace();
 			log.error(exception.getMessage(), exception);
-		        	
-		    // get the root exception from context
-		    Throwable rootException = ExceptionUtils.getRootCause(exception);
 		  
 		    /*final FacesContext fc = FacesContext.getCurrentInstance();
          	final Map<String, Object> requestMap = fc.getExternalContext().getRequestMap();
@@ -72,19 +70,28 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
 		  
 		    //here you do what ever you want with exception
 		    try {
-		    	if (log.isDebugEnabled()){
-		    		log.debug("Throwable: " + rootException);
-            		//log.debug("Message: " + rootException.getMessage());
-            	}
-            	
-            	 String msgCode = MessageConst.ERROR_000001;
-            	 Object[] params = null;
-            	 if (rootException instanceof EpException){
-            		 EpException epex = (EpException)rootException;
-            		 msgCode = epex.getMessage();
-            		 params = epex.getParameters();
-            		 //FIXME - have to set the component id if wan to let the exception decide where to display the msg
-            	 }
+		    	String msgCode = MessageConst.ERROR_000001;
+           	 	Object[] params = null;
+		    	@SuppressWarnings("unchecked")
+				List<Throwable> throwables = ExceptionUtils.getThrowableList(exception);
+	        	
+		    	while (throwables.size() > 0) {
+		    		// get the root exception from context
+				    Throwable rootException = throwables.remove(throwables.size() - 1);
+			    	
+			    	if (log.isDebugEnabled()){
+			    		log.debug("Throwable: " + rootException);
+	            		//log.debug("Message: " + rootException.getMessage());
+	            	}
+	          
+			    	if (rootException instanceof EpException){
+	            		 EpException epex = (EpException)rootException;
+	            		 msgCode = epex.getMessage();
+	            		 params = epex.getParameters();
+	            		 //FIXME - have to set the component id if wan to let the exception decide where to display the msg
+	            		 break;
+	            	}	
+		    	}
             	 
             	 if(log.isDebugEnabled()){
             		 log.debug("msgCode: " +msgCode);
