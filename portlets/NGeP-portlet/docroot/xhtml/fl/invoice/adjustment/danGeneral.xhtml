@@ -11,16 +11,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<table style="width: 100%;">
-			<tr>
-				<td colspan="4" style="text-align: right"><ui:repeat
-						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}"
-							action="#{danBackingBean.submitAction(bpmAction)}"
-							process="@this" />
-					</ui:repeat></td>
-			</tr>
-		</table>
+		
 		<p:panel header="REQUEST DETAILS" toggleable="true">
 		<table>
 			<tr>

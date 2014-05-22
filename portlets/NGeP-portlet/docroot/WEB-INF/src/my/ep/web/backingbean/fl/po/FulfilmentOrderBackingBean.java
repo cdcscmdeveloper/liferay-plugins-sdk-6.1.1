@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -24,6 +25,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
@@ -32,6 +35,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -411,6 +415,22 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				}
 			}else{
 				throw new EpException("Contract has been suspended/terminated");
+			}
+		}
+		
+		public void getFactoringDetails(){
+			getManagedBean().getFulfilmentOrder().isFactored();
+		}
+		
+		public void getFactoringCompanyDetails(){
+			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			
+			reqDTO.setServiceType("FC");
+			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
+			resDTO.getFinancialOrgList();
+			for(PmFinancialOrg financialOrg : resDTO.getFinancialOrgList()){
+				financialOrg.getFinOrgName();
 			}
 		}
 }

@@ -14,6 +14,16 @@
 	<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
+		<table style="width: 100%;">
+			<tr>
+				<td colspan="4" style="text-align: right"><ui:repeat
+						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
+						<p:commandButton value="#{bpmAction}"
+							action="#{danBackingBean.submitAction(bpmAction)}"
+							process="@this" />
+					</ui:repeat></td>
+			</tr>
+		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="danGeneral.xhtml" />

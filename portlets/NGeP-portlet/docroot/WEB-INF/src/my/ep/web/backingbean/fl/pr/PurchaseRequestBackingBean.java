@@ -925,6 +925,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				resDTO.getFlFulfilmentRequest().setApprovedDate(new Timestamp(System.currentTimeMillis()));
 			}
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			getSumOrderedQty(getManagedBean().getFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setTaskName(res.getTaskName());
@@ -937,6 +938,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	
+	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
+		if(flRequest.getFlFulfilmentItems() != null || !flRequest.getFlFulfilmentItems().isEmpty()){
+			BigDecimal sumOrderedQty = new BigDecimal(0);
+			for(FlFulfilmentItem fulfilmentItem : flRequest.getFlFulfilmentItems()){
+				for(FlFulfilmentItemAddr itemAddress : fulfilmentItem.getFlFulfilmentItemAddr()){
+					sumOrderedQty = sumOrderedQty.add(itemAddress.getOrderedQty());
+				}
+				fulfilmentItem.setSumOrderedQty(sumOrderedQty);
+			}
+		}
+		
+	}
+
 	public void calculateSubTotal(BigDecimal quantity){
 		getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
 	}
