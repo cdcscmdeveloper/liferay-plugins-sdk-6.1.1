@@ -145,7 +145,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<PmOrgProfile> orgProfiles; 
 	private List<ScQuoteSupplier> govtSellers; // 
 	private List<ScQuoteSupplier> selectedGovtSellers;
-
+	
+	// supplier view
+	private boolean productFlag;
+	private boolean serviceFlag;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -212,8 +215,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 			return null;
 		}
 	}
-
-
 
 	/**
 	 * @return the fulfillmentType
@@ -1224,6 +1225,30 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setIsZonal(Integer isZonal) {
 		this.isZonal = isZonal;
+	}
+	/**
+	 * @return the productFlag
+	 */
+	public boolean isProductFlag() {
+		return productFlag;
+	}
+	/**
+	 * @param productFlag the productFlag to set
+	 */
+	public void setProductFlag(boolean productFlag) {
+		this.productFlag = productFlag;
+	}
+	/**
+	 * @return the serviceFlag
+	 */
+	public boolean isServiceFlag() {
+		return serviceFlag;
+	}
+	/**
+	 * @param serviceFlag the serviceFlag to set
+	 */
+	public void setServiceFlag(boolean serviceFlag) {
+		this.serviceFlag = serviceFlag;
 	}
 
 }
