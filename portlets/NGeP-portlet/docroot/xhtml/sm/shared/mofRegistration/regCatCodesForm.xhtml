@@ -97,7 +97,8 @@
 						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:inputTextarea value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}"/>
+					<p:inputTextarea id="otherDesc" label="Other Description" value="#{catBean.otherDesc}" required="true" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}"/>
+					<p:message for="otherDesc" showDetail="false" showSummary="true" display="icon" />
 				</p:column>
 				<p:column>
 					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
@@ -156,7 +157,8 @@
 						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:inputTextarea value="#{catBeanR.otherDesc}" rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}"/>
+					<p:inputTextarea id="otherDescR" label="Other Description" value="#{catBeanR.otherDesc}" required="true" rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}"/>
+					<p:message for="otherDescR" showDetail="false" showSummary="true" display="icon" />
 				</p:column>
 				<p:column>
 					<h:outputText value="Normal"
