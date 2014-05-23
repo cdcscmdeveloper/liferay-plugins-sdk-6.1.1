@@ -99,13 +99,13 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCtDateEnd()));	
 			}	
 			if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.contractPhysicalNo",
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractPhysicalNo",
 				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtProductCode()));	
 			}	
 
 			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setSearchBean(super.createSearchBean(CtAssociation.class,"associateSearch"));
+			//reqDTO.setSearchBean(super.createSearchBean(CtAssociation.class,"associateSearch"));
 			reqDTO.setSearchBean(searchBean);
 			ContractAssociationResDTO ResDTO = contractAssociationSO.searchAssociation(reqDTO);
 			this.getManagedBean().setAssociationList(ResDTO.getResultBean().getResultList());
