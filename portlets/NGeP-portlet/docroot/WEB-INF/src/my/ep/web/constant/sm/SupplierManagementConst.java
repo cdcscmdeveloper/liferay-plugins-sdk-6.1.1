@@ -290,4 +290,8 @@ public class SupplierManagementConst {
 		return INDIVIDUAL_FLAG;
 	}
 
+	public static String getCOUNTRY_MALAYSIA_CODE() {
+		return COUNTRY_MALAYSIA_CODE;
+	}
+
 }

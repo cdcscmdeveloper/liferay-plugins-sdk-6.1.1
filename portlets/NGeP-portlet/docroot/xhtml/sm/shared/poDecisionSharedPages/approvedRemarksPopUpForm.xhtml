@@ -10,13 +10,15 @@
 		<tr>
 			<td><p:outputLabel value="* Registration Status" /></td>
 
-			<td><p:selectManyMenu showCheckbox="true"
-					value="backingBean.managedBean.smAppl.pmStatus.statusId}"
-					style="height:200px;width:400px;">
+			<td><p:selectOneMenu
+					value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="---Select---" itemValue="" />
 					<f:selectItems value="#{backingBean.managedBean.regStatusDescList}"
 						var="reg" itemLabel="#{reg.statusDesc}"
 						itemValue="#{reg.pmStatus.statusId}" />
-				</p:selectManyMenu></td>
+
+				</p:selectOneMenu></td>
 
 		</tr>
 		<tr>
