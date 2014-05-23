@@ -34,7 +34,8 @@
       <div class="ppRightBtn"> 
         <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
           action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
-           <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{associationBackingBean.searchReset}" icon="ui-icon-search"   update=":form"/>
+           <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{associationBackingBean.searchReset}" 
+             icon="ui-icon-search"   update="associatePanelId"/>
       </div>
 	</p:panel>
 	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
