@@ -78,7 +78,7 @@
 
 					<p:row>
 						<p:column headerText="Category" />
-
+						<p:column headerText="Other Description" />
 						<p:column headerText="Category Type" />
 						<p:column headerText="PO Action"
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
@@ -97,7 +97,7 @@
 						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<h:outputText value=" -- TBC -- " />
+					<p:inputTextarea value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}"/>
 				</p:column>
 				<p:column>
 					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
@@ -136,7 +136,7 @@
 					<p:row>
 						<p:column selectionMode="multiple" style="width:2%" />
 						<p:column headerText="Category" />
-
+						<p:column headerText="Other Description" />
 						<p:column headerText="Category Type" />
 						<p:column headerText="PO Action"
 							rendered="#{backingBean.managedBean.poUser}" />
@@ -156,7 +156,7 @@
 						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<h:outputText value=" -- TBC -- " />
+					<p:inputTextarea value="#{catBeanR.otherDesc}" rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}"/>
 				</p:column>
 				<p:column>
 					<h:outputText value="Normal"

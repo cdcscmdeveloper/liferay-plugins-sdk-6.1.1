@@ -625,6 +625,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setTabActiveIndex(outputTab);
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
+				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 			}
 			if (valid) {
 				retriveLatestApplAfterUpdate(pageType);
@@ -639,6 +640,7 @@ public class SmApplicationBackingBean extends
 							"Please contact administrator"));
 
 			getManagedBean().setTabActiveIndex(currentTab);
+			getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 			isError = true;
 			valid = false;
 			retriveLatestApplAfterUpdate(pageType);
@@ -1108,6 +1110,24 @@ public class SmApplicationBackingBean extends
 			}
 			break;
 		case "SupportingDocs":
+			if(getManagedBean().getSmAppl().getSmSupplierCategories() != null && getManagedBean().getSmAppl().getSmSupplierCategories().size() > 0){
+				for(SmSupplierCategory category : getManagedBean().getSmAppl().getSmSupplierCategories()){
+					if(category.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){
+						if(category.getOtherDesc().isEmpty()){
+							FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Other description is required : ",
+											"Please add description to proceed futher"));
+							return false;
+						}
+					}
+				}
+			}
+			
 			if (getManagedBean().isSupplierUser()) {
 				System.out.println(" ** For Suporting Docs ** ");
 				if (getManagedBean().getSmAppl().getSmSupplierCategories() == null
@@ -1124,8 +1144,10 @@ public class SmApplicationBackingBean extends
 											"Please add atleast one category to proceed futher"));
 					return false;
 				}
-				getManagedBean().getSmAppl().setSmApplSupportDocs(
-						new ArrayList<SmApplSupportDoc>());
+				if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
+					getManagedBean().getSmAppl().setSmApplSupportDocs(
+							new ArrayList<SmApplSupportDoc>());
+				}
 				DocumentReqDTO rqDto = new DocumentReqDTO();
 				rqDto.setStateCode(getManagedBean().getSmAppl()
 						.getSmCompanyBasic().getSmCompanyAddresses().get(0)
