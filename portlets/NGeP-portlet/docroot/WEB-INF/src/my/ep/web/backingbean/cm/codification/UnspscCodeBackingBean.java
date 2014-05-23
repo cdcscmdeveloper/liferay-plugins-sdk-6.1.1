@@ -10,9 +10,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -22,6 +20,7 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -34,6 +33,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
@@ -53,7 +54,6 @@ import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -138,6 +138,19 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
 
+			
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
+			supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+			System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
+			
+			this.getManagedBean().getRequestCode().setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
+			
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
@@ -1157,58 +1170,22 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setMeasurementId(code.getMeasurementNameDD());
 						code.setRequestMeasurement(false);
 					}
+					
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+					SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
+					System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
+					supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
 
+					SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
-					/*if(!this.isCatalogueAdmin()){
+					System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
 
-						if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
+					code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 
-							if(!code.getReviewedColorName().equalsIgnoreCase(code.getColorName())||
-									!code.getReviewedMeasurementName().equalsIgnoreCase(code.getMeasurementName())||
-									!code.getReviewedTypeName().equalsIgnoreCase(code.getTypeName())||
-									!code.getReviewedBrandName().equalsIgnoreCase(code.getBrandName())){
+					reqDTO.getRequestExtList().add(code);
 
-
-								code.setRemarkRequired(true);
-
-							}else{
-
-								code.setRemarkRequired(false);
-							}
-						}
-
-					}*/
-
-					try{
-
-						/////// checking remark required 2 and consensus checking
-
-						/*if(code.getReviewedBrandNameII()!=null && code.getReviewedBrandNameII().trim().length()>0){
-
-							if(!code.getReviewedBrandNameII().equalsIgnoreCase(code.getReviewedBrandName()) ||
-									!code.getReviewedTypeNameII().equalsIgnoreCase(code.getReviewedTypeName()) ||
-									!code.getReviewedMeasurementNameII().equalsIgnoreCase(code.getReviewedMeasurementName()) ||
-									!code.getReviewedColorNameII().equalsIgnoreCase(code.getReviewedColorName())){
-								//System.out.println("********setConsensus false**********");
-								//reqDTO.setConsensus(false);
-
-								if(!code.isAddedRemark()){
-									code.setRemarkRequiredII(true);
-								}
-
-
-							}else{
-								code.setRemarkRequiredII(false);
-							}
-						}*/
-
-
-						reqDTO.getRequestExtList().add(code);
-
-					}catch(Exception ex){
-						System.out.println("getMessage"+ex.getMessage());
-					}
+				
 				}
 			}
 
