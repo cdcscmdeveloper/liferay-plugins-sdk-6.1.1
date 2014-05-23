@@ -4070,6 +4070,13 @@ important
 
 
 }
+
+.ui-icon-history {
+	background-image: url(#{ resource [ 'ep/images/design:history_frame.png' ]}) !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
