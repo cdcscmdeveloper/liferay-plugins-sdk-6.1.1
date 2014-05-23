@@ -353,15 +353,17 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		   	 reqDTO.setOutcome(action);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			 reqDTO.setSupplierUser(getFacesScopes().getUserSessionBean());
+			 reqDTO.setUserRole(getUserRole());
 			 
 			 this.getManagedBean().getFactoring().setCtContract(this.getManagedBean().getCtContract());
 			 this.getManagedBean().getFactoring().setSmSupplier(this.getManagedBean().getCtContract().getSmSupplier());
 			 this.getManagedBean().getFactoring().setLoa(this.getManagedBean().getCtContract().getLoa());
 			 reqDTO.setFactoring(this.getManagedBean().getFactoring());
 			 this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-			 
+			 reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
 			 reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			 reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+			 
 			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 			  if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
