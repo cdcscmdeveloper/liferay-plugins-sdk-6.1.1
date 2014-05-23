@@ -146,8 +146,7 @@ public class BPMTaskListBackingBean extends
 //		this.getManagedBean().setAssignment("ALL");
 		try{
 //			 retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
-			
-			this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
+		
 		}catch(Exception e){
 			log.info("BPM Errors");
 			e.printStackTrace();
@@ -343,6 +342,10 @@ public class BPMTaskListBackingBean extends
 		//set filters to default for MyTasks
 		this.getManagedBean().setViewBy("ALL");
 		this.getManagedBean().setAssignment("ALL");
+		}
+		if(showIndex == 2){
+			
+			this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
 		}
 
 	
