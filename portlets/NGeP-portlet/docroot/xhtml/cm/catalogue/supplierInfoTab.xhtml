@@ -51,9 +51,9 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText size="40" /></td>
+				<td><p:inputText size="40" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText size="40" /></td>
+				<td><p:inputText size="40" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
 			</tr>
 
 			<tr>
