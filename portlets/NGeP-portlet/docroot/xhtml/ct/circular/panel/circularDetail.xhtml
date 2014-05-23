@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="pc" header="#{lbl['lbl.ct.pc.panel.pcd']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
-		<h:panelGroup rendered="#{!panelBackingBean.managedBean.updateAction and (panelBackingBean.managedBean.circularVer.updateEffDate == null)}">
+		<h:panelGroup rendered="#{!panelBackingBean.managedBean.updateAction and (panelBackingBean.managedBean.circularVer.extendStartDate == null)}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{panelBackingBean.managedBean.updateAction || (panelBackingBean.managedBean.circularVer.updateEffDate != null)}">
+		<h:panelGroup rendered="#{panelBackingBean.managedBean.updateAction || (panelBackingBean.managedBean.circularVer.extendStartDate != null)}">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>	
 	</p:panel>
@@ -43,7 +43,7 @@
 	</p:panel>
 	
 	<p:panel id="concelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
-		rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.updateEffDate == null}" >
+		rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.extendStartDate == null}" >
 		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index" 
 			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelCirculars}" >
@@ -56,7 +56,7 @@
 				<h:outputText value="#{data.ctCancelCircularVer.name}" />
 			</p:column>
 			<p:column headerText="Update Effective Date" >
-				<h:outputText value="#{data.ctCancelCircularVer.updateEffDate}" />
+				<h:outputText value="#{data.ctCancelCircularVer.extendStartDate}" />
 			</p:column>		
 		</p:dataTable>
 		<p:spacer height="2" />
@@ -82,7 +82,7 @@
 					<h:outputText value="#{data.ctCancelCircularVer.name}" style="width:300px;" />
 				</p:column>
 				<p:column headerText="Update Effective Date">
-					<h:outputText value="#{data.ctCancelCircularVer.updateEffDate}" style="width:200px;" />
+					<h:outputText value="#{data.ctCancelCircularVer.extendStartDate}" style="width:200px;" />
 				</p:column>												
 			</p:dataTable>
 			<p:spacer height="2" />

@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -44,9 +45,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
-	private CtPanelSupplier selectedPanelSupplier;
 	private CtCancelCircular selectedCancelCircular;
-	private CtPanelItem selectedPanelItem;
 	private CtCancelCircularReq cancelCircularReq;
 	
 	private List<CtContactPerson> selectedContactPersons;
@@ -69,6 +68,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Date searchStartDate;
 	private Date searchEndDate;	
 	private Long searchStatusId;
+	
+	private CtPanelItem ctPanelItems;
+	private CtPanelZone selectedPanelZone;
+	private CtPanelSupplier selectedPanelSupplier;
 
 	public CtCircular getCircular() {
 		return circular;
@@ -111,12 +114,12 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
 	}
 
-	public CtPanelItem getSelectedPanelItem() {
-		return selectedPanelItem;
+	public CtPanelItem getCtPanelItems() {
+		return ctPanelItems;
 	}
 
-	public void setSelectedPanelItem(CtPanelItem selectedPanelItem) {
-		this.selectedPanelItem = selectedPanelItem;
+	public void setCtPanelItems(CtPanelItem ctPanelItems) {
+		this.ctPanelItems = ctPanelItems;
 	}
 
 	public DualListModel<String> getApproverModel() {
@@ -265,6 +268,14 @@ public class PanelManagedBean extends BaseManagedBean {
 		return circularAdmin;
 	}
 
+	public CtPanelZone getSelectedPanelZone() {
+		return selectedPanelZone;
+	}
+
+	public void setSelectedPanelZone(CtPanelZone selectedPanelZone) {
+		this.selectedPanelZone = selectedPanelZone;
+	}
+
 	public void setCircularAdmin(String circularAdmin) {
 		this.circularAdmin = circularAdmin;
 	}
@@ -292,5 +303,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
 	}
+	
+	
 
 }

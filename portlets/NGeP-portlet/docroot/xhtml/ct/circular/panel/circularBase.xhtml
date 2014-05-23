@@ -65,14 +65,10 @@
 			</table>	    	
 		</p:panel>
 		<p:tabView id="tabview" orientation="left"  >
-			<p:ajax event="tabChange" process="@form" update=":form:tabview:itemId"/>
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/panel/circularDetail.xhtml"/>
 	       	</p:tab> 
-		 	<p:tab id="tabAgency" title="Zone" rendered="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null}" >
-	       		<ui:include src="/xhtml/ct/circular/panel/zone.xhtml"/>
-	       	</p:tab> 
-		 	<p:tab id="tabItem" title="Item" rendered="#{panelBackingBean.managedBean.circularVer.itemCategory.parameterCode!=null}" >
+	       	<p:tab id="tabItem" title="Item">
 	       		<ui:include src="/xhtml/ct/circular/panel/item.xhtml"/>  
 	       	</p:tab>  
 		 	<p:tab id="tabSetting" title="Setting" rendered="#{panelBackingBean.isPanelAdmin()}" >

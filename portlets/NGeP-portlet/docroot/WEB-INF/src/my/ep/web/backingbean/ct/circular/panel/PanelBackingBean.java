@@ -34,12 +34,14 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,6 +50,8 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -63,12 +67,15 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -102,6 +109,7 @@ import com.liferay.portal.util.PortalUtil;
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
+	public CtPanelItem[] selectedPanelItem;
 	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
@@ -519,22 +527,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void addPanelSupplier(){
-		log.info("PanelBackingBean.addPanelSupplier()");
-		try {
 			CtPanelSupplier panelSupplier = new CtPanelSupplier();
 			panelSupplier.setSupplier(new SmSupplier());
-		//	panelSupplier.setCtCircularZone(getManagedBean().getSelectedCircularZone());
-			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().add(panelSupplier);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+			getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().add(panelSupplier);
 	}
 	
 	public void deletePanelSupplier(){
 		log.info("PanelBackingBean.deletePanelSupplier()");
 		try {
-			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
+			getManagedBean().getCtPanelItems().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
 			getManagedBean().setSelectedPanelSupplier(null);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -645,8 +646,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void addPanelItem(){
 		log.info("PanelBackingBean.addPanelItem()");
         try {	
-        	CtPanelItem panelItem = new CtPanelItem();
-			getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
+        		 CtPanelItem panelItem = new CtPanelItem();
+				 panelItem.setItemCategoryId(new PmParameter());
+				 panelItem.setPanelCoverageId(new PmParameter());
+				 panelItem.setPmUom(new PmUom());
+				 panelItem.setLocationLevelId(new PmParameter());
+				 panelItem.setCtPanelZones(null);
+				 this.getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
+        	 
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -654,15 +661,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void deletePanelItem(){
-		log.info("PanelBackingBean.deletePanelItem() : "+getManagedBean().getSelectedPanelItem());
-		try {
-			getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItem());
-			getManagedBean().setSelectedPanelItem(null);
-			getManagedBean().setSelectedPanelSupplier(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		for(int i = 0; i<selectedPanelItem.length; i++){
+			CtPanelItem panelItem = selectedPanelItem[i];
+			getManagedBean().getCircularVer().getCtPanelItems().remove(panelItem);
+		}selectedPanelItem = null;
+	}
+	
+	public void addPanelZone(){
+		CtPanelZone ctPanelZone = new CtPanelZone();
+		this.getManagedBean().getCtPanelItems().getCtPanelZones().add(ctPanelZone);
+	}
+	
+	public void deletePanelZone(){
+		
+		this.getManagedBean().getCtPanelItems().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
 	}
 	
 	public void selectPanelItemEvent() {
@@ -1122,6 +1134,31 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
 	}
+	
+	
+	public String getItemGeneralCode(Long parameterId){
+		if(parameterId == null || parameterId.intValue() == 0)
+			return ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC;
+		
+		  IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			reqDTO.setLanguageCode("EN");
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			return resDTO.getPmParameter().getParameterCode();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return null;
+	}
 
 	public List<CtPanelSupplier> getPanelSupplierList() {
 		List<CtPanelSupplier> panelSuppliers = new ArrayList<CtPanelSupplier>();
@@ -1139,5 +1176,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}*/
 		return panelSuppliers;
 	}
+	
+	public void setCtPanelZoneListner(CtPanelItem ctPanelItem){
+		this.getManagedBean().setCtPanelItems(ctPanelItem);
+	}
+
+	public CtPanelItem[] getSelectedPanelItem() {
+		return selectedPanelItem;
+	}
+
+	public void setSelectedPanelItem(CtPanelItem[] selectedPanelItem) {
+		this.selectedPanelItem = selectedPanelItem;
+	}
+	
+	
 	
 }
