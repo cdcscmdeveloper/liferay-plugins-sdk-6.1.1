@@ -162,6 +162,13 @@ public class SupplierManagementConst {
 
 	public static final String SM_APPL_BPM_OUTCOME_SUBMIT = "SUBMIT";
 
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN = "1";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN = "2";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN = "3";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD = "4";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "5";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "6";
+
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
 
@@ -292,6 +299,30 @@ public class SupplierManagementConst {
 
 	public static String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN;
+	}
+
+	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN;
 	}
 
 }

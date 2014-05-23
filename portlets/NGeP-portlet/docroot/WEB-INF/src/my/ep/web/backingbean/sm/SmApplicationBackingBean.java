@@ -927,6 +927,29 @@ public class SmApplicationBackingBean extends
 			break;
 		case "CapitalInfo":
 			// assignEnteredStaffValues();
+			if (getManagedBean().getSmapplShareHolders() == null
+					|| getManagedBean().getSmapplShareHolders().isEmpty()) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"Empty Shareholders  : ",
+										"Please add at least one share holding personnel for the supplier"));
+				return false;
+			} else if (getManagedBean().getSmAppl().getSmSupplier()
+					.getBusinessType().equalsIgnoreCase("2")
+					&& getManagedBean().getSmapplShareHolders().size() < 2) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"Min 2 Shareholing personnel needed  : ",
+										"Please add at least 2 share holding personnel for the supplier with business type ROC"));
+				return false;
+			}
 			if (getManagedBean()
 					.getSmAppl()
 					.getSmCompanyBasic()
@@ -1111,24 +1134,28 @@ public class SmApplicationBackingBean extends
 			}
 			break;
 		case "SupportingDocs":
-			if(getManagedBean().getSmAppl().getSmSupplierCategories() != null && getManagedBean().getSmAppl().getSmSupplierCategories().size() > 0){
-				for(SmSupplierCategory category : getManagedBean().getSmAppl().getSmSupplierCategories()){
-					if(category.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){
-						if(category.getOtherDesc().isEmpty()){
+			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
+					&& getManagedBean().getSmAppl().getSmSupplierCategories()
+							.size() > 0) {
+				for (SmSupplierCategory category : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (category.getPmCategoryL3().getCategoryL3Code()
+							.equalsIgnoreCase("99")) {
+						if (category.getOtherDesc().isEmpty()) {
 							FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Other description is required : ",
-											"Please add description to proceed futher"));
+									.getCurrentInstance()
+									.addMessage(
+											null,
+											new FacesMessage(
+													FacesMessage.SEVERITY_ERROR,
+													"Other description is required : ",
+													"Please add description to proceed futher"));
 							return false;
 						}
 					}
 				}
 			}
-			
+
 			if (getManagedBean().isSupplierUser()) {
 				System.out.println(" ** For Suporting Docs ** ");
 				if (getManagedBean().getSmAppl().getSmSupplierCategories() == null
