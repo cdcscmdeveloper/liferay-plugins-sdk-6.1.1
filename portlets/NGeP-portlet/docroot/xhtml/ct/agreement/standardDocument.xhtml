@@ -23,7 +23,7 @@
 				<p:column style="width:20%;" styleClass="column-align-center"
 					headerText="#{lbl['lbl.ct.ag.table.action']}">
 					<h:panelGroup rendered="#{data.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
-					 <p:commandLink
+					 <p:commandLink process="@this" partialSubmit="true"
 							actionListener="#{agreementBackingBean.openNewWindow(data)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
