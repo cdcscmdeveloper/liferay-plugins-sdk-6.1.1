@@ -102,7 +102,7 @@
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:2%;" />
 			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}">
-						<p:outputLabel value="#{data.latestContractVer.docNo}" />
+						<p:outputLabel value="#{data.contractNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cname']}" >
                        <p:outputLabel value="#{data.contractName}" />
@@ -111,10 +111,10 @@
                        <p:outputLabel value="#{data.smSupplier.companyName}" />
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" >
-                       <p:outputLabel value="#{associationBackingBean.convertTime(data.latestContractVer.ctContractValue.effDate)}"/>
+                       <p:outputLabel value="#{associationBackingBean.convertTime(data.latestContractVer.ctContractValue.effDate)}" />
                    	</p:column> 
 					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}" >
-                        <p:outputLabel value="#{associationBackingBean.convertTime(data.latestContractVer.ctContractValue.expDate)}"/>
+                        <p:outputLabel value="#{associationBackingBean.convertTime(data.latestContractVer.ctContractValue.expDate)}" />
                   	</p:column> 
 					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.pname']}">
                    <p:outputLabel />
