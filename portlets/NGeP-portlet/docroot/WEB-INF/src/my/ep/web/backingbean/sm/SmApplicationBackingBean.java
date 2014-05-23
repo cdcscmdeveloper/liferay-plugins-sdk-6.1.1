@@ -156,6 +156,7 @@ public class SmApplicationBackingBean extends
 		retrieveParentCategoryList();
 		retrieveUomList();
 		retrieveRejectReasonList();
+		retrieveRegistrationStatusList();
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -721,8 +722,8 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			System.out.println("***** After final ****"
-					+ getManagedBean().getSmAppl().getSmPersonnels().size());
+			System.out.println("***** After final Retrieve ****"
+					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -3514,7 +3515,8 @@ public class SmApplicationBackingBean extends
 					.getSupplierId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 					.equalsIgnoreCase("O")) {
@@ -3532,6 +3534,8 @@ public class SmApplicationBackingBean extends
 			if (res.equalsIgnoreCase("Reject")) {
 				setSmApplRejectionReasons();
 			}
+			System.out.println("Before final decision ---"
+					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			updateSmAppl("Basic", getManagedBean().getSmAppl().getApplType());
 
 			if (validSiteVisit) {
@@ -5435,11 +5439,15 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void calcSumUpByPersonnel(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode() == null
-				|| per.getPmCountry().getCountryCode() == "") {
-			per.setPmCountry(retrievePmCountryById(per.getPmCountry()
-					.getCountryId()));
-		}
+		System.out.println("****** per country id ******"
+				+ per.getPmCountry().getCountryId());
+		// if (per.getPmCountry().getCountryCode() == null
+		// || per.getPmCountry().getCountryCode() == "") {
+		per.setPmCountry(retrievePmCountryById(per.getPmCountry()
+				.getCountryId()));
+		// }
+		System.out.println("******Afte per country code ******"
+				+ per.getPmCountry().getCountryCode());
 		PmParameter param = null;
 		if (per.getPmStaffRole() != null
 				&& per.getPmStaffRole().getPmParameterType() != null) {
@@ -5626,7 +5634,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setDirectorCount(SmPersonnel per) {
-
+		System.out.println("**** PM COOOUNTYR CODE *****"
+				+ per.getPmCountry().getCountryCode());
+		System.out.println("******* FROM CONST ***********"
+				+ SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		if (per.getPmCountry().getCountryCode()
 				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
