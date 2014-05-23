@@ -5,7 +5,9 @@ package my.ep.web.managedbean.ct.supplier;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -60,6 +62,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private SmSupplierBank supplierBank;
 	private String supplierAddress;
 	private String supplierBankAddress;
+	
+	private Map<Long, String> factoringCompMap;
+	private String factoringBankName;
+	private String factoringBankAddress;
+	
+	private boolean agreeFactoringClause;
 	
 	public SupplierManagedBean(){
 		
@@ -289,6 +297,41 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setContractVerId(Long contractVerId) {
 		this.contractVerId = contractVerId;
+	}
+
+	public Map<Long, String> getFactoringCompMap() {
+		if(factoringCompMap==null) {
+			factoringCompMap = new HashMap<Long, String>();
+		}
+		return factoringCompMap;
+	}
+
+	public void setFactoringCompMap(Map<Long, String> factoringCompMap) {
+		this.factoringCompMap = factoringCompMap;
+	}
+
+	public String getFactoringBankName() {
+		return factoringBankName;
+	}
+
+	public void setFactoringBankName(String factoringBankName) {
+		this.factoringBankName = factoringBankName;
+	}
+
+	public String getFactoringBankAddress() {
+		return factoringBankAddress;
+	}
+
+	public void setFactoringBankAddress(String factoringBankAddress) {
+		this.factoringBankAddress = factoringBankAddress;
+	}
+
+	public boolean isAgreeFactoringClause() {
+		return agreeFactoringClause;
+	}
+
+	public void setAgreeFactoringClause(boolean agreeFactoringClause) {
+		this.agreeFactoringClause = agreeFactoringClause;
 	}	
 	
 	

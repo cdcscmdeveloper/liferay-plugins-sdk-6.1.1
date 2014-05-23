@@ -8,22 +8,25 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
+		<script>
+			$('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}');
+		</script>
 		<p:panel id="headerDetails">
 		    <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
-		   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		   <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
 	    			<td class="ppRightBtn">
-	    			<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
+	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
 								action="#{supplierBackingBean.saveFactoringRequest(outcome)}" />
 						</ui:repeat>	    			
 	    			</td>
 	    		</tr>
 	    	</table>
-			<table style="width: 99%; margin-left: 25px;" class="header-info">
-				<tr style="margin-button: 10px;">
+			<table style="width: 99%; margin-left: 0px;" class="header-info">
+				<tr style="margin-button: 0px;">
 				     <td>	
 							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 					</td>
@@ -49,8 +52,8 @@
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
 					</td>
 					<td>
-							<p:inputText size="20"
-								value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}"
+							<p:inputText size="30"
+								value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}"
 								disabled="true" />
 					</td>
 				</tr>
@@ -62,7 +65,7 @@
 			<p:selectOneMenu style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
 			   rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
 			   <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
-			    <p:ajax event="change"  process="@this" update="loaId" listener="#{supplierBackingBean.setActionListener()}"/> 
+			    <p:ajax event="change" process="@this" update="@form" listener="#{supplierBackingBean.setActionListener()}"/> 
 		     </p:selectOneMenu>
 			 <p:inputText  style="width:200px;" disabled="true" 
 			    value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
@@ -84,48 +87,75 @@
 	  </h:panelGrid>
    </p:panel>
     <p:panel id="factoringPanel" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
-      <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+      <h:panelGrid columns="4" style="width:100%;" columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
          <p:outputLabel  value="Factoring Company"/> 
-		 <p:selectOneMenu style="width:210px;"
+		 <p:selectOneMenu style="width:210px;" disabled="#{supplierBackingBean.managedBean.removeFactoring}"
 		    value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
               <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
-              <p:ajax event="change" process="@this" update="branchId,bankName,accNo" listener="#{supplierBackingBean.reset}"/>
-         </p:selectOneMenu> 
-         <p:outputLabel  value="Authorization Ref No."/> 
-         <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:200px;" disabled="false"/>
+              <p:ajax event="change" process="@this" update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
+         </p:selectOneMenu>
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="Authorization Ref No." />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					 <p:inputText id="authRefNo" value="#{supplierBackingBean.managedBean.factoring.authRefNo}" 
+					 	style="width:200px;" label="Authorization Ref No." required="true" 
+					 	disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+					 <p:message for="authRefNo" display="icon" />				
+				</h:panelGrid>
          <p:outputLabel  value="Factoring Branch"/> 
-		 <p:selectOneMenu id="branchId" style="width:210px;"
-		    value="#{supplierBackingBean.managedBean.factoring.financialBranchId.financialBranchId}">
+		 <p:selectOneMenu id="branchId" style="width:210px;" disabled="#{supplierBackingBean.managedBean.removeFactoring}" 
+		    value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
             <f:selectItems value="#{supplierBackingBean.retrieveFinancialBranchOrgById()}"/> 
              <p:ajax event="change" process="@this" update="bankName,accNo" listener="#{supplierBackingBean.reset}"/>
          </p:selectOneMenu> 
-         <p:outputLabel value="Start Date"/>
-         <p:calendar size="30" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-		    value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" />
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />         
+         			<p:outputLabel value="Start Date"/>
+         		</h:panelGrid>
+         		<h:panelGrid columns="2">
+         			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
+		    			value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" 
+		    			disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+					 <p:message for="effdateCal" display="icon" />				
+				</h:panelGrid>		    			
          <p:outputLabel  value="Payment Bank Name"/> 
          <p:inputText id="bankName" value="#{supplierBackingBean.getPaymentBankName()}" style="width:200px;" disabled="true"/>
-         <p:outputLabel value="End Date"/>
-         <p:calendar size="30" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-		     value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" />
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="End Date" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+		 			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
+		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" 
+		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+					 <p:message for="expdateCal" display="icon" />				
+				</h:panelGrid>		  		    			 
 		 <p:outputLabel value="Account No."/> 
          <p:inputText id="accNo" style="width:200px;"  disabled="true"
-            value="#{supplierBackingBean.managedBean.accountNo}"/> 
-            <f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
-             <f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
-         <p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}"/> 
-          <p:inputText size="20" rendered="#{supplierBackingBean.managedBean.removeFactoring}"
-			value="#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}"
-			disabled="true" />
-          <p:outputLabel  value="Factoring Agreement"/> 
-         <h:panelGroup id="uploadFactoringPg">
+            value="#{supplierBackingBean.managedBean.accountNo}"/>
+				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
+				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
+				<p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
+				<p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}" disabled="true"
+					value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
+					<f:selectItem itemValue="0" itemLabel="Inactive" />
+					<f:selectItem itemValue="1" itemLabel="Active" />
+				</p:selectOneMenu>
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="Factoring Agreement" />
+				</h:panelGrid>
+				<h:panelGroup id="uploadFactoringPg">
            <h:panelGrid columns="3">
 			 <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" icon="iconAttachment" value="Upload"
-			  update="factoringPanel"></p:commandButton>	
+			 	disabled="#{supplierBackingBean.managedBean.removeFactoring}" update="factoringPanel" />	
 				<p:spacer width="1"/>
-		     <h:commandLink value="#{amendmentBackingBean.fileNames(supplierBackingBean.managedBean.factoring.fileName)}" 
+		     <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
 		        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
 				action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath)}"/>		
-		    </h:panelGrid>			
+		    </h:panelGrid>		
 		  </h:panelGroup> 
       </h:panelGrid>
        <p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="false" resizable="false" width="700px" height="350" 
@@ -139,25 +169,27 @@
 		    </p:fileUpload> 
 	    </p:dialog>
      </p:panel>
-     <p:panel id="calausePanel" header="Caluse Details" toggleable="true"  toggleSpeed="500"
-      rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
+     <p:panel id="clausePanel" header="Clause Details" toggleable="true"  toggleSpeed="500"
+      rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}" >
        <p:spacer height="8"/>
 	      <table style="width: 100%">
 			 <tr>
 				<td style="width: 15%;"><f:verbatim/></td>
 				<td><p:outputLabel
 					   value="Therefore, according to the terms related to the payment for the requisition below, 
-					   The Government need to pay all that is needed to Us under the specific requisition directly to the (Fill in the Factoring company)"/></td>
+					   The Government need to pay all that is needed to Us under the specific requisition directly to the #{supplierBackingBean.getFactoringCompany()}"/></td>
 				</tr>
 				<tr><td />
-				 <td><p:commandButton value="View Factoring Clauses" onclick="factoringClauseDlg.show();"/></td>
+				 <td>
+				 <p:commandButton value="View Factoring Clauses" process="@this" immediate="true" update="editorDisplay" actionListener="#{supplierBackingBean.previewAction()}" oncomplete="factoringClauseDlg.show();"/>
+			  	</td>
 				</tr>
 				<tr><td />
-				  <td><p:selectBooleanCheckbox /><h:outputText value="I Agree"/></td>
+				  <td><p:selectBooleanCheckbox value="#{supplierBackingBean.managedBean.agreeFactoringClause}" /><h:outputText value="I Agree"/></td>
 				</tr>
 			</table>
-	        <p:dialog id="factoringClauseDlg" header="Factoring Clause" widgetVar="factoringClauseDlg" modal="true" width="600" height="400">
-    	    
+	        <p:dialog id="factoringClauseDlg" header="Factoring Clause" widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
+    	    	<p:editor controls="print" id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430" />
     	    </p:dialog>
      </p:panel>
        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
