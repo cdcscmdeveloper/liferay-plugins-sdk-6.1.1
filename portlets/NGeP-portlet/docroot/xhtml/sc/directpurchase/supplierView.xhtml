@@ -59,11 +59,11 @@
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.start.date']}" /></td>
-				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"/></td>
+			    <td><p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}" disabled="true"/></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.end.date']}" /></td>
-				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"/></td>
+				<td><p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}" disabled="true"/></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.no.of.quote']}" /></td>
@@ -75,16 +75,19 @@
 
 		</table>
 		<p:spacer height="5px" />
-
+       
+      <h:panelGrid style="width: 100%;" rendered="#{simpleQuoteBackingBean.managedBean.productFlag}" >
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 			title="PRODUCT LIST" />
-
-		<p:spacer height="25px" />
+      </h:panelGrid>
+      
+	<p:spacer height="25px" />
+	 <h:panelGrid style="width: 100%;" rendered="#{simpleQuoteBackingBean.managedBean.serviceFlag}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="SERVICE LIST" />
-
+       </h:panelGrid>
 	</p:panel>
 	
 	<p:panel label="REMARKs" header="REMARKS" id="suppRmkId" toggleable="true" toggleSpeed="500">
