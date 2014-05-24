@@ -33,6 +33,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private List<SmPersonnel> personnelList;
 	
+	private SmPersonnel updateSmPersonnel;
+	
+	private SmAddress updateSmPersonnelMailingAddress;
+	
+	private SmAddress updateSmPersonnelPermanentAddress;
+
 	private SmPersonnel editSmPersonnel;
 	
 	private SmAddress editSmPersonnelMailingAddress;
@@ -101,6 +107,35 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setPersonnelList(List<SmPersonnel> personnelList) {
 		this.personnelList = personnelList;
+	}
+
+	public SmPersonnel getUpdateSmPersonnel() {
+		return updateSmPersonnel;
+	}
+
+	public void setUpdateSmPersonnel(SmPersonnel updateSmPersonnel) {
+		this.updateSmPersonnel = updateSmPersonnel;
+	}
+
+	public SmAddress getUpdateSmPersonnelMailingAddress() {
+		if(updateSmPersonnelMailingAddress == null){
+			updateSmPersonnelMailingAddress = new SmAddress();
+		}
+		return updateSmPersonnelMailingAddress;
+	}
+
+	public void setUpdateSmPersonnelMailingAddress(
+			SmAddress updateSmPersonnelMailingAddress) {
+		this.updateSmPersonnelMailingAddress = updateSmPersonnelMailingAddress;
+	}
+
+	public SmAddress getUpdateSmPersonnelPermanentAddress() {
+		return updateSmPersonnelPermanentAddress;
+	}
+
+	public void setUpdateSmPersonnelPermanentAddress(
+			SmAddress updateSmPersonnelPermanentAddress) {
+		this.updateSmPersonnelPermanentAddress = updateSmPersonnelPermanentAddress;
 	}
 
 	public SmPersonnel getEditSmPersonnel() {

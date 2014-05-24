@@ -144,7 +144,8 @@
 		<portlet id="supplierUserActivation"></portlet>
 
 		<portlet id="UserProfileMaintenance"></portlet>
-		
+
+		<portlet id="SmUserProfileMaintenance"></portlet>
 	</category>
 
 	<category name="Template">

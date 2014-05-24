@@ -8,7 +8,7 @@
 
 		<navigation-case>
 			<from-outcome>editSmPersonnel</from-outcome>
-			<to-view-id>/xhtml/sm/userProfileMaintenance/updateUserProfile.xhtml</to-view-id>
+			<to-view-id>/xhtml/sm/userProfileMaintenance/editSelSmUserProfile.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 		<navigation-case>

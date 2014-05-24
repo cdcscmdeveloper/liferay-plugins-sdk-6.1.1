@@ -76,12 +76,6 @@
 				</tr>
 		</table>	
 	</p:panel>
-	<p:panel>
-		<p:graphicImage id="imageId" height="150" width="150"/>
-		<div align="center">
-			<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload" onclick="imageDialog.show()" />
-		</div>	
-	</p:panel>
 	</p:panelGrid>
 	<p:panel id="AddressInfo" header="Address Info" styleClass="noBorders tr,noBorders td">
 	<p:panelGrid columns="2" header="Address Info" styleClass="noBorders tr,noBorders td">
@@ -249,12 +243,5 @@
 		</div>	
 	</p:panel>
 	
-	<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
-			width="700px" resizable="false" styleClass="pop_up_top">
-		<p:fileUpload
-			oncomplete="refresh();" mode="advanced" id="upload"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"/>
-	</p:dialog>
 </ui:define>	
 </ui:composition>

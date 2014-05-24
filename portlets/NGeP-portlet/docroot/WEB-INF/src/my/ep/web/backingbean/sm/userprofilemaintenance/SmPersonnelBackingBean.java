@@ -28,6 +28,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -38,6 +39,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -57,7 +59,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 //		getPersonnelById();
 //		
-		initializeLists();
+		
+		initUserPersonnelInfo();
+		initializeUpdateLists();
 		
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
@@ -69,6 +73,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	
 	public String navigateToAddNewUserPage(){  
+		
 		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(new PmCountry());
 /*		SmAppl smAppl = new SmAppl();
@@ -84,11 +89,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		smAppl.setSupplierType("2");
 		smAppl.setApplType("O");
 //		smAppl.setSmP
-		
-		
-		
-		
-		
 		
 		
 		smPersonnel.setSmAppl(smAppl);
@@ -113,13 +113,18 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		return "addNewSmUser";
 	}
 
+	
+	public void initUserPersonnelInfo(){
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser usr = facesScopes.getUserSessionBean();
+		getPersonnelByPmUser(usr);
+	}	
+	
+	
 	public String navigateToUpdateUserPage(String personnelId){
-		
-		getPersonnelById(personnelId);
-		
-		initializeLists();
-
-		return "editSmPersonnel";
+			getPersonnelById(personnelId);
+			initializeLists();
+			return "editSmPersonnel";
 	}
 	
 	public String cancel(){
@@ -138,7 +143,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		
-		reqDTO.setSmSupplierId(new Long(1));
+//		reqDTO.setSmSupplierId(new Long(1));
+		reqDTO.setSmSupplierId(this.getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 		
 		if(username != null)
 			reqDTO.setSearchUsername(username);
@@ -185,7 +191,24 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		if(getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict() != null){
 			getManagedBean().setCityList(getCityList(getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict().getDistrictId()));
 		}
+
+	}
+	
+	public void initializeUpdateLists(){
 		
+		getCountryList();
+
+		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry() != null){
+			getManagedBean().setStateList(getStateList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry().getCountryId()));
+		}
+		
+		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState() != null){
+			getManagedBean().setDistrictList(getDistrictList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState().getStateId()));
+		}
+		
+		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict() != null){
+			getManagedBean().setCityList(getCityList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict().getDistrictId()));
+		}
 	}
 	
 	public void getCountryList(){
@@ -282,7 +305,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 	}
 	
-	public void updateLists(String countryId, String stateId, String districtId){
+	public void updateELists(String countryId, String stateId, String districtId){
 		if(!countryId.isEmpty() || countryId.equalsIgnoreCase("null")){
 			getManagedBean().setStateList(getStateList(Long.valueOf(countryId)));
 			getManagedBean().setDistrictList(null);
@@ -296,6 +319,26 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			getManagedBean().setCityList(null);
 			
 			getManagedBean().getEditSmPersonnelMailingAddress().setPmCity(null);
+		}
+		if(!districtId.isEmpty() || districtId.equalsIgnoreCase("null")){
+			getManagedBean().setCityList(getCityList(Long.valueOf(districtId)));
+		}
+	}
+	
+	public void updateULists(String countryId, String stateId, String districtId){
+		if(!countryId.isEmpty() || countryId.equalsIgnoreCase("null")){
+			getManagedBean().setStateList(getStateList(Long.valueOf(countryId)));
+			getManagedBean().setDistrictList(null);
+			getManagedBean().setCityList(null);
+			
+			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmDistrict(null);
+			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmCity(null);
+		}
+		if(!stateId.isEmpty() || stateId.equalsIgnoreCase("null")){
+			getManagedBean().setDistrictList(getDistrictList(Long.valueOf(stateId)));
+			getManagedBean().setCityList(null);
+			
+			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmCity(null);
 		}
 		if(!districtId.isEmpty() || districtId.equalsIgnoreCase("null")){
 			getManagedBean().setCityList(getCityList(Long.valueOf(districtId)));
@@ -373,13 +416,58 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 	
 	
-	public boolean validateUI(){
+	public void getPersonnelByPmUser(PmUser usr){
 		
-		PmCountry country = getManagedBean().getEditSmPersonnelMailingAddress().getPmCountry();
-		PmState state = getManagedBean().getEditSmPersonnelMailingAddress().getPmState();
-		PmDistrict district = getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict();
-		PmCity city = getManagedBean().getEditSmPersonnelMailingAddress().getPmCity();
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		
+		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
+
+		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelByUserId(reqDTO);
+		
+		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
+		
+		this.getManagedBean().setUpdateSmPersonnel(smPersonnel);
+		
+		if(smPersonnel.getSmPersonnelAddresses() != null){
+			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
+			
+			smPersonnel.getSmPersonnelAddresses().size();
+			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
+			for(SmPersonnelAddress smPA : smPAList){
+				if(smPA.getAddressType().equalsIgnoreCase("M")){
+					this.getManagedBean().setUpdateSmPersonnelMailingAddress(smPA.getSmAddress());
+				} else if(smPA.getAddressType().equalsIgnoreCase("P")){
+					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(smPA.getSmAddress());
+				}
+			}
+		}
+		
+	}
+
+	
+	public boolean validateUI(SmPersonnel personnel){
+		
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser usr = facesScopes.getUserSessionBean();
+		
+		PmCountry country;
+		PmState state;
+		PmDistrict district;
+		PmCity city;
+		
+		if(personnel.getPmUser().getUserId() == usr.getUserId()){
+			country = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry();
+			state = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState();
+			district = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict();
+			city = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCity();
+		} else {
+			country = getManagedBean().getEditSmPersonnelMailingAddress().getPmCountry();
+			state = getManagedBean().getEditSmPersonnelMailingAddress().getPmState();
+			district = getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict();
+			city = getManagedBean().getEditSmPersonnelMailingAddress().getPmCity();
+		}
 		
 		if(country == null || state == null || district == null || city == null || country.getCountryId() == null || state.getStateId() == null || district.getDistrictId() == null || city.getCityId() == null){
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -525,7 +613,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String update(SmPersonnel smPersonnel){
 		
 		
-		if(validateUI()){
+		if(validateUI(smPersonnel)){
 		
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IPersonnelSO.class);
