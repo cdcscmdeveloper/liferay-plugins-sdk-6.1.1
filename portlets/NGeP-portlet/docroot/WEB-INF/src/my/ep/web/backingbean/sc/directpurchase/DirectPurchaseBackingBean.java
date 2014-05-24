@@ -425,10 +425,10 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 
 	public void applyForRequestNote() {
 		for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
-			requestNoteDtl.setFulfillmentType(getManagedBean().getFulfillmentType());
+			//requestNoteDtl.setFulfillmentType(getManagedBean().getFulfillmentType());
 			//requestNoteDtl.setAssignedUserId(getManagedBean().getAssignedToUserId());
-			requestNoteDtl.setDeliverPeriodType(getManagedBean().getPeriodType());
-			requestNoteDtl.setDeliverPeriod(getManagedBean().getPeriodValue());
+			//requestNoteDtl.setDeliverPeriodType(getManagedBean().getPeriodType());
+			//requestNoteDtl.setDeliverPeriod(getManagedBean().getPeriodValue());
 		}
 		getManagedBean().getSelectedRequestNoteDtls().clear();
 	}
