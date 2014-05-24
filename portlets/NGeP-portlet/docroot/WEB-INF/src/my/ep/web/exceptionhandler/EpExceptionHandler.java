@@ -113,11 +113,15 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
             	 //ErrorBean bean = new ErrorBean();
             	 //bean.setMessage(ExceptionUtils.getRootCauseMessage(t));
             	 
+            	 if (!msgCode.equals(message)) {
+            		 msgCode += ": " + message;
+            	 }
+            	 
             	 FacesContext.getCurrentInstance().addMessage(componentId, 
             			 new FacesMessage(
             					 FacesMessage.SEVERITY_ERROR,
             					 null, 
-            					 msgCode + ": " + message));
+            					 msgCode));
             	 //FacesScopes facesScopes = new FacesScopes();
             	 //facesScopes.setRequestScope("errorBean", bean);
              } finally {
