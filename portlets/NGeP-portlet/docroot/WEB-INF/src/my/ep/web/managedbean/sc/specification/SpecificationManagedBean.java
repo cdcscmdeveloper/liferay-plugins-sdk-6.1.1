@@ -16,7 +16,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCheckListCategory;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmReportSection;
@@ -97,8 +96,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> approvalList;
 	private String evaluationType;
 	private ScQt scQt;
-	private List<PmCheckListCategory> stageOneComplianceList;
-	private List<PmCheckListCategory> stageOneComplianceSelect;
+	
 	private List<PmDocument> stageTwoTechComplianceList;
 	private List<PmDocument> stageTwoTechComplianceSelect;
 	private List<PmDocument> stageTwoFinComplianceList;
@@ -703,37 +701,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.evaluationType = evaluationType;
 	}
 
-	/**
-	 * @return the stageOneComplianceList
-	 */
-	public List<PmCheckListCategory> getStageOneComplianceList() {
-		return stageOneComplianceList;
-	}
-
-	/**
-	 * @param stageOneComplianceList
-	 *            the stageOneComplianceList to set
-	 */
-	public void setStageOneComplianceList(
-			List<PmCheckListCategory> stageOneComplianceList) {
-		this.stageOneComplianceList = stageOneComplianceList;
-	}
-
-	/**
-	 * @return the stageOneComplianceSelect
-	 */
-	public List<PmCheckListCategory> getStageOneComplianceSelect() {
-		return stageOneComplianceSelect;
-	}
-
-	/**
-	 * @param stageOneComplianceSelect
-	 *            the stageOneComplianceSelect to set
-	 */
-	public void setStageOneComplianceSelect(
-			List<PmCheckListCategory> stageOneComplianceSelect) {
-		this.stageOneComplianceSelect = stageOneComplianceSelect;
-	}
+	
 
 	/**
 	 * @return the s1TechSelect

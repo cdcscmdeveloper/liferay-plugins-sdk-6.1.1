@@ -35,7 +35,6 @@ import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.checkList.ICheckListSO;
 import my.ep.biz.service.pm.common.currency.ICurrencySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -67,8 +66,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.common.checkList.CheckListReqDTO;
-import my.ep.dto.pm.common.checkList.CheckListResDTO;
 import my.ep.dto.pm.common.currency.CurrencyReqDTO;
 import my.ep.dto.pm.common.currency.CurrencyResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -101,7 +98,6 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmCheckListCategory;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -4314,37 +4310,6 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void stageOneTechProposal() {
-
-		try {
-
-			List<ScQtCheckList> compilance = this.getManagedBean()
-					.getScQtCheckSt1techProposal();
-
-			List<PmCheckListCategory> selectList = this.getManagedBean()
-					.getStageOneComplianceSelect();
-
-			if (compilance == null) {
-				compilance = new ArrayList<ScQtCheckList>();
-			}
-
-			for (int i = 0; i < selectList.size(); i++) {
-				PmCheckListCategory bean = selectList.get(i);
-				ScQtCheckList scqtlist = createSpecList("1");
-
-				scqtlist.setTitle(bean.getPmCheckList().getCheckListName());
-				// scqtlist.setQtChecklistId(new Long(i));
-				scqtlist.setDocCategory("1");
-				// scqtlist.setEvaluationStage("1");
-				// scqtlist.setDefinationType(1);
-				compilance.add(scqtlist);
-			}
-			getManagedBean().setScQtCheckSt1techProposal(compilance);
-
-		} finally {
-			
-		}
-	}
 
 	public void stageTwoTechProposal() {
 
