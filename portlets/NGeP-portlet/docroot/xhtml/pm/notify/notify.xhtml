@@ -47,7 +47,7 @@
 
 						<p:column
 							headerText="#{lbl['lbl.portal.alert.sender']}/#{lbl['lbl.portal.alert.subject']}">
-							#{notify.pmUser.userName} <br />
+							#{notify.pmNotifyLog.pmUser.userName} <br />
 							<p:commandLink id="btnNotifyLink"
 								action="#{notifyBackingBean.selectedNotify}"
 								update=":form:pnldetail,:form:notifyTable">
@@ -77,7 +77,7 @@
 										style="font-weight:bold;text-align: left"
 										value="#{lbl['lbl.portal.alert.sender']} :" /></td>
 								<td><p:inputText
-										value="#{notifyBackingBean.managedBean.selectedNotify.pmUser.userName}"
+										value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.pmUser.userName}"
 										readonly="true"></p:inputText></td>
 								<td><h:outputLabel style="font-weight:bold;"
 										value="#{lbl['lbl.portal.alert.datetime']} :" /></td>

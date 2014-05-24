@@ -51,7 +51,6 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 			debugLogger("retrieveNotifyActiveList["
 					+ resDTO.getPmNotifyUserList().size() + "]");
-
 			this.getManagedBean().setNotifyLists(resDTO.getPmNotifyUserList());
 		}
 		resetSelectedNotify();
