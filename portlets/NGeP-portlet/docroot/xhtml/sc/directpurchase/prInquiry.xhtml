@@ -151,7 +151,7 @@
 					  <tr>
 						 <td style="width: 250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 						<td><p:selectOneRadio style="margin-bottom: 5px;"  id="procType" 
-								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType}">
+								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
 								<f:selectItems 
 									value="#{purchaseInquiryBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 									<p:ajax event="change" update="justiId" 

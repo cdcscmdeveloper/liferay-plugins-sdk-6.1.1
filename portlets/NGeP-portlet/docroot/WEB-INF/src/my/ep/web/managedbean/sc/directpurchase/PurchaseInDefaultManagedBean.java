@@ -41,6 +41,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
     private boolean visibleRemarkAttach = true;
     private boolean visibleOrderQty = true;
     private boolean editFlag; // flat for editing fields in pid
+    private boolean pidBtnFlag = Boolean.TRUE;
     
 	private ScRequestSupplierItem scRequestSupplierItem;
 	private	List<CmPricing> listPricingItems	=	new ArrayList<>();
@@ -335,6 +336,17 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 		this.pageNavToRequestNote = pageNavToRequestNote;
 	}
 
-	
-	
+	/**
+	 * @return the pidBtnFlag
+	 */
+	public boolean isPidBtnFlag() {
+		return pidBtnFlag;
+	}
+
+	/**
+	 * @param pidBtnFlag the pidBtnFlag to set
+	 */
+	public void setPidBtnFlag(boolean pidBtnFlag) {
+		this.pidBtnFlag = pidBtnFlag;
+	}
 }

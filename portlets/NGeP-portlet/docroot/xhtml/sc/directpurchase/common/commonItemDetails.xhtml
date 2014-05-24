@@ -67,24 +67,23 @@
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						update=":form:itemDtlPopup"
 						oncomplete="itemDtlPopup.show();" />
-					<p:spacer width="2px;"/>
-					<c:if test="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}" >
-					     <p:commandLink actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}">
-							<p:graphicImage value="/resources/ep/images/design/document.png"
-								height="15px" width="15px" />
-						</p:commandLink>
-					</c:if>
-				
+					  <p:spacer width="2px;"/>
+					<p:commandLink
+						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
+						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}">
+						<p:graphicImage value="/resources/ep/images/design/document.png" height="15px" width="15px" />
+					</p:commandLink>
 				</p:column>
+				  
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%">
-					<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'E'}">
+					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
 						<p:commandLink value="Emergency"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 
 					</ui:fragment>
-					<ui:fragment rendered="#{requestNoteDtl.procurementType eq 'A'}">
+					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A'}">
 						<p:commandLink value="Ad hoc"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
@@ -109,20 +108,20 @@
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%">
 					<ui:fragment
-						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType eq ParameterConst.priceTypeStandard}">
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 						<h:outputText
 							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
 							disabled="true" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType eq ParameterConst.priceTypePromotion}">
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypePromotion}">
 						<h:outputText
 							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
 							disabled="true" />
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode ne ParameterConst.priceTypeStandard}}">
 						<p:commandLink
 							update=":form:pricingPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
@@ -147,7 +146,7 @@
 				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType)}" 
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
 					   disabled="true" size="4" />
 				</p:column>
 				
@@ -163,10 +162,10 @@
 			
 			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:10%">
 					<p:inputText style="width:20px;text-align:right;" required="false" size="2" maxlength="3"
-						value="#{requestNoteDtl.deliverPeriod}"/>
+						value="#{requestNoteDtl.deliverTerm}"/>
 					<p:spacer width="2px;"></p:spacer>
 					<p:selectOneMenu id="periodMode" style="width:75px;"
-						value="#{requestNoteDtl.deliverPeriodType}">
+						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
 				</p:column>

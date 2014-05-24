@@ -56,8 +56,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;" id="procType"  disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType eq 'G'}"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType}">
+				<td><p:selectOneRadio style="margin-bottom: 5px;" id="procType"  disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'G'}"
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
 						<f:selectItems
 							value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 							<p:ajax event="change" update="justiId" 
@@ -103,7 +103,7 @@
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.ok']}"
-						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.sourceMethod)}"
+						actionListener="#{requestNoteBackingBean.addToRequestNote}"
 						oncomplete="addToCartPopup.hide();" icon="ui-icon-submit" />
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}"
 						onclick="addToCartPopup.hide()" icon="ui-icon-close" />

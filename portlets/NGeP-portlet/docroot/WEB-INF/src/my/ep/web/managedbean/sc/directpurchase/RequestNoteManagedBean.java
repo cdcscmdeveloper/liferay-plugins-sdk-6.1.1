@@ -14,6 +14,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -65,6 +66,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SCDirectPurchaseDataType directPurchaseDataType;
     
     public RequestNoteManagedBean() {
+    	PmParameter pmParameter = new PmParameter();
+		requestNoteDtl.setProcurementType(pmParameter);
+		requestNoteDtl.setFulfillmentType(pmParameter);
     	ScRequestItem requestItem = new ScRequestItem();
     	ScSupplierItemPrice itemPrice = new ScSupplierItemPrice();
     	requestSupplierItem.setRequestNoteItem(requestItem);
