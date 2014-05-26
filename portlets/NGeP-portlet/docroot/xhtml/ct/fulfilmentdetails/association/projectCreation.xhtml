@@ -21,15 +21,18 @@
 }
     </style> 
     <p:panel>
-	<div class="ppRightBtn">
-        <p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-	    <p:commandButton value="Save" icon="ui-icon-save" ajax="false" validateClient="true" 
-	       action="#{associationBackingBean.createAssociation}" style="margin-right:10px;"   />
-        <p:commandButton value="Back" icon="ui-icon-back" ajax="false" immediate="true"   action="#{associationBackingBean.gotoCancelPage}"/>
-	 </div>
+    	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
+    	<table style="width: 100%;">
+    		<tr>
+    			<td><p:commandButton value="Back" icon="ui-icon-back" ajax="false" immediate="true" action="#{associationBackingBean.gotoCancelPage}"/></td>
+    			<td class="ppRightBtn">
+			    	<p:commandButton value="Save" icon="ui-icon-save" ajax="false" validateClient="true" 
+			       		action="#{associationBackingBean.createAssociation}" style="margin-right:10px;" />  			
+    			</td>
+    		</tr>
+    	</table>    	
 	 </p:panel>
-     <p:panel id="projectId" header="Project Associate Creation"   toggleable="true"  toggleSpeed="500">
-         <p:messages showDetail="true" globalOnly="true" autoUpdate="true"/>
+     <p:panel id="projectId" header="Project Associate Creation" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
 	       <h:outputLabel for="projectNames" value="#{lbl['lbl.ct.asearch.model.pname']}" />
 	       <h:panelGrid columns="2">

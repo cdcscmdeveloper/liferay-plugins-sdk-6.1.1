@@ -17,26 +17,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
 import my.ep.dto.ct.maintain.ContractAssociationResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.association.AssociationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 /**
  * Backing Bean For Contract Association
@@ -173,44 +176,34 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  	}
  	
  	public String createAssociation() {
-
- 		IContractAssociationSO contractAssociationSO = null;
-         List<CtAssocContract> contractAssociationList = new ArrayList<CtAssocContract>();
-         CtAssocContract ctAssocContract = new CtAssocContract();
- 		try {
- 			 contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-               for(CtContract contract : this.getManagedBean().getAssociateSearchList()){
-             	  ctAssocContract.setCtContract(contract);
-             	  ctAssocContract.setCtAssociation(this.getManagedBean().getCtAssociation());
-             	  contractAssociationList.add(ctAssocContract);  
-               }
+		IContractAssociationSO contractAssociationSO = null;
+		try {
+			CtAssocContract ctAssocContract = new CtAssocContract();
+			List<CtAssocContract> contractAssociationList = new ArrayList<CtAssocContract>();
+ 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
+			for (CtContract contract : this.getManagedBean().getAssociateSearchList()) {
+				ctAssocContract.setCtContract(contract);
+				ctAssocContract.setCtAssociation(this.getManagedBean().getCtAssociation());
+				contractAssociationList.add(ctAssocContract);
+			}
                
             this.getManagedBean().getCtAssociation().setCtAssocContracts(contractAssociationList);
  			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
  			reqDTO.setAssociation(this.getManagedBean().getCtAssociation());
  			ContractAssociationResDTO resDTO = contractAssociationSO.createAssociation(reqDTO);
  			if (resDTO.isSuccessful()) {
- 				
- 				  log.info("Record saved successfully");
- 				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Association : "+ 
- 				   this.getManagedBean().getCtAssociation().getProjectName()));
- 				 return "/xhtml/shared/acknowledge.xhtml";
- 					
- 			  } else {
- 					throw new EpException("Failed.");
- 				}
-
- 		} catch (Exception ex) {
- 			log.error("Exception>>>" + ex);
- 			ex.printStackTrace();
- 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.toString(), ex.getMessage()));
- 		} finally {
- 			contractAssociationSO = null;
- 			contractAssociationList = null;
- 			ctAssocContract = null;
- 		}
-        return null;
- 	}
+ 				log.info("Record saved successfully");
+ 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+ 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{"Project", getManagedBean().getCtAssociation().getProjectName()}, 
+ 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+ 			} 
+		} finally {
+			contractAssociationSO = null;
+		}
+		return null;
+	}
  	
  	/*Implementation of search methode*/
 	public void searchContract() {
@@ -255,15 +248,12 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		this.selectedContractList = selectedContractList;
 	}
     
-    public String gotoAssociatePage() {
-    	try {
-    	if(this.getManagedBean().getCtAssociation() != null)
-        	this.getManagedBean().setCtAssociation(null);
-    	   if(this.getManagedBean().getAssociateSearchList() == null && this.getManagedBean().getAssociateSearchList().size() != 0)
-    		  this.getManagedBean().setAssociateSearchList(null);
-    	}   catch (Exception ex) {
-    			log.error("Exception>>", ex);
-    	}return PROCESS_ASSOCIATE_PAGE;
+	public String gotoAssociatePage() {
+		if (this.getManagedBean().getCtAssociation() != null)
+			this.getManagedBean().setCtAssociation(null);
+		if (this.getManagedBean().getAssociateSearchList() != null && this.getManagedBean().getAssociateSearchList().size() != 0)
+			this.getManagedBean().setAssociateSearchList(null);
+		return PROCESS_ASSOCIATE_PAGE;
 	}
    
     public String gotoCancelPage() {
