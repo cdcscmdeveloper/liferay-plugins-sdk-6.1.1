@@ -17,239 +17,242 @@
 			<table style="width: 100%">
 				<tr>
 					<td colspan="4"><div align="center" style="width: 98%">
-							<p:panelGrid styleClass="tablePanel"
-								rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
-								<f:facet name="header">
+							<c:if
+								test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
+									<f:facet name="header">
 
+										<p:row>
+											<p:column rowspan="2" />
+											<p:column rowspan="2">Board Of Director</p:column>
+											<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
+											<p:column rowspan="2">Management</p:column>
+											<p:column colspan="2">Staff Total</p:column>
+										</p:row>
+										<p:row>
+											<p:column>Entered</p:column>
+											<p:column>Actual</p:column>
+
+										</p:row>
+									</f:facet>
 									<p:row>
-										<p:column rowspan="2" />
-										<p:column rowspan="2">Board Of Director</p:column>
-										<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-										<p:column rowspan="2">Management</p:column>
-										<p:column colspan="2">Staff Total</p:column>
+										<p:column>Bumiputera</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
+										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Entered</p:column>
-										<p:column>Actual</p:column>
-
-									</p:row>
-								</f:facet>
-								<p:row>
-									<p:column>Bumiputera</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>Non-Bumiputera</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>Non-Malaysian</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
-									</p:column>
-								</p:row>
-							</p:panelGrid>
-							<p:panelGrid styleClass="tablePanel"
-								rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
-								<f:facet name="header">
-
-									<p:row>
-										<p:column rowspan="2" />
-										<p:column rowspan="2">Board Of Director</p:column>
-										<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-										<p:column rowspan="2">Management</p:column>
-										<p:column colspan="2">Prof Staff</p:column>
-										<p:column colspan="2">Semi Prof Staff</p:column>
-										<p:column colspan="2">Clerical Staff</p:column>
+										<p:column>Non-Bumiputera</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Entered</p:column>
-										<p:column>Actual</p:column>
-										<p:column>Entered</p:column>
-										<p:column>Actual</p:column>
-										<p:column>Entered</p:column>
-										<p:column>Actual</p:column>
+										<p:column>Non-Malaysian</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</c:if>
+							<c:if
+								test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
+									<f:facet name="header" id="facetId">
+
+										<p:row id="consultPerSumHdrRow">
+											<p:column rowspan="2" />
+											<p:column rowspan="2">Board Of Director</p:column>
+											<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
+											<p:column rowspan="2">Management</p:column>
+											<p:column colspan="2">Prof Staff</p:column>
+											<p:column colspan="2">Semi Prof Staff</p:column>
+											<p:column colspan="2">Clerical Staff</p:column>
+										</p:row>
+										<p:row>
+											<p:column>Entered</p:column>
+											<p:column>Actual</p:column>
+											<p:column>Entered</p:column>
+											<p:column>Actual</p:column>
+											<p:column>Entered</p:column>
+											<p:column>Actual</p:column>
+
+										</p:row>
+									</f:facet>
+									<p:row>
+										<p:column>Bumiputera</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
+										</p:column>
+
+
 
 									</p:row>
-								</f:facet>
-								<p:row>
-									<p:column>Bumiputera</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profBumiActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiBumiActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfBumiActCnt}" />
-									</p:column>
+									<p:row>
+										<p:column>Non-Bumiputera</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profNonBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiNonBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+										</p:column>
 
-
-
-								</p:row>
-								<p:row>
-									<p:column>Non-Bumiputera</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtNonBumiCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profNonBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profNonBumiActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiNonBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiNonBumiActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfNonBumiActCnt}" />
-									</p:column>
-
-								</p:row>
-								<p:row>
-									<p:column>Non-Malaysian</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profFrgEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.profFrgActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiFrgEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.semiFrgActCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
-									</p:column>
-									<p:column>
-										<h:outputText
-											value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
-									</p:column>
-								</p:row>
-							</p:panelGrid>
-
+									</p:row>
+									<p:row>
+										<p:column>Non-Malaysian</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghMngFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngtFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profFrgActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiFrgActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</c:if>
 						</div></td>
 
 				</tr>
