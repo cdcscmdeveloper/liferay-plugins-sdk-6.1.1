@@ -13,6 +13,7 @@ public class QtnTenderSearchBean {
 	private Date fromClosingDate;
 	private Date toClosingDate;
 	private String qtStatus;
+	private String committeeType;
 	
 	public QtnTenderSearchBean() {
 	}
@@ -156,4 +157,19 @@ public class QtnTenderSearchBean {
 	public void setQtStatus(String qtStatus) {
 		this.qtStatus = qtStatus;
 	}
+
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
+	}
+	
 }

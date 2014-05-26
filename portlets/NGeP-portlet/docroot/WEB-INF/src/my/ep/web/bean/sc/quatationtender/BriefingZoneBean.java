@@ -2,6 +2,7 @@ package my.ep.web.bean.sc.quatationtender;
 
 import java.util.List;
 
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -19,24 +20,30 @@ public class BriefingZoneBean {
 	private List<ScQtDeliveryLoc> deliveryLocList;
 	private List<ScQtDeliveryLoc> selectDeliveryList;
 	public int id;
+	private ScQtBsv scQtBsv;
 
 	/**
 	 * @param zoneName
 	 * @param briefingList
 	 */
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
-			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList) {
+			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList,
+			ScQtBsv scQtBsv) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.briefingList = briefingList;
 		this.sitevisitList = sitevisitList;
+		this.scQtBsv = scQtBsv;
 	}
 
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
-			List<ScQtDeliveryLoc> deliveryLocList)
-			{
-		this.tplSpecZoneDtl=tplSpecZoneDtl;
+			List<ScQtDeliveryLoc> deliveryLocList) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.deliveryLocList = deliveryLocList;
-	
+
+	}
+
+	public BriefingZoneBean(ScQtBsv scQtBsv) {
+		this.scQtBsv = scQtBsv;
 	}
 
 	public String getZoneName() {
@@ -93,6 +100,14 @@ public class BriefingZoneBean {
 
 	public void setSitevisitList(List<ScQtBsvDtl> sitevisitList) {
 		this.sitevisitList = sitevisitList;
+	}
+
+	public ScQtBsv getScQtBsv() {
+		return scQtBsv;
+	}
+
+	public void setScQtBsv(ScQtBsv scQtBsv) {
+		this.scQtBsv = scQtBsv;
 	}
 
 }
