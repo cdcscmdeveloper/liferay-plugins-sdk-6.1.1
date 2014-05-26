@@ -12,8 +12,9 @@
 				<td style="width: 108px"><p:outputLabel
 						value="#{lbl['lbl.qt.evaluation.type']}" /></td>
 				<td><p:inputText
-						value="#{qTDetailBB.managedBean.qt.evaluationType}"
-						style="margin-right:5px;" disabled="true" readonly="true" /></td>
+						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scEvaluationType, qTDetailBB.managedBean.qt.evaluationType)}"
+						style="margin-right:5px;" disabled="true" size="30"
+						readonly="true" /></td>
 			</tr>
 		</table>
 		<div class="ppRightBtn">
