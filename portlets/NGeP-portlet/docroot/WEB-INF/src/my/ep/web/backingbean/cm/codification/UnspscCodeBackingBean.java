@@ -998,11 +998,30 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"You should add atleast one record to RequestedExtensionCode table before submit", ""));
 		 return;
 		}
+		
+		
+		
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+		System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
+		supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+		System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
+		
+		
+		for(CmRequestCode code : this.getManagedBean().getRequestExtCodeList()){
+			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
+		}
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
@@ -1374,11 +1393,14 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				codeDTO.setRequestId(new Long(itemId));
 				resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 				this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
+				
+				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 			}
 		}else{
 			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
 			resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 			this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
+			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
 
 
