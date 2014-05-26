@@ -128,12 +128,10 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 						icon="ui-icon-accept"
+						action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean)}"
 						partialSubmit="true"
-						process="tierQtyPnl"
-						update="tierQtyTbl"  
-						oncomplete="tierQtyPopup.hide()">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						process="@this, tierQtyPnl"
+						update="tierQtyPnl" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
@@ -152,11 +150,10 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 						icon="ui-icon-accept"
+						action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 						partialSubmit="true"
-						process="scoreSettPnl" 
-						oncomplete="scoringSetPopup.hide()">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						process="@this, scoreSettPnl"
+						update="scoreSettPnl" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
@@ -175,17 +172,14 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 						icon="ui-icon-accept"
+						action="#{templateSpecBackingBean.estCostOkAction(templateSpecBean)}"
 						partialSubmit="true"
-						process="estimationPnl"
-						update="estimationTbl"  
-						oncomplete="estimationPopup.hide()">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						process="@this, estimationPnl"
+						update="estimationPnl" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="estimationPopup.hide()">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
 				</div>			
 			</c:if>
 		</p:dialog>
-
 </ui:composition>

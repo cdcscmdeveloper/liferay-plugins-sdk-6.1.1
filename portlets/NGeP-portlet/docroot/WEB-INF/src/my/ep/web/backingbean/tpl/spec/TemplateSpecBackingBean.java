@@ -66,6 +66,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * Template Specification Backing Bean
@@ -150,9 +151,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				retrieveTemplateSpecMaster(templateSpecBean);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Record save successfully", "Record ID: "+resDTO.getSpecMaster().getSpecMasterId()));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			
 		} finally {
 			templateSpecSO = null;
 		}
@@ -617,6 +616,30 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		tplSpecScorings.add(new TplSpecScoring());
+	}
+	
+	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("tierQtyOkAction");
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
+		
+		RequestContext.getCurrentInstance().execute("tierQtyPopup.hide()");
+	}
+	
+	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("scoringOkAction");
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
+		
+		RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
+	}
+	
+	public void estCostOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("estCostOkAction");
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
+		
+		RequestContext.getCurrentInstance().execute("estimationPopup.hide()");
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
