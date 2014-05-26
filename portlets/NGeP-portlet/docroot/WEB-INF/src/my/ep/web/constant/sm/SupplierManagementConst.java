@@ -278,46 +278,51 @@ public class SupplierManagementConst {
 		return PERSONNEL_TYPE_STAFF;
 	}
 
-	public static String getProfService() {
+	public String getPROF_SERVICE() {
 		return PROF_SERVICE;
 	}
 
-	public static String getSpecialService() {
+	public String getSPECIAL_SERVICE() {
 		return SPECIAL_SERVICE;
 	}
 
-	public static int getRECORD_DELETED() {
+	public int getRECORD_DELETED() {
 		return RECORD_DELETED;
 	}
 
-	/**
-	 * @return the individualFlag
-	 */
-	public static String getIndividualFlag() {
+	public String getINDIVIDUAL_FLAG() {
 		return INDIVIDUAL_FLAG;
 	}
 
-	public static String getCOUNTRY_MALAYSIA_CODE() {
+	public String getSTYPE_CONSULTANT() {
+		return STYPE_CONSULTANT;
+	}
+
+	public String getSTYPE_CONTRACTOR() {
+		return STYPE_CONTRACTOR;
+	}
+
+	public String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
 	}
 
-	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN() {
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN;
 	}
 
-	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN() {
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN;
 	}
 
-	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN() {
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROC_SENDIRIAN;
 	}
 
-	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD() {
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD;
 	}
 
-	public static String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN() {
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN;
 	}
 
