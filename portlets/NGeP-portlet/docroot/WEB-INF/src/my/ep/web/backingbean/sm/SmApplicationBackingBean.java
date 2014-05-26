@@ -374,6 +374,7 @@ public class SmApplicationBackingBean extends
 			}
 			calcPersonnelListCount();
 			calculateCapital();
+			calculateBumiPercentageTotals();
 			return setNavigationForAppl(applicationType);
 
 		} catch (Exception e) {
@@ -637,8 +638,8 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-			// valid = validateBeforeSave(applType, pageType);
-			valid = true;
+			valid = validateBeforeSave(applType, pageType);
+			// valid = true;
 			if (valid) {
 				// Save or update to DB
 
@@ -1139,6 +1140,7 @@ public class SmApplicationBackingBean extends
 					return false;
 				}
 			}
+			calculateBumiPercentageTotals();
 			break;
 		case "BankInfo":
 			int payAccCnt = 0;
@@ -2672,9 +2674,9 @@ public class SmApplicationBackingBean extends
 
 	public void deleteSelectedShrHldrJobFunction(Boolean isShrHldr) {
 
-		if (getManagedBean().getSelectedPersJobFunctions().size() > 0) {
+		if (getManagedBean().getSelectedShrHldrJobFunctions().size() > 0) {
 			for (SmStaffExperience exp : getManagedBean()
-					.getSelectedPersJobFunctions()) {
+					.getSelectedShrHldrJobFunctions()) {
 				if (isShrHldr) {
 					getManagedBean().getSelectedShareHolder()
 							.getSmStaffExperiences().remove(exp);
@@ -2685,7 +2687,7 @@ public class SmApplicationBackingBean extends
 				}
 
 			}
-			getManagedBean().getSelectedPersJobFunctions().clear();
+			getManagedBean().getSelectedShrHldrJobFunctions().clear();
 		} else {
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
@@ -2695,9 +2697,9 @@ public class SmApplicationBackingBean extends
 
 	public void deleteSelectedShrHldrAcademics(Boolean isShrHldr) {
 		System.out.println("****** Delete Academics ******" + isShrHldr);
-		if (getManagedBean().getSelectedPersAcademics().size() > 0) {
+		if (getManagedBean().getSelectedShrHldrAcademics().size() > 0) {
 			for (SmStaffAcademic aca : getManagedBean()
-					.getSelectedPersAcademics()) {
+					.getSelectedShrHldrAcademics()) {
 				if (isShrHldr) {
 					getManagedBean().getSelectedShareHolder()
 							.getSmStaffAcademics().remove(aca);
@@ -2706,7 +2708,7 @@ public class SmApplicationBackingBean extends
 							.getSmStaffAcademics().remove(aca);
 				}
 			}
-			getManagedBean().getSelectedPersAcademics().clear();
+			getManagedBean().getSelectedShrHldrAcademics().clear();
 		} else {
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
@@ -2716,9 +2718,9 @@ public class SmApplicationBackingBean extends
 
 	public void deleteSelectedShrHldrProfBodies(Boolean isShrHldr) {
 		System.out.println("****** Delete Prof Bodies ******" + isShrHldr);
-		if (getManagedBean().getSelectedPersProfBodies().size() > 0) {
+		if (getManagedBean().getSelectedShrHldrProfBodies().size() > 0) {
 			for (SmAssociationBody prof : getManagedBean()
-					.getSelectedPersProfBodies()) {
+					.getSelectedShrHldrProfBodies()) {
 				if (isShrHldr) {
 					getManagedBean().getSelectedShareHolder()
 							.getSmAssociationBodies().remove(prof);
@@ -2727,7 +2729,7 @@ public class SmApplicationBackingBean extends
 							.getSmAssociationBodies().remove(prof);
 				}
 			}
-			getManagedBean().getSelectedPersProfBodies().clear();
+			getManagedBean().getSelectedShrHldrProfBodies().clear();
 		} else {
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
@@ -2738,9 +2740,9 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedShrHldrRelatedCompanies(Boolean isShrHldr) {
 		System.out
 				.println("****** Delete Related Companies ******" + isShrHldr);
-		if (getManagedBean().getSelectedPersRelatedCompanies().size() > 0) {
+		if (getManagedBean().getSelectedShrHldrRelatedCompanies().size() > 0) {
 			for (SmRelatedCompany rel : getManagedBean()
-					.getSelectedPersRelatedCompanies()) {
+					.getSelectedShrHldrRelatedCompanies()) {
 				if (isShrHldr) {
 					getManagedBean().getSelectedShareHolder()
 							.getSmRelatedCompanies().remove(rel);
@@ -3237,6 +3239,22 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setChequeSingPerId(chequSigns);
 		// shareBankBean.getSmChequeSignatories().clear();
 		getManagedBean().setSelectedBank(shareBankBean);
+	}
+
+	public void deleteSelectedBanks() {
+
+		System.out.println("*** Delete Banks  ******* "
+				+ getManagedBean().getSelectedBanks().size());
+		if (getManagedBean().getSelectedBanks().size() > 0) {
+			for (SmSupplierBank bank : getManagedBean().getSelectedBanks()) {
+				getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
+			}
+			getManagedBean().getSelectedBranches().clear();
+		} else {
+			System.out
+					.println(" ******** NO Record selected please select atleast one ");
+		}
+
 	}
 
 	public void viewSignatories(SmSupplierBank signAcctBean) {
@@ -5602,6 +5620,120 @@ public class SmApplicationBackingBean extends
 				setStaffEnteredCount(per);
 			}
 
+		}
+
+	}
+
+	private void calculateBumiPercentageTotals() {
+		getManagedBean().getPersonCalc().setBodTotalCnt(
+				getManagedBean().getPersonCalc().getBodBumiCnt()
+						+ getManagedBean().getPersonCalc().getBodNonBumiCnt()
+						+ getManagedBean().getPersonCalc().getBodFrgCnt());
+		getManagedBean().getPersonCalc().setHghrMngmtTotalCnt(
+				getManagedBean().getPersonCalc().getHghMngBumiCnt()
+						+ getManagedBean().getPersonCalc()
+								.getHghMngNonBumiCnt()
+						+ getManagedBean().getPersonCalc().getHghMngFrgCnt());
+		getManagedBean().getPersonCalc().setMngmtTotalCnt(
+				getManagedBean().getPersonCalc().getMngtBumiCnt()
+						+ getManagedBean().getPersonCalc().getMngtNonBumiCnt()
+						+ getManagedBean().getPersonCalc().getMngtFrgCnt());
+		getManagedBean().getPersonCalc().setStfTotalCnt(
+				getManagedBean().getPersonCalc().getStfBumiEnterCnt()
+						+ getManagedBean().getPersonCalc()
+								.getStfNonBumiEnterCnt()
+						+ getManagedBean().getPersonCalc().getStfFrgEnterCnt());
+		getManagedBean().getPersonCalc()
+				.setSemiTotalCnt(
+						getManagedBean().getPersonCalc().getSemiBumiEnterCnt()
+								+ getManagedBean().getPersonCalc()
+										.getSemiNonBumiEnterCnt()
+								+ getManagedBean().getPersonCalc()
+										.getSemiFrgEnterCnt());
+		getManagedBean().getPersonCalc()
+				.setProfTotalCnt(
+						getManagedBean().getPersonCalc().getProfBumiEnterCnt()
+								+ getManagedBean().getPersonCalc()
+										.getProfNonBumiEnterCnt()
+								+ getManagedBean().getPersonCalc()
+										.getProfFrgEnterCnt());
+
+		getManagedBean().getPersonCalc().setTotalStaffEntered(
+				getManagedBean().getPersonCalc().getBodTotalCnt()
+						+ getManagedBean().getPersonCalc()
+								.getHghrMngmtTotalCnt()
+						+ getManagedBean().getPersonCalc().getMngmtTotalCnt()
+						+ getManagedBean().getPersonCalc().getStfTotalCnt()
+						+ getManagedBean().getPersonCalc().getSemiTotalCnt()
+						+ getManagedBean().getPersonCalc().getProfTotalCnt());
+		getManagedBean().getPersonCalc().setTotalKeyRolesEntered(
+				getManagedBean().getPersonCalc().getBodTotalCnt()
+						+ getManagedBean().getPersonCalc()
+								.getHghrMngmtTotalCnt()
+						+ getManagedBean().getPersonCalc().getMngmtTotalCnt());
+
+		int stfBumiTotal = getManagedBean().getPersonCalc().getBodBumiCnt()
+				+ getManagedBean().getPersonCalc().getHghMngBumiCnt()
+				+ getManagedBean().getPersonCalc().getMngtBumiCnt()
+				+ getManagedBean().getPersonCalc().getStfBumiEnterCnt()
+				+ getManagedBean().getPersonCalc().getSemiBumiEnterCnt()
+				+ getManagedBean().getPersonCalc().getProfBumiEnterCnt();
+
+		BigDecimal mul = new BigDecimal(100);
+		BigDecimal halfBumi = new BigDecimal(51);
+		if (getManagedBean().getPersonCalc().getTotalStaffEntered() > 0) {
+			BigDecimal stffBumiPer = new BigDecimal(stfBumiTotal
+					/ getManagedBean().getPersonCalc().getTotalStaffEntered())
+					.multiply(mul).setScale(2, RoundingMode.HALF_UP);
+			getManagedBean().getPersonCalc().setTotalStaffBumiPerc(stffBumiPer);
+		}
+		if (getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
+				.compareTo(mul) == 0) {
+			getManagedBean().getPersonCalc().setFullBumiStatus(true);
+		} else if (getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
+				.compareTo(halfBumi) >= 0
+				&& getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
+						.compareTo(mul) < 0) {
+			int keyRoleBumiTotal = getManagedBean().getPersonCalc()
+					.getBodBumiCnt()
+					+ getManagedBean().getPersonCalc().getHghMngBumiCnt()
+					+ getManagedBean().getPersonCalc().getMngtBumiCnt();
+			if (getManagedBean().getPersonCalc().getTotalKeyRolesEntered() > 0
+					&& getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
+							.compareTo(mul) != 0) {
+				BigDecimal keyRoleBumiPer = new BigDecimal(keyRoleBumiTotal
+						/ getManagedBean().getPersonCalc()
+								.getTotalKeyRolesEntered()).multiply(mul)
+						.setScale(2, RoundingMode.HALF_UP);
+				getManagedBean().getPersonCalc().setTotalKeyRoleBumiPerc(
+						keyRoleBumiPer);
+				if (getManagedBean().getPersonCalc().getTotalKeyRoleBumiPerc()
+						.compareTo(halfBumi) >= 0
+						&& getManagedBean().getPersonCalc()
+								.getTotalKeyRoleBumiPerc().compareTo(mul) < 0) {
+					for (SmPersonnel per : getManagedBean().getSmAppl()
+							.getSmPersonnels()) {
+						if (per.isEquityOwner() && per.getBumiFlg() == 1) {
+							getManagedBean()
+									.getPersonCalc()
+									.setTotalShrBumiShrHldrPerc(
+											getManagedBean()
+													.getPersonCalc()
+													.getTotalShrBumiShrHldrPerc()
+													.add(per.getSharePercentage()));
+						}
+					}
+					if (getManagedBean().getPersonCalc()
+							.getTotalShrBumiShrHldrPerc().compareTo(halfBumi) >= 0
+							&& getManagedBean().getPersonCalc()
+									.getTotalShrBumiShrHldrPerc()
+									.compareTo(mul) < 0) {
+						getManagedBean().getPersonCalc()
+								.setHalfBumiStatus(true);
+					}
+
+				}
+			}
 		}
 
 	}

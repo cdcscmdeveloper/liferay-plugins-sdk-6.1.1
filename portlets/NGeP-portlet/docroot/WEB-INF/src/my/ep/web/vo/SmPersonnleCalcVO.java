@@ -1,6 +1,7 @@
 package my.ep.web.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class SmPersonnleCalcVO implements Serializable {
 
@@ -62,6 +63,32 @@ public class SmPersonnleCalcVO implements Serializable {
 	private int semiBumiActCnt;
 
 	private int semiFrgActCnt;
+
+	private int bodTotalCnt;
+
+	private int hghrMngmtTotalCnt;
+
+	private int mngmtTotalCnt;
+
+	private int stfTotalCnt;
+
+	private int semiTotalCnt;
+
+	private int profTotalCnt;
+
+	private int totalStaffEntered;
+
+	private int totalKeyRolesEntered;
+
+	private BigDecimal totalStaffBumiPerc = new BigDecimal(0);
+
+	private BigDecimal totalKeyRoleBumiPerc = new BigDecimal(0);
+
+	private BigDecimal totalShrBumiShrHldrPerc = new BigDecimal(0);
+
+	private boolean halfBumiStatus;
+
+	private boolean fullBumiStatus;
 
 	public int getBodNonBumiCnt() {
 		return bodNonBumiCnt;
@@ -277,6 +304,110 @@ public class SmPersonnleCalcVO implements Serializable {
 
 	public void setSemiFrgActCnt(int semiFrgActCnt) {
 		this.semiFrgActCnt = semiFrgActCnt;
+	}
+
+	public int getBodTotalCnt() {
+		return bodTotalCnt;
+	}
+
+	public void setBodTotalCnt(int bodTotalCnt) {
+		this.bodTotalCnt = bodTotalCnt;
+	}
+
+	public int getHghrMngmtTotalCnt() {
+		return hghrMngmtTotalCnt;
+	}
+
+	public void setHghrMngmtTotalCnt(int hghrMngmtTotalCnt) {
+		this.hghrMngmtTotalCnt = hghrMngmtTotalCnt;
+	}
+
+	public int getMngmtTotalCnt() {
+		return mngmtTotalCnt;
+	}
+
+	public void setMngmtTotalCnt(int mngmtTotalCnt) {
+		this.mngmtTotalCnt = mngmtTotalCnt;
+	}
+
+	public int getStfTotalCnt() {
+		return stfTotalCnt;
+	}
+
+	public void setStfTotalCnt(int stfTotalCnt) {
+		this.stfTotalCnt = stfTotalCnt;
+	}
+
+	public int getSemiTotalCnt() {
+		return semiTotalCnt;
+	}
+
+	public void setSemiTotalCnt(int semiTotalCnt) {
+		this.semiTotalCnt = semiTotalCnt;
+	}
+
+	public int getProfTotalCnt() {
+		return profTotalCnt;
+	}
+
+	public void setProfTotalCnt(int profTotalCnt) {
+		this.profTotalCnt = profTotalCnt;
+	}
+
+	public int getTotalStaffEntered() {
+		return totalStaffEntered;
+	}
+
+	public void setTotalStaffEntered(int totalStaffEntered) {
+		this.totalStaffEntered = totalStaffEntered;
+	}
+
+	public BigDecimal getTotalStaffBumiPerc() {
+		return totalStaffBumiPerc;
+	}
+
+	public void setTotalStaffBumiPerc(BigDecimal totalStaffBumiPerc) {
+		this.totalStaffBumiPerc = totalStaffBumiPerc;
+	}
+
+	public int getTotalKeyRolesEntered() {
+		return totalKeyRolesEntered;
+	}
+
+	public void setTotalKeyRolesEntered(int totalKeyRolesEntered) {
+		this.totalKeyRolesEntered = totalKeyRolesEntered;
+	}
+
+	public BigDecimal getTotalKeyRoleBumiPerc() {
+		return totalKeyRoleBumiPerc;
+	}
+
+	public void setTotalKeyRoleBumiPerc(BigDecimal totalKeyRoleBumiPerc) {
+		this.totalKeyRoleBumiPerc = totalKeyRoleBumiPerc;
+	}
+
+	public BigDecimal getTotalShrBumiShrHldrPerc() {
+		return totalShrBumiShrHldrPerc;
+	}
+
+	public void setTotalShrBumiShrHldrPerc(BigDecimal totalShrBumiShrHldrPerc) {
+		this.totalShrBumiShrHldrPerc = totalShrBumiShrHldrPerc;
+	}
+
+	public boolean isHalfBumiStatus() {
+		return halfBumiStatus;
+	}
+
+	public void setHalfBumiStatus(boolean halfBumiStatus) {
+		this.halfBumiStatus = halfBumiStatus;
+	}
+
+	public boolean isFullBumiStatus() {
+		return fullBumiStatus;
+	}
+
+	public void setFullBumiStatus(boolean fullBumiStatus) {
+		this.fullBumiStatus = fullBumiStatus;
 	}
 
 }
