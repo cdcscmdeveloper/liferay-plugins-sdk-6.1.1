@@ -141,9 +141,9 @@ public class NoticeBoardBackingBean extends
 				constructLocationTree(resDTO.getLocCriteria());
 				this.getManagedBean().setBsv(resDTO.getScQtBsv());
 				this.getManagedBean().setBriefingDtls(
-						resDTO.getBriefingResultBean().getResultList());
+						resDTO.getBriefingResultBean());
 				this.getManagedBean().setSiteVisitDtls(
-						resDTO.getSiteVisitResultBean().getResultList());
+						resDTO.getSiteVisitResultBean());
 			} else {
 				this.getManagedBean().setZones(resDTO.getZones());
 
@@ -509,9 +509,9 @@ public class NoticeBoardBackingBean extends
 			constructLocationTree(resDTO.getLocCriteria());
 			this.getManagedBean().setBsv(resDTO.getScQtBsv());
 			this.getManagedBean().setBriefingDtls(
-					resDTO.getBriefingResultBean().getResultList());
+					resDTO.getBriefingResultBean());
 			this.getManagedBean().setSiteVisitDtls(
-					resDTO.getSiteVisitResultBean().getResultList());
+					resDTO.getSiteVisitResultBean());
 		} else {
 			this.getManagedBean().setZones(resDTO.getZones());
 
@@ -637,12 +637,12 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setBsv(scQtBsv);
 		if (null != scQtBsv && scQtBsv.isSameBsv()) {
 			this.getManagedBean().setBriefingDtls(
-					resDTO.getBriefingResultBean().getResultList());
+					resDTO.getBriefingResultBean());
 		} else {
 			this.getManagedBean().setBriefingDtls(
-					resDTO.getBriefingResultBean().getResultList());
+					resDTO.getBriefingResultBean());
 			this.getManagedBean().setSiteVisitDtls(
-					resDTO.getSiteVisitResultBean().getResultList());
+					resDTO.getSiteVisitResultBean());
 		}
 		List<TplSpecLoc> locs = resDTO.getLocCriteria();
 		constructLocationTree(locs);
