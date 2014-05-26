@@ -146,6 +146,7 @@
 		<portlet id="UserProfileMaintenance"></portlet>
 
 		<portlet id="SmUserProfileMaintenance"></portlet>
+		<portlet id="SoftCertReg"></portlet>
 	</category>
 
 	<category name="Template">

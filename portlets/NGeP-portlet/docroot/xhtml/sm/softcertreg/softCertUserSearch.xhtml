@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="contentSection">
+	
+	<h:panelGrid id="search" style="width:100%;">
+	 
+	<p:panel header="Results" toggleable="true">
+	<p:dataTable id="searchProfile" value="#{softCertBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;">
+ 
+       <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
+        <h:outputText value="" /> 
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
+        <h:outputText value="#{personnel.name}" />  
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}" >
+        <h:outputText />  
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
+        <h:outputText value="#{personnel.pmCountry.countryName}" />    
+       </p:column>
+    
+       <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}"> 
+        <h:outputText value="Y" rendered="#{personnel.authorized}"/>
+        <h:outputText value="N" rendered="!#{personnel.authorized}"/>
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
+        <h:outputText value="Y" rendered="#{personnel.softcert}"/>
+        <h:outputText value="N" rendered="!#{personnel.softcert}"/>
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
+        <h:outputText />
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}"> 
+        <h:outputText value="Y" rendered="#{personnel.contractSigner}"/>
+        <h:outputText value="N" rendered="!#{personnel.contractSigner}"/>
+       </p:column>
+     </p:dataTable>
+	</p:panel>
+	
+</h:panelGrid>
+    
+</ui:define>
+</ui:composition>
