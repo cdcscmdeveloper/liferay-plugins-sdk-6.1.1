@@ -36,7 +36,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private String[] action;
 	private String taskName;
-    private String chkMenuOrTxtBox;;
 	private Date effDate;
 	private String loaNo;
 	private Date expDate;
@@ -55,19 +54,29 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private CtContract ctContract;
 	private List<PmFinancialAcc>  financialAccList;
-	private String accountNo="";
 	private boolean removeFactoring;
 	private Long loaId;
 	private Long contractVerId;
-	private SmSupplierBank supplierBank;
-	private String supplierAddress;
-	private String supplierBankAddress;
 	
-	private Map<Long, String> factoringCompMap;
 	private String factoringBankName;
 	private String factoringBankAddress;
+	private String supplierAddress;
+	private String supplierContactPerson;
+	private String supplierTelNo;
+	private String supplierFaxNo;
+	private String supplierEmail;
+	private String supplierBranch;
+	private String originalAccountNo;
+	private String accountNo;
+	private String supplierBankName;
+	private String supplierBankAddress;
+	private String supplierBankBranch;
+	private String supplierBankTelNo;
 	
 	private boolean agreeFactoringClause;
+	
+	private Map<Long, String> factoringCompMap;
+	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	
 	public SupplierManagedBean(){
 		
@@ -217,14 +226,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.ctContract = ctContract;
 	}
 
-	public String getChkMenuOrTxtBox() {
-		return chkMenuOrTxtBox;
-	}
-
-	public void setChkMenuOrTxtBox(String chkMenuOrTxtBox) {
-		this.chkMenuOrTxtBox = chkMenuOrTxtBox;
-	}
-
 	public List<PmFinancialAcc> getFinancialAccList() {
 		if(financialAccList == null)
 			financialAccList = new ArrayList<PmFinancialAcc>();
@@ -265,14 +266,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setLoaId(Long loaId) {
 		this.loaId = loaId;
-	}
-
-	public SmSupplierBank getSupplierBank() {
-		return supplierBank;
-	}
-
-	public void setSupplierBank(SmSupplierBank supplierBank) {
-		this.supplierBank = supplierBank;
 	}
 
 	public String getSupplierAddress() {
@@ -332,6 +325,89 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setAgreeFactoringClause(boolean agreeFactoringClause) {
 		this.agreeFactoringClause = agreeFactoringClause;
+	}
+
+	public String getSupplierContactPerson() {
+		return supplierContactPerson;
+	}
+
+	public void setSupplierContactPerson(String supplierContactPerson) {
+		this.supplierContactPerson = supplierContactPerson;
+	}
+
+	public String getSupplierTelNo() {
+		return supplierTelNo;
+	}
+
+	public void setSupplierTelNo(String supplierTelNo) {
+		this.supplierTelNo = supplierTelNo;
+	}
+
+	public String getSupplierFaxNo() {
+		return supplierFaxNo;
+	}
+
+	public void setSupplierFaxNo(String supplierFaxNo) {
+		this.supplierFaxNo = supplierFaxNo;
+	}
+
+	public String getSupplierEmail() {
+		return supplierEmail;
+	}
+
+	public void setSupplierEmail(String supplierEmail) {
+		this.supplierEmail = supplierEmail;
+	}
+
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+
+	public Map<String, SmSupplierBank> getSupplierBankAccountMap() {
+		if(supplierBankAccountMap==null) {
+			supplierBankAccountMap = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankAccountMap;
+	}
+
+	public void setSupplierBankAccountMap(Map<String, SmSupplierBank> supplierBankAccountMap) {
+		this.supplierBankAccountMap = supplierBankAccountMap;
+	}
+
+	public String getOriginalAccountNo() {
+		return originalAccountNo;
+	}
+
+	public void setOriginalAccountNo(String originalAccountNo) {
+		this.originalAccountNo = originalAccountNo;
+	}
+
+	public String getSupplierBankName() {
+		return supplierBankName;
+	}
+
+	public void setSupplierBankName(String supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+
+	public String getSupplierBankBranch() {
+		return supplierBankBranch;
+	}
+
+	public void setSupplierBankBranch(String supplierBankBranch) {
+		this.supplierBankBranch = supplierBankBranch;
+	}
+
+	public String getSupplierBankTelNo() {
+		return supplierBankTelNo;
+	}
+
+	public void setSupplierBankTelNo(String supplierBankTelNo) {
+		this.supplierBankTelNo = supplierBankTelNo;
 	}	
 	
 	

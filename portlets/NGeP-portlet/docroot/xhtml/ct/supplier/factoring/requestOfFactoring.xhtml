@@ -63,27 +63,30 @@
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
 			<p:outputLabel value="LOA No." />
 			<p:selectOneMenu style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
-			   rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
+			   rendered="#{supplierBackingBean.managedBean.taskId==null}" >
 			   <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
 			    <p:ajax event="change" process="@this" update="@form" listener="#{supplierBackingBean.setActionListener()}"/> 
 		     </p:selectOneMenu>
 			 <p:inputText  style="width:200px;" disabled="true" 
 			    value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
-			    rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"/>
+			    rendered="#{supplierBackingBean.managedBean.taskId!=null}"/>
 		       <p:outputLabel value="LOA Date" />
-		       <p:inputText style="width:200px;" disabled="true"
-		         value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.loaDate)}"/> 
+		       <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.loaDate}"> 
+		         	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+		       </p:inputText>
 		       <p:outputLabel value="Contract No." />
 		       <p:inputText style="width:200px;"  value="#{supplierBackingBean.managedBean.contractNo}" disabled="true"/>
 		       <p:outputLabel value="Contract Name" />
 		       <p:inputText style="width:200px;" disabled="true"
 		         value="#{supplierBackingBean.managedBean.contractName}"/> 
 	           <p:outputLabel value="Contract Effective Date" />
-	           <p:inputText style="width:200px;"  disabled="true"
-	              value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.effDate)}" /> 
+	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.effDate}" >
+	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	           </p:inputText> 
 	           <p:outputLabel value="Contract Expiry Date" />
-	           <p:inputText style="width:200px;"  disabled="true"
-	              value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.expDate)}"/> 
+	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.expDate}"> 
+	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	           </p:inputText> 
 	  </h:panelGrid>
    </p:panel>
     <p:panel id="factoringPanel" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
