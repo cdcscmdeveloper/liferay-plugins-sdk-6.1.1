@@ -71,7 +71,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZoneLocation;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;

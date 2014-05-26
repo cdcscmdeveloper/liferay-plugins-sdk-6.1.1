@@ -8,23 +8,11 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZoneLocation;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 
 public class SourcingLocationHelper {
-	public	static	List<PmState>	getStates(ScQuoteZone zone){
-		List<PmState>	results	=	new ArrayList<>();
-		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
-			if(location.getPmState() != null){
-				results.add(location.getPmState());
-			}
-		}
-		return results;
-	}
 	
 	public static <LOCATION_CLASS extends TplSpecLoc> List<PmState>	getStateFromLocationDTO(List<LOCATION_CLASS> locationDTOs) {
 		List<PmState>	results	=	new ArrayList<PmState>();
@@ -82,16 +70,6 @@ public class SourcingLocationHelper {
 		return results;
 	}
 	
-	public	static	List<PmDistrict>	getDistricts(ScQuoteZone zone){
-		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
-		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
-			if(location.getPmDistrict() != null){
-				results.add(location.getPmDistrict());
-			}
-		}
-		return results;
-	}
-	
 	public static <LOCATION_CLASS extends TplSpecLoc> List<PmDistrict> getDistrictFromLocationDTO(List<LOCATION_CLASS> locationDTOs){
 		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
 		for(LOCATION_CLASS locationDTO: locationDTOs){
@@ -119,15 +97,6 @@ public class SourcingLocationHelper {
 		for(TplSpecLoc locationDTO: locationDTOs){
 			if(locationDTO.getPmDistrict() != null){
 				results.add(locationDTO.getPmDistrict());
-			}
-		}
-		return results;
-	}
-	public	static	List<PmDivision>	getDivisions(ScQuoteZone zone){
-		List<PmDivision>	results	=	new ArrayList<PmDivision>();
-		for(ScQuoteZoneLocation location: zone.getZoneLocations()){
-			if(location.getDivision() != null){
-				results.add(location.getDivision());
 			}
 		}
 		return results;
@@ -163,16 +132,6 @@ public class SourcingLocationHelper {
 			}
 		}
 		return results;
-	}
-	public	static	ScQuoteZone	getZoneFromLocationDTOs(List<LocationDTO> locationDTOs){
-		ScQuoteZone result	=	null;
-		for(LocationDTO locationDTO: locationDTOs){
-			if(locationDTO.getZone() != null){
-				result = locationDTO.getZone();
-				break;
-			}
-		}
-		return result;
 	}
 	
 	public static <LOCATION_CLASS extends TplSpecLoc> List<PmCity> getCityFromLocationDTO(List<LOCATION_CLASS> locationDTOs){
