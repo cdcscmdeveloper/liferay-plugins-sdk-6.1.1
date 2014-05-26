@@ -531,17 +531,33 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     	//TODO Call SM API to trigger a task for complaint.
     }
     
-    public String gotoTerminatePage() {
+    public String gotoTerminatePage() throws NamingException {
     	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
     	ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(contractVerId);
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 
-    	this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-	    this.getManagedBean().setViewContract(true);
+    	getManagedBean().setContractVer(resDTO.getCtContractVer());
+	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+	    getManagedBean().setViewContract(true);
     	
+		getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		ContractBackingBean ctBB = new ContractBackingBean();
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		
+		flush();
+		String parameterCode = retrieveParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId());
+		
+		if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+			getManagedBean().setRemedy(true);
+		} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+			getManagedBean().setTermination(true);
+		} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+			getManagedBean().setMutualTermination(true);
+		}
+		
 		return PROCESS_TERMINATE_PAGE;
 	}
 }
