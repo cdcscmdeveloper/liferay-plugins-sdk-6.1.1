@@ -92,7 +92,9 @@
 				<p:commandButton value="Add" oncomplete="bankDialog.show();"
 					actionListener="#{backingBean.assignNewBank}"
 					update=":form:tt:bankDialog" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="Delete"
+					action="#{backingBean.deleteSelectedBanks}"
+					update=":form:tt:bankDt" />
 			</div>
 			<p:panel id="sfieldset"
 				header="Cheque Signatories Composition For Account No.  :  

@@ -19,6 +19,28 @@
 						<p:ajax update="supDocPan" event="change" />
 					</p:selectOneRadio></td>
 			</tr>
+
+		</table>
+		<br />
+		<table style="width: 30%">
+			<tr>
+				<td colspan="2"><c:choose>
+						<c:when
+							test="#{backingBean.managedBean.personCalc.halfBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
+							<h:outputText value="#{lbl['lbl.sm.recommendation.halfBumi']}"
+								style="color: green;font-weight: bold;font-size: 12px;" />
+						</c:when>
+						<c:when
+							test="#{backingBean.managedBean.personCalc.fullBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
+							<h:outputText value="#{lbl['lbl.sm.recommendation.fullBumi']}"
+								style="color: green;font-weight: bold;font-size: 12px;" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{lbl['lbl.sm.recommendation.noBumi']}"
+								style="color: green;font-weight: bold;font-size: 12px;" />
+						</c:otherwise>
+					</c:choose></td>
+			</tr>
 		</table>
 		<br />
 		<table style="width: 100%;">
