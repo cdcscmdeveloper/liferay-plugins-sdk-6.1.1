@@ -327,6 +327,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private BigDecimal equiCompCapTotal;
 
+	private boolean validResubmit;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -1889,6 +1891,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRegStatusDescList(List<PmStatusDesc> regStatusDescList) {
 		this.regStatusDescList = regStatusDescList;
+	}
+
+	public boolean isValidResubmit() {
+		return validResubmit;
+	}
+
+	public void setValidResubmit(boolean validResubmit) {
+		this.validResubmit = validResubmit;
 	}
 
 }

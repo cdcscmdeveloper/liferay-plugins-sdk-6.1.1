@@ -168,6 +168,9 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_BERHAD = "4";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "5";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "6";
+	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
+	
+	public static final String APPL_PM_STATUS_REJECT="20109";
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";

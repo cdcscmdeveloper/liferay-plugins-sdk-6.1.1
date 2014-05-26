@@ -11,6 +11,7 @@ import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.util.FacesScopes;
 
 public class SmEmailNotificationHelper {
 
@@ -39,21 +40,64 @@ public class SmEmailNotificationHelper {
 		System.out.println("END");
 	}
 
-	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl) {
+	public static void sendNotif(String templateId,
+			List<String> receiverIdList, String senderId,
+			List<String> subParams, List<String> contentParams) {
+		System.out.println("initiateTask******");
+		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+				.getOSBServiceObject(INtfSO.class);
+
+		NtfRequestDTO reqDTO = new NtfRequestDTO();
+
+		reqDTO.setTemplateId(templateId);
+		if (senderId != null) {
+			reqDTO.setSenderId(senderId);
+		}
+		reqDTO.setUserIdArr(receiverIdList.toArray(new String[receiverIdList
+				.size()]));
+		reqDTO.setSubParaArr(subParams.toArray(new String[subParams.size()]));
+		reqDTO.setCntParaArr(contentParams.toArray(new String[contentParams
+				.size()]));
+
+		try {
+			NtfResponseDTO resDTO = ntfSO.processAndPublish(reqDTO);
+			System.out.println(resDTO.getStatusCode());
+			System.out.println(resDTO.getSeverity());
+			System.out.println(resDTO.getStatusDesc());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("END");
+	}
+
+	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl,
+			Long senderId) {
 		String templateId = "400001";
-		List<String> emailLst = new ArrayList<String>();
+		String senderIdVal = null;
+		List<String> receiverList = new ArrayList<String>();
 		List<String> contList = new ArrayList<String>();
+		FacesScopes fs = new FacesScopes();
 		for (SmPersonnel per : smAppl.getSmPersonnels()) {
 			System.out.println("** smAppl.getSmPersonnels().size() ** "
 					+ smAppl.getSmPersonnels().size());
 			if (per.getEpRole() != null
 					&& per.getEpRole().equalsIgnoreCase("A")) {
-				emailLst.add(per.getEmail());
+				// emailLst.add(per.getEmail());
+				receiverList.add(per.getPmUser().getUserId().toString());
 				contList.add(per.getName());
 				System.out.println(" **The email id ***" + per.getEmail());
 				break;
 			}
 		}
+
+		if (senderId != null) {
+			senderIdVal = senderId.toString();
+		}
+		String parameterString = "apId=" + smAppl.getApplId();
+		String activationUrl = "http://" + fs.getRequest().getServerName()
+				+ ":" + fs.getRequest().getServerPort()
+				+ SupplierManagementConst.RESUBMIT_APPL_PATH + parameterString;
+		System.out.println("**Activation Url=" + activationUrl);
 
 		List<String> subList = new ArrayList<String>();
 		subList.add(getApplicationDesc(smAppl.getApplType()));
@@ -70,8 +114,10 @@ public class SmEmailNotificationHelper {
 			sb.append("\n");
 		}
 		contList.add(sb.toString());
+		contList.add("<br/><a href=" + activationUrl
+				+ ">Click to resubmit</a><br />");
 
-		sendEmail(templateId, emailLst, subList, contList);
+		sendNotif(templateId, receiverList, senderIdVal, subList, contList);
 
 	}
 

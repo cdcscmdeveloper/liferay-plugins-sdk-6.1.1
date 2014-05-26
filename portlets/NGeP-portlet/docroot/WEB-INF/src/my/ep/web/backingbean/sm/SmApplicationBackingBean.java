@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
@@ -140,6 +141,42 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void prerenderApplicationForResubmission() {
+		HttpServletRequest originalServletRequest = new FacesScopes()
+				.getOriginalServletRequest();
+		String applId = originalServletRequest.getParameter("apId");
+
+		log.info("application id : " + applId);
+
+		SmAppl appl = null;
+		SmSupplier supplierProfile = null;
+
+		try {
+			if (applId != null) {
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(Integer.parseInt(applId));
+				appl = mofResDto.getSmAppl();
+				supplierProfile = mofResDto.getSmSupplier();
+			}
+		} finally {
+		}
+
+		if (appl != null && supplierProfile != null) {
+			System.out.println(" *** The application type is ******* "
+					+ appl.getApplType());
+			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
+					supplierProfile);
+			System.out.println(" ****** After proceed *****"
+					+ getManagedBean().getSmAppl().getApplType());
+			getManagedBean().getSmAppl().setResubmit(true);
+			setNavigationForResubmitAppln(appl.getApplType());
+		} else {
+			// redirect & display resubmit expired
+			this.getManagedBean().setValidResubmit(false);
+		}
+
+	}
+
 	public String proceedToApplication(String applicationType) {
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
@@ -195,24 +232,6 @@ public class SmApplicationBackingBean extends
 
 					smAppl = resDto.getSmAppl();
 
-					System.out.println("Retrieved Value ==="
-							+ smAppl.getSmCompanyBasic().getIncomeTaxNo()
-							+ " === EST DATE ==== "
-							+ smApplSupplier.getEstablishDate());
-					System.out
-							.println("******** Latest Cloned Draft Copy is ******"
-									+ smAppl.getApplId()
-									+ "--- Basic info ---"
-									+ smAppl.getSmCompanyBasic()
-											.getCompanyBasicId()
-									+ " --- "
-									+ smAppl.getSmCompanyBasic()
-											.getCompanyName()
-									+ " --- Supplier Type ---"
-									+ smAppl.getSupplierType());
-					System.out
-							.println("******** After clone the basic address list *******"
-									+ smAppl.getSmCompanyBasic());
 					// TODO Set default not null values -- End insert appl ---
 					// TODo Remove hard code later
 					smAppl.setApplCategoryType(null);
@@ -330,7 +349,9 @@ public class SmApplicationBackingBean extends
 
 			System.out
 					.println(" **** APPLICATION TYPE **** " + applicationType);
-			if (fromBpm) {
+			if (fromBpm
+					&& (getManagedBean().isPoUser() || getManagedBean()
+							.isApproverUser())) {
 				getManagedBean()
 						.setMaxReviewCount(
 								assignMaxReviewCount(applicationType,
@@ -589,6 +610,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void updateSmAppl(String applType, String pageType) {
+		testUpdateSmAppl(applType, pageType);
+	}
+
+	public boolean testUpdateSmAppl(String applType, String pageType) {
 		boolean valid = false;
 		boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -612,8 +637,8 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-			valid = validateBeforeSave(applType, pageType);
-
+			// valid = validateBeforeSave(applType, pageType);
+			valid = true;
 			if (valid) {
 				// Save or update to DB
 
@@ -629,8 +654,9 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 			}
 			if (valid) {
-				retriveLatestApplAfterUpdate(pageType);
+				valid = retriveLatestApplAfterUpdate(pageType);
 			}
+			return valid;
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
@@ -646,12 +672,13 @@ public class SmApplicationBackingBean extends
 			valid = false;
 			retriveLatestApplAfterUpdate(pageType);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
+			return false;
 		} finally {
 			mofRegistrationSO = null;
 		}
 	}
 
-	private void retriveLatestApplAfterUpdate(String pageType) {
+	private boolean retriveLatestApplAfterUpdate(String pageType) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -724,8 +751,10 @@ public class SmApplicationBackingBean extends
 
 			System.out.println("***** After final Retrieve ****"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		} finally {
 			mofRegistrationSO = null;
 		}
@@ -3442,7 +3471,9 @@ public class SmApplicationBackingBean extends
 
 	public String submitMofApplToBpm() {
 		try {
+			System.out.println("******* BPM START **********");
 			initiateSmApplicationTask();
+			System.out.println("******* BPM COMPLETED **********");
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -3560,10 +3591,20 @@ public class SmApplicationBackingBean extends
 			}
 			if (res.equalsIgnoreCase("Reject")) {
 				setSmApplRejectionReasons();
+				getManagedBean()
+						.getSmAppl()
+						.getPmStatus()
+						.setStatusId(
+								Long.parseLong(SupplierManagementConst.APPL_PM_STATUS_REJECT));
 			}
+
 			System.out.println("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			updateSmAppl("Basic", getManagedBean().getSmAppl().getApplType());
+			validSiteVisit = testUpdateSmAppl("Basic", getManagedBean()
+					.getSmAppl().getApplType());
+
+			System.out.println(" ******** Return after update db *******"
+					+ validSiteVisit);
 
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
@@ -3590,8 +3631,10 @@ public class SmApplicationBackingBean extends
 						msgConst = MessageConst.INFO_700007;
 					} else if (res.equalsIgnoreCase("Reject")) {
 						SmEmailNotificationHelper
-								.sendApplicaitonRejectNotifMail(getManagedBean()
-										.getSmAppl());
+								.sendApplicaitonRejectNotifMail(
+										getManagedBean().getSmAppl(),
+										new FacesScopes().getUserSessionBean()
+												.getUserId());
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						msgConst = MessageConst.INFO_700014;
@@ -5565,8 +5608,9 @@ public class SmApplicationBackingBean extends
 
 	private void setManagementCount(SmPersonnel per) {
 		// managment
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc().setMngtBumiCnt(
 						getManagedBean().getPersonCalc().getMngtBumiCnt() + 1);
@@ -5584,8 +5628,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setStaffEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc()
 						.setStfBumiEnterCnt(
@@ -5603,8 +5648,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setSemiProfEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc()
 						.setSemiBumiEnterCnt(
@@ -5622,8 +5668,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setProfEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc()
 						.setProfBumiEnterCnt(
@@ -5641,8 +5688,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setHigherMngmtCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc()
 						.setHghMngBumiCnt(
@@ -5665,8 +5713,9 @@ public class SmApplicationBackingBean extends
 				+ per.getPmCountry().getCountryCode());
 		System.out.println("******* FROM CONST ***********"
 				+ SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		if (per.getPmCountry().getCountryCode()
-				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+		if (per.getPmCountry().getCountryCode() != null
+				&& per.getPmCountry().getCountryCode()
+						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc().setBodBumiCnt(
 						getManagedBean().getPersonCalc().getBodBumiCnt() + 1);
@@ -5686,5 +5735,74 @@ public class SmApplicationBackingBean extends
 	private void resetAllPersonnelCount() {
 		getManagedBean().setPersonCalc(new SmPersonnleCalcVO());
 		assignEnteredStaffValues();
+	}
+
+	private MofRegistrationResDTO retriveApplicationById(int applId) {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setApplId(applId);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrievePendingApplicationDetails(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			System.out
+					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
+		} finally {
+			mofRegistrationSO = null;
+		}
+
+	}
+
+	private void setNavigationForResubmitAppln(String applType) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		switch (applType) {
+		case "N":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+					// "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+							"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+			break;
+		case "A":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
+			break;
+		case "B":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+			break;
+		case "U":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+			break;
+		case "R":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			break;
+		default:
+			System.out
+					.println("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
+							+ applType);
+			break;
+		}
 	}
 }
