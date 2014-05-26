@@ -8,13 +8,11 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
-import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -81,7 +79,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private String location;
 	private String address;
 	private List<TplSpecZoneDtl> zones;
-	private List<ScRemark> remarks;
+	private List<ScQtBSVRemark> remarks;
 	private TplSpecZoneDtl selectedZone;
 	private ScQtBsv scQtBsv;
 	public List<ScQtBsvDtl> getBriefingDetailsList() {
@@ -221,10 +219,10 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setZones(List<TplSpecZoneDtl> zones) {
 		this.zones = zones;
 	}
-	public List<ScRemark> getRemarks() {
+	public List<ScQtBSVRemark> getRemarks() {
 		return remarks;
 	}
-	public void setRemarks(List<ScRemark> remarks) {
+	public void setRemarks(List<ScQtBSVRemark> remarks) {
 		this.remarks = remarks;
 	}
 	public TplSpecZoneDtl getSelectedZone() {
