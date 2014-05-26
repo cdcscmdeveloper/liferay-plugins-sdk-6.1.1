@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,13 +30,9 @@ import javax.xml.bind.JAXBException;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
-import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
@@ -121,18 +116,6 @@ public class TemplateDocBackingBean extends
 			}
 		}
 		
-		return itemList;
-	}
-
-	private List<SelectItem> toTplSelectItems(List<PmCode> list) {
-		List<SelectItem> itemList = new ArrayList<SelectItem>();
-		itemList.add(new SelectItem("", "- Select One -"));
-		if (null != list) {
-			for (PmCode dropdown : list) {
-				itemList.add(new SelectItem(dropdown.getCategory(), dropdown.getCode()
-						));
-			}
-		}
 		return itemList;
 	}
 	
@@ -532,7 +515,6 @@ public void destroyWorld(ActionEvent actionEvent){
 			if (ind.equals("newTemplate")) {
 				tplDocMaster = new TplDocMaster();
 				tplDocMaster.setDocName("Library");
-				PmCode code;
 				tplDocMaster.setCreatedBy(1l);
 				tplDocMaster.setChangedBy(1l);
 				tplDocMaster.setBrandNew(true);
@@ -541,7 +523,6 @@ public void destroyWorld(ActionEvent actionEvent){
 			if (ind.equals("newDraft")) {
 				tplDocMaster = new TplDocMaster();
 				tplDocMaster.setDocName("Draft");
-				PmCode code;
 				tplDocMaster.setCreatedBy(1l);
 				tplDocMaster.setChangedBy(1l);
 				tplDocMaster.setBrandNew(true);
@@ -551,20 +532,11 @@ public void destroyWorld(ActionEvent actionEvent){
 				tplDocMaster = tplDocMasterE;				
 				tplDocMaster.setBrandNew(false);
 				tplDocMaster.setCategoryId(tplDocMasterE.getCategoryId());				
-				tplDocMaster.setProcessType(tplDocMasterE.getProcessType());
 				tplDocMaster.setDocName(tplDocMaster.getDocTitle());
-				PmCode code = null;
 				
 			}
 			
-			ICodeCategorySO objectSO = (ICodeCategorySO)BusinessDelegate.getInstance().getServiceObject("pm",ICodeCategorySO.class);
-			CodeCategoryReqDTO objreqDTO = new CodeCategoryReqDTO();
-			objreqDTO.setCodeId(new Long(getManagedBean().getProcessType()));
-			CodeCategoryResDTO objresDTO =objectSO.retrieveCodeById(objreqDTO);
-			PmCode code = objresDTO.getPmCode();
 			tplDocMaster.setCategoryId(new Long(getManagedBean().getCategoryId()));
-			tplDocMaster.setProcessType(code);
-			tplDocMaster.setTemplateType(code);
 			tplDocMaster.setPmStatus(1l);
 			tplDocMaster.setTemplateStatus('F');
      		tplDocMaster.setRecordStatus(true);
@@ -645,7 +617,6 @@ public void destroyWorld(ActionEvent actionEvent){
 		docMaster.setBrandNew(Boolean.TRUE);
 		docMaster.setCreatedBy(1l);
 		docMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		docMaster.setProcessType(new PmCode());
 		getManagedBean().setSelectedTemplate(docMaster);
 		getManagedBean().setDocSectionMap(
 				new HashMap<TplDocSection, TreeNode>());
