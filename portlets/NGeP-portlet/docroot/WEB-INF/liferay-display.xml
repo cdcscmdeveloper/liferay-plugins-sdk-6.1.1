@@ -161,7 +161,7 @@
 		<portlet id="SvoSiteVisit"></portlet>
 		<portlet id="onlineRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
-		
+
 		<portlet id="sm" />
 		<portlet id="smAddtionalCatCodes"></portlet>
 		<portlet id="smDeleteCategoryCode"></portlet>
@@ -174,8 +174,9 @@
 		<portlet id="MOFApplication"></portlet>
 		<portlet id="ZoneMaintenancePortlet"></portlet>
 
+		<portlet id="smResubmitApplication"></portlet>
 	</category>
-	
+
 	<category name="category.ep.wp">
 		<category name="category.ep.if">
 			<portlet id="information-display-portlet"></portlet>			
