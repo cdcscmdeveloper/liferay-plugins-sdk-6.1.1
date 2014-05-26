@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.directpurchase;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -95,7 +94,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 			//scQt.setFinancialYear(2014);
 			scQt.setQtNo("planned"+ppPlan.getPlanId());
 			scQt.setQtTitle("sourcing");
-			scQt.setProcurementMode(ppPlan.getProcurementModeParam().getParameterCode());
+			scQt.setProcurementMode(ppPlan.getProcurementModeParam());
 			scQt.setQtType(ppPlan.getQtTypeParam().getParameterCode());
 			scQt.setQtType("o");
 			//scQt.setQtAmount(new BigDecimal(10000));
