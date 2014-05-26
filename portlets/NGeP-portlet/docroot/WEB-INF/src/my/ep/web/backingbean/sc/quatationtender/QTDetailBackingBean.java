@@ -540,9 +540,14 @@ public class QTDetailBackingBean extends
 							IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
+			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			
+			// auto populate the PTJ if only 1 PTJ found.
+			if (pmOrgProfiles.size() == 1) {
+				this.getManagedBean().getQt().setPmOrgProfile(pmOrgProfiles.iterator().next());
+			}
 
-			this.getManagedBean().setUserDivisionList(
-					resDTO.getOrgProfileList());
+			this.getManagedBean().setUserDivisionList(pmOrgProfiles);
 		}
 	}
 
