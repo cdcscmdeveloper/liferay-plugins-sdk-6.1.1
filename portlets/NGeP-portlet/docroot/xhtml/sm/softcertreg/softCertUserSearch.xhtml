@@ -16,18 +16,12 @@
 	<h:panelGrid id="search" style="width:100%;">
 	 
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchProfile" value="#{softCertBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;">
+	<p:dataTable id="searchProfile" rowKey="#{personnel}" rowIndexVar="index" value="#{softCertBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
  
-       <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
-        <h:outputText value="" /> 
-       </p:column>
-       
+		<p:column selectionMode="multiple" style="width:2%" />
+						
        <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
         <h:outputText value="#{personnel.name}" />  
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}" >
-        <h:outputText />  
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
@@ -40,7 +34,7 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
-        <h:outputText />
+        <h:outputText value="#{personnel.epRole}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
@@ -59,7 +53,33 @@
      </p:dataTable>
 	</p:panel>
 	
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+      <p:commandButton value="Proceed to payment" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
+	  </p:commandButton>
+	 </h:panelGrid>	
+	 </p:panel>
 </h:panelGrid>
+
+ 	<p:dialog id="confirmDialog" header="Confirmation" widgetVar="confirmDialog" modal="true" width="500" height="100">
+     <p:panel id="dPanel" style="width:100%">
+	     <table>
+	    	<tr>
+	    	<td>
+	    	<p:outputLabel value="Do you wish to continue?" />
+	    	</td>
+	    	</tr>
+	    	<tr>
+			<td>
+				<div align="center">
+				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" />
+				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
+				</div>
+			</td>		
+			</tr>		
+		</table>
+	</p:panel>			
+	</p:dialog>
     
 </ui:define>
 </ui:composition>

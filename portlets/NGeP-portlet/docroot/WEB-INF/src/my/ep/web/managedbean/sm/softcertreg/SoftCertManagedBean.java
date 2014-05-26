@@ -31,7 +31,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 6397086927187535118L;
 
 	private List<SmPersonnel> personnelList;
-	
+	private List<SmPersonnel> softCertSelectList;
 	private SmPersonnel loginUserPersonnelInfo;
 
 	private String loginRoleName;
@@ -59,6 +59,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setPersonnelList(List<SmPersonnel> personnelList) {
 		this.personnelList = personnelList;
+	}
+
+	public List<SmPersonnel> getSoftCertSelectList() {
+		return softCertSelectList;
+	}
+
+	public void setSoftCertSelectList(List<SmPersonnel> softCertSelectList) {
+		this.softCertSelectList = softCertSelectList;
 	}
 
 	public SmPersonnel getLoginUserPersonnelInfo() {
