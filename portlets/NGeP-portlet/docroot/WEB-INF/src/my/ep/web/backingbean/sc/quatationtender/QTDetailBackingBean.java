@@ -53,7 +53,6 @@ import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -75,8 +74,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
-import my.ep.persistence.entity.sc.quationtender.ScQtBreifingZoneRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
@@ -848,21 +846,31 @@ public class QTDetailBackingBean extends
 				getManagedBean().getScQtBsv().getScQtBsvDtls()
 						.addAll(siteBeansList);
 
-				TplSpecZoneDtl tplSpecZoneDtl = (TplSpecZoneDtl) constructRemarks(true);
-				getManagedBean().getScQtBsv().setTplSpecZoneDtl(tplSpecZoneDtl);
+				/*
+				 * TplSpecZoneDtl tplSpecZoneDtl = (TplSpecZoneDtl)
+				 * constructRemarks(true);
+				 * getManagedBean().getScQtBsv().setTplSpecZoneDtl
+				 * (tplSpecZoneDtl);
+				 */
 
-			} else {
-				List<ScQtBsvDtl> selectedBriefList = getManagedBean()
-						.getSelectedBriefingDetails();
-				for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
-					scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
-					scQtBsvDtl.getScQtBsv().setAllBriefingReq(
-							getManagedBean().getScQtBsv().isAllBriefingReq());
-				}
-				getManagedBean().getScQtBsv().setScQtBsvDtls(selectedBriefList);
+			}
+			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
+			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
+			scQtBsvs.add(this.getManagedBean().getScQtBsv());
+			scQt.setScQtBriefings(scQtBsvs);
+		} else {
+			List<ScQtBsvDtl> selectedBriefList = getManagedBean()
+					.getSelectedBriefingDetails();
+			for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
+				scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
+				scQtBsvDtl.getScQtBsv().setAllBriefingReq(
+						getManagedBean().getScQtBsv().isAllBriefingReq());
+			}
+			getManagedBean().getScQtBsv().setScQtBsvDtls(selectedBriefList);
 
-				List<ScQtBsvDtl> selectedSiteVisitList = getManagedBean()
-						.getSelectedSiteVisitDetails();
+			List<ScQtBsvDtl> selectedSiteVisitList = getManagedBean()
+					.getSelectedSiteVisitDetails();
+			if (selectedSiteVisitList != null) {
 				for (ScQtBsvDtl scQtBsvDtl : selectedSiteVisitList) {
 					scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
 					scQtBsvDtl.getScQtBsv().setAllSiteVisitReq(
@@ -871,9 +879,12 @@ public class QTDetailBackingBean extends
 				getManagedBean().getScQtBsv().getScQtBsvDtls()
 						.addAll(selectedSiteVisitList);
 
-				ScQt scQts = (ScQt) constructRemarks(false);
-				getManagedBean().getScQtBsv().setScQt(scQts);
 			}
+
+			/*
+			 * ScQt scQts = (ScQt) constructRemarks(false);
+			 * getManagedBean().getScQtBsv().setScQt(scQts);
+			 */
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
@@ -936,41 +947,30 @@ public class QTDetailBackingBean extends
 	 * @param b
 	 * @return
 	 */
-	private BaseEntity constructRemarks(boolean isZonal) {
-		List<ScRemark> remarks = this.getManagedBean().getRemarks();
-		TplSpecZoneDtl specZoneDtl = null;
-		ScQt qt = null;
-
-		if (isZonal) {
-			specZoneDtl = this.getManagedBean().getSelectedZone();
-			List<ScQtBreifingZoneRemark> zoneRemarks = new ArrayList<>();
-			for (ScRemark scRemark : remarks) {
-				ScQtBreifingZoneRemark briefingRemark = (ScQtBreifingZoneRemark) scRemark;
-				if (briefingRemark.getRemark() != null
-						&& !"".equals(briefingRemark.getRemark()))
-					briefingRemark.setTplSpecZoneDtl(specZoneDtl);
-				zoneRemarks.add(briefingRemark);
-
-			}
-
-			specZoneDtl.setQtBriefingRemarks(zoneRemarks);
-			return specZoneDtl;
-		} else {
-			qt = this.getManagedBean().getQt();
-			List<ScQtBriefingRemark> normalRemarks = new ArrayList<>();
-			for (ScRemark scRemark : remarks) {
-				ScQtBriefingRemark briefingRemark = (ScQtBriefingRemark) scRemark;
-				if (briefingRemark.getRemark() != null
-						&& briefingRemark.getRemarkId() == null) {
-					briefingRemark.setScQt(qt);
-					normalRemarks.add(briefingRemark);
-
-				}
-			}
-			qt.setScQtBriefingRemarks(normalRemarks);
-			return qt;
-		}
-	}
+	/*
+	 * private BaseEntity constructRemarks(boolean isZonal) { List<ScRemark>
+	 * remarks = this.getManagedBean().getRemarks(); TplSpecZoneDtl specZoneDtl
+	 * = null; ScQt qt = null;
+	 * 
+	 * if (isZonal) { specZoneDtl = this.getManagedBean().getSelectedZone();
+	 * List<ScQtBreifingZoneRemark> zoneRemarks = new ArrayList<>(); for
+	 * (ScRemark scRemark : remarks) { ScQtBreifingZoneRemark briefingRemark =
+	 * (ScQtBreifingZoneRemark) scRemark; if (briefingRemark.getRemark() != null
+	 * && !"".equals(briefingRemark.getRemark()))
+	 * briefingRemark.setTplSpecZoneDtl(specZoneDtl);
+	 * zoneRemarks.add(briefingRemark);
+	 * 
+	 * }
+	 * 
+	 * specZoneDtl.setQtBriefingRemarks(zoneRemarks); return specZoneDtl; } else
+	 * { qt = this.getManagedBean().getQt(); List<ScQtBriefingRemark>
+	 * normalRemarks = new ArrayList<>(); for (ScRemark scRemark : remarks) {
+	 * ScQtBriefingRemark briefingRemark = (ScQtBriefingRemark) scRemark; if
+	 * (briefingRemark.getRemark() != null && briefingRemark.getRemarkId() ==
+	 * null) { briefingRemark.setScQt(qt); normalRemarks.add(briefingRemark);
+	 * 
+	 * } } qt.setScQtBriefingRemarks(normalRemarks); return qt; } }
+	 */
 
 	/**
 	 * @return
@@ -1179,58 +1179,79 @@ public class QTDetailBackingBean extends
 
 				// getting Briefing Same As Site Visit value
 				ScQt scQt = resDTO.getScQt();
-				// getManagedBean().setQt(scQt);
-
-				/* if (resDTO.getScQtBsv() != null) { */
+				// getManagedBean().setScQt(scQt);
 
 				if (scQt.isZonal()) {
-					getManagedBean().setZones(resDTO.getZonesList());
-					List<ScQtBsvDtl> briefings = null;
-					List<ScQtBsvDtl> siteVisit = null;
-
-					for (TplSpecZoneDtl tplSpecZoneDtl : getManagedBean()
-							.getZones()) {
-						briefings = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-								scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId(),
-								"B");
-						if (null != briefings && !briefings.isEmpty()) {
-							this.getManagedBean().setScQtBsv(
-									briefings.get(0).getScQtBsv());
+					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
+					List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+					if (null != zones) {
+						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+						briefingReqDTO.setQtId(getManagedBean().getQt()
+								.getQtId());
+						for (TplSpecZoneDtl specZoneDtl : zones) {
+							briefingReqDTO.setSpecZoneId(specZoneDtl
+									.getSpecZoneId());
+							BriefingResDTO briefingResDTO = qTBriefingSO
+									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+									specZoneDtl,
+									briefingResDTO.getBriefingList(),
+									briefingResDTO.getSiteVisitList(),
+									briefingResDTO.getScQtBsv());
+							zoneBeans.add(briefingZoneBean);
 						}
-						siteVisit = retrieveBriefingSiteVisitDtlsByZoneNQtId(
-								scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId(),
-								"S");
-						if (null != siteVisit && !siteVisit.isEmpty()) {
-							this.getManagedBean().setScQtBsv(
-									siteVisit.get(0).getScQtBsv());
-						}
-						// }
-						BriefingZoneBean bean = new BriefingZoneBean(
-								tplSpecZoneDtl, briefings, siteVisit);
-						getManagedBean().getBriefingZoneBean().add(bean);
-						getManagedBean().setSelectedZone(tplSpecZoneDtl);
 					}
+					this.getManagedBean().setBriefingZoneBean(zoneBeans);
 				} else {
-					// Briefing Details Listing
-					List<ScQtBsvDtl> briefingDetailslist = resDTO
-							.getBriefingResultBean().getResultList();
-					getManagedBean().setBriefings(briefingDetailslist);
-					if (resDTO.getScQtBsv() != null) {
-						this.getManagedBean().setScQtBsv(resDTO.getScQtBsv());
-					}
-					// Site Visit Listing
-					List<ScQtBsvDtl> sitevisitlist = resDTO
-							.getSiteVisitResultBean().getResultList();
-					getManagedBean().setSiteBriefings(sitevisitlist);
+					this.getManagedBean()
+							.setBriefings(resDTO.getBriefingList());
+					this.getManagedBean().setSiteBriefings(
+							resDTO.getSiteVisitList());
+					this.getManagedBean().setScQtBsv(resDTO.getScQtBsv());
 
-					if (resDTO.getScQtBsv() != null) {
-						this.getManagedBean().setScQtBsv(resDTO.getScQtBsv());
-					}
-					this.getManagedBean().setRemarks(
-							resDTO.getBriefingRemarks());
+					initializeRemarks();
 				}
 
-				initializeRemarks(scQt.isZonal());
+				/*
+				 * // getting Briefing Same As Site Visit value ScQt scQt =
+				 * resDTO.getScQt(); // getManagedBean().setQt(scQt);
+				 * 
+				 * if (resDTO.getScQtBsv() != null) {
+				 * 
+				 * if (scQt.isZonal()) {
+				 * getManagedBean().setZones(resDTO.getZonesList());
+				 * List<ScQtBsvDtl> briefings = null; List<ScQtBsvDtl> siteVisit
+				 * = null;
+				 * 
+				 * for (TplSpecZoneDtl tplSpecZoneDtl : getManagedBean()
+				 * .getZones()) { briefings =
+				 * retrieveBriefingSiteVisitDtlsByZoneNQtId( scQt.getQtId(),
+				 * tplSpecZoneDtl.getSpecZoneId(), "B"); if (null != briefings
+				 * && !briefings.isEmpty()) { this.getManagedBean().setScQtBsv(
+				 * briefings.get(0).getScQtBsv()); } siteVisit =
+				 * retrieveBriefingSiteVisitDtlsByZoneNQtId( scQt.getQtId(),
+				 * tplSpecZoneDtl.getSpecZoneId(), "S"); if (null != siteVisit
+				 * && !siteVisit.isEmpty()) { this.getManagedBean().setScQtBsv(
+				 * siteVisit.get(0).getScQtBsv()); } // } BriefingZoneBean bean
+				 * = new BriefingZoneBean( tplSpecZoneDtl, briefings,
+				 * siteVisit); getManagedBean().getBriefingZoneBean().add(bean);
+				 * getManagedBean().setSelectedZone(tplSpecZoneDtl); } } else {
+				 * // Briefing Details Listing List<ScQtBsvDtl>
+				 * briefingDetailslist = resDTO.getBriefingList();
+				 * getManagedBean().setBriefings(briefingDetailslist); if
+				 * (resDTO.getScQtBsv() != null) {
+				 * this.getManagedBean().setScQtBsv(resDTO.getScQtBsv()); } //
+				 * Site Visit Listing List<ScQtBsvDtl> sitevisitlist =
+				 * resDTO.getSiteVisitList();
+				 * getManagedBean().setSiteBriefings(sitevisitlist);
+				 * 
+				 * if (resDTO.getScQtBsv() != null) {
+				 * this.getManagedBean().setScQtBsv(resDTO.getScQtBsv()); }
+				 * this.getManagedBean().setRemarks(
+				 * resDTO.getBriefingRemarks()); }
+				 * 
+				 * initializeRemarks();
+				 */
 
 				ScQtBsvRegistration scQtBsvRegistration = new ScQtBsvRegistration();
 				scQtBsvRegistration.setSupplier(new SmSupplier());
@@ -1252,10 +1273,7 @@ public class QTDetailBackingBean extends
 		System.out.println("=======get id value=====" + id);
 	}
 
-	/**
-	 * @param zonal
-	 */
-	private void initializeRemarks(boolean isZonal) {
+	public void initializeRemarks() {
 		FacesScopes facesScopes = new FacesScopes();
 		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1263,12 +1281,8 @@ public class QTDetailBackingBean extends
 		if (null == getManagedBean().getRemarks()) {
 			getManagedBean().setRemarks(new ArrayList<ScRemark>());
 		}
-		ScRemark remark = null;
-		if (isZonal) {
-			remark = new ScQtBreifingZoneRemark();
-		} else {
-			remark = new ScQtBriefingRemark();
-		}
+		ScQtBSVRemark remark = new ScQtBSVRemark();
+
 		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
@@ -1291,21 +1305,19 @@ public class QTDetailBackingBean extends
 	 * @param attendenceType
 	 * @return
 	 */
-	private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId(
-			Long qtId, Long zoneId, String bsvType) {
-		IQTBriefingSO qTBriefingSO;
-
-		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-		BriefingReqDTO reqDTO = new BriefingReqDTO();
-		reqDTO.setQtId(qtId);
-		reqDTO.setSpecZoneId(zoneId);
-		reqDTO.setBriefingType(bsvType);
-		BriefingResDTO briefingResDTO = qTBriefingSO
-				.retrieveBriefingSiteVisitList(reqDTO);
-		this.getManagedBean().setRemarks(briefingResDTO.getBriefingRemarks());
-		return briefingResDTO.getBriefingResultBean().getResultList();
-	}
+	/*
+	 * private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId( Long
+	 * qtId, Long zoneId, String bsvType) { IQTBriefingSO qTBriefingSO;
+	 * 
+	 * qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class); BriefingReqDTO
+	 * reqDTO = new BriefingReqDTO(); reqDTO.setQtId(qtId);
+	 * reqDTO.setSpecZoneId(zoneId); reqDTO.setBriefingType(bsvType);
+	 * BriefingResDTO briefingResDTO = qTBriefingSO
+	 * .retrieveBriefingSiteVisitList(reqDTO);
+	 * this.getManagedBean().setRemarks(briefingResDTO.getBriefingRemarks());
+	 * return briefingResDTO.getBriefingResultBean().getResultList(); }
+	 */
 
 	/**
 	 * 
@@ -1380,9 +1392,8 @@ public class QTDetailBackingBean extends
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
 		try {
-			committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> commMembers = resDTO
@@ -1412,11 +1423,10 @@ public class QTDetailBackingBean extends
 		reqDTO.setQtId(id);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
-		
+
 		try {
-			committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			this.getManagedBean().setScQtCommittee(resDTO.getScQtCommittee());
@@ -1568,11 +1578,10 @@ public class QTDetailBackingBean extends
 
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
-		
+
 		try {
-			detailSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
 					.updateBPMAction(qtReqDTO);
@@ -1732,12 +1741,11 @@ public class QTDetailBackingBean extends
 
 	private void retrieveSuppQualificationTabDtl() {
 		IQTDetailSO QtDetailsSO;
-		
+
 		try {
 
-			QtDetailsSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
@@ -1819,7 +1827,7 @@ public class QTDetailBackingBean extends
 
 					// Sample Submission
 					List<ScQtSampleSubmission> submissionList = resDTO
-							.getSampleSubmissionResultBean().getResultList();
+							.getSampleSubmissionResultBean();
 					if (submissionList != null) {
 
 						List<TplSpecZoneDtl> dtl = getManagedBean().getZones();
@@ -1989,7 +1997,7 @@ public class QTDetailBackingBean extends
 			} finally {
 				detailSO = null;
 			}
-			
+
 		}
 	}
 
@@ -2192,12 +2200,11 @@ public class QTDetailBackingBean extends
 
 	public void retrieveQuationTenderDetails(Long qtId) {
 		IQTDetailSO QtDetailsSO;
-		
+
 		try {
 
-			QtDetailsSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(qtId);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
@@ -2263,11 +2270,10 @@ public class QTDetailBackingBean extends
 		CommitteResDTO resDTO = null;
 		ScQtCommittee qtCommitte = null;
 		ICommitteSO committeSO;
-		
+
 		try {
-			committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 
 			qtCommitte = resDTO.getScQtCommittee();

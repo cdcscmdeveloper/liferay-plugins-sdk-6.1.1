@@ -17,7 +17,7 @@
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 			<p:spacer height="3px" />
-			<table style="width: 100%" border="1">
+			<table style="width: 100%" border="0">
 				<tr>
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.briefsamevisit']}" /></td>
@@ -69,7 +69,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 					<h:outputText
-						value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.pmStatus.statusId)}" />
+						value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
 				</p:column>
 
 			</p:dataTable>
@@ -97,7 +97,7 @@
 					</div>
 				</f:facet>
 			</p:panelGrid>
-			<table style="width: 100%" border="1">
+			<table style="width: 100%" border="0">
 				<tr>
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.attendance.brief']}" /></td>
@@ -156,7 +156,7 @@
 
 						<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 							<h:outputText
-								value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.pmStatus.statusId)}" />
+								value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.bsvStatus.statusId)}" />
 						</p:column>
 
 					</p:dataTable>
@@ -170,12 +170,16 @@
 									action="#{qTBriefingSiteVisitBackingBean.addSiteDetails}"
 									oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"
 									icon="ui-icon-add" />
+
 								<p:commandButton value="#{lbl['lbl.so.delete']}"
-									icon="ui-icon-delete" />
+									icon="ui-icon-delete"
+									action="#{qTBriefingSiteVisitBackingBean.deleteSitevisitDetails}"
+									update="sitevisitdtlid" />
+
 							</div>
 						</f:facet>
 					</p:panelGrid>
-					<table style="width: 100%" border="1">
+					<table style="width: 100%" border="0">
 						<tr>
 							<td style="width: 160px;"><p:outputLabel
 									value="#{lbl['lbl.so.attendance.site']}" /></td>

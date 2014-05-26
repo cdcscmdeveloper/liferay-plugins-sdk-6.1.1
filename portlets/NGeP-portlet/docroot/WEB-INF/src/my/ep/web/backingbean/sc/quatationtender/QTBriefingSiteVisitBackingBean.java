@@ -36,16 +36,12 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBreifingZoneRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
-import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -55,7 +51,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  * @author Viswanath
@@ -129,7 +124,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setCitys(resDTO.getCityList());
 	}
 
-	public void bsvZoneTabChange(TabChangeEvent evnt) {
+/*	public void bsvZoneTabChange(TabChangeEvent evnt) {
 		debugLogger("bsvZoneTabChange");
 		ScQt scQt = getManagedBean().getQt();
 
@@ -164,7 +159,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 		}
 		initializeRemarks(scQt.isZonal());
-	}
+	}*/
 
 	/**
 	 * @param qtId
@@ -172,7 +167,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @param attendenceType
 	 * @return
 	 */
-	private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId(
+/*	private List<ScQtBsvDtl> retrieveBriefingSiteVisitDtlsByZoneNQtId(
 			Long qtId, Long zoneId, String bsvType) {
 		debugLogger("retrieveBriefingSiteVisitDtlsByZoneNQtId");
 		IQTBriefingSO qTBriefingSO;
@@ -187,19 +182,15 @@ public class QTBriefingSiteVisitBackingBean extends
 				.retrieveBriefingSiteVisitList(reqDTO);
 		this.getManagedBean().setRemarks(briefingResDTO.getBriefingRemarks());
 		return briefingResDTO.getBriefingResultBean().getResultList();
-	}
+	}*/
 
-	public void initializeRemarks(boolean isZonal) {
+	public void initializeRemarks() {
 		FacesScopes facesScopes = new FacesScopes();
 		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStatusSO.class);
-		ScRemark remark = null;
-		if (isZonal) {
-			remark = new ScQtBreifingZoneRemark();
-		} else {
-			remark = new ScQtBriefingRemark();
-		}
+		ScQtBSVRemark remark = new ScQtBSVRemark();
+
 		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
@@ -213,6 +204,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					.retrieveStatusByStatusId(statusReqDTO);
 			remark.setPmStatus(statusResDTO.getPmStatus());
 			getManagedBean().getRemarks().add(remark);
+
 		}
 	}
 
@@ -509,6 +501,19 @@ public class QTBriefingSiteVisitBackingBean extends
 		} else {
 			for (ScQtBsvDtl scQtBriefing : selectList) {
 				beans.remove(scQtBriefing);
+			}
+		}
+	}
+	
+	public void deleteSitevisitDetails() {
+		debugLogger("deleteSitevisitDetails");
+		List<ScQtBsvDtl> bsvDtls = getManagedBean().getSiteBriefings();
+		List<ScQtBsvDtl> selectedList = getManagedBean().getSelectedSiteVisitDetails();
+		if (bsvDtls.size() == selectedList.size()) {
+			bsvDtls.clear();
+		} else {
+			for (ScQtBsvDtl scQtBriefing : selectedList) {
+				bsvDtls.remove(scQtBriefing);
 			}
 		}
 	}

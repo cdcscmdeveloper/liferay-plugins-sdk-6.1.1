@@ -987,9 +987,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		ScQuoteZone zone = new ScQuoteZone();
 		System.out.println("zone name : " + getManagedBean().getZoneName1());
-		zone.setZoneName(getManagedBean().getZoneName1());
+		//zone.setZoneName(getManagedBean().getZoneName1());
 		getManagedBean().setZoneName(null);
-		System.out.println("Zone Name : " + zone.getZoneName());
+		//System.out.println("Zone Name : " + zone.getZoneName());
 
 		/*List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTOs(locationDTOs);

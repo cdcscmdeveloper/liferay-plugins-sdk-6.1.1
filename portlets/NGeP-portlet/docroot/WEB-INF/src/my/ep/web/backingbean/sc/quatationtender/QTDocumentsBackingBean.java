@@ -295,8 +295,8 @@ public class QTDocumentsBackingBean extends
 		for (PmReportSection pmReportSection : getManagedBean()
 				.getSelectedPmReportSectionList()) {
 			ScQtCheckList qtCheckList = new ScQtCheckList();
-			qtCheckList.setTitle(pmReportSection.getPmCheckList()
-					.getCheckListName());
+			/*qtCheckList.setTitle(pmReportSection.getPmCheckList()
+					.getCheckListName());*/
 			qtCheckList.setCheckStatus(true);
 			checkLists.add(qtCheckList);
 		}
