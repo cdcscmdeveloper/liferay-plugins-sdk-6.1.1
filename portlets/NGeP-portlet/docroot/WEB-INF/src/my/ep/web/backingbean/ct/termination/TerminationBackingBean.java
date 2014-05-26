@@ -83,6 +83,8 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean (name = "terminationBackingBean")
 @RequestScoped
 public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBean> {
+	
+	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
@@ -106,7 +108,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	
 	public void preRenderView(){
 		
-		try{	
+		try{
 			System.out.println("**********preRenderView**************");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -528,5 +530,18 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     	getManagedBean().getContractVer().getCtTermination().setComplaintLodged(true);
     	//TODO Call SM API to trigger a task for complaint.
     }
+    
+    public String gotoTerminatePage() {
+    	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+    	ContractReqDTO ctReqDTO = new ContractReqDTO();
+    	ctReqDTO.setContractVerId(contractVerId);
+	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 
+    	this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+	    this.getManagedBean().setViewContract(true);
+    	
+		return PROCESS_TERMINATE_PAGE;
+	}
 }

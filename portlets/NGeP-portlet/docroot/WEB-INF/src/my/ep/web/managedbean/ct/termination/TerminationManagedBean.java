@@ -13,6 +13,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -41,9 +42,12 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private boolean termination;
 	private boolean mutualTermination;
 	private boolean remedy;
+	private List<CtTermination> terminationList;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
+
+	private boolean viewContract = false;
 	
 	public String getTaskName() {
 		return taskName;
@@ -152,4 +156,19 @@ public class TerminationManagedBean extends BaseManagedBean{
 		this.remedy = remedy;
 	}
 
+	public List<CtTermination> getTerminationList() {
+		return terminationList;
+	}
+
+	public void setTerminationList(List<CtTermination> terminationList) {
+		this.terminationList = terminationList;
+	}
+
+	public boolean isViewContract() {
+		return viewContract;
+	}
+
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
+	}
 }

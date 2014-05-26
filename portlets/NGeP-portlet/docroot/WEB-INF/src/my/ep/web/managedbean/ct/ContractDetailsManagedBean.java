@@ -108,6 +108,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private int ctContractStatus;
 	private Date ctDateStart;
 	private Date ctDateEnd;
+	private Long terminationTypeId;
 	
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
@@ -748,6 +749,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctDateEnd = ctDateEnd;
 	}
 	
-	
-	
+	public Long getTerminationTypeId() {
+		return terminationTypeId;
+	}
+
+	public void setTerminationTypeId(Long terminationTypeId) {
+		this.terminationTypeId = terminationTypeId;
+	}	
 }
