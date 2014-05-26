@@ -142,8 +142,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-			System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
-			supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
 
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
@@ -1011,8 +1011,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-		System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
-		supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
 
 		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
@@ -1193,8 +1193,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 					SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-					System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
-					supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+					PmUser pmUser = new FacesScopes().getUserSessionBean();
+					supplierReqDTO.setUserId(pmUser.getUserId());
 
 					SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
