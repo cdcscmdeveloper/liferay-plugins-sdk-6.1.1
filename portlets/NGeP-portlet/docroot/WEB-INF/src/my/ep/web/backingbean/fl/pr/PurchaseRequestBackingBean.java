@@ -34,7 +34,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -70,8 +69,6 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.votfund.VotFundReqDTO;
-import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -555,6 +552,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FlFulfilmentItem flItem = null;
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+		reqDTO.setPurchaseRequestId(6L);//this id is it suppose pass from s1?
 		reqDTO.setAssignedTo(1L);
 		reqDTO.setIncludeDetail(true);
 		 PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
@@ -1599,18 +1597,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.selectedAllChargeItem = selectedAllChargeItem;
 	}
 	
-	public VotFundResDTO getVotFundList(Long profileId){
-		IVotFundSO fundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject("pm",IVotFundSO.class);
-		VotFundReqDTO reqDTO = new VotFundReqDTO();
-		reqDTO.setOrgId(profileId);
-		VotFundResDTO resDTO = fundSO.retrieveVotFundListByOrgId(reqDTO);
+	public OrgProfileResDTO getVotFundList(Long profileId){
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(profileId);
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
 		
-			for(PmVotFund pmVotFund : resDTO.getVotFundList()) {
+			for(PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
 				votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund.getVotFundCode());
 			}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
-		getManagedBean().setVotFundList(resDTO.getVotFundList());
+		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
 		
 		return resDTO;
 	}
