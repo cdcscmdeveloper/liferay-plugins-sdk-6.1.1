@@ -59,9 +59,9 @@
 			        </h:panelGroup>
               </p:column>
                <p:column>
-                <p:selectOneMenu id="rStatus" value="#{varBond.recordStatus}" disabled="#{varBond.performanceBondId != null}"  style="width:80px;">
-                    <f:selectItem itemLabel="Inactive" itemValue="false"/>
-                    <f:selectItem itemLabel="Active" itemValue="true"/>
+                <p:selectOneMenu id="rStatus" value="#{varBond.recordStatusFlg}" disabled="#{varBond.performanceBondId != null}"  style="width:80px;">
+					<f:selectItem itemLabel="Active" itemValue="1"/>
+                    <f:selectItem itemLabel="Inactive" itemValue="0"/>
                </p:selectOneMenu>   
                </p:column>
 	    </p:dataTable>
