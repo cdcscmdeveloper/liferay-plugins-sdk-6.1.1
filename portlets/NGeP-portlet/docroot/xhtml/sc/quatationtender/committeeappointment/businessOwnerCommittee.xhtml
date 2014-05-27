@@ -12,15 +12,16 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
-						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}" size="30"
-						disabled="true" readonly="true" /></td>
+						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
+						size="30" disabled="true" readonly="true" /></td>
 				<td />
 				<td />
 			</tr>
 		</table>
 		<p:spacer height="2" />
-		<p:dataTable id="businessownercommitteeId" value="#{committe.scCommitteeMembers}"
-			var="specificationcommittee" rowIndexVar="index" editable="true"
+		<p:dataTable id="businessownercommitteeId"
+			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
+			rowIndexVar="index" editable="true"
 			rowKey="#{specificationcommittee}" selection="#{selectedMembersList}">
 
 			<ac:paginator for="businessownercommitteeId" />
@@ -62,7 +63,7 @@
 		<br />
 	</p:panel>
 	<p:spacer height="5px" />
-	<p:panel header="#{lbl['lbl.so.ministry.spec.secretary']}"
+	<p:panel header="#{lbl['lbl.so.specification.approval']}"
 		toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
 			columnClasses="columnWidth10" style="margin-left: 26px;">

@@ -851,30 +851,23 @@ public class QTDetailBackingBean extends
 				getManagedBean().getScQtBsv().getScQtBsvDtls()
 						.addAll(siteBeansList);
 
-				/*
-				 * TplSpecZoneDtl tplSpecZoneDtl = (TplSpecZoneDtl)
-				 * constructRemarks(true);
-				 * getManagedBean().getScQtBsv().setTplSpecZoneDtl
-				 * (tplSpecZoneDtl);
-				 */
-
 			}
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
 			scQt.setScQtBriefings(scQtBsvs);
 		} else {
-			List<ScQtBsvDtl> selectedBriefList = getManagedBean()
-					.getSelectedBriefingDetails();
-			for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
-				scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
-				scQtBsvDtl.getScQtBsv().setAllBriefingReq(
-						getManagedBean().getScQtBsv().isAllBriefingReq());
+			List<ScQtBsvDtl> selectedBriefList = getManagedBean().getBriefings();
+			if (selectedBriefList != null) {
+				for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
+					scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
+					scQtBsvDtl.getScQtBsv().setAllBriefingReq(
+							getManagedBean().getScQtBsv().isAllBriefingReq());
+				}
+				getManagedBean().getScQtBsv().setScQtBsvDtls(selectedBriefList);
 			}
-			getManagedBean().getScQtBsv().setScQtBsvDtls(selectedBriefList);
 
-			List<ScQtBsvDtl> selectedSiteVisitList = getManagedBean()
-					.getSelectedSiteVisitDetails();
+			List<ScQtBsvDtl> selectedSiteVisitList = this.getManagedBean().getSiteBriefings();
 			if (selectedSiteVisitList != null) {
 				for (ScQtBsvDtl scQtBsvDtl : selectedSiteVisitList) {
 					scQtBsvDtl.setScQtBsv(getManagedBean().getScQtBsv());
@@ -883,13 +876,10 @@ public class QTDetailBackingBean extends
 				}
 				getManagedBean().getScQtBsv().getScQtBsvDtls()
 						.addAll(selectedSiteVisitList);
-
 			}
 
-			/*
-			 * ScQt scQts = (ScQt) constructRemarks(false);
-			 * getManagedBean().getScQtBsv().setScQt(scQts);
-			 */
+			initializeRemarks();
+
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
@@ -1207,6 +1197,7 @@ public class QTDetailBackingBean extends
 						}
 					}
 					this.getManagedBean().setBriefingZoneBean(zoneBeans);
+					initializeRemarks();
 				} else {
 					this.getManagedBean()
 							.setBriefings(resDTO.getBriefingList());
@@ -1344,14 +1335,14 @@ public class QTDetailBackingBean extends
 							qtId)));
 			// evaluation type is one tier only oc is added..
 			if ("1".equals(evaluationType)) {
-				committeTabs.add(new TabBean("Opening Committee",
-						getQtCommiteDtlsByQtIdNType("OC", qtId)));
+				committeTabs.add(new TabBean("Evaluation Committee",
+						getQtCommiteDtlsByQtIdNType("EC", qtId)));
 
 			}
 			// evaluation type is two tier below committe are added
 			else {
-				committeTabs.add(new TabBean("Evaluation Committee",
-						getQtCommiteDtlsByQtIdNType("EC", qtId)));
+				committeTabs.add(new TabBean("Opening Committee",
+						getQtCommiteDtlsByQtIdNType("OC", qtId)));
 				committeTabs.add(new TabBean("TEC",
 						getQtCommiteDtlsByQtIdNType("TEC", qtId)));
 				committeTabs.add(new TabBean("FEC",

@@ -47,15 +47,10 @@
 											value="#{lbl['lbl.so.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
-											value="#{qTDetailBB.managedBean.qt.openFor ? 'Bumiputra' : 'All'}"
-											readonly="true" size="30" disabled="true"
-											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
-									<!-- <td><p:selectOneRadio
-											value="#{qTDetailBB.managedBean.qt.openFor}"
-											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}">
-											<f:selectItem itemLabel="Bumiputra" itemValue="true" />
-											<f:selectItem itemLabel="All" itemValue="false" />
-										</p:selectOneRadio></td> -->
+											value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scOpenFor, qTDetailBB.managedBean.qt.openFor)}"
+											disabled="true" size="30"
+											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" />
+									</td>
 								</ui:fragment>
 							</tr>
 						</table>
@@ -72,14 +67,18 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" /></td>
-				<td><p:inputText id="publishperiod" label="#{lbl['lbl.so.publishing.period']}" required="true"
-						value="#{qTDetailBB.managedBean.qt.publishPeriod}" size="30" />
-						<p:message id="publishperiodMsg" for="publishperiod" display="icon" /></td>
+				<td><p:inputText id="publishperiod"
+						label="#{lbl['lbl.so.publishing.period']}" required="true"
+						value="#{qTDetailBB.managedBean.qt.publishPeriod}" size="30"
+						style="text-align:right" /> <p:message id="publishperiodMsg"
+						for="publishperiod" display="icon" /></td>
 				<td style="width: 200px;"><p:outputLabel
 						value="* #{lbl['lbl.so.proposal.validity']}" /></td>
-				<td><p:inputText id="proposalvalidity" label="#{lbl['lbl.so.publishing.period']}" required="true"
-						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30" />
-						<p:message id="proposalvalidityMsg" for="proposalvalidity" display="icon" /></td>
+				<td><p:inputText id="proposalvalidity"
+						label="#{lbl['lbl.so.publishing.period']}" required="true"
+						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
+						style="text-align:right" /> <p:message id="proposalvalidityMsg"
+						for="proposalvalidity" display="icon" /></td>
 			</tr>
 			<!-- 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.rfp']}"

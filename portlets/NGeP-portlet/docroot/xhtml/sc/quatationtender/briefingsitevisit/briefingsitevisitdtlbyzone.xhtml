@@ -16,7 +16,7 @@
 			<!-- Briefing Details -->
 			<ui:param name="briefingList" value="#{zonePnlList.briefingList}" />
 			<ui:param name="selectedbriefingList"
-				value="#{zonePnlList.briefingList}" />
+				value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedBriefingDetails}" />
 			<ui:include src="briefingIncludeDetails.xhtml" />
 			<div align="right">
 				<p:commandButton id="addtositevisitdtlid"
@@ -36,6 +36,20 @@
 					action="#{qTBriefingSiteVisitBackingBean.deleteZoneBriefingDetails}"
 					update="briefdetaillistid" />
 			</div>
+			<table style="width: 100%" border="0">
+				<tr>
+					<td style="width: 160px;"><p:outputLabel
+							value="#{lbl['lbl.so.attendance.brief']}" /></td>
+					<td style="width: 130px;"><p:selectOneRadio
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.allBriefingReq}">
+							<f:selectItem itemLabel="All" itemValue="true" />
+							<f:selectItem itemLabel="At Least" itemValue="false" />
+						</p:selectOneRadio></td>
+					<td><p:inputText size="5"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.minBriefingAttend}" /></td>
+					<td />
+				</tr>
+			</table>
 
 			<!-- Site Visit Details -->
 			<h:panelGroup id="samebsvrequireid">
@@ -43,7 +57,7 @@
 					rendered="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv eq 'false'}">
 					<ui:param name="sitevisitList" value="#{zonePnlList.sitevisitList}" />
 					<ui:param name="selectedSitevisitList"
-						value="#{zonePnlList.sitevisitList}" />
+						value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedSiteVisitDetails}" />
 					<ui:include src="sitevistIncludeDetails.xhtml" />
 					<div align="right">
 						<p:commandButton id="sitevisitaddid"
@@ -55,6 +69,20 @@
 							icon="ui-icon-delete" process="@this, sitevisitdetaillistid"
 							partialSubmit="true" update="sitevisitdetaillistid" />
 					</div>
+					<table style="width: 100%" border="0">
+						<tr>
+							<td style="width: 160px;"><p:outputLabel
+									value="#{lbl['lbl.so.attendance.site']}" /></td>
+							<td style="width: 130px;"><p:selectOneRadio
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.allSiteVisitReq}">
+									<f:selectItem itemLabel="All" itemValue="true" />
+									<f:selectItem itemLabel="At Least" itemValue="false" />
+								</p:selectOneRadio></td>
+							<td><p:inputText size="5"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.minSiteVisitAttend}" /></td>
+							<td />
+						</tr>
+					</table>
 				</ui:fragment>
 			</h:panelGroup>
 

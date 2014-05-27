@@ -23,7 +23,7 @@
 						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true"
 						size="30">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 		</table>

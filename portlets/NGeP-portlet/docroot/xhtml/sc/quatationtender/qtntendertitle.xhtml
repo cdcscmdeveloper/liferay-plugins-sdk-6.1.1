@@ -11,61 +11,55 @@
 			<tr>
 				<td style="width: 155px;" valign="top"><p:outputLabel
 						value="* #{lbl['lbl.so.title']}" /></td>
-				<td colspan="3"><p:inputTextarea id="title1" label="#{lbl['lbl.so.title']}" required="true"
+				<td colspan="3"><p:inputTextarea id="title1"
+						label="#{lbl['lbl.so.title']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2"
 						disabled="#{!qTDetailBB.managedBean.editable}"
-						style=" margin-bottom:5px;" />
-					<p:message id="title1Msg" for="title1" display="icon" />
-							
-				</td>
+						style=" margin-bottom:5px;" maxlength="100" /> <p:message
+						id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.so.fileno']}" /></td>
-				<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}" required="true"
-						value="#{qTDetailBB.managedBean.qt.fileNo}"
-						disabled="#{!qTDetailBB.managedBean.editable}" size="30" />
-						<p:message id="filenoMsg" for="fileno" display="icon" /></td>
+				<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}"
+						required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
+						disabled="#{!qTDetailBB.managedBean.editable}" size="30"
+						maxlength="50" /> <p:message id="filenoMsg" for="fileno"
+						display="icon" /></td>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.so.crtdt']}" /></td>
 				<td><p:inputText
 						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true"
 						size="30">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
-				<td>
-					<!-- <c:if test="#{qTDetailBB.managedBean.qt.brandNew}"> --> <p:selectOneMenu
-						value="#{qTDetailBB.managedBean.qt.procurementMode.parameterId}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{qTDetailBB.getDropdownValues(PmCodeCatConst.scProcurementMode)}" />
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}" />
-					</p:selectOneMenu> <!-- </c:if> <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-						<p:inputText
-							value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scProcurementMode, qTDetailBB.managedBean.qt.procurementMode)}"
-							disabled="true" size="30" />
-					</c:if> -->
-				</td>
+				<td><p:inputText
+						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.procurementMode)}"
+						disabled="true" size="30" readonly="true" /></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
-				<td><p:inputText id="estprice"
+				<td><p:inputText id="estprice" style="text-align:right"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
-						disabled="true" readonly="true" /></td>
+						disabled="true" readonly="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
 				<td />
 				<td />
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3" valign="top"><p:inputTextarea
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.justification']}" /></td>
+				<td colspan="3"><p:inputTextarea
 						value="#{qTDetailBB.managedBean.qt.justificationRemark}" cols="30"
-						rows="2" style=" margin-bottom:5px;" /></td>
+						rows="2" style=" margin-bottom:5px;" maxlength="200"
+						disabled="true" readonly="true" /></td>
 			</tr>
 		</table>
 	</p:panel>

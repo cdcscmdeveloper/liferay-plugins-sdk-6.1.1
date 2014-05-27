@@ -490,6 +490,20 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 		}
 	}
+	
+	public void deleteZoneSiteVisitDetails() {
+		debugLogger("deleteZoneSiteVisitDetails");
+		List<ScQtBsvDtl> beans = getManagedBean().getBriefingZoneBean().get(0)
+				.getSitevisitList();
+		List<ScQtBsvDtl> selectList = getManagedBean().getSelectedSiteVisitDetails();
+		if (beans.size() == selectList.size()) {
+			beans.clear();
+		} else {
+			for (ScQtBsvDtl scQtBriefing : selectList) {
+				beans.remove(scQtBriefing);
+			}
+		}
+	}
 
 	public void deleteBriefingDetails() {
 		debugLogger("deleteBriefingDetails");
