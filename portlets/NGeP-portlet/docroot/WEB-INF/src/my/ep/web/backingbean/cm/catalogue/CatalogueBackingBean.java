@@ -980,7 +980,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/excelUpload");
 		System.out.println("tempDir"+tempDir);
 		//Read Excel document first
-		FileInputStream input_document = new FileInputStream(new File(tempDir+"\\Catalogue-offline-template.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File(tempDir+"/Catalogue-offline-template.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
@@ -1036,81 +1036,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			dataLs.add(catalog.getItemDesc());
 			dataLs.add(catalog.getFrequency());
-
-			/*IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IUomSO.class);
-			UomResDTO resDTO = uomSO.retrieveUomList();
-			List<PmUom> uomList = resDTO.getPmUomList();
-			String[] uomNames = new String[uomList.size()];
-			int j = 0;
-			for(PmUom uom : uomList){
-				uomNames[j]=uom.getUomName();
-				j++;
-			}
-
-			for (int k = 0, length= uomNames.length; k < length; k++) {
-			   String name = uomNames[k];
-			   XSSFRow row = hidden.createRow(k);
-			   XSSFCell cell = row.createCell(0);
-			   cell.setCellValue(name);
-			 }
-			 Name namedCell = my_xlsx_workbook.createName();
-			 namedCell.setNameName("hidden");
-			 namedCell.setRefersToFormula("hidden!$A$1:$A$" + uomNames.length);
-			 DataValidationHelper dvHelper = product.getDataValidationHelper();
-			  DataValidationConstraint dvConstraint = dvHelper.createFormulaListConstraint("hidden");
-			  CellRangeAddressList uomNameList = new CellRangeAddressList(no, no, 11, 11);            
-			  DataValidation validation = dvHelper.createValidation(
-			    dvConstraint, uomNameList);
-//			  my_xlsx_workbook.setSheetHidden(4, true);
-			  dvConstraint.getExplicitListValues();
-			  if(validation instanceof XSSFDataValidation) {
-			    validation.setSuppressDropDownArrow(true);
-			    validation.setShowErrorBox(true);
-			  }
-			  else {
-			    // If the Datavalidation contains an instance of the HSSFDataValidation
-			    // class then 'true' should be passed to the setSuppressDropDownArrow()
-			    // method and the call to setShowErrorBox() is not necessary.
-			    validation.setSuppressDropDownArrow(false);
-			  }
-			  product.addValidationData(validation);*/
-
-
-			/*IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IUomSO.class);
-			UomResDTO resDTO = uomSO.retrieveUomList();
-			List<PmUom> uomList = resDTO.getPmUomList();
-			String[] uomNames = new String[uomList.size()];
-			int j = 0;
-			for(PmUom uom : uomList){
-				uomNames[j]=uom.getUomName();
-				j++;
-			}
-
-			DataValidationHelper dvHelper = product.getDataValidationHelper();
-			  DataValidationConstraint dvConstraint = dvHelper.createExplicitListConstraint(uomNames);
-			  CellRangeAddressList uomNameList = new CellRangeAddressList(no, no, 11, 11);            
-			  DataValidation validation = dvHelper.createValidation(
-			    dvConstraint, uomNameList);
-			  // Note the check on the actual type of the DataValidation object.
-			  // If it is an instance of the XSSFDataValidation class then the
-			  // boolean value 'false' must be passed to the setSuppressDropDownArrow()
-			  // method and an explicit call made to the setShowErrorBox() method.
-
-			  dvConstraint.getExplicitListValues();
-			  if(validation instanceof XSSFDataValidation) {
-			    validation.setSuppressDropDownArrow(true);
-			    validation.setShowErrorBox(true);
-			  }
-			  else {
-			    // If the Datavalidation contains an instance of the HSSFDataValidation
-			    // class then 'true' should be passed to the setSuppressDropDownArrow()
-			    // method and the call to setShowErrorBox() is not necessary.
-			    validation.setSuppressDropDownArrow(false);
-			  }
-			  product.addValidationData(validation);*/
-
 			dataLs.add(catalog.getPmUom().getUomName());
 			dataLs.add(catalog.getModelNumber());
 			dataLs.add(catalog.getSkuNumber());
