@@ -16,6 +16,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
@@ -72,16 +73,16 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, "review-purchase-in-default");
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-supplier-view");
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
-        
-		
 
+		// Contract Management
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
-		temp.put("Contract Creation", "fulfilment-details");
-		temp.put("Contract Activation Suspension Request", "contract-suspension");
-		temp.put("Contract Amendment Request", "contract-amendment");
-		temp.put("Contract Termination", "contract-termination");
+		temp.put(CTProcessNameConst.CONTRACT_CREATION_PROCESS_NAME, "fulfilment-details");
+		temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME, "contract-suspension");
+		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+ParameterConst.DOCTYPE_CONTRACT_AMENDMENT, "contract-amendment");
+		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+		temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME, "contract-termination");
 		temp.put(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME, "contract-agreement");
 		temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME+CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME, "change-bank-account");
 
@@ -239,7 +240,10 @@ public class BPMTaskListBackingBean extends
 					url = (String) this.getManagedBean().getBpmMap()
 							.get(res.getProcessName() + res.getTaskName());
 				}
-
+				if (url == null || url.isEmpty()) {
+					url = (String) this.getManagedBean().getBpmMap()
+							.get(res.getProcessName() + res.getDocType());
+				}
 			}
 			log.info("url:" + url);
 			
@@ -250,7 +254,6 @@ public class BPMTaskListBackingBean extends
 				} else {
 					url = "panel-circular";
 				}
-				
 			}
 			
 			FacesScopes facesScope = new FacesScopes();
