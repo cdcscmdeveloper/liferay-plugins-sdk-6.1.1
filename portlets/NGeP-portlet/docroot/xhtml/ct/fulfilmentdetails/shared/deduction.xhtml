@@ -40,7 +40,7 @@
         	     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
         	      ParameterConst.deductionTypeAdvancePayment}" >
 		  	  </p:commandButton>
-		  	  <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@form"
+		  	  <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" partialSubmit="true" process="@form"
 		    	rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}" 
 		    	onclick="dlgDeduction.show()" />
            </c:if>
@@ -57,12 +57,12 @@
                   styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="tableClause" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="tableClause" process="@form" 
 				actionListener="#{contractDetailsBackingBean.deleteClauseDetails()}" onclick="dlgDeduction.hide();"/>
-			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
 		   </div>
       </p:dialog>  
-	  <p:panel header="Remarks" toggleable="true">
+	  <p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
