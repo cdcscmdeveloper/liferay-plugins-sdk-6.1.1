@@ -552,8 +552,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FlFulfilmentItem flItem = null;
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-		reqDTO.setPurchaseRequestId(6L);//this id is it suppose pass from s1?
-		reqDTO.setAssignedTo(1L);
+		reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());//this id is it suppose pass from s1?
+		//		reqDTO.setPurchaseRequestId(6L);//this id is it suppose pass from s1?
 		reqDTO.setIncludeDetail(true);
 		 PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
 		//PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
