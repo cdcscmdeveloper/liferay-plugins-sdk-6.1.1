@@ -53,6 +53,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -64,8 +65,8 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -233,7 +234,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			Object obj = res.getPojo();
 		      
 			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
@@ -244,9 +245,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setTaskId(taskId);
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
-			CTContractDataType dataType = (CTContractDataType) obj;
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
+				ctReqDTO.setContractId(new Long(dataType.getContractId()));
+				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			} else { 
+				CTContractDataType dataType = (CTContractDataType) obj;
+				ctReqDTO.setContractId(new Long(dataType.getContractId()));
+				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			}
 			
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
@@ -291,6 +298,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 }
 		
 		 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
+			 getManagedBean().setScheduleOption("1");
 		    this.getManagedBean().setChkSchedule(true);
 		    SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 			Calendar cal = Calendar.getInstance();
@@ -306,6 +314,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }
 		    
 		 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
+			 getManagedBean().setScheduleOption("2");
 			 SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 		     Calendar cal = Calendar.getInstance();
 			 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
@@ -422,11 +431,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setCtPhysicalNo(null);	
 		this.getManagedBean().setCtLOANo(null);		
 	}
-    public String saveContract(String action){
-		
+	
+    public String saveContract(String action) throws Exception{
 	    IContractSO contractSO = null;
 		try{
-			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
@@ -436,13 +444,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO.setTaskId(this.getManagedBean().getTaskId());
             reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
             
-            if(ContractConst.DOC_TYPE_CONTRACT_UPDATE.equalsIgnoreCase(this.getManagedBean().getContractVer().getDocType()))
-               this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);	
-            else
-              this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);
-            
-            if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0)
+            if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				this.getManagedBean().getContractVer().getCtContractItems().clear();
+            }
             this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
             this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemServiceList());
             
@@ -455,11 +459,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             getZoneObjDetails();
             convertScheduleDate();
             convertProgressiveScheduleDate();
-            
-            if(isApprover()) {
-            	this.getManagedBean().getContractVer().setApprover(getFacesScopes().getUserSessionBean());
-            	this.getManagedBean().getContractVer().setApprovedDate(new Date());
-			}
             
             reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
@@ -481,6 +480,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					messageId = MessageConst.INFO_700009;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
 				}
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
@@ -492,19 +493,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				} else {
 					setValidateContractField(resDTO);
 				}
-			  }else {
-					throw new EpException("Failed.");
 			  }
-		  }catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			if(e instanceof EpException) {
-				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ep.getMessage(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			}
-		  }finally {
+		  } finally {
 			contractSO = null;
 		  }
 		return null;	
@@ -556,7 +546,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				   zone.setDeliveryTermUom(new PmParameter()); 
 				   zone.getDeliveryTermUom().setParameterId(0L);
 			   }
-			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
+			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
 			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
@@ -580,7 +570,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
     		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
     			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
-    				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
+    				if(ctContractZone.toString().equalsIgnoreCase(((LocationDTO)zonename.getData()).getZoneId())) {
     					if(ctContractZone.getDeliveryTermUom() == null)
      					   ctContractZone.setDeliveryTermUom(new PmParameter());
      					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
@@ -1145,13 +1135,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue >= toyearValue)||
 		     (ctSchedule.getFromTranDate() <= ctSchedule.getToTranDate() && startYearValue > toyearValue)){
 		     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-		    	if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
+		    	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
 		    		dataList.setValidateScheduleDate(true);
 		         }
 		     }
 		  }else{
 		     for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-			    if(dataList.getScheduleId().equals(ctSchedule.getScheduleId())){
+			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
 			        dataList.setValidateScheduleDate(false);
 			    }
 			 }
@@ -1320,7 +1310,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoAmendPage() {
-		
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
@@ -1380,7 +1369,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoViewPage() {
-
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
 	
@@ -1391,23 +1379,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return PROCESS_VIEW_PAGE;
 	}
 	
-	public String gotoContractPage(){
+	public String gotoUpdatePage(){
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		reqDTO.setUpdateAction(true);
 		
-		ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
-	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	    ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 	    setValidateContractField(resDTO);
-	    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_UPDATE);
 	    
-	    this.getManagedBean().setUpdateContract(true);
-        this.getManagedBean().setViewContract(false);
+	    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
+	    getManagedBean().setUpdateContract(true);
+        getManagedBean().setViewContract(false);
 		return CONTRACT_PAGE;
 	}
 	
 	public String gotoTerminateHistoryPage() {
-
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
     	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());

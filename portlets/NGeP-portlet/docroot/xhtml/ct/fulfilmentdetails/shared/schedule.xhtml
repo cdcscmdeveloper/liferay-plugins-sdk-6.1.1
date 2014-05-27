@@ -8,16 +8,16 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" >
-            <p:selectOneRadio id="radiOptions" value="#{contractDetailsBackingBean.managedBean.scheduleOption}" required="true" 
+            <p:selectOneRadio id="radiOptions" value="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" required="true" 
                disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio}">  
-                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="1"/>  
-                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.progre']}" itemValue="2" /> 
+                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="true"/>  
+                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.progre']}" itemValue="false" /> 
                   <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" 
                          process="@this" update=":form:tabview:paymentSchedule"/> 
             </p:selectOneRadio> 
          </h:panelGrid>  
          <p:outputPanel id="paymentSchedule">   
-         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">    
+         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" style="width:100%;">    
 	          <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
 	            widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}"  rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />
@@ -99,7 +99,7 @@
 		   </div>
          </p:dialog>    
          </h:panelGroup>
-		 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
+		 <h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" style="width:100%">
 	        <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	           selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		       <ac:paginator for="tableProgress" />

@@ -2,13 +2,11 @@ package my.ep.web.backingbean.ct;
 
 import java.io.Serializable;
 
-import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmUom;
 
 public class LocationDTO implements Serializable{
 
@@ -17,7 +15,7 @@ public class LocationDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	String zone;
-	private	Long zoneId;
+	private	String zoneId;
 	private Long zoneDtlId;
 	private	PmState	state;
 	private	PmDistrict	district;
@@ -31,7 +29,7 @@ public class LocationDTO implements Serializable{
 	public LocationDTO() {
 		super();
 	}
-	public LocationDTO(Long zoneId, String zone,  int	deliveryTerm, Long uomId) {
+	public LocationDTO(String zoneId, String zone,  int	deliveryTerm, Long uomId) {
 		super();
 		this.zone = zone;
 		this.zoneId = zoneId;
@@ -223,10 +221,10 @@ public class LocationDTO implements Serializable{
 	public void setUomId(Long uomId) {
 		this.uomId = uomId;
 	}
-	public Long getZoneId() {
+	public String getZoneId() {
 		return zoneId;
 	}
-	public void setZoneId(Long zoneId) {
+	public void setZoneId(String zoneId) {
 		this.zoneId = zoneId;
 	}
 	public Long getZoneDtlId() {

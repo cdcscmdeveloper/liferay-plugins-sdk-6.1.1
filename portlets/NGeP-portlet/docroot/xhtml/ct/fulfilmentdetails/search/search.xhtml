@@ -104,7 +104,7 @@
 						   value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
 					   </p:commandLink>
 					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}"
+					   <p:commandLink action="#{contractDetailsBackingBean.gotoUpdatePage}"
 					     rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="evaluate.png"

@@ -83,7 +83,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -180,7 +179,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			Object obj = res.getPojo();
 			this.getManagedBean().setTaskName(res.getTaskName());
 			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
@@ -720,7 +719,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					   zone.setDeliveryTermUom(new PmParameter()); 
 					   zone.getDeliveryTermUom().setParameterId(0L);
 				   }
-				   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.getContractZoneId(),zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
+				   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
 				   TreeNode stateNode = null;
 				   List<PmState> state = new ArrayList<PmState>();
 				   if(zone.getCtContractZoneDtls() != null) {
@@ -744,7 +743,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
 	    		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
 	    			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
-	    				if(ctContractZone.getContractZoneId().longValue()==((LocationDTO)zonename.getData()).getZoneId().longValue()) {
+	    				if(ctContractZone.toString().equalsIgnoreCase(((LocationDTO)zonename.getData()).getZoneId())) {
 	    					if(ctContractZone.getDeliveryTermUom() == null)
 	     					   ctContractZone.setDeliveryTermUom(new PmParameter());
 	     					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
