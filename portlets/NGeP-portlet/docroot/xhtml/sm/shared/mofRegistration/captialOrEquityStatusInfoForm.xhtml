@@ -61,18 +61,20 @@
 							readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
-					<td><p:inputText
-							title="This field is applicable and 
+					<c:if
+						test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
+						<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
+						<td><p:inputText
+								title="This field is applicable and 
 						data is auto populated for companies other than ROC"
-							readonly="true" size="10" disabled="true" /></td>
-					<td><p:outputLabel value="Accumulated Share (RM.)" /></td>
-					<td><p:inputText
-							title="This field is applicable and 
+								readonly="true" size="10" disabled="true" /></td>
+						<td><p:outputLabel value="Accumulated Share (RM.)" /></td>
+						<td><p:inputText
+								title="This field is applicable and 
 						data is auto populated for companies other than ROC"
-							readonly="true" size="10" disabled="true"
-							value="#{backingBean.managedBean.smAppl.smSupplier.businessType}" /></td>
-
+								readonly="true" size="10" disabled="true"
+								value="#{backingBean.managedBean.smAppl.smSupplier.businessType}" /></td>
+					</c:if>
 				</tr>
 				<tr>
 					<td colspan="4">
@@ -97,8 +99,8 @@
 										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText readonly="true" id="bumiPerc"
-											disabled="true" size="10"
+										<p:inputText readonly="true" id="bumiPerc" disabled="true"
+											size="10"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" />
 									</p:column>
 								</p:row>

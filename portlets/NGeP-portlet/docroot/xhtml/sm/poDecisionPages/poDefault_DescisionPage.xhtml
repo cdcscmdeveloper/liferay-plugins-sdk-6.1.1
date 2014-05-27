@@ -74,6 +74,15 @@
 
 						</tr>
 						<tr>
+							<c:if test="#{backingBean.managedBean.smAppl.applType eq 'C'}">
+								<td><p:outputLabel value="Remarks for Cancellation" /></td>
+								<td><p:outputLabel value="   : " /></td>
+								<td><p:inputTextarea readonly="true" cols="60"
+										value="#{backingBean.managedBean.supplierRemarks}"
+										disabled="true" /></td>
+							</c:if>
+						</tr>
+						<tr>
 							<td colspan="3"><c:choose>
 									<c:when
 										test="#{backingBean.managedBean.personCalc.halfBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">

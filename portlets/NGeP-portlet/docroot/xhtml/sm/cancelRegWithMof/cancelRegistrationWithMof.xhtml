@@ -27,11 +27,16 @@
 
 				<tr>
 					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
-					<td><p:inputTextarea cols="60" style="margin-botton:5px;" /></td>
+					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
+							id="cancelReson"
+							value="#{backingBean.managedBean.supplierRemarks}"
+							required="true" /> <p:message for="cancelReson"
+							showDetail="false" showSummary="true" display="icon"
+							autoUpdate="true" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Attach Supporting Doc (If any)" /></td>
+					<td><p:outputLabel value="*Attach Supporting Doc" /></td>
 					<td><p:fileUpload mode="simple" /></td>
 
 				</tr>
@@ -50,7 +55,7 @@
 			widgetVar="canRegConfirm">
 			<div align="center">
 				<p:commandButton id="confCanDel" value="Yes"
-					onclick="canRegConfirm.hide()"
+					onclick="canRegConfirm.hide()" partialSubmit="true" process="@form"
 					action="#{backingBean.submitCancelMofApplToBpm}" />
 				<p:commandButton id="declineCancDel" value="No"
 					onclick="canRegConfirm.hide()" type="button" />

@@ -9,7 +9,7 @@
 	<h:panelGroup id="shrHolderPanGroup">
 		<p:panel header="Capital / Equity Shareholders ( Personnel)"
 			toggleable="true"
-			rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}">
+			rendered="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT or backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
 			<table style="width: 250px">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
