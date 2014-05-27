@@ -18,7 +18,9 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -32,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -49,6 +52,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
+import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -70,15 +75,23 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
@@ -510,57 +523,126 @@ public void fileUpload(FileUploadEvent event) throws Exception {
 	}	
 	
 	public void downloadDocFile(CtTemplate ctTemplate) throws IOException{
-		
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		
-		String fileName = null;
-		OutputStream out = null;
-		String decoded ="";
-		
+		IContractTemplateSO contractTemplateSO = null;
+		String fileName = "";
 		try{
-		     out = res.getOutputStream();
-		     fileName = ctTemplate.getName();
-		     res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		     res.setHeader( "Content-Transfer-Encoding", "binary" );
-		     res.setContentType("application/octet-stream");
-		   // res.setContentType("Content-Type: application/docx");
-		     res.flushBuffer();
-		     decoded = html2text(new String(ctTemplate.getContent(), "UTF-8"));
-			 byte[] content = decoded.getBytes();
-			out.write(content);
+			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE);
+			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			String content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			
+			if(resDTO.getCtTemplate()!=null) {
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				Map<String, String> valuesMap = new HashMap<String, String>();
+				
+				valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
+				valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+				valuesMap.put("SUPPLIER_REGISTRATION_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+				valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
+				valuesMap.put("CONTRACT_START_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
+				valuesMap.put("CONTRACT_END_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));
+				valuesMap.put("CONTRACT_PERIOD", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractPeriod() + "");
+				valuesMap.put("CONTRACT_VALUE", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount()+ "");
+				//valuesMap.put("CONTRACT_VALUE_TEXT", getManagedBean().getCtContract().getCurrentContractVer());
+				//valuesMap.put("PERFORMANCE_BOND_VALUE", getManagedBean().getCtContract());
+				valuesMap.put("PERFORMANCE_BOND_VALUE_TEXT", getManagedBean().getCtContract().getContractPhysicalNo());
+				
+				StrSubstitutor sub = new StrSubstitutor(valuesMap);
+				content = sub.replace(content);
+			}
+			fileName = "AgreementCoverPage.docx";
+		     			
+		 	WordprocessingMLPackage wordMLPackage;
+		 	try {
+		 		wordMLPackage = WordprocessingMLPackage.createPackage();
+		 		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+		 		afiPart.setBinaryData(content.getBytes());
+		 		afiPart.setContentType(new ContentType("text/html"));
+		 		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+		 		 
+		 		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+		 		ac.setId(altChunkRel.getId() );
+		 		wordMLPackage.getMainDocumentPart().addObject(ac);
+		 		// .. content type
+		 		wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html");
+		 		wordMLPackage.save(new java.io.File("C:/downloads/" + fileName));
+		 	} catch (InvalidFormatException e) {
+		 		e.printStackTrace();
+		 	}catch (Docx4JException e) {
+	 			e.printStackTrace();
+	 		}
 		
 		}catch(UnsupportedEncodingException e) {
-			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		}
-	     
-		out.close();
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		
+		String filePath = "C:/downloads/" + fileName;
+		if(filePath != null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
 		out.flush();
+		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
-	public static String html2text(String html) {
-	    return Jsoup.parse(html).text();
+	private String formAddress(String address1, String address2, String address3, String address4) {
+		StringBuffer address = new StringBuffer();
+		if(address1!=null && address1.length()>0) {
+			address.append(address1).append(" ");
+		}
+		if(address2!=null && address2.length()>0) {
+			address.append(address2).append(" ");
+		}
+		if(address3!=null && address3.length()>0) {
+			address.append("<BR/>").append(address3).append(" ");
+		}
+		if(address4!=null && address4.length()>0) {
+			address.append(address4).append(" ");
+		}
+		return address.toString();
 	}
 	
-	public void openNewWindow(AgreementDetails agreementDetails) throws IOException{
+	public void openNewWindow() throws IOException{
 		 
 	    /*IContractTemplateSO contractTemplateSO = null;
 	    ContractTemplateReqDTO reqDTO = null;
 	    ContractTemplateResDTO ResDTO = null;
 		try {
-			 this.getManagedBean().setFilePath(agreementDetails.getFilePath());
+			 //this.getManagedBean().setFilePath(agreementDetails.getFilePath());
 			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 			 reqDTO = new ContractTemplateReqDTO();
-			 reqDTO.setTemplateId(30L);
+			 reqDTO.setTemplateId(agreementContent);
 		     ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
 		     this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
 	   }catch(Exception ex) {
 			log.error("Exception>>", ex);
 	   }finally{
 		    contractTemplateSO = null;
-	   }*/
+	   }
+		agreementDetails.getFileType().;ParameterConst.agreementTemplateDoc;*/
+		//agreementContent.getTitle();
+		downloadDocFile(new CtTemplate());
 	}
 	
 	public void closedWindow(){
