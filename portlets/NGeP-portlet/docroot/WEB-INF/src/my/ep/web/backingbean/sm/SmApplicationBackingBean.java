@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
@@ -60,6 +61,8 @@ import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -94,6 +97,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
@@ -187,13 +191,15 @@ public class SmApplicationBackingBean extends
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
 						+ getManagedBean().getSmAppl().getSupplierType());
-		retrievePmCountryList();
-		retrievePmCertBodyList();
-		retrievePmProfBodyList();
-		retrieveParentCategoryList();
-		retrieveUomList();
-		retrieveRejectReasonList();
-		retrieveRegistrationStatusList();
+		if (!applicationType.equalsIgnoreCase("C")) {
+			retrievePmCountryList();
+			retrievePmCertBodyList();
+			retrievePmProfBodyList();
+			retrieveParentCategoryList();
+			retrieveUomList();
+			retrieveRejectReasonList();
+			retrieveRegistrationStatusList();
+		}
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -245,6 +251,13 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 
+			if (!fromBpm) {
+				// TODO remove this hard coded data and make dynamic later
+				getManagedBean().getSmAppl().setSupportingDocMode("O");
+			}
+
+			assignSupplierBusinessType(getManagedBean().getSmSupplier());
+
 			if (getManagedBean().isApproverUser()
 					|| getManagedBean().isPoUser()) {
 				System.out.println("**** LOGIN IS PO or APPROVER *******"
@@ -291,8 +304,11 @@ public class SmApplicationBackingBean extends
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 				System.out.println("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
-				// fac.setOwnerName("Sample");
-				// fac.setFacilityType("H");
+				if (smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					// fac.setOwnerName("Sample");
+					fac.setFacilityType("H");
+				}
 				SmAddress addr = setDefaultAddr();
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
@@ -318,37 +334,8 @@ public class SmApplicationBackingBean extends
 			}
 			// getManagedBean().setSmAppl(smAppl);
 
-			System.out.println(" ---- Business  Type ----"
-					+ getManagedBean().getSmAppl().getSmSupplier()
-							.getSupplierId()
-					+ " -- For this id ---"
-					+ getManagedBean().getSmAppl().getSmSupplier()
-							.getBusinessType());
-			if (!fromBpm) {
-				// TODO remove this hard coded data and make dynamic later
-				getManagedBean().getSmAppl().setSupportingDocMode("O");
-				// 1-ROB,2-ROC,3-ROS
-				if (applicationType.equalsIgnoreCase("N")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("1");
-				} else if (applicationType.equalsIgnoreCase("A")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("2");
-				} else if (applicationType.equalsIgnoreCase("R")) {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("3");
-				} else {
-					getManagedBean().getSmAppl().getSmSupplier()
-							.setBusinessType("1");
-				}
-			}
-			System.out.println(" ---- Business  Type After hard code ----"
-					+ getManagedBean().getSmAppl().getSmSupplier()
-							.getBusinessType());
 			getManagedBean().setTabActiveIndex(0);
 
-			System.out
-					.println(" **** APPLICATION TYPE **** " + applicationType);
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
@@ -371,7 +358,13 @@ public class SmApplicationBackingBean extends
 				if (getManagedBean().isApproverUser()) {
 					setDefaultApproverReviewSection();
 				}
+
+				if (applicationType.equalsIgnoreCase("C")) {
+					setSupplierCancellationRemarks(applicationType,
+							getManagedBean().getSmAppl().getApplId());
+				}
 			}
+
 			calcPersonnelListCount();
 			calculateCapital();
 			calculateBumiPercentageTotals();
@@ -384,6 +377,30 @@ public class SmApplicationBackingBean extends
 		} finally {
 			// mofRegistrationSO = null;
 		}
+	}
+
+	private void setSupplierCancellationRemarks(String docType, Long docId) {
+		SmRemaksResDTO resDTO = getRemarksByDoc(docType, docId);
+		StringBuffer sb = new StringBuffer();
+		if (resDTO != null && resDTO.getRemarksList() != null
+				&& !resDTO.getRemarksList().isEmpty()) {
+
+			for (SmRemark rem : resDTO.getRemarksList()) {
+				sb.append(rem.getRemark()).append("\n");
+			}
+		}
+		getManagedBean().setSupplierRemarks(sb.toString());
+
+	}
+
+	private SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(docId);
+		reqDTO.setDocType(docType);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISmRemarksSO.class);
+		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
+		return resDTO;
 	}
 
 	private boolean validateBeforeRenewal(Long supplierId,
@@ -707,25 +724,9 @@ public class SmApplicationBackingBean extends
 					.println(" ***** Business  Type After in finally block *********"
 							+ getManagedBean().getSmAppl().getSmSupplier()
 									.getBusinessType());
-			// TODO Remove later the hard code value
-			// 1-ROB,2-ROC,3-ROS
-			if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase("N")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("1");
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase("A")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("2");
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase("R")) {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("3");
-			} else {
-				getManagedBean().getSmAppl().getSmSupplier()
-						.setBusinessType("1");
-			}
-
+			// TODO remove the below line if not reqd
+			assignSupplierBusinessType(getManagedBean().getSmAppl()
+					.getSmSupplier());
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
 			}
@@ -967,8 +968,10 @@ public class SmApplicationBackingBean extends
 										"Empty Shareholders  : ",
 										"Please add at least one share holding personnel for the supplier"));
 				return false;
-			} else if (getManagedBean().getSmAppl().getSmSupplier()
-					.getBusinessType().equalsIgnoreCase("2")
+			} else if (getManagedBean()
+					.getBusinessTypeVal()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 					&& getManagedBean().getSmapplShareHolders().size() < 2) {
 				FacesContext
 						.getCurrentInstance()
@@ -1243,7 +1246,10 @@ public class SmApplicationBackingBean extends
 							docs.add(getDefaultSmApplSupportingDoc(doc));
 						}
 					} else {
+						docs.addAll(getManagedBean().getSmAppl()
+								.getSmApplSupportDocs());
 						for (PmDocument doc : rsDTO.getDocumentList()) {
+							boolean recordExists = false;
 							for (SmApplSupportDoc smDocu : getManagedBean()
 									.getSmAppl().getSmApplSupportDocs()) {
 								if (smDocu.getPmDocument().getDocumentId()
@@ -1251,11 +1257,13 @@ public class SmApplicationBackingBean extends
 									// docs.add(smDocu);
 									System.out
 											.println("******* Document already exists *****");
-								} else {
-									System.out
-											.println("******* This is a new Document ********");
-									docs.add(getDefaultSmApplSupportingDoc(doc));
+									recordExists = true;
 								}
+							}
+							if (!recordExists) {
+								System.out
+										.println("******* This is a new Document ********");
+								docs.add(getDefaultSmApplSupportingDoc(doc));
 							}
 						}
 					}
@@ -2673,7 +2681,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedShrHldrJobFunction(Boolean isShrHldr) {
-
+		System.out.println(" ******* The is size is ********* "
+				+ getManagedBean().getSelectedShrHldrJobFunctions().size());
 		if (getManagedBean().getSelectedShrHldrJobFunctions().size() > 0) {
 			for (SmStaffExperience exp : getManagedBean()
 					.getSelectedShrHldrJobFunctions()) {
@@ -3306,7 +3315,10 @@ public class SmApplicationBackingBean extends
 			// SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
 			// .get(0);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
-			updateSmAppl(bpmAppl.getApplType(), "BasicInfo");
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				updateSmAppl(bpmAppl.getApplType(), "BasicInfo");
+			}
 			System.out.println(" **** SUPPORTING DOC MODE ****"
 					+ bpmAppl.getSupportingDocMode());
 			if (bpmAppl.getApplType().equalsIgnoreCase("N")) {
@@ -3522,8 +3534,35 @@ public class SmApplicationBackingBean extends
 	public String submitCancelMofApplToBpm() {
 		System.out.println(" Call Cancel ---------------->>>>>>>>>>");
 		try {
+			SmRemark remark = new SmRemark();
+			remark.setDocId(getManagedBean().getSmAppl().getApplId());
+			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_CANCEL);
+			// TODO set the role
+			remark.setRemark(getManagedBean().getSupplierRemarks());
+			saveSmRemarks(remark);
 			initiateSmApplicationTask();
-			return SupplierManagementConst.CANCEL_MOF_APPL_SUCCESS;
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													MessageConst.INFO_700005,
+													new String[] {
+															getParameterDesc(
+																	ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																	ParameterConst.NEW_SM_APPLN_FOR_CANCEL),
+															getManagedBean()
+																	.getSmAppl()
+																	.getApplNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		} catch (Exception e) {
 			return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
 		}
@@ -3869,6 +3908,15 @@ public class SmApplicationBackingBean extends
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
+	}
+
+	private void saveSmRemarks(SmRemark remarks) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setSmRemark(remarks);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISmRemarksSO.class);
+		SmRemaksResDTO resDTO = reqSO.saveSmRemarks(reqDTO);
+
 	}
 
 	private PmCountry retrievePmCountryById(Long countryId) {
@@ -5935,6 +5983,53 @@ public class SmApplicationBackingBean extends
 					.println("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
 							+ applType);
 			break;
+		}
+	}
+
+	private void assignSupplierBusinessType(SmSupplier sup) {
+		if (sup.getBusinessType()
+				.equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
+			getManagedBean()
+					.setBusinessTypeVal(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT);
+
+		} else if (sup
+				.getBusinessType()
+				.equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)) {
+			getManagedBean()
+					.setBusinessTypeVal(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT);
+		} else if (sup.getBusinessType().equalsIgnoreCase(
+				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+			getManagedBean()
+					.setBusinessTypeVal(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT);
 		}
 	}
 }

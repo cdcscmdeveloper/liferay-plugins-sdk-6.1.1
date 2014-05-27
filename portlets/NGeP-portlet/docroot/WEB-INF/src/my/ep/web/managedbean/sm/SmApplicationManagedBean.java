@@ -178,6 +178,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmRelatedCompany> selectedPersRelatedCompanies;
 	private List<SmStaffAcademic> selectedPersAcademics;
 
+	private String supplierRemarks;
+
+	private String businessTypeVal;
+
 	// private SmPersonnelAddress personnelPermAddr;
 	//
 	// private SmPersonnelAddress personnelMailAddr;
@@ -1899,6 +1903,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setValidResubmit(boolean validResubmit) {
 		this.validResubmit = validResubmit;
+	}
+
+	public String getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(String supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+
+	public String getBusinessTypeVal() {
+		return businessTypeVal;
+	}
+
+	public void setBusinessTypeVal(String businessTypeVal) {
+		this.businessTypeVal = businessTypeVal;
 	}
 
 }

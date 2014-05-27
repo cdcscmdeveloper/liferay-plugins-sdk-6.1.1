@@ -46,12 +46,13 @@ public class CommonApplBackingBean extends
 
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
-		//reqDTO.setBpmUserName(bpmUserName);
+		// reqDTO.setBpmUserName(bpmUserName);
 
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
 
-		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
+		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
+				.getBPMTaskDetails(reqDTO);
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
@@ -138,7 +139,7 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
-			//String applicationType = "";
+			// String applicationType = "";
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
 				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
@@ -248,6 +249,15 @@ public class CommonApplBackingBean extends
 			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review New Mof Registration Application - ");
+			break;
+		case "C":
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+			// "/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
+			smApplBB.getManagedBean().setHeaderMsg(
+					"Review Cancel Mof Registration Application - ");
 			break;
 		case "A":
 			fc.getApplication()
