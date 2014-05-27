@@ -15,7 +15,7 @@
 					 <p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="Contract extension" />
+				<p:outputLabel value="#{lbl['lbl.ct.amend.conExtension']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -24,7 +24,7 @@
 					 <p:ajax event="change" update=":form" process="@this" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="Change item price" />
+				<p:outputLabel value="#{lbl['lbl.ct.amend.chItemPrice']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 		    <h:panelGrid columns="3">
@@ -33,7 +33,7 @@
 					<p:ajax event="change" update=":form" process="@this"/> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="Change quantity" />
+				<p:outputLabel value="#{lbl['lbl.ct.amend.chQuantity']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -42,7 +42,7 @@
 					<p:ajax event="change" update=":form:tabview:amend" process="@this" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="Change contract value" />
+				<p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -51,7 +51,7 @@
 					<p:ajax event="change" update=":form:tabview:amend" process="@this"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="Change clause"  />
+				<p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}"  />
 			</h:panelGrid>
 	     </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth20">
@@ -110,7 +110,7 @@
 		         <f:convertNumber pattern="#,##0.00" />
 		            <p:ajax event="blur" update="addValue" process="@this" listener="#{amendmentBackingBean.addContractValue}" /> 
 		       </p:inputText>
-		       <p:outputLabel value="New Contract Value" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
+		       <p:outputLabel value="#{lbl['lbl.ct.amend.newConValue']}" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"/>
 		        <p:inputText id="addValue" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}" styleClass="ppRightBtn"
