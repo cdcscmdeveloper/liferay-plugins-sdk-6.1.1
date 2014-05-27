@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.cc.panel.ccd']}" toggleable="true" toggleSpeed="500">
-		<h:panelGroup rendered="#{!centralContractBackingBean.managedBean.updateAction and (centralContractBackingBean.managedBean.circularVer.updateEffDate == null)}">
+		<h:panelGroup rendered="#{!centralContractBackingBean.managedBean.updateAction and (centralContractBackingBean.managedBean.circularVer.extendStartDate  == null)}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.updateEffDate != null)}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.extendStartDate  != null)}">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>		
 	</p:panel>
@@ -65,7 +65,7 @@
 	</p:panel>
 	
 	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
-		rendered="#{!centralContractBackingBean.managedBean.updateAction and centralContractBackingBean.managedBean.circularVer.updateEffDate == null}" >
+		rendered="#{!centralContractBackingBean.managedBean.updateAction and centralContractBackingBean.managedBean.circularVer.extendStartDate == null}" >
 		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index" 
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >

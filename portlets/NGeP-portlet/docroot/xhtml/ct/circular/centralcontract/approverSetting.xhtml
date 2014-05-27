@@ -8,15 +8,6 @@
 	
 	<p:panel id="settingId" header="Approver Setting" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="1">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="Approver Group"/>
-				<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.pmUserGroup.userGroupId}" style="width:80px;">
-					<p:ajax event="change" listener="#{centralContractBackingBean.userGroupChangeListener()}" process="@this" update="approverpickList" />
-					<f:selectItems value="#{centralContractBackingBean.getUserGroupDropdown()}" />
-				</p:selectOneMenu>		
-			</h:panelGrid>
-			<p:spacer height="1" />
-			<h:panelGrid>
 				<p:pickList id="approverpickList" value="#{centralContractBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
 					showTargetControls="true" filterMatchMode="contains">
@@ -27,8 +18,6 @@
 					</p:column>
 				</p:pickList>
 			</h:panelGrid>
-		</h:panelGrid>
 	</p:panel>
-
 </ui:composition>
 	    

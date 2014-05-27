@@ -21,6 +21,8 @@ import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -46,7 +48,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private CtCircular circular;
 	private CtCircularVer circularVer;
 	private CtCircularContract selectedCircularContract;
-	private CtCircularItem selectedCircularItem;
+	private CtContractItem selectedCircularItem;
+	private CtContractZone selectedItemsZone;
 
 	private List<CtContract> contractList;
 	private List<CtContract> selectedContractList;
@@ -235,12 +238,20 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setSelectedCircularContract(CtCircularContract selectedCircularContract) {
 		this.selectedCircularContract = selectedCircularContract;
 	}
-	public CtCircularItem getSelectedCircularItem() {
+	
+	public CtContractItem getSelectedCircularItem() {
 		return selectedCircularItem;
 	}
-	public void setSelectedCircularItem(CtCircularItem selectedCircularItem) {
+	public void setSelectedCircularItem(CtContractItem selectedCircularItem) {
 		this.selectedCircularItem = selectedCircularItem;
 	}
+	public CtContractZone getSelectedItemsZone() {
+		return selectedItemsZone;
+	}
+	public void setSelectedItemsZone(CtContractZone selectedItemsZone) {
+		this.selectedItemsZone = selectedItemsZone;
+	}
+	
 	
 	
 }

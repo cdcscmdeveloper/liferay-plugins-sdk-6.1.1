@@ -17,8 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -70,6 +71,8 @@ import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -111,7 +114,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
-	
+	private List<CtContractZone> contractItemZones;
+
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"Save","Submit"});
@@ -262,7 +266,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.contractPhysicalNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
 			}
 			if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
@@ -999,7 +1003,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	public void selectCcrContractEvent() {
-		getManagedBean().setSelectedCircularItem(null);
+		//getManagedBean().setSelectedCircularItem(null);
+		this.getManagedBean().getSelectedCircularContract();
 	}
 
 	public void selectCircularItemEvent() {
@@ -1052,5 +1057,25 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         if(time == null)
         	return str;
         return format.format(time); 
-    } 
+    }
+	
+	public List<CtContractZone> getContractItemZones() {
+		contractItemZones = new ArrayList<CtContractZone>();
+		if(this.getManagedBean().getSelectedCircularItem() != null && this.getManagedBean().getSelectedCircularItem() != null
+				&& this.getManagedBean().getSelectedCircularItem().getCtItemPrices() != null){
+		  for(CtItemPrice price :this.getManagedBean().getSelectedCircularItem().getCtItemPrices()){
+			  contractItemZones.add(price.getCtContractZone());
+				
+			}
+		  Set<CtContractZone> s= new HashSet<CtContractZone>();
+			s.addAll(contractItemZones);         
+			contractItemZones = new ArrayList<CtContractZone>();
+			contractItemZones.addAll(s);   
+		}
+		return contractItemZones;
+	}
+
+	public void setContractItemZones(List<CtContractZone> contractItemZones) {
+		this.contractItemZones = contractItemZones;
+	}
 }

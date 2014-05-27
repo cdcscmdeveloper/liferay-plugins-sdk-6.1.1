@@ -10,8 +10,8 @@
 				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
 				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
-				<td rowspan="2"><p:inputTextarea cols="26" rows="3"
-						style=" margin-bottom:0px;"
+				<td rowspan="2"><p:inputTextarea cols="31" rows="3" 
+						style=" margin-bottom:5px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 				</td>
 			</tr>
@@ -24,22 +24,10 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
 				<td><p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" /></td>
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="29" id="popupButtonCal" disabled="true" /></td>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
 			    <td><p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="24" id="popupButtonCal1" disabled="true" /></td>
-			</tr>
-			<tr>
-			    <td><h:outputLabel value="Zonal Level" /></td>
-			    <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode}" style="width:135px;">
-				    <f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				    <p:ajax event="change" update=":form:tabview" process="@form" />
-			        </p:selectOneMenu>	</td>
-			   <td> <h:outputLabel value="Item Zonal Level" /></td>
-			   <td><p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode}" style="width:156px;">
-				   <f:selectItems value="#{centralContractBackingBean.getZonalLevelDropDown()}" />
-				   <p:ajax event="change" update=":form:tabview" process="@form" />
-			       </p:selectOneMenu>	</td>
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="29" id="popupButtonCal1" disabled="true" /></td>
 			</tr>
 			<tr>
 			<td><h:outputLabel value="* #{lbl['lbl.ct.cc.upload']}" /></td>

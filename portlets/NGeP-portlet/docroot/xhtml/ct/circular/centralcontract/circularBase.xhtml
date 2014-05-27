@@ -65,20 +65,18 @@
 			</table>	 
 		</p:panel>
 		<p:tabView id="tabview" orientation="left" >
-			<p:ajax event="tabChange" process="@form" update=":form:tabview:contractListPnl"/>
+			<p:ajax event="tabChange"/>
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/createCircular.xhtml"/>
 	       		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
 	       	</p:tab> 
-	       	<p:tab id="tabAgency" title="Zone" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode!=null or centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode!=null}" >
-	       		<ui:include src="zone.xhtml"/>
-	       	</p:tab>
 	       	<p:tab id="tabContract" title="Contract">
 	       		<ui:include src="contract.xhtml"/>
 	       	</p:tab>
-		 	<p:tab id="tabSetting" title="Setting" rendered="#{centralContractBackingBean.isCentralContractAdmin()}" >
+	       	<p:tab id="tabSetting" title="Setting" rendered="#{centralContractBackingBean.isCentralContractAdmin()}" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/approverSetting.xhtml" />  
 	       	</p:tab>   
+		 	
 		</p:tabView>
 		<ac:lovPopup />
 	</ui:define>

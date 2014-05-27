@@ -47,7 +47,7 @@
 					<h:outputText value="#{data.name}" />
 				</p:column>
 				<p:column headerText="Update Effective Date" >
-					<h:outputText value="#{data.updateEffDate}" />
+					<h:outputText value="#{data.extendStartDate}" />
 				</p:column>
 				<p:column headerText="Circular Start Date" >
 					<h:outputText value="#{data.startDate}" >
@@ -63,7 +63,7 @@
 					<h:outputText value="#{centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="Action" styleClass="column-align-center">
-					<p:commandLink rendered="#{data.status.statusId==CtStatusConst.approved}"
+					<p:commandLink rendered="#{data.status.statusId==CtStatusConst.pqApproved}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
 					</p:commandLink>

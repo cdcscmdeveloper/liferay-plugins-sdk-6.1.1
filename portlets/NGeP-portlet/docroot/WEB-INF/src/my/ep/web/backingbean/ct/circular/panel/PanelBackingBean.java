@@ -533,14 +533,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void deletePanelSupplier(){
-		log.info("PanelBackingBean.deletePanelSupplier()");
-		try {
-			getManagedBean().getCtPanelItems().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
-			getManagedBean().setSelectedPanelSupplier(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+		getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
+	    getManagedBean().setSelectedPanelSupplier(null);
 	}
 	
 	public void addCancelCircularListener() {
@@ -673,8 +667,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void deletePanelZone(){
-		
 		this.getManagedBean().getCtPanelItems().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
+		this.getManagedBean().setSelectedPanelZone(null);
 	}
 	
 	public void selectPanelItemEvent() {
@@ -1177,8 +1171,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return panelSuppliers;
 	}
 	
-	public void setCtPanelZoneListner(CtPanelItem ctPanelItem){
-		this.getManagedBean().setCtPanelItems(ctPanelItem);
+	public void setCtPanelZoneListner(CtPanelItem panelItem){
+		this.getManagedBean().setCtPanelItems(panelItem);
+	 	if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase("Z")){
+	 		this.getManagedBean().setSelectedPanelZone(null);
+			this.getManagedBean().setSelectionOfZone(true);
+		}else{
+			this.getManagedBean().setSelectionOfZone(false);
+		}
 	}
 
 	public CtPanelItem[] getSelectedPanelItem() {

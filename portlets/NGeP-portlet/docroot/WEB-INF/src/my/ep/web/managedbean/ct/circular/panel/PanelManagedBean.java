@@ -72,6 +72,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelItem ctPanelItems;
 	private CtPanelZone selectedPanelZone;
 	private CtPanelSupplier selectedPanelSupplier;
+	private boolean selectionOfZone;
 
 	public CtCircular getCircular() {
 		return circular;
@@ -302,6 +303,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
+	}
+
+	public boolean isSelectionOfZone() {
+		return selectionOfZone;
+	}
+
+	public void setSelectionOfZone(boolean selectionOfZone) {
+		this.selectionOfZone = selectionOfZone;
 	}
 	
 	
