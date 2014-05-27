@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.softcertreg;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 
 	public String cancel(){
 
-		return "returnToSmUserManagementHome";
+		return "softCertUserSearch.xhtml";
 
 	}
 	
@@ -79,13 +80,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 		
 		reqDTO.setSmSupplierId(this.getManagedBean().getLoginUserPersonnelInfo().getSmAppl().getSmSupplier().getSupplierId());
 		
+//		System.out.println("\nP Size 1:"+this.getManagedBean().getLoginUserPersonnelInfo().getSmAppl().getSmPersonnels().size());
+		
 		PersonnelResDTO resDTO = new PersonnelResDTO(); 
 		
 		if(this.getManagedBean().getLoginRoleName().equalsIgnoreCase(SupplierManagementConst.MOF_SUPPLIER_ADMIN))
-			resDTO = smPersonnelSO.retrieveAuthorizedPersonnel(reqDTO);
+			resDTO = smPersonnelSO.retrieveAuthorizedPersonnelSoftCert(reqDTO);
 		else
-			resDTO = smPersonnelSO.retrievePersonnelBySupplierId(reqDTO);
-			
+			resDTO = smPersonnelSO.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
+		
+		
+		
 		List<SmPersonnel> smPersonnelList = resDTO.getSmPersonnelList();
 		this.getManagedBean().setPersonnelList(smPersonnelList);
 		
@@ -105,6 +110,23 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 		
 		this.getManagedBean().setLoginUserPersonnelInfo(smPersonnel);
 		
+	}
+	
+	public String navigateToPaymentPage(){
+		
+		this.getManagedBean().setSoftCertPayList(this.getManagedBean().getSoftCertSelectList());
+		updateAmount();
+		return "softCertPaymentPage.xhtml";
+	}
+	
+	public void updateAmount(){
+		
+		BigDecimal amount = BigDecimal.ZERO;
+		for(SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()){
+			this.getManagedBean().getPaymentMap().put(personnel.getPersonnelId(), BigDecimal.valueOf(150));
+			amount = amount.add(BigDecimal.valueOf(150));
+		}
+		this.getManagedBean().setTotalPaymentAmount(amount);
 	}
 	
 }

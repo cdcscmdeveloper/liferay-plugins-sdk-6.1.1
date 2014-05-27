@@ -39,7 +39,7 @@
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
         <h:outputText value="Y" rendered="#{personnel.softcert}"/>
-        <h:outputText value="N" rendered="!#{personnel.softcert}"/>
+        <h:outputText value="N" rendered="#{!personnel.softcert || personnel.softcert eq null}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
@@ -55,7 +55,7 @@
 	
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-      <p:commandButton value="Proceed to payment" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
+      <p:commandButton value="Proceed" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
 	  </p:commandButton>
 	 </h:panelGrid>	
 	 </p:panel>
@@ -72,7 +72,8 @@
 	    	<tr>
 			<td>
 				<div align="center">
-				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" />
+				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" 
+				action="#{softCertBackingBean.navigateToPaymentPage}"/>
 				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
 				</div>
 			</td>		

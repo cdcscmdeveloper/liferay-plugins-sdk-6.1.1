@@ -1,6 +1,9 @@
 package my.ep.web.managedbean.sm.softcertreg;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -32,6 +35,9 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	private List<SmPersonnel> personnelList;
 	private List<SmPersonnel> softCertSelectList;
+	private List<SmPersonnel> softCertPayList;
+	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
+	private BigDecimal totalPaymentAmount;
 	private SmPersonnel loginUserPersonnelInfo;
 
 	private String loginRoleName;
@@ -67,6 +73,32 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSoftCertSelectList(List<SmPersonnel> softCertSelectList) {
 		this.softCertSelectList = softCertSelectList;
+	}
+
+	public List<SmPersonnel> getSoftCertPayList() {
+		return softCertPayList;
+	}
+
+	public void setSoftCertPayList(List<SmPersonnel> softCertPayList) {
+		this.softCertPayList = softCertPayList;
+	}
+
+	public HashMap<Long, BigDecimal> getPaymentMap() {
+		return paymentMap;
+	}
+
+	public void setPaymentMap(HashMap<Long, BigDecimal> paymentMap) {
+		this.paymentMap = paymentMap;
+	}
+
+	public BigDecimal getTotalPaymentAmount() {
+		if(totalPaymentAmount == null)
+			totalPaymentAmount = BigDecimal.ZERO;
+		return totalPaymentAmount;
+	}
+
+	public void setTotalPaymentAmount(BigDecimal totalPaymentAmount) {
+		this.totalPaymentAmount = totalPaymentAmount;
 	}
 
 	public SmPersonnel getLoginUserPersonnelInfo() {
