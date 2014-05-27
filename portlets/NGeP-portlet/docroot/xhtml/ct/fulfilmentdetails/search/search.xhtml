@@ -87,41 +87,41 @@
 					   	 rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="pause.png"
-						  value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
+						  value="/resources/ep/images/design/pause.png" title="#{lbl['lbl.ct.search.susContract']}" />
 					   </p:commandLink>
 					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}"
 					   	 rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="terminate.png"
-						  value="/resources/ep/images/design/terminate.png" title="Termination" />
+						  value="/resources/ep/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
 					   </p:commandLink>
 					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" 
 					      rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="revise.png"
-						   value="/resources/ep/images/design/revise.png" title="Amendment" />
+						   value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
 					   </p:commandLink>
 					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoContractPage}"
 					     rendered="#{data.fdStatus == 1}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="evaluate.png"
-						   value="/resources/ep/images/design/evaluate.png" title="Update" />
+						   value="/resources/ep/images/design/evaluate.png" title="#{lbl['lbl.ct.search.update']}" />
 					   </p:commandLink>						
 					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png" title="View Contract" />
+							value="/resources/ep/images/design/document.png" title="#{lbl['lbl.ct.search.viewCt']}" />
 					   </p:commandLink>
 					   <p:spacer width="5" rendered="#{data.terminate or data.mutualTerminate or data.remedy}" />
 					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminateHistoryPage}" 
 					     rendered="#{data.terminate or data.mutualTerminate or data.remedy}" >
 						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
 						 <p:graphicImage library="ep/images/design" name="history_frame.png"
-							value="/resources/ep/images/design/history_frame.png" title="View Termination/Remedy History" />
+							value="/resources/ep/images/design/history_frame.png" title="#{lbl['lbl.ct.search.viewHistory']}" />
 					   </p:commandLink>
 					</p:column>
 				</p:dataTable>
