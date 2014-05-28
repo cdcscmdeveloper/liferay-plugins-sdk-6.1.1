@@ -22,14 +22,13 @@
         <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
         <p:inputText value="#{associationBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" 
-        id="calefdate" showOn="button"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" id="calefdate"
+         pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
         <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateEnd}" id="calepdate" 
-        pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+         pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
         <p:inputText  value="#{associationBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
-        <f:verbatim></f:verbatim>
       </h:panelGrid>
       <div class="ppRightBtn"> 
         <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
@@ -43,14 +42,14 @@
 		 selection="#{associationBackingBean.ctSelectAssociation}" rowKey="#{data}">
 	     <ac:paginator for="associateSearch"/>
 		 <p:column selectionMode="multiple" style="width:18px;" />
-		 <p:column style="width:200px;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
-		   <p:outputLabel value="#{data.projectName}" style="float:left;"  /> </p:column> 
-		 <p:column style="width:400px;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
-		   <p:outputLabel value="#{data.description}" style="float:left;"/> </p:column> 
-		 <p:column style="width:60px;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
-		   <p:outputLabel value="1" />
-		 </p:column> 
-		 <p:column style="width:100px;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
+		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
+		   <h:outputText value="#{data.projectName}" /> </p:column> 
+		 <p:column style="width:35%;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
+		   <h:outputText value="#{data.description}" /> </p:column> 
+		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
+		   <h:outputText value="#{associationBackingBean.getAssocContractCount(data.associationId)}" />
+		 </p:column>
+		 <p:column style="width:15%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
 		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" styleClass="column-align-center">
 			  <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
 			  <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
