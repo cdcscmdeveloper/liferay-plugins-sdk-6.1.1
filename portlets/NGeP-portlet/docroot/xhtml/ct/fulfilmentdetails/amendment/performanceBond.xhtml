@@ -8,11 +8,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500">
         <p:dataTable  id="tableBond" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-           rowKey="#{data}" selection="#{amendmentBackingBean.selectedBondList}"> 
+           rowKey="#{data}" > 
 	      <ac:paginator for="tableBond" />
 	       <p:columnGroup type="header"> 
 	            <p:row> 
-	                <p:column headerText="Select"  /> 
                     <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"  /> 
                     <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" /> 
                     <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
@@ -22,60 +21,31 @@
 		            <p:column headerText="Status"/> 
                </p:row>							
 	        </p:columnGroup>
-	        <p:column selectionMode="multiple" style="width:18px;"/>  
-            <p:column><p:inputText value="#{data.refNo}" style="width:70px;"/> </p:column>	
-            <p:column><p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;">
+            <p:column><p:inputText value="#{data.refNo}" style="width:70px;" disabled="true"/></p:column>	
+            <p:column><p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
                 <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/></p:selectOneMenu></p:column>	
-            <p:column><p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;" >
+            <p:column><p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;"  disabled="true" >
                  <f:convertNumber pattern="#,###.00" /></p:inputText></p:column>	
-            <p:column> <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button"  size="10" 
-                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> </p:column>	
-            <p:column> <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button"  
-                   pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="10"/> </p:column>	
+            <p:column> <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
+                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
+            </p:column>	
+            <p:column> <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
+                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"/> 
+            </p:column>	
             <p:column styleClass="column-align-center">
                <h:panelGroup id="uploadBondPg">
-				  <p:commandButton oncomplete="uploadBondDlg.show();return false;" icon="iconAttachment" 
-					 update=":form:tabview:tableBond" rendered="#{data.filePath == null}">
-					 <f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctPerformanceBond}" /></p:commandButton>	
-				     <h:commandLink value="#{amendmentBackingBean.fileNames(data.filePath)}" rendered="#{data.filePath != null}" 
-				      style="float:left;" styleClass="blue_font" action="#{amendmentBackingBean.downloadFile(data.filePath)}"/>					
-			   </h:panelGroup> </p:column>
+					<h:commandLink styleClass="blue_font"
+						value="#{amendmentBackingBean.fileNames(data.filePath)}"
+						rendered="#{data.filePath != null}" style="float:left;"
+						action="#{amendmentBackingBean.downloadFile(data.filePath)}" />
+				</h:panelGroup> 
+			</p:column>
              <p:column style="width:10%;">
-               <p:selectOneMenu id="rStatus" style="width:100%;">
+               <p:selectOneMenu id="rStatus" style="width:100%;" disabled="true" >
                   <f:selectItems value="#{amendmentBackingBean.getStatusDropdown()}"/>
                </p:selectOneMenu>   
              </p:column>
 	    </p:dataTable>
-       <div class="ppRightBtn"> 
-          <p:commandButton value="Add" process="@form"  icon="ui-icon-add" action="#{amendmentBackingBean.addBondDetails}" update="tableBond" />
-		  <p:spacer width="1"/>
-		  <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();"/> 
-	   </div>
-	   <p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false" resizable="false" width="700px" height="350" 
-	   	    styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-		    <p:ajax event="close" />
-	      	<p:fileUpload style="display:inline;" mode="advanced" 
-			  fileUploadListener="#{amendmentBackingBean.fileUpload}" 
-			  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			  update=":form:tabview:tableBond" >
-		    </p:fileUpload> 
-	    </p:dialog>
-	    <p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" header="Delete Confirmation" styleClass="screen-title"  
-           resizable="false" modal="true" width="325" height="90">  
-            <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			   <p:spacer width="10"/>
-              <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
-              styleClass="ui-inputtextarea"></p:inputTextarea>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="tableBond" process="@form" 
-				actionListener="#{amendmentBackingBean.delBondDetails()}" onclick="dlgPerformDel.hide();"/>
-			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgPerformDel.hide();" type="button" />
-		   </div>
-        </p:dialog>  
   </p:panel>
 </ui:composition>
 
