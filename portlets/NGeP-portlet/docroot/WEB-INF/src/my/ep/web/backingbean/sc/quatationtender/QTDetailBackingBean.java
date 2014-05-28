@@ -90,7 +90,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -478,7 +477,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
 	}
 
-	private void populateUserMinistryList() {
+	/*private void populateUserMinistryList() {
 		debugLogger("populateUserMinistryList");
 
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -499,7 +498,7 @@ public class QTDetailBackingBean extends
 
 			this.getManagedBean().setUserMinistryList(userMinistryList);
 		}
-	}
+	}*/
 
 	public List<PmGo> getGoList() {
 		debugLogger("getGoList");
@@ -831,6 +830,16 @@ public class QTDetailBackingBean extends
 						getManagedBean().getScQtBsv().setTplSpecZoneDtl(
 								briefingZoneBean.getTplSpecZoneDtl());
 					}
+					
+					List<ScQtBSVRemark> bsvRemarks = briefingZoneBean.getScQtBsv().getBsvRemarks();
+					if(null != bsvRemarks) {
+						for (int i = 0; i < bsvRemarks.size(); i++) {
+							if(bsvRemarks.get(i).getRemark() == null || bsvRemarks.get(i).getRemark() == "") {
+								briefingZoneBean.getScQtBsv().getBsvRemarks().remove(i);
+							}
+						}
+					}
+					
 				}
 				List<ScQtBsvDtl> briefBeansList = getManagedBean()
 						.getBriefingZoneBean().get(0).getBriefingList();
@@ -852,6 +861,7 @@ public class QTDetailBackingBean extends
 						.addAll(siteBeansList);
 
 			}
+			
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
@@ -877,9 +887,16 @@ public class QTDetailBackingBean extends
 				getManagedBean().getScQtBsv().getScQtBsvDtls()
 						.addAll(selectedSiteVisitList);
 			}
-
-			initializeRemarks();
-
+			
+			List<ScQtBSVRemark> bsvRemarks = getManagedBean().getScQtBsv().getBsvRemarks();
+			if(null != bsvRemarks) {
+				for (int i = 0; i < bsvRemarks.size(); i++) {
+					if(bsvRemarks.get(i).getRemark() == null || bsvRemarks.get(i).getRemark() == "") {
+						getManagedBean().getScQtBsv().getBsvRemarks().remove(i);
+					}
+				}
+			}
+			
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
@@ -1188,24 +1205,30 @@ public class QTDetailBackingBean extends
 									.getSpecZoneId());
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+							ScQtBsv  scQtBsv = briefingResDTO.getScQtBsv();
+							//List<ScQtBSVRemark> bsvRemarks =scQtBsv.getBsvRemarks();
+							initializeRemarks(scQtBsv);
+							//scQtBsv.setBsvRemarks(bsvRemarks);
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
 									briefingResDTO.getSiteVisitList(),
-									briefingResDTO.getScQtBsv());
+									scQtBsv);
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
 					this.getManagedBean().setBriefingZoneBean(zoneBeans);
-					initializeRemarks();
+					
 				} else {
 					this.getManagedBean()
 							.setBriefings(resDTO.getBriefingList());
 					this.getManagedBean().setSiteBriefings(
 							resDTO.getSiteVisitList());
-					this.getManagedBean().setScQtBsv(resDTO.getScQtBsv());
+					ScQtBsv qtBsv=resDTO.getScQtBsv();
+					initializeRemarks(qtBsv);
+					this.getManagedBean().setScQtBsv(qtBsv);
 
-					initializeRemarks();
+					
 				}
 
 				/*
@@ -1269,13 +1292,14 @@ public class QTDetailBackingBean extends
 		System.out.println("=======get id value=====" + id);
 	}
 
-	public void initializeRemarks() {
+	public void initializeRemarks(ScQtBsv qtBsv) {
 		FacesScopes facesScopes = new FacesScopes();
 		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStatusSO.class);
-		if (null == getManagedBean().getRemarks()) {
-			getManagedBean().setRemarks(new ArrayList<ScRemark>());
+		List<ScQtBSVRemark> remarks=qtBsv.getBsvRemarks();
+		if (null == remarks) {
+			remarks = new ArrayList<ScQtBSVRemark>();
 		}
 		ScQtBSVRemark remark = new ScQtBSVRemark();
 
@@ -1283,6 +1307,7 @@ public class QTDetailBackingBean extends
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
 		remark.setCreatedUser(facesScopes.getUserSessionBean());
+		remark.setScQtBsv(qtBsv);
 		PmStatus status = new PmStatus();
 		status.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -1291,8 +1316,9 @@ public class QTDetailBackingBean extends
 			StatusResDTO statusResDTO = iStatusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			remark.setPmStatus(statusResDTO.getPmStatus());
-			getManagedBean().getRemarks().add(remark);
+			remarks.add(remark);
 		}
+		qtBsv.setBsvRemarks(remarks);
 	}
 
 	/**
@@ -1380,7 +1406,7 @@ public class QTDetailBackingBean extends
 	 * @param object
 	 * @return
 	 */
-	private ScCommittee getFinalizationCommitteeTypeDtl(String type, Long id) {
+	/*private ScCommittee getFinalizationCommitteeTypeDtl(String type, Long id) {
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		ScCommittee committee = null;
 		reqDTO.setCommitteeType(type);
@@ -1407,12 +1433,12 @@ public class QTDetailBackingBean extends
 			committeSO = null;
 		}
 		return committee;
-	}
+	}*/
 
 	/**
 	 * @return
 	 */
-	private ScCommittee getCommitteeTypeDtl(String type, Long id) {
+	/*private ScCommittee getCommitteeTypeDtl(String type, Long id) {
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		ScCommittee committee = null;
 		reqDTO.setCommitteeType(type);
@@ -1451,7 +1477,7 @@ public class QTDetailBackingBean extends
 			committeSO = null;
 		}
 		return committee;
-	}
+	}*/
 
 	/**
 	 * 
@@ -1874,6 +1900,7 @@ public class QTDetailBackingBean extends
 								.getDocDefinitionTypeCode());
 						checkList.setManditory(true);
 						checkList.setAction(pmDoc.getChecklistActionCode());
+						checkList.setBrandNew(false);
 						checkListList.add(checkList);
 					}
 					this.getManagedBean().setScQtChecklists(checkListList);

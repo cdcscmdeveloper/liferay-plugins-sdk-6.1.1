@@ -39,6 +39,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -351,6 +352,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtBsv scQtBsv;
 	private ScQtBsv scQtBriefing;
 	private ScQtBsv scQtSitevisit;
+	private ScQtBSVRemark scQtBSVRemark;
 
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
@@ -2243,6 +2245,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQtCommittes(ISearchResultBean<ScQtCommittee> qtCommittes) {
 		this.qtCommittes = qtCommittes;
+	}
+
+	public ScQtBSVRemark getScQtBSVRemark() {
+		return scQtBSVRemark;
+	}
+
+	public void setScQtBSVRemark(ScQtBSVRemark scQtBSVRemark) {
+		this.scQtBSVRemark = scQtBSVRemark;
 	}
 
 }

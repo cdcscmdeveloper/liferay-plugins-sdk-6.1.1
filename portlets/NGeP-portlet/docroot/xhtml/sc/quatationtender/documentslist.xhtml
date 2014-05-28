@@ -7,11 +7,17 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Document List" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="text-align: right;"><p:commandLink
+						value="Sample Salinan Kontrak" /></td>
+			</tr>
+		</table>
+
 		<p:dataTable var="document" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtChecklists}"
-			editable="true"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedCheckLists}"
-			styleClass="documentslist" rowKey="#{document}"
+			styleClass="documentslist" rowKey="#{document}" editable="true"
 			rowIndexVar="rowIndex">
 
 			<ac:paginator for="doctbl" />
@@ -26,12 +32,12 @@
 				<h:outputText value="#{document.title}"
 					rendered="#{document.brandNew eq false}" />
 
-				<p:inputText value="#{document.title}"
+				<p:inputText value="#{document.title}" size="50"
 					rendered="#{document.brandNew eq true}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.type']}" style="width:10%">
-				<h:outputText value="#{document.definationType.parameterId}"
+				<h:outputText value="#{document.definationType.parameterCode}"
 					rendered="#{document.brandNew eq false}" />
 				<h:outputText value="Upload"
 					rendered="#{document.definationType.parameterId=='184'}" />
@@ -50,19 +56,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
-				<p:commandLink action="#{qTDocumentsBackingBean.showTemplateAction(document)}">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" rendered="#{document.definationType.parameterId=='186'}"/>
-				</p:commandLink>
-
 				<p:commandLink
-					action="#{qTDocumentsBackingBean.downloadDocumentFile(document)}"
-					update="doctbl">
-					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/resources/ep/images/design/download.png"
-						rendered="#{!empty document.scQtCheckListAttachment}" />
+					action="#{qTDocumentsBackingBean.showTemplateAction(document)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png"
+						rendered="#{document.definationType.parameterId=='186'}" />
 				</p:commandLink>
 
+				<p:commandButton value="Download" update="doctbl"
+					actionListener="#{qTDocumentsBackingBean.downloadDocumentFile(document)}"
+					rendered="#{!empty document.scQtCheckListAttachment}" />
+					
 			</p:column>
 
 		</p:dataTable>
@@ -77,9 +81,8 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,doctbl" partialSubmit="true"
 				action="#{qTDocumentsBackingBean.addDocumentList}"
-				oncomplete="documentWidget.paginator.endLink.click();" 
-				update="doctbl"
-				icon="ui-icon-add" />
+				oncomplete="documentWidget.paginator.endLink.click();"
+				update="doctbl" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete"
@@ -101,6 +104,4 @@
 			update="doctbl" oncomplete="attachDlg1.hide()">
 		</p:fileUpload>
 	</p:dialog>
-
-
 </ui:composition>

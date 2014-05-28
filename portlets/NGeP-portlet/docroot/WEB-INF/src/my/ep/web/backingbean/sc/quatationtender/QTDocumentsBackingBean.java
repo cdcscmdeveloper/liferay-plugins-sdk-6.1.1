@@ -31,20 +31,23 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -94,6 +97,9 @@ public class QTDocumentsBackingBean extends
 		List<ScQtCheckList> qtCheckLists = getManagedBean().getScQtChecklists();
 		if (null == qtCheckLists) {
 			qtCheckLists = new ArrayList<ScQtCheckList>();
+		}
+		for (ScQtCheckList existedCheckList : qtCheckLists) {
+			existedCheckList.setBrandNew(false);
 		}
 		ScQtCheckList checkList = new ScQtCheckList();
 		PmParameter parameter = new PmParameter();
@@ -284,7 +290,7 @@ public class QTDocumentsBackingBean extends
 		}
 	}
 
-	public void standardListAction() {
+	/*public void standardListAction() {
 
 		List<ScQtCheckList> checkLists = getManagedBean().getScQtChecklists();
 
@@ -295,13 +301,13 @@ public class QTDocumentsBackingBean extends
 		for (PmReportSection pmReportSection : getManagedBean()
 				.getSelectedPmReportSectionList()) {
 			ScQtCheckList qtCheckList = new ScQtCheckList();
-			/*qtCheckList.setTitle(pmReportSection.getPmCheckList()
-					.getCheckListName());*/
+			qtCheckList.setTitle(pmReportSection.getPmCheckList()
+					.getCheckListName());
 			qtCheckList.setCheckStatus(true);
 			checkLists.add(qtCheckList);
 		}
 		getManagedBean().setScQtChecklists(checkLists);
-	}
+	}*/
 
 	public void deleteUploadFile() {
 		debugLogger("deleteUploadFile");
@@ -377,6 +383,8 @@ public class QTDocumentsBackingBean extends
 
 	public void downloadDocumentFile(ScQtCheckList scQtCheckList)
 			throws IOException {
+		debugLogger("downloadDocumentFile");
+		
 		File file = new File(scQtCheckList.getScQtCheckListAttachment()
 				.getFilePath());
 		InputStream input = new FileInputStream(file);
@@ -498,5 +506,33 @@ public class QTDocumentsBackingBean extends
 	
 	public void saveAction() {
 		debugLogger("saveAction");
+		IQTTemplateSO qtTemplateSO = null;
+		try {
+			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			ScQtDoc qtDoc = this.getManagedBean().getQtDoc();
+			/*ScQtCheckList checklist = this.getManagedBean().getQtDoc()
+					.getScQtCheckList();*/
+			//checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
+			qtTemplateReqDTO.setScQtDoc(qtDoc);
+			qtTemplateReqDTO.getScQtDoc().getTplDocMaster().setCategoryId(1l);
+			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+
+			QTTemplateDocResDTO resDTO = qtTemplateSO
+					.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""
+
+						));
+			} else {
+				throw new EpException("Failed.");
+			}
+		} finally {
+			qtTemplateSO = null;
+		}
+		
 	}
 }
