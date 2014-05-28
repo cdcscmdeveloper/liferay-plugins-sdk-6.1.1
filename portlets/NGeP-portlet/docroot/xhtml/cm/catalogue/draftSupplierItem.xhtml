@@ -7,20 +7,26 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<script type="text/javascript">
+  
+
+    function clearInvalidFileMsg() {
+    	fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
+    }
+</script>
 
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload"
-			onclick="excelDialog.show()"></p:commandButton>
+			onclick="excelDialog.show(); clearInvalidFileMsg();"></p:commandButton>
 
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" update=":form"
-			icon="ui-icon-download" ajax="false">
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
+			update=":form" icon="ui-icon-download" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 
 
 		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
-			action="#{catalogueBackingBean.submitToReviewItems}"
-			update="@form"></p:commandButton>
+			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 
 	<ac:lovPopup />
@@ -47,15 +53,15 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}*
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10"></p:inputText>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"
+				size="10"></p:inputText>
 
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}*
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20"
-				headerText="UOM"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM"
 				saveObject="catalogueBackingBean.managedBean.maintainItemList[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
@@ -109,9 +115,9 @@
 		resizable="false" styleClass="pop_up_top">
 
 
-		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
-			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/" update="@form"
-			invalidFileMessage="Only XLS files are accepted">
+		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}" widgetVar="fileUploadWidget"
+			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+			update="@form" invalidFileMessage="Only XLS files are accepted">
 		</p:fileUpload>
 
 	</p:dialog>
