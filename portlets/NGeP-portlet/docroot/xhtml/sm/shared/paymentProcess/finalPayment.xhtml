@@ -9,40 +9,43 @@
 
 	<ui:define name="contentSection">
 			<p:panel header="Payment Summary :">
-				<p:dataTable>
+				<p:dataTable id="paymentList" rowKey="#{pay}" rowIndexVar="index" 
+				value="#{commApplBackingBean.managedBean.personnelList}" var="pay" 
+				editable="true" style="word-wrap: break-word;table-layout: fixed;" 
+				selection="#{commApplBackingBean.managedBean.selectPersonnelList}">
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column headerText="Include" />
-							<p:column headerText="NO." />
+							<p:column selectionMode="multiple" style="width:2%" />
 							<p:column headerText="Process / Description" />
-							<p:column headerText="Quantity / No. Of Applications" />
 							<p:column headerText="Amount (RM.)" />
 
 						</p:row>
 					</p:columnGroup>
 
-					<p:column>
-						<p:outputLabel />
-					</p:column>
+					<p:ajax event="toggleSelect" listener="#{commApplBackingBean.updateAmount()}" update=":form:paymentList"/>
+					<p:ajax event="rowSelect" listener="#{commApplBackingBean.updateAmount()}" update=":form:paymentList"/>
+					<p:ajax event="rowSelectCheckbox" listener="#{commApplBackingBean.updateAmount()}" update=":form:paymentList"/>
+					<p:ajax event="rowUnselectCheckbox" listener="#{commApplBackingBean.updateAmount()}" update=":form:paymentList"/>
+					<p:ajax event="rowUnselect" listener="#{commApplBackingBean.updateAmount()}" update=":form:paymentList"/>
+ 
+					<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{commApplBackingBean.managedBean.pListSize == index}"/>
 
-					<p:column>
-						<p:outputLabel />
+					<p:column disabledSelection="#{commApplBackingBean.managedBean.pListSize == index}">
+						<h:outputText value="Soft Cert Payment for #{pay.name}" rendered="#{commApplBackingBean.managedBean.pListSize != index}"/>
+						<h:outputText value="New MoF Fee" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'N'}"/>
+						<h:outputText value="Renew MoF Fee" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'R'}"/>
 					</p:column>
-					<p:column>
-						<p:outputLabel />
+					<p:column disabledSelection="#{commApplBackingBean.managedBean.pListSize == index}">
+						<h:outputText value="150.00" rendered="#{commApplBackingBean.managedBean.pListSize != index}"/>
+						<h:outputText value="400.00" rendered="#{commApplBackingBean.managedBean.pListSize == index}"/>
 					</p:column>
-					<p:column>
-						<p:outputLabel />
-					</p:column>
-					<p:column>
-						<p:outputLabel />
-					</p:column>
-
+					
 					<p:columnGroup type="footer">
 						<p:row>
-							<p:column colspan="4" footerText=" Total : 400"
-								style="text-align:right" />
-							<p:column footerText="" />
+							<p:column footerText=""></p:column>
+							<p:column footerText="Total"
+								style="text-align:left" />
+							<p:column footerText="#{commApplBackingBean.managedBean.totalAmount}" style="text-align:left"/>
 
 						</p:row>
 					</p:columnGroup>

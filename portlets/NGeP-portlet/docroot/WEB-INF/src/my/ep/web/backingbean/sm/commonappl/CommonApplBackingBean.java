@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.sm.commonappl;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -15,6 +18,7 @@ import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
@@ -75,11 +79,36 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/sdoreview/reviewSupportingDocuments");
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Make Payment")) {
-			SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
+			System.out.println("Process Name: " + resDTO.getProcessName());
+			/*SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
-			svoBB.getManagedBean().setTaskId(taskId);
+			svoBB.getManagedBean().setTaskId(taskId);*/
+			
+			
+			int documentId = 0;
+			if (resDTO.getProcessName()
+					.equalsIgnoreCase("MOF Account Maintain")) {
+				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+						.getPojo();
+				documentId = smObj.getDocumentId();
+				
+			} else if (resDTO.getProcessName().equalsIgnoreCase(
+					"MOF Supplier Registration")) {
+				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
+				documentId = smObj.getDocumentId();
+			}
+			
+			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+			mofResDto = retriveApplicationById(documentId);
+			SmAppl appl = mofResDto.getSmAppl();
+			this.getManagedBean().setApplType(appl.getApplType());
+			this.getManagedBean().setPersonnelList(appl.getSmPersonnels());
+			this.getManagedBean().getPersonnelList().add(new SmPersonnel());
+			this.getManagedBean().setSelectPersonnelList(this.getManagedBean().getPersonnelList());
+			this.getManagedBean().setpListSize(this.getManagedBean().getPersonnelList().size() - 1);
+			updateAmount();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -236,6 +265,17 @@ public class CommonApplBackingBean extends
 
 	}
 
+	public void updateAmount(){
+		
+		BigDecimal amount = BigDecimal.ZERO;
+		for(SmPersonnel personnel : this.getManagedBean().getSelectPersonnelList()){
+			amount = amount.add(BigDecimal.valueOf(150));
+		}
+		amount = amount.subtract(BigDecimal.valueOf(150));
+		amount = amount.add(BigDecimal.valueOf(400));
+		this.getManagedBean().setTotalAmount(amount);
+	}
+	
 	private void setNavigationForSmDecision(String applType,
 			SmApplicationBackingBean smApplBB) {
 		FacesContext fc = FacesContext.getCurrentInstance();
