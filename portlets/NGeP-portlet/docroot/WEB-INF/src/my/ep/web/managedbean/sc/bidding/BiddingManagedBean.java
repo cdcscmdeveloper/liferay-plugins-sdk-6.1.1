@@ -3,12 +3,17 @@ package my.ep.web.managedbean.sc.bidding;
 import java.util.Date;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * @author Venkat Chanumolu
+ *
+ */
+
 @ManagedBean(name="biddingMB")
-@RequestScoped
+@SessionScoped
 public class BiddingManagedBean extends BaseManagedBean{
 
 
