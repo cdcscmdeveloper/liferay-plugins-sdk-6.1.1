@@ -22,10 +22,12 @@
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
 				<td><p:selectOneRadio
 						value="#{specificationBackingBean.managedBean.scQt.panel}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
+
+						<f:selectItems
+							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" update="panelupdate"></p:ajax>
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>
+					</td>
 			</tr>
 		</table>
 

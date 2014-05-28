@@ -10,7 +10,7 @@
 
 		<table style="width: 100%" border="0">
 			<tr>
-				<td><h:outputLabel value="Title" /></td>
+				<td valign="top"><h:outputLabel value="Title" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
 						cols="143" style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
@@ -25,7 +25,7 @@
 				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.est.price']}" /></td>
 				<td><p:inputText size="35" style="text-align:right"
 						id="estPrice" required="true"
-						label="#{lbl['lbl.sc.spec.est.price']}"
+						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -37,6 +37,7 @@
 
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea rows="2" cols="143"
+						maxlength="200"
 						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
 
 			</tr>
@@ -82,9 +83,7 @@
 					<td><p:selectOneRadio required="true" id="openFor"
 							label="#{lbl['lbl.sc.spec.opn.for']}"
 							value="#{specificationBackingBean.managedBean.scQt.openFor}">
-
-							<f:selectItem itemLabel="Bumiputra" itemValue="B" />
-							<f:selectItem itemLabel="All" itemValue="A" />
+                            <f:selectItems value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
 				</ui:fragment>
 			</tr>
@@ -96,8 +95,8 @@
 				<td><p:selectOneRadio required="true" id="evalType"
 						label=" #{lbl['lbl.sc.spec.evaluation.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
-						<f:selectItem itemLabel="One Tier" itemValue="1" />
-						<f:selectItem itemLabel="Two Tier" itemValue="2" />
+						<f:selectItems value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
+					
 					</p:selectOneRadio> <p:message id="evalMsg" for="evalType" display="icon" /></td>
 			</tr>
 			<tr>
@@ -107,8 +106,9 @@
 					<td><p:selectOneRadio
 							value="#{specificationBackingBean.managedBean.scQt.zonal}">
 
-							<f:selectItem itemLabel="Yes" itemValue="true" />
-							<f:selectItem itemLabel="No" itemValue="false" />
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
 							<p:ajax event="change" partialSubmit="true"
 								update="generalLocationList" process="@this"></p:ajax>
 						</p:selectOneRadio></td>
@@ -144,7 +144,7 @@
 							style="width: 178px;">
 
 							<f:selectItems
-								value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 						</p:selectOneMenu></td>
@@ -162,7 +162,7 @@
 						<p:tree value="#{zoneTree}" var="location">
 
 							<p:treeNode type="zone">
-								<h:outputText value="#{location.zoneName}" />
+								<h:outputText value="#{location.tplSpecZoneDtl.zoneName}" />
 							</p:treeNode>
 
 							<p:treeNode type="state">

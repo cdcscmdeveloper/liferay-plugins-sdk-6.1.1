@@ -9,7 +9,7 @@
 		<table>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.approval.min.spec.secretary']}" /></td>
-				<td><p:inputText
+				<td><p:inputText size="75"
 						value="#{specificationBackingBean.managedBean.scQt.ministrySpecSecrataryId.userName}" readonly="true" disabled="true"/></td>
 			</tr>
 		</table>
@@ -37,7 +37,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}" maxlength="1000"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"

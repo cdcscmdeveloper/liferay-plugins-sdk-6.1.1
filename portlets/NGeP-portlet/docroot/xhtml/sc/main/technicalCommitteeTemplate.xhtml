@@ -57,9 +57,8 @@
 
 					<td><h:outputLabel value="Local Goods" /></td>
 					<td><p:selectOneRadio id="estimated">
-							<f:selectItem itemLabel="Yes" itemValue="true" />
-							<f:selectItem itemLabel="No" itemValue="false" />
-
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>
 				</tr>
 
@@ -67,12 +66,11 @@
 
 					<td><h:outputLabel value="Status" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 					<td><h:outputLabel value="Item Weightage" /></td>
-					<td><p:selectOneRadio >
-							<f:selectItem itemLabel="Yes" itemValue="true" />
-							<f:selectItem itemLabel="No" itemValue="false" />
-
+					<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>		
 							
 				</tr>

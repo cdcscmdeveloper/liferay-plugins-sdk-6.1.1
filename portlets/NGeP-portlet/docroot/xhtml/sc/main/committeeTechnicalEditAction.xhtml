@@ -37,7 +37,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;"
+					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
@@ -55,9 +55,8 @@
 
 					<td><h:outputLabel value="Local Goods" /></td>
 					<td><p:selectOneRadio id="estimated">
-							<f:selectItem itemLabel="Yes" itemValue="true" />
-							<f:selectItem itemLabel="No" itemValue="false" />
-
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>
 				</tr>
 				
@@ -65,7 +64,12 @@
 
 					<td><h:outputLabel value="Status" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							<td><h:outputLabel value="Item Weightage" /></td>
+					<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio></td>
 				</tr>
 
 			</table>

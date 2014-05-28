@@ -63,7 +63,9 @@
 
 					<td><h:outputLabel value="Status" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							<td><h:outputLabel value="Item Weightage" /></td>
+					<td><p:inputText value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}" disabled="true" readonly="true"></td>
 				</tr>
 			</table>
 

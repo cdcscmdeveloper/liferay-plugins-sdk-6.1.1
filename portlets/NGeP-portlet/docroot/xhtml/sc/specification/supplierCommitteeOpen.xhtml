@@ -72,7 +72,7 @@
 						style="width: 178px;margin-bottom: 5px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
@@ -91,7 +91,7 @@
 					<p:tree value="#{zoneTree}" var="location">
 
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.zoneName}" />
+							<h:outputText value="#{location.tplSpecZoneDtl.zoneName}" />
 						</p:treeNode>
 
 						<p:treeNode type="state">
@@ -140,7 +140,7 @@
 						style="width: 178px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>

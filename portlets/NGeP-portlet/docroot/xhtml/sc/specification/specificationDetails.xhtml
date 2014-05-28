@@ -22,11 +22,8 @@
 
 				<td style="width: 200px;"><h:outputLabel
 						value="Quotation/Tender Type" /></td>
-				<td><p:inputText readonly="true" value="Open"
-						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}"
-						disabled="true"></p:inputText> <p:inputText readonly="true"
-						value="Restricted"
-						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'R'}"
+				<td><p:inputText readonly="true"
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true"></p:inputText></td>
 			</tr>
 
@@ -42,11 +39,8 @@
 				<td><h:outputLabel value="Open For" /></td>
 
 
-				<td><p:inputText readonly="true" value="Bumiputra"
-						rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'B'}"
-						disabled="true"></p:inputText> <p:inputText readonly="true"
-						value="All"
-						rendered="#{specificationBackingBean.managedBean.scQt.openFor eq 'A'}"
+				<td><p:inputText readonly="true" 
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
 						disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
@@ -56,21 +50,17 @@
 						disabled="true"></p:inputText></td>
 
 				<td><h:outputLabel value="Zone/Location" /></td>
-				<td><p:inputText readonly="true" value="Yes" disabled="true"
-						rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}"></p:inputText>
-					<p:inputText readonly="true" value="No" disabled="true"
-						rendered="#{specificationBackingBean.managedBean.scQt.zonal =='false'}"></p:inputText>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, specificationBackingBean.managedBean.scQt.zonal)}"></p:inputText>
+
 				</td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel
 						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
-				<td><p:inputText value="One Tier"
-						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}"
-						readonly="true" disabled="true"></p:inputText> <p:inputText
-						value="Two Tier"
-						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}"
+				<td><p:inputText
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true"></p:inputText></td>
 				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
@@ -78,8 +68,8 @@
 				<td><p:selectOneRadio id="techEvaluation" required="true"
 						label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
 						value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
+						<f:selectItems
+							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="specDetails"></p:ajax>
 					</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
@@ -170,7 +160,7 @@
 						style="width: 178px;">
 
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
@@ -188,7 +178,7 @@
 					<p:tree value="#{zoneTree}" var="location">
 
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.zoneName}" />
+							<h:outputText value="#{location.tplSpecZoneDtl.zoneName}" />
 						</p:treeNode>
 
 						<p:treeNode type="state">
