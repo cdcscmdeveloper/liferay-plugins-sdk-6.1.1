@@ -112,7 +112,7 @@
 							<div style="text-align: right;">
 								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}" rendered="#{unspscCodeBackingBean.requisitioner}"
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} ) "></p:commandButton>
-								<p:commandButton value="#{lbl['lbl.sc.sq']}"
+								<p:commandButton value="#{lbl['lbl.sc.sq']}" rendered="#{unspscCodeBackingBean.requisitioner}"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false)}"
 									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}" />
 
