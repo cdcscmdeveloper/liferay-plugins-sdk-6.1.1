@@ -2480,7 +2480,7 @@ public class SpecificationBackingBean extends
 			if (getManagedBean().getScQt() == null) {
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				//retriveSpecdetails(1366L);
-
+				//retriveSpecdetails(1426L);
 			}
 
 		} finally {
@@ -2514,6 +2514,9 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getScQt()
 					.setFulfilmentType(new PmParameter());
 					}*/
+				
+				
+				
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 				
 					ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
@@ -2603,6 +2606,22 @@ public class SpecificationBackingBean extends
 		 * .setChecklistAction(type);
 		 */
 	}
+	
+	
+	public void setProcurementMode(ScQt scQt){
+		if(scQt.getEstimatedAmount().intValue()<=500000){
+			PmParameter quotation=new PmParameter();
+			quotation.setParameterId(234L);
+			this.getManagedBean().getScQt().setProcurementMode(quotation);
+		}
+		
+		if(scQt.getEstimatedAmount().intValue()>500000){
+			PmParameter tender=new PmParameter();
+			tender.setParameterId(235L);
+			this.getManagedBean().getScQt().setProcurementMode(tender);
+		}
+		
+	}
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
 		try {
@@ -2640,29 +2659,38 @@ public class SpecificationBackingBean extends
 	public void stateChange(AjaxBehaviorEvent event) {
 		boolean state = (boolean) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("=======state====" + state);
+		
 		this.getManagedBean().getSupplierCriteria().setAllState(state);
 	}
 
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("=======standard template====" + template);
+		
 		this.getManagedBean().setStandardTemplate(template);
 	}
 
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("=======location level====" + location);
+	
 		this.getManagedBean().getScQt().getZoneLocationLevel()
+				.setParameterId(location);
+	}
+	
+	
+	public void selectSupplierLocation(AjaxBehaviorEvent event) {
+		Long location = (Long) event.getComponent().getAttributes()
+				.get("value");
+	
+		this.getManagedBean().getSupplierCriteria().getLocationLevel()
 				.setParameterId(location);
 	}
 
 	public void scoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("=======scoreType====" + scoreType);
+	
 		if (scoreType.equalsIgnoreCase("2")) {
 
 			this.getManagedBean().setScQtCheckListScore(
@@ -2675,7 +2703,7 @@ public class SpecificationBackingBean extends
 	public void companyscoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("=======scoreType====" + scoreType);
+	
 		if (scoreType.equalsIgnoreCase("2")) {
 
 			this.getManagedBean()
