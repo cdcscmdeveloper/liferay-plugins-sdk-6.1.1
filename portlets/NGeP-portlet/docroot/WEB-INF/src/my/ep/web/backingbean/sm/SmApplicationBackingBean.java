@@ -3677,6 +3677,7 @@ public class SmApplicationBackingBean extends
 							.getApplType()
 							.equalsIgnoreCase(
 									ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				System.out.println("**** Approval for cancellation *** ");
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			}
 
@@ -3688,6 +3689,7 @@ public class SmApplicationBackingBean extends
 			System.out.println(" ******** Return after update db *******"
 					+ validSiteVisit);
 			if (res.equalsIgnoreCase("Approve")) {
+				System.out.println("***** Update supplier profile ****");
 				updateSmSupplierInfo();
 			}
 			if (validSiteVisit) {
@@ -6121,23 +6123,25 @@ public class SmApplicationBackingBean extends
 
 			} else if (getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				System.out.println(" **** This is cancelaation **** "
+						+ getManagedBean().getSmSupplier().getSmMofAccounts()
+								.size());
 				for (SmMofAccount acc : getManagedBean().getSmSupplier()
 						.getSmMofAccounts()) {
-					if (acc.getSmSupplier().equals(
+					if (acc.getSupplierType().equals(
 							getManagedBean().getSmAppl().getSupplierType())) {
 						acc.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+
 					}
 				}
 
 			}
-			System.out.println("****** Before update supplier ******");
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 			reqDTO.setSmSupp(this.getManagedBean().getSmSupplier());
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("sm", IRegistrationSO.class);
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-			System.out.println("****** Before update supplier ******");
 			getManagedBean().setSmSupplier(
 					retriveSupplierById(
 							getManagedBean().getSmSupplier().getSupplierId())
