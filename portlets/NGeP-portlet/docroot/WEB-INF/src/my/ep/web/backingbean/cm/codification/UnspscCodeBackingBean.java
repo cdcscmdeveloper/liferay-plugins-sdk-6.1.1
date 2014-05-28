@@ -168,7 +168,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-							  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 					System.out.println("***************BB end*****************");
 
 					return "unspscRequestForm";
@@ -182,7 +182,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -222,7 +222,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715005,
-							  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 					return "reviewUnspscCode";
 				}
@@ -262,7 +262,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -285,10 +285,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>1 ){
 				System.out.println("***************more than 1*****************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				
+
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715006,
-						  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-				
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+
 				return "selectRecommendUnspscCode";
 			}
 
@@ -320,7 +320,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -359,10 +359,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			
-			
+
+
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -679,9 +679,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			
+
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 			return "reviewUnspscCode";
 		}
@@ -829,10 +829,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					System.out.println("**********warning***************");
 
 					FacesContext facesContext = FacesContext.getCurrentInstance();
-					
+
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715003,
-							  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-					
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+
 					return "reviewBeforeCreateTempCode";
 				}
 
@@ -863,7 +863,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId());
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-				  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		//return "taskListView";
 		return "BPMtesting";
 
@@ -1010,7 +1010,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		if(this.getManagedBean().getRequestExtCodeList()==null || this.getManagedBean().getRequestExtCodeList().isEmpty()){
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715004,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 			return;
 		}
 
@@ -1044,7 +1044,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
 
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-				  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 	}
 
@@ -1316,7 +1316,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 
 		}
@@ -1627,7 +1627,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
-					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1822,6 +1822,44 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}
 		return false;
 	}
+
+
+	public void requestNewColor(){
+
+		if(this.getManagedBean().getRequestExtCode().isRequestColor()){
+			this.getManagedBean().setColorDisable(false);
+		}else{
+			this.getManagedBean().setColorDisable(true);
+		}
+	}
+
+	public void requestNewType(){
+
+		if(this.getManagedBean().getRequestExtCode().isRequestType()){
+			this.getManagedBean().setTypeDisable(false);
+		}else{
+			this.getManagedBean().setTypeDisable(true);
+		}
+	}
+	
+	public void requestNewBrand(){
+
+		if(this.getManagedBean().getRequestExtCode().isRequestBrand()){
+			this.getManagedBean().setBrandDisable(false);
+		}else{
+			this.getManagedBean().setBrandDisable(true);
+		}
+	}
+	
+	public void requestNewMeasurement(){
+
+		if(this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
+			this.getManagedBean().setMeasurementDisable(false);
+		}else{
+			this.getManagedBean().setMeasurementDisable(true);
+		}
+	}
+
 
 
 }

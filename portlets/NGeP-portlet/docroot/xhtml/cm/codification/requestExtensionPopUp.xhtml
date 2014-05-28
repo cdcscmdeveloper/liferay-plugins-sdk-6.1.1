@@ -23,61 +23,76 @@
 
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
-				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedType}"
+				<td><p:autoComplete
+						value="#{unspscCodeBackingBean.managedBean.selectedType}"
 						id="typePojo"
-						completeMethod="#{unspscCodeBackingBean.autoCompleteType}" var="type"
-						itemLabel="#{type.typeName}" itemValue="#{type}" converter="cmType"
-						forceSelection="true" />
-						</td>
+						completeMethod="#{unspscCodeBackingBean.autoCompleteType}"
+						var="type" itemLabel="#{type.typeName}" itemValue="#{type}"
+						converter="cmType" forceSelection="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestType}"></p:selectBooleanCheckbox></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestType}">
+						<p:ajax listener="#{unspscCodeBackingBean.requestNewType}"
+							update="requestTypeId"></p:ajax>
+					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"></p:inputText></td>
+				<td><p:inputText id="requestTypeId"
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"
+						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
-				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedBrand}"
+				<td><p:autoComplete
+						value="#{unspscCodeBackingBean.managedBean.selectedBrand}"
 						id="brandPojo"
-						completeMethod="#{unspscCodeBackingBean.autoCompleteBrand}" var="brand"
-						itemLabel="#{brand.brandName}" itemValue="#{brand}" converter="cmBrand"
-						forceSelection="true" /></td>
+						completeMethod="#{unspscCodeBackingBean.autoCompleteBrand}"
+						var="brand" itemLabel="#{brand.brandName}" itemValue="#{brand}"
+						converter="cmBrand" forceSelection="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestBrand}"></p:selectBooleanCheckbox></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestBrand}">
+						<p:ajax listener="#{unspscCodeBackingBean.requestNewBrand}"
+							update="requestBrandId"></p:ajax>
+					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"></p:inputText></td>
+				<td><p:inputText id="requestBrandId"
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"
+						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
-				<td><p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedMeasurement}"
+				<td><p:autoComplete
+						value="#{unspscCodeBackingBean.managedBean.selectedMeasurement}"
 						id="measurementPojo"
-						completeMethod="#{unspscCodeBackingBean.autoCompleteMeasurement}" var="measurement"
-						itemLabel="#{measurement.measurementName}" itemValue="#{measurement}" converter="cmMeasurement"
-						forceSelection="true" />
-				
-				</td>
+						completeMethod="#{unspscCodeBackingBean.autoCompleteMeasurement}"
+						var="measurement" itemLabel="#{measurement.measurementName}"
+						itemValue="#{measurement}" converter="cmMeasurement"
+						forceSelection="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestMeasurement}"></p:selectBooleanCheckbox></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestMeasurement}">
+						<p:ajax listener="#{unspscCodeBackingBean.requestNewMeasurement}"
+							update="requestMeasurementId"></p:ajax>
+					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"></p:inputText></td>
+				<td><p:inputText id="requestMeasurementId"
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"
+						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
-				<td>
-				<p:autoComplete value="#{unspscCodeBackingBean.managedBean.selectedColor}"
+				<td><p:autoComplete
+						value="#{unspscCodeBackingBean.managedBean.selectedColor}"
 						id="colorPojo"
-						completeMethod="#{unspscCodeBackingBean.autoCompleteColor}" var="color"
-						itemLabel="#{color.colorName}" itemValue="#{color}" converter="cmColor"
-						forceSelection="true" />
-				
-				</td>
+						completeMethod="#{unspscCodeBackingBean.autoCompleteColor}"
+						var="color" itemLabel="#{color.colorName}" itemValue="#{color}"
+						converter="cmColor" forceSelection="true" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestColor}"></p:selectBooleanCheckbox></td>
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestColor}">
+						<p:ajax listener="#{unspscCodeBackingBean.requestNewColor}"
+							update="requestColorId"></p:ajax>
+					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="Request New"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"></p:inputText></td>
+				<td><p:inputText id="requestColorId"
+						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"
+						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}"></p:inputText></td>
 			</tr>
 
 		</table>
