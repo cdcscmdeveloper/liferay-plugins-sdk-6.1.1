@@ -780,7 +780,9 @@ public class LocationSingleton {
 			//LocationDTO zoneLocation = new LocationDTO(zone);
 			
 			// Build zone - state
-			 zoneNode = new DefaultTreeNode("zone",zone.getZoneName(), rootLocationTree);
+				LOCATION_CLASS zoneLocation = locClass.newInstance();
+				((TplSpecZoneLoc) zoneLocation).setTplSpecZoneDtl(zone);
+			 zoneNode = new DefaultTreeNode("zone",zoneLocation, rootLocationTree);
 			}
 	
 			//LocationDTO	zoneLocation	=	new LocationDTO(zone);
@@ -1525,7 +1527,9 @@ public class LocationSingleton {
 	public TreeNode constuctTreeNode(TplSpecZoneDtl tplSpecZoneDtl, List<TplSpecZoneLoc> specLocs){
 		TreeNode root=new DefaultTreeNode("root",null);
 		if(tplSpecZoneDtl!=null){
-			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneDtl,root);
+			TplSpecZoneLoc	tplSpecZoneLoc=(TplSpecZoneLoc)specLocs.get(0);
+			tplSpecZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
+			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneLoc,root);
 			List<PmState> states = new ArrayList<PmState>();
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			TreeNode stateNode=null;
