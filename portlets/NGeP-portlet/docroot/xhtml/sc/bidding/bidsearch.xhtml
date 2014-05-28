@@ -6,54 +6,186 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:panel header="Search Criteria" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
-			<h:column>
-				<h:outputText value="Document No." />
-			</h:column>
-			<h:column>
-				<p:inputText id="DocNo" value="#{biddingBB.managedBean.docNo}" />
-			</h:column>
-			<h:column>
-				<h:outputText value="Bid No." />
-			</h:column>
-			<h:column>
-				<p:inputText id="BidNo" value="#{biddingBB.managedBean.bidNo}"/>
-			</h:column>
-		</h:panelGrid>
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
-			<h:column>
-				<h:outputText value="Bid Title" />
-			</h:column>
-			<h:column>
-				<p:inputText id="BidTitle" value="#{biddingBB.managedBean.bidTitle}" size="125" />
-			</h:column>
-		</h:panelGrid>
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputText value="Bidding Date (From) " />
-			</h:column>
-			<h:column>
-				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidFromDate" showOn="button"/>
-			</h:column>
-			<h:column>
-				<h:outputText value="Bidding Date (To)" />
-			</h:column>
-			<h:column>
-				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidToDate" showOn="button"/>
-			</h:column>
-	    </h:panelGrid>
-	    
-	    <p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			style="float:right;" />
+	<p:panel header="SEARCH" toggleable="true">
+		<!-- <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20"> -->
+
+		<table border="0" style="width: 900px">
+
+			<tr>
+				<td><h:outputText value="Bidding No." /></td>
+				<td><p:inputText id="BidNo"
+						value="#{biddingBB.managedBean.bidNo}" /></td>
+				<td></td>
+				<td></td>
+				<td><h:outputText value="Status" /></td>
+				<td rowspan="3"><p:selectOneListbox id="
+				pickedStatus"
+						value="#{biddingBB.pickedStatus}">
+						<f:selectItems value="#{biddingBB.statusList}" />
+					</p:selectOneListbox></td>
+			</tr>
+
+			<tr>
+				<td><h:outputText value="Document No." /></td>
+				<td><p:inputText id="DocNo"
+						value="#{biddingBB.manageBean.docNo}" /></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<tr>
+
+				<td><h:outputText value="DocumentTitle" /></td>
+				<td colspan="3"><p:inputText id="bidTitle"
+						value="#{biddingBB.managedBean.bidTitle}" size="125" /></td>
+				<td></td>
+			</tr>
+
+			<tr>
+
+				<td><h:outputText value="Bidding Date (From) " /></td>
+				<td><p:calendar value="#{biddingBB.managedBean.createdDate}"
+						pattern="MM/dd/yyyy" id="bidFromDate" showOn="button" /></td>
+				<td><h:outputText value="Bidding Date (To)" /></td>
+				<td><p:calendar value="#{biddingBB.managedBean.createdDate}"
+						pattern="MM/dd/yyyy" id="bidToDate" showOn="button" /></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			style="float:right;" icon="ui-icon-submit" action="#{}" />
+
+		<p:commandButton value="#{lbl['lbl.so.resetbtn']}"
+			style="float:right;" icon="ui-icon-reset"
+			action="#{biddingBB.reset}/>
+
+				
+	</p:panel>
+	<p:panel header=BIDDING LIST"
+			toggleable="true">
+
+			<p:dataTable id="biddingList" value="#{biddingBB.biddingList}"
+				var="bid">
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Bidding No." />
+					</f:facet>
+					<h:outputText value="#{bid.bidNo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Document No." />
+					</f:facet>
+					<h:outputText value="#{bid.documentNo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="documentTitle" />
+					</f:facet>
+					<h:outputText value="#{bid.documentTitle}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Bid Start." />
+					</f:facet>
+					<h:outputText value="#{bid.bidStart}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Bid End" />
+					</f:facet>
+					<h:outputText value="#{bid.bidEnd}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Created By" />
+					</f:facet>
+					<h:outputText value="#{bid.createdBy}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Status" />
+					</f:facet>
+					<h:outputText value="#{bid.status}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Action" />
+					</f:facet>
+					<p:commandButton id="edit" icon="ui-icon-edit" action="" />
+
+					<p:commandButton id="pause" rendered="#{bid.status}"
+						icon="ui-icon-pause" action="">
+						<p:dialog>
+							<h:outputText value="RemainingTime" />
+							<p:inputText id="remainingTime"
+								value="#{biddingBB.remainingTime}" />
+							<h:outputText value="RemainingTime" />
+							<p:inputTextarea id="* Notes to Supplier"
+								value="#{biddingBB.notesToSupplier}" />
+							<p:commandButton value="#{lbl['lbl.so.submitbtn']}"
+								style="float:right;" icon="ui-icon-ok" action="#{}" />
+
+							<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+								style="float:right;" icon="ui-icon-cancel"
+								action="#{}/>
+						</p:dialog>
 			
-		<br />
-		<br />
+					</p:commandButton>
+					
+						
+					<p:commandButton id="
+								resume" rendered="#{bid.status}" icon="ui-icon-resume" action="">
+								<p:dialog>
+									<h:outputText value="RemainingTime" />
+									<p:selectOneCheckBox id="resumeOrRebid">
+										<f:selectItem></f:selectItem>
+										<f:selectItem></f:selectItem>
+									</p:selectOneCheckBox>
+
+									<table>
+										<tr>
+											<TD><h:outputText value="Original Bidding Start" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+											<TD><h:outputText value="Original Bidding End" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+										</tr>
+
+										<tr>
+											<TD><h:outputText value="Bid Paused Time" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+											<TD><h:outputText value="Remaining Time" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+										</tr>
+										<tr>
+											<TD><h:outputText value="New Bid Start" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+											<TD><h:outputText value="New Bid End" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+										</tr>
+										<tr>
+											<TD><h:outputText value="New Bidding Duration" /></TD>
+											<TD><h:inputText value="#{}" /></TD>
+											<TD></TD>
+											<TD></TD>
+										</tr>
+									</table>
+								</p:dialog>
+
+
+							</p:commandButton>
+
+
+							<p:commandButton id="stop" rendered="#{bid.status}"
+								icon="ui-icon-stop" action="" />
+				</p:column>
+
+			</p:dataTable>
+			</p:dialog>
 	</p:panel>
-	<p:panel header="SearchResults">
-	<ui:include src="/xhtml/sc/bidding/bidResults.xhtml"></ui:include>
-	</p:panel>
-</ui:composition>   
+
+</ui:composition>
