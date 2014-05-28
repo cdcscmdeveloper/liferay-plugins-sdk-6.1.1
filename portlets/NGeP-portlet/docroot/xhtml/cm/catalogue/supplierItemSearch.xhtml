@@ -110,7 +110,7 @@
 							style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
 
 							<div style="text-align: right;">
-								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}"
+								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}" rendered="#{unspscCodeBackingBean.requisitioner}"
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} ) "></p:commandButton>
 								<p:commandButton value="#{lbl['lbl.sc.sq']}"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false)}"
