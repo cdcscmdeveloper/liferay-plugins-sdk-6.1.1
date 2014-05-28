@@ -141,7 +141,7 @@
 								<p:dataTable lazy="true"
 									rendered="#{catalogueBackingBean.managedBean.renderTableView}"
 									value="#{catalogueBackingBean.managedBean.searchDataModel}"
-									rowKey="#{supplierItem}"
+									rowKey="#{supplierItem.rowId}"
 									selection="#{catalogueBackingBean.managedBean.selectViewItems}"
 									id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
 
