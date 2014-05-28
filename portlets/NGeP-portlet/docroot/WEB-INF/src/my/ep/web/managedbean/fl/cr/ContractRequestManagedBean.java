@@ -25,7 +25,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -46,7 +45,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentRequest flRequest;
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
-	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
 	private List<CtAgencyAddress> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
@@ -99,6 +97,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long goId;
 	private Long soId;
 	private Long doId;
+	//supp address
+	private String supplierAddress;
 
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
@@ -212,24 +212,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSelectedRowFlg(boolean selectedRowFlg) {
 		this.selectedRowFlg = selectedRowFlg;
 	}
-
-
-	/**
-	 * @return the maksudCodeList
-	 */
-	public List<PmMaksud> getMaksudCodeList() {
-		return maksudCodeList;
-	}
-
-
-	/**
-	 * @param maksudCodeList the maksudCodeList to set
-	 */
-	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
-		this.maksudCodeList = maksudCodeList;
-	}
-
-
 	/**
 	 * @return the checkPtjFlg
 	 */
@@ -803,6 +785,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlManualAddress(FlDeliveryAddress flManualAddress) {
 		this.flManualAddress = flManualAddress;
+	}
+
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
 	}
 
 }
