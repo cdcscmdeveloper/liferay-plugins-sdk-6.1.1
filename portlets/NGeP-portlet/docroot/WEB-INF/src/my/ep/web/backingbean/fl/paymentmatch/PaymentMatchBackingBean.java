@@ -17,14 +17,27 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.votfund.VotFundReqDTO;
+import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
+import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -139,6 +152,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		System.out.println("taskId:" + taskId);
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+		IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
+		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
 		if(taskId != null){
 
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -166,10 +182,35 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
+			
+			
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-
+			
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
+			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			VotFundReqDTO votFundReqDTO = new VotFundReqDTO();//TODO supposely pm should have a transaction fee vot fund and GOSODO
+			votFundReqDTO.setVotFundId(125L);
+			VotFundResDTO votFundResDTO = votFundSO.retrieveVotFundByFundId(votFundReqDTO);
+			
+			GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+			glAccountReqDTO.setOrgProfileId(1L);
+			GlAccountResDTO glAccountResDTO= glAccountSO.retrieveGlAccountList(glAccountReqDTO);
+			
+			FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
+			paymentDeduction.setFlPaymentAdvice(paymentAdvice);
+			paymentDeduction.setDeductionType(parameterResDTO.getPmParameter());
+			paymentDeduction.setDeductionAmt(paymentAdvice.getFeeAmt());
+			paymentDeduction.setDeductionDesc(" ");
+			paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
+			paymentDeduction.setPmGlAccount(glAccountResDTO.getGlAccountList().get(0));
+			paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
+			
+			
 			// For PO No Deduction Panel 
 			getManagedBean().setDocType(resDTO.getInvoice().getFlRequest().getDocType());
 			
