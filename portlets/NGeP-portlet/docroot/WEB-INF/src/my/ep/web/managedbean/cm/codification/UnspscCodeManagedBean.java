@@ -100,6 +100,11 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private CmMeasurement selectedMeasurement;
 	private CmColor selectedColor;
 	
+	private boolean brandDisable = true;
+	private boolean typeDisable = true;
+	private boolean colorDisable = true;
+	private boolean measurementDisable = true;
+	
 	
 	
 	
@@ -620,6 +625,38 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public void setNewCommodity(boolean newCommodity) {
 		this.newCommodity = newCommodity;
+	}
+
+	public boolean isBrandDisable() {
+		return brandDisable;
+	}
+
+	public void setBrandDisable(boolean brandDisable) {
+		this.brandDisable = brandDisable;
+	}
+
+	public boolean isTypeDisable() {
+		return typeDisable;
+	}
+
+	public void setTypeDisable(boolean typeDisable) {
+		this.typeDisable = typeDisable;
+	}
+
+	public boolean isColorDisable() {
+		return colorDisable;
+	}
+
+	public void setColorDisable(boolean colorDisable) {
+		this.colorDisable = colorDisable;
+	}
+
+	public boolean isMeasurementDisable() {
+		return measurementDisable;
+	}
+
+	public void setMeasurementDisable(boolean measurementDisable) {
+		this.measurementDisable = measurementDisable;
 	}
 
 	
