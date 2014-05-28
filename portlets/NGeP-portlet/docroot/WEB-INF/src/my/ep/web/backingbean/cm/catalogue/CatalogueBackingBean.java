@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -76,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
@@ -265,9 +267,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully", ""));
+		
+		
+		//facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully", ""));
 
-
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, 
+				MessageUtils.getMessage(MessageConst.INFO_710007,  new String []{""+bb.getManagedBean().getExtensionVoList().size()},
+				  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
@@ -309,7 +315,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().getMaintainItemList().remove(index);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Deleted Successfully", ""));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710005,
+					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}
 
 	}
@@ -1508,7 +1515,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			if(this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName().isEmpty()){
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"UOM cannot be empty", ""));
+				
+				
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715007,
+						  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				
 				return "addCatalogView";
 			}
 
@@ -1623,7 +1634,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}catch(Exception ex){
 			System.out.println("***********error********"+ex.getMessage());
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Error", ""));
+			
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
+					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 			return "addCatalogView";
 		}finally {
@@ -1740,7 +1753,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			catalogueSO.updateSupplierItem(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Saved Successfully", ""));
+			
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
+					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 
 			if(this.getManagedBean().getTabActiveIndex()==0){
@@ -1785,7 +1800,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}catch(Exception ex){
 			System.out.println("***********error********");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Error", ""));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
+					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 			return "addCatalogView";
 		}finally {
@@ -2188,7 +2204,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Published Successfully", ""));
+			
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710002,
+					  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			
 
 
 		}
@@ -2666,7 +2685,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price deleted.", ""));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710004,
+				  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 	}
 
 	public void deleteZonalPromotionTierPrice(int index){
@@ -2702,7 +2722,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price deleted.", ""));
+		
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710004,
+				  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		
 	}
 
 
@@ -3401,7 +3424,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(index).setStandardDisabled(true);
 					}
 					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price added.", ""));
+					
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710003,
+							  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					
 
 
 				} else {
@@ -3473,7 +3499,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					}
 				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," New Promotion price added.", ""));
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710003,
+						  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 			} else {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," New Promotion price cannot be added. Please check the From and To quantities.", ""));
@@ -3534,7 +3561,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).setStandardDisabled(true);
 					}
 					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Promotion price added.", ""));
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710003,
+							  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 				}else{
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Promotion price cannot be added. Please check the From and To quantities.", ""));
@@ -3605,7 +3633,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					}
 				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," New Promotion price added.", ""));
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710003,
+						  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 
 			}else{
@@ -3911,8 +3940,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			if(resDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
 				System.out.println("*************FULFILMENT_TYPE_ONE_OFF**************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," For One-Off Contract, all items from selected contract will be included in Contract Request", ""));
 				
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710006,
+						  MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 				
 			}else{
 				System.out.println("*************not one off**************");

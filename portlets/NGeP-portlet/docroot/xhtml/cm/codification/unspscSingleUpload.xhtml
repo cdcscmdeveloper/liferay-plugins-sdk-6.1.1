@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="cmUNSPSCSingleUploadID">
-			<p:messages globalOnly="true"></p:messages>
+			<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
 					action="#{unspscCodeBackingBean.savetempCode}" update="@form"></p:commandButton>
