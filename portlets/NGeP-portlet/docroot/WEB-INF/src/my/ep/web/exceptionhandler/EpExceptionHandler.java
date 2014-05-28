@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 
 import my.ep.constant.MessageConst;
+import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.util.MessageUtils;
 import my.ep.web.util.FacesScopes;
@@ -85,12 +86,17 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
 	            	}
 	          
 			    	if (rootException instanceof EpException){
-	            		 EpException epex = (EpException)rootException;
-	            		 msgCode = epex.getMessage();
-	            		 params = epex.getParameters();
-	            		 //FIXME - have to set the component id if wan to let the exception decide where to display the msg
-	            		 break;
-	            	}	
+	            		EpException epex = (EpException)rootException;
+	            		msgCode = epex.getMessage();
+	            		params = epex.getParameters();
+	            		//FIXME - have to set the component id if wan to let the exception decide where to display the msg
+	            		break;
+	            	} else if (rootException instanceof EpBpmException) {
+	            		EpBpmException epex = (EpBpmException)rootException;
+	            		msgCode = epex.getMessage();
+	            		
+	            		break;
+	            	}
 		    	}
             	 
             	 if(log.isDebugEnabled()){
