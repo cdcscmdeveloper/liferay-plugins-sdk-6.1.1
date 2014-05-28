@@ -51,25 +51,31 @@
 					</c:if>
 				</div> <p:panel header="PO Decision">
 					<table>
+
 						<tr>
 							<td><p:outputLabel value="Supplier Name" /></td>
 							<td><p:outputLabel value="   : " /></td>
 							<td><p:inputText readonly="true"
-									value="#{backingBean.managedBean.smSupplier.companyName}"
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 									disabled="true" /></td>
 
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Date Submitted" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" value="Sample Date"
-									disabled="true" /></td>
+							<td><p:inputText readonly="true"
+									value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+									disabled="true">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
 
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Current Status" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" value="Sample Data"
+							<td><p:inputText readonly="true"
+									value="#{backingBean.managedBean.currentStatus}"
 									disabled="true" /></td>
 
 						</tr>
