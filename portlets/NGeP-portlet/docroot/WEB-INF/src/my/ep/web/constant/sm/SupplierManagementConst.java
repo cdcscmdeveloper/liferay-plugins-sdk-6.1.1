@@ -150,7 +150,6 @@ public class SupplierManagementConst {
 	public static final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
 	public static final String MOF_SUPPLIER_ADMIN = "MOF_SUPPLIER_ADMIN";
 
-	
 	// SmPersonnel Parameter for staff role
 
 	public static final String SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR = "KPT";
@@ -187,6 +186,28 @@ public class SupplierManagementConst {
 	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
+	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20100";
+	public static final String PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION = "20101";
+	public static final String PM_STATUS_PENDING_APPLICATION_VERIFICATION = "20102";
+	public static final String PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT = "20103";
+	public static final String PM_STATUS_PENDING_RE_REVIEW = "20104";
+	public static final String PM_STATUS_PENDING_SITE_VISIT = "20105";
+	public static final String PM_STATUS_PENDING_RE_SITE_VISIT = "20106";
+	public static final String PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER = "20107";
+	public static final String PM_STATUS_PENDING_APPLICATION_APPROVAL = "20108";
+	public static final String PM_STATUS_PENDING_APPLICATION_RE_APPROVAL = "20109";
+	public static final String PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT = "20110";
+	public static final String PM_STATUS_PENDING_RE_SITE_VISIT_ASSIGNMENT = "20111";
+	public static final String PM_STATUS_REJECTED_BY_PROCESSING_OFFICER = "20112";
+	public static final String PM_STATUS_REJECTED_BY_APPROVER = "20113";
+	public static final String PM_STATUS_APPROVED_BY_APPROVER = "20113";
+	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
+	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
+	public static final String PM_STATUS_REGISTERED = "20199";
+	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
+	public static final String PM_STATUS_DELETE_COMPANY = "20188";
+
+	public static final int RECORD_STATUS_DELETED = 9;
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";

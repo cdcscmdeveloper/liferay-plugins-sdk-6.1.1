@@ -25,28 +25,34 @@
 				<tr>
 					<td><p:outputLabel value="Supplier Name" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Data"
+					<td><p:inputText readonly="true"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							disabled="true" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Date Submitted" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Date"
-							disabled="true" /></td>
+					<td><p:inputText readonly="true"
+							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+							disabled="true">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Current Status" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Data"
-							disabled="true" /></td>
+					<td><p:inputText readonly="true"
+							value="#{backingBean.managedBean.currentStatus}" disabled="true" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Reason From Supplier" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputTextarea readonly="true" value="Approve"
+					<td><p:inputTextarea cols="60" readonly="true"
+							value="#{backingBean.managedBean.supplierRemarks}"
 							disabled="true" /></td>
 
 				</tr>
@@ -70,7 +76,8 @@
 			<p:separator />
 
 			<div style="width: 100%" align="right">
-				<p:commandButton value="Approve" onclick="approveAppCanDialog.show();" />
+				<p:commandButton value="Approve"
+					onclick="approveAppCanDialog.show();" />
 				<p:commandButton value="Reject" onclick="rejectAppCanDialog.show();" />
 
 			</div>
@@ -84,9 +91,11 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="Submit" onclick="approveAppCanDialog.hide();"
+				<p:commandButton value="Submit"
+					onclick="approveAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
-				<p:commandButton value="Cancel" onclick="approveAppCanDialog.hide();" />
+				<p:commandButton value="Cancel"
+					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
 		<p:dialog width="650px" header="Reject Application"

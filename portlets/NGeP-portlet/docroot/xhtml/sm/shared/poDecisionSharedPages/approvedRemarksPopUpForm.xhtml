@@ -8,18 +8,20 @@
 	<br />
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="* Registration Status" /></td>
+			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+				<td><p:outputLabel value="* Registration Status" /></td>
 
-			<td><p:selectOneMenu
-					value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
-					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
-					<f:selectItems value="#{backingBean.managedBean.regStatusDescList}"
-						var="reg" itemLabel="#{reg.statusDesc}"
-						itemValue="#{reg.pmStatus.statusId}" />
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItems
+							value="#{backingBean.managedBean.regStatusDescList}" var="reg"
+							itemLabel="#{reg.statusDesc}"
+							itemValue="#{reg.pmStatus.statusId}" />
 
-				</p:selectOneMenu></td>
-
+					</p:selectOneMenu></td>
+			</c:if>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="Remarks For Approval*" /></td>

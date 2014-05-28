@@ -323,6 +323,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	List<PmReasonDesc> reasonDescList;
 	private List<PmStatusDesc> regStatusDescList;
 
+	private String currentStatus;
+
 	private Long[] reasonId;
 
 	private SmPersonnleCalcVO personCalc;
@@ -1919,6 +1921,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeVal(String businessTypeVal) {
 		this.businessTypeVal = businessTypeVal;
+	}
+
+	public String getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(String currentStatus) {
+		this.currentStatus = currentStatus;
 	}
 
 }

@@ -9,16 +9,17 @@
 	<br />
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="* Rejection Reason(s)" /></td>
+			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+				<td><p:outputLabel value="* Rejection Reason(s)" /></td>
 
-			<td><p:selectManyMenu showCheckbox="true"
-					value="#{backingBean.managedBean.reasonId}"
-					style="height:200px;width:400px;">
-					<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
-						var="res" itemLabel="#{res.reasonDesc}"
-						itemValue="#{res.pmReason.reasonId}" />
-				</p:selectManyMenu></td>
-
+				<td><p:selectManyMenu showCheckbox="true"
+						value="#{backingBean.managedBean.reasonId}"
+						style="height:200px;width:400px;">
+						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
+							var="res" itemLabel="#{res.reasonDesc}"
+							itemValue="#{res.pmReason.reasonId}" />
+					</p:selectManyMenu></td>
+			</c:if>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="Remarks For Rejection*" /></td>

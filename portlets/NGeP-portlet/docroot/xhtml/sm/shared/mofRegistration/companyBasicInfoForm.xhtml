@@ -81,7 +81,8 @@
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
 							readonly="true" size="35">
-							<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
 				</tr>
 				<tr>
