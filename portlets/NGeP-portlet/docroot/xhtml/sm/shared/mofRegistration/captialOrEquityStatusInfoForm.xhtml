@@ -45,13 +45,16 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>
-					<td style="width: 58%;"><p:inputText
+					<td style="width: 58%;"><p:inputText id="authCapAmt"
 							title="This field is applicable for companies of type ROC Only"
 							size="10"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}">
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" required="true">
 							<p:ajax event="blur" update=":form:tt:capInfPan"
 								listener="#{backingBean.calculateCapital}" />
-						</p:inputText></td>
+						</p:inputText>
+					<p:message id="authCapAmtMsg" for="authCapAmt" showSummary="true"
+								showDetail="false" display="icon" />
+					</td>
 
 					<td><p:outputLabel value="* Paid-Up Capital (RM.)" /></td>
 					<td><p:inputText
