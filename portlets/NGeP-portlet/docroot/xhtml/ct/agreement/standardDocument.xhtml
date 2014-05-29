@@ -24,26 +24,26 @@
 					headerText="#{lbl['lbl.ct.ag.table.action']}">
 					<h:panelGroup rendered="#{data.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
 					 <p:commandLink process="@this" partialSubmit="true"
-							actionListener="#{agreementBackingBean.openNewWindow(data)}">
+							action="#{agreementBackingBean.openNewWindow(data)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
 						</p:commandLink>
 						<p:spacer width="2"/>
 					   <p:commandLink
-							actionListener="#{agreementBackingBean.openNewWindow(data)}">
+							action="#{agreementBackingBean.openNewWindow(data)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png"
 								title="View Document" />
 						</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{data.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
-						<p:commandLink
-							actionListener="#{agreementBackingBean.downloadFile(data.filePath)}">
+						<h:commandLink
+							action="#{agreementBackingBean.downloadDocFile(data.title)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
-						</p:commandLink>
+						</h:commandLink>
 					</h:panelGroup>
 					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{data.agreementContentId == null}">
 							<p:commandButton
@@ -81,7 +81,8 @@
 		      <p:commandButton value="Delete" 
 		        icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();"/> 
 		      <p:spacer width="1"/>
-		      <p:commandButton value="DownLoad All" 
+		      <h:commandButton value="DownLoad All" 
+		       action="#{agreementBackingBean.downloadAll()}"
 		        icon="ui-icon-download" process="@form"/> 
 	   </div>
 	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" header="Delete Confirmation" 
