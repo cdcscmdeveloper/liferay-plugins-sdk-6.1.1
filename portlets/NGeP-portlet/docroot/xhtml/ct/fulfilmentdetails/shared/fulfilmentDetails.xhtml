@@ -103,10 +103,10 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="false" validator="#{webappBean.checkSpaces}"
+		  rows="4" cols="113" disabled="false" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
 		  required="true" autoResize="false">
 		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
-		   <p:message for="justificationLbl"/>	
+		   <p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>
