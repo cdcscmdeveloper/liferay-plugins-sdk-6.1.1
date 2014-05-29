@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Certificate of Recognition" toggleable="true">
+	<p:panel header="Certificate of Recognition" toggleable="true"
+		id="certPanHead">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -44,7 +45,7 @@
 				id="poCertBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
 
-			<p:dataTable var="certBean"
+			<p:dataTable var="certBean" editable="true"
 				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 				selection="#{backingBean.managedBean.selectedCertList}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
@@ -89,8 +90,8 @@
 				<p:commandButton value="Add " oncomplete="certDialog.show();"
 					process="@this" action="#{backingBean.assignNewCert}"
 					update=":form:tt:certPop" />
-				<p:commandButton value="Delete " process=":form:tt:certDt"
-					partialSubmit="true" action="#{backingBean.deleteSelectedCerts}"
+				<p:commandButton value="Delete " partialSubmit="true"
+					process="certInfPan" action="#{backingBean.deleteSelectedCerts}"
 					update=":form:tt:certDt" />
 
 			</div>
@@ -130,38 +131,54 @@
 				<td><p:outputLabel value="* Certificate Type" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedCert.certTypeId}"
-						id="certTypeId" rendered="true">
+						id="certTypeId" rendered="true" required="true">
 						<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
-					</p:selectOneMenu> <p:message for="certTypeId" showDetail="false" showSummary="true" /></td>
+					</p:selectOneMenu> <p:message for="certTypeId" showDetail="false" showSummary="true" />
+					<p:message
+						id="certTypeMsg" for="certTypeId" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
 			</tr>
 
 
 			<tr>
 				<td><p:outputLabel value="Certificate Body *" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;" id="certBody"
+						value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}" required="true">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 						<f:selectItems var="certBody"
 							value="#{backingBean.managedBean.certBodyLs}"
 							itemValue="#{certBody.certBodyId}"
 							itemLabel="#{certBody.bodyName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu>
+					<p:message
+						id="certBodyMsg" for="certBody" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="* Certificate Name" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedCert.certName}" size="35" /></td>
+				<td><p:inputText id="certName"
+						value="#{backingBean.managedBean.selectedCert.certName}" size="35" required="true" /> <p:message
+						id="certNameMsg" for="certName" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Start Date" /></td>
-				<td><p:calendar showOn="button"
-						value="#{backingBean.managedBean.selectedCert.certStartDate}" /></td>
+				<td><p:calendar id="stDate" showOn="button"
+						value="#{backingBean.managedBean.selectedCert.certStartDate}"
+						required="true" /> <p:message
+						id="certStrttMsg" for="stDate" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Expiry Date" /></td>
-				<td><p:calendar showOn="button"
-						value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
+				<td><p:calendar id="endDate" showOn="button"
+						value="#{backingBean.managedBean.selectedCert.certEndDate}"
+						required="true" /> <p:message
+						id="certEndDtMsg" for="endDate" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Rating" /></td>
@@ -176,7 +193,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateCertsToSmAppl}"
 				partialSubmit="true" process="certPop"
-				onsuccess="certDialog.hide();" update=":form:tt:certDt" />
+				update=":form:tt:certDt, @([id$=Msg])" />
 			<p:commandButton value="Cancel" onclick="certDialog.hide();"
 				immediate="true" />
 		</div>

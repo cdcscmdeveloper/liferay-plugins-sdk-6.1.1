@@ -1652,6 +1652,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
 		}
+
+		RequestContext.getCurrentInstance().execute("certDialog.hide()");
 	}
 
 	public void assignSelCert(SmSupplierCert certBean) {
