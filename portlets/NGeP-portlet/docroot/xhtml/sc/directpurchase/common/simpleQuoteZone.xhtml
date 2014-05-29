@@ -11,7 +11,7 @@
 					<td><p:selectOneMenu id="locLevels"
 							value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
 							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItems value="#{simpleQuoteBackingBean.managedBean.locLevelDropdown}" />
+							<f:selectItems value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 					  </p:selectOneMenu></td>
 				</tr>
 	    </table>
@@ -20,25 +20,22 @@
 			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
 			        rowIndexVar="index">
 				 <p:column headerText="Location">
-					<p:tree value="#{zoneTree}" var="location"  id="treeid"
-					        selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
-					        selectionMode="checkbox">
-						     <p:treeNode type="zone" >
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="state">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="city">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-				   </p:tree>
+					<p:tree value="#{zoneTree}" var="location" id="treeid"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
+						selectionMode="checkbox">
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.zoneName}" />
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{location.pmState.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="division">
+							<h:outputText value="#{location.pmDivision.divisionName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.pmDistrict.districtName}" />
+						</p:treeNode>
+					</p:tree>
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink 

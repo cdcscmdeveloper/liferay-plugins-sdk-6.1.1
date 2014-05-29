@@ -11,7 +11,7 @@
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
 					</TD>
-					<TD width="80%"><p:inputText id="zoneNameId"
+					<TD width="80%"><p:inputText id="zoneNameId" size="65"
 							value="#{simpleQuoteBackingBean.managedBean.zoneName}" ></p:inputText>
 					</TD>
 				</TR>
@@ -20,24 +20,22 @@
 					</TD>
 					<TD width="80%">
 						<div style="height: 300px; overflow-y: scroll;">
-						<p:tree id="treeZoneLocationPopup"
-							value="#{simpleQuoteBackingBean.managedBean.rootZoneTree}"
-							var="location"
-							selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
-							selectionMode="checkbox" >
-							 <p:treeNode type="state">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode>
-							<p:treeNode type="city">
-								<h:outputText value="#{location.locationName}" />
-							</p:treeNode> 
-						</p:tree>
+							<p:tree id="treeZoneLocationPopup"
+								value="#{simpleQuoteBackingBean.managedBean.rootZoneTree}"
+								var="location"
+								selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
+								selectionMode="checkbox">
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
+
+							</p:tree>
 						</div>
 					</TD>
 				</TR>
@@ -45,8 +43,8 @@
 		</p:panel>
 		<p:commandButton
 				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="ZoneLocation.hide();" process="@all ,zoneNameId"
-				update="@this, zoneLocationDataTable,zonePopupPanel" partialSubmit="true"
+				style="float:right;" onclick="ZoneLocation.hide();" process="@all"
+				update="@this, zoneLocationDataTable,zonePopupPanel"   partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateZone}">
 	   </p:commandButton>
 				&#160;&#160;

@@ -89,12 +89,12 @@
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /></td>
 				<td><p:selectOneRadio
-						value="#{simpleQuoteBackingBean.managedBean.isZonal}" disabled="true">
+						value="#{simpleQuoteBackingBean.managedBean.isZonal}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.yes']}"
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.no']}"
 							itemValue="0" />
-							<p:ajax event="change" update="@([id$=tabViewId])" process="@this" />
+							<p:ajax event="change" update="@([id$=tabViewId])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
@@ -143,7 +143,7 @@
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>
 			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" style="vertical-align: top;" align="left">

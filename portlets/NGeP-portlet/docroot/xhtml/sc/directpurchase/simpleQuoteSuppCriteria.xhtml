@@ -45,7 +45,7 @@
 										value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
 										style="width: 140px;">
 										<f:selectItems
-											value="#{simpleQuoteBackingBean.managedBean.locLevelDropdown}" />
+											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
@@ -57,19 +57,16 @@
 									<p:tree value="#{locationTree}" var="location"
 										selection="#{simpleQuoteBackingBean.managedBean.selectedLocNodes}"
 										selectionMode="checkbox">
-										<p:treeNode type="zone">
-											<h:outputText value="#{location.locationName}" />
-										</p:treeNode>
 										<p:treeNode type="state">
-											<h:outputText value="#{location.locationName}" />
+											<h:outputText value="#{location.pmState.stateName}" />
 										</p:treeNode>
 										<p:treeNode type="division">
-											<h:outputText value="#{location.locationName}" />
+											<h:outputText value="#{location.pmDivision.divisionName}" />
 										</p:treeNode>
 										<p:treeNode type="district">
-											<h:outputText value="#{location.locationName}" />
+											<h:outputText value="#{location.pmDistrict.districtName}" />
 										</p:treeNode>
-										
+
 									</p:tree>
 								</p:column>
 								<p:column headerText="Action">

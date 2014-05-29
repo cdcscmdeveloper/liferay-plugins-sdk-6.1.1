@@ -96,8 +96,15 @@
 				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
 				  </p:commandLink> 
 				</p:column>
-				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
+
+				<p:column headerText="#{lbl['lbl.sc.item.dtl.price.type']}" style="width:10%">
+					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;" value="#{requestNoteDtl.priceType.parameterId}">
+						<f:selectItems
+							value="#{requestNoteBackingBean.managedBean.rnPriceTypes}" />
+					</p:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
 					<p:commandLink
 						update=":form:popupSuppDtl"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
