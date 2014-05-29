@@ -23,6 +23,7 @@ import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -87,8 +88,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	private List<CtContractItem> ctItemList;
-	private CtItemPrice ctItemPrices;
-	private CtItemCeilingQty ctItemCeilingQtys;
 	private boolean chkConceValue;
 	private CtItemPrice selectedIndexOfPrice;
 	private CtItemCeilingQty selectedIndexOfCeilingQty;
@@ -109,6 +108,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private SmSupplierBank supplierBank;
 	private String supplierBankAddress;
+	
+	private CtItemMaxQty ctItemMaxQty;
+	private CtItemPrice ctItemPrices;
+	private CtItemCeilingQty ctItemCeilingQtys;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -604,6 +607,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSupplierBankAddress(String supplierBankAddress) {
 		this.supplierBankAddress = supplierBankAddress;
+	}
+
+	public CtItemMaxQty getCtItemMaxQty() {
+		return ctItemMaxQty;
+	}
+
+	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
+		this.ctItemMaxQty = ctItemMaxQty;
 	}
 
 }

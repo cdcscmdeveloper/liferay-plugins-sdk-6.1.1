@@ -1337,12 +1337,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				     }
 			 }
 			
-			if(amendBB.getManagedBean().getContractVer().getCtAmendment() ==null) {
+			if(amendBB.getManagedBean().getContractVer().getCtAmendment()==null) {
 				amendBB.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
-			} else {
-				amendBB.getManagedBean().getContractVer().getCtAmendment().setTitle(null);
-				amendBB.getManagedBean().getContractVer().getCtAmendment().setFileRefNo(null);
-				amendBB.getManagedBean().getContractVer().getCtAmendment().setDescription(null);
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setFileRefNo(amendBB.getManagedBean().getCtContract().getContractNo()+"-");
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setTitle(amendBB.getManagedBean().getCtContract().getContractName());
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setDescription(amendBB.getManagedBean().getCtContract().getContractName());
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
+				amendBB.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 			}
 				
 		    amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
