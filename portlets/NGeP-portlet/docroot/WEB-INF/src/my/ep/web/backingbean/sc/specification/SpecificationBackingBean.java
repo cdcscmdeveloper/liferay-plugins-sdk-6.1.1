@@ -1379,7 +1379,7 @@ public class SpecificationBackingBean extends
 				}
 				List<ScQtScoreOfferPrice> offerPrice = tmpCheckList
 						.getQtScoreWeightage().getScQtScoreOfferPrices();
-				if (offerPrice == null) {
+				if (null == offerPrice || offerPrice.isEmpty()) {
 
 					offerPrice = new ArrayList<ScQtScoreOfferPrice>();
 					this.getManagedBean().setOfferPricePackage(

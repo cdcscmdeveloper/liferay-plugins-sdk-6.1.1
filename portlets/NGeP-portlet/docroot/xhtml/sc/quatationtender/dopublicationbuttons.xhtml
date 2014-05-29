@@ -8,13 +8,13 @@
 	<p:panel>
 		<div align="right">
 
+			<p:commandButton value="#{lbl['lbl.so.save']}" 
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save" update="@all" />
+			<p:button value="#{lbl['lbl.so.cancelbtn']}" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
 				
-				<p:commandButton value="#{lbl['lbl.so.save']}" 
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save" update="@all" />
 				<p:commandButton value="#{lbl['lbl.so.submit']}" 
 					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" update="@all"  />
-				<p:button value="#{lbl['lbl.so.cancelbtn']}" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
 				
 			</c:if>
 		
