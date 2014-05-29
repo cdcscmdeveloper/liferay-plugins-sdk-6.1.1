@@ -11,31 +11,32 @@
 
 
 
-  <!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
-  
-<h:outputScript library="jquery/slides" name="jquery.slides.js" />
+	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
 
-  <script>
-    $(function() {
-      $('#slides').slidesjs({
-        width: 940,
-        height: 528,
-        navigation: {
-          effect: "fade"
-        },
-        pagination: {
-          effect: "fade"
-        },
-        effect: {
-          fade: {
-            speed: 400
-          }
-        }
-      });
-    });
-  </script>
+	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
-	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+	<script>
+		$(function() {
+			$('#slides').slidesjs({
+				width : 940,
+				height : 528,
+				navigation : {
+					effect : "fade"
+				},
+				pagination : {
+					effect : "fade"
+				},
+				effect : {
+					fade : {
+						speed : 400
+					}
+				}
+			});
+		});
+	</script>
+
+	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
+		closable="true" showSummary="true"></p:messages>
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right;">
@@ -52,9 +53,13 @@
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P'}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D'}"
 					icon="ui-icon-cancel"
-					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
-					immediate="true"></p:commandButton>
+					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'D'}"
+					icon="ui-icon-cancel"
+					action="#{catalogueBackingBean.cancelBackToMaintenanceFile()}"></p:commandButton>
 
 			</h:panelGroup>
 
@@ -96,43 +101,49 @@
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10" >
+					<td rowspan="10">
 
-					  		
-					  		
-					  		
-							  <div id="slides" style="width:250px;">
-							  
-							   <h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							  
-							    	<img src="/NGeP-portlet/images/noImage.jpg" style="height:150px;left:0px !important;" />
-							   
-							  </h:panelGroup>
-							  
-							  <h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-							    <ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-							    	<img src="/NGeP-portlet/images/#{cmImage.imageName}" style="height:150px;" />
-							    </ui:repeat>
-							  </h:panelGroup>
-							    
-							  </div>
-							
-							
-							<p:commandLink style="margin-left: 200px;padding-right: 10px;" title="Upload"
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }" onclick="imageDialog.show()">
-							<p:graphicImage value="/resources/ep/images/design/upload.png" style="margin-top:10px;" ></p:graphicImage>
-						</p:commandLink> 
-						
-						<p:commandLink rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }" title="Delete" oncomplete="deleteImage.show()" >
+
+
+
+						<div id="slides" style="width: 250px;">
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+
+								<img src="/NGeP-portlet/images/noImage.jpg"
+									style="height: 150px; left: 0px !important;" />
+
+							</h:panelGroup>
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+								<ui:repeat var="cmImage"
+									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
+										style="height: 150px;" />
+								</ui:repeat>
+							</h:panelGroup>
+
+						</div> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
+							title="Upload"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
+							onclick="imageDialog.show()">
+							<p:graphicImage value="/resources/ep/images/design/upload.png"
+								style="margin-top:10px;"></p:graphicImage>
+						</p:commandLink> <p:commandLink
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
+							title="Delete" oncomplete="deleteImage.show()">
 							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-						</p:commandLink> 
-							
-						</td>
+						</p:commandLink>
+
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:inputText readonly="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputTextarea readonly="true" style="width: 195px !important;"
+					<td><p:inputTextarea readonly="true"
+							style="width: 195px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
 
 				</tr>
@@ -144,7 +155,8 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
+							headerText="UOM Lov"
+							disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
@@ -176,15 +188,17 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}" /> <p:inputText
-							style="margin-left: 2px;" size="3" value="days" readonly="true" /></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}" />
+						<p:inputText style="margin-left: 2px;" size="3" value="days"
+							readonly="true" /></td>
 				</tr>
 
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea style="width:660px !important;"
+					<td colspan="3"><p:inputTextarea
+							style="width:660px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}" /></td>
 
@@ -202,10 +216,11 @@
 
 
 			<p:fileUpload
-				fileUploadListener="#{catalogueBackingBean.imageUpload}" mode="advanced" id="upload"
+				fileUploadListener="#{catalogueBackingBean.imageUpload}"
+				mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				oncomplete="refresh();" multiple="true" >
+				oncomplete="refresh();" multiple="true">
 			</p:fileUpload>
 
 		</p:dialog>
@@ -218,12 +233,14 @@
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
 
 
-				<p:tabView id="headerTabId" activeIndex="#{catalogueBackingBean.managedBean.pricingTabIndex}">
+				<p:tabView id="headerTabId"
+					activeIndex="#{catalogueBackingBean.managedBean.pricingTabIndex}">
 
 
 					<p:tab title="Normal">
 
-						<p:tabView id="normalId" activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
+						<p:tabView id="normalId"
+							activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
 
 							<p:tab title="Standard">
 								<ui:include src="pricingTab.xhtml" />
@@ -240,7 +257,8 @@
 
 					<p:tab title="Tier">
 
-						<p:tabView id="tierId" activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
+						<p:tabView id="tierId"
+							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
 
 
 							<p:tab title="Standard">
@@ -259,7 +277,8 @@
 
 					<p:tab title="Zonal">
 
-						<p:tabView id="zonalId" activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
+						<p:tabView id="zonalId"
+							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
 
 							<p:tab title="Standard">
 								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
@@ -278,7 +297,8 @@
 
 					<p:tab title="Zonal Tier">
 
-						<p:tabView id="zonalTierId" activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
+						<p:tabView id="zonalTierId"
+							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
 							<p:tab title="Standard">
 								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
@@ -319,51 +339,57 @@
 			</p:tab>
 
 		</p:tabView>
-		
-		<p:dialog id="errorDialog" header="Error List" widgetVar="errorDialog" modal="true"
-			width="500" height="150">
-				<h:panelGroup id="errorPopupPanel">
-					<table>
-						<tr>
-							<td>
-							<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-							</td>
-							<td style="white-space:nowrap; float:left;">
-								<p:panel>
-									<p:outputLabel value="from quantity greater than To quantity." rendered="#{catalogueBackingBean.managedBean.error1}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="End date cannot be less than start date." rendered="#{catalogueBackingBean.managedBean.error2}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="Please fill all columns." rendered="#{catalogueBackingBean.managedBean.error3}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="Start and end dates of this tier cannot overlap with others." rendered="#{catalogueBackingBean.managedBean.error4}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="Normal Promotion Date must within Normal Standard Date range." rendered="#{catalogueBackingBean.managedBean.error5}"></p:outputLabel>
-									<br/>
-									<p:outputLabel value="Normal Promotion Price must be less than Normal Standard Price." rendered="#{catalogueBackingBean.managedBean.error6}"></p:outputLabel>
-								</p:panel>	
-							</td>
-						</tr>
-						<tr>	
-							<td>
-							<p:panel>
-								<p:commandButton value="#{lbl['lbl.cm.zm.btn.ok']}"	style="float:right;" onclick="errorDialog.hide();"/>
-							</p:panel>	
-							</td>
-						</tr>
-					</table>
-				</h:panelGroup>
-		</p:dialog>		
-		
-		
-		<p:dialog id="deleteImage" header="Delete Image" widgetVar="deleteImage" modal="true"
-			width="500" height="500">
-				
-				
-				<ui:include src="deleteImage.xhtml"></ui:include>
-					
-				
-		</p:dialog>				
+
+		<p:dialog id="errorDialog" header="Error List" widgetVar="errorDialog"
+			modal="true" width="500" height="150">
+			<h:panelGroup id="errorPopupPanel">
+				<table>
+					<tr>
+						<td><p:graphicImage
+								value="/resources/ep/images/messages/error.png"></p:graphicImage>
+						</td>
+						<td style="white-space: nowrap; float: left;"><p:panel>
+								<p:outputLabel value="from quantity greater than To quantity."
+									rendered="#{catalogueBackingBean.managedBean.error1}"></p:outputLabel>
+								<br />
+								<p:outputLabel value="End date cannot be less than start date."
+									rendered="#{catalogueBackingBean.managedBean.error2}"></p:outputLabel>
+								<br />
+								<p:outputLabel value="Please fill all columns."
+									rendered="#{catalogueBackingBean.managedBean.error3}"></p:outputLabel>
+								<br />
+								<p:outputLabel
+									value="Start and end dates of this tier cannot overlap with others."
+									rendered="#{catalogueBackingBean.managedBean.error4}"></p:outputLabel>
+								<br />
+								<p:outputLabel
+									value="Normal Promotion Date must within Normal Standard Date range."
+									rendered="#{catalogueBackingBean.managedBean.error5}"></p:outputLabel>
+								<br />
+								<p:outputLabel
+									value="Normal Promotion Price must be less than Normal Standard Price."
+									rendered="#{catalogueBackingBean.managedBean.error6}"></p:outputLabel>
+							</p:panel></td>
+					</tr>
+					<tr>
+						<td><p:panel>
+								<p:commandButton value="#{lbl['lbl.cm.zm.btn.ok']}"
+									style="float:right;" onclick="errorDialog.hide();" />
+							</p:panel></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:dialog>
+
+
+		<p:dialog id="deleteImage" header="Delete Image"
+			widgetVar="deleteImage" modal="true" width="500" height="500">
+
+
+			<ui:include src="deleteImage.xhtml"></ui:include>
+
+
+		</p:dialog>
 
 
 
