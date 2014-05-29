@@ -32,6 +32,8 @@ public interface QTConstants {
 	public static final String QT_BUSINESS_OWNER="Business Owner";
 	public static final String QT_COMMITTEE_APPOINTMENT="Committee Appointment";
 	public static final String QT_BRIEFING_SITEVISIT="Briefing/Site Visit & Sample Submission";
+	public static final String QT_TECHNICAL_SPECIFICATION = "Technical Specification";
+	public static final String QT_FINANCIAL_SPECIFICATION = "Financial Specification";
 	
 	// Bsv Attendance Constants
 	public static final String BSV_MOCULE_CODE = "SC";
