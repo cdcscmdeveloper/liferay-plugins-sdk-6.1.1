@@ -2611,13 +2611,13 @@ public class SpecificationBackingBean extends
 	public void setProcurementMode(ScQt scQt){
 		if(scQt.getEstimatedAmount().intValue()<=500000){
 			PmParameter quotation=new PmParameter();
-			quotation.setParameterId(234L);
+			quotation.setParameterId(145L);
 			this.getManagedBean().getScQt().setProcurementMode(quotation);
 		}
 		
 		if(scQt.getEstimatedAmount().intValue()>500000){
 			PmParameter tender=new PmParameter();
-			tender.setParameterId(235L);
+			tender.setParameterId(146L);
 			this.getManagedBean().getScQt().setProcurementMode(tender);
 		}
 		
