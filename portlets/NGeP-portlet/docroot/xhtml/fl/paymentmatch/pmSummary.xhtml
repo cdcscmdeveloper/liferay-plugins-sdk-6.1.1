@@ -10,19 +10,19 @@
 		<table>
 			<tr>
 				<td style="width:139px"><p:outputLabel value="#{lbl['lbl.fl.pm.summ.total.inv.amt']}" /></td>
-				<td><p:inputText size="35"   valu="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceAmtOri}" disabled="true" /></td>
+				<td><p:inputText size="35"   value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceAmtOri}" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width:161px"><p:outputLabel value="#{lbl['lbl.fl.pm.summ.total.ded.amt']}" /></td>
-				<td><p:inputText size="35"  disabled="true" /></td>
+				<td><p:inputText size="35"  disabled="true"  value="#{paymentMatchBackingBean.managedBean.deductionAmt}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.summ.fee.amt']}" /></td>
-				<td><p:inputText size="35" disabled="true"   valu="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.feeAmt}"/></td>
+				<td><p:inputText size="35" disabled="true"   value="#{paymentMatchBackingBean.managedBean.paymentAdvice.feeAmt}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.summ.paym.amt']}" /></td>
-				<td><p:inputText size="35" disabled="true"  /></td>
+				<td><p:inputText size="35" disabled="true"   value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAmt}"/></td>
 			</tr>
 		</table>
 	</p:panel>

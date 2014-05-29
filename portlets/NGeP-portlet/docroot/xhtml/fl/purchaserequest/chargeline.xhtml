@@ -33,13 +33,9 @@
 				<h:outputText value="#{chargeLineNode.coaValue}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Item Type">
-				<h:outputText value="#{chargeLineNode.scRequestItem.itemType}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
-			</p:column>
 			<p:column headerText="Item Code">
 				<h:outputText
-					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}"
+					value="#{chargeLineNode.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Name">

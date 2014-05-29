@@ -48,9 +48,6 @@
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}">
-					<p:column headerText="Item Type">
-						<h:outputText value="#{newItems.scRequestItem.itemType}" />
-					</p:column>
 					<p:column headerText="Item Code">
 						<h:outputText value="#{newItems.scRequestItem.cmItem.extensionCode}"/> 
 					</p:column>

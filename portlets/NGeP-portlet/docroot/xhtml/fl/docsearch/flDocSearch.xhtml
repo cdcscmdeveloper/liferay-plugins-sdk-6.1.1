@@ -12,35 +12,60 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<style>
+.column-align-center {
+	text-align: center !important;
+}
+</style>
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
-
 		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
-
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
-					<p:selectOneMenu value="#{flDocumentBackingBean.managedBean.searchOrderType}" style="width: 207px;">
-						<f:selectItems value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}"/>
-						<p:ajax event="change" update="searchDocTypeDD,docTypeSearch" listener="#{flDocumentBackingBean.selectedOrderType}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}"
+						style="width: 125px;" />
+					<p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						style="width: 207px;">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+						<p:ajax event="change" update="searchDocTypeDD,docTypeSearch"
+							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}"
+						style="width: 127px;" />
 					<p:selectOneMenu id="searchDocTypeDD" style="width: 207px;"
-						value="#{flDocumentBackingBean.managedBean.searchDocType}" >
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
-						<p:ajax event="change" update="docTypeSearch"
+						<p:ajax event="change" update="docTypeSearch,docTitleSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" />
-					<p:inputText size="35"
-						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+			</h:panelGroup>
+			<h:panelGroup id="docTitleSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkTitle}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.title']}" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchProcurementType}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
+			<h:panelGrid columns="4" columnClasses="cmWidth1">
+				<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
+				<p:selectOneMenu id="searchDocStatusDD" style="width: 407px;">
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="4" columnClasses="cmWidth1">
+				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
+				<p:inputText size="50"
+					value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+			</h:panelGrid>
+			<h:panelGrid columns="4" columnClasses="cmWidth1">
+				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.ref']}" />
+				<p:inputText size="20"
+					value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+			</h:panelGrid>
 			<h:panelGroup id="docTypeSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
@@ -60,7 +85,7 @@
 					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1" 
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.procurement.type']}" />
 					<p:inputText size="35"
@@ -69,14 +94,19 @@
 			</h:panelGroup>
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
-			<table style="width: 100%;">
-				<tr>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="Search" icon="ui-icon-search"
-							action="#{flDocumentBackingBean.searchDocument}"
-							update="resultPanel" /></td>
-				</tr>
-			</table>
+
+			<f:verbatim></f:verbatim>
+			<f:verbatim></f:verbatim>
+			<f:verbatim></f:verbatim>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lblfl.doc.search.btn.search']}"
+					action="#{flDocumentBackingBean.searchDocument}"
+					icon="ui-icon-search" update="resultPanel" />
+				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}"
+					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
+					update=":form" />
+			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="RESULT" toggleable="true">
 			<p:dataTable id="flDocListDt"
@@ -86,23 +116,25 @@
 
 				<ac:paginator for="flDocListDt" />
 
-				<p:column headerText="Document Type">
-					<h:outputText value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" >
+					<h:outputText
+						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
-				<p:column headerText="Doc No">
+				<p:column  headerText="#{lbl['lbl.fl.doc.search.datatable.doc.no']}">
 					<h:outputText value="#{flDocument.docNo}" />
 				</p:column>
-				<p:column headerText="Contract No.">
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.cont.no']}">
 					<h:outputText value="#{flDocument.contractNo}" />
 				</p:column>
-				<p:column headerText="Circular No.">
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.circular.no']}" >
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
-				<p:column headerText="Status">
-				<h:outputText value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.status']}" >
+					<h:outputText
+						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
 				</p:column>
 
-				<p:column headerText="Action" style="text-align: center">
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}" style="text-align: center">
 					<p:commandLink
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
@@ -129,7 +161,7 @@
 						<p:graphicImage library="ep/images/design" name="exclamation.png"
 							value="/resources/ep/images/design/exclamation.png"
 							title="Complain" />
-					 </p:commandLink>
+					</p:commandLink>
 
 				</p:column>
 

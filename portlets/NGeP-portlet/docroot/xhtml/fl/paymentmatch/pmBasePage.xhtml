@@ -15,6 +15,7 @@
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
+		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />	
 		<table style="width: 100%;">
 			<tr>
 				<td style="text-align: left; width: 66px;"><p:outputLabel
@@ -26,8 +27,7 @@
 						var="bpmAction"
 						value="#{paymentMatchBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}"
-							action="#{paymentMatchBackingBean.submitAction(bpmAction)}"
-							process="@this" />
+							action="#{paymentMatchBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>

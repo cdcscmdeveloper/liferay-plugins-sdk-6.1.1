@@ -20,6 +20,9 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -36,10 +39,12 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -107,7 +112,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 		}
 		//if(!"retrieveAmount".equals(actionMethod)){
-			System.out.println("Hellllllllllllllllloooooooooooooo");
 			//getManagedBean().populateChargeLineData();
 		//}
 		
@@ -125,6 +129,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 			if(null==getManagedBean().getChargeLineItemRoot()){
 				getManagedBean().populateChargeLineData();
+				canInvSummary();
 			}
 			TreeNode root= getManagedBean().getChargeLineItemRoot();
 			List<FlInvoiceItem> invoiceItemList=new ArrayList<FlInvoiceItem>();
@@ -172,9 +177,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				   invoiceItemList.add(invoiceItem);
 			   }
 			   
-			   getManagedBean().getInvoice().setFlInvoiceItem(invoiceItemList);
-			   
-			  
+			getManagedBean().getInvoice().setFlInvoiceItem(invoiceItemList);
 			
 			reqDTO.setInvoice(invoice);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
@@ -190,18 +193,24 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
-
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				String message = "InvoiceNo. : "+invoice.getInvoiceNo();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
-				}
-			} else {
+				String messageId = MessageConst.INFO_700026;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getInvoice().getInvoiceNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+			}
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}	
+			else {
 				throw new EpException("Failed.");
 			}
+			
 		} catch (Exception e) {
 			log.error("Exception>>", e);
 			e.printStackTrace();
@@ -218,7 +227,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 
 	public void preRenderView() {
-		System.out.println("we are in inv pageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -251,15 +259,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 //				getManagedBean().setInvItem(new FlInvoiceItem());
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 			}
-			    getManagedBean().setChargeLineItemRoot(null);
-				getManagedBean().getInvoice().setFlFulfilmentOrder(flOrderResDTO.getFlOrder());
+			getManagedBean().setChargeLineItemRoot(null);
+			getManagedBean().getInvoice().setFlFulfilmentOrder(flOrderResDTO.getFlOrder());
 				///flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
 				//getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
-				flReqDTO.setFlRequestId(paymentObj.getFlRequestId());
+			flReqDTO.setFlRequestId(paymentObj.getFlRequestId());
 				//flReqDTO.setFlRequestId(269L);
-				resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-				getInvoiceTable(resDTO);
-				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			getInvoiceTable(resDTO);
+			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
@@ -368,14 +376,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		TreeNode root= getManagedBean().getChargeLineItemRoot();
 		 BigDecimal invoiceTotalAmount=new BigDecimal(0);
+		 BigDecimal orderTotalAmount=new BigDecimal(0);
 		   for(TreeNode childNode:root.getChildren()){
 			   FlFulfilmentItemAddr data= (FlFulfilmentItemAddr)childNode.getData();
-			   
 			   data.getChargeInvAmt();
 			   invoiceTotalAmount=invoiceTotalAmount.add( data.getChargeInvAmt());
+			   orderTotalAmount =orderTotalAmount.add(data.getChargeOrderedAmt());
 		   }
 		   System.out.println("invoiceTotalAmount::: "+invoiceTotalAmount);
-		   getManagedBean().getInvoice().setInvoiceAmtOri(invoiceTotalAmount);
+		   getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
+		   getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
 		   getManagedBean().setServiceCharge("0.4");
 		   BigDecimal serviceFee=new BigDecimal(0.4);
 		   BigDecimal percentage=new BigDecimal(100);
@@ -388,10 +398,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		  
 		   getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		   getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
-		   getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);
-		   
-		   
-		
+		  // getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);
 	}
 	public void onTabChange(TabChangeEvent tevent){
 		if("invItemTabId".equals(tevent.getTab().getId())){

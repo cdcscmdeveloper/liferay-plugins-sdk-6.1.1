@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -239,9 +240,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 						//System.out.println("11111111111111111111111111111111111     "+deliveryAddress.getAddressType().getPmAddress().getAddressId());
 						
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+							//System.out.println("777777777777   "+itemAddress.getCmItem().getExtensionCode());
+							
 							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
 							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+							//itemAddress.getCmItem().setExtensionCode(itemAddress.getCmItem().getExtensionCode());
 							
 							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
 								//code for calculating duplicate charge line order amount and quantity for same unit price 
@@ -312,6 +316,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
 		
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
+		System.out.println("item code::9999999999999999 : "+flFulfilmentItemAddr.getCmItem().getExtensionCode());
+		if(null==itemAddress.getCmItem()){
+			itemAddress.setCmItem(new CmItem());
+		}
+		itemAddress.getCmItem().setExtensionCode(flFulfilmentItemAddr.getCmItem().getExtensionCode());
 		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
 		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());

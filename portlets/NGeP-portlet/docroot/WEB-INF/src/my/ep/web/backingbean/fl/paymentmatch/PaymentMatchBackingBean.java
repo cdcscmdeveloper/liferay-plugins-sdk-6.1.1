@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.paymentmatch;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +24,7 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -36,15 +38,20 @@ import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
+import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -110,9 +117,35 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlPaymentAdvice paymentAdvice = getManagedBean().getPaymentAdvice();
+			
+			if(null==getManagedBean().getChargeLineItemRoot()){
+				getManagedBean().populateChargeLineData();
+			}
+			TreeNode root= getManagedBean().getChargeLineItemRoot();
+			List<FlPaymentItem> paymentItemList=new ArrayList<FlPaymentItem>();
+			   for(TreeNode childNode:root.getChildren()){
+				   FlPaymentItem paymentItem=new FlPaymentItem();
+				  
+				   FlFulfilmentItem flItem=null;
+				   for(TreeNode subNode:childNode.getChildren()){
+					   FlFulfilmentItemAddr subData=(FlFulfilmentItemAddr)subNode.getData();
+					   flItem=subData.getFlFulfilmentItem();
+					  
+				   }
+				   paymentItem.setFlPaymentAdvice(paymentAdvice);
+				   paymentItem.setFlItem(flItem);
+				   
+				   for(FlInvoiceItem invItems :paymentAdvice.getFlInvoice().getFlInvoiceItem()){
+					   paymentItem.setFlInvoiceItem(invItems);
+					   
+				   }
+				   paymentItemList.add(paymentItem);
+			   }
+			  
+			getManagedBean().getPaymentAdvice().setFlPaymentItems(paymentItemList);  
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject("fl",IPaymentMatchSO.class);
-
 			reqDTO.setPaymentAdvice(paymentAdvice);
+			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}
@@ -125,16 +158,24 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			System.out.println("action: "+action);
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				String message = "Payment Advice Id. : "+paymentAdvice.getPaymentAdviceId();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
-				}
-			} else {
+				String messageId = MessageConst.INFO_700026;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getPaymentAdvice().getPaymentAdviceNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+			}
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}	
+			else {
 				throw new EpException("Failed.");
 			}
+			
+			
 		} catch (Exception e) {
 			log.error("Exception>>", e);
 			e.printStackTrace();
@@ -175,6 +216,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 			paymentAdvice.setFlInvoice(resDTO.getInvoice());
+			paymentAdvice.setFlRequest(resDTO.getInvoice().getFlRequest());
+			paymentAdvice.setFulfilmentOrder(resDTO.getInvoice().getFlFulfilmentOrder());
 			System.out.println("fulfilment req id::: "+paymentObj.getFlRequestId());
 			// Get Remark and Attachment
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -182,15 +225,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
-			
-			
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-			
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
+			//parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
 			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			
 			VotFundReqDTO votFundReqDTO = new VotFundReqDTO();//TODO supposely pm should have a transaction fee vot fund and GOSODO
@@ -209,8 +249,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
 			paymentDeduction.setPmGlAccount(glAccountResDTO.getGlAccountList().get(0));
 			paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
-			
-			
+
 			// For PO No Deduction Panel 
 			getManagedBean().setDocType(resDTO.getInvoice().getFlRequest().getDocType());
 			
@@ -218,212 +257,195 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			combineSupAddress(resDTO.getInvoice().getFlRequest());
 			
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
-			//getManagedBean().populateChargeLineData();
+			// pm summary
+			BigDecimal sampleDeductionAmt = new BigDecimal(50);
+			BigDecimal calPaymentAmt = new BigDecimal(0.0);
+			getManagedBean().getPaymentAdvice().getFlInvoice().setInvoiceAmtNew(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew());
+			getManagedBean().getPaymentAdvice().setFeeAmt(getManagedBean().getPaymentAdvice().getFlInvoice().getFeeAmt());
+			getManagedBean().setDeductionAmt(sampleDeductionAmt);
+			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getFeeAmt().add(sampleDeductionAmt));
+			BigDecimal deductPaymentAmt = new BigDecimal(0.0);
+			deductPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(calPaymentAmt);
+			getManagedBean().getPaymentAdvice().setPaymentAmt(deductPaymentAmt);
+			
 		}
+		getManagedBean().getPaymentAdvice();
 	}
 	
-	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
-	    	StringBuilder address = new StringBuilder();
-	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch()){
-	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
-	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    	    		address.append(strSpace);
+	    StringBuilder address = new StringBuilder();
+	    String strSpace = " ";
+	    if(null != fulfilmentRequest.getSupplierBranch()){
+	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
+	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    	    	address.append(strSpace);
 	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    	    		address.append(strSpace);
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    	    	address.append(strSpace);
 	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    	    		address.append(strSpace);
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    	    	address.append(strSpace);
 	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    	    		address.append(strSpace);
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    	    	address.append(strSpace);
 	    	    		
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    	    		address.append(strSpace);
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    	    	address.append(strSpace);
 	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    	    		address.append(strSpace);
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    	    	address.append(strSpace);
 	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    	    		address.append("\n");
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	    	}
-	    	    	if(null != address.toString()){
-	    	    		System.out.println("addresss     "+address.toString());
-	    	    	}
-	    		}
-	    	}	
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    	    	address.append("\n");
+	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
+	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	    }
+	    	    if(null != address.toString()){
+	    	    	System.out.println("addresss     "+address.toString());
+	    	    }
+	    	}
+	    }	
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
-	    }
+	}
 	 
-	 public void onTabChange(TabChangeEvent tevent){
-			if("pmChargeLineTabId".equals(tevent.getTab().getId())){
+	public void onTabChange(TabChangeEvent tevent){
+		if("pmChargeLineTabId".equals(tevent.getTab().getId())){
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
-			}
-			if("pmSummaryTabId".equals(tevent.getTab().getId())){
-				canPmSummary();
-				}
-	}
-	 public void canPmSummary(){
-		
-		if(null==getManagedBean().getChargeLineItemRoot()){
-			getManagedBean().populateChargeLineData();
 		}
-		TreeNode root= getManagedBean().getChargeLineItemRoot();
-		 BigDecimal invoiceTotalAmount=new BigDecimal(0);
-		   for(TreeNode childNode:root.getChildren()){
-			   FlFulfilmentItemAddr data= (FlFulfilmentItemAddr)childNode.getData();
-			   
-			   data.getChargeInvAmt();
-			   invoiceTotalAmount=invoiceTotalAmount.add( data.getChargeInvAmt());
-		   }
-		   System.out.println("invoiceTotalAmount::: "+invoiceTotalAmount);
-		   /*getManagedBean().getInvoice().setInvoiceAmtOri(invoiceTotalAmount);
-		   getManagedBean().setServiceCharge("0.4");
-		   BigDecimal serviceFee=new BigDecimal(0.4);
-		   BigDecimal percentage=new BigDecimal(100);
-		   BigDecimal invMulty=new BigDecimal(0.4);
-		   BigDecimal feeAmount=new BigDecimal(0.4);
-		   invMulty=invoiceTotalAmount.multiply(serviceFee);
-		   System.out.println("invMulty::: "+invMulty);
-		   feeAmount=invMulty.divide(percentage);
-		   System.out.println("feeAmount::: "+feeAmount);
-		  
-		   getManagedBean().getInvoice().setFeeAmt(feeAmount);
-		   getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
-		   getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);*/
-		   
-		   
+		if("pmSummaryTabId".equals(tevent.getTab().getId())){
+			calPmSummary();
+			setClassName("@(.pmSummaryTabId)");
+		}
+	}
+	public void calPmSummary(){
+		BigDecimal sampleDeductionAmt = new BigDecimal(50);
+		BigDecimal calPaymentAmt = new BigDecimal(0.0);
+		getManagedBean().getPaymentAdvice().getFlInvoice().setInvoiceAmtNew(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew());
+		getManagedBean().getPaymentAdvice().setFeeAmt(getManagedBean().getPaymentAdvice().getFlInvoice().getFeeAmt());
+		getManagedBean().setDeductionAmt(sampleDeductionAmt);
+		calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getFeeAmt().add(sampleDeductionAmt));
+		BigDecimal deductPaymentAmt = new BigDecimal(0.0);
+		deductPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(calPaymentAmt);
+		getManagedBean().getPaymentAdvice().setPaymentAmt(deductPaymentAmt);
 		
 	} 
-	 public void onNodeSelect() {
-			TreeNode selectedNode=getManagedBean().getSelectedNode();
-					if(null!=selectedNode){
-						for(TreeNode children:selectedNode.getChildren()){
-							FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
-							if(null !=childData.getPmVotFund()){
-								//do it for others
-								String votFundCode=getVotFundCodeById(childData.getPmVotFund().getVotFundId());
-								getManagedBean().setVotFundCode(votFundCode);
+	public void onNodeSelect() {
+		TreeNode selectedNode=getManagedBean().getSelectedNode();
+			if(null!=selectedNode){
+				for(TreeNode children:selectedNode.getChildren()){
+					FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
+						if(null !=childData.getPmVotFund()){
+							//do it for others
+							String votFundCode=getVotFundCodeById(childData.getPmVotFund().getVotFundId());
+							getManagedBean().setVotFundCode(votFundCode);
+							String progActvCode=getprogActivityCodeById(childData.getPmPrgActivity().getPrgActivityId());
+							getManagedBean().setPrgActivityCode(progActvCode);
+							String projectCode=getProjectCodeById(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId());
+							getManagedBean().setProjectCode(projectCode);
+							String setiaCode=getSetiaCodeById((childData.getPmSubSetia().getPmSetia().getSetiaId()));
+							getManagedBean().setSetiaCode(setiaCode);
+							String subSetiaCode=getSubSetiaCodeById((childData.getPmSubSetia().getSubSetiaId()));
+							getManagedBean().setSubSetiaCode((subSetiaCode));
 								
-								String progActvCode=getprogActivityCodeById(childData.getPmPrgActivity().getPrgActivityId());
-								getManagedBean().setPrgActivityCode(progActvCode);
+						}else{
+							getManagedBean().setVotFundCode("");
+							getManagedBean().setPrgActivityCode("");
+							getManagedBean().setProjectCode("");
+							getManagedBean().setSetiaCode("");
+							getManagedBean().setSubSetiaCode((""));
 								
-								String projectCode=getProjectCodeById(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId());
-								getManagedBean().setProjectCode(projectCode);
-								
-								String setiaCode=getSetiaCodeById((childData.getPmSubSetia().getPmSetia().getSetiaId()));
-								getManagedBean().setSetiaCode(setiaCode);
-								
-								String subSetiaCode=getSubSetiaCodeById((childData.getPmSubSetia().getSubSetiaId()));
-								getManagedBean().setSubSetiaCode((subSetiaCode));
-								
-								
-							}else{
-								getManagedBean().setVotFundCode("");
-								
-								getManagedBean().setPrgActivityCode("");
-								
-								getManagedBean().setProjectCode("");
-								
-								getManagedBean().setSetiaCode("");
-								
-								getManagedBean().setSubSetiaCode((""));
-								
-							}
-							
-							
 						}
+							
+							
 					}
+			}
 		}
 	//get chargeline code by ID
 		
-		public String getVotFundCodeById(Long votFundId) {
-			return votFundCodeMap.get(votFundId);
-		}
-		public String getprogActivityCodeById(Long progActvId) {
-			return progmActivityCodeMap.get(progActvId);
-		}
-		public String getProjectCodeById(Long projectId) {
-			return projectCodeMap.get(projectId);
-		}
-		public String getSetiaCodeById(Long setiaId) {
-			return setiaCodeMap.get(setiaId);
-		}
-		public String getSubSetiaCodeById(Long subSetiaId) {
-			return subSetiaCodeMap.get(subSetiaId);
-		}
+	public String getVotFundCodeById(Long votFundId) {
+		return votFundCodeMap.get(votFundId);
+	}
+	public String getprogActivityCodeById(Long progActvId) {
+		return progmActivityCodeMap.get(progActvId);
+	}
+	public String getProjectCodeById(Long projectId) {
+		return projectCodeMap.get(projectId);
+	}
+	public String getSetiaCodeById(Long setiaId) {
+		return setiaCodeMap.get(setiaId);
+	}
+	public String getSubSetiaCodeById(Long subSetiaId) {
+		return subSetiaCodeMap.get(subSetiaId);
+	}
 		/**
 		 * @return the votFundCodeMap
 		 */
-		public static Map<Long, String> getVotFundCodeMap() {
-			return votFundCodeMap;
-		}
+	public static Map<Long, String> getVotFundCodeMap() {
+		return votFundCodeMap;
+	}
 		/**
 		 * @param votFundCodeMap the votFundCodeMap to set
 		 */
-		public static void setVotFundCodeMap(Map<Long, String> votFundCodeMap) {
-			PaymentMatchBackingBean.votFundCodeMap = votFundCodeMap;
-		}
+	public static void setVotFundCodeMap(Map<Long, String> votFundCodeMap) {
+		PaymentMatchBackingBean.votFundCodeMap = votFundCodeMap;
+	}
 		/**
 		 * @return the progmActivityCodeMap
 		 */
-		public static Map<Long, String> getProgmActivityCodeMap() {
-			return progmActivityCodeMap;
-		}
+	public static Map<Long, String> getProgmActivityCodeMap() {
+		return progmActivityCodeMap;
+	}
 		/**
 		 * @param progmActivityCodeMap the progmActivityCodeMap to set
 		 */
-		public static void setProgmActivityCodeMap(
-				Map<Long, String> progmActivityCodeMap) {
-			PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
-		}
+	public static void setProgmActivityCodeMap(
+		Map<Long, String> progmActivityCodeMap) {
+		PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
+	}
 		/**
 		 * @return the projectCodeMap
 		 */
-		public static Map<Long, String> getProjectCodeMap() {
-			return projectCodeMap;
-		}
+	public static Map<Long, String> getProjectCodeMap() {
+		return projectCodeMap;
+	}
 		/**
 		 * @param projectCodeMap the projectCodeMap to set
 		 */
-		public static void setProjectCodeMap(Map<Long, String> projectCodeMap) {
-			PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
-		}
+	public static void setProjectCodeMap(Map<Long, String> projectCodeMap) {
+		PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
+	}
 		/**
 		 * @return the setiaCodeMap
 		 */
-		public static Map<Long, String> getSetiaCodeMap() {
+	public static Map<Long, String> getSetiaCodeMap() {
 			return setiaCodeMap;
-		}
+	}
 		/**
 		 * @param setiaCodeMap the setiaCodeMap to set
 		 */
-		public static void setSetiaCodeMap(Map<Long, String> setiaCodeMap) {
-			PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
-		}
+	public static void setSetiaCodeMap(Map<Long, String> setiaCodeMap) {
+		PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
+	}
 		/**
 		 * @return the subSetiaCodeMap
 		 */
-		public static Map<Long, String> getSubSetiaCodeMap() {
-			return subSetiaCodeMap;
-		}
+	public static Map<Long, String> getSubSetiaCodeMap() {
+		return subSetiaCodeMap;
+	}
 		/**
 		 * @param subSetiaCodeMap the subSetiaCodeMap to set
 		 */
-		public static void setSubSetiaCodeMap(Map<Long, String> subSetiaCodeMap) {
-			PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
-		}
+	public static void setSubSetiaCodeMap(Map<Long, String> subSetiaCodeMap) {
+		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
+	}
 }

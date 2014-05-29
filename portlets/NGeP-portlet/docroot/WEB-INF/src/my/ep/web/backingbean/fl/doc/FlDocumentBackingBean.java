@@ -233,8 +233,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(id.equals("CO")){
 				this.getManagedBean().setCheckDocType(true);
 				this.getManagedBean().setCheckPoDocType(false);
+				
 			}else if(id.equals("PO")){
 				this.getManagedBean().setCheckPoDocType(true);
+				this.getManagedBean().setCheckDocType(false);
+				this.getManagedBean().setCheckTitle(true);
+			}else if(id.equals("PA") || id.equals("CR") || id.equals("PR")){
+				this.getManagedBean().setCheckTitle(true);
 				this.getManagedBean().setCheckDocType(false);
 			}else{
 				this.getManagedBean().setCheckDocType(false);
@@ -248,6 +253,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchDocType(null);
 		getManagedBean().setCheckDocType(false);
 		getManagedBean().setCheckPoDocType(false);
+		this.getManagedBean().setCheckTitle(false);
+	}
+	public void searchReset(){
+		this.getManagedBean().setSearchCircularNo(null);
+		
 	}
 
 	public IPagingDataModel<VFlDocument> getFlDocumentDataModel() {

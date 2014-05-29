@@ -41,6 +41,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	private Boolean checkDocType =false;
 	private Boolean checkPoDocType =false;
+	private Boolean checkPaDocType =false;
+	private Boolean checkTitle =false;
 
 	public String getTempLoginId() {
 		return tempLoginId;
@@ -178,6 +180,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckPoDocType(Boolean checkPoDocType) {
 		this.checkPoDocType = checkPoDocType;
+	}
+
+	/**
+	 * @return the checkPaDocType
+	 */
+	public Boolean getCheckPaDocType() {
+		return checkPaDocType;
+	}
+
+	/**
+	 * @param checkPaDocType the checkPaDocType to set
+	 */
+	public void setCheckPaDocType(Boolean checkPaDocType) {
+		this.checkPaDocType = checkPaDocType;
+	}
+
+	/**
+	 * @return the checkTitle
+	 */
+	public Boolean getCheckTitle() {
+		return checkTitle;
+	}
+
+	/**
+	 * @param checkTitle the checkTitle to set
+	 */
+	public void setCheckTitle(Boolean checkTitle) {
+		this.checkTitle = checkTitle;
 	}
 	
 }

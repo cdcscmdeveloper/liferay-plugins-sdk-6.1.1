@@ -102,9 +102,7 @@
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
-				<p:column headerText="Item Type">
-					<h:outputText value="#{flItem.scRequestItem.itemType}" />
-				</p:column>
+				
 				<p:column headerText=" Item Code">
 					<h:outputText value="#{flItem.scRequestItem.cmItem.extensionCode}" />
 				</p:column>

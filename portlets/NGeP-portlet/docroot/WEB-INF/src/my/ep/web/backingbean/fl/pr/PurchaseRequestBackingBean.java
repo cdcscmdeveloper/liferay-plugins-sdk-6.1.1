@@ -555,6 +555,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());//this id is it suppose pass from s1?
 		//		reqDTO.setPurchaseRequestId(6L);//this id is it suppose pass from s1?
 		reqDTO.setIncludeDetail(true);
+		//reqDTO.setAssignedTo(1L);
 		 PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
 		//PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
 		 purResDTO.getPurchaseRequest().getRequestNoteDtls().size();
@@ -580,6 +581,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			cmItem.setItemId(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId());
 			//PmVotFund pmVotFund=new PmVotFund();
 		    //pmVotFund.setVotFundId(1L);
+			cmItem.setExtensionCode(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getExtensionCode());
 			   flItem.setItemType(pmParameter);
 			   flItem.setCmItem(cmItem);
 			   //flItem.setPmVotFund(pmVotFund);
@@ -624,7 +626,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		aNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
 		//aNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
 		aNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(1L);
-		aNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("P");
+		//aNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("P");
 		aNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Blue Pen");
 		scList.add(aNote);
 		ScRequestNoteDtl bNote=new ScRequestNoteDtl();
@@ -632,7 +634,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		bNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
 		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
 		bNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(33L);
-		bNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
+		//bNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
 		bNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Apsara Pencil");
 		scList.add(bNote);
 		ScRequestNoteDtl cNote=new ScRequestNoteDtl();
@@ -640,7 +642,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		cNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
 		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
 		cNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(34L);
-		cNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
+		//cNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
 		cNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Red Pen");
 		scList.add(cNote);
 		ScRequestNoteDtl dNote=new ScRequestNoteDtl();
@@ -648,7 +650,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		dNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
 		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
 		dNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(50L);
-		dNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
+		//dNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
 		dNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("HB Pencil");
 		scList.add(dNote);
 		
@@ -785,6 +787,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		    pmParameter.setParameterId(155L);
 			CmItem cmItem = new CmItem();
 			cmItem.setItemId(flItem.getCmItem().getItemId());
+			cmItem.setExtensionCode(flItem.getCmItem().getExtensionCode());
 			//.getScRequestSupplierItem().getRequestNoteItem().getCmItem().getItemId()
 			//PmVotFund pmVotFund=new PmVotFund();
 		   // pmVotFund.setVotFundId(1L);
