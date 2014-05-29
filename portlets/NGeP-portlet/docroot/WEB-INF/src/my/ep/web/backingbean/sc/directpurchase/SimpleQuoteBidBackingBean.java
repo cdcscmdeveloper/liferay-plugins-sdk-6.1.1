@@ -24,6 +24,8 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteBidManagedBean;
@@ -83,24 +85,28 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		createBPMTask(true);
 	}
 	public void updateZoneLocation() {
-		List<LocationDTO>	locationDTOs	=	new ArrayList<LocationDTO>();
+		List<TplSpecLoc>	locationDTOs	=	new ArrayList<TplSpecLoc>();
 		//TreeNode[]	listSelectedTreeNode	=	getManagedBean().getSelectedNodes().clone();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (!treeNode.getParent().isSelected()) {
-					LocationDTO	locationDTO	=	(LocationDTO)treeNode.getData();
+					TplSpecLoc	locationDTO	=	(TplSpecLoc)treeNode.getData();
 					locationDTOs.add(locationDTO);
 				}
 			}
 		}
-		ScQuoteZone zone = new ScQuoteZone();
+		TplSpecZoneDtl zone = new TplSpecZoneDtl();
 		zone.setZoneName(getManagedBean().getZoneName());
 		getManagedBean().setZoneName(null);
 		
-		List<PmState>	states	=	SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
-		List<PmDivision>	divisions	=	SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
-		List<PmDistrict>	districts	=	SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
-		List<PmCity>	cities	=	SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTO(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTO(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTO(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTO(locationDTOs);
 		
 		getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().buildZoneTree(zone, states, districts, divisions, cities));
 		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
@@ -113,15 +119,19 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		getManagedBean().getBusinessNatureCriterias().add(businessNature);
 	}
 	public	void	editZoneLocation(TreeNode rootZoneLocation){
-		List<LocationDTO>	locationDTOs	=	getLocations(rootZoneLocation);
+		List<TplSpecLoc>	locationDTOs	=	getLocations(rootZoneLocation);
 		ScQuoteZone	zone	=	getZone(rootZoneLocation);
-		List<PmState>	states	=	SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
-		List<PmDivision>	divisions	=	SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
-		List<PmDistrict>	districts	=	SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
-		List<PmCity>	cities	=	SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTO(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTO(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTO(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTO(locationDTOs);
 		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, states, districts, divisions, cities));
 		if(zone != null){
-			getManagedBean().setZoneName(zone.getZoneName());
+			//getManagedBean().setZoneName(zone.getZoneName());
 		}
 	}
 	public	void	showZoneLocationPopup(){
@@ -132,10 +142,10 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		ScRequestItem item = new ScRequestItem();
 		getManagedBean().getQuoteBidItems().add(item);
 	}
-	private	List<LocationDTO>	getLocations(TreeNode zoneLocation){
-		List<LocationDTO> results	=	new ArrayList<LocationDTO>();
+	private	List<TplSpecLoc>	getLocations(TreeNode zoneLocation){
+		List<TplSpecLoc> results	=	new ArrayList<TplSpecLoc>();
 		if(zoneLocation.isLeaf()){
-			LocationDTO	locationDTO	=	(LocationDTO)zoneLocation.getData();
+			TplSpecLoc	locationDTO	=	(TplSpecLoc)zoneLocation.getData();
 			results.add(locationDTO);
 		}else{
 			for(TreeNode childrendLocationNode: zoneLocation.getChildren()){
