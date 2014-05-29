@@ -76,18 +76,27 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="* Landlord's Name" /></td>
-						<td><p:inputText
+						<td><p:inputText id="landlordName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" /></td>
+								size="35" required="true"/>
+							<p:message id="landlordNameMsg" for="landlordName" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 						<td><p:outputLabel value="* Monthly Rental (RM.)" /></td>
-						<td><p:inputText
+						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
-								size="35" /></td>
+								size="35" required="true"/>
+							<p:message id="rentalMsg" for="rental" showSummary="true"
+								showDetail="false" display="icon" />	
+						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" /></td>
+						<td><p:inputText id="companyAdd1" size="35" colspan="3"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+							<p:message id="companyAdd1Msg" for="companyAdd1" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 					</tr>
 					<tr>
 						<td></td>
@@ -104,8 +113,8 @@
 						<td><p:inputText size="35" colspan="3"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
 						<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}">
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;" id="companyCntry"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}" required="true">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryLs}"
@@ -118,7 +127,10 @@
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+							<p:message id="cmpnyCntryNameMsg" for="companyCntry" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 
 					</tr>
 
@@ -126,7 +138,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
-								id="basicOffFacState">
+								id="basicOffFacState" required="true">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}"
@@ -139,10 +151,13 @@
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacDist,basicOffFacCity" />
 
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+							<p:message id="basicOffFacStateMsg" for="basicOffFacState" showSummary="true"
+								showDetail="false" display="icon" />	
+						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								id="basicOffFacDist"
+								id="basicOffFacDist" required="true"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems var="offDist"
@@ -154,20 +169,26 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
 									update="basicOffFacCity" />
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+							<p:message id="basicOffFacDistMsg" for="basicOffFacDist" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								id="basicOffFacCity"
+								id="basicOffFacCity" required="true"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}"
 									itemValue="#{offCity.cityId}" itemLabel="#{offCity.cityName}" />
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+							<p:message id="basicOffFacCityMsg" for="basicOffFacCity" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:inputText size="35"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>
@@ -212,24 +233,33 @@
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel value="* Owner Name" /></td>
-						<td colspan="3"><p:inputText
+						<td colspan="3"><p:inputText id="fcltyOwnerName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" /></td>
+								size="35" required="true"/>
+								<p:message id="fcltyOwnerNameMsg" for="fcltyOwnerName" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel value="* Purchase Date" /></td>
-						<td colspan="3" style="padding-bottom: 3px;"><p:calendar
-								showOn="button"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}">
-							</p:calendar></td>
+						<td colspan="3" style="padding-bottom: 3px;">
+							<p:calendar	showOn="button" id="purchaseDate"	
+							value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" required="true">
+							</p:calendar>
+							<p:message id="purchaseDateMsg" for="purchaseDate" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel value="* Purchase Price " /></td>
-						<td colspan="3"><p:inputText size="35"
-								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}">
+						<td colspan="3"><p:inputText size="35" id="purchasePrice"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
+							</p:inputText>
+							<p:message id="purchasePriceMsg" for="purchasePrice" showSummary="true"
+								showDetail="false" display="icon" />
+						</td>
 
 					</tr>
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
