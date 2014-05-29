@@ -739,11 +739,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 								"Di hadapan		: <br/>" +
 								"Nama			: <br/>" +
 								"No. K/Pengenalan	:<br/>" +
-								"Jawatan		: <br/>";
+								"Jawatan		: <br/><br/>";
 			
 			content = content + "Untukdanbagipihak<strong>KONTRAKTOR</strong><br/>";
 			content = content + "<strong>${COMPANY_NAME}</strong><br/>";
-			content = content + "(No. Syarikat: <strong>${COMPANY_REGISTER_ID}</strong>)<br/>";
+			content = content + "(No. Syarikat: <strong>${COMPANY_REGISTER_ID}</strong>)<br/><br/>";
 			
 			content = content + "Di hadapan		: " + "<br/>" +
 					"Nama			: <br/>" +
