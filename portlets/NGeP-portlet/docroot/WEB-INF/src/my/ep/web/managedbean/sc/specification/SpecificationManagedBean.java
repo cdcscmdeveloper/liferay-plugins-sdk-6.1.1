@@ -257,7 +257,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public List<ScQtDeliveryLoc> deleteDeliveryList;
 	public List<ScQtDeliveryLoc> selectDeliveryList;
 
-	public ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+	public ScQtSupplierCriteria supplierCriteria;
 
 	public String deliveyzoneName;
 	private int technicalChecklistScoring;
