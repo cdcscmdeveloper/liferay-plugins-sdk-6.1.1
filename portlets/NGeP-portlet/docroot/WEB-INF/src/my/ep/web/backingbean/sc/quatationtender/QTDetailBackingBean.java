@@ -904,20 +904,18 @@ public class QTDetailBackingBean extends
 		}
 
 		// Setting the contact person to qtdetails.
-		List<ScQtContactPerson> contactPersons = getManagedBean()
-				.getSelectedContactPersons();
-		if (contactPersons != null && !contactPersons.isEmpty()) {
-			List<ScQtContactPerson> contactList = new ArrayList<ScQtContactPerson>();
-			List<PmUser> userList = getManagedBean().getPmUsersList();
-			ScQtContactPerson contactPerson = getManagedBean()
-					.getQtContactPerson();
-			for (PmUser pmUser : userList) {
-				contactPerson.setUser(pmUser);
-				contactList.add(contactPerson);
-			}
-			contactPersons.addAll(contactList);
-			scQt.setScQtContactPersons(contactPersons);
+		List<ScQtContactPerson> list = new ArrayList<ScQtContactPerson>();
+		
+		List<ScQtContactPerson> contactPersonsList = this.getManagedBean().getScQtContactPersons();
+		List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean().getPmuserContactpersonList();
+		
+		list.addAll(contactPersonsList);
+		list.addAll(deskOfficerAdminList);
+		
+		if (list != null && !list.isEmpty()) {
+			scQt.setScQtContactPersons(list);
 		}
+		
 
 		List<ScQtSampleSubmission> sampleSubmissionList = getManagedBean()
 				.getSelectedSubmissionList();
@@ -1133,8 +1131,90 @@ public class QTDetailBackingBean extends
 			retrieveCommitteeAppointmentTabDtl();
 		} else if (QTConstants.QT_BRIEFING_SITEVISIT.equalsIgnoreCase(tabTitle)) {
 			retrieveBriefingSitevisitTabDtl();
+		} else if (QTConstants.QT_TECHNICAL_SPECIFICATION.equalsIgnoreCase(tabTitle)) {
+			retriveTechnicalSpecification();
+		} else if (QTConstants.QT_FINANCIAL_SPECIFICATION.equalsIgnoreCase(tabTitle)) {
+			retriveFinancialSpecification();
 		}
 
+	}
+
+	/**
+	 * 
+	 */
+	private void retriveFinancialSpecification() {
+		IQTSpecSO specSO;
+		SpecificationResDTO resDto;
+		try {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setSpecType("F");
+			specSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			resDto = specSO.retrieveSpecDetails(reqDTO);
+
+			if (resDto != null) {
+				List<ScQtCheckList> financialSpecList = this.getManagedBean()
+						.getFinancialSpecList();
+				if (financialSpecList == null) {
+					financialSpecList = new ArrayList<ScQtCheckList>();
+				}
+				List<ScQtCheckList> localList = new ArrayList<ScQtCheckList>();
+				if (resDto.getSpecResultBean().getResultList().size() != financialSpecList
+						.size()) {
+					for (ScQtCheckList checklist : resDto.getSpecResultBean()
+							.getResultList()) {
+						/*
+						 * checklist.setScQtSpec(this.getManagedBean()
+						 * .getScQtSpec());
+						 */
+						localList.add(checklist);
+					}
+					this.getManagedBean().setFinancialSpecList(localList);
+				}
+			}
+		} finally {
+			specSO = null;
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void retriveTechnicalSpecification() {
+		IQTSpecSO specSO;
+		SpecificationResDTO resDto;
+
+		try {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setSpecType("T");
+			specSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			resDto = specSO.retrieveSpecDetails(reqDTO);
+			if (resDto != null) {
+				List<ScQtCheckList> techSpecList = this.getManagedBean()
+						.getTechnicalSpecList();
+				if (techSpecList == null) {
+					techSpecList = new ArrayList<ScQtCheckList>();
+				}
+				List<ScQtCheckList> localList = new ArrayList<ScQtCheckList>();
+				if (resDto.getSpecResultBean().getResultList().size() != techSpecList
+						.size()) {
+					for (ScQtCheckList checklist : resDto.getSpecResultBean()
+							.getResultList()) {
+						/*
+						 * checklist.setScQtSpec(this.getManagedBean()
+						 * .getScQtSpec());
+						 */
+						localList.add(checklist);
+					}
+					this.getManagedBean().setTechnicalSpecList(localList);
+				}
+			}
+		} finally {
+			specSO = null;
+		}
 	}
 
 	/**

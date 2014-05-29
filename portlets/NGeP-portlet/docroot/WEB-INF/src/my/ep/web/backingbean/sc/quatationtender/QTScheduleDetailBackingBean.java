@@ -236,9 +236,9 @@ public class QTScheduleDetailBackingBean extends
 			if (null == contactList) {
 				contactList = new ArrayList<ScQtContactPerson>();
 			}
+			contactperson.setOfficerType("C");
+			contactperson.setScQt(getManagedBean().getQt());
 			for (ScQtContactPerson scQtContactPerson : contactList) {
-				scQtContactPerson.setOfficerType("C");
-				scQtContactPerson.setScQt(getManagedBean().getQt());
 				scQtContactPerson.setBrandNew(false);
 			}
 			contactList.add(contactperson);
@@ -277,26 +277,40 @@ public class QTScheduleDetailBackingBean extends
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
-		contactPerson.setUser(new PmUser());
-		contactPerson.setOfficerType("A");
-		contactPerson.setScQt(getManagedBean().getQt());
-		contactPerson.setBrandNew(false);
-		// getManagedBean().setQtContactPerson(contactPerson);
-		/*
-		 * PmUser pmUser = new PmUser(); try { List<PmUser> usersList =
-		 * this.getManagedBean().getPmUsersList(); if (null == usersList) {
-		 * usersList = new ArrayList<PmUser>(); } for (PmUser user : usersList)
-		 * { user.setBrandNew(false); usersList.add(pmUser);
-		 * this.getManagedBean().setPmUsersList(usersList); }
-		 */
-
+		
+		//getManagedBean().setQtContactPerson(contactPerson);
+		/*PmUser pmUser = new PmUser();
 		try {
-			if (this.getManagedBean().getPmuserContactpersonList() == null) {
-				this.getManagedBean().setPmuserContactpersonList(
-						new ArrayList());
+			List<PmUser> usersList = this.getManagedBean().getPmUsersList();
+			if (null == usersList) {
+				usersList = new ArrayList<PmUser>();
 			}
-			this.getManagedBean().getPmuserContactpersonList()
-					.add(contactPerson);
+			for (PmUser user : usersList) {
+				user.setBrandNew(false);
+				usersList.add(pmUser);
+			this.getManagedBean().setPmUsersList(usersList);
+			}*/
+			
+		try {
+			
+			List<ScQtContactPerson> contactList = this.getManagedBean()
+					.getPmuserContactpersonList();
+			if (null == contactList) {
+				contactList = new ArrayList<ScQtContactPerson>();
+			}
+			contactPerson.setUser(new PmUser());
+			contactPerson.setOfficerType("A");
+			contactPerson.setScQt(getManagedBean().getQt());
+			for (ScQtContactPerson scQtContactPerson : contactList) {
+				scQtContactPerson.setBrandNew(false);
+			}
+			contactList.add(contactPerson);
+			this.getManagedBean().setPmuserContactpersonList(contactList);
+			
+			/*if(this.getManagedBean().getPmuserContactpersonList()== null){
+				this.getManagedBean().setPmuserContactpersonList(new ArrayList());
+			}
+			this.getManagedBean().getPmuserContactpersonList().add(contactPerson);*/
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -304,14 +318,14 @@ public class QTScheduleDetailBackingBean extends
 
 	public void deleteDeskOfficerAdminAssistant() {
 		debugLogger("deleteDeskOfficerAdminAssistant");
-		List<PmUser> usersList = this.getManagedBean().getPmUsersList();
-		List<PmUser> selectedUsersList = this.getManagedBean()
-				.getSelectedPmUsersList();
-		if (usersList.size() == selectedUsersList.size()) {
-			usersList.clear();
+		List<ScQtContactPerson> contactList = this.getManagedBean().getPmuserContactpersonList();
+		List<ScQtContactPerson> selectedContactList = this.getManagedBean().getSelectedpmuserContactpersonList();
+		
+		if (contactList.size() == selectedContactList.size()) {
+			contactList.clear();
 		} else {
-			for (PmUser pmUser : selectedUsersList) {
-				usersList.remove(pmUser);
+			for (ScQtContactPerson contactPerson : selectedContactList) {
+				contactList.remove(contactPerson);
 			}
 		}
 	}

@@ -31,7 +31,16 @@
 			<ui:include
 				src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
 		</p:tab>
-
+		
+		<p:tab title="#{lbl['lbl.qt.tecnical.spec']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/qttechnicalchecklist.xhtml" />
+		</p:tab>
+		
+		<p:tab title="#{lbl['lbl.qt.finanial.spec']}">
+			<ui:include
+				src="/xhtml/sc/quatationtender/qtfinancialchecklist.xhtml" />
+		</p:tab>
 
 		<p:tab title="#{lbl['lbl.qt.bsv.sample']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
 			<ui:include

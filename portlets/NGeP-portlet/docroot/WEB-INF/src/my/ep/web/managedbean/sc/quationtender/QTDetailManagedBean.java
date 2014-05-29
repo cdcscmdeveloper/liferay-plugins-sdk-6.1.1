@@ -380,6 +380,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtApprovalRequest> scQtApprovalRequestList;
 	private String approvalType;
 	private ISearchResultBean<ScQtCommittee> qtCommittes;
+	
+	private List<ScQtCheckList> technicalSpecList;
+	private List<ScQtCheckList> financialSpecList;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2253,6 +2256,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setScQtBSVRemark(ScQtBSVRemark scQtBSVRemark) {
 		this.scQtBSVRemark = scQtBSVRemark;
+	}
+
+	public List<ScQtCheckList> getTechnicalSpecList() {
+		return technicalSpecList;
+	}
+
+	public void setTechnicalSpecList(List<ScQtCheckList> technicalSpecList) {
+		this.technicalSpecList = technicalSpecList;
+	}
+
+	public List<ScQtCheckList> getFinancialSpecList() {
+		return financialSpecList;
+	}
+
+	public void setFinancialSpecList(List<ScQtCheckList> financialSpecList) {
+		this.financialSpecList = financialSpecList;
 	}
 
 }

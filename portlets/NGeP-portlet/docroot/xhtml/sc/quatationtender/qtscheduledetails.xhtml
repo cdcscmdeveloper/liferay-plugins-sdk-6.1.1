@@ -11,19 +11,20 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.so.noticepublish']}" /></td>
-				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}" required="true"
+				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
+						required="true"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
 						id="noticePublish"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
-					<h:inputText value="12:00PM" disabled="true" size="06" />
-					<p:message id="noticePublishMsg" for="noticePublish" display="icon" /></td>
+					<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
+						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true" size="30"
-						style="margin-top:5px;" /></td>
+						style="margin-top:5px; text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.closingdate']}" /></td>
@@ -36,13 +37,15 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.so.sampleclosingdate']}" /></td>
-				<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}" required="true"
+				<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
+						required="true"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
 						id="proposalPreparation"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
-					<h:inputText value="12:00PM" disabled="true" size="06" />
-					<p:message id="proposalPreparationMsg" for="proposalPreparation" display="icon" /></td>
+					<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
+						id="proposalPreparationMsg" for="proposalPreparation"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
@@ -56,7 +59,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
-						readonly="true" disabled="true" style="margin-top:5px;" size="30" /></td>
+						readonly="true" disabled="true" size="30"
+						style="margin-top:5px;text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -64,8 +68,8 @@
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
 						readonly="true" disabled="true" style="margin-top:5px;" size="30">
-						<!-- <f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /> -->
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 		</table>
@@ -182,18 +186,15 @@
 			<ac:paginator for="doaaid" />
 
 			<p:column headerText="Name">
-				<ui:fragment rendered="#{deskofficeradmin.user.userName !='null'}">
-					<h:outputText value="#{deskofficeradmin.user.userName}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{deskofficeradmin.user.userName =='null'}">
-					<p:selectOneMenu value="#{deskofficeradmin.user.userName}">
-						<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
-						<f:selectItems
-							value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
-							var="appName" itemLabel="#{appName.userName}"
-							itemValue="#{appName.userName}" />
-					</p:selectOneMenu>
-				</ui:fragment>
+
+				<p:selectOneMenu value="#{deskofficeradmin.user.userId}">
+					<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+					<f:selectItems
+						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
+						var="appName" itemLabel="#{appName.userName}"
+						itemValue="#{appName.userId}" />
+
+				</p:selectOneMenu>
 
 			</p:column>
 
