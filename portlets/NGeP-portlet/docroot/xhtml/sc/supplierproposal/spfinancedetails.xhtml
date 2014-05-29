@@ -8,8 +8,8 @@
 	<p:panel header="#{lbl['lbl.sc.sp.header.finance.proposal']}"
 		toggleable="true">
 		<p:dataTable id="financeDeailsId" var="financeList"
-			value="#{sPDetailBackingBean.managedBean.financeCheckDetailsList}"
-			selection="#{sPDetailBackingBean.managedBean.selectedCheckDetails}"
+			value="#{supplierProposalDetailBackingBean.managedBean.financeCheckDetailsList}"
+			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{financeList}" rowIndexVar="rowIndex">
 
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -24,7 +24,7 @@
 
 			<p:column headerText="Doc Definition Key" style="width:10%">
 				<h:outputText
-					value="#{financeList.scQtCheckList.scQtDoc.document.docDefinitionKey}" />
+					value="#{financeList.scQtCheckList.pmDocument.docDefinitionKey}" />
 			</p:column>
 
 			<p:column headerText="Doc Definition Type" style="width:10%">
@@ -33,43 +33,25 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.action']}" style="width:10%">
-				<!-- <ui:fragment
-					rendered="#{financeList.scQtCheckList.scQtDoc.document.docDefinitionKey == 'SD'}">
-					<p:commandButton
-						action="#{sPDetailBackingBean.prepareSupplierDetailsAction(financeList)}"
-						value="Prepare" process="@this" partialSubmit="true" ajax="false" />
-				</ui:fragment>
+
 				<ui:fragment
-					rendered="#{financeList.scQtCheckList.scQtDoc.document.docDefinitionKey == 'CF'}">
+					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}">
 					<p:commandButton
-						action="#{sPDetailBackingBean.prepareCreditFacilitiesAction(financeList)}"
+						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
 						value="Prepare" />
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{financeList.scQtCheckList.scQtDoc.document.docDefinitionKey == 'FG'}">
+					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}">
 					<p:commandButton
-						action="#{sPDetailBackingBean.prepareCompanyExperienceGovtAction(financeList)}"
-						value="View" />
-				</ui:fragment> -->
-
-				<ui:fragment
-					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}">
-					<p:commandButton
-						action="#{sPDetailBackingBean.prepareFinancialAction(financeList)}"
-						value="Prepare" />
-				</ui:fragment>
-
-				<ui:fragment
-					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}}">
-					<p:commandButton value="View" icon="ui-icon-agree" />
+						action="#{supplierProposalDetailBackingBean.prepareFinancialViewAction(financeList)}"
+						value="View" icon="ui-icon-agree" />
 				</ui:fragment>
 
 				<ui:fragment
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'UP'}">
 					<p:commandButton onclick="attachDlg1.show();return false;"
-						icon="iconAttachment" value="Attachment">
-
+						icon="iconAttachment" update="financeDeailsId" value="Attachment">
 					</p:commandButton>
 				</ui:fragment>
 
@@ -81,6 +63,14 @@
 	<p:dialog id="attachDlg1id" widgetVar="attachDlg1" modal="true"
 		resizable="false" width="700px" height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
+			mode="advanced" id="uploads1"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="financeDeailsId" oncomplete="attachDlg1.hide()">
+		</p:fileUpload>
 	</p:dialog>
 
 </ui:composition>

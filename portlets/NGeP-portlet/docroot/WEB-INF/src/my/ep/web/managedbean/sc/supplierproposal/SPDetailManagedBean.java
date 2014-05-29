@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
  * @author Viswanath
  * 
  */
-@ManagedBean(name = "sPDetailManagedBean")
+@ManagedBean(name = "supplierProposalDetailManagedBean")
 @SessionScoped
 public class SPDetailManagedBean extends BaseManagedBean {
 

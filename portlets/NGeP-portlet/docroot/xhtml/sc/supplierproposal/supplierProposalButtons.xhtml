@@ -11,13 +11,13 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.sp.save']}"
-						action="#{sPDetailBackingBean.saveSPDetailsAction}" process="@all"
+						action="#{supplierProposalDetailBackingBean.saveSPDetailsAction}" process="@all"
 						icon="ui-icon-save" />
 
 					<p:commandButton value="#{lbl['lbl.sc.sp.submit']}" process="@all"
 						icon="ui-icon-submit" />
 
-					<c:forEach items="#{sPDetailBackingBean.managedBean.outComes}"
+					<c:forEach items="#{supplierProposalDetailBackingBean.managedBean.outComes}"
 						var="action">
 
 						<c:if test="${action == 'SUBMIT'}">
@@ -44,7 +44,7 @@
 
 						<p:commandButton value="#{action}" process="@all"
 							styleClass="ui-button"
-							actionListener="#{sPDetailBackingBean.updateBpmTask(action)}"
+							actionListener="#{supplierProposalDetailBackingBean.updateBpmTask(action)}"
 							icon="#{iconVar}" />
 					</c:forEach>
 				</p:column>

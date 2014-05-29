@@ -8,14 +8,14 @@
 	<p:panel header="#{lbl['lbl.sc.sp.header.tech.proposal']}"
 		toggleable="true">
 		<p:dataTable id="techDeailsId" var="techList"
-			value="#{sPDetailBackingBean.managedBean.tecCheckDetailsList}"
-			selection="#{sPDetailBackingBean.managedBean.selectedCheckDetails}"
+			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
+			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{techList}" rowIndexVar="rowIndex">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
-				<h:outputText value="#{techList.scQtCheckList.title}" />
+				<h:outputText value="#{techList.scQtCheckList.title}" escape="false" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.instruction']}"
@@ -24,7 +24,7 @@
 
 			<p:column headerText="Doc Definition Key" style="width:10%">
 				<h:outputText
-					value="#{techList.scQtCheckList.scQtDoc.document.docDefinitionKey}" />
+					value="#{techList.scQtCheckList.pmDocument.docDefinitionKey}" />
 			</p:column>
 
 			<p:column headerText="Doc Definition Type" style="width:10%">
@@ -33,30 +33,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.action']}" style="width:10%">
-				<!-- <ui:fragment
-					rendered="#{techList.scQtCheckList.scQtDoc.document.docDefinitionKey == 'TN'}">
-					<p:commandButton
-						action="#{sPDetailBackingBean.prepareNonFederalGovtAction(techList)}"
-						value="Prepare" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{techList.scQtCheckList.scQtDoc.document.docDefinitionKey == 'TG'}">
-					<p:commandButton
-						action="#{sPDetailBackingBean.prepareFederalGovtAction(techList)}"
-						value="Prepare" />
-				</ui:fragment> -->
-
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' or techList.scQtCheckList.definationType.parameterCode eq 'WF'}">
 					<p:commandButton
-						action="#{sPDetailBackingBean.prepareTechnicalAction(techList)}"
+						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
 						value="Prepare" />
 				</ui:fragment>
 
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD'}">
 					<p:commandButton
-						action="#{sPDetailBackingBean.prepareTechnicalViewAction(techList)}"
+						action="#{supplierProposalDetailBackingBean.prepareTechnicalViewAction(techList)}"
 						value="View" icon="ui-icon-agree" />
 				</ui:fragment>
 
