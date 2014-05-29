@@ -888,19 +888,21 @@ public class QTDetailBackingBean extends
 						.addAll(selectedSiteVisitList);
 			}
 			
+			if( getManagedBean().getScQtBsv() != null) {
 			List<ScQtBSVRemark> bsvRemarks = getManagedBean().getScQtBsv().getBsvRemarks();
-			if(null != bsvRemarks) {
-				for (int i = 0; i < bsvRemarks.size(); i++) {
-					if(bsvRemarks.get(i).getRemark() == null || bsvRemarks.get(i).getRemark() == "") {
-						getManagedBean().getScQtBsv().getBsvRemarks().remove(i);
+				if(null != bsvRemarks) {
+					for (int i = 0; i < bsvRemarks.size(); i++) {
+						if(bsvRemarks.get(i).getRemark() == null || bsvRemarks.get(i).getRemark() == "") {
+							getManagedBean().getScQtBsv().getBsvRemarks().remove(i);
+						}
 					}
 				}
+				getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
+				List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
+				scQtBsvs.add(this.getManagedBean().getScQtBsv());
+				scQt.setScQtBriefings(scQtBsvs);
 			}
 			
-			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
-			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
-			scQtBsvs.add(this.getManagedBean().getScQtBsv());
-			scQt.setScQtBriefings(scQtBsvs);
 		}
 
 		// Setting the contact person to qtdetails.
@@ -909,8 +911,12 @@ public class QTDetailBackingBean extends
 		List<ScQtContactPerson> contactPersonsList = this.getManagedBean().getScQtContactPersons();
 		List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean().getPmuserContactpersonList();
 		
-		list.addAll(contactPersonsList);
-		list.addAll(deskOfficerAdminList);
+		if(contactPersonsList != null && !contactPersonsList.isEmpty() ) {
+			list.addAll(contactPersonsList);
+		}
+		if(deskOfficerAdminList != null && !deskOfficerAdminList.isEmpty() ) {
+			list.addAll(deskOfficerAdminList);
+		}
 		
 		if (list != null && !list.isEmpty()) {
 			scQt.setScQtContactPersons(list);
