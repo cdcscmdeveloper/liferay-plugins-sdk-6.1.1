@@ -149,8 +149,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	 public void preRenderView(){
 			
-		try{	
+		try {	
 			System.out.println("**********preRenderView**************");
+			log.debug("Inside preRenderView()");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
@@ -264,10 +265,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		log.debug("Exit preRenderView()");
     }
 	
 	public String createAgreement(String action) {
-		
+		log.debug("Inside createAgreement(.)");
 		IAgreementSO agreementSO = null;
 		ContractAgreementReqDTO reqDTO = null;
 	    try {
@@ -343,10 +345,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			  }finally {
 				  agreementSO = null;
 			  }
+	    log.debug("Exit createAgreement(.)");
 		return null;	
 	}
 
 	public String createSupAgreement(String action) {
+		log.debug("Inside createSupAgreement(.)");
 		IAgreementSO agreementSO = null;
 		ContractAgreementReqDTO reqDTO = null;
 		try {
@@ -378,6 +382,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			agreementSO = null;
 			reqDTO = null;
 		}
+		log.debug("Exit createSupAgreement(.)");
 		return null;
 	}
 	
@@ -461,7 +466,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     }
     
     public void fileUpload(FileUploadEvent event) throws Exception {
-		
+    	log.debug("Inside fileUpload(.)");
 		UploadedFile item = event.getFile();
 		String fileName = item.getFileName();
 		String filePath = "C:/projects/uploads/"+item.getFileName();
@@ -475,9 +480,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    		this.getManagedBean().getCtContract().getCurrentAgreement().getAgreementContents().get(i).setFileName(fileName);
 	    	 }i++;
 	     }
+	    log.debug("Exit fileUpload(.)");
 	}
 
     public void uploadStampedPage(FileUploadEvent event) throws Exception{
+    	log.debug("Inside uploadStampedPage(.)");
     	UploadedFile item = event.getFile();
 		String filePath = "C:/projects/uploads/"+item.getFileName();
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
@@ -485,6 +492,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    this.getManagedBean().getCtContract().getCurrentAgreement().setStampedPagePath(filePath);
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
+	    log.debug("Exit uploadStampedPage(.)");
     }
 	
 	public void uploadSignedPage(FileUploadEvent event) throws Exception{
@@ -498,6 +506,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	public void downloadFile(String filePath) throws IOException {
+		log.debug("Inside downloadFile(.)");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
@@ -530,9 +539,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
+		log.debug("Exit downloadFile(.)");
 	}	
 	
 	public void downloadFile(String filePath, String fileName) throws IOException {
+		log.debug("Inside downloadFile(..)");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
@@ -561,11 +572,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
+		log.debug("Exit downloadFile(..)");
 	}
 	
-	public void downloadDocFile() throws IOException{
+	public void downloadDocFile(String parameterCode) throws IOException{
+		log.debug("Inside downloadDocFile(.)");
 		IContractTemplateSO contractTemplateSO = null;
-		String parameterCode = ContractConst.TEMPLATE_AGREEMENT_PARTY;
+		//String parameterCode = ContractConst.TEMPLATE_AGREEMENT_PARTY;
 		String filePath = "";
 		String fileName = "";
 		try{
@@ -573,24 +586,25 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 			ContractTemplateResDTO resDTO;
 			String content="";
+			String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
 			
 			if(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)){
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE);
 				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				filePath = "C:/downloads/AgreementCoverPage.docx";
+				filePath = tempDir + "/AgreementCoverPage.docx";
 				fileName = "AgreementCoverPage.docx";
 			}else if(ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)){
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_PARTY);
 				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				filePath = "C:/downloads/AgreementPartyPage.docx";
+				filePath = tempDir + "/AgreementPartyPage.docx";
 				fileName = "AgreementPartyPage.docx";
 			}else if(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)){
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE);
 				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				filePath = "C:/downloads/AgreementSigningPage.docx";
+				filePath = tempDir + "/AgreementSigningPage.docx";
 				fileName = "AgreementSigningPage.docx";
 			}
 			
@@ -600,12 +614,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}catch(UnsupportedEncodingException e) {
 			  e.printStackTrace();
 		}
+		log.debug("Exit downloadDocFile(.)");
 	}
 	
 	public void downloadAll(){
+		log.debug("Inside downloadAll()");
 		IContractTemplateSO contractTemplateSO = null;
 		String filePath1, filePath2, filePath3;
 		String content;
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
 		try{
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
@@ -613,25 +630,25 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
 			content = getContent(content, ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE);
-			filePath1 = "C:/downloads/AgreementCoverPage.docx";
+			filePath1 = tempDir + "/AgreementCoverPage.docx";
 			converthtmlToDocFile(content, filePath1);
 			
 			reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_PARTY);
 			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
 			content = getContent(content, ContractConst.TEMPLATE_AGREEMENT_PARTY);
-			filePath2 = "C:/downloads/AgreementPartyPage.docx";
+			filePath2 = tempDir + "/AgreementPartyPage.docx";
 			converthtmlToDocFile(content, filePath2);
 			
 			reqDTO.setTemplateName(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE);
 			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
 			content = getContent(content, ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE);
-			filePath3 = "C:/downloads/AgreementSigningPage.docx";
+			filePath3 = tempDir + "/AgreementSigningPage.docx";
 			converthtmlToDocFile(content, filePath3);
 			
 			File[] all = {new File(filePath1), new File(filePath2), new File(filePath3)};   
-			File zipFile = new File("c:/downloads/agreement.zip");
+			File zipFile = new File(tempDir + "/agreement.zip");
 			try {
 				zipFile.createNewFile();
 				byte[] buffer = new byte[1024];   
@@ -652,14 +669,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			downloadFile("c:/downloads/agreement.zip", "agreement.zip");
+			downloadFile(tempDir + "/agreement.zip", "agreement.zip");
 		}catch(Exception exp){
 			exp.printStackTrace();
 		}
+		log.debug("Exit downloadAll()");
 	}
 	
 	private void converthtmlToDocFile(String content, String filePath){
+		log.debug("Inside converthtmlToDocFile(..)");
 		WordprocessingMLPackage wordMLPackage;
 	 	try {
 	 		wordMLPackage = WordprocessingMLPackage.createPackage();
@@ -678,9 +696,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 	}catch (Docx4JException e) {
  			e.printStackTrace();
  		}
+	 	log.debug("Exit converthtmlToDocFile(..)");
 	}
 	
 	private String getContent(String content, String parameterCode){
+		log.debug("Inside getContent(..)");
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		Map<String, String> valuesMap = new HashMap<String, String>();
 		Calendar c = Calendar.getInstance();
@@ -693,6 +713,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if(addressResDTO.getAddressTypeList().size()>0) {
 			pmAddressType = addressResDTO.getAddressTypeList().get(0);
 		}
+		
 		if(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
 			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getSmSupplier().getCompanyName());
@@ -713,7 +734,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
-			return content;
 		}else if(ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("USER_INPUT_DATE", c.get(Calendar.YEAR)+"");
 			valuesMap.put("USER_INPUT_MONTH", c.get(Calendar.MONTH)+"");
@@ -730,29 +750,35 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
-			return content;
 		}else if(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
-			content = content + "Di hadapan		: <br/>" +
-								"Nama			: <br/>" +
-								"No. K/Pengenalan	: <br/>" +
-								"Jawatan		: <br/>" +
-								"Di hadapan		: <br/>" +
-								"Nama			: <br/>" +
-								"No. K/Pengenalan	:<br/>" +
-								"Jawatan		: <br/><br/>";
-			
+			for(CtAgreementParty agreementParty : getManagedBean().getCtAgencySigner()){
+				content = content + "Di hadapan		: " + agreementParty.getOfficerName() + "<br/>" + 
+								"Nama			: " + agreementParty.getOfficerName() + "<br/>" + 
+								"No. K/Pengenalan	: " + agreementParty.getOfficerIc() + "<br/>" + 
+								"Jawatan		: " + agreementParty.getOfficerPosition() + "<br/><br/>";
+			}
+			for(CtAgreementParty agreementParty : getManagedBean().getCtSignAgencyWitness()){
+				content = content + "Di hadapan		: " + agreementParty.getOfficerName() + "<br/>" + 
+								"Nama			: " + agreementParty.getOfficerName() + "<br/>" + 
+								"No. K/Pengenalan	: " + agreementParty.getOfficerIc() + "<br/>" + 
+								"Jawatan		: " + agreementParty.getOfficerPosition() + "<br/><br/>" ;
+			}
 			content = content + "Untukdanbagipihak<strong>KONTRAKTOR</strong><br/>";
 			content = content + "<strong>${COMPANY_NAME}</strong><br/>";
 			content = content + "(No. Syarikat: <strong>${COMPANY_REGISTER_ID}</strong>)<br/><br/>";
 			
-			content = content + "Di hadapan		: " + "<br/>" +
-					"Nama			: <br/>" +
-					"No. K/Pengenalan	: <br/>" +
-					"Jawatan		: <br/>" +
-					"Di hadapan		: <br/>" +
-					"Nama			: <br/>" +
-					"No. K/Pengenalan	:<br/>" +
-					"Jawatan		: <br/>";
+			for(CtAgreementParty agreementParty : getManagedBean().getCtSupplierSigner()){
+				content = content + "Di hadapan		: " + agreementParty.getOfficerName() + "<br/>" + 
+								"Nama			: " + agreementParty.getOfficerName() + "<br/>" + 
+								"No. K/Pengenalan	: " + agreementParty.getOfficerIc() + "<br/>" + 
+								"Jawatan		: " + agreementParty.getOfficerPosition() + "<br/><br/>";
+			}
+			for(CtAgreementParty agreementParty : getManagedBean().getCtSupplierWitness()){
+				content = content + "Di hadapan		: " + agreementParty.getOfficerName() + "<br/>" + 
+								"Nama			: " + agreementParty.getOfficerName() + "<br/>" + 
+								"No. K/Pengenalan	: " + agreementParty.getOfficerIc() + "<br/>" + 
+								"Jawatan		: " + agreementParty.getOfficerPosition() + "<br/><br/>" ;
+			}
 			
 			valuesMap.put("CURRENT_YEAR", c.get(Calendar.YEAR)+"");
 			valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
@@ -761,12 +787,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
-			return content;
 		}
-		return null;
+		log.debug("Exit getContent(..)");
+		return content;
 	}
 	
 	private String formAddress(String address1, String address2, String address3, String address4) {
+		log.debug("Inside formAddress(....)");
 		StringBuffer address = new StringBuffer();
 		if(address1!=null && address1.length()>0) {
 			address.append(address1).append(" ");
@@ -780,6 +807,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if(address4!=null && address4.length()>0) {
 			address.append(address4).append(" ");
 		}
+		log.debug("Exit formAddress(....)");
 		return address.toString();
 	}
 	
