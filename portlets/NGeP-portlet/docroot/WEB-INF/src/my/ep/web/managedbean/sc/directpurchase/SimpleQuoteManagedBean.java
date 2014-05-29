@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -80,7 +81,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean procTypeOption;
 	private SelectItem[] justDropdown; // justification drop down
 	private SelectItem[] LocLevelDropdown; // Location Level drop down
-	private Integer locationLevel;
+	private String locationLevel;
 	private boolean byLocality = true;
 	private boolean byBusinessNature;
 	private boolean suppListFlag = true;
@@ -114,6 +115,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	String	procurementType;
 	private	Integer	isPanel;
 	private Integer isZonal;
+    private boolean zoneFlag;
 
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
@@ -143,12 +145,15 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	//govtSellers for govt seller 
 	private List<PmOrgProfile> orgProfiles; 
-	private List<ScQuoteSupplier> govtSellers; // 
+	private List<ScQuoteSupplier> govtSellers; 
 	private List<ScQuoteSupplier> selectedGovtSellers;
 	
 	// supplier view
 	private boolean productFlag;
 	private boolean serviceFlag;
+	
+	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
+	private String quoteNo;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -464,14 +469,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the locationLevel
 	 */
-	public Integer getLocationLevel() {
+	public String getLocationLevel() {
 		return locationLevel;
 	}
 
 	/**
 	 * @param locationLevel the locationLevel to set
 	 */
-	public void setLocationLevel(Integer locationLevel) {
+	public void setLocationLevel(String locationLevel) {
 		this.locationLevel = locationLevel;
 	}
 
@@ -1249,6 +1254,42 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setServiceFlag(boolean serviceFlag) {
 		this.serviceFlag = serviceFlag;
+	}
+	/**
+	 * @return the zoneFlag
+	 */
+	public boolean isZoneFlag() {
+		return zoneFlag;
+	}
+	/**
+	 * @param zoneFlag the zoneFlag to set
+	 */
+	public void setZoneFlag(boolean zoneFlag) {
+		this.zoneFlag = zoneFlag;
+	}
+	/**
+	 * @return the remarks
+	 */
+	public List<ScSQRemark> getRemarks() {
+		return remarks;
+	}
+	/**
+	 * @param remarks the remarks to set
+	 */
+	public void setRemarks(List<ScSQRemark> remarks) {
+		this.remarks = remarks;
+	}
+	/**
+	 * @return the quoteNo
+	 */
+	public String getQuoteNo() {
+		return quoteNo;
+	}
+	/**
+	 * @param quoteNo the quoteNo to set
+	 */
+	public void setQuoteNo(String quoteNo) {
+		this.quoteNo = quoteNo;
 	}
 
 }

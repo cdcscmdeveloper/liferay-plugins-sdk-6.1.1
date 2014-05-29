@@ -31,6 +31,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -50,6 +51,8 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -71,9 +74,9 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
-import my.ep.web.sc.directpurchase.common.DPStatusConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -555,6 +558,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 				// TODO PriceType drop down list in AddToCart
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
+				
+				// TODO PriceType drop down list in request note
+				getManagedBean().setRnPriceTypes(getPriceTypes(ParameterTypeConst.PRICE_TYPE, priceTypes));
 			}
 		}
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
@@ -596,6 +602,49 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 							e.getMessage()));
 		}
 		return items;
+	}
+	
+	
+	
+	public SelectItem[] getPriceTypes(String parameterType,
+			List<String> priceTypes) {
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[priceTypes.size() + 1];
+			items[0] = new SelectItem(null, "- Select One -");
+			int i = 1;
+			for (String priceTypeCode : priceTypes) {
+				items[i++] = new SelectItem(getPmParameterById(parameterType,
+						priceTypeCode) ,getParameterDesc(parameterType,
+								priceTypeCode));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+	
+	public Long getPmParameterById(String parameterType, String parameterCode) {		
+		Long parameterId = null;
+		
+		// Get the parameter description list.
+		List<PmParameterDesc> list = ParameterHelper.getInstance()
+				.getParameterDescList(parameterType);
+		
+		for (PmParameterDesc pmParameterDesc : list) {
+			// compare matched parameterCode.
+			if (pmParameterDesc.getPmParameter().getParameterCode()
+					.equals(parameterCode)) {
+				parameterId = pmParameterDesc.getPmParameter().getParameterId();
+				break;
+			}
+		}
+		
+		return parameterId;
 	}
 	
 	/**
@@ -682,6 +731,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
 	    ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setFulfillmentType(resDTO.getPmParameter());
+	    scRequestNoteDtl.setPriceType(new PmParameter());
 
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
@@ -895,7 +945,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		    DualListModel<PmUser>	approvalUsers;
 			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
-			userReqDto.setRoleCode(RoleCode.BPK_APPROVER.value());
+			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
