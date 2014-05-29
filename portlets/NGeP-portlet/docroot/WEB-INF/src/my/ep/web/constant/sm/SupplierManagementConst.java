@@ -208,6 +208,7 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_DELETE_COMPANY = "20188";
 
 	public static final int RECORD_STATUS_DELETED = 9;
+	public static final int RECORD_STATUS_SUSPENDED = 0;
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";

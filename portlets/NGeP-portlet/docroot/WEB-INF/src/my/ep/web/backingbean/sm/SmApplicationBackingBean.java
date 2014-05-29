@@ -99,6 +99,7 @@ import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -6098,9 +6099,13 @@ public class SmApplicationBackingBean extends
 				acc.setMofNo(sb.toString());
 				acc.setEffDate(new Date());
 				Calendar c = new GregorianCalendar();
-				c.add(Calendar.YEAR, 4);
+				c.add(Calendar.YEAR, 3);
 				Date d = c.getTime();
 				acc.setExpDate(c.getTime());
+				List<SmMofCert> certList = new ArrayList<SmMofCert>();
+				certList.add(assignNewMofCert(acc));
+				acc.setSmMofCerts(certList);
+
 				if (getManagedBean().getSmSupplier().getSmMofAccounts() == null) {
 					getManagedBean().getSmSupplier().setSmMofAccounts(
 							new ArrayList<SmMofAccount>());
@@ -6115,9 +6120,20 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmAppl().getSupplierType())) {
 						acc.setEffDate(new Date());
 						Calendar c = new GregorianCalendar();
-						c.add(Calendar.YEAR, 4);
+						c.add(Calendar.YEAR, 3);
 						Date d = c.getTime();
 						acc.setExpDate(c.getTime());
+						if (acc.getSmMofCerts() != null
+								&& !acc.getSmMofCerts().isEmpty()) {
+							for (SmMofCert cer : acc.getSmMofCerts()) {
+								cer.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+							}
+							acc.getSmMofCerts().add(assignNewMofCert(acc));
+						} else {
+							List<SmMofCert> certList = new ArrayList<SmMofCert>();
+							certList.add(assignNewMofCert(acc));
+							acc.setSmMofCerts(certList);
+						}
 					}
 				}
 
@@ -6131,6 +6147,12 @@ public class SmApplicationBackingBean extends
 					if (acc.getSupplierType().equals(
 							getManagedBean().getSmAppl().getSupplierType())) {
 						acc.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+						if (acc.getSmMofCerts() != null
+								&& !acc.getSmMofCerts().isEmpty()) {
+							for (SmMofCert cer : acc.getSmMofCerts()) {
+								cer.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+							}
+						}
 
 					}
 				}
@@ -6155,6 +6177,47 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	private SmMofCert assignNewMofCert(SmMofAccount acct) {
+		SmMofCert cert = new SmMofCert();
+		cert.setSmMofAccount(acct);
+		cert.setExpDate(acct.getExpDate());
+		cert.setEffDate(new Date());
+		StringBuffer sb = new StringBuffer();
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase("J")) {
+			sb.append("J");
+			sb.append(generateMofCertNum(sb.toString()));
+		} else {
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+					.getStateName().equalsIgnoreCase("Sabah")) {
+				if (getManagedBean().getSmSupplier().isBumi()) {
+					sb.append("BPS");
+				} else {
+					sb.append("KS");
+				}
+			} else if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+					.getStateName().equalsIgnoreCase("Sarawak")) {
+				if (getManagedBean().getSmSupplier().isBumi()) {
+					sb.append("BPQ");
+				} else {
+					sb.append("KQ");
+				}
+			} else {
+				if (getManagedBean().getSmSupplier().isBumi()) {
+					sb.append("B");
+				} else {
+					sb.append("K");
+				}
+			}
+			sb.append(generateMofCertNum(sb.toString()));
+		}
+		cert.setCertSerialNo(sb.toString());
+		return cert;
+
+	}
+
 	private String generateMofNum(String mofPrefix) {
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
@@ -6165,6 +6228,18 @@ public class SmApplicationBackingBean extends
 		reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 		MofRegistrationResDTO resDTO = mofRegistrationSO.generateMofNum(reqDto);
 		return resDTO.getMofNum();
+	}
+
+	private String generateMofCertNum(String mofCertPrefix) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+		reqDto.setMofCertNum(mofCertPrefix);
+		reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.generateMofCertNum(reqDto);
+		return resDTO.getMofCertNum();
 	}
 
 	private void setApplPmStatus(String statusId) {
