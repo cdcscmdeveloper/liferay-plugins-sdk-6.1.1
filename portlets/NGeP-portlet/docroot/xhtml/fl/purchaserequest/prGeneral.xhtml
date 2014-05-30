@@ -31,7 +31,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						update=":form:prtabs:preparedOrgProfileId" readonly="true"
-						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
@@ -43,7 +43,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
 						update=":form:prtabs:issuedOrgProfileId" readonly="true"
-						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>

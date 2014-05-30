@@ -267,7 +267,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setTermDays("Days");
 	
 		//retrieveRequestNoteList();
-		addPurchsedItems();
+//		addPurchsedItems();
 		
 		//get this lists for manual Address dropdowns
 		retrieveCountryList();
@@ -277,7 +277,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		//chargeline dropdown
 		
-		getVotFundList(4L);
+//		getVotFundList(4L);
 		
 		
 		//get GL_ACCOUNT details
@@ -1844,6 +1844,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if("prChargeLineTabId".equals(tevent.getTab().getId())){
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.prChargeLinePnlClass)");
+			getVotFundList(4L);
+		}
+		if("prItemsTabId".equals(tevent.getTab().getId())){
+			addPurchsedItems();
 		}
 	}
 	

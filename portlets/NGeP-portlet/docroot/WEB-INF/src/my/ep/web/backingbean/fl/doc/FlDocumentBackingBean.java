@@ -295,7 +295,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo()));
 				}
 				if(getManagedBean().getSearchLoaNo()!=null && getManagedBean().getSearchLoaNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchLoaNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchLoaNo()));
 				}		
 				if(getManagedBean().getSearchProcurementType()!=null && getManagedBean().getSearchProcurementType()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchProcurementType()));
