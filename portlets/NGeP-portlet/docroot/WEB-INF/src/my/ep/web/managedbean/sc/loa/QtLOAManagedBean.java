@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.sc.loiloa;
+package my.ep.web.managedbean.sc.loa;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Viswanath
  * 
  */
-@ManagedBean(name = "loiLoaDetailManagedBean")
+@ManagedBean(name = "loaManagedBean")
 @SessionScoped
-public class LOILOADetailManagedBean extends BaseManagedBean {
+public class QtLOAManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private ScQt qt;

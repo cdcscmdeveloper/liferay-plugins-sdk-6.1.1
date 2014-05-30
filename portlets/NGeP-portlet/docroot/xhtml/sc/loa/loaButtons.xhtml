@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
+			action="#{lOADetailBackingBean.saveLOADetailsAction}" 
+			process="@form" update="@form" />
+			
+		<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
+			action="#{qTDetailBB.submitQTDetailsAction}" 
+			process="@form" update="@form"  />
+	</div>
+</ui:composition>

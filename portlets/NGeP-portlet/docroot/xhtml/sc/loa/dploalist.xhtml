@@ -1,0 +1,64 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+		<ui:include src="dpLoaListHeader.xhtml" />
+		
+		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}" toggleable="true">
+			<p:dataTable id="dpLoaTbl" var="scPurchaseRequest"
+				value="#{dpLOABackingBean.managedBean.purchaseRequestList}"
+				rows="10" rowIndexVar="rowIndex">
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}">
+					#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier.companyName}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}"
+					style="width:10%">
+					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].procurementType)}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.summary.price.type']}"
+					style="width:10%">
+					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].priceType)}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"
+					style="width:10%">
+					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].fulfillmentType)}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"
+					style="width:10%">
+					#{scPurchaseRequest.requestNoteDtls[0].deliverTerm} 
+					#{dpLOABackingBean.getParameterDesc(ParameterTypeConst.deliveryTerm, scPurchaseRequest.requestNoteDtls[0].deliverTermType)}
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.status']}"
+					style="width:15%">
+					<h:outputText value="#{dpLOABackingBean.getStatusDescById(scPurchaseRequest.scLoa.scLoaWorkFlowStatuses[0].pmStatus.statusId)}"
+						rendered="#{!empty scPurchaseRequest.scLoa}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+					style="width:10%">
+					<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{dpLOABackingBean.createLOAAction(scPurchaseRequest)}"
+						rendered="#{empty scPurchaseRequest.scLoa}" />
+					<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{dpLOABackingBean.editLOAAction(scPurchaseRequest)}"
+						rendered="#{!empty scPurchaseRequest.scLoa}" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

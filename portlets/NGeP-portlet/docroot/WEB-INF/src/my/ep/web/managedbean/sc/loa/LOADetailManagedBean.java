@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.sc.loiloa;
+package my.ep.web.managedbean.sc.loa;
 
 import java.util.List;
 
@@ -8,15 +8,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -32,7 +31,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class LOADetailManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	private ScQt qt;
+	private ScQt scQt;
 	
 	private List<SelectItem> comitteeUsers;
 	public String approvalDate;
@@ -43,8 +42,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
-
-	private ScQtEvaluationResult scQtEvaluationResult;
 	
 	public String address;
 	private String status;
@@ -72,23 +69,11 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private int bondAmount;
 	private String bondPercentage;
 	private List<PmUser> pmUserList;
-	private List<PmUserOrg> pmUserOrgList;
+	private List<PmOrgProfile> agencyProfileList;
 	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	private List<PmUser> contractSignerList;
-	
-	/**
-	 * @return the scQtEvaluationResult
-	 */
-	public ScQtEvaluationResult getScQtEvaluationResult() {
-		return scQtEvaluationResult;
-	}
-
-	/**
-	 * @param scQtEvaluationResult the scQtEvaluationResult to set
-	 */
-	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
-		this.scQtEvaluationResult = scQtEvaluationResult;
-	}
+	private ScLoaWitness loaAgencyWitness;
+	private ScLoaWitness loaSupplierWitness;
 
 	/**
 	 * @return the scBondDtl
@@ -133,17 +118,17 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the pmUserOrgList
+	 * @return the agencyProfileList
 	 */
-	public List<PmUserOrg> getPmUserOrgList() {
-		return pmUserOrgList;
+	public List<PmOrgProfile> getAgencyProfileList() {
+		return agencyProfileList;
 	}
 
 	/**
-	 * @param pmUserOrgList the pmUserOrgList to set
+	 * @param agencyProfileList the agencyProfileList to set
 	 */
-	public void setPmUserOrgList(List<PmUserOrg> pmUserOrgList) {
-		this.pmUserOrgList = pmUserOrgList;
+	public void setAgencyProfileList(List<PmOrgProfile> agencyProfileList) {
+		this.agencyProfileList = agencyProfileList;
 	}
 
 	/**
@@ -539,21 +524,46 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.scLoa = scLoa;
 	}
 
-	
-
 	/**
-	 * @return the qt
+	 * @return the scQt
 	 */
-	public ScQt getQt() {
-		return qt;
+	public ScQt getScQt() {
+		return scQt;
 	}
 
 	/**
-	 * @param qt
-	 *            the qt to set
+	 * @param scQt the scQt to set
 	 */
-	public void setQt(ScQt qt) {
-		this.qt = qt;
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	/**
+	 * @return the loaAgencyWitness
+	 */
+	public ScLoaWitness getLoaAgencyWitness() {
+		return loaAgencyWitness;
+	}
+
+	/**
+	 * @param loaAgencyWitness the loaAgencyWitness to set
+	 */
+	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
+		this.loaAgencyWitness = loaAgencyWitness;
+	}
+
+	/**
+	 * @return the loaSupplierWitness
+	 */
+	public ScLoaWitness getLoaSupplierWitness() {
+		return loaSupplierWitness;
+	}
+
+	/**
+	 * @param loaSupplierWitness the loaSupplierWitness to set
+	 */
+	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
+		this.loaSupplierWitness = loaSupplierWitness;
 	}
 
 }

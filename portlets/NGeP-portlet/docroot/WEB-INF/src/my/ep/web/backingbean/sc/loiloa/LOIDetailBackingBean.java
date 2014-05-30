@@ -32,6 +32,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
@@ -39,7 +40,6 @@ import my.ep.persistence.entity.sc.loaloi.ScTerm;
 import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
-import my.ep.persistence.entity.sc.quationtender.ScQtItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> {
 	public static Logger log = EpLogger
-			.getLogger(LOILOADetailsBackingBean.class);
+			.getLogger(LOIDetailBackingBean.class);
 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
@@ -371,7 +371,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 						.getScQtZoneCriterias();*/
 				
 
-				List<ScQtItem> itemList = resDTO.getItemResultBean()
+				List<ScRequestItem> itemList = resDTO.getItemResultBean()
 						.getResultList();
 				System.out.println("itemlist: " + itemList.size());
 

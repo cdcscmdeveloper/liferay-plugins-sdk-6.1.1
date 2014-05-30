@@ -509,16 +509,24 @@
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>proposal-portlet</css-class-wrapper>
 	</portlet>
-
+	
 	<portlet>
-		<portlet-name>scLoiLoa</portlet-name>
+		<portlet-name>scLoiList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>proposal-portlet</css-class-wrapper>
+		<css-class-wrapper>loilist-portlet</css-class-wrapper>
 	</portlet>
 
+	<portlet>
+		<portlet-name>scDpLoaList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>loalist-portlet</css-class-wrapper>
+	</portlet>
 
 	<portlet>
 		<portlet-name>scEvaluation Stage2</portlet-name>

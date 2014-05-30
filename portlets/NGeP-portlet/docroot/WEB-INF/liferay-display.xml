@@ -68,7 +68,8 @@
 			<portlet id="scSpecification Committee" />
 			<portlet id="scNoticeBoard" />
 			<portlet id="scProposal" />
-			<portlet id="scLoiLoa" />
+			<portlet id="scLoiList" />
+			<portlet id="scDpLoaList" />
 			<portlet id="scEvaluation Stage2" />
 			<portlet id="scEvaluation Stage1" />
 			<portlet id="Evaluation Meeting" />

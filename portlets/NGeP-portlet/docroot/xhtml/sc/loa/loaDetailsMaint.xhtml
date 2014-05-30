@@ -1,0 +1,39 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="contentSection">
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+		<ui:include src="loaButtons.xhtml" />
+		
+		<ui:include src="loaHeader.xhtml" />
+		
+		<p:tabView dynamic="true" cache="true" orientation="left" id="tt">
+
+			<p:tab title="#{lbl['lbl.sc.loiloa.loa.details']}">
+				<ui:include src="loaDetailsMenu.xhtml" />
+			</p:tab>
+	
+			<p:tab title="#{lbl['lbl.sc.loiloa.award.details']}">
+				<!-- <ui:include src="loaAwardDetailsMenu.xhtml" /> -->
+			</p:tab>
+	
+			<p:tab title="#{lbl['lbl.sc.loiloa.loa.perform.bond']}">
+				<!-- <ui:include src="loaPerformanceBondMenu.xhtml" /> -->
+			</p:tab>
+	
+			<p:tab title="Payment Details">
+				<!-- <ui:include src="loaPaymentDetailsMenu.xhtml" /> -->
+			</p:tab>
+			
+		</p:tabView>
+
+	</ui:define>
+</ui:composition>
