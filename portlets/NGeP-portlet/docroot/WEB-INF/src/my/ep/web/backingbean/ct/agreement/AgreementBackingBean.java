@@ -657,7 +657,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				out.setLevel(Deflater.DEFAULT_COMPRESSION);   
 				for (int i = 0; i < all.length; i++) {
 				  FileInputStream in = new FileInputStream(all[i]);   
-				  out.putNextEntry(new ZipEntry(all[i].getPath()));   
+				  out.putNextEntry(new ZipEntry(all[i].getName()));   
 				  int len;   
 				  while ((len = in.read(buffer)) > 0) {
 				    out.write(buffer, 0, len);   
