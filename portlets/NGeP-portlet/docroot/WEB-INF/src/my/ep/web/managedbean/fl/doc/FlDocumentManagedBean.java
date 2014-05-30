@@ -34,6 +34,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchCircularNo;
 	private String searchLoaNo;
 	private String searchProcurementType;
+	private String title;
 	private Long searchStatusId; 
 	private FlFulfilmentRequest fulfilmentRequest;
 	
@@ -208,6 +209,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckTitle(Boolean checkTitle) {
 		this.checkTitle = checkTitle;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 }
