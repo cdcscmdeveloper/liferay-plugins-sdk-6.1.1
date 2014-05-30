@@ -22,12 +22,16 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -317,5 +321,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			return null;
 		}
-	}	
+	}
+	
+	public void getStatusDescList(String docType, String moduleCode, String languageCode){
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setLanguageCode("en");//language code is "en"
+		reqDTO.setDocType(docType);
+		reqDTO.setModuleCode(moduleCode);
+		StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+		resDTO.getStatusDescList();
+	}
+	
 }
