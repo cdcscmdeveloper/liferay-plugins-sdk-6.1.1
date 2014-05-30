@@ -8,84 +8,85 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-
+		
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100"
+			width="500">
+   			 Do you want to proceed ?	
+   			<div align="right">
+				<p:commandButton value="Yes"
+					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+				<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
+		
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Application No." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td><p:inputText
 						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applNo}"
 						disabled="true" /></td>
 
-				<td><p:outputLabel value="Application Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
 				<td><p:inputText
 						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applType}"
-						disabled="true" /></td>
-
-				<td><p:outputLabel value="MOF No." /></td>
-				<td><p:inputText
-						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier}"
 						disabled="true" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Company Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 				<td><p:inputText
 						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}"
 						disabled="true" /></td>
 
-				<td><p:outputLabel value="Status" /></td>
-				<td><p:inputText disabled="true" /></td>
+<!-- 				<td><p:outputLabel value="Status" /></td> -->
+<!-- 				<td><p:inputText disabled="true" /></td> -->
 
-				<td><p:outputLabel value="Date of Creation" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.dateofcreation']}" /></td>
 				<td><p:calendar disabled="true"
 						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.createdDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 		</table>
-
+	
+		<p:messages id="svoMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-				<p:commandButton id="btnSubmit"
-					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment('SUBMIT')}"
-					value="Submit" />
+				<p:commandButton id="btnSubmit" value="Submit" action="#{svcSiteAssignBackingBean.validateForm}"/>
 		</div>
 		
-		<p:panel header="Site Visit Assignment">
+		<p:panel header="#{lbl['lbl.sm.siteassign.pnl.siteassign']}">
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvAddresses}"
 				rowIndexVar="rowIndex">
-<!-- 				<p:column headerText="No"> -->
-<!-- 				#{rowIndex+1} -->
-<!-- 				</p:column> -->
 
-				<p:column headerText="Address">
+				<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{svc.smAddress.address1}<br />
 					#{svc.smAddress.address2}<br />
 					#{svc.smAddress.address3}<br />
 					#{svc.smAddress.address4}
 				</p:column>
 
-				<p:column headerText="Post Code">
+				<p:column headerText="#{lbl['lbl.sm.postcode']}">
 				#{svc.smAddress.postcode}
 				</p:column>
 
-				<p:column headerText="City">
+				<p:column headerText="#{lbl['lbl.sm.towncity']}">
 				#{svc.smAddress.pmCity.cityName}
 				</p:column>
 
 
-				<p:column headerText="District">
+				<p:column headerText="#{lbl['lbl.sm.district']}">
 				#{svc.smAddress.pmDistrict.districtName}
 				</p:column>
 
-				<p:column headerText="State">
+				<p:column headerText="#{lbl['lbl.sm.state']}">
 				#{svc.smAddress.pmState.stateName}
 				</p:column>
 
-				<p:column headerText="Country">
+				<p:column headerText="#{lbl['lbl.sm.country']}">
 				#{svc.smAddress.pmCountry.countryName}
 				</p:column>
 
-				<p:column headerText="Schedule Date">
+				<p:column headerText="#{lbl['lbl.sm.siteassign.pnl.scheduledate']}">
 					<p:calendar id="scheduleDateId" navigator="true"
 						value="#{svc.scheduleDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
@@ -94,24 +95,19 @@
 			</p:dataTable>
 			<p:separator id="customSeparator" />
 			
-			<table class="rptTbl">
-				<tr>
-					<td valign="top"><p:outputLabel value="Remark" /></td>
-					<td colspan="3"><p:inputTextarea rows="5" cols="60"
-							autoResize="false" id="Remark"
-							value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}" /></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td><br /></td>
-				</tr>
+			<table class="customTbl">
 				<tr>
 					<td valign="top"><p:outputLabel
-							value="Site Visit Officer(Mins 2)" /></td>
-					<td colspan="3"><p:pickList id="pickList"
+							value="#{lbl['lbl.sm.siteassign.sitevisitofficer']}" /></td>
+					<td valign="top"><p:pickList id="pickList"
 							value="#{svcSiteAssignBackingBean.managedBean.svoUserList}"
-							var="off" itemLabel="#{off.userName}" itemValue="#{off}" converter="svoListConverter" /></td>
+							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
+							converter="svoListConverter" /></td>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sm.remark']}" /></td>
+					<td valign="top"><p:inputTextarea rows="5" cols="60" 
+							autoResize="false" id="Remark"
+							value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}" /></td>
 				</tr>
 			</table>
 			<br />

@@ -7,46 +7,136 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
 	<ui:define name="contentSection">
 		<div align="right">
-			<ui:repeat value="#{sdoReviewBackingBean.managedBean.bpmAction}"
-				var="item">
-				<p:commandButton
-					action="#{sdoReviewBackingBean.submitSDOReviewAction(item)}"
-					value="#{item}" />
-			</ui:repeat>
+			<p:commandButton value="Inquiry" id="btnInquiryId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}" />
+			<p:commandButton value="Verify" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
 		</div>
 
-		<p:panel header="Company Information" toggleable="true"
+		<p:outputPanel id="resOutPanelId">
+			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true"
+				height="450" width="525">
+				<table>
+					<tr>
+						<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
+					</tr>
+					<tr>
+						<td><p:inputText size="50" id="resInquirySubId" readonly="true"
+								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
+					</tr>
+					<tr>
+						<td>#{lbl['lbl.sm.supportingdoc.inquiry']} :</td>
+					</tr>
+					<tr>
+						<td><p:inputTextarea id="resInquiryId" rows="10" cols="80" 
+								autoResize="false" readonly="true"
+								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquiryText}" /></td>
+					</tr>
+					<tr>
+						<td>#{lbl['lbl.sm.supportingdoc.responsedate']} :</td>
+					</tr>
+					<tr>
+						<td><p:inputTextarea id="responseTextId" rows="10" cols="80"
+								autoResize="false" readonly="true"
+								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.responseText}" /></td>
+					</tr>
+				</table>
+
+			</p:dialog>
+		</p:outputPanel>
+
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true"
+			height="300" width="525">
+			<p:messages id="inquiryMessageId"  autoUpdate="true" />
+			<table>
+				<tr>
+					<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
+				</tr>
+				<tr>
+					<td><p:inputText size="50" id="inquirySubId" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquirySubject}"/></td>
+				</tr>
+				<tr>
+					<td>#{lbl['lbl.sm.supportingdoc.inquiry']} :</td>
+				</tr>
+				<tr>
+					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="80" autoResize="false" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquiryText}"/></td>
+				</tr>
+			</table>
+			<br />
+			<div align="right">
+				<p:commandButton value="Submit" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"></p:commandButton>
+				<p:commandButton value="Cancel" onclick="inquiryDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
+
+		<p:dialog widgetVar="submissionDlg" modal="true" height="300"
+			width="580">
+			<p:panel header="#{lbl['lbl.sm.remark']}">
+				<p:messages id="submissionMessageId" autoUpdate="true" />
+				<table>
+					<tr>
+						<td class="tdTitle"><p:outputLabel value="Receive Date" /></td>
+						<td class="tdContent"><p:calendar id="receiveCalId"
+								navigator="true" label="#{lbl['lbl.sm.receivedate']}"
+								value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+								display="inline" size="30" showOn="button" /> <p:message
+								id="receiveCalIdMsg" for="receiveCalId" display="icon" /></td>
+					</tr>
+
+					<tr>
+						<td class="tdTitle"><p:outputLabel value="Remarks" /></td>
+						<td class="tdContent">
+						<p:inputTextarea id="remarkId" rows="6"
+								cols="80" label="#{lbl['lbl.sm.remark']}"
+								value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /> 
+						<p:message id="remarkIdMsg" for="remarkId" display="icon" /></td>
+					</tr>
+				</table>
+
+				<div align="right">
+					<p:commandButton value="Submit"
+						action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
+						update="@([id$=Msg])"></p:commandButton>
+					<p:commandButton value="Cancel" onclick="submissionDlg.hide();"></p:commandButton>
+				</div>
+				<br />
+			</p:panel>
+		</p:dialog>
+
+		<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true"
 			id="pnlCompInfo">
 			<table class="customTbl">
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Supplier Name" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}"
 							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Business Type" /></td>
-					<td class="tdContent"><p:inputText
-							value="ROB Perkongsian Semenanjung" disabled="true" size="40" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" /></td>
+					<td class="tdContent">
+						<p:selectOneMenu id="busTypeId" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" disabled="true">
+							<f:selectItems value="#{sdoReviewBackingBean.managedBean.businessTypeLs}" var="busType" 
+							itemValue="#{busType.pmParameter.parameterId}" itemLabel="#{busType.codeName}" />
+						</p:selectOneMenu></td>
 						<!-- 					<td class="tdContent"><p:inputText --> <!-- 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" -->
 						<!-- 							disabled="true" size="40" /></td> -->
-					<td class="tdTitle"><p:outputLabel value="No. ROC/ROB/ROS" /></td>
+						
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}"
 							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Income Tax No." /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
 							disabled="true" size="40" /></td>
 
-					<td class="tdTitle"><p:outputLabel value="Established Date" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}"
 							disabled="true" size="40">
@@ -55,17 +145,17 @@
 						</p:inputText></td>
 				</tr>
 
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="Total Staff" /></td>
-					<td class="tdContent"><p:inputText disabled="true" size="40" value="10" /></td>
+<!-- 				<tr> -->
+<!-- 					<td class="tdTitle"><p:outputLabel value="Total Staff" /></td> -->
+<!-- 					<td class="tdContent"><p:inputText disabled="true" size="40" value="10" /></td> -->
 
-					<td class="tdTitle"><p:outputLabel value="Yearly Income" /></td>
-					<td class="tdContent"><p:inputText value="100,000"
-							disabled="true" size="40" /></td>
-				</tr>
+<!-- 					<td class="tdTitle"><p:outputLabel value="Yearly Income" /></td> -->
+<!-- 					<td class="tdContent"><p:inputText value="100,000" -->
+<!-- 							disabled="true" size="40" /></td> -->
+<!-- 				</tr> -->
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Address" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.address1}" disabled="true" size="40" /></td>
 				</tr>
@@ -88,67 +178,67 @@
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.address4}" disabled="true" size="40" /></td>
 				</tr>
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Postcode" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.postcode}" disabled="true"
 							size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="City" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.pmCity.cityName}"
 							disabled="true" size="40" /></td>
 
-					<td class="tdTitle"><p:outputLabel value="State" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.pmState.stateName}"
 							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="District" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 					<td class="tdContent"><p:inputText disabled="true" size="40"
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.pmDistrict.districtName}" />
 					</td>
 
-					<td class="tdTitle"><p:outputLabel value="Country" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.pmCountry.countryName}"
 							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Phone No." /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" disabled="true"
 							size="40" /></td>
 
-					<td class="tdTitle"><p:outputLabel value="Fax No." /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" disabled="true"
 							size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Website" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.website']}" /></td>
 					<td class="tdContent"><p:inputText  disabled="true" size="40" value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
 				</tr>
 			</table>
 		</p:panel>
 
-		<p:panel header="Contact Info" toggleable="true" id="pnlContInfo">
+		<p:panel header="#{lbl['lbl.sm.contactinfo']}" toggleable="true" id="pnlContInfo">
 			<table class="customTbl">
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Contact Person" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.contactperson']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smPersonnel.name}" disabled="true" size="40" /></td>
 
-					<td class="tdTitle"><p:outputLabel value="Position" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.positionincomp']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smPersonnel.designation}"
 							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="Phone No." /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smPersonnel.phoneNo}" disabled="true" size="40" /></td>
 
-					<td class="tdTitle"><p:outputLabel value="Email" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.email']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smPersonnel.email}"
 							disabled="true" size="40" /></td>
 				</tr>
@@ -156,7 +246,7 @@
 		</p:panel>
 		<p:panel id="pnlSuppDoc" header="Supporting Document"
 			toggleable="true">
-			<p:dataTable var="suppDoc" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}">
+			<p:dataTable var="suppDoc" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="dtSuppDoc">
 				<p:column headerText="Document Name">  
 		            #{suppDoc.pmDocument.docName} 
 		        </p:column>
@@ -164,17 +254,39 @@
 <!-- 				<p:column headerText="Receive Date"> -->
 <!-- 					<p:calendar id="receiveDate" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> -->
 <!-- 				</p:column> -->
-				<p:column headerText="Is Receive?">
-					<p:selectBooleanCheckbox value="#{suppDoc.received}" />
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
+					<p:selectBooleanCheckbox value="#{suppDoc.received}">
+						<p:ajax event="change" update="dtSuppDoc" />
+					</p:selectBooleanCheckbox>
 				</p:column>
 				
-				<p:column headerText="Is Valid?">
-					<p:selectBooleanCheckbox value="#{suppDoc.verified}" />
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isvalid']}">
+					<p:selectBooleanCheckbox value="#{suppDoc.verified}" disabled="#{!suppDoc.received}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Remark">
+		<p:panel header="Inquiries" toggable="true"
+			rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}">
+			<p:dataTable id="dtInquiryResponse" selectionMode="single" 
+			selection="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
+			value="#{sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
+				<p:column headerText="Subject">
+				#{applInq.inquirySubject}
+				</p:column>
+				<p:ajax event="rowSelect" listener="#{sdoReviewBackingBean.inquiryRowSelect}"  update=":#{p:component('resOutPanelId')}" oncomplete="responseDlg.show();" />
+				<p:column headerText="Response Date">
+				
+				<h:outputText value="#{applInq.responseDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+<!--  
+		<p:panel header="Remark" toggleable="true">
 			<table>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="Receive Date" /></td>
@@ -189,6 +301,8 @@
 					<td class="tdContent"><p:inputTextarea rows="6" cols="80" value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /></td>
 				</tr>
 			</table>
+			<br />
 		</p:panel>
+		  -->
 	</ui:define>
 </ui:composition>

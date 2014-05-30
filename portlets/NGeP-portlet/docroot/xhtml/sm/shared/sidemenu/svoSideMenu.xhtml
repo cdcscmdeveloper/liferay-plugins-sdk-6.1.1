@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <!-- 		#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates[0].pmParameter.parameterCode} -->
-	<p:tabMenu style="display : table-caption;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
+	<p:tabMenu  styleClass="sidemenu" style="display : table-caption;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
 		<p:menuitem value="Site Visit Info" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
 <!-- 		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" /> -->
 		<p:menuitem value="Financial Information" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />

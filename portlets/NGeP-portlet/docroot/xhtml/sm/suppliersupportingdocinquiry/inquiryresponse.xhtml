@@ -1,0 +1,49 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<div align="right">
+			<p:commandButton value="Submit" onclick="submissionConfirmDlg.show();" />
+		</div>
+
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100"
+			width="500">
+   			 Do you want to proceed ?	
+   		<div align="right">
+				<p:commandButton value="Yes"
+					action="#{supportingDocInquiryBackingBean.submitInquiryResponse}"></p:commandButton>
+				<p:commandButton value="No" onclick="submissionDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
+
+		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
+			<table style="width: 100%;">
+				<tr>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']} :" /></td>
+					<td><p:inputText size="50" readonly="true"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquirySubject}" /></td>
+				</tr>
+
+				<tr>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']} :" /></td>
+					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="80"
+							readonly="true" autoResize="false"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.response']}">
+			<p:inputTextarea id="inquiryResId" rows="10" cols="100" required="true"
+				value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
+				autoResize="false" />
+			<p:message id="inquiryResIdMsg" for="inquiryResId" display="icon" />
+		</p:panel>
+	</ui:define>
+</ui:composition>
