@@ -28,9 +28,6 @@
 				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:200px;">
 					<f:selectItems value="#{centralContractBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
-				<f:verbatim></f:verbatim>
-				<f:verbatim></f:verbatim>
-				<f:verbatim></f:verbatim>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
 				<p:commandButton value="Search" action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
@@ -46,8 +43,8 @@
 				<p:column headerText="Circular Name" >
 					<h:outputText value="#{data.name}" />
 				</p:column>
-				<p:column headerText="Update Effective Date" >
-					<h:outputText value="#{data.extendStartDate}" />
+				<p:column headerText="File Reference No." >
+					<h:outputText value="#{data.circularFileRefNo}" />
 				</p:column>
 				<p:column headerText="Circular Start Date" >
 					<h:outputText value="#{data.startDate}" >
@@ -63,7 +60,7 @@
 					<h:outputText value="#{centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="Action" styleClass="column-align-center">
-					<p:commandLink
+					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or data.status.statusId == CtStatusConst.cqRejected}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
 					</p:commandLink>

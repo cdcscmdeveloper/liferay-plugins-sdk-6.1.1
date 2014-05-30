@@ -30,10 +30,7 @@
 				<p:outputLabel for="status" value="Status" />
 				<p:selectOneMenu id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:200px;">
 					<f:selectItems value="#{panelBackingBean.getStatusDropdown()}" />
-				</p:selectOneMenu>				
-				<f:verbatim></f:verbatim>
-				<f:verbatim></f:verbatim>
-				<f:verbatim></f:verbatim>
+				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
 				<p:commandButton value="Search" action="#{panelBackingBean.searchCircularVer}" icon="ui-icon-search" update="circularVerDt" />
@@ -49,8 +46,8 @@
 				<p:column headerText="Circular Name" >
 					<h:outputText value="#{data.name}" />
 				</p:column>
-				<p:column headerText="Update Effective Date" >
-					<h:outputText value=" " />
+				<p:column headerText="File Reference No." >
+					<h:outputText value="#{data.circularFileRefNo}" />
 				</p:column>
 				<p:column headerText="Circular Start Date" >
 					<h:outputText value="#{data.startDate}" >
@@ -66,7 +63,7 @@
 					<h:outputText value="#{panelBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="Action" styleClass="column-align-center">
-					<p:commandLink rendered="#{data.status.statusId==CtStatusConst.pqApproved}"
+					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or data.status.statusId == CtStatusConst.pqRejected}"
 							onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 					 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
 					</p:commandLink>
