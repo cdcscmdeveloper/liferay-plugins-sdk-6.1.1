@@ -452,14 +452,6 @@ public class SmApplicationBackingBean extends
 
 						if (diffDays > 90) {
 							result = true;
-
-							/*
-							 * FacesContext .getCurrentInstance() .addMessage(
-							 * null, new FacesMessage(
-							 * FacesMessage.SEVERITY_INFO,
-							 * "Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started."
-							 * , ""));
-							 */
 							throw new EpException(MessageConst.ERROR_722501);
 						} else if (diffDays < -365) {
 							result = true;
@@ -623,14 +615,10 @@ public class SmApplicationBackingBean extends
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
-			System.out.println("this is error");
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unknown problem occurred.Invalid or missing data",
-							"Please contact administrator"));
+//			System.out.println("this is error");
+//			e.printStackTrace();
 			getManagedBean().setTabActiveIndex(currentTab);
+			throw new EpException(MessageConst.ERROR_722505);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 		}
 
@@ -683,15 +671,10 @@ public class SmApplicationBackingBean extends
 			if (valid) {
 				valid = retriveLatestApplAfterUpdate(pageType);
 			}
-			return valid;
+			isError = valid;
 		} catch (Exception e) {
-			System.out.println("this is error");
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unknown problem occurred.Invalid or missing data",
-							"Please contact administrator"));
+//			System.out.println("this is error");
+//			e.printStackTrace();
 
 			getManagedBean().setTabActiveIndex(currentTab);
 			getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
@@ -699,10 +682,13 @@ public class SmApplicationBackingBean extends
 			valid = false;
 			retriveLatestApplAfterUpdate(pageType);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
-			return false;
+			isError = false;
+			throw new EpException(MessageConst.ERROR_722505);
+			
 		} finally {
 			mofRegistrationSO = null;
 		}
+		return isError;
 	}
 
 	private boolean retriveLatestApplAfterUpdate(String pageType) {
@@ -850,6 +836,7 @@ public class SmApplicationBackingBean extends
 
 	private boolean updateSiteVisitTask(SmSvTask svTask) {
 		ISiteAssignSO siteSO = null;
+		boolean updateSuccess = true;
 		try {
 			// Save or update to DB
 			siteSO = (ISiteAssignSO) BusinessDelegate.getInstance()
@@ -859,23 +846,16 @@ public class SmApplicationBackingBean extends
 			reqDto.setSmSvTask(svTask);
 
 			SiteAssignResDTO resDTO = siteSO.updateSiteVisitAssignment(reqDto);
-			return resDTO.isSuccessful();
+			updateSuccess = resDTO.isSuccessful();
 		} catch (Exception e) {
-			System.out.println("this is error");
-			e.printStackTrace();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Unknown problem occurred.Could not save the site visit information",
-									"Please contact administrator"));
-
-			return false;
+//			System.out.println("this is error");
+//			e.printStackTrace();
+			updateSuccess = false;
+			throw new EpException(MessageConst.ERROR_722506);
 		} finally {
 			siteSO = null;
 		}
+		return updateSuccess;
 	}
 
 	private void setPoOrApprvrSectionReview() {
@@ -927,6 +907,7 @@ public class SmApplicationBackingBean extends
 
 	private Boolean validateBeforeSave(String applType, String pageType) {
 		System.out.println("******* Page Type ********" + pageType);
+		boolean validSave = true;
 		switch (pageType) {
 		case "BasicInfo":
 			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
@@ -969,28 +950,17 @@ public class SmApplicationBackingBean extends
 			// assignEnteredStaffValues();
 			if (getManagedBean().getSmapplShareHolders() == null
 					|| getManagedBean().getSmapplShareHolders().isEmpty()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Empty Shareholders  : ",
-										"Please add at least one share holding personnel for the supplier"));
-				return false;
+
+				validSave = false;
+				throw new EpException(MessageConst.ERROR_722507);
 			} else if (getManagedBean()
 					.getBusinessTypeVal()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 					&& getManagedBean().getSmapplShareHolders().size() < 2) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Min 2 Shareholing personnel needed  : ",
-										"Please add at least 2 share holding personnel for the supplier with business type ROC"));
-				return false;
+
+				validSave = false;
+				throw new EpException(MessageConst.ERROR_722508);
 			}
 			if (getManagedBean()
 					.getSmAppl()
@@ -999,16 +969,8 @@ public class SmApplicationBackingBean extends
 					.compareTo(
 							getManagedBean().getSmAppl().getSmCompanyBasic()
 									.getAuthorizedCapital()) > 0) {
-
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Invalid Paidup Capital  : ",
-										"Paid-up capital cannot exceed authorized capital.Re enter the amounts "));
-				return false;
-
+				validSave = false;
+				throw new EpException(MessageConst.ERROR_722509);
 			}
 			calcPersonnelListCount();
 			break;
@@ -1083,73 +1045,31 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (semiProfCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Semi Professional is required : ",
-											"At least one Semi-Professional  (permanent staff who contributed for EPF) staff with at least Diploma is required"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722510, new String[]{"Semi-Professional","Diploma"});
 				}
 				if (profCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Professional is required : ",
-											"At least one Professional (permanent staff who contributed for EPF) staff with at least Bachelor Degree is required"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722510, new String[]{"Professional","Bachelor Degree"});
 				}
 				if (staffCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Clerical Staff is required : ",
-											"At least one Clerical Staff (permanent staff who contributed for EPF) staff with at least SijilPelajaran Malaysia or equivalent certificate is required"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722510, new String[]{"Clerical Staff","SijilPelajaran Malaysia or equivalent certificate"});
 				}
 			}
 			if (getManagedBean().getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				if (directorCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Higher Management or Director is required : ",
-											"Please add atleast one user with role Director or Higher Management"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722513, new String[]{"Higher Management or Director", "Director or Higher Management"});
 				}
 				if (mgmtCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Management Staff is required : ",
-											"Please add atleast one user with role Management"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722513, new String[]{"Management Staff", "Management"});
 				}
 				if (staffCount < 1) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Staff is required : ",
-											"Please add atleast one user with role Staff"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722513, new String[]{"Staff", "Staff"});
 				}
 			}
 			calculateBumiPercentageTotals();
@@ -1166,14 +1086,8 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (payAccCnt == 0) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Payment Bank is required : ",
-										"Please add atleast one bank account with purpose payment"));
-				return false;
+				validSave = false;
+				throw new EpException(MessageConst.ERROR_722515);
 			}
 			break;
 		case "SupportingDocs":
@@ -1185,15 +1099,8 @@ public class SmApplicationBackingBean extends
 					if (category.getPmCategoryL3().getCategoryL3Code()
 							.equalsIgnoreCase("99")) {
 						if (category.getOtherDesc().isEmpty()) {
-							FacesContext
-									.getCurrentInstance()
-									.addMessage(
-											null,
-											new FacesMessage(
-													FacesMessage.SEVERITY_ERROR,
-													"Other description is required : ",
-													"Please add description to proceed futher"));
-							return false;
+							validSave = false;
+							throw new EpException(MessageConst.ERROR_722514);
 						}
 					}
 				}
@@ -1205,15 +1112,8 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean().getSmAppl()
 								.getSmSupplierCategories().isEmpty()) {
 					System.out.println("****** Empty Category List *******");
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Category is required : ",
-											"Please add atleast one category to proceed futher"));
-					return false;
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722516);
 				}
 				if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 					getManagedBean().getSmAppl().setSmApplSupportDocs(
@@ -1286,7 +1186,7 @@ public class SmApplicationBackingBean extends
 			System.out.println("****** Not a defined page ***********");
 
 		}
-		return true;
+		return validSave;
 	}
 
 	private SmApplSupportDoc getDefaultSmApplSupportingDoc(PmDocument doc) {
@@ -2007,15 +1907,8 @@ public class SmApplicationBackingBean extends
 	public void assignNewCategoryCode() {
 		boolean validCatCode = true;
 		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == 30) {
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Max Limit Reached : ",
-									"Only 30 Category Codes can be add. Please contact administrator to exceed the limit"));
 			validCatCode = false;
+			throw new EpException(MessageConst.ERROR_722517);
 		}
 
 		if (validCatCode) {
@@ -2478,14 +2371,8 @@ public class SmApplicationBackingBean extends
 					.println(" ******* This is a failure condition ********* "
 							+ getManagedBean().getSelectedShareHolder()
 									.getWorkExperienceYear());
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Insufficient Experience : ",
-									"The equity owner must have a minimum of 5 years work experience"));
 			validShrHldr = false;
+			throw new EpException(MessageConst.ERROR_722518);
 		}
 		validShrHldr = checkValidUser(getManagedBean().getSelectedShareHolder());
 		// if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() ==
@@ -3660,6 +3547,7 @@ public class SmApplicationBackingBean extends
 
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
+		String retMsg = null;
 		try {
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
 					+ res);
@@ -3806,7 +3694,7 @@ public class SmApplicationBackingBean extends
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
+					retMsg = CommonUIConst.ACKNOWLEDGE_PAGE;
 
 				} else {
 					FacesContext
@@ -3817,26 +3705,19 @@ public class SmApplicationBackingBean extends
 											FacesMessage.SEVERITY_ERROR,
 											"Sample error message",
 											"Un Authorized user to perform this action"));
-					return null;
+					retMsg = null;
 				}
 			} else {
-				return null;
+				retMsg = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Sample error message",
-									"There is problem in submitting the decision.Please contact the administrator or retry later"));
-			return null;
+//			e.printStackTrace();
+			retMsg = null;
+			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			reqSO = null;
 		}
-
+		return retMsg;
 	}
 
 	public void changeVerifyAll(Boolean isVerifiedAll) {
@@ -5022,15 +4903,8 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (authPerCount == 2) {
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Max limit exceed : ",
-									"You already have 5 authorized users. Please un authorise the user in Priviliges section"));
 			validAuthPerCount = false;
+			throw new EpException(MessageConst.ERROR_722520);
 		}
 		return validAuthPerCount;
 	}
@@ -5107,22 +4981,11 @@ public class SmApplicationBackingBean extends
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedShareHolder().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Invalid Peronnel Share Amout  : ",
-										"Total of personnels share amount cannot exceed Paid-up capital.Re enter the amounts "));
+				throw new EpException(MessageConst.ERROR_722521, new String[]{"Personnel","personnel"});
 			}
 		} catch (NumberFormatException ne) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Invalid Value  : ", "Please enter numbers only "));
-
-			ne.printStackTrace();
+//			ne.printStackTrace();
+			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
 
@@ -5182,22 +5045,11 @@ public class SmApplicationBackingBean extends
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedEquityCompany().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Invalid Company Share Amout  : ",
-										"Total of companies share amount cannot exceed Paid-up capital.Re enter the amounts "));
+				throw new EpException(MessageConst.ERROR_722521, new String[]{"Company","companies"});
 			}
 		} catch (NumberFormatException ne) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Invalid Value  : ", "Please enter numbers only "));
-
-			ne.printStackTrace();
+//			ne.printStackTrace();
+			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
 
@@ -5438,21 +5290,11 @@ public class SmApplicationBackingBean extends
 				}
 
 			} else {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Invalid Paidup Capital  : ",
-										"Paid-up capital cannot exceed authorized capital.Re enter the amounts "));
+				throw new EpException(MessageConst.ERROR_722523);
 			}
 		} catch (NumberFormatException ne) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Invalid Value  : ", "Please enter numbers only "));
-
-			ne.printStackTrace();
+//			ne.printStackTrace();
+			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
 
@@ -5466,15 +5308,8 @@ public class SmApplicationBackingBean extends
 				System.out.println("**** Same obj without id ******");
 			} else if (per.getIdentificationNo().equalsIgnoreCase(
 					pers.getIdentificationNo())) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Invalid User  : ",
-								"The user with the specified IC/Passport num : '"
-										+ pers.getIdentificationNo()
-										+ "' already exists."));
 				validUser = false;
-				break;
+				throw new EpException(MessageConst.ERROR_722524, new String[]{pers.getIdentificationNo()});
 			}
 		}
 		return validUser;
@@ -5505,26 +5340,12 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (semPrfCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid semi professional staff is required : ",
-										"At least one semi professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
 				validCat = false;
+				throw new EpException(MessageConst.ERROR_722511, new String[]{"semi professional staff"});
 			}
 			if (prfCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid professional staff is required : ",
-										"At least one professional staff with at least 5 years experience is required to add ICT category.Please update personnel info to add this category"));
 				validCat = false;
+				throw new EpException(MessageConst.ERROR_722511, new String[]{"professional staff"});
 			}
 
 		}
@@ -5558,38 +5379,17 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (stfCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid staff is required : ",
-										"At least one staff with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
 				validCat = false;
+				throw new EpException(MessageConst.ERROR_722512, new String[]{"staff"});
 			}
 			if (ownrCnt < 1) {
 				System.out.println("****** No OWNER ********** ");
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid owner is required : ",
-										"At least one equity owner with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
 				validCat = false;
+				throw new EpException(MessageConst.ERROR_722512, new String[]{"equity owner"});
 			}
 			if (dirCnt < 1) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Valid director is required : ",
-										"At least one director with contribution to EPF is required to add ICT category.Please update personnel info to add this category"));
 				validCat = false;
+				throw new EpException(MessageConst.ERROR_722512, new String[]{"director"});
 			}
 
 		}
@@ -5607,16 +5407,9 @@ public class SmApplicationBackingBean extends
 						&& getManagedBean().getSelectedCategory()
 								.getPmCategoryL1().getCategoryL1Id() == cat
 								.getPmCategoryL1().getCategoryL1Id()) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Already Exists : ",
-											"The requested category already exists.Please select another category."));
 					validCat = false;
-					break;
+					throw new EpException(MessageConst.ERROR_722525);
+//					break;
 
 				}
 			}

@@ -1,51 +1,21 @@
 package my.ep.web.backingbean.sm.softcertreg;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-
-import my.ep.biz.service.pm.common.city.ICitySO;
-import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
-import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.district.DistrictReqDTO;
-import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
-import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
 
 @ManagedBean(name="softCertBackingBean")
 @ViewScoped
