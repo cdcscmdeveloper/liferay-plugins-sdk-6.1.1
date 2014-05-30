@@ -126,7 +126,13 @@ public class SupplierManagementConst {
 	public static final String ACTIVATION_PATH = "/web/guest/supplier-user-activation?";
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
-
+	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
+	
+	//SDO BPM Action
+	public static final String BPM_INQUIRY = "INQUIRY";
+	public static final String BPM_SUBMIT = "SUBMIT";
+	public static final String BPM_VERIFY = "VERIFY"; 
+	
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
@@ -402,5 +408,18 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT;
 	}
+	
+	public String getBPM_SUBMIT(){
+		return BPM_SUBMIT;
+	}
+	
+	public String getBPM_INQUIRY(){
+		return BPM_INQUIRY;
+	}
+
+	public String getBPM_VERIFY() {
+		return BPM_VERIFY;
+	}
+
 
 }

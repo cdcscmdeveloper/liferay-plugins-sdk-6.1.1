@@ -48,6 +48,7 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 	public void retrieveSiteVisitInfo(){
+
 //		if(this.getManagedBean().getSmSvTask() == null){
 //			this.getManagedBean().setAppId(1009);
 			System.out.println("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());

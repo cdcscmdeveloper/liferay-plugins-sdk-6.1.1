@@ -7,18 +7,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.IPmSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.sm.common.spki.ISpkiSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.sm.common.spki.SpkiReqDTO;
-import my.ep.dto.sm.common.spki.SpkiResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
@@ -35,7 +29,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import org.apache.commons.id.serial.AlphanumericGenerator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -158,9 +151,9 @@ public class SupplierUserActivationBackingBean extends
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
 					System.out.println("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
-					//SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
-					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
-					resDTO.setSuccessful(true);
+					SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
+//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
+//					resDTO.setSuccessful(true);
 					if(resDTO.isSuccessful()){
 						return navigateToAck();
 //						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
@@ -209,45 +202,4 @@ public class SupplierUserActivationBackingBean extends
 		String url = server + SupplierManagementConst.LOGIN_URL;
 		return url;
 	}
-	
-//	public static void main(String[] args) {
-//		Date expiryDate = new Date(new Date().getTime() + (7 * 1000 * 60 * 60 * 24));
-//		long ggg = 30 * 60 * 60 * 24 * 1000;
-//		long hhh = ggg * 30;
-//		System.out.println("------::::" + 30 * 60 * 60 * 24);
-//		System.out.println("------::::" + hhh);
-//		
-//		System.out.println("expiryDate" + expiryDate);
-//		
-//		System.out.println(new Date().before(expiryDate));
-//		
-//		System.out.println(SmCommonUtil.hashString("315"));
-//	}
-	
-//	public static void main(String[] args){
-//
-//		AlphanumericGenerator generator =  new AlphanumericGenerator(false, "0003");
-//		System.out.println("***generateEpNo***" +generator.nextIdentifier());
-//
-//		
-//	}
-	
-//	public static void main(String[] args){
-//		String epNo = "eP-1400A1022";
-//		String lastEpNo = null;
-//		String newEpNo = null;
-//		
-//		if(epNo != null || epNo != ""){
-//			lastEpNo = epNo.substring(epNo.length()-4,epNo.length());
-//			//lastEpNo = epNo.substring(0,epNo.length()-4);
-//		}
-//		
-//		System.out.println("***lastEpNo***" + lastEpNo);
-//		AlphanumericGenerator generator =  new AlphanumericGenerator(false, lastEpNo != null ? lastEpNo : "0000");
-//		newEpNo = generator.nextIdentifier().toString();
-//		
-//		System.out.println("***generateEpNo***" + newEpNo);
-//		//return newEpNo;
-//	}
-	
 }

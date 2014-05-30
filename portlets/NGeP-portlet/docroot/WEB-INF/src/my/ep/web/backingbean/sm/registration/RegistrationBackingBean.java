@@ -736,8 +736,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		//846846516516
-		Long usrId = (Long)MDC.get(LogKey.USER_ID);
-		supplierSearchReqDTO.setUserId(usrId);
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierSearchReqDTO.setUserId(pmUser.getUserId());
 		
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
@@ -945,6 +945,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}else{
 			return false;
 		}
+	}
+	
+	public void createInquiry(){
+		//this.getManagedBean().getSmSupp().getSmAppl().setsma
 	}
 	
 //	public void verifyIC(){

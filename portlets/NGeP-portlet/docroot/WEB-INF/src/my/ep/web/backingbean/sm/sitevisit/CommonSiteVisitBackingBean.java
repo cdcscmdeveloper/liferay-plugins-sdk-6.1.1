@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
-@ManagedBean(name = "commSiteVisitBackingBean")
+@ManagedBean(name = "commonSiteVisitBackingBean")
 @RequestScoped
 public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitManagedBean>{
 	public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);

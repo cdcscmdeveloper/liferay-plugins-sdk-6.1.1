@@ -23,6 +23,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
+import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -60,17 +61,25 @@ public class CommonApplBackingBean extends
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
-		if (resDTO.getTaskName()
-				.equalsIgnoreCase("Verify Supporting Documents")) {
+		if (resDTO.getTaskName().equalsIgnoreCase("Verify Supporting Documents")) {
 			SdoReviewBackingBean sdoBB = new SdoReviewBackingBean();
-			SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
+			Object bpmObj = new Object();
 
-			log.info("------Verify Supporting Documents-----------"
-					+ smMofObj.getDocumentId());
-			sdoBB.getManagedBean().setAppId((long) smMofObj.getDocumentId());
+			log.info("------Verify Supporting Documents-----------");
+			
+			if (resDTO.getProcessName().equalsIgnoreCase("MOF Supplier Registration")) {
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
+				sdoBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
+				
+			}else if(resDTO.getProcessName().equalsIgnoreCase("MOF Account Maintain")) {
+				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				sdoBB.getManagedBean().setAppId((long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+		
+			}
+//			sdoBB.getManagedBean().setAppId((long) bpmObj.getDocumentId());
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
-			sdoBB.getManagedBean().setBpmPojo(smMofObj);
+			sdoBB.getManagedBean().setBpmPojo(bpmObj);
 			sdoBB.viewSupportingDocument();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -261,7 +270,31 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
+		}else if(resDTO.getTaskName().equalsIgnoreCase("Respond SDO Inquiry")){
+			Object bpmObj = new Object();
+			SupportingDocInquiryBackingBean suppDocIn = new SupportingDocInquiryBackingBean();
+			
+			if (resDTO.getProcessName().equalsIgnoreCase("MOF Supplier Registration")) {
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
+				suppDocIn.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
+				
+			}else if(resDTO.getProcessName().equalsIgnoreCase("MOF Account Maintain")) {
+				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				suppDocIn.getManagedBean().setAppId((long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+		
+			}
+			
+			suppDocIn.getManagedBean().setBpmAction(resDTO.getAction());
+			suppDocIn.getManagedBean().setTaskId(taskId);
+			suppDocIn.getManagedBean().setBpmPojo(bpmObj);
+			suppDocIn.viewDocInquiry();
+			System.out.println("*********Respond SDO Inquiry********");
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/suppliersupportingdocinquiry/inquiryresponse.xhtml");
+
 		}
+
 
 	}
 

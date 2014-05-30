@@ -1,11 +1,15 @@
 package my.ep.web.managedbean.sm.sdoreview;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -21,9 +25,12 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private String[] bpmAction;
 	private String taskId;
 	private String taskName;
-	private SMMOFRegDataType bpmPojo;
+	private Object bpmPojo;
 	private SmRemark smRemark;
 	private SmPersonnel smPersonnel;
+	private SmApplInquiry smApplInquiry;
+	private SmApplInquiry selectedInquiryResponse;
+	private List<PmParameterDesc> businessTypeLs;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -65,11 +72,11 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 		this.taskName = taskName;
 	}
 
-	public SMMOFRegDataType getBpmPojo() {
+	public Object getBpmPojo() {
 		return bpmPojo;
 	}
 
-	public void setBpmPojo(SMMOFRegDataType bpmPojo) {
+	public void setBpmPojo(Object bpmPojo) {
 		this.bpmPojo = bpmPojo;
 	}
 
@@ -95,6 +102,30 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
+	}
+
+	public SmApplInquiry getSmApplInquiry() {
+		return smApplInquiry;
+	}
+
+	public void setSmApplInquiry(SmApplInquiry smApplInquiry) {
+		this.smApplInquiry = smApplInquiry;
+	}
+
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
+
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+
+	public List<PmParameterDesc> getBusinessTypeLs() {
+		return businessTypeLs;
+	}
+
+	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
+		this.businessTypeLs = businessTypeLs;
 	}
 
 	

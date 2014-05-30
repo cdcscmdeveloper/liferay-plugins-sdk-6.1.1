@@ -10,17 +10,21 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -28,6 +32,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "svcSiteAssignBackingBean")
@@ -37,9 +42,9 @@ public class SvcSiteAssignBackingBean extends
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
 	
 	public SvcSiteAssignBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
+//		if (MDC.get(LogKey.USER_ID) == null) {
+//			MDC.put(LogKey.USER_ID, 1L);
+//		}
 	}
 
 	public void retrieveSiteAssignInfo() {
@@ -59,6 +64,7 @@ public class SvcSiteAssignBackingBean extends
 	
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
+		
 		try{
 			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 			ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
@@ -88,28 +94,23 @@ public class SvcSiteAssignBackingBean extends
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Site Visit has been submitted.", ""));
-				return "/xhtml/sm/sitevisit/outputMsg";
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
 			}
 		}catch(Exception ex){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to process.", ""));
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+			throw new EpException(MessageConst.ERROR_721202);
 		}
 
 		return null;
 	}
 	
-	public String submitSiteVisitTest (){
-		return "";
-	}
-	
 
 	private void retrieveSVOList(){
 		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setRoleCode(SupplierManagementConst.SVO);
+		reqDTO.setRoleCode(SupplierManagementConst.SVO); //pending, select user base on role code.
 		IUserSO reqSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 		UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
 		
@@ -123,6 +124,22 @@ public class SvcSiteAssignBackingBean extends
 		}
 		
 		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
+	}
+	
+	public void validateForm(){
+		if(this.getManagedBean().getSvoUserList().getTarget().size() < 1){
+			throw new EpException(MessageConst.ERROR_721201);
+		}else{
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+		}
+	}
+	
+	public String navigateToAck(){
+		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
+		MessageUtils.BUNDLE_COMMON_MESSAGES,
+		new FacesScopes().getUserLocale())));
+
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 	
 	private FacesScopes getFacesScopes() {
