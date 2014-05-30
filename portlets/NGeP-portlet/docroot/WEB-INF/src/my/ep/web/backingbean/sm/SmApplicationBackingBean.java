@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -222,7 +223,7 @@ public class SmApplicationBackingBean extends
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
 				} else if (applicationType.equalsIgnoreCase("B")) {
-					
+
 				} else if (applicationType.equalsIgnoreCase("R")
 						|| applicationType.equalsIgnoreCase("A")
 						|| applicationType.equalsIgnoreCase("B")) {
@@ -386,10 +387,12 @@ public class SmApplicationBackingBean extends
 			calculateBumiPercentageTotals();
 			return setNavigationForAppl(applicationType);
 
-		/*} catch (Exception e) {
-			System.out.println(" **** Unknown Expection ******* ");
-			e.printStackTrace();
-			return setExceptionNavigationForAppl(applicationType);*/
+			/*
+			 * } catch (Exception e) {
+			 * System.out.println(" **** Unknown Expection ******* ");
+			 * e.printStackTrace(); return
+			 * setExceptionNavigationForAppl(applicationType);
+			 */
 		} finally {
 			// mofRegistrationSO = null;
 		}
@@ -449,16 +452,15 @@ public class SmApplicationBackingBean extends
 
 						if (diffDays > 90) {
 							result = true;
-							
-							/*FacesContext
-									.getCurrentInstance()
-									.addMessage(
-											null,
-											new FacesMessage(
-													FacesMessage.SEVERITY_INFO,
-													"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
-													""));*/
-							 throw new EpException(MessageConst.ERROR_722501);
+
+							/*
+							 * FacesContext .getCurrentInstance() .addMessage(
+							 * null, new FacesMessage(
+							 * FacesMessage.SEVERITY_INFO,
+							 * "Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started."
+							 * , ""));
+							 */
+							throw new EpException(MessageConst.ERROR_722501);
 						} else if (diffDays < -365) {
 							result = true;
 							throw new EpException(MessageConst.ERROR_722502);
@@ -467,7 +469,8 @@ public class SmApplicationBackingBean extends
 							&& diffDays < 90) {
 						result = true;
 						throw new EpException(MessageConst.ERROR_722503);
-					} else if (applicationType.equalsIgnoreCase("B") && smSupplier.isBumi()) {
+					} else if (applicationType.equalsIgnoreCase("B")
+							&& smSupplier.isBumi()) {
 						result = true;
 						throw new EpException(MessageConst.ERROR_722504);
 					}
@@ -3699,26 +3702,47 @@ public class SmApplicationBackingBean extends
 				}
 
 			}
-			if (res.equalsIgnoreCase("Approve")
-					&& getManagedBean()
-							.getSmAppl()
-							.getApplType()
-							.equalsIgnoreCase(
-									ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				System.out.println("**** Approval for cancellation *** ");
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
+			if (res.equalsIgnoreCase("Approve")) {
+				if (getManagedBean()
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
+				} else {
+					if (getManagedBean().getSmAppl().getPmStatus()
+							.getStatusId() != null) {
+						for (PmStatusDesc desc : getManagedBean()
+								.getRegStatusDescList()) {
+							if (desc.getPmStatus()
+									.getStatusId()
+									.equals(getManagedBean().getSmAppl()
+											.getPmStatus().getStatusId())) {
+
+								getManagedBean().getSmAppl().setPmStatus(
+										desc.getPmStatus());
+								if (desc.getPmStatus().getPmRegStatus() != null) {
+									getManagedBean().getSmAppl()
+											.setPmRegStatus(
+													desc.getPmStatus()
+															.getPmRegStatus());
+									getManagedBean().getSmSupplier().setBumi(
+											getManagedBean().getSmAppl()
+													.getPmRegStatus()
+													.isBumiAppl());
+								}
+							}
+						}
+					}
+				}
 			}
 
 			System.out.println("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			validSiteVisit = testUpdateSmAppl("Basic", getManagedBean()
 					.getSmAppl().getApplType());
-
-			System.out.println(" ******** Return after update db *******"
-					+ validSiteVisit);
 			if (res.equalsIgnoreCase("Approve")) {
-				System.out.println("***** Update supplier profile ****");
-				updateSmSupplierInfo();
+				updateSmSupplierInfo(getManagedBean().getSmAppl().getApplType());
 			}
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
@@ -6097,12 +6121,11 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void updateSmSupplierInfo() {
+	private void updateSmSupplierInfo(String applType) {
 		try {
 			getManagedBean().getSmSupplier().setSmAppl(
 					getManagedBean().getSmAppl());
-			if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 				SmMofAccount acc = new SmMofAccount();
 				acc.setSmSupplier(getManagedBean().getSmSupplier());
 				acc.setSupplierType(getManagedBean().getSmAppl()
@@ -6146,17 +6169,26 @@ public class SmApplicationBackingBean extends
 				}
 				getManagedBean().getSmSupplier().getSmMofAccounts().add(acc);
 
-			} else if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			} else if (applType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+					|| applType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+					|| applType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					|| applType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 				for (SmMofAccount acc : getManagedBean().getSmSupplier()
 						.getSmMofAccounts()) {
 					if (acc.getSmSupplier().equals(
 							getManagedBean().getSmAppl().getSupplierType())) {
-						acc.setEffDate(new Date());
-						Calendar c = new GregorianCalendar();
-						c.add(Calendar.YEAR, 3);
-						Date d = c.getTime();
-						acc.setExpDate(c.getTime());
+						if (applType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+							acc.setEffDate(new Date());
+							Calendar c = new GregorianCalendar();
+							c.add(Calendar.YEAR, 3);
+							Date d = c.getTime();
+							acc.setExpDate(c.getTime());
+						}
 						if (acc.getSmMofCerts() != null
 								&& !acc.getSmMofCerts().isEmpty()) {
 							for (SmMofCert cer : acc.getSmMofCerts()) {
