@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -19,7 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.Deflater;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -36,8 +42,10 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -54,10 +62,14 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
+import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -91,6 +103,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -103,7 +116,17 @@ import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -162,6 +185,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		IContractSO contractSO = null;
 		try {
 			System.out.println("**********preRenderView**************");
+			log.debug("Inside preRenderView()");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
@@ -334,6 +358,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
      }
 	
 	public String saveContractAmendment(String action) throws Exception {
+		 log.debug("Inside saveContractAmendment(.)");
 		IContractSO contractSO = null;
 		try {
 			validateContractAmendment();
@@ -466,7 +491,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 	 
 	 public void ChkComplyAP201Rule(){
-		
+		 log.debug("Inside ChkComplyAP201Rule()");
 	    Long temp = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().longValue();
 		if(temp > ContractConst.CONTRACT_ADDITIONAL_VALUE){
 			this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
@@ -478,6 +503,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 } if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
 			 this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		}
+		 log.debug("Exit ChkComplyAP201Rule()");
 	 }
 	 
 	 private int getYear(Date curDate, Date ctStartDate){ 
@@ -632,6 +658,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	public void downloadFile(String filePath) throws IOException {
+		log.debug("Inside downloadFile(.)");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
@@ -663,6 +690,221 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
+		log.debug("Exit downloadFile(.)");
+	}
+	
+	public void downloadDocFile(String parameterCode) throws IOException{
+		log.debug("Inside downloadDocFile(.)");
+		IContractTemplateSO contractTemplateSO = null;
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
+		String filePath = "";
+		String fileName = "";
+		try{
+			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			ContractTemplateResDTO resDTO;
+			String content="";
+			
+			if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)){
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA);
+				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+				filePath = tempDir + "/AmendmentSuratSetujuPage.docx";
+				fileName = "AmendmentSuratSetujuPage.docx";
+			}
+			
+			content = getContent(content, parameterCode);
+		 	converthtmlToDocFile(content, filePath);
+			downloadFile(filePath, fileName);
+		}catch(UnsupportedEncodingException e) {
+			  e.printStackTrace();
+		}
+		log.debug("Exit downloadDocFile(.)");
+	}
+	
+	public void downloadFile(String filePath, String fileName) throws IOException {
+		log.debug("Inside downloadFile(..)");
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); 
+				buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+		log.debug("Exit downloadFile(..)");
+	}
+	
+	public void downloadAll(){
+		log.debug("Inside downloadAll()");
+		IContractTemplateSO contractTemplateSO = null;
+		String filePath1;
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
+		String content;
+		try{
+			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			reqDTO.setTemplateName(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA);
+			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			content = getContent(content, ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA);
+			filePath1 = tempDir + "/AmendmentSuratSetujuPage.docx";
+			converthtmlToDocFile(content, filePath1);
+			
+			File[] all = {new File(filePath1)};   
+			File zipFile = new File(tempDir + "/amendment.zip");
+			try {
+				zipFile.createNewFile();
+				byte[] buffer = new byte[1024];   
+				ZipOutputStream out = new ZipOutputStream(new   
+				FileOutputStream(zipFile));   
+				out.setLevel(Deflater.DEFAULT_COMPRESSION);   
+				for (int i = 0; i < all.length; i++) {
+				  FileInputStream in = new FileInputStream(all[i]);   
+				  out.putNextEntry(new ZipEntry(all[i].getName()));   
+				  int len;   
+				  while ((len = in.read(buffer)) > 0) {
+				    out.write(buffer, 0, len);   
+				  }   
+				  out.closeEntry();   
+				  in.close();   
+				}  
+				out.close();   
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			downloadFile(tempDir + "/amendment.zip", "amendment.zip");
+		}catch(Exception exp){
+			exp.printStackTrace();
+		}
+		log.debug("Exit downloadAll()");
+	}
+	
+	private void converthtmlToDocFile(String content, String filePath){
+		log.debug("Inside converthtmlToDocFile(..)");
+		WordprocessingMLPackage wordMLPackage;
+	 	try {
+	 		wordMLPackage = WordprocessingMLPackage.createPackage();
+	 		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+	 		afiPart.setBinaryData(content.getBytes());
+	 		afiPart.setContentType(new ContentType("text/html"));
+	 		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+	 		 
+	 		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+	 		ac.setId(altChunkRel.getId() );
+	 		wordMLPackage.getMainDocumentPart().addObject(ac);
+	 		wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html");
+	 		wordMLPackage.save(new java.io.File(filePath));
+	 	} catch (InvalidFormatException e) {
+	 		e.printStackTrace();
+	 	}catch (Docx4JException e) {
+ 			e.printStackTrace();
+ 		}
+	 	log.debug("Exit converthtmlToDocFile(..)");
+	}
+	
+	private String getContent(String content, String parameterCode){
+		log.debug("Inside getContent(..)");
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		Map<String, String> valuesMap = new HashMap<String, String>();
+		StringBuffer strBuff = new StringBuffer();
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+		AddressReqDTO addressReqDTO = new AddressReqDTO();
+		addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+		addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+		PmAddressType pmAddressType = null;
+		if(addressResDTO.getAddressTypeList().size()>0) {
+			pmAddressType = addressResDTO.getAddressTypeList().get(0);
+		}
+		if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)) {
+			if(getManagedBean().getCtContract().isBondReq()){
+				strBuff.append("*3.1 mendepositkandenganKerajaan, suatu Bon PelaksanaandalambentukJaminan Bank/Jaminan Syarikat Kewangan/ JaminanInsurans " +
+						"yang takbolehbataldaripadasebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskandandidaftarkan di Malaysia " +
+						"denganjumlahsebanyak RM ${PERF_BOND_AMOUNT} yang merupakan${BOND_AMOUNT_IN_TEXT}peratus (${PERCENTAGE}%) darijumlahkontrakdantempohsahlakusehingga" +
+						"${NEW_BOND_DATE}. Dokumen bon PelaksanaantersebuthendaklahdikemukakankepadaKerajaandalamtempoh${BOND_SUBMISSION_PERIOD}" +
+						"haridaritarikhsuratinidisetujuterima;<br/><br/>");
+				strBuff.append("*3.2 SekiranyapembekalmendepositkankepadaKerajaanPolisiInsurans. Pembekalhendaklahmengemukakanresit-resit " +
+						"premium yang telahdibayarbagitujuanpemeriksaan.<br/><br/>");
+				strBuff.append("*3.4 Apa-apakegagalandalammematuhikehendak-kehendakpara 3 inidalamtempohmasa yang dinyatakan, " +
+						"kecualijikadiabaikandengannyataolehKerajaan, akanmenyebabkanpenerimaan LOA** " +
+						"initerbataldanselepasituKerajaantidaklahdenganapa-apacarajugabertanggungjawabkepadatuan.<br/><br/>");
+			}
+			strBuff.append("*4. Tarikhpermulaansebagaimana yang disebutkandalamsyarat-syaratkontrakadalahpada${NEW_CONTRACT_EFFECTIVE_DATE}<br/><br/>");
+			strBuff.append("5. Penyetujuan/ penolakansuratsetujuterimainihendaklahdibuatsecaraatastaliandalamtempohempatbelas (14)  haridaritarikhsuratini.  " +
+					"SekiranyapihakKerajaantidakmenerimamaklumbalassuratsetujuterimainidalamtempoh yang dinyatakanmakatawaraninidengansendirinyaterbatal.<br/><br/>");
+			strBuff.append("Sekian, terimakasih.<br/><br/>");
+			strBuff.append("“BERKHIDMAT UNTUK NEGARA” <br/><br/>");
+			strBuff.append("Saya yang menurutperintah,<br/><br/>");
+			strBuff.append("-------------------------------------------<br/>");
+			strBuff.append("${ADMIN_NAME}** Default to Contract Signer<br/>");
+			strBuff.append("${POSITION}");
+			content = content + strBuff.toString();
+			
+			valuesMap.put("LOA_NO", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
+			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierCompanyName());
+			if(pmAddressType!=null) {
+				valuesMap.put("ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+				//valuesMap.put("ADDRESS", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress().getAddress1());
+			}
+			
+			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
+			valuesMap.put("PHYSICAL_CONTRACT_NO",  getManagedBean().getCtContract().getContractPhysicalNo());
+			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+			valuesMap.put("BOND_AMOUNT_IN_TEXT",  getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+			valuesMap.put("PERCENTAGE", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
+			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentEffDate()));
+			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
+			valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
+			valuesMap.put("ADMIN_NAME", getManagedBean().getCtContract().getCurrentContractVer().getContractAdmin().getUserName());
+			valuesMap.put("POSITION", getManagedBean().getCtContract().getCurrentContractVer().getContractAdmin().getDesignation());
+
+			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+			content = sub.replace(content);
+		}
+		log.debug("Exit getContent(..)");
+		return content;
+	}
+	
+	private String formAddress(String address1, String address2, String address3, String address4) {
+		log.debug("Inside formAddress(....)");
+		StringBuffer address = new StringBuffer();
+		if(address1!=null && address1.length()>0) {
+			address.append(address1).append(" ");
+		}
+		if(address2!=null && address2.length()>0) {
+			address.append(address2).append(" ");
+		}
+		if(address3!=null && address3.length()>0) {
+			address.append("<BR/>").append(address3).append(" ");
+		}
+		if(address4!=null && address4.length()>0) {
+			address.append(address4).append(" ");
+		}
+		log.debug("Exit formAddress(....)");
+		return address.toString();
 	}
 	
 	public void fileUpload(FileUploadEvent event) throws Exception {
