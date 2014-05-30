@@ -103,7 +103,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private SelectItem[] roleTypes; // Role type drop down
 	private List<CtCommitteeMember> ctCommitteeMembers;
 	private Long meetingStatusId;
-	private ScLoaWitness scLoaWitness = new ScLoaWitness();
 	private String witnessHeader;
 	
 	private SmSupplierBank supplierBank;
@@ -113,9 +112,16 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
 	private CtItemCeilingQty ctItemCeilingQtys;
+	private ScLoaWitness scLoaWitness;
 	
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
+	
+	private String supplierContactPerson;
+	private String supplierTelNo;
+	private String supplierMobileNo;
+	private String supplierFaxNo;
+	private String supplierEmail;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -638,6 +644,46 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setItemServiceExist(boolean itemServiceExist) {
 		this.itemServiceExist = itemServiceExist;
+	}
+
+	public String getSupplierContactPerson() {
+		return supplierContactPerson;
+	}
+
+	public void setSupplierContactPerson(String supplierContactPerson) {
+		this.supplierContactPerson = supplierContactPerson;
+	}
+
+	public String getSupplierTelNo() {
+		return supplierTelNo;
+	}
+
+	public void setSupplierTelNo(String supplierTelNo) {
+		this.supplierTelNo = supplierTelNo;
+	}
+
+	public String getSupplierMobileNo() {
+		return supplierMobileNo;
+	}
+
+	public void setSupplierMobileNo(String supplierMobileNo) {
+		this.supplierMobileNo = supplierMobileNo;
+	}
+
+	public String getSupplierFaxNo() {
+		return supplierFaxNo;
+	}
+
+	public void setSupplierFaxNo(String supplierFaxNo) {
+		this.supplierFaxNo = supplierFaxNo;
+	}
+
+	public String getSupplierEmail() {
+		return supplierEmail;
+	}
+
+	public void setSupplierEmail(String supplierEmail) {
+		this.supplierEmail = supplierEmail;
 	}
 
 }

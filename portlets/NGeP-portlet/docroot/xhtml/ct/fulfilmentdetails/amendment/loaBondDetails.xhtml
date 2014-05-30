@@ -4,45 +4,48 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	 <p:panel id="bondDetails" header="Performance Bond" toggleable="true" toggleSpeed="500">
+	<p:panel id="bondDetails" header="Performance Bond" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
-		    <f:verbatim/>
-		     <h:commandLink value="#{amendmentBackingBean.fileNames(data.filePath)}" 
-				style="float:left;" styleClass="blue_font" 
+			<h:commandLink value="Sample Bond Letter" style="float:left;"
+				styleClass="blue_font"
 				action="#{amendmentBackingBean.downloadFile(data.filePath)}">
-			 </h:commandLink>					
-			<p:outputLabel value="Bond Response Due Date"/>
+			</h:commandLink>
+			<f:verbatim />
+			<p:outputLabel value="Bond Response Due Date" />
 			<h:panelGrid columns="3">
-			   <p:calendar  size="18" id="dueDate" pattern="#{CommonConstants.DATE_FORMAT_TYPE_DATE}" 
-			     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}"/>
-			    <p:spacer width="1"/>
-			    <p:inputText style="width:40px;"/>
+				<p:inputText size="16" id="dueDate" disabled="true"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<p:inputText style="width:50px;" value="30 days" disabled="true" />
 			</h:panelGrid>
-			<p:outputLabel value="Contract Period"/>
+			<p:outputLabel value="Contract Period" />
 			<h:panelGrid columns="5">
-			    <p:inputText style="width:80px;"
-			      value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}"/>
-			    <p:spacer width="1"/>
-			    <p:outputLabel value="(Year)"/>
-			    <p:spacer width="1"/>
-			    <p:outputLabel value="#{amendmentBackingBean.calculateInMonths(amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod)}, Months"/>
+				<p:inputText style="width:170px;" disabled="true"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod / 12}" />
+				<p:spacer width="1" />
+				<p:outputLabel value=" (Year)" />
+				<p:spacer width="1" />
+				<p:outputLabel value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod} Months" />
 			</h:panelGrid>
-			<p:outputLabel value="Contract Amount (RM)"/>
-			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-			   style="width:170px;"/>
-			<p:outputLabel value="Percentage Bond"/>
-			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}" 
-			  style="width:170px;"/>
-			<p:outputLabel value="Bond Amount Per Year (RM)"/>
+			<p:outputLabel value="Contract Amount (RM)" />
+			<p:inputText disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}" style="width:170px;" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
+			</p:inputText>
+			<p:outputLabel value="Percentage Bond" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}" />
+			<p:outputLabel value="Bond Amount Per Year (RM)" />
 			<h:panelGrid columns="3">
-		  	  <p:inputText style="width:170px;"
-		  	    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}"/>
-			   <p:spacer width="1"/>
-			  <p:inputText style="width:300px;"
-			    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.proposedAmt}"/>
+				<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
+				</p:inputText>
+				<p:spacer width="1" />
+				<p:inputText style="width:300px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.proposedAmt}" />
 			</h:panelGrid>
-		 </h:panelGrid>
-	</p:panel>	
+		</h:panelGrid>
+	</p:panel>
 </ui:composition>
 
 
