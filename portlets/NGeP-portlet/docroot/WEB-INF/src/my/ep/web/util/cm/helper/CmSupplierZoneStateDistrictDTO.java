@@ -1,4 +1,4 @@
-package my.ep.web.backingbean.cm.catalogue;
+package my.ep.web.util.cm.helper;
 
 import java.io.Serializable;
 

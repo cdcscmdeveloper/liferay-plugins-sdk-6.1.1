@@ -8,7 +8,6 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.web.backingbean.cm.catalogue.CmSupplierZoneStateDistrictDTO;
 
 public class SourcingZoneDetailHelper {
 	public	static	List<PmState>	getStates(CmSupplierZone zone){
