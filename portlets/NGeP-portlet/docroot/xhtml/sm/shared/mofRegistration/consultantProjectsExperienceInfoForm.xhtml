@@ -70,7 +70,7 @@
 				<p:column headerText="Action">
 					<p:commandLink
 						action="#{backingBean.assignSelCompanyExperience(consBean)}"
-						oncomplete="consDialog.show();" update=":form:tt:consDialog">
+						update=":form:tt:consDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
@@ -81,7 +81,7 @@
 			<div align="right">
 				<p:commandButton value="Add"
 					action="#{backingBean.assignNewCompanyExperience}"
-					oncomplete="consDialog.show();" update=":form:tt:consDialog" />
+					update=":form:tt:consDialog" />
 				<p:commandButton value="Delete "
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
 					update=":form:tt:consDt" />
@@ -113,9 +113,9 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog header="Project Information"
-		widgetVar="consDialog" id="consDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true" width="500px">
+	<p:dialog header="Project Information" widgetVar="consDialog"
+		id="consDialog" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true" width="500px">
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -185,45 +185,47 @@
 							<td><p:outputLabel value="
 										* Main Category" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.selectedParentCat}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select -- " itemValue="" />
+									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 									<f:selectItems
-										value="#{backingBean.managedBean.defaultParentCatList}"
+										value="#{backingBean.managedBean.supplierParentCatList}"
 										var="parent" itemLabel="#{parent.categoryName}"
-										itemValue="#{parent.categoryL1Code}" />
+										itemValue="#{parent.categoryL1Id}" />
 									<p:ajax event="change"
-										listener="#{backingBean.changeParentCategory}"
+										listener="#{backingBean.populateChildCategoryByParent(backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id,
+								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
+								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
 										update="conslChild,conslSubChild" />
 								</p:selectOneMenu></td>
+
+
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Sub Category" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.selectedChildCat}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
 									id="conslChild" style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
 									<f:selectItems
-										value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
-										var="child" itemLabel="#{child.categoryName}"
-										itemValue="#{child.categoryL2Code}" />
+										value="#{backingBean.managedBean.supplierChildCatList}"
+										var="conslChild" itemLabel="#{conslChild.categoryName}"
+										itemValue="#{conslChild.categoryL2Id}" />
 									<p:ajax event="change"
-										listener="#{backingBean.changeChildCategory}"
+										listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
 										update="conslSubChild" />
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Sub Category Division" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.selectedSubChildCat}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
 									id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select One --  " itemValue="" />
+									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
 									<f:selectItems
-										value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
-										var="subChild" itemLabel="#{subChild.categoryName}"
-										itemValue="#{subChild.categoryL3Code}" />
-									<p:ajax event="change"
-										listener="#{backingBean.changeSubChildCategory}" />
+										value="#{backingBean.managedBean.supplierSubChildCatList}"
+										var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
+										itemValue="#{conslSubChild.categoryL3Id}" />
 								</p:selectOneMenu></td>
 						</tr>
 					</table>

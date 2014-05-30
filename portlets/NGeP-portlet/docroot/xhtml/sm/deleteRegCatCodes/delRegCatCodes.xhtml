@@ -35,19 +35,12 @@
 					update=":form:catDelPan,:form:catDelConfirm" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column selectionMode="multiple" rowspan="2" width="5%" />
-						<p:column rowspan="2" headerText="No." />
-						<p:column rowspan="2" headerText="Code" />
-						<p:column colspan="3" headerText="Category" />
-						<p:column rowspan="2" headerText="Business Type" />
-						<p:column rowspan="2" headerText="Category Type" />
-						<p:column rowspan="2" headerText="Remarks" />
-					</p:row>
-
-					<p:row>
-						<p:column headerText="Parent" />
-						<p:column headerText="Child" />
-						<p:column headerText="Sub-Child" />
+						<p:column selectionMode="multiple" width="5%" />
+						<p:column headerText="No." />
+						<p:column headerText="Category" />
+						<p:column headerText="Other Description" />
+						<p:column headerText="Category Type" />
+						<p:column headerText="Remarks" />
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" rowspan="2" width="5%" />
@@ -56,29 +49,25 @@
 				</p:column>
 				<p:column>
 					<h:outputText
-						value="#{catBean.pmCategoryL1.categoryL1Code}#{catBean.pmCategoryL2.categoryL2Code}#{catBean.pmCategoryL3.categoryL3Code}" />
-				</p:column>
-				<p:column>
-					<h:outputText
 						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
-				</p:column>
-				<p:column>
+					<br />
 					<h:outputText
 						value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
-				</p:column>
-				<p:column>
+					<br />
 					<h:outputText
 						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
+
 				<p:column>
-					<h:outputText value=" -- TBC -- " />
+					<h:outputText value="#{catBean.otherDesc}" />
 				</p:column>
+
 				<p:column>
 					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
 					<h:outputText value="Special" rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column>
-					<p:inputText rendered="#{catBean.selected}"
+					<p:inputTextarea cols="30" rendered="#{catBean.selected}"
 						value="#{catBean.remarks}" />
 				</p:column>
 			</p:dataTable>
