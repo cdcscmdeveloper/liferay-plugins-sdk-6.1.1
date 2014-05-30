@@ -716,7 +716,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		if(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierCompanyName());
 			valuesMap.put("SUPPLIER_REGISTRATION_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
 			valuesMap.put("CONTRACT_START_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
@@ -743,7 +743,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if(pmAddressType!=null) {
 				valuesMap.put("JABATAN_ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 			}
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierCompanyName());
 			valuesMap.put("SUPPLIER_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			valuesMap.put("SUPPLIER_ADDRESS", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress().getAddress1());
 			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
@@ -782,7 +782,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			valuesMap.put("CURRENT_YEAR", c.get(Calendar.YEAR)+"");
 			valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
-			valuesMap.put("COMPANY_NAME", getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+			valuesMap.put("COMPANY_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierCompanyName());
 			valuesMap.put("COMPANY_REGISTER_ID", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);

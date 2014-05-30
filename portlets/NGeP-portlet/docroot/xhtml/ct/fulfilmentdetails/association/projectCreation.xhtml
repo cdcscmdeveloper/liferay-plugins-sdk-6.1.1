@@ -57,7 +57,7 @@
 			     <h:outputText value="#{data.contractNo}"/>
 			   </p:column>
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}" style="width:20%;">
-				 <h:outputText  value="#{data.smSupplier.companyName}"/>
+				 <h:outputText  value="#{data.latestContractVer.ctContractValue.supplierCompanyName}"/>
 			   </p:column>
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" style="width:10%;">
 				<h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
@@ -112,7 +112,7 @@
                        	<h:outputText value="#{data.contractName}" />
 					</p:column> 
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}">
-                       	<h:outputText value="#{data.smSupplier.companyName}" />
+                       	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierCompanyName}" />
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" >
                        <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">

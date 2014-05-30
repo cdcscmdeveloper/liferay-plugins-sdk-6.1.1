@@ -42,7 +42,7 @@
 							<p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
 					</td>
 					<td>
-							<p:inputText size="30" disabled="true" value="#{supplierBackingBean.managedBean.ctContract.smSupplier.companyName}"/>
+							<p:inputText size="30" disabled="true" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"/>
 					</td>					
 					<td>
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
@@ -118,7 +118,7 @@
                 </tr> 
                 <tr>       
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
-                     <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}"
+                     <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"
                                disabled="true" style="width:218px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
                      <td> <p:inputText disabled="true"  style="width:170px;" /></td>

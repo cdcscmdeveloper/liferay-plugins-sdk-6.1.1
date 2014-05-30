@@ -14,7 +14,7 @@
             <ac:paginator for="agSupplierSigner"/>
 			   <p:column selectionMode="multiple" style="width:2%"/> 
                    <p:column style="width:25%;" headerText="Company Name">
-                     <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.smSupplier.companyName}" style="float:left;"/>
+                     <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierCompanyName}" style="float:left;"/>
                 </p:column> 
                 <p:column style="width:25%;" headerText="Contract Signer">
                   <p:selectOneMenu id="contractSigner" value="#{data.officer.userId}"  style="width:95%;">

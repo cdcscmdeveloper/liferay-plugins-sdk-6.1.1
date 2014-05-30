@@ -88,7 +88,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getProjectDescription()));	
 			}			
 			if(this.getManagedBean().getCtSupplierName()!=null && this.getManagedBean().getCtSupplierName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.SmSupplier.supplierName",
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.supplierCompanyName",
 				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtSupplierName()));	
 			}
 			if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateEnd()!=null) {
