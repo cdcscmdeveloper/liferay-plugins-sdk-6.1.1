@@ -23,12 +23,15 @@
 			   </h:panelGroup> 
 			</p:column>
 	        <p:column headerText="Action" styleClass="column-align-center" style="width:20%;">
-	             <h:commandLink
-				      style="float:left;" styleClass="blue_font"/>					
+	             <h:commandLink icon="ui-icon-download"
+	             	action="#{amendmentBackingBean.downloadDocFile(data.docName)}" >	
+	             	<p:graphicImage library="ep/images/design" name="download.png"
+								value="/resources/ep/images/design/download.png"
+								title="File Download" /></h:commandLink>
 	        </p:column>
 	    </p:dataTable>
 	     <div class="ppRightBtn"> 
-          <p:commandButton value="Download All"  icon="ui-icon-download" />
+          <h:commandButton value="Download All"  icon="ui-icon-download" action="#{amendmentBackingBean.downloadAll()}" />
 		  <p:spacer width="1"/>
 		   <p:commandButton value="Add"  icon="ui-icon-add" />
 		   <p:spacer width="1"/>
