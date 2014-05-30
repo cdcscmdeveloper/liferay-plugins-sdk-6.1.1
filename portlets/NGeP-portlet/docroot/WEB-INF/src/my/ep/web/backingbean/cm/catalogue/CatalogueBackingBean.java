@@ -72,6 +72,7 @@ import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -164,8 +165,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-		System.out.println("LogKey.USER_ID:"+(Long)MDC.get(LogKey.USER_ID));
-		supplierReqDTO.setUserId((Long)MDC.get(LogKey.USER_ID));
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
 
 		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 
@@ -287,7 +289,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		
 
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+		
+		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 		reqDTO.setItemStatus("D");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 		System.out.println("resDTO.getSupplierItemList():"+resDTO.getSupplierItemList().size());
@@ -966,6 +980,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Updated successfully.", ""));
 
+
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+				
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierReqDTO.setUserId(pmUser.getUserId());
+
+				SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 				reqDTO.setItemStatus("D");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
@@ -1622,6 +1646,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 
+
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);	
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+			
 			if(this.getManagedBean().getTabActiveIndex()==0){
 				reqDTO.setItemStatus("D");
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
@@ -1790,7 +1825,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			
+			
 
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			if(this.getManagedBean().getTabActiveIndex()==0){
 
@@ -1904,7 +1951,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			if(resDTO.isSuccessful()){
 
 
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
+				
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierReqDTO.setUserId(pmUser.getUserId());
+
+				SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 				reqDTO.setItemStatus("D");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
@@ -1993,8 +2049,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		CatalogueResDTO resDTO = null;
 		//SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
 		//searchBean.setNavigatable(false);
+		
 
-		reqDTO.setSupplierId(new Long(1));
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+		System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
+
+		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 
@@ -2006,6 +2074,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 			reqDTO.setItemStatus("D");
+			System.out.println("getSupplierId:"+reqDTO.getSupplierId());
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
@@ -2057,7 +2126,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void onTabChange(TabChangeEvent event) {  
+	/*public void onTabChange(TabChangeEvent event) {  
 		System.out.println("title"+event.getTab().getTitle());
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
@@ -2120,7 +2189,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 	}  
-
+*/
 
 
 	public String viewCartListItem(){
@@ -2178,44 +2247,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		for(int i=0; i<this.getManagedBean().getSelectedApprovedItems().length; i++){
 			CmSupplierItem catalog = this.getManagedBean().getSelectedApprovedItems()[i];
 
-
-			/*for(CmZonalStandardPricing promotion: catalog.getzStdPrices()){
-
-				promotion.setCmSupplierItem(catalog);
-				if(promotion.getPmDistrict().getDistrictId() == null) {
-					promotion.setPmDistrict(null);
-				}
-			}
-
-			for(CmZonalPromotionPricing promotion: catalog.getCmZonalPromotionPricings()){
-
-				promotion.setCmSupplierItem(catalog);
-				if(promotion.getPmDistrict().getDistrictId() == null) {
-					promotion.setPmDistrict(null);
-				}
-			}
-
-
-			for(CmZonalTierPricing promotion: catalog.getCmZonalTierPricings()){
-
-				promotion.setCmSupplierItem(catalog);
-				if(promotion.getPmDistrict().getDistrictId() == null) {
-					promotion.setPmDistrict(null);
-				}
-			}
-
-			for(CmZonalPromotionTierPricing promotion: catalog.getCmZonalPromotionTierPricings()){
-
-				promotion.setCmSupplierItem(catalog);
-				if(promotion.getPmDistrict().getDistrictId() == null) {
-					promotion.setPmDistrict(null);
-				}
-			}*/
-
-
-
-
-
 			catalog.setItemStatus("U");
 			reqDTO.getSaveSupplierItems().add(catalog);
 		}
@@ -2230,7 +2261,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 		System.out.println("resDTO.isSuccessful():"+resDTO.isSuccessful());
+		
 		if(resDTO.isSuccessful()){
+			
+
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+			System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
+
+
+
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			reqDTO.setItemStatus("A");
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
@@ -2381,9 +2429,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		supplierReqDTO.setUserId(pmUser.getUserId());
+
+		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+
+		System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
 
 
+
+
+		
+
+		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 		reqDTO.setItemStatus("D");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
