@@ -51,6 +51,7 @@ import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -404,14 +405,10 @@ public class SimpleQuoteBackingBean extends
 				 super.renewSesionObject();
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+			} else{
+				throw new EpException("Failed.");
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
+		}  finally {
 			quoteSO = null;
 		}
 		return null;
@@ -534,15 +531,10 @@ public class SimpleQuoteBackingBean extends
 				 super.renewSesionObject();
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+			} else {
+				throw new EpException("Failed.");
 			}
-         
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
+		}  finally {
 			quoteSO = null;
 		}
 		return null;
@@ -626,15 +618,11 @@ public class SimpleQuoteBackingBean extends
 							FacesContext fc = FacesContext.getCurrentInstance();
 							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 						}
+					} else {
+						throw new EpException("Failed.");
 					}
 				}
-			} catch (Exception ex) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
-				ex.printStackTrace();
-			} finally {
+			}  finally {
 				bpmSO = null;
 			}
 	   }
@@ -743,7 +731,7 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("addBusinessNature");
 		ScBusinessNatureQuoteCriteria businessNatureCriteria = new ScBusinessNatureQuoteCriteria();
 		PmBusinessNature businessNature = new PmBusinessNature();
-		businessNatureCriteria.setBusinessNature(businessNature);
+		businessNatureCriteria.setPmBusinessNature(businessNature);
 		try {
 			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias = getManagedBean()
 					.getScQuote().getBusinessNatureCriterias();
@@ -752,12 +740,9 @@ public class SimpleQuoteBackingBean extends
 			}
 			businessNatureCriterias.add(businessNatureCriteria);
 			this.getManagedBean().setBusinessNatureCriterias(businessNatureCriterias);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException();
+		} finally {
 		}
 	}
-
 	
 	/**
 	 * deleteBusinessNature method for deleting business nature
@@ -1169,7 +1154,7 @@ public class SimpleQuoteBackingBean extends
 				for (ScBusinessNatureQuoteCriteria businessNatureQuoteCriteria : businessNatureQuoteCriterias) {
 					ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
 					//natureQuoteCriteria.setCriteriaValue(businessNatureQuoteCriteria.getBusinessNature().getBusinessNatureId());
-					natureQuoteCriteria.setPmBusinessNature(businessNatureQuoteCriteria.getBusinessNature());
+					natureQuoteCriteria.setPmBusinessNature(businessNatureQuoteCriteria.getPmBusinessNature());
 					natureQuoteCriteria.setQuote(quote);
 					businessNatureCriterias.add(natureQuoteCriteria);
 				}
@@ -1468,7 +1453,7 @@ public class SimpleQuoteBackingBean extends
 		if (businessNatures != null){
 		   for (PmBusinessNature busiNature : businessNatures) {
 			   ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
-			   natureQuoteCriteria.setBusinessNature(busiNature);
+			   natureQuoteCriteria.setPmBusinessNature(busiNature);
 			   natureQuoteCriterias.add(natureQuoteCriteria);
 			}
 		   getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
@@ -1539,8 +1524,8 @@ public class SimpleQuoteBackingBean extends
 		// Business Nature Criteria
 		if(getManagedBean().getBusinessNatureCriterias() != null){
 			for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
-				if(natureQuoteCriteria.getBusinessNature() !=null){
-					busiNatureCriteria.append(natureQuoteCriteria.getBusinessNature().getBusinessNatureId())
+				if(natureQuoteCriteria.getPmBusinessNature() !=null){
+					busiNatureCriteria.append(natureQuoteCriteria.getPmBusinessNature().getBusinessNatureId())
 					.append(",");
 				}
 				
