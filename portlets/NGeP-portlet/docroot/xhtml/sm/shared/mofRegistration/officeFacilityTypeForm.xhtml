@@ -244,7 +244,8 @@
 						<td width="134px;"><p:outputLabel value="* Purchase Date" /></td>
 						<td colspan="3" style="padding-bottom: 3px;">
 							<p:calendar	showOn="button" id="purchaseDate"	
-							value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" required="true">
+							value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true">
 							</p:calendar>
 							<p:message id="purchaseDateMsg" for="purchaseDate" showSummary="true"
 								showDetail="false" display="icon" />

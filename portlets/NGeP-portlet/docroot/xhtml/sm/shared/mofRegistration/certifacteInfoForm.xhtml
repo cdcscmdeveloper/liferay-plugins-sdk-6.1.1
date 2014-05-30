@@ -63,15 +63,15 @@
 
 				<p:column headerText="Issue Date">
 					<h:outputText value="#{certBean.certStartDate}">
-						<f:convertDateTime type="date"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="Expiry Date">
 					<h:outputText value="#{certBean.certEndDate}">
-						<f:convertDateTime type="date"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 
 				</p:column>
@@ -167,14 +167,16 @@
 			<tr>
 				<td><p:outputLabel value="* Start Date" /></td>
 				<td><p:calendar id="stDate" showOn="button"
-						value="#{backingBean.managedBean.selectedCert.certStartDate}"/> <p:message
+						value="#{backingBean.managedBean.selectedCert.certStartDate}" 
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> <p:message
 						id="certStrttMsg" for="stDate" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Expiry Date" /></td>
 				<td><p:calendar id="endDate" showOn="button"
-						value="#{backingBean.managedBean.selectedCert.certEndDate}"/> <p:message
+						value="#{backingBean.managedBean.selectedCert.certEndDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> <p:message
 						id="certEndDtMsg" for="endDate" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
