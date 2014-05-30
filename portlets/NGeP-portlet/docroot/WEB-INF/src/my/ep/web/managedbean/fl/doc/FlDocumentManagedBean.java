@@ -12,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -44,6 +45,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	
 	private FlFulfilmentRequest fulfilmentRequest;
+	private PmUser pmUser;
 	
 	private List<VFlDocument> flDocumentList;
 	
@@ -275,6 +277,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchContractFromDuration(Date searchContractFromDuration) {
 		this.searchContractFromDuration = searchContractFromDuration;
+	}
+
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 	
 }

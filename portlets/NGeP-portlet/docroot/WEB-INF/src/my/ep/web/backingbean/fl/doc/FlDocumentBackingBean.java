@@ -3,7 +3,9 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -23,6 +25,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -32,7 +35,12 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -82,6 +90,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(isFlFulfilmentSupplier()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setPmUser(facesScopes.getUserSessionBean());
+			 
 		}
 	}
 	
@@ -305,6 +318,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		
 		@Override
 		public ISearchResultBean<VFlDocument> pageChangeListener(ISearchBean<VFlDocument> searchBean) {
+			SmSupplier smSupp = new SmSupplier();
+			PmOrgProfile defaultOrgProfile = new PmOrgProfile();
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -331,9 +346,38 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(getManagedBean().getSearchStatusId()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));
 				}
+				if(getManagedBean().getTitle()!=null && getManagedBean().getTitle()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getTitle()));
+				}
+				
+				if(isFlFulfilmentRequisitioner()){
+					FacesScopes facesScopes = new FacesScopes();
+					getManagedBean().setPmUser(facesScopes.getUserSessionBean());
+					Date currentDate = new Timestamp(System.currentTimeMillis());
+					for(PmUserOrg pmUserOrg : getManagedBean().getPmUser().getPmUserOrgs()){
+						if(pmUserOrg.getEffDate().before(currentDate)){
+							if(pmUserOrg.getExpDate().after(currentDate)){
+								defaultOrgProfile = pmUserOrg.getPmOrgProfile();
+								break;
+							}
+						}
+					}
+				}
+			
+				if(isFlFulfilmentSupplier()){
+					FacesScopes facesScopes = new FacesScopes();
+					getManagedBean().setPmUser(facesScopes.getUserSessionBean());
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setUserId(getManagedBean().getPmUser().getUserId());
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+					SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+					smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+				}
 				
 				FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
 				reqDTO.setSearchBean(searchBean);
+				reqDTO.setOrgProfileId(defaultOrgProfile.getOrgProfileId());
+				reqDTO.setSupplierId(smSupp.getSupplierId());
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
