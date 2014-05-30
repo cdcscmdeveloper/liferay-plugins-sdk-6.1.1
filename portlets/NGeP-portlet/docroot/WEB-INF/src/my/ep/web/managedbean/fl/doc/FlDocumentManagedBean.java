@@ -5,7 +5,6 @@ package my.ep.web.managedbean.fl.doc;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -13,7 +12,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -38,10 +37,15 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchCircularNo;
 	private String searchLoaNo;
 	private String searchProcurementType;
-	private String title;
+	private String searchTitle;
+	private String searchSuppName;
+	private String searchSuppRef;
 	private Long searchStatusId;
 	private Date searchContractFromDuration;
 	private Date searchContractToDuration;
+	
+	private List<PmStatusDesc> docStatusList;
+	private Long statusDescId;
 	
 	
 	private FlFulfilmentRequest fulfilmentRequest;
@@ -224,21 +228,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * @param title the title to set
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	/**
-	 * @return the fulfilmentRequisitioner
 	 */
 	public String getFulfilmentRequisitioner() {
 		return fulfilmentRequisitioner;
@@ -277,6 +266,76 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchContractFromDuration(Date searchContractFromDuration) {
 		this.searchContractFromDuration = searchContractFromDuration;
+	}
+
+	/**
+	 * @return the searchTitle
+	 */
+	public String getSearchTitle() {
+		return searchTitle;
+	}
+
+	/**
+	 * @param searchTitle the searchTitle to set
+	 */
+	public void setSearchTitle(String searchTitle) {
+		this.searchTitle = searchTitle;
+	}
+
+	/**
+	 * @return the searchSuppName
+	 */
+	public String getSearchSuppName() {
+		return searchSuppName;
+	}
+
+	/**
+	 * @param searchSuppName the searchSuppName to set
+	 */
+	public void setSearchSuppName(String searchSuppName) {
+		this.searchSuppName = searchSuppName;
+	}
+
+	/**
+	 * @return the searchSuppRef
+	 */
+	public String getSearchSuppRef() {
+		return searchSuppRef;
+	}
+
+	/**
+	 * @param searchSuppRef the searchSuppRef to set
+	 */
+	public void setSearchSuppRef(String searchSuppRef) {
+		this.searchSuppRef = searchSuppRef;
+	}
+
+	/**
+	 * @return the docStatusList
+	 */
+	public List<PmStatusDesc> getDocStatusList() {
+		return docStatusList;
+	}
+
+	/**
+	 * @param docStatusList the docStatusList to set
+	 */
+	public void setDocStatusList(List<PmStatusDesc> docStatusList) {
+		this.docStatusList = docStatusList;
+	}
+
+	/**
+	 * @return the statusDescId
+	 */
+	public Long getStatusDescId() {
+		return statusDescId;
+	}
+
+	/**
+	 * @param statusDescId the statusDescId to set
+	 */
+	public void setStatusDescId(Long statusDescId) {
+		this.statusDescId = statusDescId;
 	}
 
 	/**

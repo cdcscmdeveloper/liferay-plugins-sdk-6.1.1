@@ -274,6 +274,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(id.equals("CO")){
 				this.getManagedBean().setCheckDocType(true);
 				this.getManagedBean().setCheckPoDocType(false);
+				this.getManagedBean().setCheckTitle(true);
 				
 			}else if(id.equals("PO")){
 				this.getManagedBean().setCheckPoDocType(true);
@@ -288,6 +289,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 		}
 		getManagedBean().setSearchDocType(id);
+		getStatusDescList(id, "FL", "en");
 	}
 	
 	public void selectedOrderType(AjaxBehaviorEvent e) {
@@ -297,8 +299,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setCheckTitle(false);
 	}
 	public void searchReset(){
+		this.getManagedBean().setSearchTitle(null);
+		this.getManagedBean().setSearchSuppName(null);
+		this.getManagedBean().setSearchSuppRef(null);
+		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchContractToDuration(null);
+		this.getManagedBean().setSearchContractFromDuration(null);
+		this.getManagedBean().setSearchLoaNo(null);
 		this.getManagedBean().setSearchCircularNo(null);
-		
+		this.getManagedBean().setSearchOrderType(null);
 	}
 
 	public IPagingDataModel<VFlDocument> getFlDocumentDataModel() {
@@ -399,6 +408,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		reqDTO.setModuleCode(moduleCode);
 		StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 		resDTO.getStatusDescList();
+		getManagedBean().setDocStatusList(resDTO.getStatusDescList());
 	}
 	public boolean isFlFulfilmentRequisitioner() {
 		FacesScopes facesScopes = new FacesScopes();

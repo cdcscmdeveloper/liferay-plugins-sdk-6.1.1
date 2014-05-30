@@ -38,7 +38,7 @@
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
-						<p:ajax event="change" update="docTypeSearch,docTitleSearch"
+						<p:ajax event="change" update="docTypeSearch,docTitleSearch,docStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
@@ -48,43 +48,34 @@
 					rendered="#{flDocumentBackingBean.managedBean.checkTitle}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.title']}" />
 					<p:inputText size="50"
-						value="#{flDocumentBackingBean.managedBean.title}"></p:inputText>
+						value="#{flDocumentBackingBean.managedBean.searchTitle}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docStatusSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
+					<p:selectOneMenu id="statusId"
+						value="#{flDocumentBackingBean.managedBean.statusDescId}"
+						style="width: 407px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="statusList"
+							value="#{flDocumentBackingBean.managedBean.docStatusList}"
+							itemLabel="#{statusList.statusDesc}"
+							itemValue="#{statusList.statusDescId}" />
+					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="cmWidth1">
-				<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
-				<p:selectOneMenu id="searchDocStatusDD" style="width: 407px;">
-				</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGrid columns="4" columnClasses="cmWidth1">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
 				<p:inputText size="50"
-					value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGrid columns="4" columnClasses="cmWidth1">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.ref']}" />
 				<p:inputText size="20"
-					value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+					value="#{flDocumentBackingBean.managedBean.searchSuppRef}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
-					<p:inputText size="35"
-						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
-					<p:calendar mode="popup" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
-					</p:calendar>
-					 <p:spacer
-						width="5" />
-					<p:calendar mode="popup" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
-					</p:calendar>
-				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
@@ -93,9 +84,29 @@
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.duration']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
 					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
+					<p:inputText size="35"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel
+						value="#{lbl['lbl.fl.doc.search.contract.duration']}" />
+					<p:calendar mode="popup" showOn="button"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
+					</p:calendar>
+					<p:spacer width="5" />
+					<p:calendar mode="popup" showOn="button"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
+					</p:calendar>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
@@ -128,25 +139,29 @@
 
 				<ac:paginator for="flDocListDt" />
 
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" >
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}">
 					<h:outputText
 						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
-				<p:column  headerText="#{lbl['lbl.fl.doc.search.datatable.doc.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.no']}">
 					<h:outputText value="#{flDocument.docNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.cont.no']}">
 					<h:outputText value="#{flDocument.contractNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.circular.no']}" >
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.search.datatable.circular.no']}">
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.status']}" >
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.status']}">
 					<h:outputText
 						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}" style="text-align: center">
+				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
+					style="text-align: center">
 					<p:commandLink
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
