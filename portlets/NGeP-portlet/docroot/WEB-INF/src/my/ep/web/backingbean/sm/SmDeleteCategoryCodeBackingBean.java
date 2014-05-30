@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,17 +10,21 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -49,53 +52,17 @@ public class SmDeleteCategoryCodeBackingBean extends
 		try {
 			System.out.println("**** ENTER On Page Load Event  *************");
 
-			SmSupplier smApplSupplier = retriveSupplierById((long) 3)
+			// SmSupplier smApplSupplier = getCurrentSupplier();
+			SmSupplier smApplSupplier = retriveSupplierById((long) 27)
 					.getSmSupplier();
-			if (smApplSupplier == null) {
-				smApplSupplier = new SmSupplier();
-				// smApplSupplier.setSupplierName("My Sample Supplier");
-				smApplSupplier.setBusinessType("1");
-				smApplSupplier.setRegNo("12345");
-				smApplSupplier.setEstablishDate(new Date());
-				smApplSupplier.setWebSite("www.samplecompany.com");
-			}
-			System.out.println("Retrieved Value ==="
-					// + smApplSupplier.getSupplierName() + " ==== tax num == "
-					//+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
-					+ smApplSupplier.getEstablishDate());
 			System.out.println("******** SIZE ********** "
 					+ smApplSupplier.getSmAppls().size());
 			// TODO Get the latest application
 			// SmAppl smAppl = smApplSupplier.getSmAppl();
-			SmAppl smAppl = new SmAppl();
-			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
-			for (int i = 0; i < 10; i++) {
-				PmCategoryL1 parent = new PmCategoryL1();
-				parent.setCategoryL1Code(String.valueOf(i + 1));
-				parent.setCategoryName("Parent" + (i + 1));
-				PmCategoryL2 clvl1 = new PmCategoryL2();
-				clvl1.setCategoryL2Code(String.valueOf(i + 1));
-				clvl1.setCategoryName("Child" + (i + 1));
-				PmCategoryL3 sublvl1 = new PmCategoryL3();
-				sublvl1.setCategoryL3Code(String.valueOf(i + 1));
-				sublvl1.setCategoryName("Sub - Child" + (i + 1));
-				SmSupplierCategory cat = new SmSupplierCategory();
-				//cat.setSupplierCategoryId((i + 1));
-				if (i % 3 == 0) {
-					cat.setSpecialCategory(true);
-				} else {
-					cat.setSpecialCategory(false);
-				}
+			SmAppl smAppl = smApplSupplier.getSmAppl();
+			System.out.println("******** The application id is *******"
+					+ smAppl.getApplId());
 
-				cat.setPmCategoryL1(parent);
-				cat.setPmCategoryL2(clvl1);
-				cat.setPmCategoryL3(sublvl1);
-				catList.add(cat);
-
-			}
-
-			smAppl.setSmSupplierCategories(catList);
-			smAppl.setSmSupplier(smApplSupplier);
 			getManagedBean().setSmSupplier(smApplSupplier);
 			getManagedBean().setSmAppl(smAppl);
 			return SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
@@ -207,6 +174,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 				}
 			}
+			updateSmAppl();
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -226,5 +194,71 @@ public class SmDeleteCategoryCodeBackingBean extends
 							"PrimeFaces makes no mistakes"));
 		}
 
+	}
+
+	private void updateSmAppl() {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+
+			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.updateApplication(reqDto);
+			retriveLatestApplAfterUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			retriveLatestApplAfterUpdate();
+			mofRegistrationSO = null;
+		}
+
+	}
+
+	private void retriveLatestApplAfterUpdate() {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofRegistrationSO.class);
+		try {
+
+			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
+			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
+
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveCurrentDraftApplication(finReqDto);
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mofRegistrationSO = null;
+		}
+
+	}
+
+	private SmSupplier getCurrentSupplier() {
+		SmSupplier smSupp = new SmSupplier();
+		try {
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierSearchReqDTO);
+			smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
+					.get(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return smSupp;
 	}
 }

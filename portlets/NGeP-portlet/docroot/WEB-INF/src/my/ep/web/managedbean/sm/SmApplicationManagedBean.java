@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -107,6 +108,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmCategoryL2> supplierChildCatList;
 
 	private List<PmCategoryL3> supplierSubChildCatList;
+
+	private List<PmCategoryL2> comExpChildCatList;
+
+	private List<PmCategoryL3> comExpSubChildCatList;
 
 	private SmAddress defaultAddr;
 
@@ -406,6 +411,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedAssocBody.setPmCertBody(new PmCertBody());
 		selectedCompanyExperiences = new ArrayList<SmCompanyExperience>();
 		selectedCompanyExperience = new SmCompanyExperience();
+		selectedCompanyExperience
+				.setSmCompanyExperienceCats(new ArrayList<SmCompanyExperienceCat>());
+		selectedCompanyExperience.getSmCompanyExperienceCats().add(
+				setDefaulatExpCatVal());
 		// selectedConstProjs = new ArrayList<SmProjectExperience>();
 		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
@@ -596,6 +605,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		equiPerCapTotal = new BigDecimal(0);
 		equiCompCapTotal = new BigDecimal(0);
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
+	}
+
+	private SmCompanyExperienceCat setDefaulatExpCatVal() {
+		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
+		cat.setPmCategoryL1(new PmCategoryL1());
+		cat.setPmCategoryL2(new PmCategoryL2());
+		cat.setPmCategoryL3(new PmCategoryL3());
+		return cat;
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -1929,6 +1946,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrentStatus(String currentStatus) {
 		this.currentStatus = currentStatus;
+	}
+
+	public List<PmCategoryL2> getComExpChildCatList() {
+		return comExpChildCatList;
+	}
+
+	public void setComExpChildCatList(List<PmCategoryL2> comExpChildCatList) {
+		this.comExpChildCatList = comExpChildCatList;
+	}
+
+	public List<PmCategoryL3> getComExpSubChildCatList() {
+		return comExpSubChildCatList;
+	}
+
+	public void setComExpSubChildCatList(
+			List<PmCategoryL3> comExpSubChildCatList) {
+		this.comExpSubChildCatList = comExpSubChildCatList;
 	}
 
 }
