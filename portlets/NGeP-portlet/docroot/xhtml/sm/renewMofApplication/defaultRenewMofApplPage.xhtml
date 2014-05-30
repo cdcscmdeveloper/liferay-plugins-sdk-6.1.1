@@ -12,8 +12,8 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="renewMoFApplMsgs" globalOnly="true"></p:messages>
-	
+		<p:messages id="renewMoFApplMsgs" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
 		<table style="width: 100%">
 			<tr>
 				<td style="padding-left: 4px;"><p:outputPanel>
@@ -38,7 +38,8 @@
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="renCmdBtn"
-				action="#{backingBean.proceedToApplication('R')}" update="renewMoFApplMsgs"
+				action="#{backingBean.proceedToApplication('R')}"
+				update="renewMoFApplMsgs"
 				disabled="#{!backingBean.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel" /> -->
 		</div>

@@ -68,6 +68,7 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -381,10 +382,10 @@ public class SmApplicationBackingBean extends
 			calculateBumiPercentageTotals();
 			return setNavigationForAppl(applicationType);
 
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 			System.out.println(" **** Unknown Expection ******* ");
 			e.printStackTrace();
-			return setExceptionNavigationForAppl(applicationType);
+			return setExceptionNavigationForAppl(applicationType);*/
 		} finally {
 			// mofRegistrationSO = null;
 		}
@@ -444,37 +445,40 @@ public class SmApplicationBackingBean extends
 
 						if (diffDays > 90) {
 							result = true;
-							FacesContext
+							
+							/*FacesContext
 									.getCurrentInstance()
 									.addMessage(
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_INFO,
 													"Cannot renew if more than 3 months for account expiry. Please renew once the 90 days renewal period has started.",
-													""));
-							// throw new EpException(MessageConst.EP_MAJ_00001);
+													""));*/
+							 throw new EpException(MessageConst.ERROR_722501);
 						} else if (diffDays < -365) {
 							result = true;
-							FacesContext
+							/*FacesContext
 									.getCurrentInstance()
 									.addMessage(
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"Cannot renew as account is no longer active. Please register a new account.",
-													""));
+													""));*/
+							throw new EpException(MessageConst.ERROR_722502);
 						}
 					} else if (applicationType.equalsIgnoreCase("A")
 							&& diffDays < 90) {
 						result = true;
-						FacesContext
+						/*FacesContext
 								.getCurrentInstance()
 								.addMessage(
 										null,
 										new FacesMessage(
 												FacesMessage.SEVERITY_ERROR,
 												"Cannot add new category codes as account is nearing expiry.",
-												""));
+												""));*/
+						throw new EpException(MessageConst.ERROR_722503);
 					}
 				}
 			}
