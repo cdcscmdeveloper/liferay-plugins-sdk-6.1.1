@@ -95,6 +95,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -215,17 +216,20 @@ public class SmApplicationBackingBean extends
 
 			if (!fromBpm) {
 
-				boolean cannotRenewAlertMsg = false;
+				boolean cannotProceedAlertMsg = false;
 
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
+				} else if (applicationType.equalsIgnoreCase("B")) {
+					
 				} else if (applicationType.equalsIgnoreCase("R")
-						|| applicationType.equalsIgnoreCase("A")) {
-					cannotRenewAlertMsg = validateBeforeRenewal((long) 27,
+						|| applicationType.equalsIgnoreCase("A")
+						|| applicationType.equalsIgnoreCase("B")) {
+					cannotProceedAlertMsg = validateBeforeProceed((long) 27,
 							applicationType);
 				}
-				if (cannotRenewAlertMsg) {
+				if (cannotProceedAlertMsg) {
 					return setExceptionNavigationForAppl(applicationType);
 				} else {
 
@@ -415,7 +419,7 @@ public class SmApplicationBackingBean extends
 		return resDTO;
 	}
 
-	private boolean validateBeforeRenewal(Long supplierId,
+	private boolean validateBeforeProceed(Long supplierId,
 			String applicationType) {
 
 		boolean result = false;
@@ -457,28 +461,15 @@ public class SmApplicationBackingBean extends
 							 throw new EpException(MessageConst.ERROR_722501);
 						} else if (diffDays < -365) {
 							result = true;
-							/*FacesContext
-									.getCurrentInstance()
-									.addMessage(
-											null,
-											new FacesMessage(
-													FacesMessage.SEVERITY_ERROR,
-													"Cannot renew as account is no longer active. Please register a new account.",
-													""));*/
 							throw new EpException(MessageConst.ERROR_722502);
 						}
 					} else if (applicationType.equalsIgnoreCase("A")
 							&& diffDays < 90) {
 						result = true;
-						/*FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_ERROR,
-												"Cannot add new category codes as account is nearing expiry.",
-												""));*/
 						throw new EpException(MessageConst.ERROR_722503);
+					} else if (applicationType.equalsIgnoreCase("B") && smSupplier.isBumi()) {
+						result = true;
+						throw new EpException(MessageConst.ERROR_722504);
 					}
 				}
 			}
@@ -1787,18 +1778,48 @@ public class SmApplicationBackingBean extends
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			RequestContext.getCurrentInstance().execute("consDialog.show()");
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			RequestContext.getCurrentInstance().execute("contDialog.show()");
+		}
 	}
 
 	public void assignNewCompanyExperience() {
+		System.out.println("***** Assign New Company Exp ***********");
 		SmCompanyExperience exp = new SmCompanyExperience();
 		exp.setRevNo(1);
 		exp.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		exp.setSmAppl(getManagedBean().getSmAppl());
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-			exp.setProcurementModeId(new BigDecimal(0));
+			exp.setProcurementModeId(new Integer(0));
 		}
+
+		List<SmCompanyExperienceCat> expCatList = new ArrayList<SmCompanyExperienceCat>();
+		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
+		cat.setPmCategoryL1(new PmCategoryL1());
+		cat.setPmCategoryL2(new PmCategoryL2());
+		cat.setPmCategoryL3(new PmCategoryL3());
+		cat.setSmCompanyExperience(exp);
+		expCatList.add(cat);
+		exp.setSmCompanyExperienceCats(expCatList);
+
 		getManagedBean().setSelectedCompanyExperience(exp);
+
+		resetChildCatList();
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			RequestContext.getCurrentInstance().execute("consDialog.show()");
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			RequestContext.getCurrentInstance().execute("contDialog.show()");
+		}
+
 	}
 
 	public void deleteSelectedCompanyExperiences() {
@@ -4828,6 +4849,13 @@ public class SmApplicationBackingBean extends
 	private void resetSubChildCategory(PmCategoryL3 catL3) {
 		catL3.setCategoryL3Id(null);
 
+	}
+
+	private void resetChildCatList() {
+		this.getManagedBean().setSupplierChildCatList(
+				new ArrayList<PmCategoryL2>());
+		this.getManagedBean().setSupplierSubChildCatList(
+				new ArrayList<PmCategoryL3>());
 	}
 
 	private void setApplicationFailities(List<SmFacility> smFacilities) {
