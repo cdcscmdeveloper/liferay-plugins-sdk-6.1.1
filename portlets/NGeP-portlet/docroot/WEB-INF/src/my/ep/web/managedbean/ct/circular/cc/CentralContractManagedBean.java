@@ -5,6 +5,7 @@ package my.ep.web.managedbean.ct.circular.cc;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +22,9 @@ import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -48,8 +50,10 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private CtCircular circular;
 	private CtCircularVer circularVer;
 	private CtCircularContract selectedCircularContract;
-	private CtContractItem selectedCircularItem;
-	private CtContractZone selectedItemsZone;
+	private CtCircularItem selectedCircularItem;
+	private CtContractZone selectedZoneItems;
+	private boolean chkItemZone;
+	private boolean chkItemPrice;
 
 	private List<CtContract> contractList;
 	private List<CtContract> selectedContractList;
@@ -60,6 +64,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private List<CtCancelCircular> selectedCancelledCircularList;	
 	private DualListModel<String> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;	
+	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
+	private Map<String, PmUser> userMap;
 	
 	// Search
 	private String searchCircularNo;
@@ -239,19 +245,50 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.selectedCircularContract = selectedCircularContract;
 	}
 	
-	public CtContractItem getSelectedCircularItem() {
+	public CtCircularItem getSelectedCircularItem() {
 		return selectedCircularItem;
 	}
-	public void setSelectedCircularItem(CtContractItem selectedCircularItem) {
+	public void setSelectedCircularItem(CtCircularItem selectedCircularItem) {
 		this.selectedCircularItem = selectedCircularItem;
 	}
-	public CtContractZone getSelectedItemsZone() {
-		return selectedItemsZone;
-	}
-	public void setSelectedItemsZone(CtContractZone selectedItemsZone) {
-		this.selectedItemsZone = selectedItemsZone;
-	}
 	
+	public CtContractZone getSelectedZoneItems() {
+		return selectedZoneItems;
+	}
+	public void setSelectedZoneItems(CtContractZone selectedZoneItems) {
+		this.selectedZoneItems = selectedZoneItems;
+	}
+	public Map<CtContractZone, List<CtItemPrice>> getZonePriceMap() {
+		if(zonePriceMap==null) {
+			zonePriceMap = new HashMap<CtContractZone, List<CtItemPrice>>();
+		}
+		return zonePriceMap;
+	}
+	public void setZonePriceMap(Map<CtContractZone, List<CtItemPrice>> zonePriceMap) {
+		this.zonePriceMap = zonePriceMap;
+	}
+	public boolean isChkItemZone() {
+		return chkItemZone;
+	}
+	public void setChkItemZone(boolean chkItemZone) {
+		this.chkItemZone = chkItemZone;
+	}
+	public boolean isChkItemPrice() {
+		return chkItemPrice;
+	}
+	public void setChkItemPrice(boolean chkItemPrice) {
+		this.chkItemPrice = chkItemPrice;
+	}
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}
 	
 	
 }

@@ -11,7 +11,8 @@
 		  value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" 
 		  lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{data}">
 		  <ac:paginator for="centralContractDt" />
-		  <p:ajax event="rowSelect" update="@([id$=circularItemsPanel],[id$=deleteContractBtn])" process="@this"/>			
+		  <p:ajax event="rowSelect" update="@([id$=circularItemsPanel],[id$=deleteContractBtn],[id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
+		     listener="#{centralContractBackingBean.setContractListner()}"/>			
 			 <p:column headerText="#{lbl['lbl.ct.cc.phyloa']}" >
 				<h:outputText value="#{data.ctContract.loaPhysicalNo}" />
 			 </p:column>
@@ -45,25 +46,30 @@
 		 <div class="ppRightBtn"> 
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add" oncomplete="contractDlg.show();" 
 				actionListener="#{centralContractBackingBean.addCircularContractListener()}" update="contractDlg" />
-			<p:commandButton id="deleteContractBtn" value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
+			<p:commandButton id="deleteContractBtn" value="Delete" process="@all" partialSubmit="true" icon="ui-icon-delete"
 				disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}"
-				action="#{centralContractBackingBean.deleteCircularContract()}" update="centralContractDt,popupButtonCal,popupButtonCal1" />				
+				action="#{centralContractBackingBean.deleteCircularContract()}" update="@([id$=contractListPnl])"/>				
 		</div>
 		
 		<p:spacer height="20" />
 		<p:outputPanel id="circularItemsPanel">
-		 <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null}">
+		 <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
+		   centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
 		  <p:dataTable id="circularItemDt" var="itemVar" 
-		    value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctContract.latestContractVer.ctContractItems}"
+		  value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
 		   lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}" rowKey="#{itemVar}">
 		   <ac:paginator for="circularItemDt" />
-		   <p:ajax event="rowSelect" update="@([id$=circularZonePanel])" process="@this"/>
+		   <p:ajax event="rowSelect" update="@([id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
+		   listener="#{centralContractBackingBean.setZoneListener()}"/>
 			  <p:column headerText="Item Name" style="width:450px;">
-				<h:outputText value="#{itemVar.itemName}" style="width:450px;" />
+				<h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" />
 			  </p:column>
 			  <p:column headerText="Minimum Order Qty." style="width:150px;" >
 				<p:inputText value="#{itemVar.minimumOrderQty}" />
 			  </p:column>	
+			   <p:column headerText="Nilai Pesanan Minimum (RM)">
+			      <p:inputText value="#{itemVar.minimumOrderAmt}" />
+			  </p:column>
 			  <p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;">
 				<p:inputText value="#{itemVar.maxProcureAmt}" />
 			  </p:column>	
@@ -79,25 +85,31 @@
 		<p:spacer height="20" />
 		<p:outputPanel id="circularZonePanel">		
 		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null 
-		    and centralContractBackingBean.managedBean.selectedCircularItem.ctItemPrices != null
-		    and centralContractBackingBean.managedBean.selectedCircularItem.ctItemPrices.size() > 0}">
-		    <p:dataTable id="circularItemZoneDt" var="zoneVar" value="#{centralContractBackingBean.contractItemZones}"
-		      selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedItemsZone}" rowKey="#{zoneVar}">
-		      <ac:paginator for="circularItemZoneDt" />
-		      <p:ajax event="rowSelect" update="@([id$=circularPricePanel])" process="@this"/>
+		     and centralContractBackingBean.managedBean.chkItemZone}">
+		 <p:dataTable id="circularItemZoneDt" var="zoneItemVar" 
+		  value="#{centralContractBackingBean.getContractItemZones()}"
+		   lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedZoneItems}" rowKey="#{zoneItemVar}">
+		   <ac:paginator for="circularItemZoneDt" />
+		   <p:ajax event="rowSelect" update="@([id$=circularPricePanel])" process="@this"
+		   listener="#{centralContractBackingBean.setPriceListener()}"/>
 		         <p:column headerText="Zone" style="width:60%;">
-			    	<h:outputText value="#{zoneVar.zoneName}" style="width:50%;" />
+			    	<h:outputText value="#{zoneItemVar.zoneName}" style="width:50%;" />
 			     </p:column>	
 			     <p:column headerText="Action" style="width:40%;">
+			      <p:commandLink>
+			        <p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png" title="View" /></p:commandLink>
 			     </p:column>							
-		</p:dataTable>
-		</h:panelGroup>
+		     </p:dataTable>
+		   </h:panelGroup>
 		</p:outputPanel>
 		<p:spacer height="20" />
 		<p:outputPanel id="circularPricePanel">		
-		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedItemsZone != null}">	
+		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.chkItemPrice and  
+		    centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices != null 
+		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">	
 		<p:dataTable id="circularItemZonePriceDt" var="priceVar" 
-		   value="#{centralContractBackingBean.managedBean.selectedItemsZone.ctItemPrices}">
+		   value="#{centralContractBackingBean.getItemPrice()}">
 		   <ac:paginator for="circularItemZonePriceDt" />
 			  <p:column headerText="From Qty." style="width:30%;">
 			 	<h:outputText value="#{priceVar.fromQty}" style="width:50%;" />

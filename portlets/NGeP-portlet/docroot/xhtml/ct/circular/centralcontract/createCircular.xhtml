@@ -64,8 +64,7 @@
 		</div>
 	</p:panel>
 	
-	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
-		rendered="#{!centralContractBackingBean.managedBean.updateAction and centralContractBackingBean.managedBean.circularVer.extendStartDate == null}" >
+	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index" 
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
