@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -111,6 +112,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Long terminationTypeId;
 	
 	private String supplierAddress;
+	private SmAddress smAddress;
+	private String supplierCompanyName;
+	private boolean updateSupplierAddress;
+	private boolean updateCompanyName;
 	private CtPerformanceBond ctPerformanceBond;
 	
 	private	String	zoneName;
@@ -440,6 +445,38 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
+	}
+
+	public SmAddress getSmAddress() {
+		return smAddress;
+	}
+
+	public void setSmAddress(SmAddress smAddress) {
+		this.smAddress = smAddress;
+	}
+	
+	public String getSupplierCompanyName() {
+		return supplierCompanyName;
+	}
+
+	public void setSupplierCompanyName(String supplierCompanyName) {
+		this.supplierCompanyName = supplierCompanyName;
+	}
+
+	public boolean isUpdateCompanyName() {
+		return updateCompanyName;
+	}
+	
+	public void setUpdateCompanyName(boolean updateCompanyName) {
+		this.updateCompanyName = updateCompanyName;
+	}
+
+	public boolean isUpdateSupplierAddress() {
+		return updateSupplierAddress;
+	}
+	
+	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
+		this.updateSupplierAddress = updateSupplierAddress;
 	}
 
 	public CtPerformanceBond getCtPerformanceBond() {

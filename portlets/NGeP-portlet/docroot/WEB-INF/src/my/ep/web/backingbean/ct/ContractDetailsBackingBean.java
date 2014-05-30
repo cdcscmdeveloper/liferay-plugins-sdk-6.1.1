@@ -30,6 +30,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletResponse;
@@ -88,6 +89,8 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -104,6 +107,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -336,8 +340,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    }
 		    
 		    retriveZonesByContractVer();
-	        CombineSupAddress(this.getManagedBean().getContractVer());
-	        
+		    combineSupAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+		    renderUpdateCheckbox(this.getManagedBean().getContractVer());
+		    this.getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+		    
 	        this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
@@ -349,7 +355,37 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-	    
+	}
+	
+	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
+		if(ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE) &&
+			this.getManagedBean().isUpdateContract()) {
+			if(!ctContractVer.getCtContractValue().getSupplierCompanyName().equals(
+		      this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
+		    	this.getManagedBean().setUpdateCompanyName(true);
+		    }
+			
+			SmAddress latestAddress = retrieveLatestSupplierAddress();
+			if(!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
+				this.getManagedBean().setUpdateSupplierAddress(true);
+			}
+		}
+		else {
+			this.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
+			this.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
+		}
+	}
+	
+	private SmAddress retrieveLatestSupplierAddress() {
+		SmAddress smAddress = new SmAddress();
+		List<SmCompanyAddress> smCompanyAddresses = new ArrayList<SmCompanyAddress>();
+		smCompanyAddresses = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+		for(SmCompanyAddress address : smCompanyAddresses) {
+			if(address.getAddressType().equalsIgnoreCase("C")) { // C-Company Address, M-Mailing Address
+				smAddress = address.getSmAddress();
+			}
+		}
+		return smAddress;
 	}
 	
 	/*Implementation of search methode*/
@@ -460,7 +496,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             convertProgressiveScheduleDate();
             
             reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
-            reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+            CtContractVer ctContractVer = this.getManagedBean().getContractVer();
+            if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
+            	ctContractVer.getCtContractValue().setSupplierCompanyName(this.getManagedBean().getSupplierCompanyName());
+            }
+            
+            if (ctContractVer.getCtContractValue().isAddressChange()) {
+            	ctContractVer.getCtContractValue().setSupplierAddress(this.getManagedBean().getSmAddress());
+            }
+            reqDTO.setCtContractVer(ctContractVer);
             
             reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
@@ -603,41 +647,41 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	   return items;
 	}
     
-    public void CombineSupAddress(CtContractVer ctContractVer){
+    public void combineSupAddress(SmAddress supplierAddress){
     	
     	StringBuilder address = new StringBuilder();
     	String strSpace =", ";
-    	if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1());
+    	if(supplierAddress.getAddress1() != null){
+    		address.append(supplierAddress.getAddress1());
     		address.append(strSpace);
     	
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2());
+    	}if(supplierAddress.getAddress2() != null){
+    		address.append(supplierAddress.getAddress2());
     		address.append(strSpace);
     	
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3());
+    	}if(supplierAddress.getAddress3() != null){
+    		address.append(supplierAddress.getAddress3());
     		address.append(strSpace);
     	
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4());
+    	}if(supplierAddress.getAddress4() != null){
+    		address.append(supplierAddress.getAddress4());
     		address.append(strSpace);
     		
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName());
+    	}if(supplierAddress.getPmDistrict().getDistrictName() != null){
+    		address.append(supplierAddress.getPmDistrict().getDistrictName());
     		address.append(strSpace);
     	
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName());
+    	}if(supplierAddress.getPmState().getStateName() != null){
+    		address.append(supplierAddress.getPmState().getStateName());
     		address.append(strSpace);
     	
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName());
+    	}if(supplierAddress.getPmCountry().getCountryName() != null){
+    		address.append(supplierAddress.getPmCountry().getCountryName());
     		address.append("\n");
-    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode() != null){
-    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode());
+    	}if(supplierAddress.getPostcode() != null){
+    		address.append(supplierAddress.getPostcode());
     	}
-    	
+    	this.getManagedBean().setSmAddress(supplierAddress);
     	this.getManagedBean().setSupplierAddress(address.toString());
     }
     
@@ -1487,5 +1531,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setContractItemServiceList(
 			List<CtContractItem> contractItemServiceList) {
 		ContractItemServiceList = contractItemServiceList;
-	}	
+	}
+	
+	public void retrieveCompanyName(AjaxBehaviorEvent event) {
+		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
+			this.getManagedBean().setSupplierCompanyName(
+					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+		}
+		else {
+			this.getManagedBean().setSupplierCompanyName(
+				this.getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+		}
+	}
+	
+	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
+		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
+			this.getManagedBean().setSmAddress(retrieveLatestSupplierAddress());
+		}
+		else {
+			this.getManagedBean().setSmAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+		}
+		combineSupAddress(this.getManagedBean().getSmAddress());
+	}
 }
