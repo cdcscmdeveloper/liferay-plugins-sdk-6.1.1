@@ -39,6 +39,8 @@ import org.primefaces.model.TreeNode;
 
 @ManagedBean(name = "simpleQuoteBidBackingBean")
 @RequestScoped
+@Deprecated
+
 public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidManagedBean> {
 	private static Logger log = Logger.getLogger(SimpleQuoteBidBackingBean.class);
 	public SimpleQuoteBidBackingBean() {
@@ -159,7 +161,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		if(zoneLocation.getData() instanceof LocationDTO){
 			LocationDTO locationDTO	=	(LocationDTO)zoneLocation.getData();
 			if(locationDTO.getZone() != null){
-				result = locationDTO.getZone();
+				//result = locationDTO.getZone();
 			}else{
 				if(zoneLocation.getChildren() != null && zoneLocation.getChildren().size() > 0){
 					for(TreeNode childLocationNode: zoneLocation.getChildren()){

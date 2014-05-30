@@ -70,6 +70,8 @@ import com.liferay.portal.model.User;
  */
 @ManagedBean(name = "directPurchaseBackingBean")
 @RequestScoped
+@Deprecated
+
 public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseManagedBean> {
 	private static Logger log = Logger.getLogger(DirectPurchaseBackingBean.class);
 	private static final String NAV_TO_DIRECT_PURCHASE_PAGE = "/xhtml/ss/directpurchase/directPurchase.xhtml";
