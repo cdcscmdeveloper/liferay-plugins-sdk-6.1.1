@@ -109,9 +109,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private SmSupplierBank supplierBank;
 	private String supplierBankAddress;
 	
+	// Confirm use
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
 	private CtItemCeilingQty ctItemCeilingQtys;
+	
+	private boolean itemProductExist;
+	private boolean itemServiceExist;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -615,6 +619,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
 		this.ctItemMaxQty = ctItemMaxQty;
+	}
+
+	public boolean isItemProductExist() {
+		return itemProductExist;
+	}
+
+	public void setItemProductExist(boolean itemProductExist) {
+		this.itemProductExist = itemProductExist;
+	}
+
+	public boolean isItemServiceExist() {
+		return itemServiceExist;
+	}
+
+	public void setItemServiceExist(boolean itemServiceExist) {
+		this.itemServiceExist = itemServiceExist;
 	}
 
 }

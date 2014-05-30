@@ -68,6 +68,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -241,9 +242,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 	}
 	
-	private void setAmendmentContractVer(ContractResDTO resDTO) {
+	public void setAmendmentContractVer(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		
+		if(getManagedBean().getContractVer().getCtAmendment()==null) {
+			getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
+			getManagedBean().getContractVer().getCtAmendment().setFileRefNo(getManagedBean().getCtContract().getContractNo()+"-");
+			getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
+			getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
+			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
+			getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
+		}
 		
 		if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
 		   if(this.getManagedBean().getCtItemList() == null) {
@@ -251,10 +261,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   } else {
 		      this.getManagedBean().getCtItemList().clear();
 		   }
-		   for(CtContractItem item : this.getManagedBean().getContractVer().getCtContractItems()) {
-			   //TODO should cater for SERVICE also
+		   for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+			   getManagedBean().getCtItemList().add(item);
 			   if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-				   this.getManagedBean().getCtItemList().add(item);
+				   getManagedBean().setItemProductExist(true);
+			   } else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				   getManagedBean().setItemServiceExist(true);
 			   }
 		   }
 		}
@@ -1213,6 +1225,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
+	}
+	
+	public List<CtContractItem> getContractItemByType(String itemTypeCode) {
+		List<CtContractItem> ctItemList = new ArrayList<CtContractItem>();
+		for (CtContractItem item : getManagedBean().getCtItemList()) {
+			if (item.getItemType().getParameterCode().equalsIgnoreCase(itemTypeCode)) {
+				ctItemList.add(item);
+			}
+		}
+		return ctItemList;
 	}
 	
 	public CtPerformanceBond[] getSelectedBondList() {
