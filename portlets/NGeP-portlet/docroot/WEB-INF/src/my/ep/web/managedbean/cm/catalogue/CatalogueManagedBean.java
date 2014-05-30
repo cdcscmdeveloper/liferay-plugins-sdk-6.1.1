@@ -303,7 +303,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setUserId(userId);
 				System.out.println("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
-				setViewSupplierItemList(resDTO.getViewSupplierItemList());
+				setViewSupplierItemList(resDTO.getViewSuppItemResultBean().getResultList());
 				System.out.println("*********after***********");
 				
 				// enable or disable simple quote in search catalogue
