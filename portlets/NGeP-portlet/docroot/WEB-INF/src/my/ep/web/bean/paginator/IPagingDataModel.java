@@ -24,6 +24,13 @@ public interface IPagingDataModel<T> {
 	public ISearchBean<T> createSearchBean();
 	
 	/**
+	 * Get search bean
+	 * 
+	 * @return	ISearchBean instance.
+	 */
+	public ISearchBean<T> getSearchBean();
+	
+	/**
 	 * Update the search results into data model.
 	 * 
 	 * @param dataModel

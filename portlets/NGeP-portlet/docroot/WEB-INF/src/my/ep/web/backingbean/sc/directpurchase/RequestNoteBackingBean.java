@@ -17,6 +17,7 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -47,11 +48,12 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -65,12 +67,14 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
@@ -244,6 +248,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 							new FacesScopes().getUserLocale())));
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+			
+			super.renewSesionObject();
 		}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -336,13 +342,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqBpm = new BpmRequestDTO();
-		//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
+		/*//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
 			reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 			directPurchaseSO.approvalRequestNote(reqDTO);
-		}
+		}*/
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		try {
@@ -514,24 +520,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		List<CmPricing> cmPricings = catResDTO.getPriceLs();
 		if(cmPricings != null && cmPricings.size() > 0){
-			ScRequestItem requestItem = new ScRequestItem();
-			ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-			ScSupplierItemPrice supplierItemPrice = new ScSupplierItemPrice();
 			CmSupplierItem cmSupplierItem = cmPricings.get(0).getCmSupplierItem();
 			cmSupplierItem.setCmPricings(cmPricings);
-			supplierItemPrice.setPricing(cmPricings.get(0));
-			//TODO default value to price type drop down listing
-			reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-			reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			supplierItemPrice.setPriceType(resDTO.getPmParameter());
-			supplierItemPrice.setItemPrice(cmPricings.get(0).getPrice());
-			requestSupplierItem.setRequestNoteItem(requestItem);
-			requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
-			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
 			
-			requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, cmSupplierItem.getCmPricings()));
+			ScRequestItem requestItem = createRequestItem(cmSupplierItem);
+
+			ScRequestSupplierItem requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+			ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
+			
+			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
 			getManagedBean().setRequestSupplierItem(requestSupplierItem);
+			
+			ParameterResDTO resDTO; 
 			 // TODO check supplier is government seller or not 
 			  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
 			  if(cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
@@ -566,6 +566,29 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 	}
 	
+	private ScRequestItem createRequestItem(CmSupplierItem cmSupplierItem){
+		CmItem cmItem = cmSupplierItem.getCmItem();
+		ScRequestItem scRequestItem	= new ScRequestItem();
+		
+		scRequestItem.setCmItem(cmItem);
+		scRequestItem.setItemName(cmItem.getItemName());
+		scRequestItem.setItemDesc(cmSupplierItem.getItemDesc());
+		scRequestItem.setMinqty(cmSupplierItem.getMinOrder());
+		scRequestItem.setUom(cmSupplierItem.getPmUom());
+		
+		return scRequestItem;
+	}
+	
+	private ScRequestSupplierItem createScRequestSupplierItem(ScRequestItem requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
+		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
+		
+		requestSupplierItem.setRequestNoteItem(requestItem);
+		requestSupplierItem.setSmSupplier(smSupplier);
+		
+		requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, cmPricings));
+		
+		return requestSupplierItem;
+	}
 
 	private	List<ScSupplierItemPrice>	createScSupplierItemPrices(ScRequestSupplierItem scRequestSupplierItem, List<CmPricing> pricings){
 		List<ScSupplierItemPrice> results	=	new ArrayList<ScSupplierItemPrice>();
@@ -574,12 +597,39 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		return results;
 	}
+	
 	private ScSupplierItemPrice		createSupplierItemPrice(ScRequestSupplierItem	scRequestSupplierItem, CmPricing pricing){
 		ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
+		
 		result.setScRequestSupplierItem(scRequestSupplierItem);
-		result.setItemPrice(new BigDecimal(0.0));
 		result.setPricing(pricing);
-		result.setPriceType(scRequestSupplierItem.getSupplierItemPrice().getPriceType());
+		
+		result.setTplSpecZone(null);	//TODO - zone in cm.
+		
+		IParameterSO parameterSO;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+			reqDTO.setParameterCode(pricing.getPricingType());
+			
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			
+			result.setPriceType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	
+		if (pricing.getPrice() != null) {
+			result.setItemPrice(pricing.getPrice());
+		} else {
+			result.setItemPrice(new BigDecimal(0));
+		}
+		
+		result.setFromQty(pricing.getFromQty());
+		result.setToQty(pricing.getToQty());
+		
 		return result;
 	}
 	
@@ -666,7 +716,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 		List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
-		ScRequestItem scRequestItem = new ScRequestItem();
+		ScRequestItem scRequestItem = requestSupplierItem.getRequestNoteItem();
+		ScSupplierItemPrice scSupplierItemPrice = requestSupplierItem.getSupplierItemPrice();
+		CmSupplierItem cmSupplierItem = scSupplierItemPrice.getPricing().getCmSupplierItem();
 		ScRequestNote  requestNote = getManagedBean().getRequestNote();
 		
 		if(getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)){
@@ -695,6 +747,31 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		    	scRequestItem.setPurchaseInDefault(purchaseInDefault);
 		    }*/
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+		    
+		    IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+		    
+		    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+
+		    catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+		    catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
+		    catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+		    
+		    CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+		    
+		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
+		    for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
+		    	if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
+		    		CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+	    			ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
+			    			scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+	    			
+	    			supplierItems.add(scRequestSupplierItem);	
+		    	}
+		    }
+		    // Add selected supplier item.
+		    supplierItems.add(requestSupplierItem);
+		    
+		    scRequestItem.setSupplierItems(supplierItems);
 		}
 		
 		requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
@@ -719,8 +796,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			requestNote.setWorkFlowStatuses(workFlowStatuses);
 		}
 
-		FacesScopes facesScopes = new FacesScopes();
-		scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
+		scRequestNoteDtl.setAssignedUser(new PmUser());
 		scRequestNoteDtl.setProcurementType(getManagedBean().getRequestNoteDtl().getProcurementType());
 		scRequestNoteDtl.setJustificationType(getManagedBean().getRequestNoteDtl().getJustificationType());
 		scRequestNoteDtl.setJustification(getManagedBean().getRequestNoteDtl().getJustification());
@@ -731,7 +807,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
 	    ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setFulfillmentType(resDTO.getPmParameter());
-	    scRequestNoteDtl.setPriceType(new PmParameter());
+	    
+	    reqDTO = new ParameterReqDTO();
+	    reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+	    reqDTO.setParameterCode(scSupplierItemPrice.getPriceType().getParameterCode());
+	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+	    scRequestNoteDtl.setPriceType(resDTO.getPmParameter());
+	    
+	    scRequestNoteDtl.setDeliverTerm(cmSupplierItem.getLeadTime().intValue());
 
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
@@ -767,6 +850,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		//scRequestItem.setSupplierItems(requestSupplierItems);
 		//requestNoteItems.add(scRequestItem);
 		//requestNote.setRequestNoteItems(requestNoteItems);
+		scRequestItem.setRequestNote(requestNote);
 		requestNote.setRequestNoteDtls(requestNoteDtls);
 		//this.getManagedBean().setRequestNoteItems(requestNoteItems);
 		
@@ -1030,7 +1114,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestSupplierItems.add(scReqSupplierItem);
 				    
 					// request Note Items
-					requestItem.setSupplierItems(requestSupplierItems);
+					//requestItem.setSupplierItems(requestSupplierItems);
 					requestNoteItems.add(requestItem);
 				}
 			}

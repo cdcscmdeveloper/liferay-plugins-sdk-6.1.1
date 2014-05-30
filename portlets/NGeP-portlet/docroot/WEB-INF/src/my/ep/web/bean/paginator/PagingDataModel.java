@@ -37,6 +37,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	private String componentId;
 	private String sortField;
 	private SortOrder sortOrder;
+	private ISearchBean<T> searchBean;
 
 	public PagingDataModel(String componentId) {
 		this.componentId = componentId;
@@ -92,7 +93,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		this.sortOrder = sortOrder;
 		super.setPageSize(pageSize);
 		
-		ISearchBean<T> searchBean = createSearchBean();
+		this.searchBean = createSearchBean();
 		ISearchResultBean<T> resultBean = pageChangeListener(searchBean);
 		
 		return updatePagingResults(resultBean);
@@ -263,5 +264,19 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 */
 	public void setSortOrder(SortOrder sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	/**
+	 * @return the searchBean
+	 */
+	public ISearchBean<T> getSearchBean() {
+		return searchBean;
+	}
+
+	/**
+	 * @param searchBean the searchBean to set
+	 */
+	public void setSearchBean(ISearchBean<T> searchBean) {
+		this.searchBean = searchBean;
 	}
 }
