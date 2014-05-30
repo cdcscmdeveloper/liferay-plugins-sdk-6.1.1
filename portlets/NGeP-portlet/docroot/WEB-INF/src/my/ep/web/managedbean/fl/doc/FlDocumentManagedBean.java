@@ -3,13 +3,16 @@
  */
 package my.ep.web.managedbean.fl.doc;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -35,7 +38,11 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchLoaNo;
 	private String searchProcurementType;
 	private String title;
-	private Long searchStatusId; 
+	private Long searchStatusId;
+	private Date searchContractFromDuration;
+	private Date searchContractToDuration;
+	
+	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<VFlDocument> flDocumentList;
@@ -44,6 +51,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Boolean checkPoDocType =false;
 	private Boolean checkPaDocType =false;
 	private Boolean checkTitle =false;
+	
+	// getUserGroup
+	private String fulfilmentRequisitioner;
 
 	public String getTempLoginId() {
 		return tempLoginId;
@@ -223,6 +233,48 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the fulfilmentRequisitioner
+	 */
+	public String getFulfilmentRequisitioner() {
+		return fulfilmentRequisitioner;
+	}
+
+	/**
+	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
+	 */
+	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
+		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
+	}
+
+	/**
+	 * @return the searchContractToDuration
+	 */
+	public Date getSearchContractToDuration() {
+		return searchContractToDuration;
+	}
+
+	/**
+	 * @param searchContractToDuration the searchContractToDuration to set
+	 */
+	public void setSearchContractToDuration(Date searchContractToDuration) {
+		this.searchContractToDuration = searchContractToDuration;
+	}
+
+	/**
+	 * @return the searchContractFromDuration
+	 */
+	public Date getSearchContractFromDuration() {
+		return searchContractFromDuration;
+	}
+
+	/**
+	 * @param searchContractFromDuration the searchContractFromDuration to set
+	 */
+	public void setSearchContractFromDuration(Date searchContractFromDuration) {
+		this.searchContractFromDuration = searchContractFromDuration;
 	}
 	
 }

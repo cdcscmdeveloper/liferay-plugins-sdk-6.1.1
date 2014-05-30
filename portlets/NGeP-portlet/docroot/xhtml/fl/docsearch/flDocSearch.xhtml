@@ -76,12 +76,24 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
-					<p:inputText size="35"
-						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+					<p:calendar mode="popup" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
+					</p:calendar>
+					 <p:spacer
+						width="5" />
+					<p:calendar mode="popup" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
+					</p:calendar>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
+					<p:inputText size="35"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.duration']}" />
 					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>

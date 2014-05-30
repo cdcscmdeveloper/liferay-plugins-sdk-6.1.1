@@ -34,6 +34,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
@@ -44,6 +45,7 @@ import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -77,6 +79,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 
 	public void searchDocument(){
 		flDocumentDataModel.reloadData();
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
 	}
 	
 	public SelectItem[] getDocumentTypeDropDown() {
@@ -92,20 +98,38 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			List<String> flDocTypes = new ArrayList<String>();
 			if(getManagedBean().getSearchOrderType()!=null) {
 				// TODO Should filter by user role
-				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+				getManagedBean().getFulfilmentRequisitioner();
+				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRequisitioner()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+					flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentRequisitioner()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentApprover()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentApprover()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentSupplier()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRecevingOfficer()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentRecevingOfficer()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				}
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_ADJUSTMENT_NOTE);
+				//flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				//flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				//flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				//flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+				//flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				//flDocTypes.add(ParameterConst.DOCTYPE_ADJUSTMENT_NOTE);
 			}
 			
 		    for(SelectItem selectItem : itemList) {
@@ -331,6 +355,22 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		reqDTO.setModuleCode(moduleCode);
 		StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 		resDTO.getStatusDescList();
+	}
+	public boolean isFlFulfilmentRequisitioner() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	public boolean isFlFulfilmentApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.APPROVER.value());
+	}
+	public boolean isFlFulfilmentSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SUPPLIER_USER.value());
+	}
+	public boolean isFlFulfilmentRecevingOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.RN_APPROVER.value());
 	}
 	
 }
