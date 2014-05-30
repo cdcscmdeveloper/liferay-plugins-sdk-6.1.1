@@ -277,6 +277,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtContractVer> getAmendHistoryList() {
+		if(amendHistoryList==null) {
+			amendHistoryList = new ArrayList<CtContractVer>();
+		}
 		return amendHistoryList;
 	}
 

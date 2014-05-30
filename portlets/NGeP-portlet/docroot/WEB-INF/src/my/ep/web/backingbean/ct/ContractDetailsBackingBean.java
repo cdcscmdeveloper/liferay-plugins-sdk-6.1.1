@@ -1364,12 +1364,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB.setAmendmentContractVer(resDTO);
 			
-		    if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())){
-		    	reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-				reqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-				ContractResDTO amendResDTO = contractSO.retrieveContractVerByIdDoctype(reqDTO);
-				amendBB.getManagedBean().setAmendHistoryList(amendResDTO.getAmendHistoryList());
-		    }
 		}finally {
 			contractSO = null;
 			ctBB = null;
