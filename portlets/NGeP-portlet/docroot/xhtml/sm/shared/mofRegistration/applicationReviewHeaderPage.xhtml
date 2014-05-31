@@ -24,12 +24,11 @@
 					value=" - #{backingBean.managedBean.smAppl.applNo}" /></td>
 			<td><p:outputLabel value="Current Status" /></td>
 			<td><p:inputText readonly="true" disabled="true"
-					value="-- Status Value --" /></td>
+					value="#{backingBean.managedBean.currentStatus}" /></td>
 		</tr>
 		<tr>
-			
-			<td><p:outputLabel value="Date Submitted" /></td>
-			<td><p:outputLabel value="   : " /></td>
+
+			<td><p:outputLabel value="Date Submitted :" /></td>
 			<td><p:inputText readonly="true"
 					value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 					disabled="true">

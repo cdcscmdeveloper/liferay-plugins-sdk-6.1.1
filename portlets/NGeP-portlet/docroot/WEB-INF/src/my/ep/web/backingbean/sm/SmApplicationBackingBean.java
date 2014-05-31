@@ -647,7 +647,6 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
 		getManagedBean().setTabActiveIndex(outputTab);
-		List<SmPersonnel> perList = new ArrayList<SmPersonnel>();
 		try {
 
 			System.out.println("******* IS PO *******"
@@ -669,11 +668,8 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				// Save or update to DB
-
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.updateApplication(reqDto);
 			} else {
@@ -700,7 +696,7 @@ public class SmApplicationBackingBean extends
 		//
 		// }
 		finally {
-			retriveLatestApplAfterUpdate(pageType);
+			isError=retriveLatestApplAfterUpdate(pageType);
 			mofRegistrationSO = null;
 		}
 		return isError;
@@ -773,6 +769,22 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = null;
 		}
 
+	}
+
+	private void retriveCurrentAppl() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofRegistrationSO.class);
+		try {
+
+			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
+			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveCurrentDraftApplication(finReqDto);
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+		} finally {
+			mofRegistrationSO = null;
+		}
 	}
 
 	private void setSmApplRejectionReasons() {
@@ -3607,9 +3619,15 @@ public class SmApplicationBackingBean extends
 		String retMsg = null;
 		try {
 
-			retriveLatestApplAfterUpdate("");
+			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId();
+			retriveCurrentAppl();
+			System.out.println(" **** After retrieve ***"
+					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
 					+ res);
+			System.out.println(" **** The Value from screen of approval ***"
+					+ pmStatId);
 			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IReviewApplicationSO.class);
@@ -3657,15 +3675,11 @@ public class SmApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 				} else {
-					if (getManagedBean().getSmAppl().getPmStatus()
-							.getStatusId() != null) {
+					if (pmStatId != null) {
 						for (PmStatusDesc desc : getManagedBean()
 								.getRegStatusDescList()) {
-							if (desc.getPmStatus()
-									.getStatusId()
-									.equals(getManagedBean().getSmAppl()
-											.getPmStatus().getStatusId())) {
-
+							if (pmStatId.equals(desc.getPmStatus()
+									.getStatusId())) {
 								getManagedBean().getSmAppl().setPmStatus(
 										desc.getPmStatus());
 								if (desc.getPmStatus().getPmRegStatus() != null) {
