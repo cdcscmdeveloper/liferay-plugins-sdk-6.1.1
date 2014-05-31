@@ -32,6 +32,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -64,11 +65,14 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -216,6 +220,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
 			if (!fromBpm) {
+				SmSupplier currSupp = getCurrentSupplier();
 
 				boolean cannotProceedAlertMsg = false;
 
@@ -227,14 +232,14 @@ public class SmApplicationBackingBean extends
 				} else if (applicationType.equalsIgnoreCase("R")
 						|| applicationType.equalsIgnoreCase("A")
 						|| applicationType.equalsIgnoreCase("B")) {
-					cannotProceedAlertMsg = validateBeforeProceed((long) 27,
-							applicationType);
+					cannotProceedAlertMsg = validateBeforeProceed(
+							currSupp.getSupplierId(), applicationType);
 				}
 				if (cannotProceedAlertMsg) {
 					return setExceptionNavigationForAppl(applicationType);
 				} else {
 
-					resDto = cloneSmApplicationDraft((long) 27,
+					resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
 							applicationType, smAppl.getSupplierType());
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
@@ -615,8 +620,8 @@ public class SmApplicationBackingBean extends
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
-//			System.out.println("this is error");
-//			e.printStackTrace();
+			// System.out.println("this is error");
+			// e.printStackTrace();
 			getManagedBean().setTabActiveIndex(currentTab);
 			throw new EpException(MessageConst.ERROR_722505);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
@@ -637,11 +642,7 @@ public class SmApplicationBackingBean extends
 						.getBusinessType());
 		List<SmPersonnel> perList = new ArrayList<SmPersonnel>();
 		try {
-			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
-				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
-			} else {
-				System.out.println(" ****** REMAIN PREV VALUE ********");
-			}
+
 			System.out.println("******* IS PO *******"
 					+ getManagedBean().isPoUser());
 			if (getManagedBean().isPoUser()
@@ -663,29 +664,37 @@ public class SmApplicationBackingBean extends
 
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.updateApplication(reqDto);
+				if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
+					getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+				} else {
+					System.out.println(" ****** REMAIN PREV VALUE ********");
+				}
 				getManagedBean().setTabActiveIndex(outputTab);
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 			}
-			if (valid) {
-				valid = retriveLatestApplAfterUpdate(pageType);
-			}
+			// if (valid) {
+			// valid = retriveLatestApplAfterUpdate(pageType);
+			// }
 			isError = valid;
-		} catch (Exception e) {
-//			System.out.println("this is error");
-//			e.printStackTrace();
-
-			getManagedBean().setTabActiveIndex(currentTab);
-			getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
-			isError = true;
-			valid = false;
+		}
+//		catch (Exception e) {
+//			// System.out.println("this is error");
+//			// e.printStackTrace();
+//
+//			getManagedBean().setTabActiveIndex(currentTab);
+//			// getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
+//			isError = true;
+//			valid = false;
+//			retriveLatestApplAfterUpdate(pageType);
+//			// return SupplierManagementConst.PROCEED_MOF_REG;
+//			isError = false;
+//			throw new EpException(MessageConst.ERROR_722505);
+//
+//		} 
+		finally {
 			retriveLatestApplAfterUpdate(pageType);
-			// return SupplierManagementConst.PROCEED_MOF_REG;
-			isError = false;
-			throw new EpException(MessageConst.ERROR_722505);
-			
-		} finally {
 			mofRegistrationSO = null;
 		}
 		return isError;
@@ -848,8 +857,8 @@ public class SmApplicationBackingBean extends
 			SiteAssignResDTO resDTO = siteSO.updateSiteVisitAssignment(reqDto);
 			updateSuccess = resDTO.isSuccessful();
 		} catch (Exception e) {
-//			System.out.println("this is error");
-//			e.printStackTrace();
+			// System.out.println("this is error");
+			// e.printStackTrace();
 			updateSuccess = false;
 			throw new EpException(MessageConst.ERROR_722506);
 		} finally {
@@ -1046,30 +1055,39 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (semiProfCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722510, new String[]{"Semi-Professional","Diploma"});
+					throw new EpException(MessageConst.ERROR_722510,
+							new String[] { "Semi-Professional", "Diploma" });
 				}
 				if (profCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722510, new String[]{"Professional","Bachelor Degree"});
+					throw new EpException(MessageConst.ERROR_722510,
+							new String[] { "Professional", "Bachelor Degree" });
 				}
 				if (staffCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722510, new String[]{"Clerical Staff","SijilPelajaran Malaysia or equivalent certificate"});
+					throw new EpException(
+							MessageConst.ERROR_722510,
+							new String[] { "Clerical Staff",
+									"SijilPelajaran Malaysia or equivalent certificate" });
 				}
 			}
 			if (getManagedBean().getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				if (directorCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722513, new String[]{"Higher Management or Director", "Director or Higher Management"});
+					throw new EpException(MessageConst.ERROR_722513,
+							new String[] { "Higher Management or Director",
+									"Director or Higher Management" });
 				}
 				if (mgmtCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722513, new String[]{"Management Staff", "Management"});
+					throw new EpException(MessageConst.ERROR_722513,
+							new String[] { "Management Staff", "Management" });
 				}
 				if (staffCount < 1) {
 					validSave = false;
-					throw new EpException(MessageConst.ERROR_722513, new String[]{"Staff", "Staff"});
+					throw new EpException(MessageConst.ERROR_722513,
+							new String[] { "Staff", "Staff" });
 				}
 			}
 			calculateBumiPercentageTotals();
@@ -3711,7 +3729,7 @@ public class SmApplicationBackingBean extends
 				retMsg = null;
 			}
 		} catch (Exception e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 			retMsg = null;
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
@@ -4981,10 +4999,11 @@ public class SmApplicationBackingBean extends
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedShareHolder().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(MessageConst.ERROR_722521, new String[]{"Personnel","personnel"});
+				throw new EpException(MessageConst.ERROR_722521, new String[] {
+						"Personnel", "personnel" });
 			}
 		} catch (NumberFormatException ne) {
-//			ne.printStackTrace();
+			// ne.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
@@ -5045,10 +5064,11 @@ public class SmApplicationBackingBean extends
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedEquityCompany().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(MessageConst.ERROR_722521, new String[]{"Company","companies"});
+				throw new EpException(MessageConst.ERROR_722521, new String[] {
+						"Company", "companies" });
 			}
 		} catch (NumberFormatException ne) {
-//			ne.printStackTrace();
+			// ne.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
@@ -5293,7 +5313,7 @@ public class SmApplicationBackingBean extends
 				throw new EpException(MessageConst.ERROR_722523);
 			}
 		} catch (NumberFormatException ne) {
-//			ne.printStackTrace();
+			// ne.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
@@ -5309,7 +5329,8 @@ public class SmApplicationBackingBean extends
 			} else if (per.getIdentificationNo().equalsIgnoreCase(
 					pers.getIdentificationNo())) {
 				validUser = false;
-				throw new EpException(MessageConst.ERROR_722524, new String[]{pers.getIdentificationNo()});
+				throw new EpException(MessageConst.ERROR_722524,
+						new String[] { pers.getIdentificationNo() });
 			}
 		}
 		return validUser;
@@ -5341,11 +5362,13 @@ public class SmApplicationBackingBean extends
 			}
 			if (semPrfCnt < 1) {
 				validCat = false;
-				throw new EpException(MessageConst.ERROR_722511, new String[]{"semi professional staff"});
+				throw new EpException(MessageConst.ERROR_722511,
+						new String[] { "semi professional staff" });
 			}
 			if (prfCnt < 1) {
 				validCat = false;
-				throw new EpException(MessageConst.ERROR_722511, new String[]{"professional staff"});
+				throw new EpException(MessageConst.ERROR_722511,
+						new String[] { "professional staff" });
 			}
 
 		}
@@ -5380,16 +5403,19 @@ public class SmApplicationBackingBean extends
 			}
 			if (stfCnt < 1) {
 				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512, new String[]{"staff"});
+				throw new EpException(MessageConst.ERROR_722512,
+						new String[] { "staff" });
 			}
 			if (ownrCnt < 1) {
 				System.out.println("****** No OWNER ********** ");
 				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512, new String[]{"equity owner"});
+				throw new EpException(MessageConst.ERROR_722512,
+						new String[] { "equity owner" });
 			}
 			if (dirCnt < 1) {
 				validCat = false;
-				throw new EpException(MessageConst.ERROR_722512, new String[]{"director"});
+				throw new EpException(MessageConst.ERROR_722512,
+						new String[] { "director" });
 			}
 
 		}
@@ -5409,7 +5435,7 @@ public class SmApplicationBackingBean extends
 								.getPmCategoryL1().getCategoryL1Id()) {
 					validCat = false;
 					throw new EpException(MessageConst.ERROR_722525);
-//					break;
+					// break;
 
 				}
 			}
@@ -6130,5 +6156,26 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCurrentStatus(
 					resDTO.getPmStatusDesc().getStatusDesc());
 		}
+	}
+
+	private SmSupplier getCurrentSupplier() {
+		SmSupplier smSupp = new SmSupplier();
+		try {
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierSearchReqDTO);
+			smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
+					.get(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return smSupp;
 	}
 }
