@@ -15,16 +15,14 @@
 	
 	
 	<p:panel id="searchSmUserProfile" header="Search Users" styleClass="noBorders tr,noBorders td">
-		<table style="width: 1000px;">
+		<table style="width: 100%;">
 			<tr>
-				<td style="width: 350px;"/>
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Username" /></td>
-				<td style="width: 500px;"><p:inputText id="username" value="#{smPersonnelBackingBean.managedBean.searchUsername}" size="35" /></td>
+				<td><p:inputText id="username" value="#{smPersonnelBackingBean.managedBean.searchUsername}" size="35" /></td>
 			</tr>
 			<tr>
-				<td style="width: 350px;"/>
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="User eP Role" /></td>
-				<td style="width: 500px;"><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
+				<td ><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
 						<f:selectItem itemLabel="Supplier Admin" itemValue="A" />
 						<f:selectItem itemLabel="Supplier User" itemValue="U" />
@@ -35,7 +33,7 @@
 				<td style="width: 350px;"/>
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Company Role" /></td>
 				<td style="width: 500px;"><p:selectOneMenu id="companyRole" value="#{smPersonnelBackingBean.managedBean.searchCompanyRole}" style="width: 207px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One--" itemValue="" />
+						<f:selectItem itemLabel="- Select One -" itemValue="" />
 					</p:selectOneMenu></td>
 			</tr> -->
 		</table>
