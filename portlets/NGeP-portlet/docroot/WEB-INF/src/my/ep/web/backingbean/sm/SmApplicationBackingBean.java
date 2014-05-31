@@ -629,11 +629,17 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void updateSmAppl(String applType, String pageType) {
-		testUpdateSmAppl(applType, pageType);
+	public void updateSmApplBpmSubmit(String applType, String pageType,
+			boolean isBpmSubmit) {
+		testUpdateSmAppl(applType, pageType, isBpmSubmit);
 	}
 
-	public boolean testUpdateSmAppl(String applType, String pageType) {
+	public void updateSmAppl(String applType, String pageType) {
+		testUpdateSmAppl(applType, pageType, false);
+	}
+
+	public boolean testUpdateSmAppl(String applType, String pageType,
+			Boolean isBpmSubmit) {
 		boolean valid = false;
 		boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -679,20 +685,20 @@ public class SmApplicationBackingBean extends
 			// }
 			isError = valid;
 		}
-//		catch (Exception e) {
-//			// System.out.println("this is error");
-//			// e.printStackTrace();
-//
-//			getManagedBean().setTabActiveIndex(currentTab);
-//			// getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
-//			isError = true;
-//			valid = false;
-//			retriveLatestApplAfterUpdate(pageType);
-//			// return SupplierManagementConst.PROCEED_MOF_REG;
-//			isError = false;
-//			throw new EpException(MessageConst.ERROR_722505);
-//
-//		} 
+		// catch (Exception e) {
+		// // System.out.println("this is error");
+		// // e.printStackTrace();
+		//
+		// getManagedBean().setTabActiveIndex(currentTab);
+		// // getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
+		// isError = true;
+		// valid = false;
+		// retriveLatestApplAfterUpdate(pageType);
+		// // return SupplierManagementConst.PROCEED_MOF_REG;
+		// isError = false;
+		// throw new EpException(MessageConst.ERROR_722505);
+		//
+		// }
 		finally {
 			retriveLatestApplAfterUpdate(pageType);
 			mofRegistrationSO = null;
@@ -754,9 +760,11 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
-			System.out.println("***** After final Retrieve ****"
-					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
+			if (getManagedBean().getSmAppl().getPmStatus() != null) {
+				System.out.println("***** After final Retrieve ****"
+						+ getManagedBean().getSmAppl().getPmStatus()
+								.getStatusId());
+			}
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3646,7 +3654,7 @@ public class SmApplicationBackingBean extends
 			System.out.println("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			validSiteVisit = testUpdateSmAppl("Basic", getManagedBean()
-					.getSmAppl().getApplType());
+					.getSmAppl().getApplType(), true);
 			if (res.equalsIgnoreCase("Approve")) {
 				updateSmSupplierInfo(getManagedBean().getSmAppl().getApplType());
 			}
