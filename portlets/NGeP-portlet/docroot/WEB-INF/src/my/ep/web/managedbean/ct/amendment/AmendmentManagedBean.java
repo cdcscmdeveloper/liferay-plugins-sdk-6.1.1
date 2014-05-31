@@ -123,6 +123,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String supplierFaxNo;
 	private String supplierEmail;
 	
+	private String editorValue;
+	
+	private boolean termAndConditionFlg;
+	
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -684,6 +688,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSupplierEmail(String supplierEmail) {
 		this.supplierEmail = supplierEmail;
+	}
+
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
+	}
+
+	public boolean isTermAndConditionFlg() {
+		return termAndConditionFlg;
+	}
+
+	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
+		this.termAndConditionFlg = termAndConditionFlg;
 	}
 
 }

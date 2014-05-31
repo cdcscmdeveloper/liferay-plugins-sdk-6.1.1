@@ -71,26 +71,21 @@
 				<ui:include src="amendmentDetails.xhtml" />
 				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 			</p:tab>
-			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}"
-				rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing and amendmentBackingBean.managedBean.ackFA == null 
+			<p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing and amendmentBackingBean.managedBean.ackFA == null 
 			      and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
 				<ui:include src="zone.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.menu.item']}"
-				rendered="#{amendmentBackingBean.managedBean.ackFA == null
-							and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
+			<p:tab title="#{lbl['lbl.ct.menu.item']}" rendered="#{amendmentBackingBean.managedBean.ackFA == null
+				and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
 				<ui:include src="item.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.meetingDtl']}"
-				rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}">
+			<p:tab title="#{lbl['lbl.ct.amend.meetingDtl']}" rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}">
 				<ui:include src="pbqcc/meeting.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.decision']}"
-				rendered="#{amendmentBackingBean.managedBean.signOffDecision}">
+			<p:tab title="#{lbl['lbl.ct.amend.decision']}" rendered="#{amendmentBackingBean.managedBean.signOffDecision}">
 				<ui:include src="pbqcc/signOffMember.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.decision']}"
-				rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}">
+			<p:tab title="#{lbl['lbl.ct.amend.decision']}" rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}">
 				<ui:include src="pbqcc/signOffpbqcc.xhtml" />
 			</p:tab>
 			<p:tab title="#{lbl['lbl.ct.amend.loaDtl']}" rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA == 'Ack'}">
