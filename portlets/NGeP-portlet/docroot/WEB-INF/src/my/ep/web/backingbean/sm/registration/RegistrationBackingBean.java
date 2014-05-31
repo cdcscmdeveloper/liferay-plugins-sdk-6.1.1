@@ -185,21 +185,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
-			return "";
+			return null;
 		}
 		
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
-			return "";
+			return null;
 		}
 		
 		if(checkExistingBusinessRegNo()){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Business Registration No is exist.", ""));
-			return "";
+			return null;
 		}
 		
+		if(!validateBankInfo()){
+			return null;
+		}
 		
 		
 		return firstUserRegistration;
@@ -246,27 +249,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
-				return "";
+				return null;
 			}
 		}
 		
 		if(smAppl.getSmSupplierBanks().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
-			return "";
+			return null;
+		}
+		
+		if(!validateBankInfo()){
+			return null;
 		}
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", ""));
-			return "";
+			return null;
 		}
 		
 		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
 		if(isExistUserByIdentificationNo(loginID)){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", ""));
-			return "";
+			return null;
 		}
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.STYPE_BASIC)) {
@@ -442,9 +449,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public void addSupplierBank() {
+
 		if (this.getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
 			this.getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
-		}
+		}		
 		SmSupplierBank smSuppBank = new SmSupplierBank();
 		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
 		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
@@ -672,7 +680,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 
 			if(serviceTypeParam != null){
-				List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(serviceTypeParam, "en");
+				List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(serviceTypeParam, new FacesScopes().getUserLocale().getLanguage());
 				System.out.println("******ServiceType******" + paramDesc.size() );
 				this.getManagedBean().setServiceLs(paramDesc);
 			}
@@ -947,8 +955,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
-	public void createInquiry(){
-		//this.getManagedBean().getSmSupp().getSmAppl().setsma
+	public boolean validateBankInfo(){
+		for(SmSupplierBank suppBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()){
+			System.out.println("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinOrgName());
+			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank name is required.", ""));
+				return false;
+			}
+			
+			if(suppBank.getAccountNo() == null || suppBank.getAccountNo() == ""){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank account no. is required", ""));
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 //	public void verifyIC(){

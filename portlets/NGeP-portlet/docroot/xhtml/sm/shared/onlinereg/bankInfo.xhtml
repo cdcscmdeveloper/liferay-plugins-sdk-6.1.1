@@ -18,7 +18,7 @@
 					#{lbl['lbl.sm.bankname']}
 				</f:facet>
 			
-				<p:selectOneMenu value="#{bankInfo.pmFinancialOrg.financialOrgId}">
+				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
@@ -37,7 +37,7 @@
 					</p:tooltip>
 				</f:facet>
 			
-				<p:inputText value="#{bankInfo.accountNo}" />
+				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" />
 			</p:column>
 		</p:dataTable>
 

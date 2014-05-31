@@ -10,7 +10,7 @@
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 	<p:outputPanel id="outPnlProfCert">
 		<c:if
-			test="#{registrationBackingBean.managedBean.smAppl.supplierType == 'J'}">
+			test="#{registrationBackingBean.managedBean.smAppl.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
 			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" />
 		</c:if>
 	</p:outputPanel>
