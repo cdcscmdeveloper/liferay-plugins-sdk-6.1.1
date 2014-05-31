@@ -24,6 +24,8 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
@@ -33,13 +35,19 @@ import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -349,24 +357,40 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(getManagedBean().getSearchLoaNo()!=null && getManagedBean().getSearchLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchLoaNo()));
 				}		
-				if(getManagedBean().getSearchProcurementType()!=null && getManagedBean().getSearchProcurementType()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchProcurementType()));
+				if(getManagedBean().getSearchProcurementTypeId()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchProcurementTypeId()));
 				}			
-				if(getManagedBean().getSearchStatusId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));
+				if(getManagedBean().getStatusDescId()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getStatusDescId()));
 				}
-				if(getManagedBean().getTitle()!=null && getManagedBean().getTitle()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getTitle()));
+				if(getManagedBean().getSearchTitle()!=null && getManagedBean().getSearchTitle()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchTitle()));
+				}
+				if(getManagedBean().getSearchSuppName()!=null && getManagedBean().getSearchSuppName()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppName()));
+				}
+				if(getManagedBean().getSearchSuppRef()!=null && getManagedBean().getSearchSuppRef()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppRef()));
 				}
 				
+				
+				IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				if(isFlFulfilmentRequisitioner()){
 					FacesScopes facesScopes = new FacesScopes();
 					getManagedBean().setPmUser(facesScopes.getUserSessionBean());
+					UserReqDTO reqDTO = new UserReqDTO();
+					reqDTO.setUserId(getManagedBean().getPmUser().getUserId());
+					reqDTO.setLanguageCode("en");
+					UserResDTO resDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
 					Date currentDate = new Timestamp(System.currentTimeMillis());
+					for(PmRoleDesc roleDesc : resDTO.getRoleDescList()){
+						roleDesc.getPmRole().getRoleCode();
+					}
 					for(PmUserOrg pmUserOrg : getManagedBean().getPmUser().getPmUserOrgs()){
 						if(pmUserOrg.getEffDate().before(currentDate)){
 							if(pmUserOrg.getExpDate().after(currentDate)){
 								defaultOrgProfile = pmUserOrg.getPmOrgProfile();
+								
 								break;
 							}
 						}
@@ -425,6 +449,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public boolean isFlFulfilmentRecevingOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.RN_APPROVER.value());
+	}
+	
+	public void getProcurementTypeList(){
+		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setLanguageCode("en");
+		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+		resDTO.getParameterDescList();
 	}
 	
 }

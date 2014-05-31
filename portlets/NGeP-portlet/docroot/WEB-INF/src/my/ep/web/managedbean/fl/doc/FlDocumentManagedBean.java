@@ -36,7 +36,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchContractNo;
 	private String searchCircularNo;
 	private String searchLoaNo;
-	private String searchProcurementType;
 	private String searchTitle;
 	private String searchSuppName;
 	private String searchSuppRef;
@@ -46,6 +45,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	private List<PmStatusDesc> docStatusList;
 	private Long statusDescId;
+	private Long searchProcurementTypeId;
 	
 	
 	private FlFulfilmentRequest fulfilmentRequest;
@@ -147,14 +147,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	public void setSearchStatusId(Long searchStatusId) {
 		this.searchStatusId = searchStatusId;
-	}
-
-	public String getSearchProcurementType() {
-		return searchProcurementType;
-	}
-
-	public void setSearchProcurementType(String searchProcurementType) {
-		this.searchProcurementType = searchProcurementType;
 	}
 
 	/**
@@ -350,6 +342,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+
+	/**
+	 * @return the searchProcurementTypeId
+	 */
+	public Long getSearchProcurementTypeId() {
+		return searchProcurementTypeId;
+	}
+
+	/**
+	 * @param searchProcurementTypeId the searchProcurementTypeId to set
+	 */
+	public void setSearchProcurementTypeId(Long searchProcurementTypeId) {
+		this.searchProcurementTypeId = searchProcurementTypeId;
 	}
 	
 }
