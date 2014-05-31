@@ -69,7 +69,7 @@
 					</p:column>
 					<p:column headerText="Action" styleClass="column-align-center"
 						style="width:10%;">
-						<p:commandLink update="ctItemMaxQtyTable" process="@form" rendered="#{!data.changeQuantity}"
+						<p:commandLink update="ctItemMaxQtyTable" process="@form" rendered="#{!data.changeQuantity and data.editable}"
 							action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
@@ -165,7 +165,7 @@
 					</p:column>
 					<p:column headerText="Action" styleClass="column-align-center"
 						style="width:10%;">
-						<p:commandLink update="itemPriceTable" process="@form" rendered="#{!data.changePrice}"
+						<p:commandLink update="itemPriceTable" process="@form" rendered="#{!data.changePrice and data.editable}"
 							action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
@@ -226,7 +226,7 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Action" style="width:5%;" styleClass="column-align-center">
-						<p:commandLink update="ceilingTable" rendered="#{!data.changeCeilQuantity}"
+						<p:commandLink update="ceilingTable" rendered="#{!data.changeCeilQuantity and data.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
@@ -311,7 +311,7 @@
 					</p:column>
 					<p:column headerText="Action" styleClass="column-align-center"
 						style="width:10%;">
-						<p:commandLink update="servicePriceTable" process="@form" rendered="#{!data.changePrice}"
+						<p:commandLink update="servicePriceTable" process="@form" rendered="#{!data.changePrice and data.editable}"
 							action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
