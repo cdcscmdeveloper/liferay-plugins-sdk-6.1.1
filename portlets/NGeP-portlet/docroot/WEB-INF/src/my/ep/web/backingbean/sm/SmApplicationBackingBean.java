@@ -950,6 +950,19 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
+			int validStfCont = 0;
+			for (SmStaffTotal stfTl : getManagedBean().getSmAppl()
+					.getSmStaffTotals()) {
+				if (stfTl.getTotalBumi() > 0 || stfTl.getTotalForeigner() > 0
+						|| stfTl.getTotalNonBumi() > 0) {
+					validStfCont = validStfCont + 1;
+					break;
+				}
+			}
+			if (validStfCont == 0) {
+				setNavigationBackToCurrentPage();
+				throw new EpException(MessageConst.ERROR_722526);
+			}
 			if (!getManagedBean().getSmAppl().getSmAssociationBodies()
 					.isEmpty()) {
 				System.out
@@ -3593,6 +3606,8 @@ public class SmApplicationBackingBean extends
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
 		try {
+
+			retriveLatestApplAfterUpdate("");
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
 					+ res);
 			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
