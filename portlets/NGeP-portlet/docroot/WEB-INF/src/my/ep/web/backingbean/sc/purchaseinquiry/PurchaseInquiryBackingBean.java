@@ -46,6 +46,7 @@ import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -82,7 +83,7 @@ import com.liferay.portal.util.PortalUtil;
 /**
  * 
  * @author sri
- * 
+ * since 01.15.2014
  */
 @ManagedBean(name = "purchaseInquiryBackingBean")
 @RequestScoped
@@ -105,7 +106,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
     
 	/**
 	  * pricingDetails for getting pricing details in Purchase Inquiry
-	 * @return 
+	 * @return String
 	  */
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
 		  debugLogger("prInquiryAction");
@@ -238,12 +239,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
 						parameterType, priceTypeCode));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+		} finally{
 		}
 		return items;
 	}
@@ -346,15 +342,13 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 									 new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
 									 MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									 new FacesScopes().getUserLocale())));
+						// clear data
+						super.renewSesionObject();
 					 FacesContext fc = FacesContext.getCurrentInstance();
 					 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-				 } 
-			} catch (Exception ex) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
-				ex.printStackTrace();
+				 } else{
+					 throw new EpException("Failed.");
+				 }
 			} finally {
 				prInquirySO = null;
 				iStatusSO = null;
@@ -387,13 +381,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
 						    MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							new FacesScopes().getUserLocale())));
+					// clear data
+					super.renewSesionObject();
 				 FacesContext fc = FacesContext.getCurrentInstance();
 				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
 			   }else{
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
+					throw new EpException("Failed.");
 			   }
 		   }else{
 			   BpmRequestDTO reqBpm = new BpmRequestDTO();
@@ -416,14 +409,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 										new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
+					} else{
+						throw new EpException("Failed.");
 					}
 					}
-				} catch (Exception ex) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Sorry We are unable to process.", ""));
-					ex.printStackTrace();
 				} finally {
 					bpmSO = null;
 				}
@@ -620,14 +609,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 										new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+					} else{
+						throw new EpException("Failed.");
 					}
 				}
-			} catch (Exception ex) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
-				ex.printStackTrace();
 			} finally {
 				bpmSO = null;
 			}

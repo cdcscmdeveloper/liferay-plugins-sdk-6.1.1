@@ -47,6 +47,7 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -85,6 +86,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -171,16 +173,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							new FacesScopes().getUserLocale())));
+			// clear data
+			super.renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+		}else {
+			throw new EpException("Failed.");
 		}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
+    }    
+	    finally {
 			directPurchaseSO = null;
 		}
 		return null;
@@ -246,18 +247,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							new FacesScopes().getUserLocale())));
+			// clear data
+			super.renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
-			
-			super.renewSesionObject();
+		}else {
+			throw new EpException("Failed.");
 		}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
+    }    
+	    finally {
 			directPurchaseSO = null;
 		}
 		return null;
@@ -395,18 +393,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 					}
+				}	} else {
+					throw new EpException("Failed.");
 				}
+			}  finally {
+				bpmSO = null;
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
-			bpmSO = null;
 		}
-	}
 	
 	public void applyForRequestNote() {
 	   log.info("applyForRequestNote");
@@ -558,7 +551,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 				// TODO PriceType drop down list in AddToCart
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
-				
+				// required validation
+				getManagedBean().setRequired(Boolean.TRUE);
 				// TODO PriceType drop down list in request note
 				getManagedBean().setRnPriceTypes(getPriceTypes(ParameterTypeConst.PRICE_TYPE, priceTypes));
 			}
@@ -644,16 +638,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				items[i++] = new SelectItem(priceTypeCode,getParameterDesc(parameterType,
 						priceTypeCode));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+	} finally {
+			
 		}
 		return items;
 	}
-	
 	
 	
 	public SelectItem[] getPriceTypes(String parameterType,
@@ -668,12 +657,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						priceTypeCode) ,getParameterDesc(parameterType,
 								priceTypeCode));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+	  } finally {
+			
 		}
 		return items;
 	}
@@ -796,7 +781,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			requestNote.setWorkFlowStatuses(workFlowStatuses);
 		}
 
-		scRequestNoteDtl.setAssignedUser(new PmUser());
+		FacesScopes facesScopes = new FacesScopes();
+		scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 		scRequestNoteDtl.setProcurementType(getManagedBean().getRequestNoteDtl().getProcurementType());
 		scRequestNoteDtl.setJustificationType(getManagedBean().getRequestNoteDtl().getJustificationType());
 		scRequestNoteDtl.setJustification(getManagedBean().getRequestNoteDtl().getJustification());
@@ -826,7 +812,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 			if (itemIds.size() > 0) {
 				if(itemIds.contains(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId())){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700027, 
 									new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName()}, 
@@ -861,6 +847,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		initialInformation(requestNote);
 		initializeRemarks(requestNote);
 		fulfilmentTypeEvent(scRequestNoteDtl);
+		
+		// add to cart validation
+		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
+		getManagedBean().setRequired(Boolean.FALSE);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		return null;
@@ -982,10 +973,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
 				options = resDTO.getUserList();
 			log.info("result size: " +options.size());
-		}catch (Exception e){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, e.toString(),"Role "+RoleCode.PROGRAM_SECTOR.value()));
-			throw e;
+		} finally{
+			
 		}
 		log.info("userListByRole - End");
 		return options;
@@ -1089,7 +1078,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
-
+					requestItem.setCmItem(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem());
 					// TODO selected ptj id for non contract item for pid
 					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
@@ -1114,7 +1103,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestSupplierItems.add(scReqSupplierItem);
 				    
 					// request Note Items
-					//requestItem.setSupplierItems(requestSupplierItems);
+					requestItem.setSupplierItems(requestSupplierItems);
 					requestNoteItems.add(requestItem);
 				}
 			}
@@ -1125,16 +1114,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			this.getManagedBean().setRequestNote(requestNote);
 		}
 		return getManagedBean().getRequestNote().getPmOrgProfile();
-	} catch (Exception ex) {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Sorry We are unable to process.", ""));
-		ex.printStackTrace();
 	} finally {
 		purchaseInDefaultSO = null;
 	}
-		return null;
   }
 	
 	/**
@@ -1187,18 +1169,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			} 
 		}
+
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
-	} catch (Exception ex) {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Sorry We are unable to process.", ""));
-		ex.printStackTrace();
-	} finally {
-		purchaseInDefaultSO = null;
+	 } finally {
+		 purchaseInDefaultSO = null;
+	 }
 	}
-	}
-	
+
 
 	public String cancel() {
 		log.info("cancel");

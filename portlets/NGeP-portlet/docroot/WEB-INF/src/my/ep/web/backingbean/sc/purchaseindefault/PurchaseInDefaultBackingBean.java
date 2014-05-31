@@ -55,6 +55,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
@@ -96,7 +97,7 @@ import com.liferay.portal.util.PortalUtil;
 /**
  * 
  * @author sri
- * 
+ * since 01.15.2014
  */
 @ManagedBean(name = "purchaseInDefaultBackingBean")
 @RequestScoped
@@ -115,7 +116,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 			}
 		}
-		retrieveReasonDescListByCategory();
 	}
 	
 	 /**
@@ -170,6 +170,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			initialInformation(scPurchaseInDefault);
 			populatePtjDropDownList();
+			retrieveReasonDescListByCategory();
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -213,18 +214,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 					// clear pid data
-					 super.renewSesionObject();
+					super.renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					throw new EpException("Failed.");
 				}
-			} catch (Exception ex) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
-				ex.printStackTrace();
 			} finally {
 				purchaseInDefaultSO = null;
 			}
-			return null;
 		}
 		
 		
@@ -259,8 +256,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				debugLogger(resDTO.getStatusCode());
 				debugLogger(resDTO.getSeverity());
 				debugLogger(resDTO.getStatusDesc());
-			} catch (Exception e) {
-				e.printStackTrace();
+			} finally{
 			}
 			debugLogger("END");
 		}
@@ -299,14 +295,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							FacesContext fc = FacesContext.getCurrentInstance();
 							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 						}
+					} else {
+						throw new EpException("Failed.");
 					}
 				}
-			} catch (Exception ex) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Sorry We are unable to process.", ""));
-				ex.printStackTrace();
 			} finally {
 				bpmSO = null;
 			}
@@ -472,14 +464,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							reasonDesc.getPmReason().getReasonCode(),
 							reasonDesc.getReasonDesc());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null, 
-						new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,
-								e.toString(), 
-								e.getMessage()));
+			} finally{
 			}
 			return items;
 		}
