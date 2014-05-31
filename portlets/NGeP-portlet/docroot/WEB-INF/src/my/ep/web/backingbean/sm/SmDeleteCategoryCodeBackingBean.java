@@ -52,14 +52,21 @@ public class SmDeleteCategoryCodeBackingBean extends
 		try {
 			System.out.println("**** ENTER On Page Load Event  *************");
 
-			// SmSupplier smApplSupplier = getCurrentSupplier();
-			SmSupplier smApplSupplier = retriveSupplierById((long) 27)
-					.getSmSupplier();
+			SmSupplier smApplSupplier = getCurrentSupplier();
+			// SmSupplier smApplSupplier = retriveSupplierById((long) 27)
+			// .getSmSupplier();
 			System.out.println("******** SIZE ********** "
 					+ smApplSupplier.getSmAppls().size());
 			// TODO Get the latest application
 			// SmAppl smAppl = smApplSupplier.getSmAppl();
 			SmAppl smAppl = smApplSupplier.getSmAppl();
+			if (smAppl == null) {
+				smAppl = new SmAppl();
+			}
+
+			if (smAppl.getSmSupplierCategories() == null) {
+				smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+			}
 			System.out.println("******** The application id is *******"
 					+ smAppl.getApplId());
 

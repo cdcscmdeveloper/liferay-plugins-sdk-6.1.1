@@ -646,6 +646,7 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
+		getManagedBean().setTabActiveIndex(outputTab);
 		List<SmPersonnel> perList = new ArrayList<SmPersonnel>();
 		try {
 
@@ -661,6 +662,11 @@ public class SmApplicationBackingBean extends
 							IMofRegistrationSO.class);
 			valid = validateBeforeSave(applType, pageType);
 			// valid = true;
+			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
+				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+			} else {
+				System.out.println(" ****** REMAIN PREV VALUE ********");
+			}
 			if (valid) {
 				// Save or update to DB
 
@@ -670,12 +676,6 @@ public class SmApplicationBackingBean extends
 
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.updateApplication(reqDto);
-				if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
-					getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
-				} else {
-					System.out.println(" ****** REMAIN PREV VALUE ********");
-				}
-				getManagedBean().setTabActiveIndex(outputTab);
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
@@ -969,6 +969,7 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmapplShareHolders().isEmpty()) {
 
 				validSave = false;
+				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722507);
 			} else if (getManagedBean()
 					.getBusinessTypeVal()
@@ -977,6 +978,7 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getSmapplShareHolders().size() < 2) {
 
 				validSave = false;
+				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722508);
 			}
 			if (getManagedBean()
@@ -987,6 +989,7 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmAppl().getSmCompanyBasic()
 									.getAuthorizedCapital()) > 0) {
 				validSave = false;
+				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722509);
 			}
 			calcPersonnelListCount();
@@ -1063,16 +1066,19 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (semiProfCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722510,
 							new String[] { "Semi-Professional", "Diploma" });
 				}
 				if (profCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722510,
 							new String[] { "Professional", "Bachelor Degree" });
 				}
 				if (staffCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(
 							MessageConst.ERROR_722510,
 							new String[] { "Clerical Staff",
@@ -1083,17 +1089,20 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				if (directorCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722513,
 							new String[] { "Higher Management or Director",
 									"Director or Higher Management" });
 				}
 				if (mgmtCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722513,
 							new String[] { "Management Staff", "Management" });
 				}
 				if (staffCount < 1) {
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722513,
 							new String[] { "Staff", "Staff" });
 				}
@@ -1113,6 +1122,7 @@ public class SmApplicationBackingBean extends
 			}
 			if (payAccCnt == 0) {
 				validSave = false;
+				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722515);
 			}
 			break;
@@ -1126,6 +1136,7 @@ public class SmApplicationBackingBean extends
 							.equalsIgnoreCase("99")) {
 						if (category.getOtherDesc().isEmpty()) {
 							validSave = false;
+							setNavigationBackToCurrentPage();
 							throw new EpException(MessageConst.ERROR_722514);
 						}
 					}
@@ -1139,6 +1150,7 @@ public class SmApplicationBackingBean extends
 								.getSmSupplierCategories().isEmpty()) {
 					System.out.println("****** Empty Category List *******");
 					validSave = false;
+					setNavigationBackToCurrentPage();
 					throw new EpException(MessageConst.ERROR_722516);
 				}
 				if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
@@ -1213,6 +1225,12 @@ public class SmApplicationBackingBean extends
 
 		}
 		return validSave;
+	}
+
+	private void setNavigationBackToCurrentPage() {
+		getManagedBean().setTabActiveIndex(currentTab);
+		getManagedBean().getSmAppl().setCurrentActiveTab(
+				getManagedBean().getSmAppl().getCurrentActiveTab());
 	}
 
 	private SmApplSupportDoc getDefaultSmApplSupportingDoc(PmDocument doc) {
