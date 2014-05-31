@@ -102,6 +102,7 @@ public class SupplierUserActivationBackingBean extends
 					
 					this.getManagedBean().setEncrpKeyStr(encryptedKey);
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml");
+					return;
 					// display form to enter temp password
 				} else {
 					// redirect & display activation expired
@@ -115,6 +116,8 @@ public class SupplierUserActivationBackingBean extends
 			// redirect & display invalid activation
 			this.getManagedBean().setValidActivation(false);
 		}
+		
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/prerenderSupplierUser.xhtmls");
 	}
 	
 	public String activateSupplierUser() {
@@ -155,6 +158,8 @@ public class SupplierUserActivationBackingBean extends
 //					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 //					resDTO.setSuccessful(true);
 					if(resDTO.isSuccessful()){
+						this.getManagedBean().setValidActivation(false);
+						this.getManagedBean().setSmPersonnel(null);
 						return navigateToAck();
 //						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
 //						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
