@@ -93,31 +93,28 @@
 				rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}">
 				<ui:include src="pbqcc/signOffpbqcc.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.loaDtl']}"
-				rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+			<p:tab title="#{lbl['lbl.ct.amend.loaDtl']}" rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA == 'Ack'}">
 				<ui:include src="supplier/supplierforloa.xhtml" />
-				<c:if test='#{amendmentBackingBean.managedBean.ackFA eq "Ack"}'>
-					<ui:include src="supplier/paymentdetails.xhtml" />
-				</c:if>
-				<c:if test='#{amendmentBackingBean.managedBean.prepareLOA}'>
+				<ui:include src="supplier/paymentdetails.xhtml" />
+				<c:if test="#{amendmentBackingBean.managedBean.prepareLOA}">
 					<ui:include src="loaDetails.xhtml" />
 				</c:if>
 				<ui:include src="witnessDetails.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.perfBond']}"
-				rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
+			<p:tab title="#{lbl['lbl.ct.amend.perfBond']}" rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
 				<ui:include src="loaBondDetails.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.spAprlAP201']}"
-				rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}">
+			<p:tab title="#{lbl['lbl.ct.amend.spAprlAP201']}" rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}">
 				<ui:include src="bpk/approvalOfAP201.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.letterOfAcc']}"
-				rendered="#{amendmentBackingBean.managedBean.letterOfAcceptance}">
+			<p:tab title="#{lbl['lbl.ct.amend.letterOfAcc']}" rendered="#{amendmentBackingBean.managedBean.letterOfAcceptance}">
 				<ui:include src="letterOfAcceptance.xhtml" />
 			</p:tab>
-			<p:tab title="#{lbl['lbl.ct.amend.declaration']}"
-				rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+			<p:tab title="#{lbl['lbl.ct.amend.letterOfAcc']}" rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+				<ui:include src="supplier/supplierLoa.xhtml" />
+			</p:tab>			
+			<p:tab title="#{lbl['lbl.ct.amend.declaration']}" rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
+				<ui:include src="supplier/supplierDeclaration.xhtml" />
 			</p:tab>
 		</p:tabView>
 	</ui:define>  
