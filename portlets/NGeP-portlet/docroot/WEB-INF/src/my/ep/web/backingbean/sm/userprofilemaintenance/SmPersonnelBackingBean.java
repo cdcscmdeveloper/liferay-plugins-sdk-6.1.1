@@ -609,25 +609,30 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String update(SmPersonnel smPersonnel){
 		
-		
-		if(validateUI(smPersonnel)){
-		
-			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		boolean valid = true;
+		try{
+			valid = validateUI(smPersonnel);
+			if(valid){
 			
-			reqDTO.setSmPersonnel(smPersonnel);
-	
-			PersonnelResDTO resDTO = smPersonnelSO.updatePersonnelRecord(reqDTO);
-	
-			System.out.println("Result:" + resDTO.isSuccessful());
-			
-			if(resDTO.isSuccessful())
-				return "acknowledge.xhtml";
-			else 
+				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+						.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				
+				reqDTO.setSmPersonnel(smPersonnel);
+		
+				PersonnelResDTO resDTO = smPersonnelSO.updatePersonnelRecord(reqDTO);
+		
+				System.out.println("Result:" + resDTO.isSuccessful());
+				
+				if(resDTO.isSuccessful())
+					return "acknowledge.xhtml";
+				else 
+					return null;
+			} else {
 				return null;
-		} else {
-			return null;
+			}
+		} finally {
+			// do nothing
 		}
 	}
 	
