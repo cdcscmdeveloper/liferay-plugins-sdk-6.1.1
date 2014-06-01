@@ -415,7 +415,7 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	/**
-	 * saveSimpleQuote method to save SQ
+	 * submitSimpleQuote method to submit SQ
 	 */
 	public String submitSimpleQuote() {
 		debugLogger("submitSimpleQuote");
@@ -523,7 +523,7 @@ public class SimpleQuoteBackingBean extends
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_700005, 
+						MessageUtils.getMessage(MessageConst.INFO_700026, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
@@ -629,6 +629,72 @@ public class SimpleQuoteBackingBean extends
 	return null;
  }
 	
+ 
+	/**
+	 * supplierSubmit method to submit SQ
+	 */
+	public String supplierSubmit() {
+		debugLogger("supplierSubmit");
+		IQuoteSO quoteSO = null;
+		try {
+			quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQuoteSO.class);
+			QuoteReqDTO reqDTO = new QuoteReqDTO();
+			ScQuote quote = getManagedBean().getScQuote();
+			//remarks
+			quote.setRemarks(initializeRemarks(quote));
+			// tpl spec - product - ans
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
+				ScQuoteDoc quoteDoc = new ScQuoteDoc();
+				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+					quoteDoc.setQuote(getManagedBean().getScQuote());
+					quoteDocs.add(quoteDoc);
+					quote.setQuoteDocs(quoteDocs);
+				}
+			}
+			// tpl spec - service - ans
+			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
+				ScQuoteDoc quoteDoc = new ScQuoteDoc();
+				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+					quoteDoc.setQuote(getManagedBean().getScQuote());
+					quoteDocs.add(quoteDoc);
+					quote.setQuoteDocs(quoteDocs);
+				}
+			}
+			FacesScopes facesScopes = new FacesScopes();
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			reqDTO.setToken(token);
+			reqDTO.setSubmit(Boolean.TRUE);
+			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			reqDTO.setQuoteBidDtl(quote);
+			QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
+			if (quoteResDTO.isSuccessful()) {
+				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_700006, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+				 // clear SQ data
+				 super.renewSesionObject();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+			} else {
+				throw new EpException("Failed.");
+			}
+		}  finally {
+			quoteSO = null;
+		}
+		return null;
+	}
+ 
 	
 	 public void byLocAndBusinessEvent() {
 		 debugLogger("byBusinessEvent");
@@ -1803,6 +1869,8 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO.setFetchSubEntity(true);
 				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				// supplier
+				getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
 				parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 				parameterReqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
@@ -1820,7 +1888,7 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 				scQuote.setRemarks(results);
-                // service and product
+                // service and product - ans
 				if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
 					productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
 					productTplSpecBean.setSpecMaster(new TplSpecMaster());
