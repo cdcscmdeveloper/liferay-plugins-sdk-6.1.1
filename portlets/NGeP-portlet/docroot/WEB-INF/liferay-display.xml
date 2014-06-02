@@ -130,17 +130,10 @@
 	<category name="category.sample">
 		<portlet id="TaskList"></portlet>
 		<portlet id="sm"></portlet>
-		<portlet id="CatalogueMaintenance"></portlet>
-		<portlet id="UnspscRequestForm"></portlet>
-		<portlet id="ExtensionRequestForm"></portlet>
-		<portlet id="UnspscBulkUpload"></portlet>
-		<portlet id="ContractedItem"></portlet>
-		<portlet id="UnspscSingleUpload"></portlet>
-		<portlet id="reviewUnspsc"></portlet>
+		
 
 		<portlet id="BpmTaskList"></portlet>
-		<portlet id="reviewExtensionRequest"></portlet>
-		<portlet id="reviewExtensionMaintenance"></portlet>
+		
 		<portlet id="Welcome"></portlet>
 		<portlet id="supplierUserActivation"></portlet>
 
@@ -149,6 +142,24 @@
 		<portlet id="SmUserProfileMaintenance"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 	</category>
+	
+	
+	
+		<portlet id="publicCatalogue"></portlet>
+		
+		
+		<category name="Catalogue">
+			<portlet id="publicCatalogue"></portlet>
+			<portlet id="CatalogueMaintenance"></portlet>
+			<portlet id="UnspscRequestForm"></portlet>
+			<portlet id="ExtensionRequestForm"></portlet>
+			<portlet id="UnspscBulkUpload"></portlet>
+			<portlet id="ContractedItem"></portlet>
+			<portlet id="UnspscSingleUpload"></portlet>
+			<portlet id="reviewUnspsc"></portlet>
+			<portlet id="reviewExtensionRequest"></portlet>
+			<portlet id="reviewExtensionMaintenance"></portlet>
+		</category>
 
 	<category name="Template">
 		<portlet id="templateDoc"></portlet>

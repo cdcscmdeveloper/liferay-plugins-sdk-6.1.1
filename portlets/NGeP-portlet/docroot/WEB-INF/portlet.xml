@@ -4715,7 +4715,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/cm/publicCatalogue/portletViewMode.xhtml
+					/xhtml/cm/publicCatalogue/publicCatalogueView.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
