@@ -696,7 +696,7 @@ public class SmApplicationBackingBean extends
 		//
 		// }
 		finally {
-			isError=retriveLatestApplAfterUpdate(pageType);
+			isError = retriveLatestApplAfterUpdate(pageType);
 			mofRegistrationSO = null;
 		}
 		return isError;
@@ -1028,6 +1028,15 @@ public class SmApplicationBackingBean extends
 
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
+				PmParameter param = null;
+				if (per.getPmStaffRole() != null
+						&& per.getPmStaffRole().getPmParameterType() != null) {
+					param = per.getPmStaffRole();
+
+				} else if (per.getStaffRoleFlg() != null) {
+					param = new PmParameter();
+					param = retrievePmParameterById(per.getStaffRoleFlg());
+				}
 				System.out.println("**** EPF Value --- >>>> " + per.getEpfNo());
 				if (getManagedBean()
 						.getSmAppl()
@@ -1037,10 +1046,22 @@ public class SmApplicationBackingBean extends
 					if (per.isDirector() || per.isHigherManagement()) {
 						directorCount = directorCount + 1;
 					} else if (per.getStaffRoleFlg() != null
-							&& per.getStaffRoleFlg() == 834) {
+							&& param != null
+							&& param.getPmParameterType()
+									.getParameterType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR)
+							&& param.getParameterCode()
+									.equals(SupplierManagementConst.PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE)) {
 						mgmtCount = mgmtCount + 1;
 					} else if (per.getStaffRoleFlg() != null
-							&& per.getStaffRoleFlg() == 835) {
+							&& param != null
+							&& param.getPmParameterType()
+									.getParameterType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR)
+							&& param.getParameterCode()
+									.equals(SupplierManagementConst.PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE)) {
 						staffCount = staffCount + 1;
 					}
 				}
@@ -1050,7 +1071,13 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(
 								SupplierManagementConst.STYPE_CONSULTANT)) {
 					if (per.getStaffRoleFlg() != null
-							&& per.getStaffRoleFlg() == 833
+							&& param != null
+							&& param.getPmParameterType()
+									.getParameterType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+							&& param.getParameterCode()
+									.equals(SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE)
 							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						// for (SmStaffAcademic aca : per.getSmStaffAcademics())
 						// {
@@ -1063,7 +1090,13 @@ public class SmApplicationBackingBean extends
 						staffCount = staffCount + 1;
 
 					} else if (per.getStaffRoleFlg() != null
-							&& per.getStaffRoleFlg() == 831
+							&& param != null
+							&& param.getPmParameterType()
+									.getParameterType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+							&& param.getParameterCode()
+									.equals(SupplierManagementConst.PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE)
 							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
@@ -1074,7 +1107,13 @@ public class SmApplicationBackingBean extends
 						}
 
 					} else if (per.getStaffRoleFlg() != null
-							&& per.getStaffRoleFlg() == 832
+							&& param != null
+							&& param.getPmParameterType()
+									.getParameterType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+							&& param.getParameterCode()
+									.equals(SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE)
 							&& per.getEpfNo() != null && per.getEpfNo() != "") {
 						for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 							if (aca.getQualificationLevelId() >= 83
@@ -3695,6 +3734,7 @@ public class SmApplicationBackingBean extends
 							}
 						}
 					}
+					reqDTO.setPaymentReqd(setPaymentMode());
 				}
 			}
 
@@ -3703,7 +3743,8 @@ public class SmApplicationBackingBean extends
 			validSiteVisit = testUpdateSmAppl("Basic", getManagedBean()
 					.getSmAppl().getApplType(), true);
 			if (res.equalsIgnoreCase("Approve")) {
-				updateSmSupplierInfo(getManagedBean().getSmAppl().getApplType());
+				validSiteVisit = updateSmSupplierInfo(getManagedBean()
+						.getSmAppl().getApplType());
 			}
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
@@ -3791,6 +3832,26 @@ public class SmApplicationBackingBean extends
 			reqSO = null;
 		}
 		return retMsg;
+	}
+
+	private boolean setPaymentMode() {
+		boolean payReq = false;
+		if (getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			payReq = true;
+		} else {
+			for (SmPersonnel per : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (per.getAuthorizedFlg() == 1 && per.getSoftcertFlg() == 2) {
+					payReq = true;
+					break;
+				}
+
+			}
+		}
+		return payReq;
 	}
 
 	public void changeVerifyAll(Boolean isVerifiedAll) {
@@ -5399,13 +5460,35 @@ public class SmApplicationBackingBean extends
 			int semPrfCnt = 0;
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
+				PmParameter param = null;
+				if (per.getPmStaffRole() != null
+						&& per.getPmStaffRole().getPmParameterType() != null) {
+					param = per.getPmStaffRole();
+
+				} else if (per.getStaffRoleFlg() != null) {
+					param = new PmParameter();
+					param = retrievePmParameterById(per.getStaffRoleFlg());
+				}
+
 				if (per.getStaffRoleFlg() != null
-						&& per.getStaffRoleFlg() == 831
+						&& param != null
+						&& param.getPmParameterType()
+								.getParameterType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+						&& param.getParameterCode()
+								.equals(SupplierManagementConst.PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE)
 						&& per.getWorkExperienceYear() >= 5) {
 					prfCnt = prfCnt + 1;
 
 				} else if (per.getStaffRoleFlg() != null
-						&& per.getStaffRoleFlg() == 832
+						&& param != null
+						&& param.getPmParameterType()
+								.getParameterType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONSULTANT)
+						&& param.getParameterCode()
+								.equals(SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE)
 						&& per.getWorkExperienceYear() >= 5) {
 
 					semPrfCnt = semPrfCnt + 1;
@@ -5437,6 +5520,15 @@ public class SmApplicationBackingBean extends
 			int dirCnt = 0;
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
+				PmParameter param = null;
+				if (per.getPmStaffRole() != null
+						&& per.getPmStaffRole().getPmParameterType() != null) {
+					param = per.getPmStaffRole();
+
+				} else if (per.getStaffRoleFlg() != null) {
+					param = new PmParameter();
+					param = retrievePmParameterById(per.getStaffRoleFlg());
+				}
 				if (per.isEquityOwner() && per.getEpfNo() != null
 						&& per.getEpfNo() != "") {
 					ownrCnt = ownrCnt + 1;
@@ -5446,7 +5538,13 @@ public class SmApplicationBackingBean extends
 					dirCnt = dirCnt + 1;
 
 				} else if (per.getStaffRoleFlg() != null
-						&& per.getStaffRoleFlg() == 835
+						&& param != null
+						&& param.getPmParameterType()
+								.getParameterType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_PERSONNEL_STAFF_PARAMTYPE_CONTRACTOR)
+						&& param.getParameterCode()
+								.equals(SupplierManagementConst.PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE)
 						&& per.getEpfNo() != null && per.getEpfNo() != "") {
 
 					stfCnt = stfCnt + 1;
@@ -5995,7 +6093,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void updateSmSupplierInfo(String applType) {
+	private boolean updateSmSupplierInfo(String applType) {
 		try {
 			getManagedBean().getSmSupplier().setSmAppl(
 					getManagedBean().getSmAppl());
@@ -6053,7 +6151,8 @@ public class SmApplicationBackingBean extends
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 				for (SmMofAccount acc : getManagedBean().getSmSupplier()
 						.getSmMofAccounts()) {
-					if (acc.getSmSupplier().equals(
+					System.out.println("*** Acc Type ********");
+					if (acc.getSupplierType().equals(
 							getManagedBean().getSmAppl().getSupplierType())) {
 						if (applType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
@@ -6070,6 +6169,9 @@ public class SmApplicationBackingBean extends
 							}
 							acc.getSmMofCerts().add(assignNewMofCert(acc));
 						} else {
+							System.out
+									.println("******* Adding new cert for *******"
+											+ applType);
 							List<SmMofCert> certList = new ArrayList<SmMofCert>();
 							certList.add(assignNewMofCert(acc));
 							acc.setSmMofCerts(certList);
@@ -6108,12 +6210,14 @@ public class SmApplicationBackingBean extends
 					retriveSupplierById(
 							getManagedBean().getSmSupplier().getSupplierId())
 							.getSmSupplier());
-
+			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			getManagedBean().setSmSupplier(
 					retriveSupplierById(
 							getManagedBean().getSmSupplier().getSupplierId())
 							.getSmSupplier());
+			return false;
 		}
 	}
 
