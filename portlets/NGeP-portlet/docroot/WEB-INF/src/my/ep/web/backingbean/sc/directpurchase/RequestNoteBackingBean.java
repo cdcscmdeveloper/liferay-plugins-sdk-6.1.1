@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -45,6 +46,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -340,13 +342,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqBpm = new BpmRequestDTO();
-		/*//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
+		//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
+			IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 			reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-			directPurchaseSO.approvalRequestNote(reqDTO);
-		}*/
+			purchaseReqSO.approvalRequestNote(reqDTO);
+		}
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		try {
