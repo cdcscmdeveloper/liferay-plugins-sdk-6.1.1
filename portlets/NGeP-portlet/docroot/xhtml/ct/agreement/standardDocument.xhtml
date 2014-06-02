@@ -4,13 +4,20 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="createAgreement" header="AGREEMENT CONTENT"
-		toggleable="true" toggleSpeed="500">
+	<p:panel id="createAgreement" header="AGREEMENT CONTENT" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Sample Contract" />
+				<h:commandLink action="#{agreementBackingBean.downloadFile('sample')}">
+					<p:graphicImage library="ep/images/design" name="download.png"
+						value="/resources/ep/images/design/download.png" title="File Download" />
+				</h:commandLink>				
+			</h:panelGrid>
 			<p:spacer height="5" />
 			<p:dataTable id="contentTable" var="data" rowIndexVar="rowIndex"
-				value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.agreementContents}"
+				value="#{agreementBackingBean.managedBean.ctAgreement.agreementContents}"
 				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{data}">
+				<p:ajax event="rowSelect" update=":form:agreementTab:delContentBtn" />
 				<p:column style="width:60%;" headerText="Content">
 					<p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.agreementContentId != null}" />
 					<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.agreementContentId == null}"/>
@@ -38,26 +45,20 @@
 						</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{data.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
-						<h:commandLink
-							action="#{agreementBackingBean.downloadDocFile(data.title)}">
+						<h:commandLink action="#{agreementBackingBean.downloadDocFile(data.title)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
 						</h:commandLink>
 					</h:panelGroup>
-					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{data.agreementContentId == null}">
-							<p:commandButton
-								oncomplete="uploadUserDefineDlg.show();return false;"
-								icon="iconAttachment" update=":form:agreementTab:contentTable"
-								rendered="#{data.filePath == null}">
+					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{data.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
+							<p:commandButton oncomplete="uploadUserDefineDlg.show();return false;"
+								icon="iconAttachment" update=":form:agreementTab:contentTable" >
 								<f:setPropertyActionListener value="#{data}" 
 								  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
 							</p:commandButton>
-							<h:commandLink rendered="#{data.filePath != null}"
+							<h:commandLink rendered="#{data.filePath != null}" value="#{data.fileName}"
 								action="#{agreementBackingBean.downloadFile(data.filePath)}">
-								<p:graphicImage library="ep/images/design" name="download.png"
-									value="/resources/ep/images/design/download.png"
-									title="File Download" />
 							</h:commandLink>
 					  </h:panelGroup>
 				</p:column>
@@ -75,15 +76,13 @@
 			</p:dialog>
 		</h:panelGrid>
 		  <div class="ppRightBtn"> 
-              <p:commandButton value="Add" process="@form"  icon="ui-icon-add" update="contentTable" 
-                 action="#{agreementBackingBean.addAgreementContents}" />
+              <p:commandButton value="Add" process="@form"  icon="ui-icon-add" update="contentTable" action="#{agreementBackingBean.addAgreementContents}" />
 		      <p:spacer width="1"/>
-		      <p:commandButton value="Delete" 
-		        icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();"/> 
+		      <p:commandButton id="delContentBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();"
+		      	disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}" /> 
 		      <p:spacer width="1"/>
-		      <h:commandButton value="DownLoad All" 
-		       action="#{agreementBackingBean.downloadAll()}"
-		        icon="ui-icon-download" process="@form"/> 
+		      <p:commandButton value="DownLoad All" ajax="false" action="#{agreementBackingBean.downloadAll()}"
+		        	icon="ui-icon-download" process="@form"/> 
 	   </div>
 	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" header="Delete Confirmation" 
 	      styleClass="screen-title" resizable="false" modal="true" width="325" height="90">  

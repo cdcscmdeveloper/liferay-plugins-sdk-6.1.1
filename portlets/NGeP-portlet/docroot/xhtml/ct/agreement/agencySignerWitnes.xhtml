@@ -13,18 +13,19 @@
 	     selection="#{agreementBackingBean.selectedAgencySigner}" rowKey="#{data}">
 		 <ac:paginator for="AgSignerTable"/>
 		 <p:column selectionMode="multiple" style="width:2%"/>  
-		 <p:column style="width:15%;"  headerText="Ministry">
+		 <p:column style="width:15%; white-space:normal;"  headerText="Ministry">
 		   <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
 		 </p:column> 
          <p:column style="width:20%;"  headerText="Department"> 	
            <p:selectOneMenu id="department" value="#{data.orgProfile.parentOrgProfile.orgProfileId}"  style="width:95%;" >
               <f:selectItems value="#{agreementBackingBean.getDepartmentDropdown(agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId)}"/>
-              <p:ajax event="change" update="ptj" process="@this"/> 
+              <p:ajax event="change" update="ptj,contractSigner" process="@this"/> 
            </p:selectOneMenu>
          </p:column>
          <p:column style="width:25%;" headerText="PTJ">
             <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:95%" >
               <f:selectItems value="#{agreementBackingBean.getPtjCodeName(data.orgProfile.parentOrgProfile.orgProfileId)}"/>
+              <p:ajax event="change" update="contractSigner" process="@this"/> 
             </p:selectOneMenu>
          </p:column>
          <p:column style="width:15%;" headerText="Contract Signer">
@@ -33,10 +34,10 @@
               <p:ajax event="change" update="agOfId,agOfPosition" process="@this" listener="#{agreementBackingBean.setUserValueAgency(data,data.officer.userId)}"/> 
            </p:selectOneMenu>
          </p:column>  
-         <p:column style="width:10%;" headerText="IC No">
+         <p:column style="width:10%; white-space:normal;" headerText="IC No">
              <p:outputLabel id="agOfId" value="#{data.officerIc}" style="float:left;"/>
          </p:column>         
-         <p:column style="width:10%;" headerText="Position">
+         <p:column style="width:10%; white-space:normal;" headerText="Position">
             <p:outputLabel id="agOfPosition" value="#{data.officerPosition}" style="float:left;"/>
          </p:column> 
        </p:dataTable>

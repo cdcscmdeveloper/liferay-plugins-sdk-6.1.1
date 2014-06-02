@@ -12,11 +12,13 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.managedbean.BaseManagedBean;
+
 import org.primefaces.model.DualListModel;
 
 @ManagedBean(name ="agreementManagedBean")
@@ -49,6 +51,11 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	
 	private boolean chkConceValue;
+	
+	//KY
+	private Map<String, SmPersonnel> supplierUserMap;
+	
+	private CtAgreement ctAgreement;
 	
 	public AgreementManagedBean(){
 		
@@ -232,5 +239,23 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.selectedAgreementContent = selectedAgreementContent;
 	}
 
+	public Map<String, SmPersonnel> getSupplierUserMap() {
+		if(supplierUserMap==null) {
+			supplierUserMap = new HashMap<String, SmPersonnel>();
+		}
+		return supplierUserMap;
+	}
+
+	public void setSupplierUserMap(Map<String, SmPersonnel> supplierUserMap) {
+		this.supplierUserMap = supplierUserMap;
+	}
+
+	public CtAgreement getCtAgreement() {
+		return ctAgreement;
+	}
+
+	public void setCtAgreement(CtAgreement ctAgreement) {
+		this.ctAgreement = ctAgreement;
+	}
 	
 }
