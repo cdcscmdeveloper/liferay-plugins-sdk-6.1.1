@@ -119,7 +119,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{"Save","Submit"});
+			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			getManagedBean().setCircularVer(new CtCircularVer());
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
@@ -135,7 +135,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		if(getManagedBean().getUserMap().size()==0) {
 			 initializeApproverList();
 			 this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		}
+				
+	    }
 	}
 	
 	private FacesScopes getFacesScopes() {
@@ -148,7 +149,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			List<String> target = new ArrayList<String>();
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
-	}	
+	}
 	
 	public SelectItem[] getStatusDropdown() {
 		IStatusSO statusSO = null;
@@ -170,7 +171,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    items[0] = new SelectItem(null, "- Select One -");
 		      
 			for(PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusDesc());
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -375,21 +376,22 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-			CtCircularVer circularVer = getManagedBean().getCircularVer();
+			CtCircularVer circularVer = this.getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR);
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+		    reqDTO.setUserMap(this.getManagedBean().getUserMap());
+		    reqDTO.setSelectedApprovers(this.getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(this.getManagedBean().getApproverModel().getSource());
+			reqDTO.setRemark(this.getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());			
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			PmUser pmUSer = new PmUser();
-			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
+			pmUSer.setLoginId(this.getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
@@ -542,7 +544,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
-				getManagedBean().setOutComes(new String[]{"Save","Submit"});
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
@@ -592,7 +594,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setCircularAdmin(dataType.getContractAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
@@ -606,17 +608,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
-			  this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-			    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-				   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-				   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-				} 
-		        this.getManagedBean().setRemarkList(resDTO.getRemarkList());
-				this.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-				
-				initializeRemarks();
-				ContractBackingBean ctBB = new ContractBackingBean();
-			    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			}
+	        this.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			this.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
+			initializeRemarks();
+			ContractBackingBean ctBB = new ContractBackingBean();
+		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		    
 						
 		} catch (Exception e) {
@@ -642,11 +644,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 
-				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-				if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
-					reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
-				}// TODO hardcode to get the value, should remove after have real data
-				reqDTO.setOrgProfileId(1003L);
+			reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
+				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
+			}// TODO hardcode to get the value, should remove after have real data
+			reqDTO.setOrgProfileId(1003L);
 			
 
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);

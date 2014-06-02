@@ -767,7 +767,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    items[0] = new SelectItem(null, "- Select One -");
 		      
 			for(PmStatusDesc statusDesc : list) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusDesc());
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
