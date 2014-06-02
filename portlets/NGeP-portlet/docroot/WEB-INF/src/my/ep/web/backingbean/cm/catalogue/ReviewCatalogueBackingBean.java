@@ -88,16 +88,8 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
-		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-		
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-		
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+	
+		reqDTO.setSupplierId(this.getManagedBean().getSelectedReviewCat().getSmSupplier().getSupplierId());
 
 		CatalogueResDTO catResDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 
