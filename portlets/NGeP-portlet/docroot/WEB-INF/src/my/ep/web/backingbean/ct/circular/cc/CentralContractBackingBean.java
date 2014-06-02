@@ -729,18 +729,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public void setContractListner(){
 		
-		if(this.getManagedBean().getSelectedCircularContract().getCtCircularItems() == null)
-			this.getManagedBean().getSelectedCircularContract().setCtCircularItems(new ArrayList<CtCircularItem>());
-		else
-			this.getManagedBean().getSelectedCircularContract().getCtCircularItems().clear();
-			
-		if(this.getManagedBean().getSelectedCircularContract() != null){
-			for(CtContractItem ctitems :this.getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
-				CtCircularItem item = new CtCircularItem();
-				item.setCtContractItem(ctitems);
-				this.getManagedBean().getSelectedCircularContract().getCtCircularItems().add(item);
-			}
-		}
+		  if(this.getManagedBean().getSelectedCircularContract() != null && 
+			       (this.getManagedBean().getSelectedCircularContract().getCtCircularItems() == null ||
+			       this.getManagedBean().getSelectedCircularContract().getCtCircularItems().size() == 0)){
+					this.getManagedBean().getSelectedCircularContract().setCtCircularItems(new ArrayList<CtCircularItem>());
+					for(CtContractItem ctitems :this.getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
+						CtCircularItem item = new CtCircularItem();
+						item.setCtContractItem(ctitems);
+						this.getManagedBean().getSelectedCircularContract().getCtCircularItems().add(item);
+					}
+				}
 		this.getManagedBean().setSelectedCircularItem(null);
 	 	this.getManagedBean().setZonePriceMap(null);
 		this.getManagedBean().setChkItemZone(false);
