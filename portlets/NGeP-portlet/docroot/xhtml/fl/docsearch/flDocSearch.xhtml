@@ -38,7 +38,8 @@
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
-						<p:ajax event="change" update="docTypeSearch,docTitleSearch,docStatusSearch"
+						<p:ajax event="change"
+							update="docTypeSearch,docTitleSearch,docStatusSearch,docDoInvStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
@@ -56,7 +57,7 @@
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
-						style="width: 407px;">
+						style="width: 366px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="statusList"
 							value="#{flDocumentBackingBean.managedBean.docStatusList}"
@@ -70,11 +71,14 @@
 				<p:inputText size="50"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
-			<h:panelGrid columns="4" columnClasses="cmWidth1">
-				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.ref']}" />
-				<p:inputText size="20"
-					value="#{flDocumentBackingBean.managedBean.searchSuppRef}"></p:inputText>
-			</h:panelGrid>
+			<h:panelGroup id="docDoInvStatusSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDoInDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.ref']}" />
+					<p:inputText size="20"
+						value="#{flDocumentBackingBean.managedBean.searchSuppRef}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
 			<h:panelGroup id="docTypeSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
@@ -111,8 +115,15 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.procurement.type']}" />
-					<p:inputText size="35"
-						value="#{flDocumentBackingBean.managedBean.searchProcurementType}"></p:inputText>
+					<p:selectOneMenu id="parameterId"
+						value="#{flDocumentBackingBean.managedBean.searchProcurementTypeId}"
+						style="width: 366px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="procureList"
+							value="#{flDocumentBackingBean.managedBean.procurementTypeList}"
+							itemLabel="#{procureList.codeDesc}"
+							itemValue="#{procureList.pmParameter.parameterId}" />
+					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
 			<p:outputPanel id="advanceSearchID" style="width:100%">
@@ -136,9 +147,7 @@
 				value="#{flDocumentBackingBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
 				width="100%">
-
 				<ac:paginator for="flDocListDt" />
-
 				<p:column
 					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}">
 					<h:outputText
@@ -159,10 +168,10 @@
 					<h:outputText
 						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
 					style="text-align: center">
 					<p:commandLink
+						rendered="#{flDocument.docType == 'CR' or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
@@ -170,6 +179,7 @@
 					</p:commandLink>
 					<p:spacer width="7" />
 					<p:commandLink
+						rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
@@ -177,6 +187,7 @@
 					</p:commandLink>
 					<p:spacer width="7" />
 					<p:commandLink
+						rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])">
 						<p:graphicImage library="ep/images/design" name="cancel.png"
 							value="/resources/ep/images/design/cancel.png"

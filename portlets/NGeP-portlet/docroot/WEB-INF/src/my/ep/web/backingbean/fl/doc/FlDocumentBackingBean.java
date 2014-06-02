@@ -47,7 +47,6 @@ import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -134,6 +133,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentSupplier()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
@@ -277,7 +277,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		//System.out.println("====enter process checked===="+ getManagedBean().getSearchDocType());
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
+		System.out.println("=======get Doc Type value=====" + id);
 		if(id!=null) {
 			if(id.equals("CO")){
 				this.getManagedBean().setCheckDocType(true);
@@ -288,14 +288,22 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				this.getManagedBean().setCheckPoDocType(true);
 				this.getManagedBean().setCheckDocType(false);
 				this.getManagedBean().setCheckTitle(true);
+				getProcurementTypeList();
+				
 			}else if(id.equals("PA") || id.equals("CR") || id.equals("PR")){
 				this.getManagedBean().setCheckTitle(true);
+				this.getManagedBean().setCheckDocType(false);
+				this.getManagedBean().setCheckPoDocType(false);
+			}else if(id.equals("DO") || id.equals("IN")){
+				this.getManagedBean().setCheckDoInDocType(true);
 				this.getManagedBean().setCheckDocType(false);
 			}else{
 				this.getManagedBean().setCheckDocType(false);
 				this.getManagedBean().setCheckPoDocType(false);
+				this.getManagedBean().setCheckDoInDocType(false);
 			}
 		}
+		
 		getManagedBean().setSearchDocType(id);
 		getStatusDescList(id, "FL", "en");
 	}
@@ -434,6 +442,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		resDTO.getStatusDescList();
 		getManagedBean().setDocStatusList(resDTO.getStatusDescList());
 	}
+	public void getProcurementTypeList(){
+		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setLanguageCode("en");
+		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+		resDTO.getParameterDescList();
+		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
+	}
 	public boolean isFlFulfilmentRequisitioner() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
@@ -451,13 +468,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		return facesScopes.hasRoleUser(RoleCode.RN_APPROVER.value());
 	}
 	
-	public void getProcurementTypeList(){
-		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setLanguageCode("en");
-		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-		resDTO.getParameterDescList();
-	}
+	
 	
 }

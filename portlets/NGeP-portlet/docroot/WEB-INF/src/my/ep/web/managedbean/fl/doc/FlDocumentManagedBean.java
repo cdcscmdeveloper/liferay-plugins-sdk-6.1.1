@@ -12,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -44,6 +45,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Date searchContractToDuration;
 	
 	private List<PmStatusDesc> docStatusList;
+	private List<PmParameterDesc> procurementTypeList;
 	private Long statusDescId;
 	private Long searchProcurementTypeId;
 	
@@ -57,6 +59,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Boolean checkPoDocType =false;
 	private Boolean checkPaDocType =false;
 	private Boolean checkTitle =false;
+	private Boolean  checkDoInDocType=false;
 	
 	// getUserGroup
 	private String fulfilmentRequisitioner;
@@ -356,6 +359,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchProcurementTypeId(Long searchProcurementTypeId) {
 		this.searchProcurementTypeId = searchProcurementTypeId;
+	}
+
+	/**
+	 * @return the checkDoInDocType
+	 */
+	public Boolean getCheckDoInDocType() {
+		return checkDoInDocType;
+	}
+
+	/**
+	 * @param checkDoInDocType the checkDoInDocType to set
+	 */
+	public void setCheckDoInDocType(Boolean checkDoInDocType) {
+		this.checkDoInDocType = checkDoInDocType;
+	}
+
+	/**
+	 * @return the procurementTypeList
+	 */
+	public List<PmParameterDesc> getProcurementTypeList() {
+		return procurementTypeList;
+	}
+
+	/**
+	 * @param procurementTypeList the procurementTypeList to set
+	 */
+	public void setProcurementTypeList(List<PmParameterDesc> procurementTypeList) {
+		this.procurementTypeList = procurementTypeList;
 	}
 	
 }
