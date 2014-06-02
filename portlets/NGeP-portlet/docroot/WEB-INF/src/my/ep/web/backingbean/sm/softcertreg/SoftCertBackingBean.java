@@ -85,6 +85,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	public String navigateToPaymentPage(){
 		
 		this.getManagedBean().setSoftCertPayList(this.getManagedBean().getSoftCertSelectList());
+		for(SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()){
+			personnel.setSoftcertFlg(2);
+		}
 		updateAmount();
 		return "softCertPaymentPage.xhtml";
 	}
