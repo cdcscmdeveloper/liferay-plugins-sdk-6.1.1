@@ -780,9 +780,7 @@ public class LocationSingleton {
 			//LocationDTO zoneLocation = new LocationDTO(zone);
 			
 			// Build zone - state
-				LOCATION_CLASS zoneLocation = locClass.newInstance();
-				((TplSpecZoneLoc) zoneLocation).setTplSpecZoneDtl(zone);
-			 zoneNode = new DefaultTreeNode("zone",zoneLocation, rootLocationTree);
+			 zoneNode = new DefaultTreeNode("zone",zone, rootLocationTree);
 			}
 	
 			//LocationDTO	zoneLocation	=	new LocationDTO(zone);
@@ -793,14 +791,19 @@ public class LocationSingleton {
 					//LocationDTO stateLocation = new LocationDTO(state);
 					LOCATION_CLASS stateLocation = locClass.newInstance();
 					stateLocation.setPmState(state);
+					
 					TreeNode stateNode=null;
 					if(zoneNode !=null){
-						 stateNode =new DefaultTreeNode("state",stateLocation, zoneNode);
-						}else{
-							stateNode = new DefaultTreeNode("state",stateLocation,
-									rootLocationTree);
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation).setTplSpecZoneDtl(zone);
 						}
-	
+
+						stateNode =new DefaultTreeNode("state",stateLocation, zoneNode);
+					} else {
+						/*stateNode = new DefaultTreeNode("state",stateLocation,
+									rootLocationTree);*/
+					}
+
 					//TreeNode stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
 				}
 			}
@@ -812,6 +815,9 @@ public class LocationSingleton {
 					stateLocation.setPmState(state);
 					TreeNode stateNode=null;
 					if(zoneNode !=null){
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation).setTplSpecZoneDtl(zone);
+						}
 						stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
 						}else{
 							 stateNode = new DefaultTreeNode("state",stateLocation,
@@ -825,6 +831,7 @@ public class LocationSingleton {
 							//LocationDTO divisionLocation = new LocationDTO(division);
 							LOCATION_CLASS divisionLocation = locClass.newInstance();
 							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
 							TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
 						}
 					}
@@ -839,6 +846,9 @@ public class LocationSingleton {
 					stateLocation.setPmState(state);
 					TreeNode stateNode=null;
 					if(zoneNode !=null){
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation).setTplSpecZoneDtl(zone);
+						}
 						stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
 						}else{
 							 stateNode = new DefaultTreeNode("state",stateLocation,
@@ -853,6 +863,10 @@ public class LocationSingleton {
 							//LocationDTO districtLocation = new LocationDTO(district);
 							LOCATION_CLASS districtLocation = locClass.newInstance();
 							districtLocation.setPmDistrict(district);
+							districtLocation.setPmState(state);
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) districtLocation).setTplSpecZoneDtl(zone);
+							}
 							TreeNode districtNode = new DefaultTreeNode("district",districtLocation, stateNode);
 							List<PmCity>	cities	=	mapDistrictsCities.get(district);
 							if(cities != null && !cities.isEmpty()){
@@ -874,6 +888,9 @@ public class LocationSingleton {
 					stateLocation.setPmState(state);
 					TreeNode stateNode=null;
 					if(zoneNode !=null){
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation).setTplSpecZoneDtl(zone);
+						}
 						stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
 						}else{
 							 stateNode = new DefaultTreeNode("state",stateLocation,
@@ -887,6 +904,10 @@ public class LocationSingleton {
 							//LocationDTO divisionLocation = new LocationDTO(division);
 							LOCATION_CLASS divisionLocation = locClass.newInstance();
 							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) divisionLocation).setTplSpecZoneDtl(zone);
+							}
 							TreeNode	divisionNode	=	new DefaultTreeNode("division",divisionLocation, stateNode);
 							Map<PmDistrict,List<PmCity>>	mapDistrictsCities	=	mapDivisionsDistrictsCities.get(division);
 							Set<PmDistrict>		districtsCitiesKeySet	=	mapDistrictsCities.keySet();
@@ -895,6 +916,11 @@ public class LocationSingleton {
 									//LocationDTO districtLocation = new LocationDTO(district);
 									LOCATION_CLASS districtLocation = locClass.newInstance();
 									districtLocation.setPmDistrict(district);
+									districtLocation.setPmState(state);
+									districtLocation.setPmDivision(division);
+									if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+										((TplSpecZoneLoc) districtLocation).setTplSpecZoneDtl(zone);
+									}
 									TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
 									List<PmCity>	cities	=	mapDistrictsCities.get(district);
 									if(cities != null && !cities.isEmpty()){
@@ -1527,9 +1553,7 @@ public class LocationSingleton {
 	public TreeNode constuctTreeNode(TplSpecZoneDtl tplSpecZoneDtl, List<TplSpecZoneLoc> specLocs){
 		TreeNode root=new DefaultTreeNode("root",null);
 		if(tplSpecZoneDtl!=null){
-			TplSpecZoneLoc	tplSpecZoneLoc=(TplSpecZoneLoc)specLocs.get(0);
-			tplSpecZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
-			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneLoc,root);
+			TreeNode zoneNode = new DefaultTreeNode("zone",specLocs.get(0).getTplSpecZoneDtl(),root);
 			List<PmState> states = new ArrayList<PmState>();
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			TreeNode stateNode=null;
