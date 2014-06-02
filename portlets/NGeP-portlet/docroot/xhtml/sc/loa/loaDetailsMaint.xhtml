@@ -15,25 +15,69 @@
 		
 		<ui:include src="loaHeader.xhtml" />
 		
-		<p:tabView dynamic="true" cache="true" orientation="left" id="tt">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top">
+				<p:tabMenu styleClass="sidemenu"
+					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}"
+					style="display : table-caption;">
 
-			<p:tab title="#{lbl['lbl.sc.loiloa.loa.details']}">
-				<ui:include src="loaDetailsMenu.xhtml" />
-			</p:tab>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.deduction.payment']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
+					</p:menuitem>
+				</p:tabMenu>
+			</td>
+			<td width="80%">
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
+					<ui:include src="loaDetailsMenu.xhtml" />
+				</c:if>
 	
-			<p:tab title="#{lbl['lbl.sc.loiloa.award.details']}">
-				<!-- <ui:include src="loaAwardDetailsMenu.xhtml" /> -->
-			</p:tab>
-	
-			<p:tab title="#{lbl['lbl.sc.loiloa.loa.perform.bond']}">
-				<!-- <ui:include src="loaPerformanceBondMenu.xhtml" /> -->
-			</p:tab>
-	
-			<p:tab title="Payment Details">
-				<!-- <ui:include src="loaPaymentDetailsMenu.xhtml" /> -->
-			</p:tab>
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
+					<ui:include src="loaAwardDetailsMenu.xhtml" />
+				</c:if>
+				
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+					
+				</c:if>
+				
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
+					
+				</c:if>
 			
-		</p:tabView>
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
+					<!-- <ui:include src="loaPerformanceBondMenu.xhtml" /> -->
+				</c:if>
+				
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
+					
+				</c:if>
+				
+				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
+					
+				</c:if>
+				
+				<!-- <ui:include src="loaPaymentDetailsMenu.xhtml" /> -->
+			</td>
+		</tr>
+		</table>
 
 	</ui:define>
 </ui:composition>

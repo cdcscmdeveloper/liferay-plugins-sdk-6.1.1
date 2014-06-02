@@ -43,10 +43,10 @@
 		</h:panelGrid>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.ded.pay']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.loiloa.deduction.payment']}" toggleable="true"
 		id="deductID">
 
-		<p:commandLink value="#{lbl['lbl.sc.loiloa.loa.ded.pay']}"></p:commandLink>
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.deduction.payment']}"></p:commandLink>
 
 
 		<p:dataTable id="deducttbl" var="deductList"
@@ -58,15 +58,15 @@
 
 			<ac:paginator for="deductpayments" />
 
-			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.type']}">
+			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.type']}">
 				<h:outputText value="#{deductList.deductionType.code}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
+			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.description']}">
 				<h:outputText value="Purchase Request" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.percentage']}">
+			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.percentage']}">
 				<h:outputText value="Percentage" />
 			</p:column>
 
@@ -76,7 +76,7 @@
 
 		</p:dataTable>
 		<p:spacer height="30px" />
-		<p:commandLink value="#{lbl['lbl.sc.loiloa.loa.ded.clause']}" />
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.deduction.clause']}" />
 		<p:dataTable
 			value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 			id="deductclause" var="dclauseList" rowKey="#{dclauseList}"
@@ -86,11 +86,11 @@
 			
 			<p:column selectionMode="multiple" style="width:2%" />
 			
-			<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.clause']}">
+			<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.deduction.clause']}">
 				<h:outputText value="" />
 			</p:column> -->
 
-			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
+			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.description']}">
 				<h:outputText value="Percentage" />
 			</p:column>
 

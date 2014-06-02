@@ -5,36 +5,77 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isZonal" value="#{lOADetailBackingBean.managedBean.scQtFinalization.scQt.zonal}" />
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
-		toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
+	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="17%">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.award.type']}" />
-			</h:column>
-			<h:column>
+			</td>
+			<td width="83%">
 				<p:inputText
-					value="#{lOADetailBackingBean.managedBean.qt.awardType}"
+					value="#{lOADetailBackingBean.managedBean.scQtFinalization.recommendedType}"
 					disabled="true" size="30" readonly="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.multiple.locality']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOADetailBackingBean.managedBean.qt.scQtCriterias.multiLocality ? 'Yes' : 'No'}"
-					readonly="true" disabled="true" size="30" />
-			</h:column>
-			<h:column />
-			<h:column />
-		</h:panelGrid>
+			</td>
+		</tr>
+		</table>
+		
+		<p:dataTable id="itemtbl" var="scQtRecommendDtl"
+			value="#{lOADetailBackingBean.managedBean.scQtRecommendDtls}" rows="10">
+			
+			<ac:paginator for="itemtbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}">
+				<p:commandLink id="zoneName"
+					oncomplete="zoneLocPopup.show();"
+					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
+					
+					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{scQtRecommendDtl.scQtRecommend.tplSpecZoneDtl}" />
+					
+					<h:outputText value="#{scQtRecommendDtl.scQtRecommend.tplSpecZoneDtl.zoneName}" />
+				</p:commandLink>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}">
+				#{scQtRecommendDtl.scQtRecommend.requestItem.itemName}
+			</p:column>
+			
+			<p:column style="width:10%; text-align:right;" headerText="#{lbl['lbl.sc.loiloa.item.quantity']}">
+				<h:outputText value="#{scQtRecommendDtl.awardQty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.loiloa.item.uom']}">
+				#{scQtRecommendDtl.scQtRecommend.requestItem.pmUom.uomName}
+			</p:column>
+
+			<p:column style="width:20%; text-align:right;" headerText="#{lbl['lbl.sc.loiloa.item.unit.price']}">
+				<f:facet name="footer">
+					<h:outputText value="#{lbl['lbl.sc.loiloa.item.total']}" />
+				</f:facet>	
+				
+				<h:outputText value="">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column style="width:20%; text-align:right;" headerText="#{lbl['lbl.sc.loiloa.item.sub.total']}">
+				<f:facet name="footer">
+					
+				</f:facet>
+				
+				<h:outputText value="">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+		</p:dataTable>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.loiloa.location.list']}"
-		toggleable="true">
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.location.list']}" toggleable="true" rendered="false">
 		<p:dataTable id="zoneId" var="zone"
 			value="#{lOADetailBackingBean.managedBean.zonelist}" rows="10"
 			rowIndexVar="rowIndex" style="width:35%">
@@ -47,44 +88,8 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="true">
-		<p:dataTable id="itemtbl" var="itemList"
-			value="#{lOADetailBackingBean.managedBean.scQtItemList}" rows="10"
-			rowIndexVar="rowIndex">
-			<ac:paginator for="itemId" />
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item']}">
-				<h:outputText value="#{itemList.itemName}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.uom']}">
-				<h:outputText value="#{itemList.pmUom.uomName}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item.award.by']}">
-				<h:outputText value="item" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.value']}">
-				<h:outputText value="1234" />
-			</p:column>
-
-		</p:dataTable>
-	</p:panel>
-	<p:dialog id="zonePopUpId" widgetVar="zonePopUp" modal="true">
-		<p:panel toggleable="true">
-			<h:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<h:outputLabel value="Zone Name" />
-				<p:inputText readonly="true" />
-			</h:panelGrid>
-			<h:panelGroup style="width:100%;">
-				<p:dataTable value="" var="">
-					<p:column headerText="Location Name" />
-				</p:dataTable>
-			</h:panelGroup>
-
-			<p:commandButton value="CANCEL" style="float:right;"
-				icon="ui-icon-cancel" onclick="popQtn.hide();"></p:commandButton>
-		</p:panel>
-	</p:dialog>
+	
+	<c:if test="#{isZonal}">
+		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
+	</c:if>
 </ui:composition>

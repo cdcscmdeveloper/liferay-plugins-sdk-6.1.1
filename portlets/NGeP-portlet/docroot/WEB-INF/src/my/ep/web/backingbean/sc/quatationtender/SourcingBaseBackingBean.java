@@ -35,6 +35,7 @@ import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.OrganizationType;
@@ -46,6 +47,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -56,6 +58,9 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
+	
+	protected static final String DELIMITER_ADDRESS = ",";
+	
 	/**
 	 * Method to retrive orgprofiles based on user id and parent org id
 	 * 
@@ -122,6 +127,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"The file was uploaded successfully.", null);
 			FacesContext.getCurrentInstance().addMessage(null, message);
+			
+			//FileHelper.getInstance().uploadFile("\\attachment\\sc\\", fileName, null, null, fileBytes);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -284,5 +291,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return userName;
+	}
+	
+	public String getSupplierAddress(PmAddress pmAddress) {
+		StringBuilder address = new StringBuilder();
+		
+		if (pmAddress != null) {
+			String addr = pmAddress.getAddress1();
+			
+			if (StringUtils.isNotBlank(addr)) {
+				address.append(addr);
+				address.append(DELIMITER_ADDRESS);
+			}
+			
+			addr = pmAddress.getAddress2();
+			if (StringUtils.isNotBlank(addr)) {
+				address.append(addr);
+				address.append(DELIMITER_ADDRESS);
+			}
+			
+			addr = pmAddress.getAddress3();
+			if (StringUtils.isNotBlank(addr)) {
+				address.append(addr);
+				address.append(DELIMITER_ADDRESS);
+			}
+			
+			addr = pmAddress.getAddress4();
+			if (StringUtils.isNotBlank(addr)) {
+				address.append(addr);
+			}	
+		}
+		
+		return address.toString();
 	}
 }

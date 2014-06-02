@@ -13,7 +13,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText size="50"
-					value="#{lOADetailBackingBean.managedBean.smMofAccount.mofNo}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNumber}"
 					disabled="true" />
 			</td>
 		</tr>
@@ -35,7 +35,7 @@
 				<p:selectOneMenu id="branch"
 					value="#{lOADetailBackingBean.managedBean.branchName}"
 					style="width: 280px;margin-bottom: 5px;"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.branch']}">
 					<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
 					<f:selectItems
@@ -117,7 +117,7 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.title}" size="125"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.loa.title']}"
 					disabled="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}"
 					maxlength="100" />
@@ -133,7 +133,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileNo}" size="42" />
 				<p:inputText id="fileExtNo" dir="rtl"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="1"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 					maxlength="3" />
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
@@ -173,7 +173,7 @@
 			<td width="33%">
 				<p:selectOneRadio id="insWarranty"
 					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 				</p:selectOneRadio>
@@ -185,7 +185,7 @@
 			<td width="33%">
 				<p:selectOneRadio id="bondReq"
 					value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 				</p:selectOneRadio>
@@ -206,14 +206,14 @@
 					<p:selectOneMenu id="contractType"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"
-						required="true"
+						required1="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItems
-							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.qtContractType)}" />
+							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
 						<p:ajax event="change"
-							listener="#{lOADetailBackingBean.retrieveContractType}"
+							listener="#{lOADetailBackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractAgency" />
+							update="contractAgencyPG" />
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
@@ -230,21 +230,45 @@
 			</td>
 			<td width="33%">
 				<c:if test="#{lOADetailBackingBean.managedBean.scLoa.brandNew}">
-					<p:selectOneMenu id="contractAgency"
+					<h:panelGroup id="contractAgencyPG">
+					<p:selectOneMenu id="contractAgencyProf"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
 						style="width: 280px;margin-bottom: 5px;"
-						required="true"
-						label="#{lbl['lbl.sc.loiloa.loa.agency']}">
+						required1="true"
+						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
+						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
 						
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.agencyProfileList}"
 							var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgName}"
 							itemValue="#{pmOrgProfile.orgProfileId}" />
-						<p:ajax event="change" partialSubmit="true" process="@this"
+						<p:ajax event="change" 
+							listener="#{lOADetailBackingBean.contractAdminChanged()}"
+							partialSubmit="true" process="@this"
+							update="contractAdmin" />
+					</p:selectOneMenu>
+					<p:message id="contractAgencyProfMsg" for="contractAgencyProf" display="icon" />
+					
+					<p:selectOneMenu id="contractAgency"
+						value="#{lOADetailBackingBean.managedBean.selectedContractAgency}"
+						style="width: 280px;margin-bottom: 5px;"
+						required1="true"
+						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
+						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+						
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.agencyList}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterCode}" />
+						<p:ajax event="change" 
+							listener="#{lOADetailBackingBean.contractAdminChanged()}"
+							partialSubmit="true" process="@this"
 							update="contractAdmin" />
 					</p:selectOneMenu>
 					<p:message id="contractAgencyMsg" for="contractAgency" display="icon" />
+					</h:panelGroup>
 				</c:if>
 				<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}">
 					<p:inputText 
@@ -260,12 +284,12 @@
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
 						style="width: 280px;margin-bottom: 5px;"
-						required="true"
+						required1="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOADetailBackingBean.managedBean.pmUserList}"
+							value="#{lOADetailBackingBean.managedBean.contractAdminList}"
 							var="pmuser" itemLabel="#{pmuser.userName}"
 							itemValue="#{pmuser.userId}" />
 						<p:ajax event="change"
@@ -283,16 +307,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
+				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scQtFinalization.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText
-					value="#{lOADetailBackingBean.managedBean.scQt.contractDuration}"
+					value="#{lOADetailBackingBean.managedBean.scQtFinalization.scQt.contractDuration}"
 					disabled="true" size="30" />
 			</td>
 		</tr>
-		<ui:param name="lbleffDate" value="#{lOADetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
-		<ui:param name="lblexpDate" value="#{lOADetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
+		<ui:param name="lbleffDate" value="#{lOADetailBackingBean.managedBean.scQtFinalization.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
+		<ui:param name="lblexpDate" value="#{lOADetailBackingBean.managedBean.scQtFinalization.scQt.fulfilmentType.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
 		<tr>
 			<td>
 				<p:outputLabel value="* #{lbl[lbleffDate]}" />
@@ -302,7 +326,7 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					showOn="button"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
-					required="true"
+					required1="true"
 					label="#{lbl[lbleffDate]}"
 					size="25" />
 				<p:message id="effdateMsg" for="effdate" display="icon" />
@@ -315,7 +339,7 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					showOn="button"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractExpDate}"
-					required="true"
+					required1="true"
 					label="#{lbl[lblexpDate]}"
 					size="25" />
 				<p:message id="expdateMsg" for="expdate" display="icon" />
@@ -328,7 +352,7 @@
 			<td>
 				<p:selectOneRadio id="agreementReq"
 					value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 				</p:selectOneRadio>
@@ -451,7 +475,7 @@
 				<p:selectOneMenu id="contractSigner" 
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userId}"
 					style="width: 280px;margin-bottom: 5px;"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
 					<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
 					<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
@@ -477,7 +501,7 @@
 			<td colspan="3">
 				<p:inputText id="witnessName" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.agency.witness.full.name']}"
 					maxlength="50" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
@@ -490,7 +514,7 @@
 			<td colspan="3">
 				<p:inputText id="identificationNo" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
-					required="true"
+					required1="true"
 					label="#{lbl['lbl.sc.loiloa.agency.witness.ic.no']}"
 					maxlength="15" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
@@ -503,7 +527,7 @@
 			<td colspan="3">
 				<p:inputText id="designation" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
-					required="true"
+					required1="true"
 					maxlength="30"
 					label="#{lbl['lbl.sc.loiloa.agency.witness.designation']}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
@@ -518,7 +542,7 @@
 					cols="50" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
 					style=" margin-bottom:5px;"
-					required="true"
+					required1="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.loiloa.address']}" />
 				<p:message id="addressMsg" for="address" display="icon" />
@@ -529,7 +553,7 @@
 			<td width="33%">
 				<p:inputText id="phoneNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.phoneNo}"
-					required="true"
+					required1="true"
 					maxlength="20"
 					label="#{lbl['lbl.sc.loiloa.tel.no']}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
@@ -542,7 +566,7 @@
 			<td>
 				<p:inputText id="faxNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.faxNo}"
-					required="true"
+					required1="true"
 					maxlength="20"
 					label="#{lbl['lbl.sc.loiloa.fax.no']}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
@@ -555,7 +579,7 @@
 			<td>
 				<p:inputText id="mobileNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"
-					required="true"
+					required1="true"
 					maxlength="20"
 					label="#{lbl['lbl.sc.loiloa.mobile.no']}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
@@ -568,7 +592,7 @@
 			<td colspan="3">
 				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
-					required="true"
+					required1="true"
 					maxlength="80"
 					label="#{lbl['lbl.sc.loiloa.email']}" />
 				<p:message id="emailMsg" for="email" display="icon" />

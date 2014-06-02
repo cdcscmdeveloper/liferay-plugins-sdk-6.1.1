@@ -11,18 +11,26 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -30,14 +38,16 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -47,6 +57,7 @@ import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -127,103 +138,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		return approverUserNames;
 	}
 
-	/**
-	 * Handle Department dropdown changed - reset selected ptj profile and
-	 * populate list of department.
-	 * */
-	public void handleMinistryProfileChanged() {
-		debugLogger("handleMinistryProfileChanged");
-
-		Long parentOrgProfileId = this.getManagedBean().getScQt()
-				.getMinistryOrgProfile().getOrgProfileId();
-
-		if (parentOrgProfileId != null) {
-			PmUser user = new FacesScopes().getUserSessionBean();
-
-			if (user != null) {
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-
-				reqDTO.setUserId(user.getUserId());
-				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-				reqDTO.setParentOrgProfileId(parentOrgProfileId);
-
-				IOrgProfileSO orgProfileSO = BusinessDelegate
-						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
-
-				this.getManagedBean().setUserDepartmentList(
-						resDTO.getOrgProfileList());
-			}
-		} else {
-			this.getManagedBean().setUserDepartmentList(
-					new ArrayList<PmOrgProfile>());
-		}
-
-		this.getManagedBean().getScQt().getDepartmentOrgProfile()
-				.setOrgProfileId(null);
-
-		handleDepartmentProfileChanged();
-	}
-
-	/**
-	 * Handle Department dropdown changed - reset selected ptj profile and
-	 * populate list of division.
-	 */
-	public void handleDepartmentProfileChanged() {
-		debugLogger("handleDepartmentProfileChanged");
-
-		Long parentOrgProfileId = this.getManagedBean().getScQt()
-				.getDepartmentOrgProfile().getOrgProfileId();
-
-		if (parentOrgProfileId != null) {
-			PmUser user = new FacesScopes().getUserSessionBean();
-
-			if (user != null) {
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-
-				reqDTO.setUserId(user.getUserId());
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				reqDTO.setParentOrgProfileId(parentOrgProfileId);
-
-				IOrgProfileSO orgProfileSO = BusinessDelegate
-						.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
-
-				this.getManagedBean().setUserDivisionList(
-						resDTO.getOrgProfileList());
-			}
-		} else {
-			this.getManagedBean().setUserDivisionList(
-					new ArrayList<PmOrgProfile>());
-		}
-
-		this.getManagedBean().getScQt().getPmOrgProfile().setOrgProfileId(null);
-	}
-
-	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
-		}
-	}
-
 	public String createLOAAction(ScLoiLoa scLoiLoa) {
 		debugLogger("createLOAAction");
 		
@@ -240,15 +154,19 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			reqDTO.setScLoiLoa(scLoiLoa);
 			reqDTO.setLanguageCode(language);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtlTab(reqDTO);
 			
-			ScLoa scLoa = resDTO.getScLoa();
-			if (scLoa == null) {
-				scLoa = new ScLoa();
-				scLoa.setContractSigner(new PmUser());
-			}
+			ScLoa scLoa = new ScLoa();
+			
+			scLoa.setScLoiLoa(scLoiLoa);
+			scLoa.setContractType(new PmParameter());
+			scLoa.setContractAgency(new PmOrgProfile());
+			scLoa.setContractAdmin(new PmUser());
+			scLoa.setContractSigner(new PmUser());
 			
 			getManagedBean().setScLoa(scLoa);
+			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());			
+			getManagedBean().setLoaAgencyWitness(new ScLoaWitness());
 
 			//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
 
@@ -275,15 +193,13 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 					new BigDecimal(1000000));*/
 			//getManagedBean().getScLoa().setMtoDuration(14);
 
-			showOfficerDetails();
-
-			getManagedBean().setApproverName(getApproverNames());
+			getManagedBean().setScQtRecommendDtls(resDTO.getScQtRecommendDtls());
 			
-			getManagedBean().setContractSignerList(getContractSigners());
-
 			if (resDTO.getDeductionResultBean() != null) {
 				getManagedBean().setScQtDeductionList(resDTO.getDeductionResultBean().getResultList());	
 			}
+			
+			getManagedBean().setContractSignerList(resDTO.getContractSignerList());
 
 			SmSupplierBranch branch = new SmSupplierBranch();
 			SmSupplierBranch branch1 = new SmSupplierBranch();
@@ -346,21 +262,19 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			reqDTO.setScLoiLoa(scLoiLoa);
 			reqDTO.setLanguageCode(language);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtlTab(reqDTO);
 
 			ScLoa scLoa = resDTO.getScLoa();
 			
 			getManagedBean().setScLoa(scLoa);
 			
-			getManagedBean().setScQtItemList(resDTO.getItemResultBean()
-					.getResultList());
+			getManagedBean().setScQtRecommendDtls(resDTO.getScQtRecommendDtls());
 			
-			getManagedBean().setScQtDeductionList(resDTO
-					.getDeductionResultBean().getResultList());
-
-			getManagedBean().setApproverName(getApproverNames());
+			if (resDTO.getDeductionResultBean() != null) {
+				getManagedBean().setScQtDeductionList(resDTO.getDeductionResultBean().getResultList());	
+			}
 			
-			getManagedBean().setContractSignerList(getContractSigners());
+			getManagedBean().setContractSignerList(resDTO.getContractSignerList());
 
 			
 			/*if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
@@ -433,7 +347,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		IAddressSO addressSO;
 		try {
 			PmUser user = new FacesScopes().getUserSessionBean();
-			getManagedBean().setPmUser(user);
+			
 		//	getManagedBean().getScLoa().setOfficierName(user.getUserName());
 		//	getManagedBean().getScLoa().setOfficerDesignation(
 				//	user.getDesignation());
@@ -572,29 +486,85 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 							ex.toString(), ex.getMessage()));
 		}
 	}
+	
+	public void contractTypeChanged() {
+		debugLogger("contractTypeChanged");
+		
+		ScLoa scLoa = getManagedBean().getScLoa();
+		
+		IParameterSO parameterSO = null;
+		try {			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(scLoa.getContractType().getParameterId());
+			
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scLoa.setContractType(resDTO.getPmParameter());
+			
+		} finally {
+			parameterSO = null;
+		}
+		
+		String contractType = scLoa.getContractType().getParameterCode();
+		
+		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+			IOrgProfileSO orgProfileSO;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+				
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+				
+				getManagedBean().setAgencyProfileList(resDTO.getOrgProfileList());
 
-	public void retrieveContractType() {
-		debugLogger("retrieveContractType");
+			} finally {
+				orgProfileSO = null;
+			}	
+		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			List<String> orgTypes = new ArrayList<String>();
+			
+			orgTypes.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+			orgTypes.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+			orgTypes.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+			
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmParameter.parameterCode", 
+					SearchOperator.OPERATOR_IN.value(), 
+					orgTypes));
+			
+			List<PmParameterDesc> agencyList = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			
+			getManagedBean().setAgencyList(agencyList);
+		}
+		
+	}
+
+	public void contractAdminChanged() {
+		debugLogger("contractAdminChanged");
+		
 		IUserSO userSO;
 		try {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
+			
+			ScLoa scLoa = getManagedBean().getScLoa();
+			
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setOrgProfileId(1l);
-			//reqDTO.setOrgType(getManagedBean().getScLoa().getContractType());
-			UserResDTO dto = userSO
-					.retrieveUserListByOrgProfileAndContractType(reqDTO);
-			List<PmUser> userList = dto.getUserList();
-			System.out.println("PmUser List : " + userList.size());
-			// System.out.println(dto.getUserList().size());
-			getManagedBean().setPmUserList(userList);
+			reqDTO.setOrgType(scLoa.getContractType().getParameterCode());
+			reqDTO.setOrgProfileId(scLoa.getContractAgency().getOrgProfileId());
+			
+			UserResDTO resDTO = userSO.retrieveUserListByOrgProfileAndContractType(reqDTO);
+			
+			getManagedBean().setContractAdminList(resDTO.getUserList());
 
-			System.out.println("User Id : "
-					+ getManagedBean().getPmUserList().get(0).getUserId());
-			// handleContractPTJ();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			userSO = null;
 		}
 	}
 
@@ -629,39 +599,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			e.printStackTrace();
 		}*/
 
-	}
-
-	public List<PmUser> getContractSigners() {
-		List<PmUser> contractUsers = this.getManagedBean()
-				.getContractSignerList();
-
-		if (contractUsers == null) {
-			IUserSO userSO = null;
-			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-				// Get Approver Users
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-
-				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				contractUsers = resDTO.getUserList();
-				System.out.println("Contract Signers List: "
-						+ contractUsers.size());
-				this.getManagedBean().setContractSignerList(contractUsers);
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
-								.toString(), ex.getMessage()));
-			} finally {
-				userSO = null;
-			}
-		}
-		return contractUsers;
 	}
 
 	public void handleFileAttachment(FileUploadEvent event) {
