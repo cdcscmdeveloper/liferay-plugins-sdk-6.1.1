@@ -7,25 +7,34 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="RolePopUp" header="SELECT ROLE" widgetVar="rolescreen" modal="true" width="600" height="200">
-		<p:panel toggleable="true">
-	    <p:dataTable id="roleAssign">
-		<ac:paginator />
-		<p:column>
-		<p:selectBooleanCheckbox/>
-		</p:column>
-	    <p:column headerText="Role Name" > 
+	<p:dialog id="recRoleName" header="SELECT ROLE" widgetVar="roleReceiving" modal="true" width="600" height="200">
+	
+		<p:panel id="searRoleName" toggleable="true">
+		
+		<p:dataTable id="rolescreen" var="rolelist"
+		  rowKey="#{rolelist}" rowIndexVar="index"
+		  selection="#{userprofilesBackingBean.managedBean.userRoleSelect}"		  
+		  lazy="true">
+
+		<ac:paginator for="roleReceiving"></ac:paginator>
+		<p:column selectionMode="multiple"
+		  style="width:2%;text-align:center;" />
+		  						 	    		
+	    <p:column headerText="Role Name"> 
           <h:outputText />
         </p:column>
-        <p:column headerText="Approval/Plan/Supplier PLan" > 
-          <h:outputText />   
-        </p:column>
+        
 		</p:dataTable>
-       <p:spacer height="15"></p:spacer>
-       
+ 
+	    <p:dataTable> 	          
+         <p:column headerText="Approval Type" >       
+        </p:column>      
+		</p:dataTable>   
+      <p:spacer height="15"></p:spacer>	
+      	    
  		<div align="right">
-		  <p:commandButton value="Ok" icon="ui-icon-check"/>		
-		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="rolescreen.hide()" />		
+		  <p:commandButton value="Ok" icon="ui-icon-check" /> 		
+		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="roleReceiving.hide()" />		
 		</div>      
 
 		</p:panel>

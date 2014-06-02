@@ -7,8 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="recAddress" header="SELECT ADDRESS" widgetVar="receivingaddress" modal="true">
-	<p:panel header="SEARCH" toggleable="true">
+	<p:dialog id="recAddress" header="SELECT ADDRESS" widgetVar="receivingAddress" modal="true"
+	   width="1000" height="500" >
+	<p:panel id="searchAddress" header="SEARCH" toggleable="true">
 
 		<h:panelGrid columns="4" >
 		
@@ -124,24 +125,40 @@
 			
 		</h:panelGrid>
 		<div align="right">
-		  <p:commandButton value="Search" icon="ui-icon-search"/>		
+		  <p:commandButton value="Search" icon="ui-icon-search"
+		     action="#{userprofilesBackingBean.searchReceivingAddress}"
+		     update="receivingAddress" />			  		
 		  <p:commandButton value="Reset" icon="ui-icon-reset" />		
 		</div>
+		
        </p:panel>	
        <br/>	
 		<p:panel header="RESULT" toggleable="true">
-	    <p:dataTable >
-		<ac:paginator />
-		<p:column />		
+	    <p:dataTable id="receivingAddress" var="userAddress"
+		   rowKey="#{userAddress}" rowIndexVar="index"
+		   value="#{userprofilesBackingBean.searchReceivingAddress}"
+		   selection="#{userprofilesBackingBean.managedBean.userAddressSelect}"
+		   lazy="true">	    
+	    	  
+		<ac:paginator for="receivingAddress"></ac:paginator>
+		<p:column selectionMode="multiple" style="width:2%;text-align:center;" />	
 	    <p:column headerText="Address" > 
-          <h:outputText />
+			<h:outputText value="#{userAddress.pmAddress.address1}" size="50"></h:outputText>,
+			<h:outputText value="#{userAddress.pmAddress.address2}" size="50"></h:outputText>,
+			<h:outputText value="#{userAddress.pmAddress.address3}" size="50"></h:outputText>,
+			<h:outputText value="#{userAddress.pmAddress.address4}" size="50"></h:outputText>
         </p:column>      
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>
 
-		<div align="right">
-		  <p:commandButton value="Ok" icon="ui-icon-check"/>		
-		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="receivingaddress.hide()" />		
+		<div align="right">			
+		  <p:commandButton value="Ok" 
+		  	 process="@all" partialSubmit="true"
+			 onclick="receivingAddress.hide();" icon="ui-icon-accept"
+			 update="@(.recAddUpdate)"
+			 oncomplete="roleService.paginator.endLink.click();"
+			 actionListener="#{userprofilesBackingBean.acceptReceivingAddress}" />		
+		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="receivingAddress.hide()" />			   	
 		</div>
 		</p:panel>
 	</p:dialog>

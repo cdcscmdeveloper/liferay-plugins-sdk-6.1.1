@@ -19,10 +19,10 @@
 	</h:panelGrid>
      
 			<p:tabView>
-				<p:tab id="definedSearch" title="DEFINED SEARCH">
+				<p:tab id="definedSearch" title="Defined Search">
 				   <ui:include src="/xhtml/pm/profilemanagement/userDefinedSearch.xhtml" />
 				</p:tab>
-				<p:tab id="advancedSearch" title="ADVANCED SEARCH">
+				<p:tab id="advancedSearch" title="Advanced Search">
 				   <ui:include src="/xhtml/pm/profilemanagement/userAdvancedSearch.xhtml" />					
 				</p:tab>			
 			</p:tabView>
@@ -75,7 +75,7 @@
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="Create" style="float:right;" action="#{userprofilesBackingBean.createUserProfile()}" ajax="false"
+      <p:commandButton value="Create" style="float:right;" action="#{userprofilesBackingBean.createUserProfiles()}" ajax="false"
        	 icon="ui-icon-add" />
 	 </h:panelGrid>	
 	</p:panel>

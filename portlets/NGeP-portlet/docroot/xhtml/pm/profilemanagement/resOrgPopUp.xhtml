@@ -28,7 +28,7 @@
             	<f:selectItem itemLabel="(Operator)" itemValue="3" />            	            	            	 
               </p:selectOneMenu> 
               
-			 <p:inputText size="50" /> 
+			 <p:inputText value="#{userprofilesBackingBean.managedBean.orgNames}" size="50" /> 
               
 		      <p:selectOneMenu style="width:40px">  
             	<f:selectItem itemLabel="AND" itemValue="1" />  
@@ -124,20 +124,23 @@
 			
 		</h:panelGrid>
 		<div align="right">
-		  <p:commandButton value="Search" icon="ui-icon-search" />		
+		  <p:commandButton value="Search" icon="ui-icon-search"  />	
 		  <p:commandButton value="Reset" icon="ui-icon-reset" />		
 		</div>
        </p:panel>	
        <br/>	
 		<p:panel header="RESULT" toggleable="true">
-	    <p:dataTable >
-		<ac:paginator />
+	    <p:dataTable id="searchOrgList" var="orgProfile" editable="true">
+ 	    <ac:paginator for="searchOrgList" />
+ 	    
         <p:column headerText="Org.Code" > 
-          <h:outputText value="MOF"/>   
+          <h:outputText  />            
         </p:column>
+        
         <p:column headerText="Org.Name" > 
-          <h:outputText value="Ministry Of Education"/>   
-        </p:column>        
+          <h:outputText />   
+        </p:column> 
+               
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>
 
