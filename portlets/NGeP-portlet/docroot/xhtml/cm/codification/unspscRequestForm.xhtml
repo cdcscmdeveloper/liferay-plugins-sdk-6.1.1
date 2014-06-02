@@ -9,13 +9,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	
-		<script>
-	
-	$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html('UNSPSC Request Form'); 
-	</script>
 
-		<p:messages id="unspscFormId" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<script>
+			$('#portlet_codification_WAR_NGePportlet').find(
+					'.portlet-title-text').html('UNSPSC Request Form');
+		</script>
+
+		<p:messages id="unspscFormId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
 		<h:panelGroup id="cmUNSPSCrequestID">
 
 
@@ -26,22 +27,21 @@
 					update="@form"></p:commandButton>
 			</div>
 
-			<table style="width: 66%; margin-bottom: 4px;">
+			
+
+
+			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
 					<td><p:selectOneMenu
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
-							style="width:228px;">
+							style="width:230px;">
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
 						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
 				</tr>
-			</table>
-
-
-			<table style="width: 100%;">
 
 				<tr>
 					<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
