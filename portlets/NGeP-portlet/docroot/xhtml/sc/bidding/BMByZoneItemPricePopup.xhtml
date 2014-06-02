@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div>
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.supplierCode']}" /></TD>
+				<TD><p:inputText id="itemName"
+						value="#{biddingBB.managedBean.supplierCode}" size="20"
+						disabled="true" /></TD>
+			</tr>
+
+		</table>
+
+	</div>
+
+	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl']}"
+		toggleable="true">
+
+		<div>
+
+			<p:dataTable id="itemPriceList"
+				value="#{scheduleBiddingBB.managedBean.itemPriceList}" var="itemPrice">
+
+				<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.itemName']}">
+					<p:outputLabel value="#{itemPrice.itemName}" />
+
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.startPrice']}">
+					<p:outputLabel value="#{itemPrice.startPrice}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.lastPrice']}">
+					<p:outputLabel value="#{itemPrice.lastPrice}" />
+
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.costSaving']}">
+					<p:outputLabel value="#{itemPrice.costSaving}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.ranking']}">
+					<p:outputLabel value="#{itemPrice.ranking}" />
+				</p:column>
+			</p:dataTable>
+
+		</div>
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bmbp.popup.close']}"
+			icon="ui-icon-close" />
+
+	</p:panel>
+</ui:composition>
