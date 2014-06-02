@@ -700,7 +700,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		List<ScRequestNoteDtl>	requestNoteDtls = getManagedBean().getRequestNoteDtls();
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-		List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
 		ScRequestItem scRequestItem = requestSupplierItem.getRequestNoteItem();
 		ScSupplierItemPrice scSupplierItemPrice = requestSupplierItem.getSupplierItemPrice();
 		CmSupplierItem cmSupplierItem = scSupplierItemPrice.getPricing().getCmSupplierItem();
@@ -719,48 +718,34 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 		} else {
 			// purchase in default & add to cart
-			//IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			//PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-		    //purchaseInDefaultReqDTO.setItemId(requestSupplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId());
-		    // TODO hard coded ptj id for non contract item for pid
-		    //purchaseInDefaultReqDTO.setOrgProfileId(16717L);
-		    //PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
-		    
-		    // pid to request note
-		   /* if(defaultResDTO.getPurchaseInDefaultDtl() != null){
-		    	ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
-		    	scRequestItem.setPurchaseInDefault(purchaseInDefault);
-		    }*/
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
-		    
 		    IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
-		    
 		    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-
 		    catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 		    catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
 		    catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
-		    
 		    CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 		    
 		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
 		    for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
 		    	if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
 		    		CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
-	    			ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-			    			scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
-	    			
-	    			supplierItems.add(scRequestSupplierItem);	
+		    		ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
+		    				scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+
+		    		supplierItems.add(scRequestSupplierItem);	
 		    	}
 		    }
 		    // Add selected supplier item.
 		    supplierItems.add(requestSupplierItem);
-		    
 		    scRequestItem.setSupplierItems(supplierItems);
+		    scRequestItem.setRequestNote(requestNote);
 		}
 		
+		requestSupplierItem.setRequestNoteItem(scRequestItem);
 		requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 		scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+		
 		//Hoa: TODO WorkFlow Status should be set In the save, submit method
 		List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 		ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
@@ -800,7 +785,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setPriceType(resDTO.getPmParameter());
 	    
-	    scRequestNoteDtl.setDeliverTerm(cmSupplierItem.getLeadTime().intValue());
+	    if(cmSupplierItem.getLeadTime() != null){
+	    	 scRequestNoteDtl.setDeliverTerm(cmSupplierItem.getLeadTime().intValue());
+	    }
 
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
@@ -827,19 +814,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 		}
 		
-		// request items & request supplier items
-		//List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
-		//ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
-		//requestSupplierItem.setRequestNoteItem(scRequestItem);
-		//requestSupplierItems.add(scReqSupplierItem);
-		
-		//scRequestItem.setSupplierItems(requestSupplierItems);
-		//requestNoteItems.add(scRequestItem);
-		//requestNote.setRequestNoteItems(requestNoteItems);
-		scRequestItem.setRequestNote(requestNote);
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-		//this.getManagedBean().setRequestNoteItems(requestNoteItems);
-		
 		populateUserDivisionList();
 		getManagedBean().setRequestNote(requestNote);
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);

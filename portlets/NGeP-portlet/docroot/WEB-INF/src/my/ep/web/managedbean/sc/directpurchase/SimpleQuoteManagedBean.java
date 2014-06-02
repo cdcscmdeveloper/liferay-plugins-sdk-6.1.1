@@ -151,6 +151,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	// supplier view
 	private boolean productFlag;
 	private boolean serviceFlag;
+	private SmSupplier smSupplier;
 	
 	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
 	private String quoteNo;
@@ -1291,5 +1292,16 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setQuoteNo(String quoteNo) {
 		this.quoteNo = quoteNo;
 	}
-
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
 }

@@ -62,7 +62,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SelectItem[] rnPriceTypes; // price type drop down for request note
     private String processName;
     private String requestNoteStatus;
-    private boolean required;
+    private boolean required = Boolean.FALSE;
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
