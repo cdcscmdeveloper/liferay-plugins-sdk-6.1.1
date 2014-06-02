@@ -222,14 +222,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		 * LocationSingleton.getInstance().buildZoneTree(zone, states,
 		 * districts, divisions, cities));
 		 */
-		getManagedBean().setZoneName(zone.getSuppZoneName());
-		
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		
 		
 		for(CmSupplierZone suppZone : getManagedBean().getCmSupplierZoneList()){
 			if(zone.getSuppZoneId() == suppZone.getSuppZoneId()){
-				getManagedBean().setSelectedSupplierZone(suppZone);		
+				getManagedBean().setSelectedSupplierZone(suppZone);
+				getManagedBean().setZoneName(suppZone.getSuppZoneName());
 			}
 		}
 		
