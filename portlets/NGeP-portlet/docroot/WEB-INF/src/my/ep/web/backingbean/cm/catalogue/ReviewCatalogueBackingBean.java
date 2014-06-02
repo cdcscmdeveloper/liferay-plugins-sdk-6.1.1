@@ -41,18 +41,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		
-
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
-		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-		
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-		
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+	
 		reqDTO.setItemStatus("P");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
@@ -64,17 +53,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
-			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
 			
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			supplierReqDTO.setUserId(pmUser.getUserId());
-
-			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-			
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
-
 			reqDTO.setItemStatus("P");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
