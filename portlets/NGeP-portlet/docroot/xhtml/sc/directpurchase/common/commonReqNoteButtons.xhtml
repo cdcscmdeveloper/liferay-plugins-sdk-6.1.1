@@ -12,9 +12,9 @@
 					action="#{requestNoteBackingBean.backToPervious}" />
 					
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
-				   	action="#{requestNoteBackingBean.saveAction}" />
+				   	action="#{requestNoteBackingBean.saveAction}" update="@form"/>
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@form"
 					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction}"/>
 				
 	    </c:if>

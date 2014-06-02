@@ -4,111 +4,139 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
-		header="ADD TO CART" width="540 " height="460" resizable="true" dynamic="true" modal="true">
-		<p:spacer height="5px"/>
+		header="ADD TO CART" width="540 " height="460" resizable="true"
+		dynamic="true" modal="true">
+		<p:spacer height="5px" />
 		<p:panel id="addToCartId">
-		<table style="width: 500px">
+			<p:messages id="cartmessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<table style="width: 0%">
 				<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="33"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.smSupplier.smAppl.smCompanyBasic.companyName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-				<td><p:inputText disabled="true"  size="33"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-				<td><p:inputText disabled="true" size="33"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}" /></td>
-			</tr>
-			<tr>
-				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
-				<td><p:inputTextarea readonly="true" disabled="true" rows="3"
-						cols="35" style="margin-bottom: 5px;"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.itemDesc}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-				<td><p:inputText disabled="true" size="33"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.min.qty']}" /></td>
-				<td><p:inputText disabled="true" size="33"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-				<td><p:inputText  size="33" style="text-align:right;"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
-				<td><p:selectOneMenu  id="priceType" style="margin-bottom: 5px;" 
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode}">
-						<f:selectItems
-							value="#{requestNoteBackingBean.managedBean.priceTypes}" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;" id="procType"  disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'G'}"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
-						<f:selectItems
-							value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
-							<p:ajax event="change" update="justiId" 
-							listener="#{requestNoteBackingBean.procurementTypeEvent}" process="@this" />
-					</p:selectOneRadio></td>
-			</tr>
-			<tr>
-			  <td colspan="2">
-			        <p:outputPanel id="justiId">
-					<table>
-					    <tr>
-						   <ui:fragment rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-							 <td>
-							    <p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
-							 <td> 
-							    <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" 
-									value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justificationType}">
-								   <f:selectItems
-										value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-									<p:ajax event="change" update="justiId" 
-										listener="#{requestNoteBackingBean.justificationTypeEvent}" process="@this" />
-								</p:selectOneMenu> 
-								</td>
-				    	 </ui:fragment>
-					   </tr>
-					   <tr>
-					     <ui:fragment rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-						   <td style="vertical-align:top; text-align:left;width: 200px;"><p:outputLabel
-								value="#{lbl['lbl.sc.just.rmks']}" /></td>
-						   <td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
-								rows="4" cols="65" style="margin-bottom: 5px;" /></td>
-						</ui:fragment>
-					     </tr>
-					 </table>
-				    </p:outputPanel>
-				   </td>
-			</tr>
-          
-		 </table>
-	  </p:panel>
-	  
-	 <p:panelGrid styleClass="noBorders tr,noBorders td">
+					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
+					<td><p:inputText disabled="true" size="33"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.smSupplier.smAppl.smCompanyBasic.companyName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
+					<td><p:inputText disabled="true" size="33"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
+					<td><p:inputText disabled="true" size="33"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}" /></td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top; text-align: left;"><p:outputLabel
+							value="#{lbl['lbl.sc.desc']}" /></td>
+					<td><p:inputTextarea readonly="true" disabled="true" rows="3"
+							cols="35" style="margin-bottom: 5px;"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.itemDesc}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
+					<td><p:inputText disabled="true" size="33"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.min.qty']}" /></td>
+					<td><p:inputText disabled="true" size="33"
+							styleClass="ppRightBtn"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
+					<td><p:inputText size="33" styleClass="ppRightBtn"
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneMenu id="priceType"
+										style="margin-bottom: 5px;"
+										label="#{lbl['lbl.sc.price.type']}"
+										required="#{requestNoteBackingBean.managedBean.required}"
+										value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode}">
+										<f:selectItems
+											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="priceTypeMsg" for="priceType"
+										display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
+					<td><p:selectOneRadio style="margin-bottom: 5px;"
+							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
+							disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'G'}"
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}"
+							required="#{requestNoteBackingBean.managedBean.required}">
+							<f:selectItems
+								value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+							<p:ajax event="change" update="justiId"
+								listener="#{requestNoteBackingBean.procurementTypeEvent}"
+								process="@this" />
+						</p:selectOneRadio></td>
+					<td><p:message id="procTypeMsg" for="procType" display="icon" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><p:outputPanel id="justiId">
+							<table>
+								<tr>
+									<ui:fragment
+										rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
+										<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
+										<td><p:selectOneMenu
+												style="width: 120px;margin-bottom: 5px;"
+												value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justificationType}">
+												<f:selectItems
+													value="#{requestNoteBackingBean.managedBean.justDropdown}" />
+												<p:ajax event="change" update="justiId"
+													listener="#{requestNoteBackingBean.justificationTypeEvent}"
+													process="@this" />
+											</p:selectOneMenu></td>
+									</ui:fragment>
+								</tr>
+								<tr>
+									<ui:fragment
+										rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
+										<td
+											style="vertical-align: top; text-align: left; width: 200px;"><p:outputLabel
+												value="#{lbl['lbl.sc.just.rmks']}" /></td>
+										<td><p:inputTextarea
+												value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
+												rows="4" cols="65" style="margin-bottom: 5px;" /></td>
+									</ui:fragment>
+								</tr>
+							</table>
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.ok']}"
 						actionListener="#{requestNoteBackingBean.addToRequestNote}"
-						oncomplete="addToCartPopup.hide();" icon="ui-icon-submit" />
+						icon="ui-icon-submit" update="addToCartId" />
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}"
-						onclick="addToCartPopup.hide()" icon="ui-icon-close" />
+						onclick="addToCartPopup.hide()" icon="ui-icon-close"
+						partialSubmit="true" />
 				</p:column>
 			</p:row>
-	</p:panelGrid>
+		</p:panelGrid>
 	</p:dialog>
 </ui:composition>

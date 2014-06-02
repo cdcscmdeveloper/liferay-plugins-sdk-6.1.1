@@ -9,6 +9,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
     <ui:define name="contentSection">
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
     <ac:title value="#{lbl['lbl.sc.sq']}"/>
+    
+    	  <div align="right">
+	    <c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@form"
+					icon="ui-icon-submit"  action="#{simpleQuoteBackingBean.supplierSubmit}"/>
+	    </c:if>
+	    </div>
 		<div align="right">
 	     <table>
 			<tr>
@@ -40,7 +47,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						</c:if>
 						<p:commandButton value="#{action}" process="@all"
 								styleClass="ui-button" icon="#{iconVar}"
-								actionListener="#{simpleQuoteBackingBean.updateBpmTask(action)}" />
+								actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
 						</c:forEach>
 					</c:if></td>
 			</tr>

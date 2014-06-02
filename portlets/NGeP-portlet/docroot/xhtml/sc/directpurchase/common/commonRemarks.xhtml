@@ -19,16 +19,19 @@
 							<td>
 								<h:outputText value="#{remarkVar.user.userName}"/>,
 								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
-									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 								</h:outputText>
 							</td>
 						</tr>
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" />
+								<p:inputTextarea style="width:350px;" label="Remarks" id="remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  required="true"/>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
+							 <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 
+					        <p:message id="remarksMsg" for="remarks" display="icon" /></td>
 						</tr>
 					</table>
 				</p:dataGrid>
