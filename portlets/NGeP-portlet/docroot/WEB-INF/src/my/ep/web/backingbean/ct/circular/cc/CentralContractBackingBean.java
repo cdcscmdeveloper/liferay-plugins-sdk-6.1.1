@@ -148,37 +148,29 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			List<String> target = new ArrayList<String>();
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
-	}
-	
+	}	
 	
 	public SelectItem[] getStatusDropdown() {
 		IStatusSO statusSO = null;
 		SelectItem[] items = null;
 		try {
-			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
 			
-			List<Long> statusIdList = new ArrayList<Long>();
-			statusIdList.add(ContractStatusConst.CQ_PENDING_SUBMISSION);
-			statusIdList.add(ContractStatusConst.CQ_PENDING_REVISION);
-			statusIdList.add(ContractStatusConst.CQ_PENDING_APPROVAL);
-			statusIdList.add(ContractStatusConst.CQ_PENDING_REVISION_APPROVAL);
-			statusIdList.add(ContractStatusConst.CQ_APPROVED);
-			statusIdList.add(ContractStatusConst.CQ_REJECTED);
-			//statusIdList.add(ContractStatusConst.CANCELLED);
-			
+			int i = 1;
+		    //IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			reqDTO.setLanguageCode(languageCode);
 			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 			
-			items = new SelectItem[statusIdList.size()+1];
-			int i = 0;
-			items[i++] = new SelectItem(null, "- Select One -");
-			for(PmStatusDesc statusDesc : resDTO.getStatusDescList()) {
-				if(statusIdList.contains(statusDesc.getPmStatus().getStatusId())) {
-					items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-				}
+		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		      
+			for(PmStatusDesc statusDesc : list) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusDesc());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,7 +192,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
 			}if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
 			}if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
@@ -287,6 +279,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         		
         		reqDTO.setContractId(contract.getContractId());
         		circularContract.setCtContract(contractSO.retrieveContract(reqDTO).getContract());
+        		circularContract.setCtContractVer(contractSO.retrieveContract(reqDTO).getContract().getLatestContractVer());
         		getManagedBean().getCircularVer().getCtCircularContracts().add(circularContract);
         	}
 		} catch (Exception e) {
@@ -404,6 +397,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				reqDTO.getCircularVer().setApprovedDate(new Date());
 			}
 			
+			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {

@@ -140,7 +140,7 @@
 				selection="#{centralContractBackingBean.managedBean.selectedContractList}" >
 				<ac:paginator for="contractDt" />
 				<p:column selectionMode="multiple" style="width:3%;" />
-				<p:column headerText="{lbl['lbl.ct.cc.phyloa']}">
+				<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
 					<h:outputText value="#{data.loaPhysicalNo}" />
 				</p:column>
 				 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" >
@@ -150,7 +150,7 @@
 					<h:outputText value="#{data.contractNo}" />
 				</p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" >
-				<h:outputText value="#{data.smSupplier.companyName}" />
+				<h:outputText value="#{data.latestContractVer.ctContractValue.supplierCompanyName}" />
 			 </p:column>
 			</p:dataTable>
 			<p:spacer height="2" />
