@@ -320,9 +320,13 @@
 							rendered="#{person.authorizedFlg eq '1'}" />
 						<h:outputText value="No" rendered="#{person.authorizedFlg eq '0'}" />
 					</p:column>
-					<p:column headerText="Is Cert Issued">
-						<h:outputText value="Yes" rendered="#{person.softcertFlg eq '1'}" />
-						<h:outputText value="No" rendered="#{person.softcertFlg eq '0'}" />
+					<p:column headerText="Cert Status">
+						<h:outputText value="Requested"
+							rendered="#{person.softcertFlg eq '2'}" />
+						<h:outputText value="Issued"
+							rendered="#{person.softcertFlg eq '1'}" />
+						<h:outputText value="Not Applied"
+							rendered="#{person.softcertFlg eq '0'}" />
 					</p:column>
 					<p:column headerText="Action">
 						<p:commandLink rendered="#{!person.equityOwner}"
