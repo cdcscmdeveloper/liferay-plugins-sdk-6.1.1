@@ -100,20 +100,26 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}" style="width:10%">
-					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;" value="#{requestNoteDtl.priceType.parameterId}">
+					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;" required="true"
+					    label="#{lbl['lbl.sc.request.note.price.type']}"
+					    value="#{requestNoteDtl.priceType.parameterId}">
 						<f:selectItems
 							value="#{requestNoteBackingBean.managedBean.rnPriceTypes}" />
 					</p:selectOneMenu>
+					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
-				   <p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;">  
+				   <p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" 
+				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
+				        style="width:120px;" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.scRequestSupplierItem.requestNoteItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
 							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
 					</p:selectOneMenu>
+					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%;text-align:right">
@@ -181,13 +187,12 @@
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="2" maxlength="3"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
+					   <p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
 					<p:spacer width="2px;"></p:spacer>
 					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
-					 <p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
-					
 				</p:column>
 		
 			</p:dataTable>
