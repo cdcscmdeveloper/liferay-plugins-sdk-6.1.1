@@ -5,20 +5,30 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:selectOneMenu>
-	
-	
-	</p:selectOneMenu>
+	<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
+		closable="true" />
 
-	<p:panel header="BIDDING DETAILS" toggleable="true">
+	<div>
+		<p:outputLabel value="#{lbl['lbl.sc.bidding.ob.bidNo']}" />
+
+		<p:selectOneMenu>
+
+		</p:selectOneMenu>
+	</div>
+
+	<p:panel header="#{lbl['lbl.sc.bidding.ob.bd']}" toggleable="true">
 
 
-		<table style="width: 500px; align: LEFT">
+
+		<table style="width: 100%; align: LEFT">
 
 			<tr>
 
-				<td><h:outputText value="Bidding No." /></td>
-				<td><p:inputText id="biddingNo" value="#{}" /></td>
+				<td style="width: 100px"><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.bidNo']}" /></td>
+				<td><p:inputText id="bidNo"
+						value="#{onlineBiddingBB.managedBean.bidNo}" disabled="true"
+						size="20" /></td>
 				<TD></TD>
 				<TD></TD>
 
@@ -26,8 +36,11 @@
 
 			<tr>
 
-				<td><h:outputText value="Document No." /></td>
-				<td><p:inputText id="documentNo" value="#{}" /></td>
+				<td style="width: 100px"><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.docNo']}" /></td>
+				<td><p:inputText id="documentNo"
+						value="#{onlineBiddingBB.managedBean.documentNo}" disabled="true"
+						size="20" /></td>
 				<TD></TD>
 				<TD></TD>
 
@@ -35,25 +48,37 @@
 
 			<tr>
 
-				<td><h:outputText value="Document Title" /></td>
-				<td clospan="3"><p:inputText id="documentTitle" value="#{}" /></td>
-				
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.docTitle']}" /></td>
+				<td clospan="3"><p:inputText id="documentTitle"
+						value="#{onlineBiddingBB.managedBean.documentTitle}"
+						disabled="true" size="60" /></td>
+
 
 			</tr>
 
 			<tr>
 
-				<td><h:outputText value="PTJ Name" /></td>
-				<td clospan="3"><p:inputText id="ptjName" value="#{}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.ptjName']}" /></td>
+				<td clospan="3"><p:inputText id="ptjName"
+						value="#{onlineBiddingBB.managedBean.ptjName}" disabled="true"
+						size="60" /></td>
 
 			</tr>
-			
+
 			<tr>
 
-				<td><h:outputText value="Bidding Start" /></td>
-				<td><p:inputText id="bidStart" value="#{}" /></td>
-				<TD><h:outputText value="Bidding End" /></TD>
-				<TD><p:inputText id="bidEnd" value="#{}" /></TD>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.bidStart']}" /></td>
+				<td><p:inputText id="bidStart"
+						value="#{onlineBiddingBB.managedBean.bidStart}" disabled="true"
+						size="20" /></td>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.bd.bidEnd']}" /></TD>
+				<TD><p:inputText id="bidEnd"
+						value="#{onlineBiddingBB.managedBean.bidEnd}" disabled="true"
+						size="20" /></TD>
 
 			</tr>
 
@@ -61,80 +86,147 @@
 
 	</p:panel>
 
-	<p:panel header="BID PRICE" toggleable="true">
-	
-	<!-- count down timer here -->
+	<p:panel header="#{lbl['lbl.sc.bidding.ob.bp']}" toggleable="true">
 
-		<p:dataTable id="bidEstimate"
-			value="#{}" var="item">
+		<!-- count down timer here -->
+		<div style="allign: left">
 
-			<p:column>
+			<table>
+
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+				</tr>
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+				</tr>
+
+			</table>
+
+		</div>
+
+
+		<p:dataTable id="itemWiseBidList"
+			value="#{onlineBiddingBB.managedBean.itemWiseBidList}" var="bidItem">
+
 			<f:facet name="header">
-					<h:outputText value="Item Name" />
-				</f:facet>
-				<h:outputText value="#{item.itemName}" />
-			</p:column>
-			
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Quantity" />
-				</f:facet>
-				<h:inputText value="#{item.quantity}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Min. Decement Block" />
-				</f:facet>
-				<h:outputText value="#{item.minDecrement}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Unit Price (RM)" />
-				</f:facet>
-				<h:outputText value="#{item.unitPrice}" />
-				<f:facet name="header">
-					<h:outputText value="Total" />
-				</f:facet>
-			</p:column>
-			
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Sub Total" />
-				</f:facet>
-				<h:outputText value="#{item.minDecrement}" />
-				<f:facet name="header">
-					<h:outputText value="" />
-				</f:facet>
-			</p:column>
+
+				<p:row>
+					<p:column rowspan="2">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.itemName']}" />
+					</p:column>
+					<p:column rowspan="2">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.qty']}" />
+					</p:column>
+					<p:column rowspan="2">
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.bp.dt.minDecrement']}" />
+					</p:column>
+					<p:column colspan="2">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.starting']}" />
+					</p:column>
+					<p:column colspan="2">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.lastBid']}" />
+					</p:column>
+					<p:column colspan="3">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.newBid']}" />
+					</p:column>
+					<p:column rowspan="2">
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.bp.dt.currentRanking']}" />
+					</p:column>
+
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.unitPrice']}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.subTotal']}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.unitPrice']}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.subTotal']}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.bp.dt.decrement']}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.unitPrice']}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.subTotal']}" />
+					</p:column>
+
+				</p:row>
+			</f:facet>
+			<p:row>
+
+				<p:column>
+					<p:commandLink value="#{bidItem.itemName}"
+						onComplete="widgetVar.show" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.qty}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.minDecrement}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{bidItem.startingUnitPrice}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.startingSubTotal}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.lastBidUnitPrice}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.lastBidSubTotal}" />
+				</p:column>
+				<p:column>
+					<p:inputText value="#{bidItem.newBidDecrement}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.newBidUnitPrice}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.newBidsubTotal}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.currentRanking}" />
+				</p:column>
+
+			</p:row>
+			<f:facet name="footer"></f:facet>
+
+
 
 		</p:dataTable>
 
 	</p:panel>
+
+	<div style="allign: right">
+		<p:outputLabel value="#{lbl['lbl.sc.bidding.ob.bp.packageRanking']}" />
+		<p:inputText id="bidNo"
+						value="#{onlineBiddingBB.managedBean.packageRanking]}" disabled="true"
+						size="20" />
+	</div>
+	<p:panel header="#{lbl['lbl.sc.bidding.ob.cpd']}" toggleable="true">
 	
-	<p:panel header="Contact Person Details" toggleable="true">
-	
-	<!-- count down timer here -->
-
-		<p:dataTable id="contactPerson"
-			value="#{}" var="person">
-
-			<p:column>
-			<f:facet name="header">
-					<h:outputText value="Name" />
-				</f:facet>
-				<h:outputText value="#{person.Name}" />
-			</p:column>
-			
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Tel No" />
-				</f:facet>
-				<h:inputText value="#{person.telNo}" />
-			</p:column>
-		</p:dataTable>
-
 	</p:panel>
 
 </ui:composition>
