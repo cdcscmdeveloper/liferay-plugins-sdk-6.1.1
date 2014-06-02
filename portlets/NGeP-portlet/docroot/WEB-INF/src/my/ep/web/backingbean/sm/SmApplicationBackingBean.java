@@ -6300,7 +6300,7 @@ public class SmApplicationBackingBean extends
 		resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 			getManagedBean().setCurrentStatus(
-					resDTO.getPmStatusDesc().getStatusDesc());
+					resDTO.getPmStatusDesc().getStatusName());
 		}
 	}
 
@@ -6313,7 +6313,7 @@ public class SmApplicationBackingBean extends
 		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 			getManagedBean().setCurrentStatus(
-					resDTO.getPmStatusDesc().getStatusDesc());
+					resDTO.getPmStatusDesc().getStatusName());
 		}
 	}
 
