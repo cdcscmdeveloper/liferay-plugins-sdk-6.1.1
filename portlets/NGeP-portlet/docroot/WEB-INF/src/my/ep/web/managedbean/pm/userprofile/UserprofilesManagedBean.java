@@ -9,9 +9,16 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmRole;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmCriteria;
+import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -38,21 +45,33 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private static final Logger log= EpLogger.getLogger(UserprofilesManagedBean.class);	
 	
 	private PmUser user;
+	
+	private PmUser pmUser = new PmUser();	
+	
+	private PmCriteria pmCriteria;		
 
 	private PmAddress pmAddress;
 	
-	private PmCountry pmCountry;
+	private PmOrgValidity orgValidity;
 	
-	private String loginId;
+	private PmRole roles;
+				
+    // user profile	search	
+	private String userNames;
 	
-    // user profile	
-	private String userNames;	
+	private String criteriaDescs;	
 	
 	private String userRole;	
 	
 	private String userorganizationNames;	
 	
 	private boolean userStatus = false;
+	
+	private String stateCode;
+	
+	private String roleNames;
+	
+	private String districtCode;	
 	
 	// user group profile
 	private String userGroupNames;	
@@ -62,21 +81,31 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private String userGroupOrganizationNames;	
 	
 	private String userGroupStatus;
+		
+	private PmState state;
 	
-	private PmState pmState;	
+	private PmCity city = new PmCity();	
 	
-    private PmDistrict pmDistrict;	
+	private PmDivision division = new PmDivision();
+
+	private PmDistrict district = new PmDistrict();	
 
 	private boolean isEditable = true;	
 	
 	private List<PmUser> users;
 	
-	private List<PmAddress> useraddress;	
+    private List<PmOrgProfile> orgUnits; 
+    
+    private List<PmOrgProfile> deleteorgUnits;      
+	
+	private List<PmCriteriaDesc> criterias;	
+	
+	private List<PmAddress> address;	
 
 	private List<PmUserGroup> usersGroup;
 	
 	private List<SelectItem> countryName;
-	
+		
 	// PM datatable array list
 	private List<PreferenceList> preferencelists;
 	
@@ -92,42 +121,93 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private List<PmDivision> divisions;	
 	
+	private List<PmCountry> countries;	
+	
 	// get user profiles detail
-	private String userDetailNames = null;
 	
-	private String userIdNo = null;
+	private Long userId;
 	
-	private String userIdType;
+	private Long districtId;
 	
-	private String userDesignation = null;	
-	
-	private String userNationality;	
-	
-	private String userOrgType;	
-	
-	private String usergrade = null;
-	
-    private String userSalutation;	
+	private Long countryId;
 
+	private Long stateId;
 
-	public UserprofilesManagedBean(){
-		log.info("inside ");		
+	private Long divisionId;
+	
+	private boolean status;	
+	
+	// org search	
+    private String orgNames;
+    
+    // get the lists of roles
+	public List<PmRoleDesc> userRoleSelect;;
+	
+	//get the lists of address
+	private List<PmAddressType> userAddressSelect;
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}	
 
+	public UserprofilesManagedBean(){
+		log.info("inside ");
+		
+	
+	}	
+	
+		
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
+	
+	public PmCriteria getPmCriteria() {
+		return pmCriteria;
+	}
+
+	public void setPmCriteria(PmCriteria pmCriteria) {
+		this.pmCriteria = pmCriteria;
+	}
+	
 	public List<PmUser> getUsers() {
 		return users;
 	}
-	
+
 	public void setUsers(List<PmUser> users) {
 		this.users = users;
-	}		
-
-	public void setUseraddress(List<PmAddress> useraddress) {
-		this.useraddress = useraddress;
 	}
 	
-	public List<PmAddress> getUseraddress() {
-		return useraddress;
+	public List<PmOrgProfile> getOrgUnits() {
+		return orgUnits;
+	}
+
+	public void setOrgUnits(List<PmOrgProfile> orgUnits) {
+		this.orgUnits = orgUnits;
+	}		
+
+	public List<PmOrgProfile> getDeleteorgUnits() {
+		return deleteorgUnits;
+	}
+
+	public void setDeleteorgUnits(List<PmOrgProfile> deleteorgUnits) {
+		this.deleteorgUnits = deleteorgUnits;
+	}
+
+	public void setAddress(List<PmAddress> address) {
+		this.address = address;
+	}
+	
+	public List<PmAddress> getAdddress() {
+		return address;
 	}
 	
 	public List<PmUserGroup> getUsersGroup() {
@@ -137,18 +217,22 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUsersGroup(List<PmUserGroup> usersGroup) {
 		this.usersGroup = usersGroup;
 	}	
-
+	
 	public String getUserNames() {
 		return userNames;
 	}
 
-
-
 	public void setUserNames(String userNames) {
 		this.userNames = userNames;
+	}	
+	
+	public String getCriteriaDesc() {
+		return criteriaDescs;
 	}
 
-
+	public void setCriteriaDesc(String criteriaDescs) {
+		this.criteriaDescs = criteriaDescs;
+	}
 
 	public String getUserRole() {
 		return userRole;
@@ -184,37 +268,44 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.userStatus = userStatus;
 	}
 
-
-	public String getLoginId() {
-		return loginId;
+	public String getStateCode() {
+		return stateCode;
 	}
 
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+		
 
-
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public String getRoleNames() {
+		return roleNames;
 	}
 
+	public void setRoleNames(String roleNames) {
+		this.roleNames = roleNames;
+	}
 
-	
+	public String getDistrictCode() {
+		return districtCode;
+	}
 
-
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
 
 	public PmAddress getPmAddress() {
 		return pmAddress;
 	}
 
 
-
 	public void setPmAddress(PmAddress pmAddress) {
 		this.pmAddress = pmAddress;
 	}
-		
 	
+
 	public boolean isEditable() {
 		return isEditable;
 	}
-
 
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
@@ -251,15 +342,22 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUserGroupStatus(String userGroupStatus) {
 		this.userGroupStatus = userGroupStatus;
 	}	
-
-	public PmCountry getPmCountry() {
-		return pmCountry;
-	}
-
-	public void setPmCountry(PmCountry pmCountry) {
-		this.pmCountry = pmCountry;
-	}
 	
+	public PmOrgValidity getOrgValidity() {
+		return orgValidity;
+	}
+
+	public void setOrgValidity(PmOrgValidity orgValidity) {
+		this.orgValidity = orgValidity;
+	}	
+
+	public PmRole getRoles() {
+		return roles;
+	}
+
+	public void setRoles(PmRole roles) {
+		this.roles = roles;
+	}	
 
 	public List<SelectItem> getCountryName() {
 		return countryName;
@@ -267,8 +365,8 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	public void setCountryName(List<SelectItem> countryName) {
 		this.countryName = countryName;
-	}
-	
+	}		
+
 	public PmUser getUser() {
 		return user;
 	}
@@ -276,9 +374,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUser(PmUser user) {
 		this.user = user;
 	}
-	
 
-	
 	public List<PmState> getStates() {
 		return states;
 	}
@@ -286,16 +382,24 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setStates(List<PmState> states) {
 		this.states = states;
 	}
-
-	public PmState getPmState() {
-		return pmState;
+	
+	public PmState getState() {
+		return state;
 	}
 
-	public void setPmState(PmState pmState) {
-		this.pmState = pmState;
+	public void setState(PmState state) {
+		this.state = state;
 	}
-	
-	
+		
+
+	public PmCity getCity() {
+		return city;
+	}
+
+	public void setCity(PmCity city) {
+		this.city = city;
+	}
+
 	public List<PmDistrict> getDistricts() {
 		return districts;
 	}
@@ -311,15 +415,33 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setCitys(List<PmCity> citys) {
 		this.citys = citys;
 	}
-
-	public PmDistrict getPmDistrict() {
-		return pmDistrict;
+	
+	
+	
+	public List<PmCriteriaDesc> getCriterias() {
+		return criterias;
 	}
 
-	public void setPmDistrict(PmDistrict pmDistrict) {
-		this.pmDistrict = pmDistrict;
-	}	
-		
+	public void setCriterias(List<PmCriteriaDesc> criterias) {
+		this.criterias = criterias;
+	}
+
+	public PmDivision getDivision() {
+		return division;
+	}
+
+	public void setDivision(PmDivision division) {
+		this.division = division;
+	}
+
+	public PmDistrict getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(PmDistrict district) {
+		this.district = district;
+	}
+
 	public List<PmDivision> getDivisions() {
 		return divisions;
 	}
@@ -327,70 +449,77 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setDivisions(List<PmDivision> divisions) {
 		this.divisions = divisions;
 	}
-
-	public String getUserDetailNames() {
-		return userDetailNames;
+		
+	public List<PmCountry> getCountries() {
+		return countries;
 	}
 
-	public void setUserDetailNames(String userDetailNames) {
-		this.userDetailNames = userDetailNames;
-	}
-
-	public String getUserIdNo() {
-		return userIdNo;
-	}
-
-	public void setUserIdNo(String userIdNo) {
-		this.userIdNo = userIdNo;
-	}
-
-	public String getUserIdType() {
-		return userIdType;
-	}
-
-	public void setUserIdType(String userIdType) {
-		this.userIdType = userIdType;
-	}
-
-	public String getUserDesignation() {
-		return userDesignation;
-	}
-
-	public void setUserDesignation(String userDesignation) {
-		this.userDesignation = userDesignation;
-	}
-
-	public String getUserNationality() {
-		return userNationality;
-	}
-
-	public void setUserNationality(String userNationality) {
-		this.userNationality = userNationality;
-	}
-
-	public String getUserOrgType() {
-		return userOrgType;
-	}
-
-	public void setUserOrgType(String userOrgType) {
-		this.userOrgType = userOrgType;
-	}
+	public void setCountries(List<PmCountry> countries) {
+		this.countries = countries;
+	}	
 	
-	public String getUsergrade() {
-		return usergrade;
+	public Long getDistrictId() {
+		return districtId;
 	}
 
-	public void setUsergrade(String usergrade) {
-		this.usergrade = usergrade;
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
+	}
+
+	public Long getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	public Long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
 	}
 		
-
-	public String getUserSalutation() {
-		return userSalutation;
+	public boolean isStatus() {
+		return status;
 	}
 
-	public void setUserSalutation(String userSalutation) {
-		this.userSalutation = userSalutation;
+	public void setStatus(boolean status) {
+		this.status = status;
+	}		
+
+	public String getOrgNames() {
+		return orgNames;
+	}
+
+	public void setOrgNames(String orgNames) {
+		this.orgNames = orgNames;
+	}	
+	
+	public List<PmRoleDesc> getUserRoleSelect() {
+		return userRoleSelect;
+	}
+
+	public void setUserRoleSelect(List<PmRoleDesc> userRoleSelect) {
+		this.userRoleSelect = userRoleSelect;
+	}
+
+	public List<PmAddressType> getUserAddressSelect() {
+		return userAddressSelect;
+	}
+
+	public void setUserAddressSelect(List<PmAddressType> userAddressSelect) {
+		this.userAddressSelect = userAddressSelect;
 	}
 
 	public List<PreferenceList> getPreferencelists() {
