@@ -19,20 +19,20 @@
 							<td style="text-align: left; vertical-align: middle;"><p:commandLink
 									id="allLink" action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable">
-									<h:outputText value="All"></h:outputText>
+									<h:outputText value="#{lbl['lbl.portal.notify.all']}"></h:outputText>
 								</p:commandLink> &#160;&#160;|&#160;&#160; <h:graphicImage
 									style="vertical-align:bottom;" library="ep/images/design"
-									name="mail.png" value="/resources/ep/images/design/mail.png" />
+									name="mail.png" value="/resources/ep/images/design/mail.png" />&#160;
 								<p:commandLink
 									action="#{notifyBackingBean.retrieveUnreadNotifyList}"
-									id="unreadLink" update=":form:pnldetail,:form:notifyTable">&#160;
-									<h:outputText value="Unread"></h:outputText>
+									id="unreadLink" update=":form:pnldetail,:form:notifyTable">
+									<h:outputText value="#{lbl['lbl.portal.notify.unread']}"></h:outputText>
 								</p:commandLink></td>
 							<td style="text-align: right;"><p:commandButton
-									value="Refresh" icon="ui-icon-reset"
+									value="#{lbl['lbl.portal.notify.btn.refresh']}" icon="ui-icon-reset"
 									action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable" /> <p:commandButton
-									value="Delete" icon="ui-icon-delete"
+									value="#{lbl['lbl.portal.notify.btn.delete']}" icon="ui-icon-delete"
 									action="#{notifyBackingBean.removeNotifys}"
 									update=":form:notifyTable,:form:pnldetail" /></td>
 						</tr>
@@ -98,7 +98,7 @@
 									<td style="text-align: left"><h:outputText
 											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.pmUser.userName}"></h:outputText>
 									</td>
-									<td align="right" style="width: 200px;text-align: right;"><h:outputText
+									<td align="right" style="width: 200px;text-align: right;font-size: 12px;"><h:outputText
 											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.createdDate}"
 											readonly="true">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
