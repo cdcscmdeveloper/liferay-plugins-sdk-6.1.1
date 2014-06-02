@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div>
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.itemName']}" /></TD>
+				<TD><p:inputText id="itemName"
+						value="#{biddingBB.managedBean.itemName}" size="20"
+						disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.uom]}" /></TD>
+				<TD><p:inputText id="itemName"
+						value="#{biddingBB.managedBean.uom}" size="20" disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.qty']}" /></TD>
+				<TD><p:inputText id="itemName"
+						value="#{biddingBB.managedBean.quantity}" size="20"
+						disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.supplierCode']}" /></TD>
+				<TD><p:selectOneMenu id="bidTitle"
+						value="#{biddingBB.managedBean.supplierCode}" size="20" /></TD>
+			</tr>
+
+		</table>
+
+	</div>
+
+	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs']}"
+		toggleable="true">
+		
+		<div>
+		<p:lineChart></p:lineChart>
+		</div>
+
+
+		<div>
+
+			<p:dataTable id="historySummary"
+				value="#{scheduleBiddingBB.managedBean.historySummaryList}"
+				var="history">
+
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs.submittedTime']}">
+					<p:outputLabel value="#{history.submittedTime}" />
+
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs.bidPrice']}">
+					<p:outputLabel value="#{history.bidPrice}" />
+				</p:column>
+			</p:dataTable>
+
+		</div>
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.schedulebid.pl.close']}"
+			icon="ui-icon-close" />
+	</p:panel>
+
+</ui:composition>
