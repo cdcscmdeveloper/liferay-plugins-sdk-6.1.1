@@ -99,18 +99,22 @@
 				  </p:commandLink> 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}" style="width:10%">
-					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;" required="true"
-					    label="#{lbl['lbl.sc.request.note.price.type']}"
-					    value="#{requestNoteDtl.priceType.parameterId}">
+				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}"
+					style="width:10%">
+					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
+						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
+						value="#{requestNoteDtl.priceType.parameterId}">
 						<f:selectItems
-							value="#{requestNoteBackingBean.managedBean.rnPriceTypes}" />
+							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrices}"
+							var="supplierItemPrice"
+							itemLabel="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,supplierItemPrice.priceType.parameterCode)}"
+							itemValue="#{supplierItemPrice.priceType.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
-				   <p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" 
+				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
 				        style="width:120px;" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -161,9 +165,7 @@
 								height="15px" width="15px" />
 						</p:commandLink>
 					</ui:fragment>
-
 				</p:column>
-				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
@@ -182,17 +184,16 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:10%">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:15%">
 					<p:inputText style="width:20px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="2" maxlength="3"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
-					   <p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
-					<p:spacer width="2px;"></p:spacer>
 					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
+					<p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
 				</p:column>
 		
 			</p:dataTable>
