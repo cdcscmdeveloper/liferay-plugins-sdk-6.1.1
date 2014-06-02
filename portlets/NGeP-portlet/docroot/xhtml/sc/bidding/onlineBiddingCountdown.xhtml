@@ -5,20 +5,31 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:selectOneMenu>
-	
-	
-	</p:selectOneMenu>
 
-	<p:panel header="BIDDING DETAILS" toggleable="true">
+	<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
+		closable="true" />
+
+	<div>
+		<p:outputLabel value="#{lbl['lbl.sc.bidding.ob.cd.bidNo']}" />
+
+		<p:selectOneMenu>
+
+		</p:selectOneMenu>
+	</div>
+
+	<p:panel header="#{lbl['lbl.sc.bidding.ob.cd.bd']}" toggleable="true">
 
 
-		<table style="width: 500px; align: LEFT">
+
+		<table style="width: 100%; align: LEFT">
 
 			<tr>
 
-				<td><h:outputText value="Bidding No." /></td>
-				<td><p:inputText id="biddingNo" value="#{}" /></td>
+				<td style="width: 100px"><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.bidNo']}" /></td>
+				<td><p:inputText id="bidNo"
+						value="#{onlineBiddingBB.managedBean.bidNo}" disabled="true"
+						size="20" /></td>
 				<TD></TD>
 				<TD></TD>
 
@@ -26,8 +37,11 @@
 
 			<tr>
 
-				<td><h:outputText value="Document No." /></td>
-				<td><p:inputText id="documentNo" value="#{}" /></td>
+				<td style="width: 100px"><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.docNo']}" /></td>
+				<td><p:inputText id="documentNo"
+						value="#{onlineBiddingBB.managedBean.documentNo}" disabled="true"
+						size="20" /></td>
 				<TD></TD>
 				<TD></TD>
 
@@ -35,25 +49,37 @@
 
 			<tr>
 
-				<td><h:outputText value="Document Title" /></td>
-				<td clospan="3"><p:inputText id="documentTitle" value="#{}" /></td>
-				
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.docTitle']}" /></td>
+				<td clospan="3"><p:inputText id="documentTitle"
+						value="#{onlineBiddingBB.managedBean.documentTitle}"
+						disabled="true" size="60" /></td>
+
 
 			</tr>
 
 			<tr>
 
-				<td><h:outputText value="PTJ Name" /></td>
-				<td clospan="3"><p:inputText id="ptjName" value="#{}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.ptjName']}" /></td>
+				<td clospan="3"><p:inputText id="ptjName"
+						value="#{onlineBiddingBB.managedBean.ptjName}" disabled="true"
+						size="60" /></td>
 
 			</tr>
-			
+
 			<tr>
 
-				<td><h:outputText value="Bidding Start" /></td>
-				<td><p:inputText id="bidStart" value="#{}" /></td>
-				<TD><h:outputText value="Bidding End" /></TD>
-				<TD><p:inputText id="bidEnd" value="#{}" /></TD>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.bidStart']}" /></td>
+				<td><p:inputText id="bidStart"
+						value="#{onlineBiddingBB.managedBean.bidStart}" disabled="true"
+						size="20" /></td>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.ob.cd.bd.bidEnd']}" /></TD>
+				<TD><p:inputText id="bidEnd"
+						value="#{onlineBiddingBB.managedBean.bidEnd}" disabled="true"
+						size="20" /></TD>
 
 			</tr>
 
@@ -61,53 +87,84 @@
 
 	</p:panel>
 
-	<p:panel header="BID PRICE" toggleable="true">
-	
-	<!-- count down timer here -->
+	<p:panel header="#{lbl['lbl.sc.bidding.ob.cd.bp']}" toggleable="true">
 
-		<p:dataTable id="bidEstimate"
-			value="#{}" var="item">
+		<!-- count down timer here -->
+		<div>
 
-			<p:column>
+			<table>
+
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+				</tr>
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+				</tr>
+
+			</table>
+
+		</div>
+
+
+		<p:dataTable id="bidItemWisePriceList"
+			value="#{onlineBiddingBB.managedBean.bidItemWisePriceList}"
+			var="bidItem">
+
 			<f:facet name="header">
-					<h:outputText value="Item Name" />
-				</f:facet>
-				<h:outputText value="#{item.itemName}" />
-			</p:column>
-			
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Quantity" />
-				</f:facet>
-				<h:inputText value="#{item.quantity}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Min. Decement Block" />
-				</f:facet>
-				<h:outputText value="#{item.minDecrement}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Unit Price (RM)" />
-				</f:facet>
-				<h:outputText value="#{item.unitPrice}" />
-				<f:facet name="header">
-					<h:outputText value="Total" />
-				</f:facet>
-			</p:column>
-			
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="Sub Total" />
-				</f:facet>
-				<h:outputText value="#{item.minDecrement}" />
-				<f:facet name="header">
-					<h:outputText value="" />
-				</f:facet>
-			</p:column>
 
+				<p:row>
+					<p:column rowspan="2">
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.itemName']}" />
+					</p:column>
+					<p:column rowspan="2">
+						<h:outputText value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.qty']}" />
+					</p:column>
+					<p:column rowspan="2">
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.minDecrement']}" />
+					</p:column>
+					<p:column colspan="2">
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.starting']}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.unitPrice']}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{lbl['lbl.sc.bidding.ob.cd.bp.dt.subTotal']}" />
+					</p:column>
+
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column>
+					<h:outputText value="#{bidItem.itemName}" />
+
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.qty}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.minDecrement}" />
+
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{bidItem.unitPrice}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{bidItem.subTotal}" />
+				</p:column>
+			</p:row>
 		</p:dataTable>
 
 	</p:panel>
