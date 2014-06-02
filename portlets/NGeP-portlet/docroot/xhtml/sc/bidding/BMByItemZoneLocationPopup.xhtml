@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<div>
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.zoneName']}" /></TD>
+				<TD><p:inputText id="itemName"
+						value="#{biddingBB.managedBean.zoneName}" size="20"
+						disabled="true" /></TD>
+			</tr>
+
+		</table>
+
+
+
+	</div>
+
+	<div>
+
+		<p:dataTable id="zoneLocation"
+			value="#{scheduleBiddingBB.managedBean.zoneLocationList}" var="zone">
+
+			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.state']}">
+				<p:outputLabel value="#{zone.state}" />
+
+			</p:column>
+			<p:column
+				headerText="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.district']}">
+				<p:outputLabel value="#{zone.district}" />
+			</p:column>
+		</p:dataTable>
+
+	</div>
+
+	<p:commandButton value="#{lbl['lbl.sc.bidding.schedulebid.pl.close']}"
+		icon="ui-icon-close" />
+
+</ui:composition>
