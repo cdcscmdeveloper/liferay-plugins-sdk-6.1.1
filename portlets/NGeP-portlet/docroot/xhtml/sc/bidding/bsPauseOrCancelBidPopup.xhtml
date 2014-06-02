@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<div>
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.remainingTime']}" /></TD>
+				<TD><p:inputText id="remainingTime"
+						value="#{biddingBB.managedBean.remainingTime}" size="20"
+						disabled="true" /></TD>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.nos']}" /></TD>
+				<TD><p:inputTextarea id="supplierNotes"
+						value="#{biddingBB.managedBean.supplierNotes}" size="200" maxlength="1000"
+						 /></TD>
+			</tr>
+
+		</table>
+
+	</div>
+	<div>
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.btn.ok']}"
+			icon="ui-icon-ok" />
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.btn.cancel']}"
+			icon="ui-icon-cancel" />
+	</div>
+
+</ui:composition>
