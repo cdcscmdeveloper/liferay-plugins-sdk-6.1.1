@@ -29,6 +29,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 /**
  * Central Contract Circular Managed Bean
@@ -79,6 +80,9 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private TreeNode centralZoneTrees;
+	
+	private List<CtContractZone> contractItemZones;
 	
 	public boolean isUpdateAction() {
 		return updateAction;
@@ -289,6 +293,20 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
 	}
+	public TreeNode getCentralZoneTrees() {
+		return centralZoneTrees;
+	}
+	public void setCentralZoneTrees(TreeNode centralZoneTrees) {
+		this.centralZoneTrees = centralZoneTrees;
+	}
+	
+	public List<CtContractZone> getContractItemZones() {
+		return contractItemZones;
+	}
+	public void setContractItemZones(List<CtContractZone> contractItemZones) {
+		this.contractItemZones = contractItemZones;
+	}
+	
 	
 	
 }

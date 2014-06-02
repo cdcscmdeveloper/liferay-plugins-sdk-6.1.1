@@ -4,37 +4,22 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
-
-	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.cc.ct']}" toggleable="true" toggleSpeed="500">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+    <p:panel id="contractListPnl" header="#{lbl['lbl.ct.cc.ct']}" toggleable="true" toggleSpeed="500">
 	   <p:dataTable id="centralContractDt" var="data" rowIndexVar="index" 
-		  value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" 
-		  lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{data}">
-		  <ac:paginator for="centralContractDt" />
-		  <p:ajax event="rowSelect" update="@([id$=circularItemsPanel],[id$=deleteContractBtn],[id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
-		     listener="#{centralContractBackingBean.setContractListner()}"/>			
-			 <p:column headerText="#{lbl['lbl.ct.cc.phyloa']}" >
-				<h:outputText value="#{data.ctContract.loaPhysicalNo}" />
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" >
-				<h:outputText value="#{data.ctContract.contractPhysicalNo}" />
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.ctname']}" >
-				<h:outputText value="#{data.ctContract.contractName}" />
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" >
-				<h:outputText value="#{data.ctContract.smSupplier.companyName}" />
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}" >
-				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}" >
-				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-			 </p:column>
+		   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" 
+		   lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{data}">
+		   <ac:paginator for="centralContractDt" />
+		   <p:ajax event="rowSelect" update="@([id$=circularItemsPanel],[id$=deleteContractBtn],[id$=circularZonePanel],[id$=circularPricePanel])"
+		     process="@this"  listener="#{centralContractBackingBean.setContractListner()}"/>			
+			 <p:column headerText="#{lbl['lbl.ct.cc.phyloa']}" > <h:outputText value="#{data.ctContract.loaPhysicalNo}" /></p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" > <h:outputText value="#{data.ctContract.contractPhysicalNo}" /></p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.ctname']}" ><h:outputText value="#{data.ctContract.contractName}" /> </p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" ><h:outputText value="#{data.ctContract.smSupplier.companyName}" /></p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>
 			 <p:column headerText="Status">
 				<p:selectOneMenu  value="#{data.recordStatusFlg}" style="width:70px;">
 				  <f:selectItem itemValue="0" itemLabel="Inactive" />
@@ -56,56 +41,50 @@
 		 <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
 		   centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
 		  <p:dataTable id="circularItemDt" var="itemVar" 
-		  value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
-		   lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}" rowKey="#{itemVar}">
-		   <ac:paginator for="circularItemDt" />
-		   <p:ajax event="rowSelect" update="@([id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
-		   listener="#{centralContractBackingBean.setZoneListener()}"/>
-			  <p:column headerText="Item Name" style="width:450px;">
-				<h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" />
-			  </p:column>
-			  <p:column headerText="Minimum Order Qty." style="width:150px;" >
-				<p:inputText value="#{itemVar.minimumOrderQty}" />
-			  </p:column>	
-			   <p:column headerText="Nilai Pesanan Minimum (RM)">
-			      <p:inputText value="#{itemVar.minimumOrderAmt}" />
-			  </p:column>
-			  <p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;">
-				<p:inputText value="#{itemVar.maxProcureAmt}" />
-			  </p:column>	
-			  <p:column headerText="Status">
-				<p:selectOneMenu  value="#{itemVar.recordStatusFlg}" style="width:70px;">
-				   <f:selectItem itemValue="0" itemLabel="Inactive" />
-			       <f:selectItem itemValue="1" itemLabel="Active" />
-			    </p:selectOneMenu>
-			  </p:column>								
-		</p:dataTable>
+		      value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
+		      lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}" rowKey="#{itemVar}">
+		      <ac:paginator for="circularItemDt" />
+		        <p:ajax event="rowSelect"  update="@([id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
+		           listener="#{centralContractBackingBean.setZoneListener()}"/>
+			       <p:column headerText="Item Name" style="width:450px;"><h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" /></p:column>
+			       <p:column headerText="Minimum Order Qty." style="width:150px;" ><p:inputText value="#{itemVar.minimumOrderQty}" /> </p:column>	
+			       <p:column headerText="Nilai Pesanan Minimum (RM)"> <p:inputText value="#{itemVar.minimumOrderAmt}" />   </p:column>
+			       <p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;"><p:inputText value="#{itemVar.maxProcureAmt}" /></p:column>	
+			       <p:column headerText="Status">
+			     	<p:selectOneMenu  value="#{itemVar.recordStatusFlg}" style="width:70px;">
+				        <f:selectItem itemValue="0" itemLabel="Inactive" />
+			            <f:selectItem itemValue="1" itemLabel="Active" />
+			        </p:selectOneMenu>
+			       </p:column>								
+		    </p:dataTable>
 		</h:panelGroup>
-		</p:outputPanel>
-		<p:spacer height="20" />
+    </p:outputPanel>
+    
+    <p:spacer height="20" />
 		<p:outputPanel id="circularZonePanel">		
-		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null 
+		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null
 		     and centralContractBackingBean.managedBean.chkItemZone}">
-		 <p:dataTable id="circularItemZoneDt" var="zoneItemVar" 
-		  value="#{centralContractBackingBean.getContractItemZones()}"
-		   lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedZoneItems}" rowKey="#{zoneItemVar}">
-		   <ac:paginator for="circularItemZoneDt" />
-		   <p:ajax event="rowSelect" update="@([id$=circularPricePanel])" process="@this"
-		   listener="#{centralContractBackingBean.setPriceListener()}"/>
-		         <p:column headerText="Zone" style="width:60%;">
-			    	<h:outputText value="#{zoneItemVar.zoneName}" style="width:50%;" />
-			     </p:column>	
-			     <p:column headerText="Action" style="width:40%;">
-			      <p:commandLink>
-			        <p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png" title="View" /></p:commandLink>
-			     </p:column>							
+		     <p:dataTable id="circularItemZoneDt" var="dataZone" value="#{centralContractBackingBean.managedBean.contractItemZones}"
+		       lazy="true" selection="#{centralContractBackingBean.managedBean.selectedZoneItems}" 
+		       selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
+		       <ac:paginator for="circularItemZoneDt" />
+		       <p:ajax event="rowSelect" update="@([id$=circularPricePanel])"  process="@this"
+		           listener="#{centralContractBackingBean.setPriceListener()}"/>
+		           <p:column headerText="Zone" style="width:60%;"><h:outputText value="#{dataZone.zoneName}" style="width:50%;" /> </p:column>	
+			    	 <p:column headerText="Action" style="width:40%;"> 
+			    	 <p:commandLink update="@([id$=itemZoneId])"
+			         oncomplete="itemZoneDlg.show();" immediate="true">
+			          <p:graphicImage library="ep/images/design" name="document.png"
+			          value="/resources/ep/images/design/document.png" title="View"></p:graphicImage>
+                 	</p:commandLink>
+			     </p:column>			
 		     </p:dataTable>
 		   </h:panelGroup>
 		</p:outputPanel>
-		<p:spacer height="20" />
-		<p:outputPanel id="circularPricePanel">		
-		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.chkItemPrice and  
+    
+    <p:spacer height="20" />
+		<p:outputPanel id="circularPricePanel">	
+		   <h:panelGroup rendered="#{centralContractBackingBean.managedBean.chkItemPrice and  
 		    centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices != null 
 		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">	
 		<p:dataTable id="circularItemZonePriceDt" var="priceVar" 
@@ -123,9 +102,28 @@
 		</p:dataTable>
 		</h:panelGroup>
 		</p:outputPanel>
-	   </p:panel>
-	   
-	   <p:dialog id="contractDlg" header="Contract List" widgetVar="contractDlg" modal="true" width="750" height="400">
+	  
+	  <p:dialog id="itemZoneDlg" header="Zone Details" widgetVar="itemZoneDlg" modal="true" width="350" height="200">
+	  <p:outputPanel id="itemZoneId">
+	     <p:treeTable id="itemZoneDt"  value="#{centralContractBackingBean.managedBean.centralZoneTrees}"
+ 		    var="zoneTree">
+ 		    <p:column style="width:70%;">
+            <f:facet name="header">  Location Name </f:facet>
+              <p:treeNode type="zone">
+                  <h:outputText value="#{zoneTree.zone}"/>
+              </p:treeNode>
+              <p:treeNode type="state">
+               <h:outputText value="#{zoneTree.state.stateName}"  />
+              </p:treeNode>
+              <p:treeNode type="district">
+               <h:outputText value="#{zoneTree.district.districtName}"  />
+              </p:treeNode>
+        </p:column>
+      </p:treeTable>
+	</p:outputPanel>
+	</p:dialog>
+		
+   <p:dialog id="contractDlg" header="Contract List" widgetVar="contractDlg" modal="true" width="750" height="400">
 		<p:panel id="listOfContract">
 			<h:panelGrid columns="6">
 				<h:outputText value="Contract No."/>
@@ -164,46 +162,5 @@
 			</div>	
 		</p:panel>
 	</p:dialog>
-	
-	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top">
-					<table style="width: 100%">
-						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
-							<td class="TableFieldRight">
-								<p:dataGrid value="#{centralContractBackingBean.managedBean.circularVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
-									<table>
-										<tr>
-											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{centralContractBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
-											</td>
-											<td width="5"></td>
-											<td>
-												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-												</h:outputText>
-											</td>
-										</tr>
-										<tr>
-											<td></td>
-											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
-												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-											</td>
-										</tr>
-									</table>
-								</p:dataGrid>
-							</td>
-						</tr>
-					</table>    					
-				</td>
-				<td width="50%" valign="top">
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-	
-</ui:composition>
+	 </p:panel>
+	 </ui:composition>
