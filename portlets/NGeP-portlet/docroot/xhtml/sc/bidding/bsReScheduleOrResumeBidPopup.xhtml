@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<div>
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.Action']}" /></TD>
+				<TD><p:selectOneRadio></p:selectOneRadio> </TD>
+				<TD></TD>
+				<TD></TD>
+			</tr>
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.originalBS']}" /></TD>
+				<TD><p:inputText id="bidStartTime"
+						value="#{biddingBB.managedBean.bidStartTime}" size="20"
+						disabled="true" /></TD>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.originalBE']}" /></TD>
+				<TD><p:inputText id="bidEndTime"
+						value="#{biddingBB.managedBean.bidEndTime}" size="20" disabled="true" 
+						 /></TD>
+			</tr>
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.bidPT']}" /></TD>
+				<TD><p:inputText id="remainingTime"
+						value="#{biddingBB.managedBean.bidPausedTime}" size="20" disabled="true"
+						disabled="true" /></TD>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.remainTime']}" /></TD>
+				<TD><p:inputText id="remainingTime"
+						value="#{biddingBB.managedBean.remainingTime}" size="20" disabled="true"
+						 /></TD>
+			</tr>
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBS']}" /></TD>
+				<TD><p:inputText id="newBidStart"
+						value="#{biddingBB.managedBean.newBidStart}" size="20"
+						disabled="true" /></TD>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBE']}" /></TD>
+				<TD><p:inputText id="newBidEnd"
+						value="#{biddingBB.managedBean.newBidEnd}" size="20" disabled="true"
+						 /></TD>
+			</tr>
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBD']}" /></TD>
+				<TD><p:inputTextArea id="newBidDuration"
+						value="#{biddingBB.managedBean.newBidDuration}" size="20"
+						disabled="true" /></TD>
+				<TD></TD>
+				<TD></TD>
+			</tr>
+			<tr>
+				<TD><p:outputLabel
+						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.nTs']}" /></TD>
+				<TD colspan="3"><p:inputTextArea id="supplierNotes"
+						value="#{biddingBB.managedBean.supplierNotes}" size="200"
+						maxLength="1000" /></TD>
+				
+			</tr>
+
+		</table>
+
+	</div>
+	<div>
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.ok']}"
+			icon="ui-icon-ok" />
+
+		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.cancel']}"
+			icon="ui-icon-cancel" />
+	</div>
+
+</ui:composition>
