@@ -115,6 +115,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	private TreeNode selectedNode;
 	private TreeNode root1; 
 	private TreeNode root2; 
+	
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
@@ -146,6 +147,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().setStateList(resStateDTO.getStateList());
 
+		
 
 
 	}
@@ -198,6 +200,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			extCodeVO.setColorName(String.valueOf(objects[7]));
 
 			bb.getManagedBean().getExtensionVoList().add(extCodeVO);
+			
+			
 
 
 		}
@@ -343,7 +347,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		reqDTO.setSupplierId(new Long(1));
+		reqDTO.setSupplierId(this.getManagedBean().getMaintainItemList().get(index).getSmSupplier().getSupplierId());
 
 		CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 
