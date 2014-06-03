@@ -177,6 +177,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> selectedPersonnels;
 
 	private SmPersonnel selectedPersonnel;
+	
+	private SmPersonnel addrUpdatePersonnel;
 
 	private List<SmStaffExperience> selectedPersJobFunctions;
 	private List<SmAssociationBody> selectedPersProfBodies;
@@ -926,6 +928,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
 	// this.personnelAcademics = personnelAcademics;
 	// }
+
+	public SmPersonnel getAddrUpdatePersonnel() {
+		return addrUpdatePersonnel;
+	}
+
+	public void setAddrUpdatePersonnel(SmPersonnel addrUpdatePersonnel) {
+		this.addrUpdatePersonnel = addrUpdatePersonnel;
+	}
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;

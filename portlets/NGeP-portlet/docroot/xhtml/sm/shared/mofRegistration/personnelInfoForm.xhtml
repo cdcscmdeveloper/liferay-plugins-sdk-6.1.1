@@ -468,7 +468,7 @@
 			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderAddressInfoPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.selectedShareHolder)}"
+				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.addrUpdatePersonnel)}"
 				oncomplete="perShareHolderAddrDialog.hide();"
 				update=":form:tt:personDt,:form:tt:perBrDt" />
 			<p:commandButton value="Cancel"

@@ -150,7 +150,7 @@
 			<p:commandButton value="Save"
 				oncomplete="shareHolderAddrDialog.hide();"
 				update=":form:tt:shrHolderPanGroup"
-				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.selectedShareHolder)}" />
+				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.addrUpdatePersonnel)}" />
 			<p:commandButton value="Cancel"
 				onclick="shareHolderAddrDialog.hide();" />
 		</div>
