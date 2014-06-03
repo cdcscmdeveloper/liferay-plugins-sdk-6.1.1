@@ -21,14 +21,14 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
-			editable="true" rowIndexVar="index" style="width: 1000px;"
+			editable="true" rowIndexVar="index" style="width: 1000px;" value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
-				<p:inputText size="70"></p:inputText>
+				<h:outputText value="#{qualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -45,7 +45,7 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true" value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>
@@ -56,7 +56,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier"
+		<p:dataTable var="disQualifiedSupplier" value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
 			id="complianceDisQualifiedSupplier" editable="true"
 			rowIndexVar="index" style="width: 1000px;"
 			rowKey="#{disQualifiedSupplier}">
@@ -65,7 +65,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
-				<p:inputText size="70"></p:inputText>
+				<h:outputText value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -82,7 +82,7 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true" value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>

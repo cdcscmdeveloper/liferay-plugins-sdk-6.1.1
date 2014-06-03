@@ -28,10 +28,13 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
-					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText size="50" disabled="true" value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
+					<td style="width: 100px;">
+					<h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true"></p:inputTextarea>
+					</td>
 				</tr>
 			</table>
 		</p:panel>
@@ -40,14 +43,15 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
 			toggleable="true">
-			<p:dataTable var="psComplianceList" id="pServiceListId"
+			<p:dataTable var="psComplianceList" id="pServiceListId" value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{psComplianceList}">
 				<ac:paginator for="pServiceListId" />
 
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-
+                   <h:outputText value="#{psComplianceList.title}"></h:outputText>   
+                      
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
@@ -58,11 +62,14 @@
 
 		</p:panel>
 
+<ac:templateSpec
+			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
+
+		<!-- <p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
 			toggleable="true">
-			<p:dataTable var="productServiceSpec" id="productSpecId"
+			<p:dataTable var="productServiceSpec" id="productSpecId" value="#{evaluationBackingBean.managedBean.specItemList}"
 				editable="true" rowIndexVar="index" style="width:100%"
 				rowKey="#{productServiceSpec}">
 				<ac:paginator for="productSpecId" />
@@ -70,18 +77,18 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.item.name']}"
 					style="width:60%">
-
+                    <h:outputText value="#{productServiceSpec.clItem}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.uom']}"
 					style="width:20%">
-
+                          <h:outputText value="#{productServiceSpec.clUom.uomCode}"></h:outputText>
 				</p:column>
 
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.quantity']}"
 					style="width:20%">
-
+                      <h:outputText value="#{productServiceSpec.clUom.clQuantity}"></h:outputText>
 				</p:column>
 
 
@@ -106,7 +113,7 @@
 			</p:dataTable>
 
 		</p:panel>
-
+ -->
 
 	</ui:define>
 </ui:composition>

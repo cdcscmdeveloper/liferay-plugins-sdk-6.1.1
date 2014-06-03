@@ -28,10 +28,12 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -41,6 +43,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
 			toggleable="true">
 			<p:dataTable var="techComplianceList" id="sampleComplianceListId"
+				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%"
 				rowKey="#{techComplianceList}">
 				<ac:paginator for="sampleComplianceListId" />
@@ -48,7 +51,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-
+					<h:outputText value="#{techComplianceList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
@@ -57,6 +60,8 @@
 
 			</p:dataTable>
 
+
+
 		</p:panel>
 
 
@@ -64,6 +69,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
 			toggleable="true">
 			<p:dataTable var="sampleItem" id="techSampleEvaluateId"
+				value="#{evaluationBackingBean.managedBean.sampleItemList}"
 				editable="true" rowIndexVar="index" style="width:100%"
 				rowKey="#{sampleItem}">
 				<ac:paginator for="techSampleEvaluateId" />
@@ -71,27 +77,44 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.item.name']}"
 					style="width:70%">
-
+					<h:outputText
+						value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}"
 					style="width:30%">
-
+					<h:outputText value="#{sampleItem.scQtSampleLable.lableNo}"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
+			<table>
+				<c:forEach
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					var="action">
+
+					<tr>
+
+						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}" /></td>
+						<td><p:inputText value="#{action.userScore}"></p:inputText></td>
+					</tr>
+
+					
+				</c:forEach>
+			</table>
 
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
 			toggleable="true">
 			<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
+				value="#{evaluationBackingBean.managedBean.sampleItemList}"
 				rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
 				<ac:paginator for="techSampleSpecId" />
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}"
 					style="width:50%">
-
+					<h:outputText
+						value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
 
 				</p:column>
 

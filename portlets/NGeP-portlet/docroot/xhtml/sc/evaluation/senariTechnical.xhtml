@@ -28,18 +28,22 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
 
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+			toggleable="true">
 			<p:dataTable var="techComplianceList" id="senariTechId"
+				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%"
 				rowKey="#{techComplianceList}">
 				<ac:paginator for="senariTechId" />
@@ -47,7 +51,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-
+					<h:outputText value="#{techComplianceList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
@@ -92,13 +96,26 @@
 
 
 			<table>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.tot.num.yrs.exp']}" /></td>
-					<td style="width:200px;"><p:inputText readonly="true" disabled="true"></p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
-				</tr>
+				<c:forEach
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					var="action">
+					<tr>
+						<td><h:outputText
+								value="#{lbl['lbl.sc.eva.tot.num.yrs.exp']}" /></td>
+						<td style="width: 200px;"><p:inputText
+								value="#{action.criteriaValue}" readonly="true" disabled="true"></p:inputText></td>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
+						<td><p:inputText readonly="true" disabled="true"
+								value="#{action.autoScore}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
+						<td><p:inputText value="#{action.userScore}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
+					</tr>
 
+				</c:forEach>
 
 			</table>
 
@@ -111,6 +128,8 @@
 
 		<h:panelGroup id="senariTechnical">
 			<ui:param name="scoringPnlId" value="senariTechnicalId" />
+			<ui:param name="scoringList"
+				value="#{evaluationBackingBean.managedBean.technicalStaffScore}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.eva.score.tot.num.yrs.exp']}"></ui:param>
 			<ui:include src="evaluationScoring.xhtml"></ui:include>

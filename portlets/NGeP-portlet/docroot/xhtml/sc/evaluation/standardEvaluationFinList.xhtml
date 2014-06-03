@@ -35,6 +35,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
 			<p:dataTable var="othersFinList" id="othersFinListId" editable="true"
+				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
 				<ac:paginator for="othersFinListId" />
 
@@ -42,21 +43,30 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:40%">
 
-					<h:outputText></h:outputText>
+					<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
-				
 
-				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}" style="width:40%">
+
+				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+					style="width:40%">
+					<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+					style="width:15%">
+
+
+					<h:outputText value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 					style="width:20%">
 
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this"
-						partialSubmit="true" />
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+						process="@this" partialSubmit="true" action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList)}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

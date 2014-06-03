@@ -66,8 +66,7 @@
 						action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
 						update="@(.existingCommitteeResults)" partialSubmit="true"
 						process="@parent" />
-					<br />
-					<br />
+					<p:spacer height="40" />
 					<p:panel header="Search Result" toggleable="true">
 						<p:dataTable id="existingcommitteesearch" widgetVar="existingCommittee"
 							value="#{evaluationMeetingBackingBean.managedBean.externalUsers}"

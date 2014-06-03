@@ -47,7 +47,7 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
 
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}" icon=""
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}" 
 					rendered="#{complianceTech.definationType.parameterId eq '184'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalComplianceAction(complianceTech)}" />

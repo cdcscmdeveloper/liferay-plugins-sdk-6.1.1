@@ -34,7 +34,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="finSpec" id="finSpecId" editable="true"
+			<p:dataTable var="finSpec" id="finSpecId" editable="true" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{finSpec}">
 				<ac:paginator for="finSpecId" />
 
@@ -42,13 +42,13 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
 
-					<h:outputText></h:outputText>
+						<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
 				<p:column headerText="Total Amount&lt;br /&gt;(Package)(RM)"
 					style="width:25%">
-					<h:outputText></h:outputText>
+						<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
 
 				</p:column>
 
@@ -57,13 +57,13 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}" style="width:20%">
-
+                       <h:outputText  value="#{finSpec.totalScore}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 					style="width:15%">
 
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this" action="#{evaluationBackingBean.othersFinancialEvaluate(finSpec)}"
 						partialSubmit="true" />
 				</p:column>
 			</p:dataTable>

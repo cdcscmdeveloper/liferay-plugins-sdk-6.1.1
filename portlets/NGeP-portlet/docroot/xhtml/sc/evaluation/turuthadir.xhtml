@@ -50,6 +50,7 @@
 		<div align="right">
 			<p:commandButton id="turutbutton" value="#{lbl['lbl.sc.eva.btn.add']}"
 				process="@this,turuthadir" partialSubmit="true" update="turuthadir"
+					oncomplete="tirutWidget.paginator.endLink.click();"
 				icon="ui-icon-add" immediate1="true"
 				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"

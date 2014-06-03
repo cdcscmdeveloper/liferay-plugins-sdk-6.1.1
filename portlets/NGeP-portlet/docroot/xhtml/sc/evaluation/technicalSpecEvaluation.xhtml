@@ -34,7 +34,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="templateSpec" id="templateSpecId" editable="true"
+			<p:dataTable var="templateSpec" id="templateSpecId" editable="true" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
 				<ac:paginator for="templateSpecId" />
 
@@ -42,28 +42,28 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:25%">
 
-					<h:outputText></h:outputText>
+					<h:outputText value="#{templateSpec.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.auto.score']}" style="width:20%">
-					<h:outputText></h:outputText>
+					<h:outputText  value="#{templateSpec.proposalScore[0].autoScore}"></h:outputText>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.manual.score']}"  style="width:20%">
-
+                   <h:outputText  value="#{templateSpec.proposalScore[0].userScore}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}" style="width:20%">
-
+                        <h:outputText  value="#{templateSpec.totalScore}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 					style="width:15%">
 
 					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this"
-						partialSubmit="true" />
+						partialSubmit="true" action="#{evaluationBackingBean.othersTechnicalEvaluate(templateSpec)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>

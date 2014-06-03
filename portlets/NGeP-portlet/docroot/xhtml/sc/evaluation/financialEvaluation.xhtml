@@ -41,11 +41,11 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
 				<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
-					<p:commandButton value="View" process="@this" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}" process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
-					<p:commandButton value="Evaluate" process="@this"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this"
 						partialSubmit="true"
 						action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
 				</ui:fragment>

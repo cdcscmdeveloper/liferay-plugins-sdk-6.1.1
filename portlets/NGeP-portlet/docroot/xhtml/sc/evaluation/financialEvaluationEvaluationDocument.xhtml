@@ -17,8 +17,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+			<!-- <p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save" /> -->
 		</div>
 
 		<p:panel>
@@ -35,7 +35,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="evaFinSupplier"
+			<p:dataTable var="evaFinSupplier" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				id="evaluateFinSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
 				<ac:paginator for="evaluateFinSupplier" />
@@ -44,7 +44,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
 
-					<h:outputText></h:outputText>
+					<h:outputText value="#{evaFinSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
@@ -54,21 +54,21 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:15%">
-					<h:outputText></h:outputText>
+					<h:outputText value="#{evaluationBackingBean.getStatusDescById(evaFinSupplier.scQtCheckList.pmStatus.statusId)}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}" style="width:15%">
-					<h:outputText></h:outputText>
+						<h:outputText value="#{evaFinSupplier.compliance}"></h:outputText>
 				</p:column>
 				
 				
 				
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}" style="width:15%">
-					<h:outputText></h:outputText>
+					<p:inputText value="#{evaFinSupplier.userScore}"></p:inputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}" style="width:25%">
-					<p:inputTextarea rows="2" cols="40"></p:inputTextarea>
+						<p:inputTextarea rows="2" cols="40" value="#{evaFinSupplier.remark}" disabled="true"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

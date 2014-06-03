@@ -8,21 +8,21 @@
 
 	<p:panel header="#{scoringPnlName}" toggleable="true">
 
-		<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
+		<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" value="#{scoringList}"
 			var="checkListScoring" rowKey="#{checkListScoring}">
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 		<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
-				style="width:40%">
-				<p:inputText value="#{checkListScoring.rangeFrom}"></p:inputText>
+				style="width:40%" rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
+				<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
-				style="width:30%">
-				<p:inputText value="#{checkListScoring.rangeTo}"></p:inputText>
+				style="width:30%" rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
+				<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
 				style="width:30%">
-				<p:inputText value="#{checkListScoring.score}"></p:inputText>
+				<h:outputText value="#{checkListScoring.score}"></h:outputText>
 			</p:column>
 			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>

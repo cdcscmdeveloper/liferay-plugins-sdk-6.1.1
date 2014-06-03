@@ -28,18 +28,22 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
 
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+			toggleable="true">
 			<p:dataTable var="techComplianceList" id="privateGovCompanyId"
+				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%"
 				rowKey="#{techComplianceList}">
 				<ac:paginator for="privateGovCompanyId" />
@@ -47,7 +51,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-
+					<h:outputText value="#{techComplianceList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
@@ -65,49 +69,72 @@
 			<h:panelGrid columns="2">
 				<h:outputLabel
 					value="*#{lbl['lbl.sc.eva.cmpny.exp.product.service.year']} "></h:outputLabel>
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.year}"></h:outputText>
 			</h:panelGrid>
 			<p:dataTable id="experience" rowIndexVar="index" var="experience"
+				value="#{evaluationBackingBean.managedBean.prpCompanyExperienceList}"
 				rowKey="#{experience}">
 				<ac:paginator for="experience"></ac:paginator>
 				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
 				<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.clientName}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.contractTitle}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.contractNo}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.effective.date']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.effectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.exp.date']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.expiryDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.contractPeriod}">
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contarct.amount']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.contractAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.ramarks']}">
-					<p:inputText></p:inputText>
+					<h:outputText value="#{experience.remark}">
+					</h:outputText>
 				</p:column>
 			</p:dataTable>
 
 
 			<table>
+			<c:forEach
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					var="action">
 				<tr>
 					<td><h:outputText
 							value="#{lbl['lbl.sc.eva.cmpny.tot.contract.amount']}" /></td>
-					<td style="width:200px;"><p:inputText readonly="true" disabled="true"></p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+					<td style="width: 200px;"><p:inputText readonly="true" value="#{action.criteriaValue}"
+							disabled="true"></p:inputText></td>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
+					<td><p:inputText readonly="true" disabled="true" value="#{action.autoScore}"
+							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
+					<td><p:inputText  value="#{action.userScore}"
+							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 				</tr>
+</c:forEach>
 
-				
 			</table>
 
 
@@ -116,13 +143,15 @@
 
 		<h:panelGroup id="privatetotalContractAmount">
 			<ui:param name="scoringPnlId" value="privatecontractorAmountId" />
+			<ui:param name="scoringList"
+				value="#{evaluationBackingBean.managedBean.finPrivateContract}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.eva.cmpny.score.tot.contract.amount']}"></ui:param>
 			<ui:include src="evaluationScoring.xhtml"></ui:include>
 		</h:panelGroup>
 
 
-		
+
 
 	</ui:define>
 </ui:composition>
