@@ -15,7 +15,7 @@
 			 <p:column headerText="#{lbl['lbl.ct.cc.phyloa']}" > <h:outputText value="#{data.ctContract.loaPhysicalNo}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" > <h:outputText value="#{data.ctContract.contractPhysicalNo}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctname']}" ><h:outputText value="#{data.ctContract.contractName}" /> </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" ><h:outputText value="#{data.ctContract.smSupplier.companyName}" /></p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.supplierCompanyName}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
@@ -89,7 +89,8 @@
 		   <h:panelGroup rendered="#{centralContractBackingBean.managedBean.chkItemPrice and  
 		    centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices != null 
 		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">
-		   <p:outputLabel value="#{lbl['lbl.ct.cc.sublabel.price']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		   <p:outputLabel value="#{(centralContractBackingBean.managedBean.selectedCircularItem != null
+		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.cc.sublabel.zoneprice']:lbl['lbl.ct.cc.sublabel.itemprice']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		   <p:dataTable id="circularItemZonePriceDt" var="priceVar" 
 		   value="#{centralContractBackingBean.getItemPrice()}">
 		   <ac:paginator for="circularItemZonePriceDt" />
