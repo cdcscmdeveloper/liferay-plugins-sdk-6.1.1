@@ -49,7 +49,7 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 	private	void	prepareDummyData(){
 		//TODO	hard code dummy data, remove it later
 		ScBusinessNatureQuoteCriteria	criteria1	=	new ScBusinessNatureQuoteCriteria();
-		criteria1.setCriteriaValue("100201");
+		//criteria1.setCriteriaValue("100201");
 		businessNatureCriterias.add(criteria1);
 	}
 	

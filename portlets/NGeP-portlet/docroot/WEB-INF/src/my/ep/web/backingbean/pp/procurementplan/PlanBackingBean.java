@@ -2150,7 +2150,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean> {
 				for (CtCircularContract circularContract : circularContracts) {
 					options.add(new SelectItem(circularContract.getCtContract()
 							.getContractId(), circularContract.getCtContract()
-							.getLatestContractVer().getCtContractValue()
+							.getLatestContractVer().getCtContract()
 							.getContractPhysicalNo()));
 				}
 			} else if (ProcurementPlanConst.CONTRACT_TYPE_MINISTRY_CONTRACT
@@ -2161,7 +2161,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean> {
 				for (CtContract contract : contracts) {
 					options.add(new SelectItem(contract.getContractId(),
 							contract.getLatestContractVer()
-									.getCtContractValue()
+									.getCtContract()
 									.getContractPhysicalNo()));
 				}
 			}
@@ -3039,14 +3039,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean> {
 			 */
 
 			try {
-
-				ISearchBean<PpPlan> searchBeanData = getSearchBean(searchBean);
 				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ProcurementPlanConst.SO_PP,
 								IProcurementPlanSO.class);
 				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
-				reqDTO.setSearchBean(searchBeanData);
+				reqDTO.setSearchBean(searchBean);
 				ProcurementPlanResDTO resDTO = procurementPlanSO
 						.retrievePlanListByParams(reqDTO);
 				if (resDTO.isSuccessful()) {

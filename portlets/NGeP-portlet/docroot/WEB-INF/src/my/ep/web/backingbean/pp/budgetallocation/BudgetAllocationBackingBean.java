@@ -1658,7 +1658,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			}
 
 			try {	
-				ISearchBean<PpBudgetAlloc> searchBeanData = getSearchBean(searchBean);
 				BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 				BudgetAllocSearchBean baSearchBean = getManagedBean().getBudgetAllocSearchBean();
 				if(baSearchBean.getStatusId()!=null && CommonMethod.isSelected(baSearchBean.getStatusId())){
@@ -1666,7 +1665,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 					reqDTO.setStatusId(baSearchBean.getStatusId());
 				}
 				
-				reqDTO.setBudgetAllocSearchBean(searchBeanData);
+				reqDTO.setBudgetAllocSearchBean(searchBean);
 				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);	
 				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocByParams(reqDTO);
 
