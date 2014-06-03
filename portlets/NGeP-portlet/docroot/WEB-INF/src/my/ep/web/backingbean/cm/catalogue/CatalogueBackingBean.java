@@ -20,12 +20,12 @@ import java.util.Vector;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -99,11 +99,14 @@ import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="catalogueBackingBean")
@@ -4092,6 +4095,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
+	public void navigateToCR() throws PortalException, SystemException{
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+		
+		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url = "contract-request";
 
+		try {
+			externalContext.redirect(commonUrl+"/" + url+"?contractId="+this.getManagedBean().getCtRequestList().get(0).getContractId());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
