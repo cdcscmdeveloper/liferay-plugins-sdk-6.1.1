@@ -6,10 +6,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -18,9 +19,17 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -31,13 +40,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<EvaluationReportListBean> evaluationReportListItems;
 	private List<EvaluationReportSubBean> evaluationReportSupplierItems;
 	private List<ScQtMeeting> scQtMeetings;
-	
+
 	private List<ScQtMeeting> meetingMultiSelect;
 	private ScQtMeeting meeting;
 	private List<ScQtCommitteeActivity> committeeMemberList;
 	private ScQtChecklistEvaluation checklistEvaluation;
 	private List<ScQtChecklistEvaluation> manuals1EvaluationList;
-	//private List<ScQtManualEvaluation> manualMultiSelect;
+	// private List<ScQtManualEvaluation> manualMultiSelect;
 	private List<ScQtEvaluationResult> s1TechEvalList;
 	private List<ScQtEvaluationResult> s1FinEvalList;
 	private List<ScQtEvaluationResult> s2TechSupplier;
@@ -54,15 +63,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> disQualifiedList;
 	private ScQtEvaluationResult scQtEvaluationResult;
 	private int tabActiveIndex;
-	private List<ScRequestItem> scQtItemList;
-	
+
 	private ScQtCommitteeActivity commiteeActivity;
 	private ScQt scqt;
 	// OC,EC,TEC,FEC
 	private String committeeType = "TEC";
 	private List<ScQtEvaluationResult> manuals1SupplierList;
-	//private List<ScQtProposalLabel> manualProposalLabel;
-	//private List<ScQtManualEvaluation> manualEvaluateList;
+	// private List<ScQtProposalLabel> manualProposalLabel;
+	// private List<ScQtManualEvaluation> manualEvaluateList;
 	private boolean isEvaluateStatus;
 	private Long evaluationResultId;
 	private int tempTab;
@@ -78,7 +86,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> meetingAttendanceSelectList;
 	private List<ScQtCheckList> complianceTechnicalCheckList;
 	private List<ScQtCheckList> compliancefinancialCheckList;
-	private ScQtCheckList scQtChecklist;
+	private ScQtCheckList scQtChecklist; 
+	private ScQtProposalChecklist qtProposalChecklist; 
 	private ScQt scQt;
 	private int countDays;
 	private List<ScQtProposalChecklist> complianceTechnicalProposalCheckList;
@@ -94,11 +103,45 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> evaluationStgTechnicalCheckList;
 	private List<ScQtCheckList> evaluationStgfinancialCheckList;
 	private String summaryViewBy;
+	private List<ScQtCheckListScore> technicalGovNoOfContracts=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalGovNoOfYears=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalPrivateNoOfContracts=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalPrivateNoOfYears=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalStaffScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> totalNumEmployees=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finGovContract=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finPrivateContract=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankStatementScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditFacilityScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> cashOnHandScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetLiabilityScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> paidUpCapitalScore=new ArrayList<ScQtCheckListScore>();
+	private String checklistScoreType;
+	private String companyScoreType;
+	private ScQtCheckListScore technicalContractUserScore;
+	private ScQtCheckListScore technicalNoOfYearsUserScore;
 	
+	private List<ScQtEvaluationResult> complianceSummaryQualSuppliers;
+	private List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers;
+	
+	private List<ScQtCheckList> evaluationComplianceList;
+	private List<TplSpecQuestion> specItemList;
+	
+	private int complianceQualifiedSuppliers;
+	private int complianceDisQualifiedSuppliers;
+	private List<ScQtPRPExperience> prpCompanyExperienceList;
+	private List<ScLoa> loaGovCompanyExpList;
+	private List<ScQtSampleItem> sampleItemList;
+	private ScQtPRPEmployee noOfEmployeeList;
+	
+	private List<ScQtPRPCashOnHand> cashOnHandList;
+	private List<ScQtPRPCreditFacility> creditFacilityList;
+	
+	private List<ScQtPRPBankStmt> bankStmtList;
+	private List<ScQtPRPAssetLiability> assetList;
+	private List<ScQtProposalScore> techGovProposalScore;
 
-	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -173,8 +216,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setScQtMeetings(List<ScQtMeeting> scQtMeetings) {
 		this.scQtMeetings = scQtMeetings;
 	}
-
-	
 
 	/**
 	 * @return the meeting
@@ -423,22 +464,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtItemList
-	 */
-	public List<ScRequestItem> getScQtItemList() {
-		return scQtItemList;
-	}
-
-	/**
-	 * @param scQtItemList
-	 *            the scQtItemList to set
-	 */
-	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
-		this.scQtItemList = scQtItemList;
-	}
-
-	
-	/**
 	 * @return the commiteeActivity
 	 */
 	public ScQtCommitteeActivity getCommiteeActivity() {
@@ -513,8 +538,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluateStatus(boolean isEvaluateStatus) {
 		this.isEvaluateStatus = isEvaluateStatus;
 	}
-
-	
 
 	/**
 	 * @return the tempTab
@@ -750,7 +773,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param templateSpecBean the templateSpecBean to set
+	 * @param templateSpecBean
+	 *            the templateSpecBean to set
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
@@ -764,7 +788,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param meetingAttendanceList the meetingAttendanceList to set
+	 * @param meetingAttendanceList
+	 *            the meetingAttendanceList to set
 	 */
 	public void setMeetingAttendanceList(
 			List<ScQtMeetingAttendance> meetingAttendanceList) {
@@ -779,7 +804,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param meetingAttendanceSelectList the meetingAttendanceSelectList to set
+	 * @param meetingAttendanceSelectList
+	 *            the meetingAttendanceSelectList to set
 	 */
 	public void setMeetingAttendanceSelectList(
 			List<ScQtMeetingAttendance> meetingAttendanceSelectList) {
@@ -794,7 +820,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceTechnicalCheckList the complianceTechnicalCheckList to set
+	 * @param complianceTechnicalCheckList
+	 *            the complianceTechnicalCheckList to set
 	 */
 	public void setComplianceTechnicalCheckList(
 			List<ScQtCheckList> complianceTechnicalCheckList) {
@@ -809,7 +836,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param compliancefinancialCheckList the compliancefinancialCheckList to set
+	 * @param compliancefinancialCheckList
+	 *            the compliancefinancialCheckList to set
 	 */
 	public void setCompliancefinancialCheckList(
 			List<ScQtCheckList> compliancefinancialCheckList) {
@@ -824,7 +852,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtChecklist the scQtChecklist to set
+	 * @param scQtChecklist
+	 *            the scQtChecklist to set
 	 */
 	public void setScQtChecklist(ScQtCheckList scQtChecklist) {
 		this.scQtChecklist = scQtChecklist;
@@ -838,7 +867,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -852,7 +882,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param countDays the countDays to set
+	 * @param countDays
+	 *            the countDays to set
 	 */
 	public void setCountDays(int countDays) {
 		this.countDays = countDays;
@@ -866,7 +897,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceTechnicalProposalCheckList the complianceTechnicalProposalCheckList to set
+	 * @param complianceTechnicalProposalCheckList
+	 *            the complianceTechnicalProposalCheckList to set
 	 */
 	public void setComplianceTechnicalProposalCheckList(
 			List<ScQtProposalChecklist> complianceTechnicalProposalCheckList) {
@@ -881,7 +913,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceFinancialProposalCheckList the complianceFinancialProposalCheckList to set
+	 * @param complianceFinancialProposalCheckList
+	 *            the complianceFinancialProposalCheckList to set
 	 */
 	public void setComplianceFinancialProposalCheckList(
 			List<ScQtProposalChecklist> complianceFinancialProposalCheckList) {
@@ -896,7 +929,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtCommittee the scQtCommittee to set
+	 * @param scQtCommittee
+	 *            the scQtCommittee to set
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
@@ -910,9 +944,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtCommitteeRemarks the qtCommitteeRemarks to set
+	 * @param qtCommitteeRemarks
+	 *            the qtCommitteeRemarks to set
 	 */
-	public void setQtCommitteeRemarks(List<ScQtCommitteRemarks> qtCommitteeRemarks) {
+	public void setQtCommitteeRemarks(
+			List<ScQtCommitteRemarks> qtCommitteeRemarks) {
 		this.qtCommitteeRemarks = qtCommitteeRemarks;
 	}
 
@@ -924,7 +960,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceActiveIndex the complianceActiveIndex to set
+	 * @param complianceActiveIndex
+	 *            the complianceActiveIndex to set
 	 */
 	public void setComplianceActiveIndex(int complianceActiveIndex) {
 		this.complianceActiveIndex = complianceActiveIndex;
@@ -938,7 +975,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param prepareActiveIndex the prepareActiveIndex to set
+	 * @param prepareActiveIndex
+	 *            the prepareActiveIndex to set
 	 */
 	public void setPrepareActiveIndex(int prepareActiveIndex) {
 		this.prepareActiveIndex = prepareActiveIndex;
@@ -952,7 +990,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSampleLblsupplier the complianceSampleLblsupplier to set
+	 * @param complianceSampleLblsupplier
+	 *            the complianceSampleLblsupplier to set
 	 */
 	public void setComplianceSampleLblsupplier(
 			List<ScQtSampleLable> complianceSampleLblsupplier) {
@@ -967,7 +1006,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtSampleLbl the scQtSampleLbl to set
+	 * @param scQtSampleLbl
+	 *            the scQtSampleLbl to set
 	 */
 	public void setScQtSampleLbl(ScQtSampleLable scQtSampleLbl) {
 		this.scQtSampleLbl = scQtSampleLbl;
@@ -981,7 +1021,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSampleItemList the complianceSampleItemList to set
+	 * @param complianceSampleItemList
+	 *            the complianceSampleItemList to set
 	 */
 	public void setComplianceSampleItemList(
 			List<ScQtSampleItem> complianceSampleItemList) {
@@ -996,10 +1037,46 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluatioStageActiveIndex the evaluatioStageActiveIndex to set
+	 * @param evaluatioStageActiveIndex
+	 *            the evaluatioStageActiveIndex to set
 	 */
 	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
 		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
+	}
+
+	
+
+	
+
+	/**
+	 * @return the summaryViewBy
+	 */
+	public String getSummaryViewBy() {
+		return summaryViewBy;
+	}
+
+	/**
+	 * @param summaryViewBy
+	 *            the summaryViewBy to set
+	 */
+	public void setSummaryViewBy(String summaryViewBy) {
+		this.summaryViewBy = summaryViewBy;
+	}
+
+	
+
+	/**
+	 * @return the qtProposalChecklist
+	 */
+	public ScQtProposalChecklist getQtProposalChecklist() {
+		return qtProposalChecklist;
+	}
+
+	/**
+	 * @param qtProposalChecklist the qtProposalChecklist to set
+	 */
+	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
+		this.qtProposalChecklist = qtProposalChecklist;
 	}
 
 	/**
@@ -1032,20 +1109,468 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evaluationStgfinancialCheckList = evaluationStgfinancialCheckList;
 	}
 
+	
+
 	/**
-	 * @return the summaryViewBy
+	 * @return the checklistScoreType
 	 */
-	public String getSummaryViewBy() {
-		return summaryViewBy;
+	public String getChecklistScoreType() {
+		return checklistScoreType;
 	}
 
 	/**
-	 * @param summaryViewBy the summaryViewBy to set
+	 * @param checklistScoreType the checklistScoreType to set
 	 */
-	public void setSummaryViewBy(String summaryViewBy) {
-		this.summaryViewBy = summaryViewBy;
+	public void setChecklistScoreType(String checklistScoreType) {
+		this.checklistScoreType = checklistScoreType;
 	}
 
+	/**
+	 * @return the technicalContractUserScore
+	 */
+	public ScQtCheckListScore getTechnicalContractUserScore() {
+		return technicalContractUserScore;
+	}
+
+	/**
+	 * @param technicalContractUserScore the technicalContractUserScore to set
+	 */
+	public void setTechnicalContractUserScore(
+			ScQtCheckListScore technicalContractUserScore) {
+		this.technicalContractUserScore = technicalContractUserScore;
+	}
+
+	/**
+	 * @return the technicalNoOfYearsUserScore
+	 */
+	public ScQtCheckListScore getTechnicalNoOfYearsUserScore() {
+		return technicalNoOfYearsUserScore;
+	}
+
+	/**
+	 * @param technicalNoOfYearsUserScore the technicalNoOfYearsUserScore to set
+	 */
+	public void setTechnicalNoOfYearsUserScore(
+			ScQtCheckListScore technicalNoOfYearsUserScore) {
+		this.technicalNoOfYearsUserScore = technicalNoOfYearsUserScore;
+	}
+
+	/**
+	 * @return the companyScoreType
+	 */
+	public String getCompanyScoreType() {
+		return companyScoreType;
+	}
+
+	/**
+	 * @param companyScoreType the companyScoreType to set
+	 */
+	public void setCompanyScoreType(String companyScoreType) {
+		this.companyScoreType = companyScoreType;
+	}
+
+	/**
+	 * @return the technicalGovNoOfContracts
+	 */
+	public List<ScQtCheckListScore> getTechnicalGovNoOfContracts() {
+		return technicalGovNoOfContracts;
+	}
+
+	/**
+	 * @param technicalGovNoOfContracts the technicalGovNoOfContracts to set
+	 */
+	public void setTechnicalGovNoOfContracts(
+			List<ScQtCheckListScore> technicalGovNoOfContracts) {
+		this.technicalGovNoOfContracts = technicalGovNoOfContracts;
+	}
+
+	/**
+	 * @return the technicalGovNoOfYears
+	 */
+	public List<ScQtCheckListScore> getTechnicalGovNoOfYears() {
+		return technicalGovNoOfYears;
+	}
+
+	/**
+	 * @param technicalGovNoOfYears the technicalGovNoOfYears to set
+	 */
+	public void setTechnicalGovNoOfYears(
+			List<ScQtCheckListScore> technicalGovNoOfYears) {
+		this.technicalGovNoOfYears = technicalGovNoOfYears;
+	}
+
+	/**
+	 * @return the technicalPrivateNoOfYears
+	 */
+	public List<ScQtCheckListScore> getTechnicalPrivateNoOfYears() {
+		return technicalPrivateNoOfYears;
+	}
+
+	/**
+	 * @param technicalPrivateNoOfYears the technicalPrivateNoOfYears to set
+	 */
+	public void setTechnicalPrivateNoOfYears(
+			List<ScQtCheckListScore> technicalPrivateNoOfYears) {
+		this.technicalPrivateNoOfYears = technicalPrivateNoOfYears;
+	}
+
+	/**
+	 * @return the technicalPrivateNoOfContracts
+	 */
+	public List<ScQtCheckListScore> getTechnicalPrivateNoOfContracts() {
+		return technicalPrivateNoOfContracts;
+	}
+
+	/**
+	 * @param technicalPrivateNoOfContracts the technicalPrivateNoOfContracts to set
+	 */
+	public void setTechnicalPrivateNoOfContracts(
+			List<ScQtCheckListScore> technicalPrivateNoOfContracts) {
+		this.technicalPrivateNoOfContracts = technicalPrivateNoOfContracts;
+	}
+
+	/**
+	 * @return the technicalStaffScore
+	 */
+	public List<ScQtCheckListScore> getTechnicalStaffScore() {
+		return technicalStaffScore;
+	}
+
+	/**
+	 * @param technicalStaffScore the technicalStaffScore to set
+	 */
+	public void setTechnicalStaffScore(List<ScQtCheckListScore> technicalStaffScore) {
+		this.technicalStaffScore = technicalStaffScore;
+	}
+
+	/**
+	 * @return the totalNumEmployees
+	 */
+	public List<ScQtCheckListScore> getTotalNumEmployees() {
+		return totalNumEmployees;
+	}
+
+	/**
+	 * @param totalNumEmployees the totalNumEmployees to set
+	 */
+	public void setTotalNumEmployees(List<ScQtCheckListScore> totalNumEmployees) {
+		this.totalNumEmployees = totalNumEmployees;
+	}
+
+	/**
+	 * @return the finGovContract
+	 */
+	public List<ScQtCheckListScore> getFinGovContract() {
+		return finGovContract;
+	}
+
+	/**
+	 * @param finGovContract the finGovContract to set
+	 */
+	public void setFinGovContract(List<ScQtCheckListScore> finGovContract) {
+		this.finGovContract = finGovContract;
+	}
+
+	/**
+	 * @return the finPrivateContract
+	 */
+	public List<ScQtCheckListScore> getFinPrivateContract() {
+		return finPrivateContract;
+	}
+
+	/**
+	 * @param finPrivateContract the finPrivateContract to set
+	 */
+	public void setFinPrivateContract(List<ScQtCheckListScore> finPrivateContract) {
+		this.finPrivateContract = finPrivateContract;
+	}
+
+	/**
+	 * @return the bankStatementScore
+	 */
+	public List<ScQtCheckListScore> getBankStatementScore() {
+		return bankStatementScore;
+	}
+
+	/**
+	 * @param bankStatementScore the bankStatementScore to set
+	 */
+	public void setBankStatementScore(List<ScQtCheckListScore> bankStatementScore) {
+		this.bankStatementScore = bankStatementScore;
+	}
+
+	/**
+	 * @return the creditFacilityScore
+	 */
+	public List<ScQtCheckListScore> getCreditFacilityScore() {
+		return creditFacilityScore;
+	}
+
+	/**
+	 * @param creditFacilityScore the creditFacilityScore to set
+	 */
+	public void setCreditFacilityScore(List<ScQtCheckListScore> creditFacilityScore) {
+		this.creditFacilityScore = creditFacilityScore;
+	}
+
+	/**
+	 * @return the cashOnHandScore
+	 */
+	public List<ScQtCheckListScore> getCashOnHandScore() {
+		return cashOnHandScore;
+	}
+
+	/**
+	 * @param cashOnHandScore the cashOnHandScore to set
+	 */
+	public void setCashOnHandScore(List<ScQtCheckListScore> cashOnHandScore) {
+		this.cashOnHandScore = cashOnHandScore;
+	}
+
+	/**
+	 * @return the assetLiabilityScore
+	 */
+	public List<ScQtCheckListScore> getAssetLiabilityScore() {
+		return assetLiabilityScore;
+	}
+
+	/**
+	 * @param assetLiabilityScore the assetLiabilityScore to set
+	 */
+	public void setAssetLiabilityScore(List<ScQtCheckListScore> assetLiabilityScore) {
+		this.assetLiabilityScore = assetLiabilityScore;
+	}
+
+	/**
+	 * @return the paidUpCapitalScore
+	 */
+	public List<ScQtCheckListScore> getPaidUpCapitalScore() {
+		return paidUpCapitalScore;
+	}
+
+	/**
+	 * @param paidUpCapitalScore the paidUpCapitalScore to set
+	 */
+	public void setPaidUpCapitalScore(List<ScQtCheckListScore> paidUpCapitalScore) {
+		this.paidUpCapitalScore = paidUpCapitalScore;
+	}
+
+	/**
+	 * @return the complianceSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getComplianceSummaryQualSuppliers() {
+		return complianceSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param complianceSummaryQualSuppliers the complianceSummaryQualSuppliers to set
+	 */
+	public void setComplianceSummaryQualSuppliers(
+			List<ScQtEvaluationResult> complianceSummaryQualSuppliers) {
+		this.complianceSummaryQualSuppliers = complianceSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the complianceSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getComplianceSummaryDisQualSuppliers() {
+		return complianceSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param complianceSummaryDisQualSuppliers the complianceSummaryDisQualSuppliers to set
+	 */
+	public void setComplianceSummaryDisQualSuppliers(
+			List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers) {
+		this.complianceSummaryDisQualSuppliers = complianceSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the complianceQualifiedSuppliers
+	 */
+	public int getComplianceQualifiedSuppliers() {
+		return complianceQualifiedSuppliers;
+	}
+
+	/**
+	 * @param complianceQualifiedSuppliers the complianceQualifiedSuppliers to set
+	 */
+	public void setComplianceQualifiedSuppliers(int complianceQualifiedSuppliers) {
+		this.complianceQualifiedSuppliers = complianceQualifiedSuppliers;
+	}
+
+	/**
+	 * @return the complianceDisQualifiedSuppliers
+	 */
+	public int getComplianceDisQualifiedSuppliers() {
+		return complianceDisQualifiedSuppliers;
+	}
+
+	/**
+	 * @param complianceDisQualifiedSuppliers the complianceDisQualifiedSuppliers to set
+	 */
+	public void setComplianceDisQualifiedSuppliers(
+			int complianceDisQualifiedSuppliers) {
+		this.complianceDisQualifiedSuppliers = complianceDisQualifiedSuppliers;
+	}
+
+	/**
+	 * @return the evaluationComplianceList
+	 */
+	public List<ScQtCheckList> getEvaluationComplianceList() {
+		return evaluationComplianceList;
+	}
+
+	/**
+	 * @param evaluationComplianceList the evaluationComplianceList to set
+	 */
+	public void setEvaluationComplianceList(
+			List<ScQtCheckList> evaluationComplianceList) {
+		this.evaluationComplianceList = evaluationComplianceList;
+	}
+
+	/**
+	 * @return the specItemList
+	 */
+	public List<TplSpecQuestion> getSpecItemList() {
+		return specItemList;
+	}
+
+	/**
+	 * @param specItemList the specItemList to set
+	 */
+	public void setSpecItemList(List<TplSpecQuestion> specItemList) {
+		this.specItemList = specItemList;
+	}
+
+	/**
+	 * @return the prpCompanyExperienceList
+	 */
+	public List<ScQtPRPExperience> getPrpCompanyExperienceList() {
+		return prpCompanyExperienceList;
+	}
+
+	/**
+	 * @param prpCompanyExperienceList the prpCompanyExperienceList to set
+	 */
+	public void setPrpCompanyExperienceList(
+			List<ScQtPRPExperience> prpCompanyExperienceList) {
+		this.prpCompanyExperienceList = prpCompanyExperienceList;
+	}
+
+	/**
+	 * @return the loaGovCompanyExpList
+	 */
+	public List<ScLoa> getLoaGovCompanyExpList() {
+		return loaGovCompanyExpList;
+	}
+
+	/**
+	 * @param loaGovCompanyExpList the loaGovCompanyExpList to set
+	 */
+	public void setLoaGovCompanyExpList(List<ScLoa> loaGovCompanyExpList) {
+		this.loaGovCompanyExpList = loaGovCompanyExpList;
+	}
+
+	/**
+	 * @return the sampleItemList
+	 */
+	public List<ScQtSampleItem> getSampleItemList() {
+		return sampleItemList;
+	}
+
+	/**
+	 * @param sampleItemList the sampleItemList to set
+	 */
+	public void setSampleItemList(List<ScQtSampleItem> sampleItemList) {
+		this.sampleItemList = sampleItemList;
+	}
+
+	/**
+	 * @return the noOfEmployeeList
+	 */
+	public ScQtPRPEmployee getNoOfEmployeeList() {
+		return noOfEmployeeList;
+	}
+
+	/**
+	 * @param noOfEmployeeList the noOfEmployeeList to set
+	 */
+	public void setNoOfEmployeeList(ScQtPRPEmployee noOfEmployeeList) {
+		this.noOfEmployeeList = noOfEmployeeList;
+	}
+
+	/**
+	 * @return the cashOnHandList
+	 */
+	public List<ScQtPRPCashOnHand> getCashOnHandList() {
+		return cashOnHandList;
+	}
+
+	/**
+	 * @param cashOnHandList the cashOnHandList to set
+	 */
+	public void setCashOnHandList(List<ScQtPRPCashOnHand> cashOnHandList) {
+		this.cashOnHandList = cashOnHandList;
+	}
+
+	/**
+	 * @return the creditFacilityList
+	 */
+	public List<ScQtPRPCreditFacility> getCreditFacilityList() {
+		return creditFacilityList;
+	}
+
+	/**
+	 * @param creditFacilityList the creditFacilityList to set
+	 */
+	public void setCreditFacilityList(List<ScQtPRPCreditFacility> creditFacilityList) {
+		this.creditFacilityList = creditFacilityList;
+	}
+
+	/**
+	 * @return the bankStmtList
+	 */
+	public List<ScQtPRPBankStmt> getBankStmtList() {
+		return bankStmtList;
+	}
+
+	/**
+	 * @param bankStmtList the bankStmtList to set
+	 */
+	public void setBankStmtList(List<ScQtPRPBankStmt> bankStmtList) {
+		this.bankStmtList = bankStmtList;
+	}
+
+	/**
+	 * @return the assetList
+	 */
+	public List<ScQtPRPAssetLiability> getAssetList() {
+		return assetList;
+	}
+
+	/**
+	 * @param assetList the assetList to set
+	 */
+	public void setAssetList(List<ScQtPRPAssetLiability> assetList) {
+		this.assetList = assetList;
+	}
+
+	/**
+	 * @return the techGovProposalScore
+	 */
+	public List<ScQtProposalScore> getTechGovProposalScore() {
+		return techGovProposalScore;
+	}
+
+	/**
+	 * @param techGovProposalScore the techGovProposalScore to set
+	 */
+	public void setTechGovProposalScore(List<ScQtProposalScore> techGovProposalScore) {
+		this.techGovProposalScore = techGovProposalScore;
+	}
+
+	
 	
 
 }
