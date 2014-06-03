@@ -15,21 +15,11 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
-				<h:outputText value="#{techList.scQtCheckList.title}" escape="false" />
+				<h:outputText value="#{techList.scQtCheckList.title}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.instruction']}"
 				style="width:15%">
-			</p:column>
-
-			<p:column headerText="Doc Definition Key" style="width:10%">
-				<h:outputText
-					value="#{techList.scQtCheckList.pmDocument.docDefinitionKey}" />
-			</p:column>
-
-			<p:column headerText="Doc Definition Type" style="width:10%">
-				<h:outputText
-					value="#{techList.scQtCheckList.definationType.parameterCode}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.action']}" style="width:10%">
