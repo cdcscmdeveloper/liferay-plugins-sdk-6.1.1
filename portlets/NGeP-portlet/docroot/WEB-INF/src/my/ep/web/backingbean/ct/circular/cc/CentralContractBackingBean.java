@@ -395,8 +395,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
-				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
-				reqDTO.getCircularVer().setApprovedDate(new Date());
+				circularVer.setApprover(getFacesScopes().getUserSessionBean());
+				circularVer.setApprovedDate(new Date());
 			}
 			
 			reqDTO.setCircular(circular);
@@ -644,11 +644,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 
-			reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 			if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
 				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
 			}// TODO hardcode to get the value, should remove after have real data
-			reqDTO.setOrgProfileId(1003L);
+			reqDTO.setOrgProfileId(1392L);
 			
 
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
