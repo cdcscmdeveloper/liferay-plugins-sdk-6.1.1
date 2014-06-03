@@ -121,21 +121,7 @@
 									value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
 							</div>
-							<div style="text-align: right;">
-								<p:commandLink action="#{catalogueBackingBean.showTableView}"
-									update="searchViewId">
-									<p:ajax update="@(.ui-button[id$=compareButton])" />
-									<p:graphicImage library="ep/images/design"
-										name="icon-table.png" id="tableIconId" />
-								</p:commandLink>
-								<p:commandLink
-									actionListener="#{catalogueBackingBean.showGridView}"
-									update="searchViewId">
-									<p:ajax update="@(.ui-button[id$=compareButton])" />
-									<p:graphicImage library="ep/images/design"
-										name="icon-datagrid2.png" id="gridIconId" />
-								</p:commandLink>
-							</div>
+							
 							<h:panelGroup id="searchViewId">
 
 								<p:dataTable lazy="true"
