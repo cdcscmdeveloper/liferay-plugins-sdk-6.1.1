@@ -1,12 +1,14 @@
 package my.ep.web.phaselistener;
 
-import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.logging.LogKey;
 import my.ep.web.util.EpPortletUtil;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
 
 import org.apache.log4j.Logger;
@@ -39,14 +41,20 @@ public class EpSecurityPhaseListener implements PhaseListener {
 
 	@Override
 	public void beforePhase(PhaseEvent phaseEvent) {
-		debugLogger("beforePhase");
+		debugLogger("beforePhase");		
 		
-		FacesContext context = phaseEvent.getFacesContext();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			debugLogger("userId: " + pmUser.getUserId());
+			
+			new LogKey(pmUser.getUserId());	
+			// Init the Data Filters
+			SecurityFilterUtil.applyDataFilters(
+					pmUser.getUserId(), 
+					EpPortletUtil.getDisplayPortletId());
+		}
 		
-		// Init the Data Filters
-		SecurityFilterUtil.applyDataFilters(
-				EpPortletUtil.getLoginUserId(context), 
-				EpPortletUtil.getDisplayPortletId());
+		
 	}
 	
 	@Override

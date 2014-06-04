@@ -4,27 +4,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import my.ep.persistence.entity.aut.AutScreenMetadata;
+import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
 
 /**
  * @author Kenny
  * @created 03.12.2012
- *
+ * 
  */
 public class SecurityFiltersBean {
-	// Map to keep  Screen Filters
+	// Map to keep Screen Filters
 	// The key is screen id with Map object
 	// Lastly the key is component id with screenAuth in the Map object
 	private HashMap<String, Map<String, String>> authScreenFilters;
-	
+
 	// Map to keep Data Filters
 	// The key is screen id with Map object
-	// Lastly the key is component id with collection of AutScreenMetadata in the Map object	
-	private Map<String, Map<String, List<AutScreenMetadata>>> authDataFilters;
+	// Lastly the key is component id with collection of AutScreenMetadata in
+	// the Map object
+
+	private Map<String, Map<String, List<PmScreenRestr>>> autDataFilters;
 
 	public SecurityFiltersBean() {
 		authScreenFilters = new HashMap<String, Map<String, String>>();
-		authDataFilters = new HashMap<String, Map<String, List<AutScreenMetadata>>>();		
+		autDataFilters = new HashMap<String, Map<String, List<PmScreenRestr>>>();
 	}
 
 	/**
@@ -35,25 +37,22 @@ public class SecurityFiltersBean {
 	}
 
 	/**
-	 * @param authScreenFilters the authScreenFilters to set
+	 * @param authScreenFilters
+	 *            the authScreenFilters to set
 	 */
 	public void setAuthScreenFilters(
 			HashMap<String, Map<String, String>> authScreenFilters) {
 		this.authScreenFilters = authScreenFilters;
 	}
 
-	/**
-	 * @return the authDataFilters
-	 */
-	public Map<String, Map<String, List<AutScreenMetadata>>> getAuthDataFilters() {
-		return authDataFilters;
+	public Map<String, Map<String, List<PmScreenRestr>>> getAutDataFilters() {
+		return autDataFilters;
 	}
 
-	/**
-	 * @param authDataFilters the authDataFilters to set
-	 */
-	public void setAuthDataFilters(
-			Map<String, Map<String, List<AutScreenMetadata>>> authDataFilters) {
-		this.authDataFilters = authDataFilters;
+	public void setAutDataFilters(
+			Map<String, Map<String, List<PmScreenRestr>>> autDataFilters) {
+		this.autDataFilters = autDataFilters;
 	}
+
+	
 }

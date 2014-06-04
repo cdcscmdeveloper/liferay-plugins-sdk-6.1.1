@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletCategory;
@@ -43,6 +44,8 @@ import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.permission.GroupPermissionUtil;
+import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -57,25 +60,22 @@ public class EpPortletUtil {
 		}
 	}
 
-	public static String getDisplayPortletId() {
+	public static String getDisplayPortletId() {	
+		
 		return getThemeDisplay().getPortletDisplay().getId();
+		
+
 	}
-	
-	
 
 	public String getDisplayLayoutName() {
 
-		ThemeDisplay themeDisplay = getThemeDisplay();		
+		ThemeDisplay themeDisplay = getThemeDisplay();
 
 		return themeDisplay.getLayout().getName(themeDisplay.getLocale());
 	}
 
 	public static String getLoginUserId(FacesContext context) {
 		return getThemeDisplay().getUser().getScreenName();
-	}
-	
-	public static long getUserId() {
-		return getThemeDisplay().getUserId();
 	}
 
 	public static List<PortletCategoryBean> getPortletCategories() {
@@ -130,44 +130,40 @@ public class EpPortletUtil {
 			ThemeDisplay themeDisplay = getThemeDisplay();
 			PermissionChecker permissionChecker = themeDisplay
 					.getPermissionChecker();
-			List<Layout> layouts = themeDisplay.getLayouts();
-			//Group group = themeDisplay.getLayout().getGroup();
-			Locale locale = themeDisplay.getLocale();/*
+			List<Layout> layouts = themeDisplay.getUnfilteredLayouts();
+			Group group = themeDisplay.getLayout().getGroup();
+			Locale locale = themeDisplay.getLocale();
 			boolean hasViewStagingPermission = (group.isStagingGroup() || group
 					.isStagedRemotely())
 					&& GroupPermissionUtil.contains(permissionChecker,
-							group.getGroupId(), ActionKeys.VIEW_STAGING);*/
+							group.getGroupId(), ActionKeys.VIEW_STAGING);
 
-			for (Layout mainLayout : layouts) {
-				if (mainLayout.getFriendlyURL().equals("/my-application")) {
-					for (Layout layout : mainLayout.getChildren(permissionChecker)) {
-						if (!layout.isHidden()/*
-								&& (isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)*/) {
+			for (Layout layout : layouts) {
+				if (layout.isHidden()
+						&& (isViewableLayout(permissionChecker, layout) || hasViewStagingPermission)) {
 
-							menuBean = toMenuBean(permissionChecker, layout, locale);
+					menuBean = toMenuBean(permissionChecker, layout, locale);
 
-							if (log.isDebugEnabled()) {
-								log.debug(new StringBuilder().append("name:")
-										.append(menuBean.getName()).append(", title:")
-										.append(menuBean.getTitle())
-										.append(", imageId:")
-										.append(menuBean.getImageId()));
+					if (log.isDebugEnabled()) {
+						log.debug(new StringBuilder().append("name:")
+								.append(menuBean.getName()).append(", title:")
+								.append(menuBean.getTitle())
+								.append(", imageId:")
+								.append(menuBean.getImageId()));
 
-								for (MenuBean childMenuBean : menuBean.getChildren()) {
-									log.debug(new StringBuilder().append("childname:")
-											.append(childMenuBean.getName())
-											.append(", title:")
-											.append(childMenuBean.getTitle())
-											.append(", imageId:")
-											.append(childMenuBean.getImageId())
-											.append(", url:")
-											.append(childMenuBean.getUrl()));
-								}
-							}
+						for (MenuBean childMenuBean : menuBean.getChildren()) {
+							log.debug(new StringBuilder().append("childname:")
+									.append(childMenuBean.getName())
+									.append(", title:")
+									.append(childMenuBean.getTitle())
+									.append(", imageId:")
+									.append(childMenuBean.getImageId())
+									.append(", url:")
+									.append(childMenuBean.getUrl()));
+						}
+					}
 
-							menuBeans.add(menuBean);
-						}	
-					}	
+					menuBeans.add(menuBean);
 				}
 			}
 		} catch (PortalException e) {
@@ -405,8 +401,8 @@ public class EpPortletUtil {
 				PortalUtil.getLayoutFriendlyURL(layout, getThemeDisplay()));
 
 		List<MenuBean> childs = new ArrayList<MenuBean>();
-		for (Layout child : layout.getChildren(permissionChecker)) {
-			if (/*isViewableLayout(permissionChecker, child)*/!child.isHidden()) {
+		for (Layout child : layout.getChildren()) {
+			if (isViewableLayout(permissionChecker, child)) {
 				childs.add(toMenuBean(permissionChecker, child, locale));
 			}
 		}
@@ -415,20 +411,20 @@ public class EpPortletUtil {
 		return menuBean;
 	}
 
-	/*private static boolean isViewableLayout(
+	private static boolean isViewableLayout(
 			PermissionChecker permissionChecker, Layout layout)
 			throws PortalException, SystemException {
 
 		return LayoutPermissionUtil.contains(permissionChecker, layout, false,
 				ActionKeys.VIEW);
-	}*/
+	}
 
 	private static void handleException(Exception e) {
 		e.printStackTrace();
 		log.error(e);
 		throw new EpException(MessageConst.EP_MAJ_00001);
 	}
-	
+
 	public String getDisplayPortletName() {
 		return getThemeDisplay().getPortletDisplay().getTitle();
 	}
