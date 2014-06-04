@@ -597,7 +597,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			Object obj = res.getPojo();			
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			
-			getManagedBean().setCircularAdmin(dataType.getContractAdmin().getUserName());
+			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
