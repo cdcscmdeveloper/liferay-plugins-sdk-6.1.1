@@ -15,7 +15,9 @@
 				<td><p:outputPanel>
 						<div align="right" style="width: 99%" class="button-wrapper">
 							<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-								icon="ui-icon-save" style="margin-bottom:5px;" />
+								icon="ui-icon-save" style="margin-bottom:5px;"
+								action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+								update=":form" />
 						</div>
 					</p:outputPanel> <ui:include
 						src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />

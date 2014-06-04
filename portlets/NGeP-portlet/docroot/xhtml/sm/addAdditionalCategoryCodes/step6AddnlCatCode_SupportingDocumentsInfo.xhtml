@@ -13,7 +13,8 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							icon="ui-icon-save" style="margin-bottom:5px;" />
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 						<p:commandButton value="Submit Application"
 							style="margin-bottom:5px;"
 							action="#{backingBean.submitAddnlCategoryApplToBpm}" />
@@ -45,8 +46,8 @@
 									<tr>
 										<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 												actionListener="#{backingBean.setTabValue('7','6')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}" update=":form"
-												icon="ui-icon-prev" /></td>
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+												update=":form" icon="ui-icon-prev" /></td>
 
 									</tr>
 								</table>

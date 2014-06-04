@@ -12,7 +12,8 @@
 			<td><p:outputPanel>
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							icon="ui-icon-save" style="margin-bottom:5px;" />
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel>
 				<table style="width: 250px">

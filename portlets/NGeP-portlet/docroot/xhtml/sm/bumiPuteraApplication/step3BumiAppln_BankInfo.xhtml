@@ -10,10 +10,9 @@
 					src="smBumiApplnSideMenuItem.xhtml" /></td>
 			<td><p:outputPanel
 					rendered="#{backingBean.managedBean.supplierUser}">
-					<div align="right" style="width: 99%" class="button-wrapper">
-						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							icon="ui-icon-save" style="margin-bottom:5px;" />
-					</div>
+					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+						action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForBumi,'BankInfo')}"
+						update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 				</p:outputPanel> <ui:include
 					src="/xhtml/sm/shared/mofRegistration/bankInfoForm.xhtml" />
 				<div class="nav-wrapper">
