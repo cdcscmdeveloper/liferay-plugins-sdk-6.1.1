@@ -342,13 +342,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqBpm = new BpmRequestDTO();
-		//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
-		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
-			IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-			reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-			purchaseReqSO.approvalRequestNote(reqDTO);
-		}
+		
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		try {
@@ -378,6 +372,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 
 					} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+						//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
+						
+						IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+						PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+						reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+						purchaseReqSO.approvalRequestNote(reqDTO);
+						
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700011, 
