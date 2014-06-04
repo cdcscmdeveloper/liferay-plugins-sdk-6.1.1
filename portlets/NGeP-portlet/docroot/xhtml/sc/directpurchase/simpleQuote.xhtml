@@ -8,30 +8,52 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
     <ac:title value="#{lbl['lbl.sc.sq']}"/>
-    <p:panel id="mainSqId">
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
-    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
-    
-    <p:tabView orientation="left" id="tabViewId" >
-      <p:ajax event="tabChange" update="@([id$=suppCriteria])" listener="#{simpleQuoteBackingBean.tabEvent}" partialSubmit="true" process="@this"/>  
+      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
+     <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top">
+				<p:tabMenu styleClass="sidemenu"
+					activeIndex="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}"
+					style="display : table-caption;">
 
-		<p:tab title="General Information" >
-			<ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />
-		</p:tab>
-		
-		<p:tab title="Zone" disabled="#{simpleQuoteBackingBean.managedBean.zoneFlag}">
-			<ui:include src="/xhtml/sc/directpurchase/common/simpleQuoteZone.xhtml" />
-		</p:tab>
-		
-		<p:tab title="Item List">
-			<ui:include src="/xhtml/sc/directpurchase/simpleQuoteItemList.xhtml" />
-		</p:tab>
-		
-		<p:tab title="Supplier Criteria &#38; List">
-			<ui:include src="/xhtml/sc/directpurchase/simpleQuoteSuppCriteria.xhtml" />
-		</p:tab>
-	</p:tabView>
-	</p:panel>
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.gen.info']}" update="@form">
+						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="0" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.zone']}" update="@form">
+						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="1" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.item.list']}" update="@form">
+						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" update="@form" action="#{simpleQuoteBackingBean.tabEvent}">
+						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="3" />
+					</p:menuitem>
+					
+				</p:tabMenu>
+			</td>
+			<td width="80%">
+			  <div align="right">
+			      <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{simpleQuoteBackingBean.saveSimpleQuote}" update="@form"/>
+			   </div>
+				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 0}">
+				    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />
+				</c:if>
+	
+				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 1}">
+					<ui:include src="/xhtml/sc/directpurchase/common/simpleQuoteZone.xhtml" />
+				</c:if>
+				
+				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 2}">
+					<ui:include src="/xhtml/sc/directpurchase/simpleQuoteItemList.xhtml" />
+				</c:if>
+				
+				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 3}">
+					<ui:include src="/xhtml/sc/directpurchase/simpleQuoteSuppCriteria.xhtml" />
+				</c:if>
+			</td>
+		</tr>
+		</table>
 </ui:define>
 </ui:composition>
