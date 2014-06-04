@@ -127,12 +127,12 @@ public class SupplierManagementConst {
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
-	
-	//SDO BPM Action
+
+	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
 	public static final String BPM_SUBMIT = "SUBMIT";
-	public static final String BPM_VERIFY = "VERIFY"; 
-	
+	public static final String BPM_VERIFY = "VERIFY";
+
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
 	public static final String SVO_SA = "UPS_SVO_SA";
@@ -170,6 +170,8 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
 
 	public static final String SM_APPL_BPM_OUTCOME_SUBMIT = "SUBMIT";
+	public static final String SM_APPL_BPM_OUTCOME_DRAFT = "DRAFT";
+	public static final String SM_APPL_BPM_OUTCOME_SAVE = "SAVE";
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL = "A";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP = "B";
@@ -192,7 +194,9 @@ public class SupplierManagementConst {
 	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
-	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20100";
+	// public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION =
+	// "20100";
+	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20700";
 	public static final String PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION = "20101";
 	public static final String PM_STATUS_PENDING_APPLICATION_VERIFICATION = "20102";
 	public static final String PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT = "20103";
@@ -408,18 +412,17 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT;
 	}
-	
-	public String getBPM_SUBMIT(){
+
+	public String getBPM_SUBMIT() {
 		return BPM_SUBMIT;
 	}
-	
-	public String getBPM_INQUIRY(){
+
+	public String getBPM_INQUIRY() {
 		return BPM_INQUIRY;
 	}
 
 	public String getBPM_VERIFY() {
 		return BPM_VERIFY;
 	}
-
 
 }

@@ -341,6 +341,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal equiCompCapTotal;
 
 	private boolean validResubmit;
+	
+	private boolean draftedAppl;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1973,6 +1975,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setComExpSubChildCatList(
 			List<PmCategoryL3> comExpSubChildCatList) {
 		this.comExpSubChildCatList = comExpSubChildCatList;
+	}
+
+	public boolean isDraftedAppl() {
+		return draftedAppl;
+	}
+
+	public void setDraftedAppl(boolean draftedAppl) {
+		this.draftedAppl = draftedAppl;
 	}
 
 }

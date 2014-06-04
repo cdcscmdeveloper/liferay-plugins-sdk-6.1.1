@@ -764,7 +764,7 @@ public class SmApplicationBackingBean extends
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			mofRegistrationSO = null;
 		}
@@ -972,6 +972,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (validStfCont == 0) {
+				getManagedBean().getSmAppl().setSmStaffTotals(
+						getStaffList(getManagedBean().getSmAppl()
+								.getSupplierType()));
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722526);
 			}
@@ -2606,20 +2609,28 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getShareHolderPermAddr());
 				}
 			}
-			
-			if(!shareHolderBean.getSmPersonnelAddresses().contains(getManagedBean().getShareHolderPermAddr())){
-				shareHolderBean.getSmPersonnelAddresses().add(getManagedBean().getShareHolderPermAddr());
+
+			if (!shareHolderBean.getSmPersonnelAddresses().contains(
+					getManagedBean().getShareHolderPermAddr())) {
+				shareHolderBean.getSmPersonnelAddresses().add(
+						getManagedBean().getShareHolderPermAddr());
 			}
-			if(!shareHolderBean.getSmPersonnelAddresses().contains(getManagedBean().getShareHolderMailAddr())){
-				shareHolderBean.getSmPersonnelAddresses().add(getManagedBean().getShareHolderMailAddr());
+			if (!shareHolderBean.getSmPersonnelAddresses().contains(
+					getManagedBean().getShareHolderMailAddr())) {
+				shareHolderBean.getSmPersonnelAddresses().add(
+						getManagedBean().getShareHolderMailAddr());
 			}
-			if(!shareHolderBean.getSmPersonnelAddresses().contains(getManagedBean().getShareHolderResdAddr())){
-				shareHolderBean.getSmPersonnelAddresses().add(getManagedBean().getShareHolderResdAddr());
+			if (!shareHolderBean.getSmPersonnelAddresses().contains(
+					getManagedBean().getShareHolderResdAddr())) {
+				shareHolderBean.getSmPersonnelAddresses().add(
+						getManagedBean().getShareHolderResdAddr());
 			}
-			if(!shareHolderBean.getSmPersonnelAddresses().contains(getManagedBean().getShareHolderOffAddr())){
-				shareHolderBean.getSmPersonnelAddresses().add(getManagedBean().getShareHolderOffAddr());
-			} 
-			
+			if (!shareHolderBean.getSmPersonnelAddresses().contains(
+					getManagedBean().getShareHolderOffAddr())) {
+				shareHolderBean.getSmPersonnelAddresses().add(
+						getManagedBean().getShareHolderOffAddr());
+			}
+
 			getManagedBean().setSelectedShareHolder(shareHolderBean);
 
 		}
@@ -3369,61 +3380,22 @@ public class SmApplicationBackingBean extends
 			// SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
 			// .get(0);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
-			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
+			if (getManagedBean().getSmAppl().isResubmit()) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
+			} else {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
+			}
 			getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-			// if (!getManagedBean().getSmAppl().getApplType()
-			// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			updateSmAppl(bpmAppl.getApplType(), "BasicInfo");
 			// }
 			System.out.println(" **** SUPPORTING DOC MODE ****"
 					+ bpmAppl.getSupportingDocMode());
-			if (bpmAppl.getApplType().equalsIgnoreCase("N")) {
-				System.out.println(" **** BPM FROM MOF REG CALLED ******");
-			} else if (bpmAppl.getApplType().equalsIgnoreCase("B")) {
-				System.out.println(" **** BPM FROM BUMI APPL CALLED ******");
-			} else if (bpmAppl.getApplType().equalsIgnoreCase("U")) {
-				System.out.println(" **** BPM FROM UPDATE APPL CALLED ******");
-			} else if (bpmAppl.getApplType().equalsIgnoreCase("A")) {
-				System.out
-						.println(" **** BPM FROM ADDITIONAL CATEGORY CODE APPL CALLED ******");
-			} else if (bpmAppl.getApplType().equalsIgnoreCase("R")) {
-				System.out
-						.println(" **** BPM FROM RENEWAL APPLICATION IS CALLED ******");
-			} else if (bpmAppl.getApplType().equalsIgnoreCase("C")) {
-				System.out
-						.println(" **** BPM FROM CANCEL REG APPLICATION IS CALLED ******");
-			} else {
-				bpmAppl.setApplId((long) 777);
-			}
+
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode("O");
 			}
-			System.out.println(" ***** VALUE OF SELECTED OBJECT ***** "
-					+ getManagedBean().getSmSupplier().getSmAppls().size()
-					+ "  ---  " + bpmAppl.getApplId());
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-
-			// TODO Remove the hard code later
-			reqDTO.setOutcome(SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
-			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
-			reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
-			reqDTO.setAppType(bpmAppl.getApplType());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setSmAppl(bpmAppl);
-			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
-			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
-					.getSupplierType().toUpperCase());
-			reqDTO.setBaseOfficeState(getManagedBean().getSmAppl()
-					.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-					.getSmAddress().getPmState().getStateName().toUpperCase());
-
-			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase("O")) {
-				reqDTO.setOnlineDoc(true);
-			} else {
-				reqDTO.setOnlineDoc(false);
-			}
+			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
 
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -3580,9 +3552,9 @@ public class SmApplicationBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
-
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return SupplierManagementConst.MOF_APPL_FAIL;
 		}
 	}
@@ -3669,6 +3641,111 @@ public class SmApplicationBackingBean extends
 		} finally {
 			regSo = null;
 		}
+	}
+
+	public void saveApplicationAsDraft(String applType, String pageType) {
+		System.out.println("****** Save As Draft **********");
+		boolean valid = false;
+		try {
+			valid = validateBeforeSave(applType, pageType);
+			if (valid) {
+				valid = intializeSaveDraftBpm();
+			}
+			if (!valid) {
+				System.out.println("******* Process No Valid ******");
+				throw new EpException(MessageConst.ERROR_722519);
+			}
+		} finally {
+			if (valid) {
+				if (retriveLatestApplAfterUpdate(pageType)) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_700004,
+															new String[] {
+																	getParameterDesc(
+																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																			getManagedBean()
+																					.getSmAppl()
+																					.getApplType()),
+																	getManagedBean()
+																			.getSmAppl()
+																			.getApplNo() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+				}
+			}
+		}
+	}
+
+	private boolean intializeSaveDraftBpm() {
+		System.out.println("*********  intializeSaveDraftBpm ************* ");
+		IMofRegistrationSO regSo = null;
+		try {
+			SmAppl bpmAppl = getManagedBean().getSmAppl();
+
+			if (bpmAppl.getSupportingDocMode() == null) {
+				bpmAppl.setSupportingDocMode("O");
+			}
+			String outcome = "";
+			if (!getManagedBean().isDraftedAppl()) {
+				outcome = SupplierManagementConst.SM_APPL_BPM_OUTCOME_DRAFT;
+			} else {
+				outcome = "";
+			}
+			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+					outcome);
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IMofRegistrationSO.class);
+			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
+			if (resDTO != null) {
+				System.out.println("******* From SO ******** "
+						+ resDTO.isBpmSuccess());
+				return resDTO.isBpmSuccess();
+			} else {
+				return false;
+			}
+		} finally {
+			regSo = null;
+		}
+
+	}
+
+	private MofRegistrationReqDTO setMofRegistrationReqDTO(SmAppl bpmAppl,
+			String outcome) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+
+		// TODO Remove the hard code later
+		reqDTO.setOutcome(outcome);
+		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+		reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
+		reqDTO.setAppType(bpmAppl.getApplType());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setSmAppl(bpmAppl);
+		// reqDTO.setUserName(new FacesScopes().getUserScreenName());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+				.getSupplierType().toUpperCase());
+		reqDTO.setBaseOfficeState(getManagedBean().getSmAppl()
+				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress().getPmState().getStateName().toUpperCase());
+
+		if (this.getManagedBean().getSmAppl().getSupportingDocMode()
+				.equalsIgnoreCase("O")) {
+			reqDTO.setOnlineDoc(true);
+		} else {
+			reqDTO.setOnlineDoc(false);
+		}
+
+		return reqDTO;
 	}
 
 	public String submitPOorApproverReviewToBPM(String res) {

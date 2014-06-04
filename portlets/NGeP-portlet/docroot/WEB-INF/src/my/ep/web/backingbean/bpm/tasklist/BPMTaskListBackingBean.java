@@ -65,6 +65,8 @@ public class BPMTaskListBackingBean extends
 		temp.put("Site Visit Manage", "site-visit");
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
+		temp.put("Start MOF Supplier Registration", "mof-application");
+		temp.put("Start MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_REVIEW, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
