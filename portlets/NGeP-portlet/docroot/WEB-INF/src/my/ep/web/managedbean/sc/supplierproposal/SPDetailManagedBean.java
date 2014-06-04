@@ -1,17 +1,28 @@
 package my.ep.web.managedbean.sc.supplierproposal;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -37,6 +48,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposalChecklist> selectedCheckDetails;
 
 	private ScQtCheckList scQtCheckList;
+	private long days;
 
 	// Tab Menu
 	private int prepareActiveIndex;
@@ -53,9 +65,53 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
+	private List<ScQtProposalScore> scQtProposalScoreList;
+	private ScQtProposalScore scQtProposalScore;
+
+	private ScQtDoc scQtDoc;
+
+	// Federal Government
+	private List<ScLoa> scLoaList;
+	private int contractSize;
+
 	// Non-Federal Government
 	private List<ScQtPRPExperience> scQtPRPExperiences;
 	private List<ScQtPRPExperience> selectedPRPExperiences;
+	private int totalContracts;
+	private int totalYears;
+	private BigDecimal totalContractAmount;
+
+	// Credit Facilities
+	private List<ScQtPRPCreditFacility> scQtPRPCreditFacilities;
+	private List<ScQtPRPCreditFacility> selectedPRPCreditFacilities;
+	private BigDecimal totalAmountCredit;
+	private BigDecimal totalAmountPaid;
+	private BigDecimal totalPercentagePaid;
+
+	// Cash On Hand
+	private List<ScQtPRPCashOnHand> scQtPRPCashOnHand;
+	private List<ScQtPRPCashOnHand> selectedPRPCashOnHand;
+	private BigDecimal totalcashHand;
+
+	// Bank Statement
+	private List<ScQtPRPBankStmt> scQtPRPBankStmts;
+	private List<ScQtPRPBankStmt> selectedPRPBankStmts;
+	private BigDecimal totalAmount;
+	private BigDecimal avgAmount;
+
+	// Asset Liability
+	private ScQtPRPAssetLiability scQtPRPAssetLiability;
+	private List<ScQtPRPAssetLiability> scQtPRPAssetLiabilities;
+	private List<ScQtPRPAssetLiability> selectedPRPAssetLiabilities;
+	private BigDecimal acidRatio;
+
+	// No of Employees
+	private ScQtPRPEmployee scQtPRPEmployee;
+
+	// Sample Address
+	private ScQtSampleSubmission scQtSampleSubmission;
+	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
+	private List<ScQtSampleItem> scQtSampleItemList;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -191,6 +247,248 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSelectedPRPExperiences(
 			List<ScQtPRPExperience> selectedPRPExperiences) {
 		this.selectedPRPExperiences = selectedPRPExperiences;
+	}
+
+	public List<ScQtPRPCreditFacility> getScQtPRPCreditFacilities() {
+		return scQtPRPCreditFacilities;
+	}
+
+	public void setScQtPRPCreditFacilities(
+			List<ScQtPRPCreditFacility> scQtPRPCreditFacilities) {
+		this.scQtPRPCreditFacilities = scQtPRPCreditFacilities;
+	}
+
+	public List<ScQtPRPCreditFacility> getSelectedPRPCreditFacilities() {
+		return selectedPRPCreditFacilities;
+	}
+
+	public void setSelectedPRPCreditFacilities(
+			List<ScQtPRPCreditFacility> selectedPRPCreditFacilities) {
+		this.selectedPRPCreditFacilities = selectedPRPCreditFacilities;
+	}
+
+	public List<ScQtPRPCashOnHand> getScQtPRPCashOnHand() {
+		return scQtPRPCashOnHand;
+	}
+
+	public void setScQtPRPCashOnHand(List<ScQtPRPCashOnHand> scQtPRPCashOnHand) {
+		this.scQtPRPCashOnHand = scQtPRPCashOnHand;
+	}
+
+	public List<ScQtPRPCashOnHand> getSelectedPRPCashOnHand() {
+		return selectedPRPCashOnHand;
+	}
+
+	public void setSelectedPRPCashOnHand(
+			List<ScQtPRPCashOnHand> selectedPRPCashOnHand) {
+		this.selectedPRPCashOnHand = selectedPRPCashOnHand;
+	}
+
+	public List<ScQtPRPBankStmt> getScQtPRPBankStmts() {
+		return scQtPRPBankStmts;
+	}
+
+	public void setScQtPRPBankStmts(List<ScQtPRPBankStmt> scQtPRPBankStmts) {
+		this.scQtPRPBankStmts = scQtPRPBankStmts;
+	}
+
+	public List<ScQtPRPBankStmt> getSelectedPRPBankStmts() {
+		return selectedPRPBankStmts;
+	}
+
+	public void setSelectedPRPBankStmts(
+			List<ScQtPRPBankStmt> selectedPRPBankStmts) {
+		this.selectedPRPBankStmts = selectedPRPBankStmts;
+	}
+
+	public ScQtPRPAssetLiability getScQtPRPAssetLiability() {
+		return scQtPRPAssetLiability;
+	}
+
+	public void setScQtPRPAssetLiability(
+			ScQtPRPAssetLiability scQtPRPAssetLiability) {
+		this.scQtPRPAssetLiability = scQtPRPAssetLiability;
+	}
+
+	public List<ScQtPRPAssetLiability> getScQtPRPAssetLiabilities() {
+		return scQtPRPAssetLiabilities;
+	}
+
+	public void setScQtPRPAssetLiabilities(
+			List<ScQtPRPAssetLiability> scQtPRPAssetLiabilities) {
+		this.scQtPRPAssetLiabilities = scQtPRPAssetLiabilities;
+	}
+
+	public List<ScQtPRPAssetLiability> getSelectedPRPAssetLiabilities() {
+		return selectedPRPAssetLiabilities;
+	}
+
+	public void setSelectedPRPAssetLiabilities(
+			List<ScQtPRPAssetLiability> selectedPRPAssetLiabilities) {
+		this.selectedPRPAssetLiabilities = selectedPRPAssetLiabilities;
+	}
+
+	public BigDecimal getTotalAmountCredit() {
+		return totalAmountCredit;
+	}
+
+	public void setTotalAmountCredit(BigDecimal totalAmountCredit) {
+		this.totalAmountCredit = totalAmountCredit;
+	}
+
+	public BigDecimal getTotalAmountPaid() {
+		return totalAmountPaid;
+	}
+
+	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {
+		this.totalAmountPaid = totalAmountPaid;
+	}
+
+	public BigDecimal getTotalPercentagePaid() {
+		return totalPercentagePaid;
+	}
+
+	public void setTotalPercentagePaid(BigDecimal totalPercentagePaid) {
+		this.totalPercentagePaid = totalPercentagePaid;
+	}
+
+	public List<ScQtProposalScore> getScQtProposalScoreList() {
+		return scQtProposalScoreList;
+	}
+
+	public void setScQtProposalScoreList(
+			List<ScQtProposalScore> scQtProposalScoreList) {
+		this.scQtProposalScoreList = scQtProposalScoreList;
+	}
+
+	public ScQtProposalScore getScQtProposalScore() {
+		return scQtProposalScore;
+	}
+
+	public void setScQtProposalScore(ScQtProposalScore scQtProposalScore) {
+		this.scQtProposalScore = scQtProposalScore;
+	}
+
+	public BigDecimal getTotalcashHand() {
+		return totalcashHand;
+	}
+
+	public void setTotalcashHand(BigDecimal totalcashHand) {
+		this.totalcashHand = totalcashHand;
+	}
+
+	public BigDecimal getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public BigDecimal getAvgAmount() {
+		return avgAmount;
+	}
+
+	public void setAvgAmount(BigDecimal avgAmount) {
+		this.avgAmount = avgAmount;
+	}
+
+	public ScQtPRPEmployee getScQtPRPEmployee() {
+		return scQtPRPEmployee;
+	}
+
+	public void setScQtPRPEmployee(ScQtPRPEmployee scQtPRPEmployee) {
+		this.scQtPRPEmployee = scQtPRPEmployee;
+	}
+
+	public int getTotalContracts() {
+		return totalContracts;
+	}
+
+	public void setTotalContracts(int totalContracts) {
+		this.totalContracts = totalContracts;
+	}
+
+	public int getTotalYears() {
+		return totalYears;
+	}
+
+	public void setTotalYears(int totalYears) {
+		this.totalYears = totalYears;
+	}
+
+	public BigDecimal getTotalContractAmount() {
+		return totalContractAmount;
+	}
+
+	public void setTotalContractAmount(BigDecimal totalContractAmount) {
+		this.totalContractAmount = totalContractAmount;
+	}
+
+	public ScQtSampleSubmission getScQtSampleSubmission() {
+		return scQtSampleSubmission;
+	}
+
+	public void setScQtSampleSubmission(
+			ScQtSampleSubmission scQtSampleSubmission) {
+		this.scQtSampleSubmission = scQtSampleSubmission;
+	}
+
+	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
+		return scQtSampleSubmissionList;
+	}
+
+	public void setScQtSampleSubmissionList(
+			List<ScQtSampleSubmission> scQtSampleSubmissionList) {
+		this.scQtSampleSubmissionList = scQtSampleSubmissionList;
+	}
+
+	public List<ScQtSampleItem> getScQtSampleItemList() {
+		return scQtSampleItemList;
+	}
+
+	public void setScQtSampleItemList(List<ScQtSampleItem> scQtSampleItemList) {
+		this.scQtSampleItemList = scQtSampleItemList;
+	}
+
+	public List<ScLoa> getScLoaList() {
+		return scLoaList;
+	}
+
+	public void setScLoaList(List<ScLoa> scLoaList) {
+		this.scLoaList = scLoaList;
+	}
+
+	public int getContractSize() {
+		return contractSize;
+	}
+
+	public void setContractSize(int contractSize) {
+		this.contractSize = contractSize;
+	}
+
+	public BigDecimal getAcidRatio() {
+		return acidRatio;
+	}
+
+	public void setAcidRatio(BigDecimal acidRatio) {
+		this.acidRatio = acidRatio;
+	}
+
+	public ScQtDoc getScQtDoc() {
+		return scQtDoc;
+	}
+
+	public void setScQtDoc(ScQtDoc scQtDoc) {
+		this.scQtDoc = scQtDoc;
+	}
+
+	public long getDays() {
+		return days;
+	}
+
+	public void setDays(long days) {
+		this.days = days;
 	}
 
 }
