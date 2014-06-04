@@ -28,7 +28,7 @@
 					</td>
 					<td class="ppRightBtn">
 						<ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" process="@form"
+							<p:commandButton value="#{outcome}" ajax="false" process="@form"
 								styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{agreementBackingBean.createAgreement(outcome)}" />
 						</ui:repeat>
@@ -51,7 +51,7 @@
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.ct.cc.status']}" /></td>
 					<td>
-						<p:inputText size="30" disabled="true"
+						<p:inputText size="40" disabled="true"
 							value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctAgreement.status.statusId)}"  />
 					</td>
 				</tr>
@@ -60,9 +60,7 @@
 		<p:tabView id="agreementTab" orientation="left">
 			<p:tab id="agDetail" title="Create Agreement">
 				<ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml" />
-				<c:if test='#{agreementBackingBean.managedBean.agreementType eq "supplemental"}'>
-					<ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml" />
-				</c:if>
+				<ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml" />
 				<ui:include src="/xhtml/ct/agreement/standardDocument.xhtml" />
 				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 			</p:tab>
@@ -70,12 +68,10 @@
 				<ui:include src="/xhtml/ct/agreement/agencySignerWitnes.xhtml" />
 				<ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml" />
 			</p:tab>
-			<p:tab id="signedDetail" title="Signed Details"
-				rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
+			<p:tab id="signedDetail" title="Signed Details" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 				<ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml" />
 			</p:tab>
-			<p:tab id="approverSetting" title="Approver Setting"
-				rendered="#{!agreementBackingBean.isApprover()}">
+			<p:tab id="approverSetting" title="Approver Setting" rendered="#{!agreementBackingBean.isApprover()}">
 				<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
 			</p:tab>
 		</p:tabView>

@@ -19,8 +19,8 @@
 				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{data}">
 				<p:ajax event="rowSelect" update=":form:agreementTab:delContentBtn" />
 				<p:column style="width:60%;" headerText="Content">
-					<p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.agreementContentId != null}" />
-					<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.agreementContentId == null}"/>
+					<p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
+					<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				<p:column style="width:20%px;"
 					headerText="#{lbl['lbl.ct.ag.table.type']}">
@@ -99,5 +99,36 @@
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
+	</p:panel>
+	
+	<p:panel id="agreementPnl" header="agreement" toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
+		<h:panelGroup id="uploadAgPg">
+			<h:panelGrid columns="2">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="Attachment" />
+				</h:panelGrid>
+				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
+					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
+					icon="iconAttachment" value="Upload" update="uploadAgPg" />
+				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
+				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}"
+					style="float:left;" styleClass="blue_font"
+					rendered="#{agreementBackingBean.managedBean.ctAgreement.fileName != null}"
+					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath)}" />
+			</h:panelGrid>
+			<p:spacer height="20" />
+		</h:panelGroup>
+		<p:dialog id="uploadAgDlg" widgetVar="uploadAgDlg"
+			modal="false" resizable="false" width="700px" height="350"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" mode="advanced"
+				fileUploadListener="#{agreementBackingBean.uploadAgreement}"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update=":form:agreementTab:uploadAgPg">
+			</p:fileUpload>
+		</p:dialog>				
 	</p:panel>
 </ui:composition>

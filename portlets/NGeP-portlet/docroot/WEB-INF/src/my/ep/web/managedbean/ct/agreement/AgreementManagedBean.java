@@ -34,7 +34,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private Long ministryProfileId;
 	private Long departmentProfileId;
 	private String agreementType ="";
-	private boolean uploadFinalAgreement;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -53,6 +52,9 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean chkConceValue;
 	
 	//KY
+	private boolean uploadFinalAgreement;
+	private boolean uploadStampedAndSignedPage;
+	
 	private Map<String, SmPersonnel> supplierUserMap;
 	
 	private CtAgreement ctAgreement;
@@ -256,6 +258,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setCtAgreement(CtAgreement ctAgreement) {
 		this.ctAgreement = ctAgreement;
+	}
+
+	public boolean isUploadStampedAndSignedPage() {
+		return uploadStampedAndSignedPage;
+	}
+
+	public void setUploadStampedAndSignedPage(boolean uploadStampedAndSignedPage) {
+		this.uploadStampedAndSignedPage = uploadStampedAndSignedPage;
 	}
 	
 }

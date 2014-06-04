@@ -5,35 +5,56 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <p:panel id="uploadDocument" header="SIGNED DETAILS" toggleable="true"  toggleSpeed="500">
-     <p:spacer width="15"/>
-     <h:panelGrid style="width:100%" columns="2" columnClasses="columnWidth15">
-      <p:outputLabel value="Signed Date"/>
-         <p:calendar value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate}" id="popupButtonCal4" showOn="button"  size="25" 
-            pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-          <p:outputLabel value="Signed Page"/>
-          <h:panelGrid columns="2">
-           <h:panelGroup id="upAgrSignedPagePg">
-		    <p:commandButton oncomplete="upAgrSignedPageDlg.show();return false;" icon="iconAttachment" 
-			  update="upAgrSignedPagePg" value="Upload Document"/>
-			<h:commandLink value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
-			    rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
-			    styleClass="blue_font" action="#{agreementBackingBean.downloadUploadFile()}" />					
-		    </h:panelGroup>
-		 </h:panelGrid>
-          <p:outputLabel value="Stamped Page"/>
-           <h:panelGrid columns="2">
-             <h:panelGroup id="upStampedPagePg">
-              <p:commandButton oncomplete="upStampedPageDlg.show();return false;" icon="iconAttachment" 
-			    update="upStampedPagePg" value="Upload Document"  />
-			 <h:commandLink value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
-			    rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"
-			    styleClass="blue_font" action="#{agreementBackingBean.downloadUploadFile()}"/>					
-		   </h:panelGroup>
+	<p:panel id="uploadDocument" header="SIGNED DETAILS" toggleable="true" toggleSpeed="500">
+		<p:spacer width="15" />
+		<h:panelGrid style="width:100%" columns="2"	columnClasses="columnWidth15">
+			<h:panelGrid columns="2">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="Signed Date" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:calendar	value="#{agreementBackingBean.managedBean.ctAgreement.signedDate}"
+					id="popupButtonCal4" showOn="button" size="25" required="true" label="Signed Date"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<p:message for="popupButtonCal4" display="icon" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="Signed Page" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:panelGroup id="upAgrSignedPagePg">
+					<p:commandButton
+						oncomplete="upAgrSignedPageDlg.show();return false;"
+						icon="iconAttachment" update="upAgrSignedPagePg"
+						value="Upload Document" />
+					<h:commandLink
+						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
+						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
+						styleClass="blue_font"
+						action="#{agreementBackingBean.downloadUploadFile()}" />
+				</h:panelGroup>
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="Stamped Page" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:panelGroup id="upStampedPagePg">
+					<p:commandButton
+						oncomplete="upStampedPageDlg.show();return false;"
+						icon="iconAttachment" update="upStampedPagePg"
+						value="Upload Document" />
+					<h:commandLink
+						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
+						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"
+						styleClass="blue_font"
+						action="#{agreementBackingBean.downloadUploadFile()}" />
+				</h:panelGroup>
+			</h:panelGrid>
 		</h:panelGrid>
-	  </h:panelGrid>
-     </p:panel>
-     <p:dialog id="upAgrSignedPageDlg" widgetVar="upAgrSignedPageDlg" modal="false" resizable="false" 
+	</p:panel>
+	<p:dialog id="upAgrSignedPageDlg" widgetVar="upAgrSignedPageDlg" modal="false" resizable="false" 
        width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" 

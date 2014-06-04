@@ -5,65 +5,75 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="suplimental" header="Supplemental Agreement"   toggleable="true"  toggleSpeed="500">
+	<p:panel id="suplimental" header="Supplemental Agreement"   toggleable="true"  toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.agreementType eq 'supplemental'}">
 	  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth15">
 	     <f:verbatim/>
 	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox
+		    <p:selectBooleanCheckbox disabled="true"
 			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.quantityChange}" >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="Change of quantity" />
+		    <p:outputLabel value="#{lbl['lbl.ct.amend.chQuantity']}" />
 		</h:panelGrid>
 		
 		 <f:verbatim/>
 	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox
+		    <p:selectBooleanCheckbox disabled="true"
 			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.valueChange}"  >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="Change contract value" />
+		    <p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
 		</h:panelGrid>
 		
 		<f:verbatim/>
 	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox
-			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.priceChange}" >
+		    <p:selectBooleanCheckbox disabled="true"
+			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="Change item price" />
+		    <p:outputLabel value="#{lbl['lbl.ct.amend.chItemPrice']}" />
 		</h:panelGrid>
 		
 		<f:verbatim/>
 	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox
+		    <p:selectBooleanCheckbox disabled="true"
 			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.contractExtend}">
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="Extension of Contract" />
+		    <p:outputLabel value="#{lbl['lbl.ct.amend.conExtension']}" />
 		</h:panelGrid>
+		
+		<f:verbatim/>
+	     <h:panelGrid columns="3">
+		    <p:selectBooleanCheckbox disabled="true"
+			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />				
+		    <p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}" />
+		</h:panelGrid>		
 	  </h:panelGrid>
 	  
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15">
 	     
-	     <p:outputLabel value="Request No" />  
-         <p:inputText value=" " style="width:170px;"/>
+         <p:outputLabel value="Title / Name" />  
+         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:170px;" disabled="true" />
          <p:outputLabel value="File Ref No."/>  
          <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.fileRefNo}" style="width:170px;" disabled="true" /> 
       
-         <p:outputLabel value="Title / Name" />  
-         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:170px;"/>
-         <p:outputLabel value="Request Date" />  
-         <p:inputText value="02 DEC 2013" style="width:170px;"  disabled="true" />
-         
 	     <h:panelGroup>
 		   <div style="height: 40px; vertical-align: top;">
 		      <p:outputLabel for="amendmentD" value="Description" />
 		   </div>
 		 </h:panelGroup>
 		 <h:panelGrid>
-		    <p:inputTextarea id="amendmentD" value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  rows="3" cols="31"  autoResize="false" />
+		    <p:inputTextarea id="amendmentD" value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  disabled="true" rows="3" cols="31"  autoResize="false" />
 		 </h:panelGrid>
+
+         <p:outputLabel value="Amendment Effective Date" />  
+         <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.amendmentEffDate}" style="width:170px;"  disabled="true" >
+         	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+         </p:inputText>
+         		 
 	  </h:panelGrid>
 	</p:panel>
 </ui:composition>
