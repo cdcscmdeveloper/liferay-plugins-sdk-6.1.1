@@ -488,6 +488,31 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	    return items;
 	}
 	
+	public SelectItem[] getRadioButtonValues(String parameterType) {
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(parameterType);
+			
+		    items = new SelectItem[parameterDescs.size()];
+		    int i = 0;
+		    for(PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterId(), 
+		    			parameterDesc.getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null, 
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							e.toString(), 
+							e.getMessage()));
+		}
+		
+	    return items;
+	}
 	
 	public void commonUploadFile(FileUploadEvent event, String moduleName){
 
