@@ -21,6 +21,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -44,6 +45,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.TreeNode;
+import org.python.modules.newmodule;
 /**
  * 
  * @author sri
@@ -61,7 +63,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	int	periodValue;
 	private Long orgProfileId;
 	private String priceType;
-	private Integer duration = 0;
+	private Integer duration;
 	private String durationDropdown;
 	private String createdBy;
 	private String processName;
@@ -84,7 +86,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String locationLevel;
 	private boolean byLocality = true;
 	private boolean byBusinessNature;
-	private boolean suppListFlag = true;
 	private boolean locAndBusinessFlag;
 	private boolean g2GFlag;
 	private String simpleQuoteStatus;
@@ -113,8 +114,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private IPagingDataModel<ScQuote> searchQuoteDataModel;
 	private	String	procurementType;
-	private	Integer	isPanel;
-	private Integer isZonal;
+	private	boolean	panel;
+	private boolean zonal;
     private boolean zoneFlag;
 
 	// search criteria for popup clone item spec
@@ -142,6 +143,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	// quoteSuppliers for  supplier list
 	private List<ScQuoteSupplier> supplierList; 
 	private List<ScQuoteSupplier> selectedSupplierList;
+	private List<SmSupplier> compareSuppliers = new ArrayList<SmSupplier>();
 
 	//govtSellers for govt seller 
 	private List<PmOrgProfile> orgProfiles; 
@@ -152,6 +154,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean productFlag;
 	private boolean serviceFlag;
 	private SmSupplier smSupplier;
+	private int selectedTabIndex;
+	
 	
 	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
 	private String quoteNo;
@@ -751,20 +755,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the suppListFlag
-	 */
-	public boolean isSuppListFlag() {
-		return suppListFlag;
-	}
-
-	/**
-	 * @param suppListFlag the suppListFlag to set
-	 */
-	public void setSuppListFlag(boolean suppListFlag) {
-		this.suppListFlag = suppListFlag;
-	}
-
-	/**
 	 * @return the duration
 	 */
 	public Integer getDuration() {
@@ -948,20 +938,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setProcurementType(String procurementType) {
 		this.procurementType = procurementType;
-	}
-
-	/**
-	 * @return the isPanel
-	 */
-	public Integer getIsPanel() {
-		return isPanel;
-	}
-
-	/**
-	 * @param isPanel the isPanel to set
-	 */
-	public void setIsPanel(Integer isPanel) {
-		this.isPanel = isPanel;
 	}
 
 	/**
@@ -1220,18 +1196,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setPtjName(String ptjName) {
 		this.ptjName = ptjName;
 	}
-	/**
-	 * @return the isZonal
-	 */
-	public Integer getIsZonal() {
-		return isZonal;
-	}
-	/**
-	 * @param isZonal the isZonal to set
-	 */
-	public void setIsZonal(Integer isZonal) {
-		this.isZonal = isZonal;
-	}
+	
 	/**
 	 * @return the productFlag
 	 */
@@ -1304,4 +1269,53 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
+	/**
+	 * @return the panel
+	 */
+	public boolean isPanel() {
+		return panel;
+	}
+	/**
+	 * @param panel the panel to set
+	 */
+	public void setPanel(boolean panel) {
+		this.panel = panel;
+	}
+	/**
+	 * @return the zonal
+	 */
+	public boolean isZonal() {
+		return zonal;
+	}
+	/**
+	 * @param zonal the zonal to set
+	 */
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
+	}
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+	/**
+	 * @return the compareSuppliers
+	 */
+	public List<SmSupplier> getCompareSuppliers() {
+		return compareSuppliers;
+	}
+	/**
+	 * @param compareSuppliers the compareSuppliers to set
+	 */
+	public void setCompareSuppliers(List<SmSupplier> compareSuppliers) {
+		this.compareSuppliers = compareSuppliers;
+	}
+	
 }

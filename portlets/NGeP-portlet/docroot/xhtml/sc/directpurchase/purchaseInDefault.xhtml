@@ -121,19 +121,19 @@
 		</p:dataTable>
 
      </p:panel>
-	<p:panel header="REQUEST DETAIL" toggleable="true" >
+	<p:panel header="REQUEST DETAIL" toggleable="true"  id="reqDtlId">
 	   <p:spacer height="3px"/>
 	      <h:panelGroup>
 			<table style="width:0%">
 			<tr>
 			   <td style="width: 250px;"><p:outputLabel
 								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
-				<td><p:selectOneMenu id="justId" disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"  required="true"
+				<td><p:selectOneMenu id="justId" label="#{lbl['lbl.sc.purchase.in.default.just']}" disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"  required="true"
 					value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}" style="margin-bottom: 5px;">
 					<f:selectItems
 							value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
-					<p:ajax event="change" update="mainform"
-						listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" process="@this" />
+					<p:ajax event="change" update="reqDtlId"  
+						listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" process="@all" />
 				</p:selectOneMenu>
 			   <p:commandLink style="text-align:left">
 			        <p:graphicImage 
@@ -144,7 +144,7 @@
 		   </tr>
 		</table>
 	   </h:panelGroup>
-	 <h:panelGroup id="mainform">
+	
 	  <h:panelGroup id="orderQty" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
 		 <table style="width: 90%">
 			 <tr>
@@ -229,7 +229,6 @@
 			<td> <p:message id="attachIdMsg" for="attachId" display="icon" /></td>
 		    </tr>
 		  </table>
-	  </h:panelGroup>
 
 	</h:panelGroup>
    </p:panel>

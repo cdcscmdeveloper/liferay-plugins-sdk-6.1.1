@@ -198,6 +198,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				if(getManagedBean().getAttachments() != null){
 					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
 				}
+				if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
+					reqDTO.setContractType(getParameterDesc(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType()).toUpperCase());
+				}
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				//Hoa: add token authenticate to support BPM
 				FacesScopes facesScopes = new FacesScopes();
@@ -209,7 +212,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, 
 							null,
-							MessageUtils.getMessage(MessageConst.INFO_700005, 
+							MessageUtils.getMessage(MessageConst.INFO_700006, 
 									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),purchaseInDefault.getPurchaseInDefaultNo()},  
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
@@ -280,7 +283,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							this.sendNotificationEmail();
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700007, 
+									MessageUtils.getMessage(MessageConst.INFO_700005, 
 											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
 											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 							FacesContext fc = FacesContext.getCurrentInstance();

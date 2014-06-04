@@ -1152,7 +1152,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		 purchaseInDefaultSO = null;
 	 }
 	}
-
+	
+	public void closeListener() {
+		log.info("closeListener");
+		// add to cart validation
+		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
+		getManagedBean().setRequired(Boolean.FALSE);
+	}
 
 	public String cancel() {
 		log.info("cancel");

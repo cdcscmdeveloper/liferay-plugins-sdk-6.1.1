@@ -113,7 +113,7 @@
 								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}" rendered="#{unspscCodeBackingBean.requisitioner}"
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} ) "></p:commandButton>
 								<p:commandButton value="#{lbl['lbl.sc.sq']}" rendered="#{unspscCodeBackingBean.requisitioner}"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false)}"
+									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false , null)}"
 									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}" />
 
 								<p:commandButton id="compareButton"
@@ -214,7 +214,7 @@
 
 										<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
 											id="sqId"
-											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
+											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false ,null)}"
 											rendered="#{supplierItem.circularNo ne null}"
 											disabled="#{supplierItem.circularNo eq null }">
 										</p:commandButton>

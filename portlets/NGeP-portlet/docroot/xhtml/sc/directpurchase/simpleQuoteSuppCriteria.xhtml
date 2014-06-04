@@ -101,7 +101,7 @@
 				<!-- BY BUSINESS NATURE -->
 				<p:tab title="Business Nature"
 					rendered="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
-
+                   <p:panel>
 					<p:dataTable id="byBusNatureDtl" var="busiNatureCriteria"
 						rowKey="#{busiNatureCriteria}" rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
@@ -148,13 +148,13 @@
 						    </tr>
 						</table>
 				     </div>
+				     </p:panel>
 				</p:tab>
 
 				<!--  BY SUPPLIER   -->
 				<p:tab title="Supplier List"
-					disabled="#{simpleQuoteBackingBean.managedBean.suppListFlag}"
 					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
-					<p:spacer height="10px"></p:spacer>
+					<p:panel>
 					<p:dataTable id="supplierItemDt" var="quoteSupplier"
 						rowKey="#{quoteSupplier}" rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
@@ -187,9 +187,9 @@
 									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers)"
 										headerText="Supplier Lov" buttonLabel="Add"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
+										update="@form"
 										saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
-										conditionField="#{simpleQuoteBackingBean.supplierListCriteria}"
-										update="@([id$=suppCriteriasId])" />
+										conditionField="#{simpleQuoteBackingBean.supplierListCriteria}"/>
 								   </td>
 									<td>
 									    <p:commandButton
@@ -203,12 +203,13 @@
 						    </tr>
 						</table>
 						</div>
+						</p:panel>
 				 </p:tab>
 
 				<!--  BY Government Seller   -->
 				<p:tab title="Government Seller"
 					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
-					<p:spacer height="10px"></p:spacer>
+					<p:panel>
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
@@ -259,13 +260,13 @@
 						    </tr>
 						</table>
 					 </div>
-
+               </p:panel>
 				</p:tab>
 
 				<!-- Panel Supplier   -->
 				<p:tab title="Panel Supplier"
-					rendered="#{simpleQuoteBackingBean.managedBean.isPanel eq 1}">
-					<p:spacer height="10px"></p:spacer>
+					rendered="#{simpleQuoteBackingBean.managedBean.panel}">
+					<p:panel>
 					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
@@ -317,6 +318,7 @@
 						    </tr>
 						</table>
 					 </div>
+					 </p:panel>
 				</p:tab>
 
 			</p:tabView>

@@ -44,8 +44,8 @@
 									var="pmOrgProfile"
 									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change" update="rnHeaderId ,itemDtlId"
-									process="@all"
+								<p:ajax event="change" update="rnHeaderId ,itemDtlId" partialSubmit="true"
+									process="@this"
 									listener="#{requestNoteBackingBean.ptjNameEvent}" />
 							</p:selectOneMenu>
 							</td>
@@ -67,7 +67,7 @@
 					<p:commandLink
 						value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
-						update=":form:itemDtlPopup" partialSubmit="true"
+						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
 						oncomplete="itemDtlPopup.show();" />
 					  <p:spacer width="2px;"/>
 					<p:commandLink partialSubmit="true" 
@@ -104,6 +104,7 @@
 					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
+						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems
 							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrices}"
 							var="supplierItemPrice"

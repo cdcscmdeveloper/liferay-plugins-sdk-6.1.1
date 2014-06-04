@@ -7,7 +7,7 @@
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
 		header="ADD TO CART" width="540 " height="460" resizable="true"
 		dynamic="true" modal="true">
-		<p:spacer height="5px" />
+		
 		<p:panel id="addToCartId">
 			<p:messages id="cartmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -132,11 +132,12 @@
 					<p:commandButton value="#{lbl['lbl.sc.ok']}"
 						actionListener="#{requestNoteBackingBean.addToRequestNote}"
 						icon="ui-icon-submit" update="addToCartId" />
-					<p:commandButton value="#{lbl['lbl.sc.cancel']}"
-						onclick="addToCartPopup.hide()" icon="ui-icon-close"
+					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
+						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-close"
 						partialSubmit="true" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+		  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/>
 	</p:dialog>
 </ui:composition>
