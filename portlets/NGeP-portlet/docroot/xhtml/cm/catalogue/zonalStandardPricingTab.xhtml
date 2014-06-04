@@ -110,7 +110,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D'}"
-				action="#{catalogueBackingBean.addNewZonalStandardPricing()}"
+				action="#{catalogueBackingBean.addNewZonalStandardPricing()}" icon="ui-icon-add"
 				update="zStanPriceTableId" process="@this zStanPriceId"></p:commandButton>
 		</div>
 
