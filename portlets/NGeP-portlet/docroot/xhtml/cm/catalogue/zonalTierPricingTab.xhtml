@@ -130,7 +130,7 @@
 		<div class="clear"></div>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D'
+			<p:commandButton value="#{lbl['lbl.cm.add']}"   rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D'}"
 				action="#{catalogueBackingBean.addNewZonalTierPricing()}"
 				update="cmZonalTierPricingsId" process="@this cmZonalTierPricingsId"></p:commandButton>
 		</div>
