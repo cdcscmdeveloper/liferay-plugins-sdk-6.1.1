@@ -81,8 +81,10 @@ public class BPMTaskListBackingBean extends
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.CONTRACT_CREATION_PROCESS_NAME, "fulfilment-details");
+		temp.put(CTProcessNameConst.CONTRACT_INITIATION_PROCESS_NAME, "fulfilment-details");
 		temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME, "contract-suspension");
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+"null", "contract-amendment"); //TODO in case of CA save as draft
+		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME+"null", "contract-amendment"); //TODO in case of CA save as draft
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+ParameterConst.DOCTYPE_CONTRACT_AMENDMENT, "contract-amendment");
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
 		temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME, "contract-termination");
