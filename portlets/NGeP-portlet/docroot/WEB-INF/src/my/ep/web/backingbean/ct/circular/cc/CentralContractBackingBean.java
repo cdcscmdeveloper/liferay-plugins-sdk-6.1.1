@@ -423,8 +423,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}else{
+			        getManagedBean().setCircularVer(resDTO.getCircularVer());
+					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+					initializeRemarks();
+					ContractBackingBean ctBB = new ContractBackingBean();
+					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+				
 				}
-			    initializeRemarks();
 			  }else {
 					throw new EpException("Failed.");
 			  }
