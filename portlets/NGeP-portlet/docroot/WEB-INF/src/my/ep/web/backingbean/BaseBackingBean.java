@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -27,6 +29,8 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -483,5 +487,44 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 	    return items;
 	}
+	
+	
+	public void commonUploadFile(FileUploadEvent event, String moduleName){
+
+		String tempDir = "C://Ngep//doc//"+moduleName+"//";
+		String uploadDir = "";
+		
+		UploadedFile file = event.getFile();
+		
+		uploadDir = tempDir + file.getFileName();
+		
+		genFile(uploadDir, file.getContents());
+
+	}
+	
+	
+	public void genFile(String uploadDir, byte[] content){
+
+
+		try {	
+			
+			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir));
+
+			bufferedOutputStream.write(content);
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+
+
+		}catch(Exception e) {
+			log.error(e);
+		}
+
+
+	}
+	
 	
 }
