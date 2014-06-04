@@ -5,6 +5,7 @@ package my.ep.web.managedbean.ct.circular.panel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +22,11 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 /**
  * Circular Panel Managed Bean
@@ -57,7 +59,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private DualListModel<String> approverModel;
-	private Map<Long, PmUserGroup> userGroupMap;
 
 	// Search
 	private String searchCircularNo;
@@ -69,11 +70,23 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Date searchEndDate;	
 	private Long searchStatusId;
 	
-	private CtPanelItem ctPanelItems;
+	private CtPanelItem selectedPanelItems;
 	private CtPanelZone selectedPanelZone;
-	private CtPanelSupplier selectedPanelSupplier;
 	private boolean selectionOfZone;
-
+	private List<CtPanelSupplier> panelSupplierList;
+	private CtPanelSupplier selectedPanelSupplier;
+	
+	private TreeNode rootZoanlTree;
+	private String zoneName;
+	private TreeNode[] selectedGeneralTreeNodes;
+	private int index = -1;
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+	private TreeNode rootLocationTree;
+	private Map<String, PmUser> userMap;
+	private boolean editZone;
+	
+	private TreeNode selectedZoneTree;
+	
 	public CtCircular getCircular() {
 		return circular;
 	}
@@ -88,14 +101,6 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
-	}
-
-	public CtPanelSupplier getSelectedPanelSupplier() {
-		return selectedPanelSupplier;
-	}
-
-	public void setSelectedPanelSupplier(CtPanelSupplier selectedPanelSupplier) {
-		this.selectedPanelSupplier = selectedPanelSupplier;
 	}
 
 	public CtCancelCircular getSelectedCancelCircular() {
@@ -115,12 +120,14 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
 	}
 
-	public CtPanelItem getCtPanelItems() {
-		return ctPanelItems;
+	
+
+	public CtPanelItem getSelectedPanelItems() {
+		return selectedPanelItems;
 	}
 
-	public void setCtPanelItems(CtPanelItem ctPanelItems) {
-		this.ctPanelItems = ctPanelItems;
+	public void setSelectedPanelItems(CtPanelItem selectedPanelItems) {
+		this.selectedPanelItems = selectedPanelItems;
 	}
 
 	public DualListModel<String> getApproverModel() {
@@ -257,14 +264,6 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	public Map<Long, PmUserGroup> getUserGroupMap() {
-		return userGroupMap;
-	}
-
-	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
-		this.userGroupMap = userGroupMap;
-	}
-
 	public String getCircularAdmin() {
 		return circularAdmin;
 	}
@@ -312,7 +311,99 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSelectionOfZone(boolean selectionOfZone) {
 		this.selectionOfZone = selectionOfZone;
 	}
-	
-	
 
+	public List<CtPanelSupplier> getPanelSupplierList() {
+		if(panelSupplierList == null)
+			panelSupplierList = new ArrayList<CtPanelSupplier>();
+		return panelSupplierList;
+	}
+
+	public void setPanelSupplierList(List<CtPanelSupplier> panelSupplierList) {
+		this.panelSupplierList = panelSupplierList;
+	}
+
+	public CtPanelSupplier getSelectedPanelSupplier() {
+		return selectedPanelSupplier;
+	}
+
+	public void setSelectedPanelSupplier(CtPanelSupplier selectedPanelSupplier) {
+		this.selectedPanelSupplier = selectedPanelSupplier;
+	}
+
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	public TreeNode[] getSelectedGeneralTreeNodes() {
+		return selectedGeneralTreeNodes;
+	}
+
+	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
+		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
+	}
+
+	public TreeNode getRootLocationTree() {
+		return rootLocationTree;
+	}
+
+	public void setRootLocationTree(TreeNode rootLocationTree) {
+		this.rootLocationTree = rootLocationTree;
+	}
+	
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}
+
+	public TreeNode getSelectedZoneTree() {
+		return selectedZoneTree;
+	}
+
+	public void setSelectedZoneTree(TreeNode selectedZoneTree) {
+		this.selectedZoneTree = selectedZoneTree;
+	}
+
+	public boolean isEditZone() {
+		return editZone;
+	}
+
+	public void setEditZone(boolean editZone) {
+		this.editZone = editZone;
+	}
+
+	
 }

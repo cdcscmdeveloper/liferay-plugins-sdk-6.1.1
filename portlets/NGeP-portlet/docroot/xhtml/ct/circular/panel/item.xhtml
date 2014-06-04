@@ -1,127 +1,213 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="panelItemDt" var="data"   value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
-		   rowKey="#{data}" selection="#{panelBackingBean.selectedPanelItem}" rowIndexVar="index" >
-			<ac:paginator for="panelItemDt" />
-			  <p:column selectionMode="multiple" style="width:18px;"/>  
-			 <p:column headerText="Panel Coverage">
-			   <p:selectOneMenu value="#{data.panelCoverageId.parameterId}" style="width:100px;">
+	  <div style="overflow-x: auto">
+		<p:dataTable id="panelItemDt" var="data"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
+		  selectionMode="single" rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedPanelItems}" rowIndexVar="index" scrollWidth="800" style="width:100%;" >
+		   <ac:paginator for="panelItemDt" />
+            <p:ajax event="rowSelect" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"
+		     process="@this"  listener="#{panelBackingBean.setPanelListner()}"/>	
+			  <p:column headerText="Panel Coverage">
+			     <p:selectOneMenu value="#{data.panelCoverageId.parameterId}" style="width:100px;">
 			      <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
-			       <p:ajax event="change" update=":form:tabview:itemId" process="@this" listener="#{panelBackingBean.setCtPanelZoneListner(data)}"/> 
-			   </p:selectOneMenu>
-	  	    </p:column>
-			<p:column headerText="Item Category">
-			 <p:selectOneMenu value="#{data.itemCategoryId.parameterId}" style="width:100px;">
-			   <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
-			   <p:ajax event="change" update="spec" process="@this"/> 
-			 </p:selectOneMenu>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.pc.item.name']}">
-			  <p:inputText value="#{data.itemName}" style="width:135px;" />
-			</p:column>
-			<p:column headerText="Specification">
-			  <p:inputText id="spec" value="#{data.specification}"  style="width:170px;" 
-				disabled="#{panelBackingBean.getItemGeneralCode(data.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
-			</p:column>
-			<p:column headerText="UOM">
-			  <ac:lov id="uomLovId" lovId="PM_UOM" size="10"
-				headerText="UOM Lov" update=":form:tabview:panelItemDt"
-				value="#{data.pmUom.uomName}" conditionField="recordStatus^1"
-				saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
-			  </ac:lov>
-			</p:column>
-			<p:column headerText="Min. Order Qty" >
-			   <p:inputText value="#{data.minimumOrderQty}" style="width:70px;text-align:right;" />
-			</p:column>
-			<p:column headerText="Had Pembelian Luar Kontrak">
-			   <p:inputText value="#{data.maxProcureAmt}" style="width:150px;text-align:right;" />
-			</p:column>
-			<p:column headerText="Direct Nego">
-			  <p:selectBooleanCheckbox value="#{data.directNego}" />
-			</p:column>			
-			<p:column headerText="Direct Purchase">
-			  <p:selectBooleanCheckbox value="#{data.directPurchase}" />
-			</p:column>	
-			<p:column headerText="Quotation/Tender">
-			   <p:selectBooleanCheckbox value="#{data.qt}" />
-			</p:column>
-			<p:column headerText="Status">
-		       <p:selectOneMenu  value="#{data.chkStatusId}" style="width:70px;">
-				<f:selectItem itemValue="0" itemLabel="Inactive" />
-			    <f:selectItem itemValue="1" itemLabel="Active" />
-			  </p:selectOneMenu>
-			</p:column>													
-		</p:dataTable>
+			       <p:ajax event="change"  update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" process="@this" 
+			       listener="#{panelBackingBean.setCtPanelZoneListner(data)}"/> 
+			     </p:selectOneMenu>
+	  	      </p:column>
+			  <p:column headerText="Item Category">
+			     <p:selectOneMenu value="#{data.itemCategoryId.parameterId}" style="width:100px;">
+			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+			       <p:ajax event="change" update="spec" process="@this"/> 
+			     </p:selectOneMenu>
+			  </p:column>
+		 	  <p:column headerText="#{lbl['lbl.ct.pc.item.name']}"><p:inputText value="#{data.itemName}" style="width:100px;" /></p:column>
+			  <p:column headerText="Specification">
+			     <p:inputText id="spec" value="#{data.specification}"  style="width:120px;" 
+				    disabled="#{panelBackingBean.getItemGeneralCode(data.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
+			  </p:column>
+			  <p:column headerText="UOM">
+			      <ac:lov id="uomLovId" lovId="PM_UOM" size="9"
+				     headerText="UOM Lov" update=":form:tabview:panelItemDt"
+				     value="#{data.pmUom.uomName}" conditionField="recordStatus^1"
+				     saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
+			      </ac:lov>
+			  </p:column>
+			  <p:column headerText="Min. Order Qty" ><p:inputText value="#{data.minimumOrderQty}" style="width:60px;text-align:right;" /></p:column>
+			  <p:column headerText="Had Pembelian Luar Kontrak"><p:inputText value="#{data.maxProcureAmt}" style="width:140px;text-align:right;" /></p:column>
+			  <p:column headerText="Nego"><p:selectBooleanCheckbox value="#{data.directNego}" /></p:column>			
+			  <p:column headerText="Purchase"><p:selectBooleanCheckbox value="#{data.directPurchase}" /></p:column>	
+			  <p:column headerText="Quo/Ten"><p:selectBooleanCheckbox value="#{data.qt}" /></p:column>
+			  <p:column headerText="Status">
+		        <p:selectOneMenu  value="#{data.chkStatusId}" style="width:70px;">
+				  <f:selectItem itemValue="0" itemLabel="Inactive" />
+			      <f:selectItem itemValue="1" itemLabel="Active" />
+			    </p:selectOneMenu>
+			  </p:column>													
+		  </p:dataTable>
+		</div>
 		<ac:lovPopup />
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
-		   <p:commandButton value="Add" process="@form" partialSubmit="true" 
-			 icon="ui-icon-add" update="panelItemDt" action="#{panelBackingBean.addPanelItem()}"/>
-		   <p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete"  process="@form"
-			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.ctPanelItems == null}" />
-	     </div>	
-		 <p:dialog id="delItemDlg" header="Delete Confirmation" resizable="false"
+		   <p:commandButton value="Add" process="@all" icon="ui-icon-add"
+		      update="@([id$=panelItemDt])" action="#{panelBackingBean.addPanelItem()}"/>
+		   <p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete"  process="@this"
+			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.selectedPanelItems == null}" />
+	    </div>	
+		<p:dialog id="delItemDlg" header="Delete Confirmation" resizable="false"
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="325" height="90">  
             <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png"
-			    value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
-              <p:inputTextarea styleClass="ui-inputtextarea"
-                 rows="2" cols="48" value="Are you sure you want to delete this record?"/>
+              <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="panelItemDt"
-		       process="@form" actionListener="#{panelBackingBean.deletePanelItem()}" onclick="delItemDlg.hide();"/>
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=panelItemDt])"
+		       process="@all" actionListener="#{panelBackingBean.deletePanelItem()}" onclick="delItemDlg.hide();"/>
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
 		<p:spacer height="20" />
-		<h:panelGroup id="itemZone" rendered="#{panelBackingBean.managedBean.ctPanelItems != null}">
-		<table style="width: 100%">
-		  <tr>
-			<td style="width: 94px"><p:outputLabel id="locLevel" value="Location Level"/></td>
-			<td> <p:selectOneMenu id="locationMenu" style="width:170px;"
-			        value="#{panelBackingBean.managedBean.ctPanelItems.locationLevelId.parameterId}">
-			        <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}"/>
-			     </p:selectOneMenu>
-		     </td>
-		  </tr>
-		</table>
-		<p:spacer height="20" />
-		<p:dataTable id="itemZoneDt" var="data" value="#{panelBackingBean.managedBean.ctPanelItems.ctPanelZones}"
-		   rowKey="#{data}" selectionMode="Single" selection="#{panelBackingBean.managedBean.selectedPanelZone}" >
-			<ac:paginator for="itemZoneDt"/>
-			 <p:ajax event="rowSelect" update="@([id$=itemSupplier])"/>
-			<p:column style="width:60%" headerText="#{lbl['lbl.ct.pc.zone.name']}">
-				<h:outputText value="#{data.name}" style="width:200px;" />
-			</p:column>
-			<p:column style="width:25%" headerText="Status">
-			   <p:selectOneMenu  value="#{data.recordStatusFlg}" style="width:70px;">
-				  <f:selectItem itemValue="0" itemLabel="Inactive" />
-			      <f:selectItem itemValue="1" itemLabel="Active" />
-			   </p:selectOneMenu>
-			</p:column>
-			<p:column style="width:15%" headerText="Action">	
-			  <p:commandLink>
-			    <p:graphicImage library="ep/images/design" name="edit.png"
-				  value="/resources/ep/images/design/edit.png" title="Update" />
-			  </p:commandLink>		
-			</p:column>
-		</p:dataTable>
-		<div class="ppRightBtn">
-		  <p:commandButton value="Add" process="@form" 
-		     icon="ui-icon-add" update="itemZoneDt" action="#{panelBackingBean.addPanelZone()}"/>
-		  <p:commandButton id="deleteZoneBtn" value="Delete" icon="ui-icon-delete" process="@form"
+		<p:outputPanel id="itemZone">
+		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectionOfZone}">
+			 <table style="width: 100%">
+				<tr>
+					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+					<td><p:selectOneMenu id="locationLevels"
+							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}"
+							style="width: 178px;">
+							<f:selectItems
+								value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+							<p:ajax event="change"
+								listener="#{panelBackingBean.selectLocation}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		  
+		      <p:spacer height="20" />
+		     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" var="panelZoneVar"
+		        selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
+			    <ac:paginator for="zoneGeneralDataTable" />
+			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" process="@this"  />	
+					<p:column headerText="Location" style="width:60%">
+					<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
+					</p:column>
+                    <p:column headerText="Status" style="width:20%">
+                      <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  style="width:100px;">
+				         <f:selectItem itemValue="0" itemLabel="Inactive" />
+			             <f:selectItem itemValue="1" itemLabel="Active" />
+			          </p:selectOneMenu>
+                    </p:column>
+					<p:column headerText="Action" style="width:20%">
+					  <p:commandLink
+						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
+						process="@this" update="@([id$=zonePopupGeneral])"
+						oncomplete="ZoneGeneral.show();">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+						  value="/resources/ep/images/design/edit.png" />
+					  </p:commandLink>
+					</p:column>
+			</p:dataTable>
+		   <div class="ppRightBtn">
+		   <p:commandButton value="Add"
+					process="@this" update="@([id$=zonePopupGeneral])"
+					oncomplete="ZoneGeneral.show();"
+					actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
+					icon="ui-icon-add" />
+		  <p:commandButton id="deleteZoneBtn" value="Delete" icon="ui-icon-delete" process="@this"
 		     onsuccess="delZoneDlg.show();"/>
 	    </div>	
 	  </h:panelGroup>
-		<p:dialog id="delZoneDlg" widgetVar="delZoneDlg" header="Delete Confirmation" 
+	  <p:dialog header="ADD LOCATION1" widgetVar="ZoneGeneral" modal="true"
+		width="600" position="top" height="400">
+		<p:panel id="zonePopupGeneral">
+			<table styleClass="noBorders tr,noBorders td">
+
+				<TR>
+					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></TD>
+					<TD width="80%"><p:inputText size="70"
+							value="#{panelBackingBean.managedBean.zoneName}"></p:inputText>
+					</TD>
+				</TR>
+				<TR>
+					<TD width="20%" valign="top"><p:outputLabel
+							value="Zone Location" /></TD>
+					<TD width="80%"><p:panel></p:panel>
+						<div style="height: 300px; overflow-y: scroll;">
+							<p:tree id="treeZoneGeneralPopup"
+								value="#{panelBackingBean.managedBean.rootZoanlTree}"
+								var="location"
+								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
+								selectionMode="checkbox">
+								<p:treeNode type="state">
+									<h:outputText value="#{location.stateId.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.districtId.districtName}" />
+								</p:treeNode>
+							</p:tree>
+						</div></TD>
+				</TR>
+			</table>
+		</p:panel>
+		
+		<p:commandButton
+			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+			style="float:right;" onclick="ZoneGeneral.hide();"
+			icon="ui-icon-cancel" />
+		
+		<p:commandButton value="Ok"
+			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
+			update="@([id$=itemZone],[id$=zonePopupGeneral])"
+			icon="ui-icon-accept"
+			action="#{panelBackingBean.updateZoneGeneralLocation}">
+		</p:commandButton>
+
+		
+	   </p:dialog>
+       </p:outputPanel>
+		<p:spacer height="20" />
+		<p:outputPanel id="itemSupplier">
+		 <h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
+		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
+		   <ac:lovPopup />
+			<p:dataTable id="itemSupplierDt" var="supVar" 
+			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
+		    selection="#{panelBackingBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">
+				<p:ajax event="rowSelect" />
+				<p:column selectionMode="multiple" style="width:18px;"/>  
+				<p:column headerText="Supplier Name">
+				<c:if test="#{panelBackingBean.managedBean.selectionOfZone}">
+				   <ac:lov id="loaSupId"  lovId="SM_SUPPLIER" headerText="Supplier List" 
+					   saveObject="panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers[#{index}].supplier"
+					   value="#{supVar.supplier.companyName}"  update=":form:tabview:itemSupplierDt" >
+				   </ac:lov>
+				  </c:if>
+				  <c:if test="#{!panelBackingBean.managedBean.selectionOfZone}">
+				   <ac:lov id="loaSupId1"  lovId="SM_SUPPLIER" headerText="Supplier List" 
+					   saveObject="panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers[#{index}].supplier"
+					   value="#{supVar.supplier.companyName}"  update=":form:tabview:itemSupplierDt" >
+				   </ac:lov>
+				  </c:if>
+			    </p:column>
+				<p:column headerText="Business Reg. No."> <p:outputLabel value="#{supVar.supplier.regNo}" style="float:left;"/></p:column>
+				<p:column headerText="MOF No."><p:outputLabel /></p:column>
+				<p:column headerText="Address"> <p:outputLabel value="#{panelBackingBean.getSupAddress(supVar)}"/></p:column>
+				<p:column headerText="Status"></p:column>
+			</p:dataTable>
+		   <div class="ppRightBtn">
+		     <p:commandButton value="Add" process="@form" icon="ui-icon-add"
+		       update="itemSupplierDt" action="#{panelBackingBean.addPanelSupplier()}"/>
+		     <p:commandButton id="deleteSupplierBtn" value="Delete" 
+		       icon="ui-icon-delete" process="@this" onclick="delSupplierDlg.show()"/>
+	      </div>
+	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg" header="Delete Confirmation" 
 		   styleClass="screen-title" resizable="false" modal="true" width="325" height="90">  
            <h:panelGrid columns="3">
              <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -131,41 +217,13 @@
                 rows="2" cols="48" styleClass="ui-inputtextarea"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="itemZoneDt" 
-		        process="@form" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
-			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide();" type="button" />
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=itemSupplierDt])" process="@all"
+		        actionListener="#{panelBackingBean.deletePanelSupplier()}" onclick="delSupplierDlg.hide();"/>
+			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delSupplierDlg.hide();" type="button" />
 		  </div>
         </p:dialog>  
-		<p:spacer height="20" />
-		<h:panelGroup id="itemSupplier" rendered="#{panelBackingBean.managedBean.selectedPanelZone != null}">
-		   <ac:lovPopup />
-			<p:dataTable id="itemSupplierDt" var="data"
-				value="#{panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers}"
-				selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" rowKey="#{data}" 
-				selectionMode="single" rowIndexVar="index">
-				<p:ajax event="rowSelect"/>
-				<p:column headerText="Supplier Name">
-				   <ac:lov id="loaSupId" lovId="SM_SUPPLIER" headerText="Supplier List"
-					   saveObject="panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers[#{index}].supplier"
-					   value="#{data.supplier.companyName}">
-				   </ac:lov>
-			   </p:column>
-				<p:column headerText="Business Reg. No.">
-				</p:column>
-
-				<p:column headerText="MOF No.">
-				</p:column>
-				<p:column headerText="Address">
-				</p:column>
-				<p:column headerText="Status">
-				</p:column>
-			</p:dataTable>
-		   <div class="ppRightBtn">
-		  <p:commandButton value="Add" process="@form" 
-		     icon="ui-icon-add" update="itemSupplierDt" action="#{panelBackingBean.addPanelSupplier()}"/>
-		  <p:commandButton id="deleteSupplierBtn" value="Delete" icon="ui-icon-delete" process="@form"/>
-	    </div>	
-	  </h:panelGroup>
+	    </h:panelGroup>	
+	  </p:outputPanel>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
 		<table style="width: 100%">

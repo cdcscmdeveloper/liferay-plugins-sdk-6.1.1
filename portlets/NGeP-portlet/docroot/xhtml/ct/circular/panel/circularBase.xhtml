@@ -18,7 +18,7 @@
 	    			<td class="ppRightBtn">
 			  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
 							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
-								action="#{panelBackingBean.saveCircularPanel(action)}" />
+								action="#{panelBackingBean.savePanelCircular(action)}" />
 						</ui:repeat>	    			
 	    			</td>
 	    		</tr>
