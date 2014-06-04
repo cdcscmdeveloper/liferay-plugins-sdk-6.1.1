@@ -111,7 +111,7 @@ public class ParameterHelper {
 			    list = resDTO.getParameterDescList();
 			    
 			    // Put parameter description list into map.			   
-				//parameterMap.put(key.toString(), list);
+				parameterMap.put(key.toString(), list);
 				
 				debugLogger("put into list: " + list);
 			} catch (Exception e) {
