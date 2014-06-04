@@ -317,7 +317,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public void searchReset(){
 		this.getManagedBean().setSearchTitle(null);
 		this.getManagedBean().setSearchSuppName(null);
-		this.getManagedBean().setSearchSuppRef(null);
+		this.getManagedBean().setSearchSuppDoRef(null);
+		this.getManagedBean().setSearchSuppInvRef(null);
 		this.getManagedBean().setSearchContractNo(null);
 		this.getManagedBean().setSearchContractToDuration(null);
 		this.getManagedBean().setSearchContractFromDuration(null);
@@ -377,8 +378,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(getManagedBean().getSearchSuppName()!=null && getManagedBean().getSearchSuppName()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppName()));
 				}
-				if(getManagedBean().getSearchSuppRef()!=null && getManagedBean().getSearchSuppRef()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppRef()));
+				if(getManagedBean().getSearchSuppDoRef()!=null && getManagedBean().getSearchSuppDoRef()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierDoRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppDoRef()));
+				}
+				if(getManagedBean().getSearchSuppInvRef()!=null && getManagedBean().getSearchSuppInvRef()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppInvRef()));
 				}
 				
 				

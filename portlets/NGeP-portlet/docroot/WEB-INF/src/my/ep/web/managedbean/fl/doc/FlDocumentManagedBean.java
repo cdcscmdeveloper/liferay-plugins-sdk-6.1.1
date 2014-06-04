@@ -39,7 +39,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchLoaNo;
 	private String searchTitle;
 	private String searchSuppName;
-	private String searchSuppRef;
+	private String searchSuppDoRef;
+	private String searchSuppInvRef;
 	private Long searchStatusId;
 	private Date searchContractFromDuration;
 	private Date searchContractToDuration;
@@ -292,20 +293,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchSuppRef
-	 */
-	public String getSearchSuppRef() {
-		return searchSuppRef;
-	}
-
-	/**
-	 * @param searchSuppRef the searchSuppRef to set
-	 */
-	public void setSearchSuppRef(String searchSuppRef) {
-		this.searchSuppRef = searchSuppRef;
-	}
-
-	/**
 	 * @return the docStatusList
 	 */
 	public List<PmStatusDesc> getDocStatusList() {
@@ -387,6 +374,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setProcurementTypeList(List<PmParameterDesc> procurementTypeList) {
 		this.procurementTypeList = procurementTypeList;
+	}
+
+	/**
+	 * @return the searchSuppDoRef
+	 */
+	public String getSearchSuppDoRef() {
+		return searchSuppDoRef;
+	}
+
+	/**
+	 * @param searchSuppDoRef the searchSuppDoRef to set
+	 */
+	public void setSearchSuppDoRef(String searchSuppDoRef) {
+		this.searchSuppDoRef = searchSuppDoRef;
+	}
+
+	/**
+	 * @return the searchSuppInvRef
+	 */
+	public String getSearchSuppInvRef() {
+		return searchSuppInvRef;
+	}
+
+	/**
+	 * @param searchSuppInvRef the searchSuppInvRef to set
+	 */
+	public void setSearchSuppInvRef(String searchSuppInvRef) {
+		this.searchSuppInvRef = searchSuppInvRef;
 	}
 	
 }

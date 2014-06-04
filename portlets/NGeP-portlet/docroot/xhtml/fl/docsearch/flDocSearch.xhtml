@@ -61,7 +61,7 @@
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="statusList"
 							value="#{flDocumentBackingBean.managedBean.docStatusList}"
-							itemLabel="#{statusList.statusDesc}"
+							itemLabel="#{statusList.statusName}"
 							itemValue="#{statusList.pmStatus.statusId}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
@@ -74,9 +74,9 @@
 			<h:panelGroup id="docDoInvStatusSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDoInDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.ref']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.do.ref']}" />
 					<p:inputText size="20"
-						value="#{flDocumentBackingBean.managedBean.searchSuppRef}"></p:inputText>
+						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTypeSearch">
