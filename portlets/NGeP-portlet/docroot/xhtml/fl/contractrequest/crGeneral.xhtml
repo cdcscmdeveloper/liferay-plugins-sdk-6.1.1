@@ -43,6 +43,7 @@
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
+						update=":form:cotabs:preparedOrgProfileId" readonly="true"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
 					</ac:lov></td>
 			</tr>
@@ -55,7 +56,7 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}"
-						update=":form:cotabs:ministry,:form:cotabs:issuedJabatan">
+						update=":form:cotabs:ministry,:form:cotabs:issuedJabatan,:form:cotabs:issuedOrgProfileId">
 					</ac:lov></td>
 			</tr>
 			<tr>

@@ -4,13 +4,17 @@
 package my.ep.web.managedbean.fl.cr;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
@@ -25,10 +29,18 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmProject;
+import my.ep.persistence.entity.pm.common.PmSetia;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean for Create Contract Order
@@ -74,6 +86,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long testOrg;
 	
 	
+	
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -103,9 +116,169 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
 	//private List<FlFulfilmentItem> selectedItemsRows;
+	
+	//receving officer List
+	private List<PmAddressType> receivingOffList;
+	
+	//chargeline
+	private TreeNode chargeLineItemRoot ;
+	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
+	//private  List<TreeNode> selectedNodes;
+	private TreeNode[] selectedNodes;
+	private TreeNode selectedNode;
+	private FlFulfilmentItemAddr selectedItemChargeSection;
+	//private Long pmPrjSetia;
+	private BigDecimal orderedAmtGrandTotal ;
+	private String chargeCheck ="false";
+		
+	// charge Line dropdown lists
+	private List<PmVotFund> votFundList;
+	private List<PmProject> projectList;
+	private List<PmSetia> setiaList;
+	private List<PmSubSetia> subSetiaList;
+	private List<PmPrgActivity> prgActivityList;
+	private List<SelectItem> manualAddrList;
+		
+	// set chargeline for selected items
+	private String votFundCode;
+	private String projectCode;
+	private String setiaCode;
+	private String subSetiaCode;
+	private String prgActivityCode;
+		
+	private Long votFundId;
+	private Long projectId;
+	private Long setiaId;
+	private Long subSetiaId;
+	private Long prgActivityId;
+	
+	private boolean deleteButtonHide;
 
 	public ContractRequestManagedBean(){
 
+	}
+	
+	
+	public void populateChargeLineData(){
+		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
+			prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
+	}
+
+	/**
+	 * @param chargeLineItemRoot the chargeLineItemRoot to set
+	 */
+	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
+		this.chargeLineItemRoot = chargeLineItemRoot;
+	}
+
+	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
+			if(null !=this.getFlRequest().getFlDeliveryAddresses()){
+				for(FlDeliveryAddress  deliveryAddress :this.getFlRequest().getFlDeliveryAddresses()){
+					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
+						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+							
+							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
+							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
+							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+							//itemAddress.getCmItem().getItemId()
+							//itemAddress.getScRequestItem().getRequestNoteItemId()
+							if(chargeLineItemsMap.containsKey(itemAddress.getCmItem().getItemId())){
+								//code for calculating duplicate charge line order amount and quantity for same unit price 
+								//Condition for checking unit price same.
+								boolean notContained=true;
+								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getCmItem().getItemId())){
+									if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
+										//BigDecimal chargeOrderedAmt=containedItem.getChargeOrderedAmt();
+										containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
+										containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
+										notContained=false;
+									}
+								}
+								if(notContained){
+									chargeLineItemsMap.get(itemAddress.getCmItem().getItemId()).add(itemAddress);
+								}
+								
+							} else {
+								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
+								itemAddressList.add(itemAddress);
+								//Copy order amount ,qty to charge line fields and set.
+								chargeLineItemsMap.put(itemAddress.getCmItem().getItemId(),itemAddressList);
+							}
+						}
+					}
+				}
+			}
+			return chargeLineItemsMap;
+		}
+	
+	
+	private void prepareChargeLineTreeNode(
+			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
+		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
+		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
+			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
+			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
+			if(null!=flItemAddress){
+				//Do create New Item Address and copy the first element data manually.
+				//flItemAddress.getScRequestItem().getRequestNoteItemId()
+				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getCmItem().getItemId().toString(),flItemAddress,chargeLineItemRoot);
+				BigDecimal totalOrderAmt=new BigDecimal(0);
+				for(FlFulfilmentItemAddr itemAddr:itemAddress){
+					new DefaultTreeNode(itemAddr.getCmItem().getItemId().toString(),itemAddr,childItemNode);
+					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
+				}
+				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
+				grandTotalOrderAmt=grandTotalOrderAmt.add(totalOrderAmt);
+				setOrderedAmtGrandTotal(grandTotalOrderAmt);
+			}
+			
+		}
+	
+		
+	}
+	
+	private FlFulfilmentItemAddr getFulfilmentItemAddress(
+			FlFulfilmentItemAddr flFulfilmentItemAddr) {
+		FlFulfilmentItemAddr itemAddress = new FlFulfilmentItemAddr();
+		// Do Convertions
+
+		//itemAddress.setFlFulfilmentItem(new FlFulfilmentItem());
+		//itemAddress.getFlFulfilmentItem().setScRequestNoteDtl(new ScRequestNoteDtl());
+		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().setScRequestSupplierItem(new ScRequestSupplierItem());
+		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
+		itemAddress.setScRequestItem(new ScRequestItem());
+		itemAddress.setParent(true);
+		//itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
+		if(null==itemAddress.getCmItem()){
+			itemAddress.setCmItem(new CmItem());
+			
+		}
+		itemAddress.getCmItem().setItemId(flFulfilmentItemAddr.getCmItem().getItemId());
+		
+		//itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
+		System.out.println("item code::9999999999999999 : "+flFulfilmentItemAddr.getCmItem().getExtensionCode());
+		if(null==itemAddress.getCmItem()){
+			itemAddress.setCmItem(new CmItem());
+		}
+		itemAddress.getCmItem().setExtensionCode(flFulfilmentItemAddr.getCmItem().getExtensionCode());
+		itemAddress.getCmItem().setItemName(flFulfilmentItemAddr.getCmItem().getItemName());
+		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
+		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
+		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
+		/*if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
+			itemAddress.setCoaValue("N");
+		}*/
+		if(null !=flFulfilmentItemAddr.getPmVotFund()){
+			if(null !=flFulfilmentItemAddr.getPmVotFund().getVotFundId()){
+			itemAddress.setCoaValue("Y");
+			}
+		}else{
+			itemAddress.setCoaValue("N");
+		}
+		
+		return itemAddress;
 	}
 
 
@@ -801,6 +974,400 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
+	}
+
+
+	/**
+	 * @return the receivingOffList
+	 */
+	public List<PmAddressType> getReceivingOffList() {
+		return receivingOffList;
+	}
+
+
+	/**
+	 * @param receivingOffList the receivingOffList to set
+	 */
+	public void setReceivingOffList(List<PmAddressType> receivingOffList) {
+		this.receivingOffList = receivingOffList;
+	}
+
+
+	/**
+	 * @return the chargeLineSelectedItemAddress
+	 */
+	public FlFulfilmentItemAddr getChargeLineSelectedItemAddress() {
+		return chargeLineSelectedItemAddress;
+	}
+
+
+	/**
+	 * @param chargeLineSelectedItemAddress the chargeLineSelectedItemAddress to set
+	 */
+	public void setChargeLineSelectedItemAddress(
+			FlFulfilmentItemAddr chargeLineSelectedItemAddress) {
+		this.chargeLineSelectedItemAddress = chargeLineSelectedItemAddress;
+	}
+
+
+	/**
+	 * @return the selectedNodes
+	 */
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+
+	/**
+	 * @param selectedNodes the selectedNodes to set
+	 */
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+
+
+	/**
+	 * @return the selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+
+	/**
+	 * @param selectedNode the selectedNode to set
+	 */
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+
+	/**
+	 * @return the selectedItemChargeSection
+	 */
+	public FlFulfilmentItemAddr getSelectedItemChargeSection() {
+		return selectedItemChargeSection;
+	}
+
+
+	/**
+	 * @param selectedItemChargeSection the selectedItemChargeSection to set
+	 */
+	public void setSelectedItemChargeSection(
+			FlFulfilmentItemAddr selectedItemChargeSection) {
+		this.selectedItemChargeSection = selectedItemChargeSection;
+	}
+
+
+	/**
+	 * @return the orderedAmtGrandTotal
+	 */
+	public BigDecimal getOrderedAmtGrandTotal() {
+		return orderedAmtGrandTotal;
+	}
+
+
+	/**
+	 * @param orderedAmtGrandTotal the orderedAmtGrandTotal to set
+	 */
+	public void setOrderedAmtGrandTotal(BigDecimal orderedAmtGrandTotal) {
+		this.orderedAmtGrandTotal = orderedAmtGrandTotal;
+	}
+
+
+	/**
+	 * @return the votFundList
+	 */
+	public List<PmVotFund> getVotFundList() {
+		return votFundList;
+	}
+
+
+	/**
+	 * @param votFundList the votFundList to set
+	 */
+	public void setVotFundList(List<PmVotFund> votFundList) {
+		this.votFundList = votFundList;
+	}
+
+
+	/**
+	 * @return the projectList
+	 */
+	public List<PmProject> getProjectList() {
+		return projectList;
+	}
+
+
+	/**
+	 * @param projectList the projectList to set
+	 */
+	public void setProjectList(List<PmProject> projectList) {
+		this.projectList = projectList;
+	}
+
+
+	/**
+	 * @return the setiaList
+	 */
+	public List<PmSetia> getSetiaList() {
+		return setiaList;
+	}
+
+
+	/**
+	 * @param setiaList the setiaList to set
+	 */
+	public void setSetiaList(List<PmSetia> setiaList) {
+		this.setiaList = setiaList;
+	}
+
+
+	/**
+	 * @return the subSetiaList
+	 */
+	public List<PmSubSetia> getSubSetiaList() {
+		return subSetiaList;
+	}
+
+
+	/**
+	 * @param subSetiaList the subSetiaList to set
+	 */
+	public void setSubSetiaList(List<PmSubSetia> subSetiaList) {
+		this.subSetiaList = subSetiaList;
+	}
+
+
+	/**
+	 * @return the prgActivityList
+	 */
+	public List<PmPrgActivity> getPrgActivityList() {
+		return prgActivityList;
+	}
+
+
+	/**
+	 * @param prgActivityList the prgActivityList to set
+	 */
+	public void setPrgActivityList(List<PmPrgActivity> prgActivityList) {
+		this.prgActivityList = prgActivityList;
+	}
+
+
+	/**
+	 * @return the manualAddrList
+	 */
+	public List<SelectItem> getManualAddrList() {
+		return manualAddrList;
+	}
+
+
+	/**
+	 * @param manualAddrList the manualAddrList to set
+	 */
+	public void setManualAddrList(List<SelectItem> manualAddrList) {
+		this.manualAddrList = manualAddrList;
+	}
+
+
+	/**
+	 * @return the votFundCode
+	 */
+	public String getVotFundCode() {
+		return votFundCode;
+	}
+
+
+	/**
+	 * @param votFundCode the votFundCode to set
+	 */
+	public void setVotFundCode(String votFundCode) {
+		this.votFundCode = votFundCode;
+	}
+
+
+	/**
+	 * @return the projectCode
+	 */
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+
+	/**
+	 * @param projectCode the projectCode to set
+	 */
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
+
+
+	/**
+	 * @return the setiaCode
+	 */
+	public String getSetiaCode() {
+		return setiaCode;
+	}
+
+
+	/**
+	 * @param setiaCode the setiaCode to set
+	 */
+	public void setSetiaCode(String setiaCode) {
+		this.setiaCode = setiaCode;
+	}
+
+
+	/**
+	 * @return the subSetiaCode
+	 */
+	public String getSubSetiaCode() {
+		return subSetiaCode;
+	}
+
+
+	/**
+	 * @param subSetiaCode the subSetiaCode to set
+	 */
+	public void setSubSetiaCode(String subSetiaCode) {
+		this.subSetiaCode = subSetiaCode;
+	}
+
+
+	/**
+	 * @return the prgActivityCode
+	 */
+	public String getPrgActivityCode() {
+		return prgActivityCode;
+	}
+
+
+	/**
+	 * @param prgActivityCode the prgActivityCode to set
+	 */
+	public void setPrgActivityCode(String prgActivityCode) {
+		this.prgActivityCode = prgActivityCode;
+	}
+
+
+	/**
+	 * @return the votFundId
+	 */
+	public Long getVotFundId() {
+		return votFundId;
+	}
+
+
+	/**
+	 * @param votFundId the votFundId to set
+	 */
+	public void setVotFundId(Long votFundId) {
+		this.votFundId = votFundId;
+	}
+
+
+	/**
+	 * @return the projectId
+	 */
+	public Long getProjectId() {
+		return projectId;
+	}
+
+
+	/**
+	 * @param projectId the projectId to set
+	 */
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+
+	/**
+	 * @return the setiaId
+	 */
+	public Long getSetiaId() {
+		return setiaId;
+	}
+
+
+	/**
+	 * @param setiaId the setiaId to set
+	 */
+	public void setSetiaId(Long setiaId) {
+		this.setiaId = setiaId;
+	}
+
+
+	/**
+	 * @return the subSetiaId
+	 */
+	public Long getSubSetiaId() {
+		return subSetiaId;
+	}
+
+
+	/**
+	 * @param subSetiaId the subSetiaId to set
+	 */
+	public void setSubSetiaId(Long subSetiaId) {
+		this.subSetiaId = subSetiaId;
+	}
+
+
+	/**
+	 * @return the prgActivityId
+	 */
+	public Long getPrgActivityId() {
+		return prgActivityId;
+	}
+
+
+	/**
+	 * @param prgActivityId the prgActivityId to set
+	 */
+	public void setPrgActivityId(Long prgActivityId) {
+		this.prgActivityId = prgActivityId;
+	}
+
+
+	/**
+	 * @return the chargeLineItemRoot
+	 */
+	public TreeNode getChargeLineItemRoot() {
+		return chargeLineItemRoot;
+	}
+
+
+	/**
+	 * @return the chargeCheck
+	 */
+	public String getChargeCheck() {
+		return chargeCheck;
+	}
+
+
+	/**
+	 * @param chargeCheck the chargeCheck to set
+	 */
+	public void setChargeCheck(String chargeCheck) {
+		this.chargeCheck = chargeCheck;
+	}
+
+
+	/**
+	 * @return the deleteButtonHide
+	 */
+	public boolean isDeleteButtonHide() {
+		return deleteButtonHide;
+	}
+
+
+	/**
+	 * @param deleteButtonHide the deleteButtonHide to set
+	 */
+	public void setDeleteButtonHide(boolean deleteButtonHide) {
+		this.deleteButtonHide = deleteButtonHide;
 	}
 
 }

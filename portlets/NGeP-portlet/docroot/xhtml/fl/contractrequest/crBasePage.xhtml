@@ -48,18 +48,23 @@
 			</tr>
 		</table>
 		<p:tabView id="cotabs" orientation="left" dynamic="true" cache="true">
-			<p:tab id="tab1" title="#{lbl['lbl.tab.fl.general']}">
+		
+		<p:ajax event="tabChange" listener="#{contractRequestBackingBean.onTabChange}" update="#{contractRequestBackingBean.className}"></p:ajax>
+			<p:tab id="crGeneralTabId" title="General">
 				<ui:include src="crGeneral.xhtml" />
 			</p:tab>
-			<p:tab id="tab2" title="#{lbl['lbl.tab.fl.item']}">
-					<ui:include src="crItem.xhtml" /> 
+			<p:tab id="crItemsTabId" title="Delivery Address and Item " >
+				<ui:include src="crItem.xhtml" />
 			</p:tab>
-			<p:tab id="tab3" title="#{lbl['lbl.tab.fl.order.summary']}">
-					<ui:include src="ordSummary.xhtml" /> 
+			<p:tab id="crOrderSummeryTabId" title="Order Summary">
+				<ui:include src="crOrdersummary.xhtml" />
 			</p:tab>
-			<p:tab id="tab4" title="#{lbl['lbl.tab.fl.charge.line.summary']}">
-					<ui:include src="chargeLineSummary.xhtml" /> 
+			<p:tab id="crChargeLineTabId" title="Charge Line Summary" >
+				<ui:include src="crChargeline.xhtml" />
 			</p:tab>
+			
+			
+			
 			<p:tab id="tab5" title="Approver Settings" rendered="#{contractRequestBackingBean.isRequisitioner()}">
 				<p:panel id="settingId" header="Approver Setting" toggleable="true"
 					toggleSpeed="500">

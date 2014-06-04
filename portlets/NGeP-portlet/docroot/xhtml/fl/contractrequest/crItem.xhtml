@@ -24,6 +24,10 @@
 				<h:outputText rendered="#{address.addressType eq null}"
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
+			<p:column headerText="Delivery Term (Days)">
+				<h:outputText style="text-align:right"
+					value="#{address.deliveryTerm}" />
+			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
 				<p:calendar value="#{address.startDate}" id="calStartDate"
@@ -33,7 +37,18 @@
 			<p:column headerText="Exp. Delivery (End)">
 				<p:calendar value="#{address.endDate}" id="calEndDate"
 					showOn="button" pattern="dd/mm/yyyy" />
-
+			</p:column>
+			<p:column headerText=" Recv. Officer">
+				<h:outputText style="text-align:right" />
+				<p:commandLink oncomplete="addOfficer.show();"
+					action="#{contractRequestBackingBean.receivingOfficerList(address)}"
+					update=":form:cotabs:addReceivingOfficerDialog">
+					<p:graphicImage library="ep/images/design" name="register.png"
+						value="/resources/ep/images/design/register.png"
+						title="Recv Officer List" />
+				</p:commandLink>
+			</p:column>
+			
 				<p:commandLink rendered="#{address.checkManualAddress}"
 					oncomplete="addManualDeliveryAddr.show();"
 					action="#{contractRequestBackingBean.editManualAddress(address)}"
@@ -42,7 +57,7 @@
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
-			</p:column>
+			
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
@@ -85,7 +100,7 @@
 						value="P" />
 				</p:column>
 			<p:column headerText="Item Name">
-				<h:outputText value="#{item.flFulfilmentItem.qtItem.itemName}" />
+				<h:outputText value="#{item.cmItem.itemName}" />
 			</p:column>
 
 			
@@ -94,7 +109,7 @@
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{item.orderedQty}" style="text-align:right" required="true" requiredMessage="Please input the quantity.">
-					<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.retrieveZonalPrice(item)}"></p:ajax>
+					<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
@@ -127,25 +142,22 @@
 
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.agencyAddressId}"
+			rowKey="#{delAddr}"
 			selection="#{contractRequestBackingBean.managedBean.selectedCtAddrTypeList}">
-			<p:ajax event="rowSelect" update=":form:cotabs:delAddr" />
+			
 			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
 					<p:column rowspan="1" headerText="Address"></p:column>
-					<p:column rowspan="1" headerText="Ptj Name"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, 
+				<h:outputText
+					value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, 
 									#{delAddr.addressType.pmAddress.address3}, #{delAddr.addressType.pmAddress.address4}"
 					escape="false" />
-			</p:column>
-			<p:column>
-			 <h:outputText value="#{delAddr.ctAgency.orgProfile.orgName}"></h:outputText>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -178,7 +190,7 @@
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{contractedItem.itemName}" />
+				<h:outputText value="#{contractedItem.scRequestItem.cmItem.itemName}" />
 			</p:column>
 			<p:column>
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractedItem.itemType)}" />
@@ -316,6 +328,31 @@
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-add"
 				oncomplete="addManualDeliveryAddr.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
+		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
+		modal="true" height="250" width="600" resizable="false">
+		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
+			value="#{contractRequestBackingBean.managedBean.receivingOffList}"
+			rowKey="#{purchasedItem}">
+			<ac:paginator for="receivingOfficerDt" />
+			<p:column headerText="Receiving Officer Name">
+				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
+			</p:column>
+			<p:column headerText="Tel. No.">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Email">
+				<h:outputText />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Close" icon="ui-icon-cancel"
+				oncomplete="addOfficer.hide();" update="addressDataTable"
+				process="@this,receivingOfficerDt">
 			</p:commandButton>
 		</div>
 	</p:dialog>

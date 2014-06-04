@@ -1,0 +1,301 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="CHARGE ASSIGNMENT" id="chargeAss" toggleable="true"
+		styleClass="prChargeLinePnlClass">
+
+		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
+			styleClass="chargeLineChange"
+			selection="#{contractRequestBackingBean.managedBean.selectedNode}"
+			selectionMode="single"
+			value="#{contractRequestBackingBean.managedBean.chargeLineItemRoot}">
+			<p:ajax event="select"
+				listener="#{contractRequestBackingBean.onNodeSelect()}"
+				update=":form:cotabs:applyBulkChargeDialog,@(.chargeLineSection)" />
+			<p:ajax event="unselect"
+				listener="#{contractRequestBackingBean.onNodeUnSelect()}"
+				update=":form:cotabs:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
+			<p:column>
+				<p:selectBooleanCheckbox
+					value="#{chargeLineNode.selectedChargeItem}"
+					rendered="#{chargeLineNode.parent == 'true'}"
+					styleClass="myCustomChekBox">
+					<p:ajax event="change"
+						listener="#{contractRequestBackingBean.clearPopupLists}"
+						update="@(.chargeLineSection)"></p:ajax>
+				</p:selectBooleanCheckbox>
+			</p:column>
+			<p:column headerText="COA">
+				<h:outputText value="#{chargeLineNode.coaValue}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="Item Code">
+				<h:outputText value="#{chargeLineNode.cmItem.extensionCode}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="Item Name">
+				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="UOM">
+				<h:outputText value="Unit"
+					rendered="#{chargeLineNode.parent == 'true'}" />
+			</p:column>
+			<p:column headerText="Unit Price (RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.unitPrice}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Ordered Qty." style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
+					rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
+					rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Query">
+
+			</p:column>
+		</p:treeTable>
+		<br />
+		<br />
+		<br />
+
+		<table style="width: 93%">
+			<tr>
+				<td style="text-align: right; font: bold; size: 10;">Grand
+					Total: <p:spacer width="10px" /> <h:outputText
+						value="#{contractRequestBackingBean.managedBean.orderedAmtGrandTotal}">
+						<f:convertNumber pattern="#,#00.00" />
+					</h:outputText>
+				</td>
+			</tr>
+		</table>
+		<table style="width: 100%;">
+			<tr>
+
+				<td colspan="4" style="text-align: left"><p:commandButton
+						value="Bulk Update" icon="ui-icon-add" ajax='true'
+						styleClass="ui-button" process="@this,chargeAss"
+						oncomplete="applyBulkCharge.show();"
+						update=":form:cotabs:applyBulkChargeDialog"
+						action="#{contractRequestBackingBean.clearPopupLists}" /></td>
+
+			</tr>
+		</table>
+		<br />
+		<br />
+		<br />
+		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{contractRequestBackingBean.managedBean.votFundCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+					<td><p:inputText size="9" disabled="true" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
+					<td><p:inputText size="9" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.program.activity']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{contractRequestBackingBean.managedBean.prgActivityCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{contractRequestBackingBean.managedBean.projectCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText
+							value="#{contractRequestBackingBean.managedBean.setiaCode}"
+							size="9" disabled="true" /></td>
+					<td><p:inputText
+							value="#{contractRequestBackingBean.managedBean.subSetiaCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
+							style="margin-bottom:15px;" /></td>
+					<td><p:inputText size="9" disabled="true" /></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+	</p:panel>
+	<p:dialog id="queryDialog" header="QUERY" widgetVar="addQuery"
+		showEffect="fade" hideEffect="fade" modal="true" width="600px"
+		height="250px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Item Code" /></td>
+				<td><p:inputText disabled="true" size="20"
+						value="#{contractRequestBackingBean.queryItemCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:inputText disabled="true" size="35"
+						value="#{contractRequestBackingBean.queryItemName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Query Description" /></td>
+				<td><p:inputTextarea cols="50" rows="6" disabled="true"
+						style=" margin-bottom:5px;" /></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Close" icon="ui-icon-close"
+				oncomplete="addQuery.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	<p:dialog id="applyBulkChargeDialog" header="Bulk Update"
+		widgetVar="applyBulkCharge" showEffect="fade" hideEffect="fade"
+		modal="true" width="500px" height="400px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu id="votCode"
+						value="#{contractRequestBackingBean.managedBean.votFundId}"
+						style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="votCodeList"
+							value="#{contractRequestBackingBean.managedBean.votFundList}"
+							itemLabel="#{votCodeList.votFundCode}"
+							itemValue="#{votCodeList.votFundId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.getProjectList}"
+							update="project" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.getProgramList}"
+							update="prgActivity" />
+						<p:ajax event="change" update="setia" />
+						<p:ajax event="change" update="subSetia" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.charge.program.activity']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu id="prgActivity"
+						value="#{contractRequestBackingBean.managedBean.prgActivityId}"
+						style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="prgActivityList"
+							value="#{contractRequestBackingBean.managedBean.prgActivityList}"
+							itemLabel="#{prgActivityList.prgActivityCode}"
+							itemValue="#{prgActivityList.prgActivityId}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu id="project"
+						value="#{contractRequestBackingBean.managedBean.projectId}"
+						style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="projectList"
+							value="#{contractRequestBackingBean.managedBean.projectList}"
+							itemLabel="#{projectList.projectCode}"
+							itemValue="#{projectList.projectId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.getSetiaList}"
+							update="setia" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu id="setia"
+						value="#{contractRequestBackingBean.managedBean.setiaId}"
+						style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="setiaList"
+							value="#{contractRequestBackingBean.managedBean.setiaList}"
+							itemLabel="#{setiaList.setiaCode}"
+							itemValue="#{setiaList.setiaId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.getSubSetiaList}"
+							update="subSetia" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.subsetia']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu id="subSetia"
+						value="#{contractRequestBackingBean.managedBean.subSetiaId}"
+						style="width: 207px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="subSetiaList"
+							value="#{contractRequestBackingBean.managedBean.subSetiaList}"
+							itemLabel="#{subSetiaList.subSetiaCode}"
+							itemValue="#{subSetiaList.subSetiaId}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
+						style="margin-bottom:15px;" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+						<f:selectItem itemLabel="Value1" itemValue="1" />
+						<f:selectItem itemLabel="Value2" itemValue="2" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Apply" icon="ui-icon-accept"
+				process="@this,chargeAss,applyBulkChargeDialog"
+				update=":form:cotabs:applyBulkChargeDialog,chargeLineTbl"
+				action="#{contractRequestBackingBean.chargeLineApply}"
+				oncomplete="applyBulkCharge.hide();">
+			</p:commandButton>
+			<p:commandButton value="Cancel" icon="ui-icon-cancel"
+				oncomplete="applyBulkCharge.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+</ui:composition>
