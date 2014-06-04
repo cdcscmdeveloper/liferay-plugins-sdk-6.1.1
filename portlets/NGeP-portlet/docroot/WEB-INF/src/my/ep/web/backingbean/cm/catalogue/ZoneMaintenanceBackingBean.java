@@ -282,9 +282,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	public void updateZoneListOnPopUpClose(){
 
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
-
+		
 		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
 			selZone = new CmSupplierZone();
+			
+			selZone.setSuppZoneName(getManagedBean().getSelectedSupplierZone().getSuppZoneName());
 			
 			if(selZone.getSmSupplier() == null){
 				IRegistrationSO smSO = (IRegistrationSO) BusinessDelegate.getInstance()
@@ -301,10 +303,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 				selZone.setSuppZoneDesc(selZone.getSuppZoneName());
 			}
 			
-		}
-		
-		if(selZone.getSuppZoneName() == null){
-			selZone.setSuppZoneName(getManagedBean().getZoneName());
 		}
 		
 		TreeNode[] selectedNodes = getManagedBean().getSelectedNodes();
