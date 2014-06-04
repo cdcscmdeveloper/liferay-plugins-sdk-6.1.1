@@ -110,6 +110,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 		}
 		bb.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+		bb.getManagedBean().setDisplayCatalogue(true);
 		return "addCatalogItem";
 
 	}

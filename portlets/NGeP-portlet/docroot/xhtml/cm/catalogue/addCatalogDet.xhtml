@@ -44,22 +44,23 @@
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
 				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P'}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					icon="ui-icon-submit"
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
 					update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
 					icon="ui-icon-save"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P'}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D'}"
+					rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
 					icon="ui-icon-cancel"
 					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'D'}"
-					icon="ui-icon-cancel"
-					action="#{catalogueBackingBean.cancelBackToMaintenanceFile()}"></p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
+					action="#{catalogueBackingBean.cancelToSupplierItemSearch()}"
+					immediate="true"></p:commandButton>
+
 
 			</h:panelGroup>
 
@@ -85,7 +86,7 @@
 
 			<h:panelGroup
 				rendered="#{(unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin) 
-				and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}">
+				and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and catalogueBackingBean.managedBean.displayCatalogue}">
 				<table width="100%;">
 					<tr>
 						<td style="width: 90px;"></td>
@@ -121,18 +122,18 @@
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
 									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
-										style="height: 150px;" />
+										style="height: 150px; left: 0px !important;" />
 								</ui:repeat>
 							</h:panelGroup>
 
 						</div> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="Upload"
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							onclick="imageDialog.show()">
 							<p:graphicImage value="/resources/ep/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' }"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							title="Delete" oncomplete="deleteImage.show()">
 							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
@@ -156,7 +157,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
 							headerText="UOM Lov"
-							disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"
+							disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
@@ -164,7 +165,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
@@ -173,22 +174,22 @@
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}"></p:inputText></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}" />
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" />
 						<p:inputText style="margin-left: 2px;" size="3" value="days"
 							readonly="true" /></td>
 				</tr>
@@ -200,7 +201,7 @@
 					<td colspan="3"><p:inputTextarea
 							style="width:660px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P'}" /></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" /></td>
 
 				</tr>
 

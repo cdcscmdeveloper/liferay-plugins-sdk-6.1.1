@@ -384,6 +384,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
+		
+		this.getManagedBean().setDisplayCatalogue(true);
 
 
 
@@ -397,6 +399,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getPublishedItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getPublishedItemList().get(index).getItemDesc());
 		this.getManagedBean().setTabActiveIndex(4);
+		this.getManagedBean().setDisplayCatalogue(true);
 		return "addCatalogItem";
 
 	}
@@ -407,7 +410,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getExpiredItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getExpiredItemList().get(index).getItemDesc());
 		this.getManagedBean().setTabActiveIndex(5);
-
+		this.getManagedBean().setDisplayCatalogue(true);
 		return "addCatalogItem";
 
 	}
@@ -454,7 +457,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 		this.getManagedBean().setTabActiveIndex(1);
-
+		this.getManagedBean().setDisplayCatalogue(true);
 		return "addCatalogItem";
 
 	}
@@ -465,7 +468,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getApprovedItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getApprovedItemList().get(index).getItemDesc());
 		this.getManagedBean().setTabActiveIndex(2);
-
+		this.getManagedBean().setDisplayCatalogue(true);
 		return "addCatalogItem";
 
 	}
@@ -514,7 +517,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 		this.getManagedBean().setTabActiveIndex(3);
-
+		this.getManagedBean().setDisplayCatalogue(true);
 
 
 
@@ -536,12 +539,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		reqDTO.setDocId(supplierItem.getDocId());
 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
+		
+		this.getManagedBean().setDisplayCatalogue(false);
 		System.out.println("*****************end********************");
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 
-		return "supplierItemDetView?faces-redirect=true";
+		return "addCatalogView?faces-redirect=true";
 	}
 
 

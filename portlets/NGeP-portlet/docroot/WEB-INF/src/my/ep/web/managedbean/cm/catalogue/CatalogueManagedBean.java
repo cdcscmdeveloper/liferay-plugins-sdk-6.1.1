@@ -165,6 +165,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
 	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
+	private boolean displayCatalogue = false;
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -1289,6 +1290,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setCloneIndex(int cloneIndex) {
 		this.cloneIndex = cloneIndex;
 	}
+
+
+	public boolean isDisplayCatalogue() {
+		return displayCatalogue;
+	}
+
+
+	public void setDisplayCatalogue(boolean displayCatalogue) {
+		this.displayCatalogue = displayCatalogue;
+	}
+
+	
+	
+
+
 
 	
 	
