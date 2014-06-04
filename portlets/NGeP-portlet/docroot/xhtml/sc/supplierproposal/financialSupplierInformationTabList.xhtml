@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+
+		<p:tabView id="supplierinfotabViewid" dynamic="true">
+
+			<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/supplierDetails.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/branchInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/capitalInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/personnelInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/bankInfo.xhtml" />
+			</p:tab>
+
+			<p:tab id="tab6" title="#{lbl['lbl.sc.sp.categories.code']}"
+				styleClass="noBorders tr,noBorders td">
+				<ui:include src="/xhtml/sc/specification/category.xhtml" />
+			</p:tab>
+		</p:tabView>
+
+	</p:panel>
+</ui:composition>

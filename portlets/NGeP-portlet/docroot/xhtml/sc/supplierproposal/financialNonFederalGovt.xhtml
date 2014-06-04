@@ -1,0 +1,110 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				icon="ui-icon-back"
+				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				action="#{supplierProposalDetailBackingBean.saveNonGovCompanyExpDtls}" />
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				icon="ui-icon-check"
+				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+		</div>
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
+							disabled="true" size="150" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /> <h:outputText /></td>
+				</tr>
+			</table>
+			<p:dataTable id="financenongovtid" var="financenongovt"
+				value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
+				rowKey="#{financenongovt}" rowIndexVar="rowIndex"
+				selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}">
+
+				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
+					<h:outputText value="#{financenongovt.clientName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
+					<h:outputText value="#{financenongovt.contractTitle}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
+					<h:outputText value="#{financenongovt.contractNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
+					<h:outputText value="#{financenongovt.effectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
+					<h:outputText value="#{financenongovt.expiryDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
+					<h:outputText value="#{financenongovt.contractPeriod}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contract.amt']}">
+					<p:inputText value="#{financenongovt.contractAmt}" size="20">
+						<p:ajax event="blur" process="@this"
+							listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
+							update=":form:totalcontractamt" />
+					</p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
+					<p:inputTextarea value="#{financenongovt.remark}" rows="3"
+						cols="20" />
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="5" />
+			<h:panelGroup id="totalcontractamt">
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 170px"><p:outputLabel
+								value="#{lbl['lbl.ss.sp.ttl.cotract.amt']}" /></td>
+						<td colspan="3"><p:inputText style="text-align:right"
+								value="#{supplierProposalDetailBackingBean.managedBean.totalContractAmount}"
+								readonly="true" disabled="true" size="30">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

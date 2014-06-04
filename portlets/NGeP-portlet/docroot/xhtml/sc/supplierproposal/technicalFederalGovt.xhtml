@@ -1,0 +1,84 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
+				icon="ui-icon-back" />
+		</div>
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
+							disabled="true" size="150" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.sp.fed.gov']}" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
+				</tr>
+			</table>
+			<p:dataTable id="techgovtid" var="techgovt"
+				value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
+				rowKey="#{techgovt}" rowIndexVar="rowIndex">
+
+				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
+					<h:outputText />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
+					<h:outputText value="#{techgovt.title}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
+					<h:outputText value="#{techgovt.loaNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
+					<h:outputText value="#{techgovt.contractEffDate}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
+					<h:outputText value="#{techgovt.contractExpDate}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
+					<h:outputText />
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="5" />
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 140px"><p:outputLabel
+							value="#{lbl['lbl.sc.sp.ttlnoofcontracts']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
+							readonly="true" disabled="true" size="30" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
+					<td colspan="3"><p:inputText readonly="true" disabled="true"
+							size="30" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>
