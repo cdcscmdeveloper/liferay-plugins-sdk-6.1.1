@@ -114,8 +114,6 @@ import com.liferay.portal.util.PortalUtil;
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
-	public CtPanelItem[] selectedPanelItem;
-	private CtPanelSupplier[] selectedPanelSupplier;
 	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
@@ -663,14 +661,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			return null;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void addContactPerson(){
 		log.info("PanelBackingBean.addContactPerson()");
 		try {
@@ -703,11 +693,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	
 	public void deletePanelSupplier(){
-		
-		for(int i =0; i < selectedPanelSupplier.length; i++){
-			  CtPanelSupplier sup = selectedPanelSupplier[i];
-			  getManagedBean().getPanelSupplierList().remove(sup);
-		}selectedPanelSupplier = null;
+		if(this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null){
+			this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(this.getManagedBean().getSelectedPanelSupplier());
+		}else if(!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null){
+			this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().remove(this.getManagedBean().getSelectedPanelSupplier());
+		}
 	}
 	
 	public void addCancelCircularListener() {
@@ -772,10 +762,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void deletePanelItem(){
-		for(int i = 0; i<selectedPanelItem.length; i++){
-			CtPanelItem panelItem = selectedPanelItem[i];
-			getManagedBean().getCircularVer().getCtPanelItems().remove(panelItem);
-		}selectedPanelItem = null;
+			getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItems());
+			this.getManagedBean().setSelectedPanelItems(null);
+			this.getManagedBean().setSelectionOfZone(false);
 	}
 	
 	public void addPanelZone(){
@@ -985,10 +974,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
-	
-	
-	
-	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
 		String filePath = "C:/projects/uploads/"+item.getFileName();
@@ -1031,10 +1016,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
-	
-	
-
-	
 	
 	public String getItemGeneralCode(Long parameterId){
 		if(parameterId == null || parameterId.intValue() == 0)
@@ -1247,22 +1228,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
 	}
 	
-	public CtPanelItem[] getSelectedPanelItem() {
-		return selectedPanelItem;
-	}
-
-	public void setSelectedPanelItem(CtPanelItem[] selectedPanelItem) {
-		this.selectedPanelItem = selectedPanelItem;
-	}
-
-	public CtPanelSupplier[] getSelectedPanelSupplier() {
-		return selectedPanelSupplier;
-	}
-
-	public void setSelectedPanelSupplier(CtPanelSupplier[] selectedPanelSupplier) {
-		this.selectedPanelSupplier = selectedPanelSupplier;
-	}
-	
 	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
 		return circularVerPagingDataModel;
 	}
@@ -1271,6 +1236,4 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
 	}
-	
-	
 }

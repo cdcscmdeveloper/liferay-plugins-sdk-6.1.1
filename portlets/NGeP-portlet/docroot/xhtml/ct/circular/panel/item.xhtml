@@ -68,7 +68,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=panelItemDt])"
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=itemId])"
 		       process="@all" actionListener="#{panelBackingBean.deletePanelItem()}" onclick="delItemDlg.hide();"/>
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide();" type="button" />
 		   </div>
@@ -168,9 +168,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			icon="ui-icon-accept"
 			action="#{panelBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
-
-		
 	   </p:dialog>
+	   
+	   <p:dialog id="delZoneDlg" header="Delete Confirmation" resizable="false"
+		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="325" height="90">  
+            <h:panelGrid columns="3">
+              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			  <p:spacer width="10"/>
+              <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=zoneGeneralDataTable],[id$=itemSupplier])"
+		       process="@all" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
+			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide();" type="button" />
+		   </div>
+        </p:dialog>  		
        </p:outputPanel>
 		<p:spacer height="20" />
 		<p:outputPanel id="itemSupplier">
@@ -179,9 +191,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		   <ac:lovPopup />
 			<p:dataTable id="itemSupplierDt" var="supVar" 
 			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
-		    selection="#{panelBackingBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">
+		    selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">
 				<p:ajax event="rowSelect" />
-				<p:column selectionMode="multiple" style="width:18px;"/>  
 				<p:column headerText="Supplier Name">
 				<c:if test="#{panelBackingBean.managedBean.selectionOfZone}">
 				   <ac:lov id="loaSupId"  lovId="SM_SUPPLIER" headerText="Supplier List" 
