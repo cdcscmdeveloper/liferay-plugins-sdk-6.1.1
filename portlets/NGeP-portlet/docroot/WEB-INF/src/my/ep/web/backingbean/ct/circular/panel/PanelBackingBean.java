@@ -181,7 +181,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
@@ -252,7 +252,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length+1];
-			outcome[0] = "Save";
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
@@ -293,12 +293,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void searchActiveCircularVer(ActionEvent event) {
 		ICircularSO circularSO = null;
 		try { 
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
-			reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
-			
+			if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)){
+			    reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
+			 }else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)){
+				 reqDTO.setFilterStatusId(ContractStatusConst.CQ_APPROVED);
+			 }
 			CircularResDTO resDTO = circularSO.retrieveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
@@ -460,7 +463,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		ICircularSO circularSO = null;
 		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICircularSO.class);
 			
 			if(isBPKApprover()) {
 				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
@@ -784,11 +787,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         try {	
         	CtCancelCircular cancelCircular = null;
         	List<CtCancelCircular> cancelCircularList = new ArrayList<CtCancelCircular>();
-        	/*for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
+        	for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
         		cancelCircular = new CtCancelCircular();
-        		cancelCircular.setCtCancelCircularVer(circularVer);
+        		cancelCircular.setCircularVer(circularVer);
         		cancelCircularList.add(cancelCircular);
-        	}*/
+        	}
         	if(getManagedBean().getCancelCircularReq()==null) {
         		getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
         	}
@@ -812,7 +815,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
 		try {
-			IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
+			IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStateSO.class);
 			StateReqDTO reqDTO = new StateReqDTO();
 			reqDTO.setCountryId(1l);
 			StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
@@ -929,7 +932,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
-				getManagedBean().setOutComes(new String[]{"Save","Submit"});
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
@@ -1035,10 +1038,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void setCtPanelZoneListner(CtPanelItem panelItem){
 		this.getManagedBean().setSelectedPanelItems(panelItem);
-	 	if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase("Z")){
+	 	if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 	 		this.getManagedBean().setSelectedPanelZone(null);
 			this.getManagedBean().setSelectionOfZone(true);
-		}else if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase("A")){
+		}else if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
 			this.getManagedBean().setSelectionOfZone(false);
 		}else{
 			this.getManagedBean().setSelectionOfZone(false);

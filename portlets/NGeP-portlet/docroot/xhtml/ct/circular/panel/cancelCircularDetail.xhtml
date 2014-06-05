@@ -13,33 +13,39 @@
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
 			rendered="#{!panelBackingBean.isBPKApprover()}" >
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
+			<p:ajax event="change" update="@([id$=cancelCircularList])"/>
 		</p:selectOneMenu>		
 		<p:spacer height="10" />
+		<p:outputPanel id="cancelCircularList">
 		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowKey="#{data}"
 			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cno']}" >
-				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
+				<h:outputText value="#{data.circularVer.circularNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
-				<h:outputText value="#{data.ctCancelCircularVer.name}" />
+				<h:outputText value="#{data.circularVer.name}" />
 			</p:column>
 			<p:column headerText="Update Effective Date" >
-				<h:outputText value="#{data.ctCancelCircularVer.updateEffDate}" />
+				<h:outputText value="#{data.circularVer.extendStartDate}">
+				    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" >
-				<f:setPropertyActionListener value="#{CtStatusConst.pqApproved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
-			</p:commandButton>
+					<f:setPropertyActionListener
+						value="#{panelBackingBean.managedBean.circularDocType == ContractConst.circularDocTypePanel ? CtStatusConst.pqApproved : CtStatusConst.cqApproved}"
+						target="#{panelBackingBean.managedBean.searchStatusId}" />
+				</p:commandButton>
 			<p:commandButton value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
 				action="#{panelBackingBean.deleteCancelReqCircular()}" update="cancelCcrDt,cancelCcrPnl" />				
 		</div>				
-			
-		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="650" height="350">
+		</p:outputPanel>	
+		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
@@ -53,7 +59,9 @@
 						<h:outputText value="#{data.name}" />
 					</p:column>
 					<p:column headerText="Update Effective Date">
-						<h:outputText value="#{data.updateEffDate}" />
+						<h:outputText value="#{data.extendStartDate}">
+						  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
 					</p:column>												
 				</p:dataTable>
 				<f:facet name="footer">
