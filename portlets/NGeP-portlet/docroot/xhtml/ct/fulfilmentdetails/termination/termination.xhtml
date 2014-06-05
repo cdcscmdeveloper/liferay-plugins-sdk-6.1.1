@@ -89,6 +89,12 @@
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
 		   </h:panelGrid>	
+		    <h:panelGrid columns="3">
+			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.bondReq ? false : true}"
+				 disabled="true" style="text-align:top;" />
+			  <p:spacer width="2" />	
+			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.pbexemption']}" style="text-align:top;" />
+		   </h:panelGrid>	
 	    </h:panelGrid>
 	</h:panelGrid>
  </p:panel>
