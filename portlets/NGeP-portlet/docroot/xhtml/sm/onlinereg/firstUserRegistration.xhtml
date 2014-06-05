@@ -38,7 +38,7 @@
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.nationality']}" /></td>
 					<td class="tdContent">
-						<p:selectOneMenu id="nationalityId" required="true" label="{lbl['lbl.sm.nationality']}"
+						<p:selectOneMenu id="nationalityId" required="true" label="#{lbl['lbl.sm.nationality']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}">
 							<f:selectItem itemValue="" itemLabel="---Select---" />
 							<f:selectItems var="counLs"
