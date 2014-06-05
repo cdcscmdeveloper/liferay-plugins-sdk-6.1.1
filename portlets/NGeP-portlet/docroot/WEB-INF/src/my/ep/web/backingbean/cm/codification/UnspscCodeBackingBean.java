@@ -1206,17 +1206,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						code.setRequestMeasurement(false);
 					}
 
-					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
-					SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-					PmUser pmUser = new FacesScopes().getUserSessionBean();
-					supplierReqDTO.setUserId(pmUser.getUserId());
-
-					SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-
-					System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
-
-					code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 
 					reqDTO.getRequestExtList().add(code);
 
