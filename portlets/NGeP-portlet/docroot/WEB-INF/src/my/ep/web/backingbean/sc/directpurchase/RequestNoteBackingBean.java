@@ -771,7 +771,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 		FacesScopes facesScopes = new FacesScopes();
 		scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
-		scRequestNoteDtl.setProcurementType(getManagedBean().getRequestNoteDtl().getProcurementType());
+		reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+		reqDTO.setParameterCode(getManagedBean().getRequestNoteDtl().getProcurementType().getParameterCode());
+		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+		scRequestNoteDtl.setProcurementType(resDTO.getPmParameter());
 		scRequestNoteDtl.setJustificationType(getManagedBean().getRequestNoteDtl().getJustificationType());
 		scRequestNoteDtl.setJustification(getManagedBean().getRequestNoteDtl().getJustification());
 		scRequestNoteDtl.setScRequestNote(requestNote);
@@ -779,7 +783,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    reqDTO = new ParameterReqDTO();
 	    reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
 	    reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
-	    ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setFulfillmentType(resDTO.getPmParameter());
 	    
 	    reqDTO = new ParameterReqDTO();
@@ -1002,8 +1006,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
 			
-		    if (requestNote.getApprovalUsers().size() > 0
-				&& requestNote != null) {
+		    if ( requestNote != null && requestNote.getApprovalUsers().size() > 0) {
 			   for (int i = 0; i < requestNote.getApprovalUsers().size(); i++) {
 				    selectedApprover.add(requestNote.getApprovalUsers().get(i).getPmUser());
 				    for (int j = 0; j < availableApprover.size(); j++) {
