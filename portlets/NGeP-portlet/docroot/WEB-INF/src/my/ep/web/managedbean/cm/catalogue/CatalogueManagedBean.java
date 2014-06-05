@@ -219,6 +219,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
 					itemNameFilterBean.setSearchField("itemName");
+					itemNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
 
