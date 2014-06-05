@@ -174,8 +174,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		  if(this.getManagedBean().getCtCommitteeMember() == null){
 			  this.getManagedBean().setCtCommitteeMember(new CtCommitteeMember());
-			  if(this.getManagedBean().getCtCommitteeMember().getUserId() == null){
-				  this.getManagedBean().getCtCommitteeMember().setUserId(new PmUser());				  
+			  if(this.getManagedBean().getCtCommitteeMember().getPmUser() == null){
+				  this.getManagedBean().getCtCommitteeMember().setPmUser(new PmUser());				  
 			  }
 			  if(this.getManagedBean().getCtCommitteeMember().getMemberRole() == null){
 				  this.getManagedBean().getCtCommitteeMember().setMemberRole(new PmParameter());
@@ -210,9 +210,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 			this.getManagedBean().setTaskName(res.getTaskName());
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
+			String[] outcome = new String[res.getAction().length];
+			int i = 0;
+			if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) || 
+				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) ||
+				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) || 
+				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
+				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+				outcome = new String[res.getAction().length+1];
+				outcome[i++] = BpmOutcomeConst.BPM_SAVE;
+			}
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
 			}
@@ -1302,7 +1309,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     committeeMember.setCtAmendment(this.getManagedBean().getContractVer().getCtAmendment());
 				     committeeMember.setMemberRole(new PmParameter());
 				     committeeMember.setPnp(user.isPMP());
-				     committeeMember.setUserId(user);
+				     committeeMember.setPmUser(user);
 				     committeeMember.setExternalUser(true);
 			         memberList.add(committeeMember);					     
 			    }
