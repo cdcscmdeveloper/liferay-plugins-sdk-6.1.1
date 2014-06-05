@@ -212,7 +212,6 @@ public class SimpleQuoteBackingBean extends
 						prodTpl.setTplSpecQuestions(productQuestions);
 						productTemplateSpecBean.setSpecMaster(prodTpl);
 						getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
-						
 						getManagedBean().setProductFlag(Boolean.TRUE);
 					}
 				}
@@ -687,9 +686,7 @@ public class SimpleQuoteBackingBean extends
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
 		}
-		procurementTypeEvent();
-		// update suppCriteria
-		// RequestContext.getCurrentInstance().update("suppCriteria");
+		
 	}
 	
 	/**
@@ -1380,6 +1377,9 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		procurementTypeEvent();
+		// update suppCriteria
+		// RequestContext.getCurrentInstance().update("suppCriteria");
 	}
 	
 	public void reset() {
