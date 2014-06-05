@@ -14,10 +14,14 @@
 		 	  <p:inputText for="physicalNo" value="#{amendmentBackingBean.managedBean.ctContract.contractPhysicalNo}" disabled="true" style="width:170px;" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
-				value="#{amendmentBackingBean.convertTime(amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
+				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
 			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
-				value="#{amendmentBackingBean.convertTime(amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
+				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  </p:inputText>
 			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
