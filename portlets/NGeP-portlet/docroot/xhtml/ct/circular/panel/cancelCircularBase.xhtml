@@ -23,31 +23,23 @@
 	    			</td>
 	    		</tr>
 	    	</table>			
-			<table style="width: 99%; margin-left: 25px;">
-				<tr style="margin-button: 10px;">
+			<table style="width: 99%; margin-left: 0px;" class="header-info">
+				<tr style="margin-button: 0px;">
 					<td>
-						<h6 style="color: blue;">
 							<p:outputLabel value="Cancel Circular Request Id" />
-						</h6>
 					</td>
 					<td>
-						<h6>
 							<p:inputText size="20"
 								value="#{panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId == null ? '-- System Generated --':panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId}"
 								disabled="true" />
-						</h6>
 					</td>
 					<td>
-						<h6 style="color: blue;">
 							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-						</h6>
 					</td>
 					<td>
-						<h6>
 							<p:inputText size="20"
 								value="#{panelBackingBean.getStatusDescById(panelBackingBean.managedBean.cancelCircularReq.status.statusId)}"
 								disabled="true" />
-						</h6>
 					</td>
 				</tr>
 			</table>	    	

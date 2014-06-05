@@ -439,7 +439,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-				
+					return "circularBase.xhtml?faces-redirect=true";
 				}
 			}
 		  }catch (Exception e) {

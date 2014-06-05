@@ -21,7 +21,8 @@
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>
 			 <p:column headerText="Status">
-				<p:selectOneMenu  value="#{data.recordStatusFlg}" style="width:70px;">
+				<p:selectOneMenu  value="#{data.recordStatusFlg}" 
+				disabled="#{!centralContractBackingBean.managedBean.updateAction}" style="width:70px;">
 				  <f:selectItem itemValue="0" itemLabel="Inactive" />
 			      <f:selectItem itemValue="1" itemLabel="Active" />
 			    </p:selectOneMenu>
@@ -52,7 +53,8 @@
 			       <p:column headerText="Nilai Pesanan Minimum (RM)"> <p:inputText value="#{itemVar.minimumOrderAmt}" />   </p:column>
 			       <p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;"><p:inputText value="#{itemVar.maxProcureAmt}" /></p:column>	
 			       <p:column headerText="Status">
-			     	<p:selectOneMenu  value="#{itemVar.recordStatusFlg}" style="width:70px;">
+			     	<p:selectOneMenu  value="#{itemVar.recordStatusFlg}" 
+			     	disabled="#{!centralContractBackingBean.managedBean.updateAction}" style="width:70px;">
 				        <f:selectItem itemValue="0" itemLabel="Inactive" />
 			            <f:selectItem itemValue="1" itemLabel="Active" />
 			        </p:selectOneMenu>

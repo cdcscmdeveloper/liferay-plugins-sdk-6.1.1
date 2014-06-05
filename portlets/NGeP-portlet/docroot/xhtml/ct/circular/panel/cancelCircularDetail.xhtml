@@ -28,11 +28,6 @@
 			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
 				<h:outputText value="#{data.circularVer.name}" />
 			</p:column>
-			<p:column headerText="Update Effective Date" >
-				<h:outputText value="#{data.circularVer.extendStartDate}">
-				    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
@@ -57,12 +52,7 @@
 					</p:column>
 					<p:column headerText="Circular Name">
 						<h:outputText value="#{data.name}" />
-					</p:column>
-					<p:column headerText="Update Effective Date">
-						<h:outputText value="#{data.extendStartDate}">
-						  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
-					</p:column>												
+					</p:column>									
 				</p:dataTable>
 				<f:facet name="footer">
 					<div class="ppRightBtn"> 

@@ -225,12 +225,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(getManagedBean().getCancelledCircularList()==null) {
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircularVer.ctCircular.circularType", 
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
 						SearchOperator.OPERATOR_EQUALS.value(), 
 						ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
 				reqDTO.setCancelCircularSearchBean(searchBean);
+				 reqDTO.setFilterStatusId(ContractStatusConst.CQ_APPROVED);
 				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
 				if(resDTO.isSuccessful()) {
 					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
@@ -325,7 +326,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				reqDTO.setCircularVerSearchBean(searchBean);
 				reqDTO.setFilterStatusId(getManagedBean().getSearchStatusId());
 				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
 					return resDTO.getCircularVerResultBean();
@@ -368,7 +369,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 		ICircularSO circularSO = null;
 		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			//validateCircular(outcome);
 			
 			CtCircular circular = this.getManagedBean().getCircular();
@@ -403,7 +404,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircularVer(circularVer);
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
-				if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
 					String messageId = MessageConst.INFO_700005;
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
@@ -429,12 +429,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-				
+					return "circularBase.xhtml?faces-redirect=true";
 				}
 			  }else {
 					throw new EpException("Failed.");
 			  }
-			}
 		  }catch (Exception e) {
 			log.error("Exception>>", e);
 			e.printStackTrace();
@@ -676,7 +675,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
 		try {
-			IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
+			IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStateSO.class);
 			StateReqDTO reqDTO = new StateReqDTO();
 			reqDTO.setCountryId(1l);
 			StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
