@@ -115,6 +115,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	boolean	panel;
 	private boolean zonal;
     private boolean zoneFlag;
+    private boolean saveBtnFlag= Boolean.TRUE;
 
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
@@ -153,6 +154,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean serviceFlag;
 	private SmSupplier smSupplier;
 	private int selectedTabIndex;
+	
 	
 	
 	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
@@ -205,7 +207,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 				}
 
 				if(getProductOrService() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.specMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.tplSpecMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
 				}
 
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -1314,6 +1316,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCompareSuppliers(List<SmSupplier> compareSuppliers) {
 		this.compareSuppliers = compareSuppliers;
+	}
+	/**
+	 * @return the saveBtnFlag
+	 */
+	public boolean isSaveBtnFlag() {
+		return saveBtnFlag;
+	}
+	/**
+	 * @param saveBtnFlag the saveBtnFlag to set
+	 */
+	public void setSaveBtnFlag(boolean saveBtnFlag) {
+		this.saveBtnFlag = saveBtnFlag;
 	}
 	
 }

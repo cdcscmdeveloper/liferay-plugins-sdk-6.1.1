@@ -38,7 +38,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private	List<ScRequestSupplierItem>	supplierItems	=	new ArrayList<ScRequestSupplierItem>();
 	
     private String justificationType;
-    private boolean visibleOrderQty = Boolean.FALSE;
+    private boolean visibleOrderQty;
     private boolean editFlag; // flat for editing fields in pid
     private boolean pidBtnFlag = Boolean.TRUE;
     
