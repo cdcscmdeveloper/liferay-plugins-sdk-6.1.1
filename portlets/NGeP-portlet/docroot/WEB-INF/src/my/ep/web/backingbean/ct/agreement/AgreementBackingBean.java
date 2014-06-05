@@ -259,10 +259,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())) {
 					if(ctAgreementParty.getOrgProfile()==null) {
 					   ctAgreementParty.setOrgProfile(new PmOrgProfile());
-						if(ctAgreementParty.getOrgProfile().getParentOrgProfile() == null){
-						   ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
-						}
 					}
+					if(ctAgreementParty.getOrgProfile().getParentOrgProfile() == null){
+					   ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
+					}					
 					this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 				} else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId())) {
 					this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
