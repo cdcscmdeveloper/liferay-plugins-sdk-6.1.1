@@ -19,7 +19,6 @@ import my.ep.dto.authorization.mergerules.DataRestrValueResDTO;
 import my.ep.dto.authorization.mergerules.FieldRestrValueReqDTO;
 import my.ep.dto.authorization.mergerules.FieldRestrValueResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmDataRestrValue;
 import my.ep.persistence.entity.pm.authorization.PmFieldRestrValue;
 import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
 import my.ep.type.aut.ScreenAuthority;
@@ -71,10 +70,10 @@ public class SecurityFilterUtil {
 
 				UIComponent component = facesScopes.findComponentById(viewroot,
 						componentId);
-				log.info("veiwRoot : " + viewroot);
-				log.info("componentId : " + componentId);
-				log.info("CompMap : " + compMap);
-				log.info("Component : " + component);
+				System.out.println("veiwRoot : " + viewroot);
+				System.out.println("componentId : " + componentId);
+				System.out.println("CompMap : " + compMap);
+				System.out.println("Component : " + component);
 
 				if (component != null) {
 					mergeBizRules(compMap, component);
@@ -127,14 +126,14 @@ public class SecurityFilterUtil {
 						if (fieldRestrValues != null) {
 							for (PmFieldRestrValue fieldRestrData : fieldRestrValues) {
 								screenRestr = fieldRestrData.getPmScreenRestr();
-								log.info("ScreenCode : "
+								System.out.println("ScreenCode : "
 										+ screenRestr.getScreenCode());
-								log.info("RoleCode : "
+								System.out.println("RoleCode : "
 										+ fieldRestrData.getPmRole()
 												.getRoleCode());
-								log.info("UserID ; "
+								System.out.println("UserID ; "
 										+ requestDTO.getUserId());
-								log.info("ComponentID : "
+								System.out.println("ComponentID : "
 										+ fieldRestrData.getPmScreenRestr()
 												.getComponentId());							
 
@@ -282,38 +281,53 @@ public class SecurityFilterUtil {
 					dataRestrictionSO = (IDataRestrValueSO) BusinessDelegate
 							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IDataRestrValueSO.class);			
+
 					DataRestrValueReqDTO requestDTO = new DataRestrValueReqDTO();
 					requestDTO.setScreenId(screenId);
 					requestDTO.setUserId(userId.toString());
 
 					DataRestrValueResDTO dataRestrictionResDTO = dataRestrictionSO
 							.getRestrictionData(requestDTO);
-					List<PmDataRestrValue> screenMetadatas = dataRestrictionResDTO
+					List<PmScreenRestr> screenMetadatas = dataRestrictionResDTO
 							.getDataRestrValues();
 					Map<String, List<PmScreenRestr>> screenMetadataMap = new HashMap<String, List<PmScreenRestr>>();
 
 					if (screenMetadatas != null) {
 						String componentId;
 						List<PmScreenRestr> componentScreenMetadatas;
-						for(PmDataRestrValue pmDataRestrValue : screenMetadatas){
-							componentId = pmDataRestrValue.getPmScreenRestr().getComponentId();
-							if(!StringUtils.isBlank(componentId)){
-								componentScreenMetadatas = screenMetadataMap.get(componentId);
-								if(componentScreenMetadatas == null){
+
+						for (PmScreenRestr screenMetadata : screenMetadatas) {
+							componentId = screenMetadata
+									.getComponentId();
+
+							if (!StringUtils.isBlank(componentId)) {
+								componentScreenMetadatas = screenMetadataMap
+										.get(componentId);
+
+								// Check based on component id
+								// (ScreenFilterObject) to create a new List
+								if (componentScreenMetadatas == null) {
 									componentScreenMetadatas = new ArrayList<PmScreenRestr>();
-									componentScreenMetadatas.add(pmDataRestrValue.getPmScreenRestr());
-									screenMetadataMap.put(componentId,componentScreenMetadatas);
-									debugLogger(new StringBuilder()
-									  .append("componentId:") .append(componentId)
-									  .append(", filterDataType:")
-									  .append(pmDataRestrValue.getPmScreenRestr().getPropertyName())
-									  .append(", filterDataSql:")
-									  .append(pmDataRestrValue.getPmScreenRestr().getDataRestrType()));
+
+									// Put to the map with the key as
+									// component id (ScreenFilterObject)
+									screenMetadataMap.put(componentId,
+											componentScreenMetadatas);
 								}
+
 								
+								  debugLogger(new StringBuilder()
+								  .append("componentId:") .append(componentId)
+								  .append(", filterDataType:")
+								  .append(screenMetadata.getPropertyName())
+								  .append(", filterDataSql:")
+								  .append(screenMetadata.getDataRestrType()));
+								 
+
+								// Put to the list
+								componentScreenMetadatas.add(screenMetadata);
 							}
 						}
-					
 					}
 
 					// Put to the map with the key as screen id in
