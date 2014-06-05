@@ -734,7 +734,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 
-				if(this.getManagedBean().isNewSegment()){
+				if(this.getManagedBean().getSelectedLovUnspscSegment().isBrandNew()){
 					CmUnspsc unspsc = new CmUnspsc();
 					unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());	
 					unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscKey());
@@ -748,8 +748,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					//resDTO =  unspscSO.saveUnspsc(reqDTO);
 				}
 				////// start family
-				System.out.println("***this.getManagedBean().isNewFamily()"+this.getManagedBean().isNewFamily());
-				if(this.getManagedBean().isNewFamily()){
+			
+				if(this.getManagedBean().getSelectedLovUnspscfamily().isBrandNew()){
 					CmUnspsc unspsc = new CmUnspsc();
 					System.out.println("this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()"+this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());
 					unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());	
@@ -765,8 +765,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				}
 
 				/////start class	
-				System.out.println("***this.getManagedBean().isNewClass()"+this.getManagedBean().isNewClass());
-				if(this.getManagedBean().isNewClass()){
+				
+				if(this.getManagedBean().getSelectedLovUnspscClass().isBrandNew()){
 					CmUnspsc unspsc = new CmUnspsc();
 					System.out.println("this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()"+this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());
 					unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());	
@@ -782,8 +782,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 				}
 				////start commodity
-				System.out.println("***this.getManagedBean().isNewCommodity()"+this.getManagedBean().isNewCommodity());
-				if(this.getManagedBean().isNewCommodity()){
+			
+				if(this.getManagedBean().getSelectedLovUnspsc().isBrandNew()){
 					CmUnspsc unspsc = new CmUnspsc();
 					unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());	
 					unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspsc().getUnspscKey());
@@ -820,7 +820,26 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 				reqDTO.setCodeCommittees("user003,user051");
+				
+				
+				if(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle()==null || this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle()==null
+						|| this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle() == null ||  this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle() == null){
+					
+					FacesContext facesContext = FacesContext.getCurrentInstance();
 
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715008,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+
+					return "reviewBeforeCreateTempCode";
+					
+					
+				}
+				
+				
+				
+				
+				
+			
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}else if(outcome.equalsIgnoreCase("RECOMMEND")){
 
