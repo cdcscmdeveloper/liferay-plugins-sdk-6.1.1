@@ -33,7 +33,7 @@
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" >
-				<f:setPropertyActionListener value="#{CtStatusConst.approved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
+				<f:setPropertyActionListener value="#{CtStatusConst.pqApproved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
 			</p:commandButton>
 			<p:commandButton value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
 				action="#{panelBackingBean.deleteCancelReqCircular()}" update="cancelCcrDt,cancelCcrPnl" />				

@@ -86,6 +86,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean editZone;
 	
 	private TreeNode selectedZoneTree;
+	private boolean buttonHideActive;
+	private Long itemCategoryId;
+	private Long panelCoverageId;
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -405,5 +408,27 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.editZone = editZone;
 	}
 
-	
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
+	}
+
+	public Long getItemCategoryId() {
+		return itemCategoryId;
+	}
+
+	public void setItemCategoryId(Long itemCategoryId) {
+		this.itemCategoryId = itemCategoryId;
+	}
+
+	public Long getPanelCoverageId() {
+		return panelCoverageId;
+	}
+
+	public void setPanelCoverageId(Long panelCoverageId) {
+		this.panelCoverageId = panelCoverageId;
+	}
 }

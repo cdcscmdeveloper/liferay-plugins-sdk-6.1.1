@@ -14,6 +14,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		   <ac:paginator for="panelItemDt" />
             <p:ajax event="rowSelect" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"
 		     process="@this"  listener="#{panelBackingBean.setPanelListner()}"/>	
+		     <p:column>
+		     <p:selectBooleanCheckbox value="#{data.selectedCheckBox}"
+				styleClass="myCustomChekBox">
+					<p:ajax event="change" update="@([id$=deleteItemBtn])"
+						listener="#{panelBackingBean.selectOneCheckboxSelect}"></p:ajax>
+			 </p:selectBooleanCheckbox>
+		     </p:column>
 			  <p:column headerText="Panel Coverage" style="width:100px;" >
 			     <p:selectOneMenu value="#{data.panelCoverageId.parameterId}" style="width:100px;" >
 			      <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
@@ -55,11 +62,33 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<ac:lovPopup />
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
+		<p:commandButton value="Bulk Update" process="@this" icon="ui-icon-add" onsuccess="bulkUpdateDlg.show()"/>
 		   <p:commandButton value="Add" process="@all" icon="ui-icon-add"
 		      update="@([id$=panelItemDt])" action="#{panelBackingBean.addPanelItem()}"/>
 		   <p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete"  process="@this"
-			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.selectedPanelItems == null}" />
-	    </div>	
+			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" />
+	    </div>
+	    <p:dialog id="bulkUpdateDlg" header="Bulk Update" resizable="false"
+		    styleClass="screen-title" widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
+            <h:panelGrid columns="3">
+               <f:verbatim></f:verbatim>
+              <p:outputLabel  value="Panel Coverage"/>
+                 <p:selectOneMenu value="#{panelBackingBean.managedBean.panelCoverageId}" style="width:100px;margin-bottom: 5px;">
+			        <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/> 
+			     </p:selectOneMenu>
+			     <f:verbatim></f:verbatim>
+			      <p:outputLabel  value="Item Category"/>
+			     <p:selectOneMenu value="#{panelBackingBean.managedBean.itemCategoryId}" style="width:100px;">
+			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+			     </p:selectOneMenu>
+			  </h:panelGrid>
+			  <p:spacer height="15"/>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=panelItemDt])"
+		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"/>
+			 <p:commandButton value="No" icon="ui-icon-reject" onclick="bulkUpdateDlg.hide();" type="button" />
+		   </div>
+        </p:dialog>  	
 		<p:dialog id="delItemDlg" header="Delete Confirmation" resizable="false"
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="325" height="90">  
             <h:panelGrid columns="3">
@@ -69,7 +98,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=itemId])"
-		       process="@all" actionListener="#{panelBackingBean.deletePanelItem()}" onclick="delItemDlg.hide();"/>
+		       process="@all" actionListener="#{panelBackingBean.removeAddRow()}" onclick="delItemDlg.hide();"/>
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
