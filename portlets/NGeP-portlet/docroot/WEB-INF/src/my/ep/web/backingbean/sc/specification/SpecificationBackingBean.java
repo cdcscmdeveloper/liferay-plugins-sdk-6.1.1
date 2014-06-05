@@ -2358,7 +2358,7 @@ public class SpecificationBackingBean extends
 
 		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
-		scQt.setItemType("P");
+		//scQt.setItemType("P");
 		PmParameter parameter = scQt.getPmProcurementCategory();
 		if (null != parameter && null == parameter.getParameterId()) {
 			scQt.setPmProcurementCategory(null);
