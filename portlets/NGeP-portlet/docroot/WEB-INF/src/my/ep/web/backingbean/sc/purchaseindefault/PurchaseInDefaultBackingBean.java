@@ -88,6 +88,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 
@@ -372,21 +373,20 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 * Event for justification type drop down in pid
 		 */
 		public void justificationTypeEvent() {
-			log.info("justificationTypeEvent"); 
+			log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType()); 
 			if(getManagedBean().getPurchaseInDefault().getReasonType() !=null){
 			if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_SS)) {
-				getManagedBean().setVisibleOrderQty(false);
-				getManagedBean().setVisibleRemarkAttach(true);
+				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
 				
 			} else if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
-				getManagedBean().setVisibleOrderQty(true);
-				getManagedBean().setVisibleRemarkAttach(true);
-				
+				getManagedBean().setVisibleOrderQty(Boolean.TRUE);
+			
 			} else {
-				getManagedBean().setVisibleOrderQty(false);
-				getManagedBean().setVisibleRemarkAttach(true);
+				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
 			}
 			}
+			// update order qty
+			RequestContext.getCurrentInstance().update("reqDtlId");
 		}
 		
 	   /**
