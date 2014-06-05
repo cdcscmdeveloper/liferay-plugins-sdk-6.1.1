@@ -73,7 +73,7 @@
 						<h:outputText value="#{doItems.orderedQty}"
 							style="text-align:right" />
 					</p:column>
-					<p:column headerText="Deliverey &lt;br /&gt; Qty.">
+					<p:column headerText="Delivery &lt;br /&gt; Qty.">
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
 							
 							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product' and createDOBackingBean.managedBean.docType eq 'PR'}">
@@ -91,7 +91,7 @@
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
 						</p:inputText>
 					</p:column>
-					<p:column headerText="Deliverey &lt;br /&gt; Amt.(RM)">
+					<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)">
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
 								rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product'}">

@@ -216,6 +216,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 			paymentAdvice.setFlInvoice(resDTO.getInvoice());
+			paymentAdvice.setFeeAmt(resDTO.getInvoice().getFeeAmt());
 			paymentAdvice.setFlRequest(resDTO.getInvoice().getFlRequest());
 			paymentAdvice.setFulfilmentOrder(resDTO.getInvoice().getFlFulfilmentOrder());
 			System.out.println("fulfilment req id::: "+paymentObj.getFlRequestId());
@@ -230,16 +231,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setOutComes(res.getAction());
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
-			//parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
+			parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
 			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			
 			VotFundReqDTO votFundReqDTO = new VotFundReqDTO();//TODO supposely pm should have a transaction fee vot fund and GOSODO
 			votFundReqDTO.setVotFundId(125L);
 			VotFundResDTO votFundResDTO = votFundSO.retrieveVotFundByFundId(votFundReqDTO);
-			
-			GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-			glAccountReqDTO.setOrgProfileId(1L);
-			GlAccountResDTO glAccountResDTO= glAccountSO.retrieveGlAccountList(glAccountReqDTO);
 			
 			FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
 			paymentDeduction.setFlPaymentAdvice(paymentAdvice);
@@ -247,7 +244,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			paymentDeduction.setDeductionAmt(paymentAdvice.getFeeAmt());
 			paymentDeduction.setDeductionDesc(" ");
 			paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
-			paymentDeduction.setPmGlAccount(glAccountResDTO.getGlAccountList().get(0));
+			paymentDeduction.setPmGlAccount(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmGlAccounts().get(0));
+			paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
 			paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
 
 			// For PO No Deduction Panel 

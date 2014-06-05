@@ -603,7 +603,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					flItemAddr.setUnitPrice(unitPrice2);
 					flItem.setUnitPrice(unitPrice2);
 				}
-				//getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
 				
 				//flItemAddr.setItemType("P");
 				//flItemAddr.setOrderedAmt(orderedAmt);
@@ -1340,7 +1339,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getPmPrgActivity();
 		getManagedBean().getVotFundId();
 		updateSelectedTreeNodes();
-		
+		Map<Long, FlFulfilmentItem> flItemMap = new HashMap<Long, FlFulfilmentItem>();
 			if(null == getManagedBean().getSelectedNodes()){
 				throw new EpException("Please Select Item Node.");
 				//(getManagedBean().getSelectedNodes().length >0 && null !=getManagedBean().getSelectedNodes())
@@ -1400,6 +1399,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							itemDelAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 							itemDelAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
+							if(flItemMap.get(itemDelAddress.getFlFulfilmentItem().getCmItem().getItemId()) ==  null){
+								getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(itemDelAddress.getFlFulfilmentItem());
+								flItemMap.put(itemDelAddress.getFlFulfilmentItem().getCmItem().getItemId(), itemDelAddress.getFlFulfilmentItem());
+							}
+							
 						}
 
 					}
