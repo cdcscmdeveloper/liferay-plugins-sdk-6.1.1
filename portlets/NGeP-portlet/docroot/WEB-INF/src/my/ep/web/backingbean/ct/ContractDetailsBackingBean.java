@@ -1270,6 +1270,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
+				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			}			
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
@@ -1309,6 +1313,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
             reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
+				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			}			
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
@@ -1358,7 +1366,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			AmendmentBackingBean amendBB = new AmendmentBackingBean();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
+				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			}
+			reqDTO.setContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			reqDTO.setUpdateAction(true);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -1383,19 +1395,28 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoUpdatePage(){
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
-		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-		reqDTO.setUpdateAction(true);
-		
-	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
-	    setValidateContractField(resDTO);
-	    
-	    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
-	    getManagedBean().setUpdateContract(true);
-        getManagedBean().setViewContract(false);
-		return CONTRACT_PAGE;
+		IContractSO contractSO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
+				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			}		
+			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			reqDTO.setUpdateAction(true);
+			
+		    ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+		    setValidateContractField(resDTO);
+		    
+		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
+		    getManagedBean().setUpdateContract(true);
+	        getManagedBean().setViewContract(false);
+			return CONTRACT_PAGE;
+		} finally {
+			contractSO = null;
+		}
 	}
 	
 	public String gotoTerminateHistoryPage() {
