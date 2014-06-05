@@ -214,7 +214,7 @@
 
 										<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
 											id="sqId"
-											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false ,null)}"
+											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , true ,null)}"
 											rendered="#{supplierItem.circularNo ne null}"
 											disabled="#{supplierItem.circularNo eq null }">
 										</p:commandButton>
