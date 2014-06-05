@@ -38,8 +38,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private	List<ScRequestSupplierItem>	supplierItems	=	new ArrayList<ScRequestSupplierItem>();
 	
     private String justificationType;
-    private boolean visibleRemarkAttach = true;
-    private boolean visibleOrderQty = true;
+    private boolean visibleOrderQty = Boolean.FALSE;
     private boolean editFlag; // flat for editing fields in pid
     private boolean pidBtnFlag = Boolean.TRUE;
     
@@ -157,18 +156,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setJustificationType(String justificationType) {
 		this.justificationType = justificationType;
 	}
-	/**
-	 * @return the visibleRemarkAttach
-	 */
-	public boolean isVisibleRemarkAttach() {
-		return visibleRemarkAttach;
-	}
-	/**
-	 * @param visibleRemarkAttach the visibleRemarkAttach to set
-	 */
-	public void setVisibleRemarkAttach(boolean visibleRemarkAttach) {
-		this.visibleRemarkAttach = visibleRemarkAttach;
-	}
+	
 	/**
 	 * @return the visibleOrderQty
 	 */
