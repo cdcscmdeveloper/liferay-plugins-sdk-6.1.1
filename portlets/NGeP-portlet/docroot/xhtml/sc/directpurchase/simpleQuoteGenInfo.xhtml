@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="sqinfoId" header="SIMPLE QUOTE INFORMATION" toggleable="true">
 	<p:spacer height="7px" />
-	  <table style="width:0%;">
+	  <table style="width:100%;">
 	      <tr>
 			<td colspan="4"><p:outputPanel>
-				<table style="width:0%">
+				<table style="width:100%">
 				    <tr>
 					    <c:if test ="#{simpleQuoteBackingBean.managedBean.pmOrgProfile.brandNew}">
 						 <td style="width: 150px">
@@ -68,7 +68,7 @@
 						value="#{simpleQuoteBackingBean.managedBean.procurementType}">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
-							<p:ajax event="change" update="@([id$=tabViewId])" 
+							<p:ajax event="change" update="@([id$=justId])" 
 							listener="#{simpleQuoteBackingBean.procurementTypeEvent}" process="@this" />
 					</p:selectOneRadio>
 					<p:message id="procTypeMsg" for="procurementType" display="icon" />
@@ -95,7 +95,7 @@
 				   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
 					<td style="vertical-align:top; text-align:left;"><p:outputLabel
 							value="#{lbl['lbl.sc.just.rmks']}" /></td>
-					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.requestNoteDtl.justification}"
+					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 							rows="3" cols="122" style="margin-bottom: 5px;" /></td>
 				 </ui:fragment>
 			    </tr>
@@ -111,7 +111,7 @@
 				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="false">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="@([id$=tabViewId])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
+						<p:ajax event="change" update="@([id$=tabMainMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
 					</p:selectOneRadio>
 					<p:message id="zonalMsg" for="zonal" display="icon" /></td>
 			</tr>

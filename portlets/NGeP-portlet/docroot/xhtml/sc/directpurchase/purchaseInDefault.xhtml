@@ -27,23 +27,30 @@
 	 <table>
 	        <tr>
 			     <td colspan="4" style="width: 250px;"><p:outputPanel>
-				 <table style="width: 0%">
+				 <table style="width: 90%">
 				  <tr>
  				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.selectedPmOrgProfile.brandNew}">
  				     <td style="width: 250px;">
 						    <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /></td>
-					 <td> <p:selectOneMenu id="ptjName" required="true" label="#{lbl['lbl.sc.purchase.in.default.ptj.name']}"
-						     value="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId}"
-						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
-						     <f:selectItem itemLabel="- Select One -"> </f:selectItem>
-						  <f:selectItems 
-							   value="#{purchaseInDefaultBackingBean.managedBean.ptjDropdown}"
-							   var="pmOrgProfile"
-							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							   itemValue="#{pmOrgProfile.orgProfileId}" />
-					</p:selectOneMenu>
+					 <td> 
+					  <table>
+					    <tr>
+						 <td> 
+						   <p:selectOneMenu id="ptjName" required="true" label="#{lbl['lbl.sc.purchase.in.default.ptj.name']}"
+						       value="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId}"
+						       styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
+						       <f:selectItem itemLabel="- Select One -"> </f:selectItem>
+						       <f:selectItems 
+							      value="#{purchaseInDefaultBackingBean.managedBean.ptjDropdown}"
+							      var="pmOrgProfile"
+							      itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+							     itemValue="#{pmOrgProfile.orgProfileId}" />
+					        </p:selectOneMenu></td>
+							<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
+							</tr>
+						</table>
 					</td>
-					<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
+					
 			    	</ui:fragment>
 				</tr>
 				</table>
@@ -124,28 +131,37 @@
 	<p:panel header="REQUEST DETAIL" toggleable="true"  id="reqDtlId">
 	   <p:spacer height="3px"/>
 	      <h:panelGroup>
-			<table style="width:0%">
+			<table style="width:90%">
 			<tr>
 			   <td style="width: 250px;"><p:outputLabel
 								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
-				<td><p:selectOneMenu id="justId" label="#{lbl['lbl.sc.purchase.in.default.just']}" disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"  required="true"
-					value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}" style="margin-bottom: 5px;">
-					<f:selectItems
-							value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
-					<p:ajax event="change" update="reqDtlId"  
-						listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" process="@all" />
-				</p:selectOneMenu>
-			   <p:commandLink style="text-align:left">
-			        <p:graphicImage 
-							value="/resources/ep/images/design/document.png" height="18" width="18"/>
-			    </p:commandLink> 
-			  </td>
-			  <td><p:message id="justIdMsg" for="justId" display="icon" /></td>
-		   </tr>
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneMenu id="justId"
+										label="#{lbl['lbl.sc.purchase.in.default.just']}"
+										disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
+										required="true"
+										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}"
+										style="margin-bottom: 5px;">
+										<f:selectItems
+											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
+										<p:ajax event="change" update="reqDtlId" process="@form" 
+											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
+									</p:selectOneMenu> <p:commandLink style="text-align:left">
+										<p:graphicImage
+											value="/resources/ep/images/design/document.png" height="18"
+											width="18" />
+									</p:commandLink></td>
+								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 		</table>
 	   </h:panelGroup>
 	
-	  <h:panelGroup id="orderQty" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
+	  <p:panel id="orderQty" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
 		 <table style="width: 90%">
 			 <tr>
 			  <td style="width: 250px;"><p:outputLabel
@@ -155,9 +171,9 @@
 			       </td>
 			</tr>
 		</table>
-	 </h:panelGroup>
+	 </p:panel>
 
-	 <h:panelGroup id="rmkId" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleRemarkAttach}">   
+	 <h:panelGroup id="rmkId">   
 		   <table style="width: 90%">
 			 <tr>
 			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="Remark"/></td>
@@ -192,7 +208,7 @@
 		</table>
 	  </h:panelGroup>
 	  
-	 <h:panelGroup id="attachmentId" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleRemarkAttach}">
+	 <h:panelGroup id="attachmentId">
 	   <table style="width: 90%">
 		<tr>
 			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
