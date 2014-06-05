@@ -822,8 +822,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				reqDTO.setCodeCommittees("user003,user051");
 				
 				
-				if(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle()==null || this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle()==null
-						|| this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle() == null ||  this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle() == null){
+				if(!(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle()!=null && this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle().trim().length()>0)
+						|| !(this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle()!=null && this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle().trim().length()>0)
+						|| !(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle() != null && this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle().trim().length()>0)
+						||  !(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle() != null && this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle().trim().length()>0)){
 					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 
