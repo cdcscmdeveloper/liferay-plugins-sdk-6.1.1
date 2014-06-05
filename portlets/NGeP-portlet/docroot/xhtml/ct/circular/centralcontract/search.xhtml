@@ -48,12 +48,12 @@
 				</p:column>
 				<p:column headerText="Circular Start Date" >
 					<h:outputText value="#{data.startDate}" >
-						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Circular End Date" >
 					<h:outputText value="#{data.endDate}" >
-						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Status" >
