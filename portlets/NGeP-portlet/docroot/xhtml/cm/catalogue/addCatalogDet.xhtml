@@ -238,15 +238,15 @@
 					activeIndex="#{catalogueBackingBean.managedBean.pricingTabIndex}">
 
 
-					<p:tab title="Normal">
+					<p:tab title="#{lbl['lbl.cm.normal']}">
 
 						<p:tabView id="normalId"
 							activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
 
-							<p:tab title="Standard">
+							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTab.xhtml" />
 							</p:tab>
-							<p:tab title="Promotion">
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
 								<ui:include src="promotionTab.xhtml" />
 							</p:tab>
 
@@ -256,16 +256,16 @@
 
 					</p:tab>
 
-					<p:tab title="Tier">
+					<p:tab title="#{lbl['lbl.cm.tier']}">
 
 						<p:tabView id="tierId"
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
 
 
-							<p:tab title="Standard">
+							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTierTab.xhtml" />
 							</p:tab>
-							<p:tab title="Promotion">
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
 								<ui:include src="pricingPromotionTierTab.xhtml" />
 							</p:tab>
 
@@ -276,16 +276,16 @@
 					</p:tab>
 
 
-					<p:tab title="Zonal">
+					<p:tab title="#{lbl['lbl.cm.zonal']}">
 
 						<p:tabView id="zonalId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
 
-							<p:tab title="Standard">
+							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
 
 							</p:tab>
-							<p:tab title="Promotion">
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
 								<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
 
 							</p:tab>
@@ -296,15 +296,15 @@
 
 					</p:tab>
 
-					<p:tab title="Zonal Tier">
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
 
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
-							<p:tab title="Standard">
+							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
 							</p:tab>
-							<p:tab title="Promotion">
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
 								<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
 
 							</p:tab>
