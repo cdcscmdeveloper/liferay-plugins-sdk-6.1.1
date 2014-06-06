@@ -104,7 +104,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_CONSULTANT = "J";
 	public static final String STYPE_CONTRACTOR = "K";
 	public static final String STYPE_BASIC = "B";
-	public static final String ACC_BASIC = "B";
+	public static final String ACC_BASIC = "O";
 	public static final String ACC_MOF = "M";
 	public static final String PERM_ADD = "P";
 	public static final String BUS_ADD = "C";
@@ -140,6 +140,15 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
+	//Site Visit
+	public static final String CAT_TYPE_TRANSPORTATION = "A";
+	public static final String CAT_TYPE_WORKSHOP = "B";
+	public static final String CAT_TYPE_INSURANCE = "I";
+	public static final String CAT_TYPE_DOCKYARD = "L";
+	public static final String CAT_TYPE_MANUFACTURING = "M";
+	public static final String CAT_TYPE_PRINTING = "PC";
+	public static final String CAT_TYPE_TRAVEL= "PG";
 
 	// PO and Approver
 	public static final String PO_HQ = "UPS_PO_HQ";
@@ -222,6 +231,7 @@ public class SupplierManagementConst {
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
+	public static final String MALAYSIA_CODE = "MY";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
@@ -423,6 +433,42 @@ public class SupplierManagementConst {
 
 	public String getBPM_VERIFY() {
 		return BPM_VERIFY;
+	}
+
+	public String getCAT_TYPE_TRANSPORTATION() {
+		return CAT_TYPE_TRANSPORTATION;
+	}
+
+	public String getCAT_TYPE_WORKSHOP() {
+		return CAT_TYPE_WORKSHOP;
+	}
+
+	public String getCAT_TYPE_INSURANCE() {
+		return CAT_TYPE_INSURANCE;
+	}
+
+	public String getCAT_TYPE_DOCKYARD() {
+		return CAT_TYPE_DOCKYARD;
+	}
+
+	public String getCAT_TYPE_MANUFACTURING() {
+		return CAT_TYPE_MANUFACTURING;
+	}
+
+	public String getCAT_TYPE_PRINTING() {
+		return CAT_TYPE_PRINTING;
+	}
+
+	public String getCAT_TYPE_TRAVEL() {
+		return CAT_TYPE_TRAVEL;
+	}
+
+	public String getACC_BASIC() {
+		return ACC_BASIC;
+	}
+
+	public String getACC_MOF() {
+		return ACC_MOF;
 	}
 
 }
