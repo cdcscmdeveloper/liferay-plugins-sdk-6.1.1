@@ -273,7 +273,7 @@ public class CommonApplBackingBean extends
 			System.out.println("********getTaskId********" + taskId);
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 
-			smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+			smApplBB.processDraftApplication(appl.getApplType(), Boolean.TRUE,
 					appl, mofResDto.getSmSupplier());
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
@@ -282,7 +282,7 @@ public class CommonApplBackingBean extends
 			// }
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				" Draft Maintain Account")) {
+				"Draft Maintain Account")) {
 			System.out
 					.println(" ******* The selected process name is  Draft Maintain Account******"
 							+ resDTO.getProcessName());
@@ -313,7 +313,7 @@ public class CommonApplBackingBean extends
 					.println("********Draft Register Account For New Mof********");
 			System.out.println("********getTaskId********" + taskId);
 
-			smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+			smApplBB.processDraftApplication(appl.getApplType(), Boolean.TRUE,
 					appl, mofResDto.getSmSupplier());
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);

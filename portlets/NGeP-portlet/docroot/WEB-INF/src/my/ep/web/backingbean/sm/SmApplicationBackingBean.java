@@ -194,6 +194,13 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void processDraftApplication(String applicationType,
+			boolean fromBpm, SmAppl appl, SmSupplier supp) {
+		proceedToApplication(applicationType, fromBpm, appl, supp);
+		//updateSmAppl(applicationType, "");
+
+	}
+
 	public String proceedToApplication(String applicationType) {
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
@@ -238,7 +245,8 @@ public class SmApplicationBackingBean extends
 				if (cannotProceedAlertMsg) {
 					return setExceptionNavigationForAppl(applicationType);
 				} else {
-
+					System.out.println("****** Before Clone supp id *****"
+							+ currSupp.getSupplierId());
 					resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
 							applicationType, smAppl.getSupplierType());
 					if (resDto.isErrorCaued()) {
@@ -246,7 +254,8 @@ public class SmApplicationBackingBean extends
 
 					}
 					smApplSupplier = resDto.getSmSupplier();
-
+					System.out.println(" *** After clone Supplier Id ******* "
+							+ smApplSupplier.getSupplierId());
 					resDto = retriveLatestDraftApplication(smApplSupplier,
 							applicationType);
 					if (resDto.isErrorCaued()) {
@@ -254,7 +263,11 @@ public class SmApplicationBackingBean extends
 					}
 
 					smAppl = resDto.getSmAppl();
-
+					System.out
+							.println("****** After retrieve the appl is ********"
+									+ smAppl.getApplId()
+									+ " *** Num ***"
+									+ smAppl.getApplNo());
 					// TODO Set default not null values -- End insert appl ---
 					// TODo Remove hard code later
 					smAppl.setApplCategoryType(null);
@@ -313,6 +326,9 @@ public class SmApplicationBackingBean extends
 					addrs.add(comAdd);
 					smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
 				}
+			} else {
+				System.out
+						.println("******** My Company Basic is null ********");
 			}
 
 			if (smAppl.getSmFacilities() != null
@@ -390,6 +406,7 @@ public class SmApplicationBackingBean extends
 			calcPersonnelListCount();
 			calculateCapital();
 			calculateBumiPercentageTotals();
+			updateSmAppl(applicationType, "");
 			return setNavigationForAppl(applicationType);
 
 			/*
@@ -999,10 +1016,11 @@ public class SmApplicationBackingBean extends
 				validSave = false;
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722507);
-			} else if (getManagedBean()
-					.getBusinessTypeVal()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+			} else if (getManagedBean().getBusinessTypeVal() != null
+					&& getManagedBean()
+							.getBusinessTypeVal()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 					&& getManagedBean().getSmapplShareHolders().size() < 2) {
 
 				validSave = false;
@@ -3396,7 +3414,16 @@ public class SmApplicationBackingBean extends
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
-
+			System.out.println(" ****** The task list id ss *********"
+					+ getManagedBean().getTaskId());
+			if (getManagedBean().getTaskId() != null
+					&& !getManagedBean().getTaskId().equalsIgnoreCase("")) {
+				System.out.println("***** Update the task *******");
+				reqDTO.setUpdateTask(true);
+				reqDTO.setTaskId(getManagedBean().getTaskId());
+			} else {
+				reqDTO.setUpdateTask(false);
+			}
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -3643,51 +3670,53 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void saveApplicationAsDraft(String applType, String pageType) {
+	public String saveApplicationAsDraft(String applType, String pageType) {
 		System.out.println("****** Save As Draft **********");
 		boolean valid = false;
 		try {
 			valid = validateBeforeSave(applType, pageType);
 			if (valid) {
-				valid = intializeSaveDraftBpm();
+				valid = intializeSaveDraftBpm(pageType);
 			}
 			if (!valid) {
 				System.out.println("******* Process No Valid ******");
 				throw new EpException(MessageConst.ERROR_722519);
+			} else {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_721204,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																		getManagedBean()
+																				.getSmAppl()
+																				.getApplType()),
+																getManagedBean()
+																		.getSmAppl()
+																		.getApplNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
-			if (valid) {
-				if (retriveLatestApplAfterUpdate(pageType)) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_700004,
-															new String[] {
-																	getParameterDesc(
-																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																			getManagedBean()
-																					.getSmAppl()
-																					.getApplType()),
-																	getManagedBean()
-																			.getSmAppl()
-																			.getApplNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-				}
-			}
+
 		}
 	}
 
-	private boolean intializeSaveDraftBpm() {
+	@SuppressWarnings("finally")
+	private boolean intializeSaveDraftBpm(String pageType) {
 		System.out.println("*********  intializeSaveDraftBpm ************* ");
 		IMofRegistrationSO regSo = null;
+		boolean valid = false;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 
@@ -3702,6 +3731,9 @@ public class SmApplicationBackingBean extends
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome);
+			if (reqDTO.getOutcome().equals("")) {
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			}
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -3709,12 +3741,20 @@ public class SmApplicationBackingBean extends
 			if (resDTO != null) {
 				System.out.println("******* From SO ******** "
 						+ resDTO.isBpmSuccess());
-				return resDTO.isBpmSuccess();
+				valid = resDTO.isBpmSuccess();
 			} else {
-				return false;
+				valid = false;
 			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			regSo = null;
+			if (valid) {
+				return retriveLatestApplAfterUpdate(pageType);
+			} else {
+				return valid;
+			}
+
 		}
 
 	}
@@ -5730,15 +5770,20 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void calcSumUpByPersonnel(SmPersonnel per) {
-		System.out.println("****** per country id ******"
-				+ per.getPmCountry().getCountryId());
-		// if (per.getPmCountry().getCountryCode() == null
-		// || per.getPmCountry().getCountryCode() == "") {
-		per.setPmCountry(retrievePmCountryById(per.getPmCountry()
-				.getCountryId()));
-		// }
-		System.out.println("******Afte per country code ******"
-				+ per.getPmCountry().getCountryCode());
+
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryId() != null) {
+			System.out.println("****** per country id ******"
+					+ per.getPmCountry().getCountryId());
+			if (per.getPmCountry().getCountryCode() == null
+					|| per.getPmCountry().getCountryCode().equalsIgnoreCase("")) {
+				per.setPmCountry(retrievePmCountryById(per.getPmCountry()
+						.getCountryId()));
+			}
+			System.out.println("******Afte per country code ******"
+					+ per.getPmCountry().getCountryCode());
+		}
+
 		PmParameter param = null;
 		if (per.getPmStaffRole() != null
 				&& per.getPmStaffRole().getPmParameterType() != null) {
@@ -5943,7 +5988,8 @@ public class SmApplicationBackingBean extends
 
 	private void setManagementCount(SmPersonnel per) {
 		// managment
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
@@ -5963,7 +6009,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setStaffEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
@@ -5983,7 +6030,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setSemiProfEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
@@ -6003,7 +6051,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setProfEnteredCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
@@ -6023,7 +6072,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setHigherMngmtCount(SmPersonnel per) {
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
@@ -6044,13 +6094,12 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setDirectorCount(SmPersonnel per) {
-		System.out.println("**** PM COOOUNTYR CODE *****"
-				+ per.getPmCountry().getCountryCode());
-		System.out.println("******* FROM CONST ***********"
-				+ SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		if (per.getPmCountry().getCountryCode() != null
+		if (per.getPmCountry() != null
+				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+			System.out.println("**** PM COOOUNTYR CODE *****"
+					+ per.getPmCountry().getCountryCode());
 			if (per.getBumiFlg() == 1) {
 				getManagedBean().getPersonCalc().setBodBumiCnt(
 						getManagedBean().getPersonCalc().getBodBumiCnt() + 1);
