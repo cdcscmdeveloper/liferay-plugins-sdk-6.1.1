@@ -22,6 +22,11 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	private SmSupplier smSupp;
 	private List<SmSupplierAnswer> smSuppAnswerLs;
 
+	private String mofCertSerialNo;
+	private String mofAccountNo;
+	private String effDate;
+	private String expDate;
+	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
 	}
@@ -46,4 +51,35 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 		this.smSuppAnswerLs = smSuppAnswerLs;
 	}
 
+	public String getMofCertSerialNo() {
+		return mofCertSerialNo;
+	}
+
+	public void setMofCertSerialNo(String mofCertSerialNo) {
+		this.mofCertSerialNo = mofCertSerialNo;
+	}
+
+	public String getMofAccountNo() {
+		return mofAccountNo;
+	}
+
+	public void setMofAccountNo(String mofAccountNo) {
+		this.mofAccountNo = mofAccountNo;
+	}
+
+	public String getEffDate() {
+		return effDate;
+	}
+
+	public void setEffDate(String effDate) {
+		this.effDate = effDate;
+	}
+
+	public String getExpDate() {
+		return expDate;
+	}
+
+	public void setExpDate(String expDate) {
+		this.expDate = expDate;
+	}
 }
