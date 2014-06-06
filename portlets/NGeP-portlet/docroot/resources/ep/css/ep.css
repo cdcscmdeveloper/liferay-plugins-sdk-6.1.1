@@ -4614,6 +4614,11 @@ label > span.ui-button-text {
 	font-weight: bold;
 }
 
+.header-info-text {
+	font-weight: normal;
+	text-align: left;
+}
+
 .compulsary-field label {
 	color: #FF0000;
 }
