@@ -20,8 +20,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="B" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="M" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
 							<p:ajax event="change" update="agreementId" />
 						</p:selectOneRadio></td>
 				</tr>
@@ -32,7 +32,7 @@
 			<p:scrollPanel style="height:300px;" mode="native">
 				<c:choose>
 					<c:when
-						test="${registrationBackingBean.managedBean.applType == 'M'}">
+						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.account.mof']}</b>
 						<br />
 						<p>Lorem ipsum dolor sit amet, ea sit tation exerci soluta. Ut

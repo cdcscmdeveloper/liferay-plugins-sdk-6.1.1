@@ -8,7 +8,7 @@
 	<p:outputPanel id="indBtnSubmit">
 		<c:if test="#{registrationBackingBean.managedBean.smAppl.brandNew}">
 			<c:if
-				test="#{registrationBackingBean.managedBean.smSupp.businessType == 'A'}">
+				test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 				<div align="right">
 					<p:commandButton value="Submit"
 						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])" />
@@ -21,7 +21,7 @@
 		<table class="customTbl">
 			<tr>
 				<c:if
-					test="#{registrationBackingBean.managedBean.smAppl.applType == 'M'}">
+					test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
 
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
@@ -32,9 +32,9 @@
 							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
-								itemValue="K" />
+								itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}"
-								itemValue="J" />
+								itemValue="#{SupplierManagementConst.STYPE_CONSULTANT}" />
 							<p:ajax event="change" update="busTypeId,outPnlRegForm" />
 						</p:selectOneMenu>
 						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" /></td>

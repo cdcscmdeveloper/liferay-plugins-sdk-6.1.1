@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +39,6 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.dto.NtfResponseDTO;
-import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -65,7 +61,6 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -99,7 +94,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		}
 //
 		if (this.getManagedBean().getApplType() == null) {
-			this.getManagedBean().setApplType("M");
+			this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
 		}
 		
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -276,7 +271,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return null;
 		}
 		
-		if (smAppl.getApplType().equals(SupplierManagementConst.STYPE_BASIC)) {
+		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
 		}
 
@@ -379,15 +374,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		/* Create Basic Account */
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		FacesScopes fs = new FacesScopes();
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			System.out.println("****Personnel Obj*******" + resDTO.getSmSupp().getSmAppls().get(0).getSmPersonnels().get(0));
-			SmPersonnel resSmPersonnel = resDTO.getSmSupp().getSmAppls().get(0).getSmPersonnels().get(0);
+			System.out.println("****User created Successfully*******");
+			//SmPersonnel resSmPersonnel = resDTO.getSmSupp().getSmAppls().get(0).getSmPersonnels().get(0);
 			
-			this.sendActivationEmail(resSmPersonnel);
+			//this.sendActivationEmail(resSmPersonnel);
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days.",
@@ -855,63 +854,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureById(reqDTO);
 
 		return resDTO.getBusinessNature();
-	}
-	
-	
-	public void sendActivationEmail(SmPersonnel smPersonnel){
-		System.out.println("initiateTask******");
-		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
-
-		NtfRequestDTO reqDTO = new NtfRequestDTO();
-		reqDTO.setTemplateId("399999");
-
-		List<String> emailLst = new ArrayList<String>();
-		emailLst.add(smPersonnel.getEmail());
-		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
-
-		List<String> subParaLst = new ArrayList<String>();
-		subParaLst.add("#SM#");
-		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
-		List<String> cntParaLst = new ArrayList<String>();
-		cntParaLst.add(smPersonnel.getName());
-		
-		//http://localhost:8080/web/dashboard/supplier-user-activation?pr=152&sp=377adeb4cd4096adc7ca64b533938cffc6294a9b3534f883b2336a26252cda9a
-		System.out.println("**********sendActivationEmail************" + smPersonnel.getSmAppl().getSmSupplier().getSmAppl().getSmSupplier().getSupplierId());
-		FacesScopes fs = new FacesScopes();
-		String suppId = String.valueOf(smPersonnel.getSmAppl().getSmSupplier().getSmAppl().getSmSupplier().getSupplierId());
-		String personnelId = smPersonnel.getPersonnelId().toString();
-		String tempPassword = String.valueOf((new Date()).getTime());
-		
-		String keyStr = suppId + personnelId + tempPassword;
-		String encrypKeyStr = SmCommonUtil.hashString(keyStr);
- 		String hashString = SmCommonUtil.hashString(suppId);
- 		
- 		String parameterString = "pr="+ personnelId + "&sp=" + hashString + "&kp=" + encrypKeyStr;
- 		
- 		System.out.println("********tempPassword***********" + tempPassword);
- 		System.out.println("********keyStr***********" + keyStr);
- 		System.out.println("********hashString***********" + hashString);
- 		
-		String activationUrl = "http://" + fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort() + SupplierManagementConst.ACTIVATION_PATH + parameterString;
-		
-		//cntParaLst.add("<a href=\"http://google.com.my\">dadfas</a><br />Hello&lt;add&gt;World<br />");
-		System.out.println("**Activation Url="+ activationUrl);
-		
-		cntParaLst.add("<a href="+ activationUrl + ">Click to activate</a><br />");
-		cntParaLst.add(smPersonnel.getIdentificationNo());
-		cntParaLst.add(tempPassword);
-		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-
-		try {
-			NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
-			System.out.println(resDTO.getStatusCode());
-			System.out.println(resDTO.getSeverity());
-			System.out.println(resDTO.getStatusDesc());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println("END");
-		
 	}
 
 	public void resetBusinessNatureSelection(){

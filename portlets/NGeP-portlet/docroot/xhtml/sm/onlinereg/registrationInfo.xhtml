@@ -15,7 +15,7 @@
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 			<c:choose>
 				<c:when
-					test="#{registrationBackingBean.managedBean.smSupp.businessType == 'A'}">
+					test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 					<ui:include
 						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
 				</c:when>
