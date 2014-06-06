@@ -800,8 +800,8 @@ public class LocationSingleton {
 
 						stateNode =new DefaultTreeNode("state",stateLocation, zoneNode);
 					} else {
-						/*stateNode = new DefaultTreeNode("state",stateLocation,
-									rootLocationTree);*/
+						stateNode = new DefaultTreeNode("state",stateLocation,
+									rootLocationTree);
 					}
 
 					//TreeNode stateNode = new DefaultTreeNode("state",stateLocation, zoneNode);
