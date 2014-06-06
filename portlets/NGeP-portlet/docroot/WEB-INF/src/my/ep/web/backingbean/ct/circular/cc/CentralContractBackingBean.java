@@ -340,26 +340,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	public boolean isCentralContractAdmin() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
 	public boolean isBPKApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
 	}
 	
 	private String getUserRole() {		
-		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value())) 
-			return RoleCode.BPK_CCA_HQ.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()))
-			return RoleCode.BPK_CCA_SA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value()))
-			return RoleCode.BPK_CCA_SK.value();		
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
+			return RoleCode.BPK_CCA.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
 			return RoleCode.BPK_APPROVER.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()))
-			return RoleCode.BPK_APPROVER_SA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value()))
-			return RoleCode.BPK_APPROVER_SK.value();	
 		else 
 			return null;
 	}

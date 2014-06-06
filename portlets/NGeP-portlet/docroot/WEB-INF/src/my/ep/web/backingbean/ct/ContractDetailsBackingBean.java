@@ -1071,8 +1071,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			return RoleCode.CT_APPROVER.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
 			return RoleCode.BPK_CCA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value()))
-			return RoleCode.BPK_CCA_HQ.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
 			return RoleCode.BPK_APPROVER.value();
 		else 

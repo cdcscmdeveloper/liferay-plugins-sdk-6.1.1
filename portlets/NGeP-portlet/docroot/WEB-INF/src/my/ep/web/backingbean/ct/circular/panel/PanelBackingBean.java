@@ -268,6 +268,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
+			List <CtCancelCircular> ctCancelCircularList = resDTO.getCancelCircularReq().getCtCancelCircularList();
+			if(ctCancelCircularList.get(0).getCircularVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+			} else {
+				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+			}
+
 			
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
@@ -512,12 +519,23 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Cancel Circular Request"));
-				// save action with task ID not null will remain in the same page
+				String messageId = MessageConst.INFO_700005;
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
+				} 
+				log.info("Record saved successfully");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
+								reqDTO.getDocType()+"-"+resDTO.getCancelCircularReq().getCancelCircularReqId().toString()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
 					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 				
 				getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
@@ -620,49 +638,33 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 
 	public boolean isPanelAdmin() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value());
 	}
 	
 	public boolean isCentralContractAdmin() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
 	public boolean isBPKApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
 	}
 	
 	private String getUserRole() {
 		if(getManagedBean().getCircularDocType()!=null) { // Cancellation Request
 			if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
-				if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value())) 
-					return RoleCode.BPK_PCA_HQ.value();
-				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()))
-					return RoleCode.BPK_PCA_SA.value();
-				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value()))
-					return RoleCode.BPK_PCA_SK.value();
+				if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) 
+					return RoleCode.BPK_PCA.value();
 			} else if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
-				if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value())) 
-					return RoleCode.BPK_CCA_HQ.value();
-				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()))
-					return RoleCode.BPK_CCA_SA.value();
-				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value()))
-					return RoleCode.BPK_CCA_SK.value();
+				if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
+					return RoleCode.BPK_CCA.value();
 			}
 		} else { // Panel Circular Creation
-			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value())) 
-				return RoleCode.BPK_PCA_HQ.value();
-			else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()))
-				return RoleCode.BPK_PCA_SA.value();
-			else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value()))
-				return RoleCode.BPK_PCA_SK.value();
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) 
+				return RoleCode.BPK_PCA.value();
 		}
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
 			return RoleCode.BPK_APPROVER.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()))
-			return RoleCode.BPK_APPROVER_SA.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value()))
-			return RoleCode.BPK_APPROVER_SK.value();	
 		else 
 			return null;
 	}
