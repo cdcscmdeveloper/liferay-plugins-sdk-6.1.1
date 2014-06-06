@@ -32,6 +32,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -82,7 +83,6 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -249,6 +249,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setPmUserOrg(getManagedBean().getPmUserOrg());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			if(isRequisitioner()){
 				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -659,11 +660,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}else if(contractId != null){
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO ctDTO = new ContractReqDTO();
 			ctDTO.setContractId(getManagedBean().getContractId());
-			getManagedBean().getFlRequest().setCtContract(contractSO.retrieveContract(ctDTO).getContract());
+			ContractResDTO contractResDTO = contractSO.retrieveContract(ctDTO);
+			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
+			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
+			if(contractResDTO.getContract().getSmSupplierBranch() != null){
+				getManagedBean().getFlRequest().setSupplierBranch(contractResDTO.getContract().getSmSupplierBranch());
+			}
 			getLoginUserOrg();
 			// getManagedBean().setMinistryName(getManagedBean().getPmUserOrg().getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
 
@@ -1222,7 +1228,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getPmPrgActivity();
 		getManagedBean().getVotFundId();
 		updateSelectedTreeNodes();
-		
+		Map<Long, FlFulfilmentItem> flItemMap = new HashMap<Long, FlFulfilmentItem>();
 			if(null == getManagedBean().getSelectedNodes()){
 				throw new EpException("Please Select Item Node.");
 				//(getManagedBean().getSelectedNodes().length >0 && null !=getManagedBean().getSelectedNodes())
@@ -1282,6 +1288,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 							itemDelAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 							itemDelAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
+//							if(flItemMap.get(itemDelAddress.getFlFulfilmentItem().getCmItem().getItemId()) ==  null){//i need to test whether i got set fkrequest > flitems
+//								getManagedBean().getFlRequest().getFlFulfilmentItems().add(itemDelAddress.getFlFulfilmentItem());
+//								flItemMap.put(itemDelAddress.getFlFulfilmentItem().getCmItem().getItemId(), itemDelAddress.getFlFulfilmentItem());
+//							}
 						}
 
 					}
