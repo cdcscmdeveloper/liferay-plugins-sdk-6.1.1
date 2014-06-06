@@ -103,9 +103,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
-		<p:spacer height="20" />
+		<p:spacer height="40" />
 		<p:outputPanel id="itemZone">
 		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectionOfZone}">
+		     <p:outputLabel value="#{lbl['lbl.ct.pc.sublabel.panelcoverage']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 			 <table style="width: 100%">
 				<tr>
 					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -155,7 +156,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		     onsuccess="delZoneDlg.show();"/>
 	    </div>	
 	  </h:panelGroup>
-	  <p:dialog header="ADD LOCATION1" widgetVar="ZoneGeneral" modal="true"
+	  <p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true"
 		width="600" position="top" height="400">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
@@ -215,9 +216,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		   </div>
         </p:dialog>  		
        </p:outputPanel>
-		<p:spacer height="20" />
+		<p:spacer height="40" />
 		<p:outputPanel id="itemSupplier">
-		 <h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
+		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.pc.sublabel.panelsupplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.pc.sublabel.itemsupplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
 		   <ac:lovPopup />
 			<p:dataTable id="itemSupplierDt" var="supVar" 

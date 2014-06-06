@@ -234,6 +234,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			System.out.println("taskId:" + taskId);
 
 			if(taskId==null) {
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				return;
 			}
 			
@@ -251,9 +252,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
-			String[] outcome = new String[res.getAction().length+1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
+			String[] outcome = new String[res.getAction().length];
+			//outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 0;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
 			}
@@ -504,25 +505,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				reqDTO.getCancelCircularReq().setApprovedDate(new Date());
 			}
 			
-			/*if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
-				getManagedBean().getCancelCircularReq().setPmUserGroup(getManagedBean().getCircularVer().getPmUserGroup());
-				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCancelCircularReq().getPmUserGroup().getUserGroupId());
-				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
-				if(pmUserGroup!=null) {
-					for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
-						userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
-					}
-				}
-				reqDTO.setUserMap(userMap);
-			}*/
-			
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
@@ -532,18 +519,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
 								reqDTO.getDocType()+"-"+resDTO.getCancelCircularReq().getCancelCircularReqId().toString()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
-					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}
-				
-				getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
-				getManagedBean().setRemarkList(resDTO.getRemarkList());
-				getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
-				
-				ContractBackingBean ctBB = new ContractBackingBean();
-				ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				throw new EpException("000001");
 			}
@@ -1138,6 +1115,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(this.getManagedBean().isEditZone()){
 				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
+				get(this.getManagedBean().getIndex()).setName(getManagedBean().getZoneName());
+				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
 				get(this.getManagedBean().getIndex()).getPanelZoneDtls().clear();
 				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
 				get(this.getManagedBean().getIndex()).getPanelZoneDtls().addAll(allNodes);
@@ -1183,7 +1162,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		this.getManagedBean().setIndex(i);
 		this.getManagedBean().setEditZone(true);
-		getManagedBean().setZoneName(zoneLocation.getName());
+		this.getManagedBean().setZoneName(zoneLocation.getName());
 
 		
 	}
