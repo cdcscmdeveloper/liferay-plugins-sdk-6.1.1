@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		<h:panelGroup id="contractedItemID">
             
             <div style="text-align: left;">
@@ -41,8 +41,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.createdDate']}"></p:outputLabel></td>
 					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
+					<td><h:outputText readonly="true" style="text-align :left" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
 				</tr>
 			</table>
     </p:panel>
@@ -66,7 +66,7 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.table.type']}
 						</f:facet>
-						#{requestItem.itemType}
+						#{codificationBackingBean.getParameterDesc(requestItem.itemType)}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -78,7 +78,7 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.table.temporary.code']}
 						</f:facet>
-						#{requestItem.cmItem.unspscCode}
+						#{requestItem.tempUnspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -91,15 +91,15 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
-					<p:commandButton value="#{lbl['lbl.cm.assign']}"
+					<p:commandButton value="#{lbl['lbl.cm.assign']}" disabled="#{!(requestItem.cmItem == null)}"
 						action="#{codificationBackingBean.assignProductCode(requestItem)}"
-						onclick="contractedItemPopUp.show()"
+						oncomplete="contractedItemPopUp.show()"
 						update=":form:contractedItemPopUpId"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 
 			<p:dialog id="contractedItemDialog" widgetVar="contractedItemPopUp" header="Assign Product Code"
-				width="600" height="500">
+				width="680" height="550">
 
 				<ui:include src="assignContractedCodePopUp.xhtml" />
 

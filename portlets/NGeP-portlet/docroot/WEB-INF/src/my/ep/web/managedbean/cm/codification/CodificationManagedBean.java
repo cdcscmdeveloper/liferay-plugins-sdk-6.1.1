@@ -1,32 +1,25 @@
 package my.ep.web.managedbean.cm.codification;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
-import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -116,6 +109,19 @@ public class CodificationManagedBean extends BaseManagedBean {
     private ScRequestItem selectedRequestItem;
     private Object[] selectedExtenstionForItem;
     
+    private CmRequestCode requestExtCode;
+	private List<CmRequestCode> requestExtCodeList;
+    
+    private boolean brandDisable = true;
+	private boolean typeDisable = true;
+	private boolean colorDisable = true;
+	private boolean measurementDisable = true;
+	
+//	private String typeName;
+//	private String colorName;
+//	private String measurementName;
+//	private String brandName;
+	
 	public Object[] getSelectedObject() {
 		return selectedObject;
 	}
@@ -617,6 +623,62 @@ public class CodificationManagedBean extends BaseManagedBean {
 			List<ScRequestItem> selectedVPendingRequestItemList) {
 		this.selectedVPendingRequestItemList = selectedVPendingRequestItemList;
 	}
+
+
+	public CmRequestCode getRequestExtCode() {
+		if(requestExtCode==null)
+			requestExtCode = new CmRequestCode();
+		return requestExtCode;
+	}
+
+	public void setRequestExtCode(CmRequestCode requestExtCode) {
+		this.requestExtCode = requestExtCode;
+	}
+
+	public boolean isBrandDisable() {
+		return brandDisable;
+	}
+
+	public void setBrandDisable(boolean brandDisable) {
+		this.brandDisable = brandDisable;
+	}
+
+	public boolean isTypeDisable() {
+		return typeDisable;
+	}
+
+	public void setTypeDisable(boolean typeDisable) {
+		this.typeDisable = typeDisable;
+	}
+
+	public boolean isColorDisable() {
+		return colorDisable;
+	}
+
+	public void setColorDisable(boolean colorDisable) {
+		this.colorDisable = colorDisable;
+	}
+
+	public boolean isMeasurementDisable() {
+		return measurementDisable;
+	}
+
+	public void setMeasurementDisable(boolean measurementDisable) {
+		this.measurementDisable = measurementDisable;
+	}
+
+
+	public List<CmRequestCode> getRequestExtCodeList() {
+		if(requestExtCodeList==null)
+			requestExtCodeList = new ArrayList<CmRequestCode>();
+		return requestExtCodeList;
+	}
+
+	public void setRequestExtCodeList(List<CmRequestCode> requestExtCodeList) {
+		this.requestExtCodeList = requestExtCodeList;
+	}
+
+
 
 
 	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new SearchPagingDataModel();
