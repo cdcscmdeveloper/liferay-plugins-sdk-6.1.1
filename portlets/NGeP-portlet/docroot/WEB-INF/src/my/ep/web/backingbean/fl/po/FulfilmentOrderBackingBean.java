@@ -108,6 +108,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
