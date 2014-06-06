@@ -215,24 +215,26 @@ public class BPMTaskListBackingBean extends
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("taskId");
+		String process = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("process");
+		String taskName = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskName");
+		String docType = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("docType");
 		FacesScopes face = new FacesScopes();
 		String token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {
 			log.info("taskId:" + taskId);
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			
 			System.out.println("********getProcessName********"
-					+ res.getProcessName());
-			System.out.println("********res.getAction()********"
-					+ res.getAction());
+					+ process);
 			System.out.println("********getTaskName********"
-					+ res.getTaskName());
-			this.getManagedBean().setProcessName(res.getProcessName());
-			this.getManagedBean().setAction(res.getAction());
-			Object obj = res.getPojo();
+					+ taskName);
+			//this.getManagedBean().setProcessName(res.getProcessName());
+			//this.getManagedBean().setAction(res.getAction());
+			//Object obj = res.getPojo();
 
 			String url = "";
 
@@ -240,19 +242,23 @@ public class BPMTaskListBackingBean extends
 					&& this.getManagedBean().getBpmMap().size() > 0) {
 
 				url = (String) this.getManagedBean().getBpmMap()
-						.get(res.getProcessName());
+						.get(process);
 				if (url == null || url.isEmpty()) {
 					url = (String) this.getManagedBean().getBpmMap()
-							.get(res.getProcessName() + res.getTaskName());
+							.get(process + taskName);
 				}
 				if (url == null || url.isEmpty()) {
 					url = (String) this.getManagedBean().getBpmMap()
-							.get(res.getProcessName() + res.getDocType());
+							.get(process + docType);
 				}
 			}
 			log.info("url:" + url);
 			
-			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)) {
+			if(process.equalsIgnoreCase(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)) {
+				reqDTO.setCtxToken(token);
+				reqDTO.setTaskId(taskId);
+				BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+				Object obj = res.getPojo();
 				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 				if(dataType.getType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
 					url = "central-contract-circular";

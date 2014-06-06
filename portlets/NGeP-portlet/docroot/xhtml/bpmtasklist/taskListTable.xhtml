@@ -94,10 +94,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.bpm.doc.no']}
 				</f:facet>
-				<p:commandLink value="#{tasks.docNumber}"
-					action="#{bpmTasklistBackingBean.navigateToURL}">
-					<f:param name="taskId" value="#{tasks.taskId}" />
-				</p:commandLink>
+				#{tasks.docNumber}
 			</p:column>
 			<p:column width="5%;">
 				<f:facet name="header">
@@ -114,6 +111,9 @@
 				<p:commandLink value="#{tasks.title}"
 					action="#{bpmTasklistBackingBean.navigateToURL}">
 					<f:param name="taskId" value="#{tasks.taskId}" />
+					<f:param name="process" value="#{tasks.process}" />
+					<f:param name="taskName" value="#{tasks.taskName}" />
+					<f:param name="docType" value="#{tasks.docType}" />	
 				</p:commandLink>
 
 			</p:column>
