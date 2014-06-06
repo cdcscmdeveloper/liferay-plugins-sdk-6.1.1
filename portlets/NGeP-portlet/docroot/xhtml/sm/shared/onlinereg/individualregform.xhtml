@@ -7,19 +7,6 @@
 	<p:panel header="#{lbl['lbl.sm.individual.individualreginfo']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.individual.servicecategory']}" /></td>
-				<td class="tdContent" colspan="3">
-					<p:selectOneRadio id="serviceCatId" required="true" label="#{lbl['lbl.sm.individual.servicecategory']}"
-						value="#{registrationBackingBean.managedBean.smSupp.serviceCategory}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.individual.profservice']}" itemValue="P" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.individual.specialservice']}" itemValue="S" />
-						<p:ajax event="valueChange" update="outPnl,serviceTypeId" listener="#{registrationBackingBean.getIndividualServiceType}"/>
-					</p:selectOneRadio>
-					<p:message id="serviceCatIdMsg" for="serviceCatId" display="icon" /></td>
-			</tr>
-
-			<tr>
 				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.individual.service']}" /></td>
 				<td class="tdContent"><p:selectOneMenu required="true" label="#{lbl['lbl.sm.individual.service']}"
 						value="#{registrationBackingBean.managedBean.smSupp.serviceType}"
@@ -132,17 +119,17 @@
 					<p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" /></td>
 			</tr>
 		</table>
-	</p:panel>\
+	</p:panel>
 <!-- 	<ui:include src="/xhtml/sm/shared/onlinereg/businessNature.xhtml" /> -->
 	<!-- 	<ui:include src="/xhtml/sm/shared/onlinereg/identityUpload.xhtml"></ui:include> -->
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml"></ui:include>
 
-	<p:outputPanel id="outPnl">
-		<c:if
-			test="#{registrationBackingBean.managedBean.smSupp.serviceCategory == 'P'}">
-			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" />
-		</c:if>
-	</p:outputPanel>
+<!-- 	<p:outputPanel id="outPnl"> -->
+<!-- 		<c:if -->
+<!-- 			test="#{registrationBackingBean.managedBean.smSupp.serviceCategory == 'P'}"> -->
+<!-- 			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" /> -->
+<!-- 		</c:if> -->
+<!-- 	</p:outputPanel> -->
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />

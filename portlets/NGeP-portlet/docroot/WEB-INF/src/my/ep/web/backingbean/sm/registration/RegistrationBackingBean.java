@@ -171,6 +171,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		this.getManagedBean().getSmAppl().setApplType(this.getManagedBean().getApplType());
+		getIndividualServiceType();
 		log.info("-------onlineAccountAgreement end-------------");
 		
 		return accountRegistration;
@@ -277,7 +278,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			
+			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
 			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
@@ -347,11 +348,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		/***
 		 * Professional Cert 
 		 */
-		if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && 
-				smAppl.getSupplierType() != null)  || 
-				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
-				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
-				smSupp.getServiceCategory() != null)){
+		if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && smAppl.getSupplierType() != null)){  
+//				|| 
+//				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
+//				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
+//				smSupp.getServiceCategory() != null)){
 			log.info("*****IS PROF********");
 			for(SmSupplierCert suppCert : smAppl.getSmSupplierCerts()){
 				log.info("**Cert Body****" + suppCert.getPmCertBody().getCertBodyId());
@@ -668,22 +669,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void getIndividualServiceType(){
-		System.out.println("******getIndividualServiceType******");
-		if(this.getManagedBean().getSmSupp().getServiceCategory() != null){
-			String serviceTypeParam = null;
-			System.out.println("******getIndividualServiceType******" + this.getManagedBean().getSmSupp().getServiceCategory());
-			if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE)){
-				serviceTypeParam = SupplierManagementConst.PROF_SERVICE_CODE;
-			}else if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.SPECIAL_SERVICE)){
-				serviceTypeParam = SupplierManagementConst.SPECIAL_SERVICE_CODE;
-			}
-
-			if(serviceTypeParam != null){
-				List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(serviceTypeParam, new FacesScopes().getUserLocale().getLanguage());
-				System.out.println("******ServiceType******" + paramDesc.size() );
-				this.getManagedBean().setServiceLs(paramDesc);
-			}
-		}
+//		System.out.println("******getIndividualServiceType******");
+//		if(this.getManagedBean().getSmSupp().getServiceCategory() != null){
+//			String serviceTypeParam = null;
+//			System.out.println("******getIndividualServiceType******" + this.getManagedBean().getSmSupp().getServiceCategory());
+//			if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE)){
+//				serviceTypeParam = SupplierManagementConst.PROF_SERVICE_CODE;
+//			}else if(this.getManagedBean().getSmSupp().getServiceCategory().equals(SupplierManagementConst.SPECIAL_SERVICE)){
+//				serviceTypeParam = SupplierManagementConst.SPECIAL_SERVICE_CODE;
+//			}
+//
+//			if(serviceTypeParam != null){
+//				List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(serviceTypeParam, new FacesScopes().getUserLocale().getLanguage());
+//				System.out.println("******ServiceType******" + paramDesc.size() );
+//				this.getManagedBean().setServiceLs(paramDesc);
+//			}
+//		}
+		
+		List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SPECIAL_SERVICE_CODE, new FacesScopes().getUserLocale().getLanguage());
+		this.getManagedBean().setServiceLs(paramDesc);
 	}
 	
 	public void populateStateByAddType(String typeAdd) {
