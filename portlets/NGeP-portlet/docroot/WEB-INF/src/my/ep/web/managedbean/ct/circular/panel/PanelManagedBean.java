@@ -90,6 +90,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Long itemCategoryId;
 	private Long panelCoverageId;
 	
+	private int selectedTabIndex;
+	
 	public CtCircular getCircular() {
 		return circular;
 	}
@@ -430,5 +432,13 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setPanelCoverageId(Long panelCoverageId) {
 		this.panelCoverageId = panelCoverageId;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 }

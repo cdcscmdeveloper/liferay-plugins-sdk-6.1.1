@@ -9,50 +9,38 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
     <ui:define name="contentSection">
-    	<f:event listener="#{panelBackingBean.preRenderViewCancelReq}" type="preRenderView" />	
-		<p:panel>
-			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	    	<table style="width: 100%;">
-	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
-	    			<td class="ppRightBtn">
-			  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
-							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
-								action="#{panelBackingBean.saveCancelCircularReq(action)}" />
-						</ui:repeat>	    			
-	    			</td>
-	    		</tr>
-	    	</table>			
-			<table style="width: 99%; margin-left: 0px;" class="header-info">
-				<tr style="margin-button: 0px;">
-					<td>
-							<p:outputLabel value="Cancel Circular Request Id" />
-					</td>
-					<td>
-							<p:inputText size="20"
-								value="#{panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId == null ? '-- System Generated --':panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId}"
-								disabled="true" />
-					</td>
-					<td>
-							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-					</td>
-					<td>
-							<p:inputText size="20"
-								value="#{panelBackingBean.getStatusDescById(panelBackingBean.managedBean.cancelCircularReq.status.statusId)}"
-								disabled="true" />
-					</td>
-				</tr>
-			</table>	    	
-		</p:panel>
-		<p:tabView id="tabview" orientation="left" >
-			<p:tab id="tabcd" title="Circular Details" >
-	       		<ui:include src="/xhtml/ct/circular/panel/cancelCircularDetail.xhtml"/>
-	       		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
-	       	</p:tab> 
-		 	<p:tab id="tabSetting" title="Setting" rendered="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}" >
-	       		<ui:include src="/xhtml/ct/circular/panel/approverSetting.xhtml" />  
-	       	</p:tab>   
-		</p:tabView>
+    	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	    <ui:include src="cancelCircularButtons.xhtml" />
+		<ui:include src="cancelCircularHeader.xhtml" />
+		
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		  <tr>
+			<td width="20%" valign="top">
+				<p:tabMenu styleClass="sidemenu"
+					activeIndex="#{panelBackingBean.managedBean.selectedTabIndex}"
+					style="display : table-caption;">
+
+					<p:menuitem value="Circular Details" update="@form">
+						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="0" />
+					</p:menuitem>
+					<p:menuitem value="Setting" update="@form">
+						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
+					</p:menuitem>
+				</p:tabMenu>
+			</td>
+			<td width="80%">
+				<c:if test="#{panelBackingBean.managedBean.selectedTabIndex == 0}">
+					<ui:include src="cancelCircularDetail.xhtml" />
+				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
+				</c:if>
+	
+				<c:if test="#{panelBackingBean.managedBean.selectedTabIndex == 1 
+				  and (panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin())}">
+					<ui:include src="approverSetting.xhtml" />
+				</c:if>
+			</td>
+		</tr>
+		</table>
+
 	</ui:define>
-		    
 </ui:composition>				
