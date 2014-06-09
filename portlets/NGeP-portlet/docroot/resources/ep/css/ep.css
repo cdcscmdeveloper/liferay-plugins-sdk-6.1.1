@@ -2589,6 +2589,13 @@ important
 	height:16px !important;
 }
 
+.ui-icon-complete {
+	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]}) !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
+}
+
 .ui-icon-action {
 	background-image: url(#{ resource [ 'ep/images/design:action.png' ]
 }
