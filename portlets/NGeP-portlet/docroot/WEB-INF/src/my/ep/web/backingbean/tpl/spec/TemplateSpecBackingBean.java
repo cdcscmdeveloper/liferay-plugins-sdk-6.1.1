@@ -259,8 +259,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
 				reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-				reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+				reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+				reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				newQuestion.setClFulfilmentTypeCode(resDTO.getPmParameter());
 				

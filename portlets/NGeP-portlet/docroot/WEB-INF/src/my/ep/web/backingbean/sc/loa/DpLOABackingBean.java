@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.loa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -82,7 +83,10 @@ public class DpLOABackingBean extends
 			
 			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 			reqDTO.setRequestNoteId(requestNoteId);
-			reqDTO.setFulfillmentType(ParameterConst.FULFILLMENT_PERIODIC);
+			List<String> fulfilmentTypes = new ArrayList<String>();
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+			reqDTO.setFulfillmentTypes(fulfilmentTypes);
 			reqDTO.setAssignedTo(userId);
 
 			PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequestsByReqNote(reqDTO);
