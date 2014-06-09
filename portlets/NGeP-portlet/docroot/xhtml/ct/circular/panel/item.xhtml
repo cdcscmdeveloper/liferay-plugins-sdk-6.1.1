@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  <p:column headerText="UOM" style="width: 10%;">
 			      <ac:lov id="uomLovId" lovId="PM_UOM" size="8" 
-				     headerText="UOM Lov" update="@([id$=panelItemDt])" 
+				     headerText="UOM Lov" 
 				     value="#{data.pmUom.uomName}" conditionField="recordStatus^1"
 				     saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			      </ac:lov>
@@ -225,7 +225,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.pc.sublabel.itemsupplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
-		   <ac:lovPopup />
 			<p:dataTable id="itemSupplierDt" var="supVar" 
 			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
 		    selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">
@@ -234,13 +233,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<c:if test="#{panelBackingBean.managedBean.selectionOfZone}">
 				   <ac:lov id="loaSupId"  lovId="SM_SUPPLIER" headerText="Supplier List" 
 					   saveObject="panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers[#{index}].supplier"
-					   value="#{supVar.supplier.companyName}"  update=":form:tabview:itemSupplierDt" >
+					   value="#{supVar.supplier.companyName}" update="@([id$=itemSupplier])" >
 				   </ac:lov>
 				  </c:if>
 				  <c:if test="#{!panelBackingBean.managedBean.selectionOfZone}">
 				   <ac:lov id="loaSupId1"  lovId="SM_SUPPLIER" headerText="Supplier List" 
 					   saveObject="panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers[#{index}].supplier"
-					   value="#{supVar.supplier.companyName}"  update=":form:tabview:itemSupplierDt" >
+					   value="#{supVar.supplier.companyName}"  update="@form" >
 				   </ac:lov>
 				  </c:if>
 			    </p:column>
