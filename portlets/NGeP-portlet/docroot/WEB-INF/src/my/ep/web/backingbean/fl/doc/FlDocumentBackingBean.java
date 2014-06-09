@@ -96,16 +96,42 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		flDocumentDataModel.reloadData();
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
-			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+			getManagedBean().setFlRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
 		if(isFlFulfilmentSupplier()) {
 			FacesScopes facesScopes = new FacesScopes();
-			getManagedBean().setPmUser(facesScopes.getUserSessionBean());
-			 
+			getManagedBean().setFlSupplier(facesScopes.getUserSessionBean().getLoginId());
 		}
+		if(isFlFulfilmentRecevingOfficer()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlRecevingOfficer(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(isFlFulfilmentApprover()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
+		}
+		
+		
 	}
 	
 	public SelectItem[] getDocumentTypeDropDown() {
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(isFlFulfilmentSupplier()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlSupplier(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(isFlFulfilmentRecevingOfficer()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlRecevingOfficer(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(isFlFulfilmentApprover()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
+		}
+		
 		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
 		try {
 			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
@@ -118,7 +144,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			List<String> flDocTypes = new ArrayList<String>();
 			if(getManagedBean().getSearchOrderType()!=null) {
 				// TODO Should filter by user role
-				getManagedBean().getFulfilmentRequisitioner();
+				getManagedBean().getFlRequisitioner();
+				isFlFulfilmentApprover();
+				isFlFulfilmentRecevingOfficer();
 				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRequisitioner()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 					flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
@@ -129,8 +157,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentApprover()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					if(isFlFulfilmentRecevingOfficer()){
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+					}else{
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					}
+					
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
@@ -142,7 +177,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRecevingOfficer()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+					
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentRecevingOfficer()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentApprover() && isFlFulfilmentRecevingOfficer()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				}
 				//flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);

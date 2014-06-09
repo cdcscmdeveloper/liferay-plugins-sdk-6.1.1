@@ -1,65 +1,79 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.del.addr']}" toggleable="true">
-
-		<p:dataTable id="addressDataTable" var="address"
-			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}"
-			selection="#{flOrderBB.managedBean.selectedDelAddr}" rowKey="#{address}" lazy="true"
-			selectionMode="single">
-			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel">
-			</p:ajax>
-			<p:column headerText="#{lbl['lbl.fl.del.addr']}">
-				<h:outputText rendered="#{address.addressType != null}"
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
-				<h:outputText rendered="#{address.addressType eq null}"
-					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
+	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+		<p:dataTable id="delAddressSummary" var="delAddressSummary"
+			styleClass="orderSummaryChange hide-column-names"
+			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
+			<p:column style="width:2%">
+				<p:rowToggler />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.exp.del.start']}">
-				 <p:calendar disabled="true" value="#{address.startDate}" id="calStartDate" showOn="button" />  
+			<p:column headerText="Delivery Address" style="width:5%">
+				<h:outputText rendered="#{delAddressSummary.addressType != null}"
+					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}, #{delAddressSummary.addressType.pmAddress.address4}" />
+				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
+					value="#{delAddressSummary.pmAddress.address1}, #{delAddressSummary.pmAddress.address2}, #{delAddressSummary.pmAddress.address3}, #{delAddressSummary.pmAddress.address4}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.exp.del.end']}">
-				<p:calendar disabled="true" value="#{address.endDate}" id="calEndDate" showOn="button" />  
+			<p:column>
+				<p:spacer width="7" />
+				<h:outputText value="Delivery Term" />
+				<p:spacer width="7" />
+				<p:inputText size="4" disabled="true"
+					value="#{delAddressSummary.deliveryTerm}" />
+				<p:spacer width="7" />
+				<h:inputText size="4" disabled="true"
+					value="#{flOrderBB.managedBean.termDays}" />
+				<p:spacer width="7" />
+				<h:outputText value="Delivery Start" />
+				<p:spacer width="7" />
+				<p:inputText size="9"
+					value="#{flOrderBB.managedBean.flRequest.startDate}"
+					disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<p:spacer width="7" />
+				<h:outputText value="Delivery End" />
+				<p:spacer width="7" />
+				<p:inputText size="9"
+					value="#{flOrderBB.managedBean.flRequest.endDate}" disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</p:column>
+			<p:rowExpansion>
 
+				<p:dataTable id="newItems" var="newItems"
+					styleClass="show-column-names"
+					value="#{delAddressSummary.flFulfilmentItemAddr}">
+					
+					<p:column headerText="Item Code">
+						<h:outputText
+							value="#{newItems.cmItem.extensionCode}" />
+					</p:column>
+					<p:column headerText="Item Name">
+						<h:outputText value="#{newItems.cmItem.itemName}" />
+					</p:column>
+					<p:column headerText="UOM">
+						<h:outputText />
+					</p:column>
+					<p:column headerText="Unit Price (RM)" style="text-align:right">
+						<h:outputText value="#{newItems.unitPrice}">
+							<f:convertNumber pattern="#,#00.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Ordered Qty." style="text-align:right">
+						<h:outputText value="#{newItems.orderedQty}" />
+					</p:column>
+					<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+						<h:outputText value="#{newItems.orderedAmt}" />
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
 		</p:dataTable>
 	</p:panel>
-	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
-		
-		<p:dataTable id="itemDataTable" var="item" lazy="true"
-			value="#{flOrderBB.managedBean.selectedDelAddr.flFulfilmentItemAddr}">
-			<ac:paginator for="itemDataTable"/>
-			
-			<p:column headerText="Item Name">
-				<h:outputText value="#{item.flFulfilmentItem.qtItem.itemName}" />
-			</p:column>
-
-			<p:column headerText="GOSODO">
-			</p:column>
-
-			<p:column headerText="Activity Code">
-			</p:column>
-			<p:column headerText="Unit Price (MYR)">
-				<h:outputText disabled="true" value="#{item.unitPrice}">
-				<f:convertNumber pattern="#,#00.00" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{item.orderedQty}" disabled="true"/>
-			</p:column>
-			<p:column headerText="Sub Total">
-				<p:inputText value="#{item.orderedQty * item.unitPrice}" disabled="true"/>
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-
 </ui:composition>

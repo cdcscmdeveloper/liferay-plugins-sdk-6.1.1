@@ -39,7 +39,7 @@
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Name">
-				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
+				<h:outputText value="#{chargeLineNode.cmItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="UOM">
@@ -98,7 +98,7 @@
 						styleClass="ui-button" process="@this,chargeAss"
 						oncomplete="applyBulkCharge.show();"
 						update=":form:cotabs:applyBulkChargeDialog"
-						action="#{contractRequestBackingBean.clearPopupLists}" /></td>
+						action="#{contractRequestBackingBean.checkNodeSelected}" /></td>
 
 			</tr>
 		</table>

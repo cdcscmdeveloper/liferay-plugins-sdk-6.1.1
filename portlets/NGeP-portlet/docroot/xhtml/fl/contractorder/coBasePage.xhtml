@@ -13,14 +13,8 @@
 	<ui:define name="contentSection">
 	<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	<ui:include src="/xhtml/fl/contractorder/coHeaderPage.xhtml" />
 		<table style="width: 100%;">
-		<tr>
-				<td><h:outputText
-						value="Document Number: " />
-				<h:outputText
-						value="#{flOrderBB.managedBean.flRequest.docNo}" />
-				</td>
-			</tr>
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">

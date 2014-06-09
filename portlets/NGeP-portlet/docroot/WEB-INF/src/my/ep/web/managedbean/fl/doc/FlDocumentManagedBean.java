@@ -63,7 +63,11 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Boolean  checkDoInDocType=false;
 	
 	// getUserGroup
-	private String fulfilmentRequisitioner;
+	private String flRequisitioner;
+	private String flRecevingOfficer;
+	private String flSupplier;
+	private String flPmOfficer;
+	private String flApprover;
 
 	public String getTempLoginId() {
 		return tempLoginId;
@@ -221,19 +225,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckTitle(Boolean checkTitle) {
 		this.checkTitle = checkTitle;
-	}
-
-	/**
-	 */
-	public String getFulfilmentRequisitioner() {
-		return fulfilmentRequisitioner;
-	}
-
-	/**
-	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
-	 */
-	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
-		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
 	}
 
 	/**
@@ -402,6 +393,76 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchSuppInvRef(String searchSuppInvRef) {
 		this.searchSuppInvRef = searchSuppInvRef;
+	}
+
+	/**
+	 * @return the flRequisitioner
+	 */
+	public String getFlRequisitioner() {
+		return flRequisitioner;
+	}
+
+	/**
+	 * @param flRequisitioner the flRequisitioner to set
+	 */
+	public void setFlRequisitioner(String flRequisitioner) {
+		this.flRequisitioner = flRequisitioner;
+	}
+
+	/**
+	 * @return the flRecevingOfficer
+	 */
+	public String getFlRecevingOfficer() {
+		return flRecevingOfficer;
+	}
+
+	/**
+	 * @param flRecevingOfficer the flRecevingOfficer to set
+	 */
+	public void setFlRecevingOfficer(String flRecevingOfficer) {
+		this.flRecevingOfficer = flRecevingOfficer;
+	}
+
+	/**
+	 * @return the flSupplier
+	 */
+	public String getFlSupplier() {
+		return flSupplier;
+	}
+
+	/**
+	 * @param flSupplier the flSupplier to set
+	 */
+	public void setFlSupplier(String flSupplier) {
+		this.flSupplier = flSupplier;
+	}
+
+	/**
+	 * @return the flPmOfficer
+	 */
+	public String getFlPmOfficer() {
+		return flPmOfficer;
+	}
+
+	/**
+	 * @param flPmOfficer the flPmOfficer to set
+	 */
+	public void setFlPmOfficer(String flPmOfficer) {
+		this.flPmOfficer = flPmOfficer;
+	}
+
+	/**
+	 * @return the flApprover
+	 */
+	public String getFlApprover() {
+		return flApprover;
+	}
+
+	/**
+	 * @param flApprover the flApprover to set
+	 */
+	public void setFlApprover(String flApprover) {
+		this.flApprover = flApprover;
 	}
 	
 }

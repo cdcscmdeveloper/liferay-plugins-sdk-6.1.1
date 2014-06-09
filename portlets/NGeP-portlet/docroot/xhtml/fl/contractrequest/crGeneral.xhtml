@@ -108,7 +108,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
@@ -118,7 +118,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" value="#{contractRequestBackingBean.managedBean.flRequest.endDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>

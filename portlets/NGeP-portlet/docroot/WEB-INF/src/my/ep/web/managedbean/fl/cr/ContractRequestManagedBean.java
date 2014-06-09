@@ -29,9 +29,14 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -153,6 +158,17 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long prgActivityId;
 	
 	private boolean deleteButtonHide;
+	
+	//temp
+	private String termDays;
+	
+	// for Manual Address
+	private List<PmCountry> countryList;
+	private List<PmState> stateList;
+	private List<PmDivision> divisionList;
+	private List<PmCity> cityList;
+	private List<PmDistrict> districtList;
+	private FlDeliveryAddress flManulaAddress;
 
 	public ContractRequestManagedBean(){
 
@@ -1368,6 +1384,118 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDeleteButtonHide(boolean deleteButtonHide) {
 		this.deleteButtonHide = deleteButtonHide;
+	}
+
+
+	/**
+	 * @return the termDays
+	 */
+	public String getTermDays() {
+		return termDays;
+	}
+
+
+	/**
+	 * @param termDays the termDays to set
+	 */
+	public void setTermDays(String termDays) {
+		this.termDays = termDays;
+	}
+
+
+	/**
+	 * @return the countryList
+	 */
+	public List<PmCountry> getCountryList() {
+		return countryList;
+	}
+
+
+	/**
+	 * @param countryList the countryList to set
+	 */
+	public void setCountryList(List<PmCountry> countryList) {
+		this.countryList = countryList;
+	}
+
+
+	/**
+	 * @return the stateList
+	 */
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+
+	/**
+	 * @param stateList the stateList to set
+	 */
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+
+	/**
+	 * @return the divisionList
+	 */
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+
+	/**
+	 * @param divisionList the divisionList to set
+	 */
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+
+	/**
+	 * @return the cityList
+	 */
+	public List<PmCity> getCityList() {
+		return cityList;
+	}
+
+
+	/**
+	 * @param cityList the cityList to set
+	 */
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
+	}
+
+
+	/**
+	 * @return the districtList
+	 */
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+
+	/**
+	 * @return the flManulaAddress
+	 */
+	public FlDeliveryAddress getFlManulaAddress() {
+		return flManulaAddress;
+	}
+
+
+	/**
+	 * @param flManulaAddress the flManulaAddress to set
+	 */
+	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
+		this.flManulaAddress = flManulaAddress;
+	}
+
+
+	/**
+	 * @param districtList the districtList to set
+	 */
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
 	}
 
 }

@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel id="delAddrPanel" header="DELIVERY ITEM DETAILS" toggleable="true">
+	<p:panel id="delAddrPanel" header="DELIVERY ITEM DETAILS"
+		toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
@@ -15,8 +16,9 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}"
 			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelectRadio" update=":form:cotabs:itemDetPanel,:form:cotabs:deleteAddrBtn"
-			listener="#{contractRequestBackingBean.selectAddrEvent()}"/>
+			<p:ajax event="rowSelectRadio"
+				update=":form:cotabs:itemDetPanel,:form:cotabs:deleteAddrBtn"
+				listener="#{contractRequestBackingBean.selectAddrEvent()}" />
 			<p:column selectionMode="single" width="5%" />
 			<p:column headerText="Delivery Address">
 				<h:outputText rendered="#{address.addressType != null}"
@@ -48,92 +50,96 @@
 						title="Recv Officer List" />
 				</p:commandLink>
 			</p:column>
-			
-				<p:commandLink rendered="#{address.checkManualAddress}"
-					oncomplete="addManualDeliveryAddr.show();"
-					action="#{contractRequestBackingBean.editManualAddress(address)}"
-					update=":form:cotabs:addManualDelAddrDialog"
-					style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			
+
+			<p:commandLink rendered="#{address.checkManualAddress}"
+				oncomplete="addManualDeliveryAddr.show();"
+				action="#{contractRequestBackingBean.editManualAddress(address)}"
+				update=":form:cotabs:addManualDelAddrDialog"
+				style="padding-right:5px">
+				<p:graphicImage library="ep/images/design" name="edit.png"
+					value="/resources/ep/images/design/edit.png" />
+			</p:commandLink>
+
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Ptj Address" icon="ui-icon-add"
+			<p:commandButton value="PTJ Address" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flDeliveryAddrList}"
-				update="delAddr" process="@this,delAddr"
+				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
 			<p:commandButton value="Manual Address" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
-				update="delAddr" process="@this,delAddr"
+				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				oncomplete="addManualDeliveryAddr.show();" />
-			<p:commandButton id="deleteAddrBtn" value="Delete" icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
-						disabled="#{contractRequestBackingBean.managedBean.selectedDelAddr == null}" >
+			<p:commandButton id="deleteAddrBtn" value="Delete"
+				icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
+				disabled="#{contractRequestBackingBean.managedBean.selectedDelAddr == null}">
 			</p:commandButton>
-			
+
 		</div>
-		
-		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delAddrDlg"
-			closable="true" appendToBody="true" header="Delete Confirmation" >
+
+		<p:confirmDialog message="Do you want to delete the record?"
+			severity="alert" widgetVar="delAddrDlg" closable="true"
+			appendToBody="true" header="Delete Confirmation">
 			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" action="#{contractRequestBackingBean.removeAddRow()}" 
-					update=":form:cotabs:deleteAddrBtn,:form:cotabs:itemDataTable,addressDataTable" oncomplete="delAddrDlg.hide();"   /> 
-				<p:commandButton value="No" icon="ui-icon-reject" onclick="delAddrDlg.hide()" type="button" />
+				<p:commandButton value="Yes" icon="ui-icon-accept"
+					partialSubmit="true"
+					action="#{contractRequestBackingBean.removeAddRow()}"
+					update=":form:cotabs:deleteAddrBtn,:form:cotabs:itemDataTable,addressDataTable"
+					oncomplete="delAddrDlg.hide();" />
+				<p:commandButton value="No" icon="ui-icon-reject"
+					onclick="delAddrDlg.hide()" type="button" />
 			</h:panelGrid>
-		</p:confirmDialog>	
-	
-	<p:spacer height="20" />
-	
-	<h:panelGroup id="itemDetPanel">
+		</p:confirmDialog>
 
-		<p:dataTable id="itemDataTable" var="item" lazy="true"
-			rowIndexVar="index" rowKey="#{item}"
-			value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
-			selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
-			rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
-			<ac:paginator for="itemDataTable" />
-			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="Type">
-					<h:outputText
-						value="P" />
+		<p:spacer height="20" />
+
+		<h:panelGroup id="itemDetPanel">
+
+			<p:dataTable id="itemDataTable" var="item" lazy="true"
+				rowIndexVar="index" rowKey="#{item}"
+				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
+				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
+				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
+				<ac:paginator for="itemDataTable" />
+				<p:column selectionMode="multiple" width="5%" />
+				<p:column headerText="Item Name">
+					<h:outputText value="#{item.cmItem.itemName}" />
 				</p:column>
-			<p:column headerText="Item Name">
-				<h:outputText value="#{item.cmItem.itemName}" />
-			</p:column>
 
-			
-			<p:column headerText="Unit Price (MYR)">
-				<p:inputText value="#{item.unitPrice}" disabled="true" style="text-align:right"></p:inputText>
-			</p:column>
-			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{item.orderedQty}" style="text-align:right" required="true" requiredMessage="Please input the quantity.">
-					<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
-				</p:inputText>
-			</p:column>
-			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" style="text-align:right"
-					value="#{item.orderedAmt}"
-					disabled="true">
-					<f:convertNumber pattern="#,#00.00" />
+
+				<p:column headerText="Unit Price (MYR)">
+					<p:inputText value="#{item.unitPrice}" disabled="true"
+						style="text-align:right"></p:inputText>
+				</p:column>
+				<p:column headerText="Ord. Qty.">
+					<p:inputText value="#{item.orderedQty}" style="text-align:right"
+						required="true" requiredMessage="Please input the quantity.">
+						<p:ajax update="subTotalTxt"
+							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
 					</p:inputText>
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
-				action="#{contractRequestBackingBean.addContractedItems}"
-				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
-				update="contractedItemDt" process="@this,contractedItemDt"
-				oncomplete="addItems.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
-				action="#{contractRequestBackingBean.removeItemRow}"
-				update="itemDataTable" partialSubmit="true" />	
+				</p:column>
+				<p:column headerText="Sub Total">
+					<p:inputText id="subTotalTxt" style="text-align:right"
+						value="#{item.orderedAmt}" disabled="true">
+						<f:convertNumber pattern="#,#00.00" />
+					</p:inputText>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
+					action="#{contractRequestBackingBean.addContractedItems}"
+					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
+					update="contractedItemDt" process="@this,contractedItemDt"
+					oncomplete="addItems.show();" />
+				<p:commandButton value="Delete" icon="ui-icon-delete"
+					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
+					action="#{contractRequestBackingBean.removeItemRow}"
+					update="itemDataTable" partialSubmit="true" />
 
-		</div>
-	</h:panelGroup>
+			</div>
+		</h:panelGroup>
 	</p:panel>
 
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
@@ -144,7 +150,7 @@
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
 			rowKey="#{delAddr}"
 			selection="#{contractRequestBackingBean.managedBean.selectedCtAddrTypeList}">
-			
+
 			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -190,10 +196,12 @@
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{contractedItem.scRequestItem.cmItem.itemName}" />
+				<h:outputText
+					value="#{contractedItem.scRequestItem.cmItem.itemName}" />
 			</p:column>
 			<p:column>
-				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractedItem.itemType)}" />
+				<h:outputText
+					value="#{contractRequestBackingBean.getParameterDesc(contractedItem.itemType)}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -206,7 +214,7 @@
 		</div>
 
 	</p:dialog>
-	
+
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -222,102 +230,132 @@
 		modal="true" width="800px" height="450px" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Country" /></td>
-				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmCountry.countryId}"
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu id="manCountry"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="MALAYSIA" itemValue="1" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="countryList"
+							value="#{contractRequestBackingBean.managedBean.countryList}"
+							itemLabel="#{countryList.countryName}"
+							itemValue="#{countryList.countryId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.retrieveStateList}"
+							update="manState" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="* State" /></td>
+				<td><p:selectOneMenu id="manState"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="stateList"
+							value="#{contractRequestBackingBean.managedBean.stateList}"
+							itemLabel="#{stateList.stateName}"
+							itemValue="#{stateList.stateId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.retrieveDistrictList}"
+							update="manDistrict" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Address" /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.address1}"
+				<td><p:outputLabel value="* Address Line 1" /></td>
+				<td><p:inputText id="address1" label="Test"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
 						size="35" /></td>
-				<td><p:outputLabel value="City/Town" /></td>
-				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmCity.cityCode}"
+				<td><p:outputLabel value="* Divison" /></td>
+				<td><p:selectOneMenu id="manDivison"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="KUALA SELANGOR" itemValue="124" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="divisionList"
+							value="#{contractRequestBackingBean.managedBean.divisionList}"
+							itemValue="#{divisionList.divisionId}"
+							itemLabel="#{divisionList.divisionName}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.retrieveDistrictList}"
+							update="manDistrict" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel /></td>
+				<td><p:outputLabel value="Line 2" /></td>
 				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.address2}"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 						size="35" /></td>
-				<td><p:outputLabel value="Distict" /></td>
-				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmDistrict.districtId}"
+				<td><p:outputLabel value="* Distict" /></td>
+				<td><p:selectOneMenu id="manDistrict"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="TAMAN MEDAN" itemValue="1" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="districtList"
+							value="#{contractRequestBackingBean.managedBean.districtList}"
+							itemValue="#{districtList.districtId}"
+							itemLabel="#{districtList.districtName}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.retrieveCityList}"
+							update="manCity" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel /></td>
+				<td><p:outputLabel value="Line 3" /></td>
 				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.address3}"
-						size="35" /></td>
-				<td><p:outputLabel value="Divison" /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmDivision.divisionId}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.address4}"
-						size="35" /></td>
-				<td><p:outputLabel value="State" /></td>
-				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.pmState.stateId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItems value="#{contractRequestBackingBean.state}"></f:selectItems>
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Postal Code" /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.postcode}"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 						size="35" /></td>
 
+				<td><p:outputLabel value="* City/Town" /></td>
+				<td><p:selectOneMenu id="manCity"
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityCode}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="cityList"
+							value="#{contractRequestBackingBean.managedBean.cityList}"
+							itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Contact Person" /></td>
+				<td><p:outputLabel value="Line 4" /></td>
 				<td><p:inputText
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 						size="35" /></td>
-
+				<td><p:outputLabel value="* Postal Code" /></td>
+				<td><p:inputText
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
+						size="20" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Tel.No." /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.phoneNo}"
-						size="35" /></td>
+				<td><p:outputLabel value="* Contact Person" /></td>
+				<td><p:inputText size="35" /></td>
+				<td><p:outputLabel value="* Delivery Address" /></td>
+				<td><p:selectOneMenu id="manAddress"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="delAddByDistrict"
+							value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
 
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Email" /></td>
+				<td><p:inputText
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Tel.No." /></td>
+				<td><p:inputText
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
+						size="20" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax.No." /></td>
 				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.faxNo}"
-						size="35" /></td>
-
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
+						size="20" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Mobile.No." /></td>
 				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.mobileNo}"
-						size="35" /></td>
-
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Email" /></td>
-				<td><p:inputText
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.pmAddress.email}"
-						size="35" /></td>
-
+						value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
+						size="20" /></td>
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>

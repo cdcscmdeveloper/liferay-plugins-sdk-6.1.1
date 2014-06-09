@@ -5,53 +5,52 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 99%; margin-left: 25px;">
+	<table style="width: 99%;" class="header-info">
 		<tr style="margin-button: 10px;">
 			<td><h6>
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.document.type']} :" />
+					<p:outputLabel
+						value="#{lbl['lbl.fl.rev.hed.contract.request.no']} " />
 				</h6></td>
 			<td>
 				<h6>
-					<h:outputText
-						value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType)}" />
+					<p:inputText value="RNPTJ00142020200" disabled="true" size="20" />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.document.no']} :" />
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.ord.no']} " />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<h:outputText
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}" />
+					<p:inputText size="20"
+						
+						disabled="true" />
 				</h6>
 
 			</td>
-		</tr>
-		<tr>
 			<td>
 				<h6>
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.prepared.by']} :" />
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.ptj.name']} " />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<h:outputText value="#{purchaseRequestBackingBean.managedBean.pmUserOrg.pmUser.userName}" />
+					<p:inputText size="30" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />
 				</h6>
 			</td>
+			<td>
+				<h6>
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.status']} " />
 
-			<td>
-				<h6>
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.current.status']} :" />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<h:outputText value="Pending Submission"
-						rendered="#{purchaseRequestBackingBean.managedBean.docStatusId ==0}" />
-					<h:outputText
-						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.docStatusId)}" />
+					<p:inputText size="25"
+						value="#{contractRequestBackingBean.getStatusDescById(contractRequestBackingBean.managedBean.flRequest.status.statusId)}"
+						disabled="true" />
 				</h6>
 			</td>
 		</tr>
