@@ -9,14 +9,16 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="true"></p:messages>
 		<h:panelGroup id="cmReviewUnspsc">
 
 
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" rendered="#{action != 'REQUEST EXTENSION'}"
+					<p:commandButton value="#{action}"
+						rendered="#{action != 'REQUEST EXTENSION'}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
 				</ui:repeat>
@@ -28,7 +30,7 @@
 
 			<p:panel header="Request Info" toggleable="true">
 
-				<table style="width: 66%; margin-bottom: 4px;">
+				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
 						<td><p:selectOneMenu disabled="true"
@@ -36,14 +38,11 @@
 								style="width:228px;">
 								<f:selectItem itemValue="P" itemLabel="Product " />
 								<f:selectItem itemValue="S" itemLabel="Service" />
+								<p:ajax event="valueChange" update="@form" />
 							</p:selectOneMenu></td>
+							<td></td>
+							<td></td>
 					</tr>
-				</table>
-
-
-
-				<table style="width: 100%;">
-
 
 					<tr>
 						<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
@@ -55,27 +54,29 @@
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								disabled="true" size="40"></p:inputText></td>
 					</tr>
-					<tr>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
-								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
-								disabled="true" size="40"></p:inputText></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
-								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
-								disabled="true" size="40"></p:inputText></td>
-					</tr>
-
+					<h:panelGroup id="extensionFiledsId"
+						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+					</h:panelGroup>
 				</table>
 
 			</p:panel>

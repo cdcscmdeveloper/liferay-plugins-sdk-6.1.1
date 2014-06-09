@@ -836,13 +836,44 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					
 					
 				}
+	
+				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 				
 				
+				//insert type, measurment, brand and color objects with NA values.
+				reqDTO = new CodificationReqDTO();
+				reqDTO.setUnspscCode(tempCode);
+				resDTO = unspscSO.searchCommodityObj(reqDTO);
+				CmUnspsc commodity = resDTO.getCommodityObj();
+				
+				CmType cmType = new CmType();
+				cmType.setUnspscId(commodity);
+				cmType.setTypeCode("00");
+				cmType.setTypeName("NA");
+				
+				CmBrand cmBrand = new CmBrand();
+				cmBrand.setUnspscId(commodity);
+				cmBrand.setBrandCode("000");
+				cmBrand.setBrandName("NA");
+				
+				CmMeasurement cmMeasurement = new CmMeasurement();
+				cmMeasurement.setUnspscId(commodity);
+				cmMeasurement.setMeasurementCode("000");
+				cmMeasurement.setMeasurementName("NA");
 				
 				
 				
 			
-				resDTO = unspscSO.updateCodificationRequest(reqDTO);
+				reqDTO.setCmType(cmType);
+				unspscSO.addNewType(reqDTO);
+				
+				reqDTO.setCmBrand(cmBrand);
+				unspscSO.addNewBrand(reqDTO);
+				
+				reqDTO.setCmMeasurement(cmMeasurement);
+				unspscSO.addNewMeasurement(reqDTO);
+				
+				
 			}else if(outcome.equalsIgnoreCase("RECOMMEND")){
 
 
@@ -1760,7 +1791,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	public String requestUnspscCode(){
-
+        this.getManagedBean().getRequestCode().setItemType("P");
 		return "unspscRequestForm";
 	}
 
