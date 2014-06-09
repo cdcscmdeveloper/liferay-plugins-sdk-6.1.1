@@ -343,7 +343,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularName()));	
 				}
 				if(getManagedBean().getSearchSupplierName()!=null && getManagedBean().getSearchSupplierName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelSuppliers.supplier.supplierName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName()));	
 				}			
 				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularFileRefNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo()));	
@@ -415,8 +415,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
 			if(isBPKApprover()) {
-				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
-				reqDTO.getCircularVer().setApprovedDate(new Date());
+				circularVer.setApprover(getFacesScopes().getUserSessionBean());
+				circularVer.setApprovedDate(new Date());
 			}
 			
 			
