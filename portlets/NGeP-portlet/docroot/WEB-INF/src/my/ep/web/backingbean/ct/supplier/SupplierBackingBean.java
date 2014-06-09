@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -51,6 +51,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
@@ -66,6 +68,8 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -73,8 +77,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.AddressType;
@@ -172,20 +174,16 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 				ContractReqDTO ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-				ctReqDTO.setContractId(new Long(dataType.getContractId()));
 				ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 				getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 				getManagedBean().setContractVer(resDTO.getCtContractVer());
+				getManagedBean().setContractVerId(ctReqDTO.getContractVerId());
 				getManagedBean().setRemarkList(resDTO.getCtRemarks());
 				getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 				
-				combineSupAddress();
-				setSupplierInfo();
-				getManagedBean().setAccountNo(getManagedBean().getContractVer().getCtContractValue().getSupplierBankAccountNo());
-				if(getManagedBean().getAccountNo()!=null) {
+				if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
 					getPopulateBankAccountList();
 				}
-				setBankInfo();
 			} else if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {
 				CTFactoringDataType dataType = (CTFactoringDataType) obj;
 				
@@ -265,73 +263,47 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setContractVer(resDTO.getCtContractVer());
 					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-					combineSupAddress();
-					setSupplierInfo();
-					getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getSupplierBankAccountNo());
-					getManagedBean().setAccountNo(getManagedBean().getContractVer().getCtContractValue().getSupplierBankAccountNo());
-					if(getManagedBean().getAccountNo()!=null) {
+					getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+					if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
 						getPopulateBankAccountList();
 					}
-					setBankInfo();
 				}
 			} else {
-				getManagedBean().setContractVer(null);
+				CtContractVer ctContractVer = new CtContractVer();
+				CtContractValue ctContractValue = new CtContractValue();
+				ctContractVer.setCtContractValue(ctContractValue);
+				
+				getManagedBean().setContractVer(ctContractVer);
 				getManagedBean().setCtContract(null);
-				setSupplierInfo();
 				getManagedBean().setOriginalAccountNo(null);
-				getManagedBean().setAccountNo(null);
-				setBankInfo();
 			}
 		} finally {
 			contractSO = null;
 		}
 	}
     
-	private void setSupplierInfo() {
-		if(getManagedBean().getCtContract()!=null) {
-			if(getManagedBean().getCtContract().getSmSupplierBranch()!=null) {
-				getManagedBean().setSupplierBranch(getManagedBean().getCtContract().getSmSupplierBranch().getBranchName());
-				getManagedBean().setSupplierContactPerson(getManagedBean().getCtContract().getSmSupplierBranch().getSmPersonnel().getName());
-				getManagedBean().setSupplierTelNo(getManagedBean().getCtContract().getSmSupplierBranch().getPhoneNo());
-				getManagedBean().setSupplierFaxNo(getManagedBean().getCtContract().getSmSupplierBranch().getFaxNo());
-				getManagedBean().setSupplierEmail(getManagedBean().getCtContract().getSmSupplierBranch().getSmPersonnel().getEmail());
-			} else {
-				getManagedBean().setSupplierTelNo(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getPhoneNo());
-				getManagedBean().setSupplierFaxNo(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getFaxNo());
-				for(SmPersonnel smPersonnel : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmPersonnels()) {
-					if(smPersonnel.isContactPerson()) {
-						getManagedBean().setSupplierContactPerson(smPersonnel.getName());
-						getManagedBean().setSupplierEmail(smPersonnel.getEmail());
-						break;
-					}
-				}
-			}
-		} else {
-			getManagedBean().setSupplierBranch(null);
-			getManagedBean().setSupplierContactPerson(null);
-			getManagedBean().setSupplierTelNo(null);
-			getManagedBean().setSupplierFaxNo(null);
-			getManagedBean().setSupplierEmail(null);
-			getManagedBean().setSupplierAddress(null);
-		}
-	}
-	 
 	private void setBankInfo() {
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getAccountNo());
+		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+		
+		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
+		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
+		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+		getManagedBean().getContractVer().getCtContractValue().setBankPhoneNo(null);
+		getManagedBean().getContractVer().getCtContractValue().setBankFaxNo(null);
+		
 		if(supplierBank!=null) {
-			getManagedBean().setSupplierBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+			if(supplierBank.getSmSupplierBranch()!=null) {
+				getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
+			}			
 			for(PmAddressType pmAddressType : supplierBank.getPmFinancialOrg().getPmAddressTypes()) {
 				if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-					getManagedBean().setSupplierBankTelNo(pmAddressType.getPmAddress().getPhoneNo());
-					getManagedBean().setSupplierBankAddress(formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+					getManagedBean().getContractVer().getCtContractValue().setBankAddress(pmAddressType.getPmAddress());
+					getManagedBean().getContractVer().getCtContractValue().setBankPhoneNo(pmAddressType.getPmAddress().getPhoneNo());
+					getManagedBean().getContractVer().getCtContractValue().setBankFaxNo(pmAddressType.getPmAddress().getFaxNo());
+					break;
 				}
 			}
-			// TODO not able to get it from SM table
-			getManagedBean().setSupplierBankBranch("");
-		} else {
-			getManagedBean().setSupplierBankName(null);
-			getManagedBean().setSupplierBankTelNo(null);
-			getManagedBean().setSupplierBankAddress(null);
 		}
 	}
 	 
@@ -359,7 +331,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public String saveChangeBankRequest(String action) throws Exception {
 		IContractSO contractSO = null;
 		try {
-			if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())) {
+			if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
 				throw new EpException(MessageConst.ERROR_750000);
 			}
 			
@@ -373,10 +345,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setUserRole(getUserRole());
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 
-			getManagedBean().getContractVer().getCtContractValue().setSupplierBankAccountNo(getManagedBean().getAccountNo());
-			getManagedBean().getContractVer().getCtContractValue().setSupplierFinancialOrg(getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getAccountNo()).getPmFinancialOrg());
-			reqDTO.setCtContract(this.getManagedBean().getCtContract());
-			reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+			reqDTO.setCtContract(getManagedBean().getCtContract());
+			reqDTO.setCtContractVer(getManagedBean().getContractVer());
 
 			reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
@@ -413,10 +383,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			return RoleCode.CT_APPROVER.value();
 		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
 			return RoleCode.BPK_APPROVER.value();		
-		else if (getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_USER.value()))
-			return RoleCode.SUPPLIER_USER.value();
-		else if (getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_ADMIN.value()))
-			return RoleCode.SUPPLIER_ADMIN.value();		
+		else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()))
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();		
+		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();		
 		else
 			return null;
 	}
@@ -545,7 +519,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					List<PmFinancialAcc> list = resDTO.getPmFinancialOrg().getPmFinancialAccs();
 					PmFinancialAcc pmObj = null;
 					for (PmFinancialAcc financialAcc : list) {
-						if (financialAcc.getEffDate().before(today) && financialAcc.getExpDate().after(today)) {
+						if (financialAcc.getEffDate().before(today) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(today))) {
 							pmObj = financialAcc;
 							break;
 						}
@@ -555,7 +529,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 						getManagedBean().setFactoringBankName(pmObj.getPmPaymentBankOrg().getFinOrgName());
 						for(PmAddressType pmAddressType : pmObj.getPmPaymentBankOrg().getPmAddressTypes()) {
 							if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-								getManagedBean().setFactoringBankAddress(formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+								getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
 								break;
 							}
 						}
@@ -567,7 +541,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					for (PmFinancialBranch pmFinancialBranch : list) {
 						if (pmFinancialBranch.getFinancialBranchId().equals(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId())) {
 							for (PmFinancialAcc financialAcc : pmFinancialBranch.getPmFinancialAccs()) {
-								if (financialAcc.getEffDate().before(today) && financialAcc.getExpDate().after(today)) {
+								if (financialAcc.getEffDate().before(today) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(today))) {
 									pmObj = financialAcc;
 									break;
 								}
@@ -579,7 +553,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					getManagedBean().setFactoringBankName(pmObj.getPmPaymentBankOrg().getFinOrgName());
 					for(PmAddressType pmAddressType : pmObj.getPmPaymentBankOrg().getPmAddressTypes()) {
 						if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-							getManagedBean().setFactoringBankAddress(formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+							getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
 							break;
 						}
 					}					
@@ -709,6 +683,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		SelectItem[] items = null;
 		IQTAwardSO qtAwardSO = null;
 		ISupplierSearchSO supplierSearchSO = null;
+		IContractAmendmentSO contractAmendmentSO = null;
 		try {
 			supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO1 = new SupplierSearchReqDTO();
@@ -718,10 +693,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			for(SmSupplier smSupplier : resDTO1.getResultBean().getResultList()) {
 				supplierIdList.add(smSupplier.getSupplierId());
 			}
+			
+			contractAmendmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			amendmentReqDTO.setSupplierIds(supplierIdList);
+			ContractAmendmentResDTO amendmentResDTO = contractAmendmentSO.getAmendmentLoaIdsBySupplierIds(amendmentReqDTO);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			qtAwardSO = (IQTAwardSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			reqDTO.setSupplierIdList(supplierIdList);
+			if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
+				reqDTO.setExcludeLoaIdList(amendmentResDTO.getAmendmentLoaIds());
+			}
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			items = new SelectItem[list.size() + 1];
@@ -733,94 +716,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		} finally {
 			supplierSearchSO = null;
 			qtAwardSO = null;
+			contractAmendmentSO = null;
 		}
 		return items;
 	}
-    
-    public void combineSupAddress(){
-    	
-    	StringBuilder address = new StringBuilder();
-    	String strSpace =", ";
-    	if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress1() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress1());
-    		address.append(strSpace);
-    	
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress2() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress2());
-    		address.append(strSpace);
-    	
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress3() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress3());
-    		address.append(strSpace);
-    	
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress4() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getAddress4());
-    		address.append(strSpace);
-    		
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName());
-    		address.append(strSpace);
-    	
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName());
-    		address.append(strSpace);
-    	
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmCountry().getCountryName() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPmCountry().getCountryName());
-    		address.append("\n");
-    	}if(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPostcode() != null){
-    		address.append(this.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress().getPostcode());
-    	}
-    	
-    	this.getManagedBean().setSupplierAddress(address.toString());
-    }
-    
-    public void CombineBankAddress(SmAddress smAddress){
-    	
-    	StringBuilder address = new StringBuilder();
-    	String strSpace =", ";
-    	if(smAddress.getAddress1() != null){
-    		address.append(smAddress.getAddress1());
-    		address.append(strSpace);
-    	
-    	}if(smAddress.getAddress2() != null){
-    		address.append(smAddress.getAddress2());
-    		address.append(strSpace);
-    	
-    	}if(smAddress.getAddress3() != null){
-    		address.append(smAddress.getAddress3());
-    		address.append(strSpace);
-    	
-    	}if(smAddress.getAddress4() != null){
-    		address.append(smAddress.getAddress4());
-    		address.append(strSpace);
-    		
-    	}if(smAddress.getPmDistrict().getDistrictName() != null){
-    		address.append(smAddress.getPmDistrict().getDistrictName());
-    		address.append(strSpace);
-    	
-    	}if(smAddress.getPmState().getStateName() != null){
-    		address.append(smAddress.getPmState().getStateName());
-    		address.append(strSpace);
-    	
-    	}if(smAddress.getPmCountry().getCountryName() != null){
-    		address.append(smAddress.getPmCountry().getCountryName());
-    		address.append("\n");
-    	}if(smAddress.getPostcode() != null){
-    		address.append(smAddress.getPostcode());
-    	}
-    	
-    	this.getManagedBean().setSupplierAddress(address.toString());
-    }
 
-	public String convertTime(Date time){ 
-        String str ="";
-    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-        if(time == null)
-        	return str;
-        return format.format(time); 
-    } 
-	
 	public String getFactoringCompany() {
 		if(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()!=null) {
 			return getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
@@ -834,7 +734,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		try {
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-			if(getUserRole().equalsIgnoreCase(RoleCode.SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.SUPPLIER_ADMIN.value())) {
+			if(getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER);	
 			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())) {
 				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA);	
@@ -877,23 +778,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		} finally {
 			contractTemplateSO = null;
 		}
-	}
-	
-	private String formAddress(String address1, String address2, String address3, String address4) {
-		StringBuffer address = new StringBuffer();
-		if(address1!=null && address1.length()>0) {
-			address.append(address1).append(" ");
-		}
-		if(address2!=null && address2.length()>0) {
-			address.append(address2).append(" ");
-		}
-		if(address3!=null && address3.length()>0) {
-			address.append("<BR/>").append(address3).append(" ");
-		}
-		if(address4!=null && address4.length()>0) {
-			address.append(address4).append(" ");
-		}
-		return address.toString();
 	}
 
 	public String getPortletTitle() {

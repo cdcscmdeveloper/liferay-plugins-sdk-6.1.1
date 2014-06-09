@@ -17,10 +17,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
@@ -551,5 +554,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 	
+	public String getFullAddress(SmAddress smAddress) {
+		return AddressUtils.getFullAddress(smAddress);
+	}
 	
+	public String getFullAddress(PmAddress pmAddress) {
+		return AddressUtils.getFullAddress(pmAddress);
+	}
 }

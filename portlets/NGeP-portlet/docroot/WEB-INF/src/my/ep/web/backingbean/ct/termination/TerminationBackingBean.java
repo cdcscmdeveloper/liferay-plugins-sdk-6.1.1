@@ -381,7 +381,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
 					valuesMap.put("NOTICE_DATE", df.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
 				}			
-				valuesMap.put("SUPPLIER_NAME",getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+				valuesMap.put("SUPPLIER_NAME",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
 				valuesMap.put("SUPPLIER_ADDRESS",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
 				valuesMap.put("CONTRACT_TITLE",getManagedBean().getCtContract().getContractName());

@@ -60,19 +60,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private String factoringBankName;
 	private String factoringBankAddress;
-	private String supplierAddress;
-	private String supplierContactPerson;
-	private String supplierTelNo;
-	private String supplierFaxNo;
-	private String supplierEmail;
-	private String supplierBranch;
 	private String originalAccountNo;
 	private String accountNo;
-	private String supplierBankName;
-	private String supplierBankAddress;
-	private String supplierBankBranch;
-	private String supplierBankTelNo;
-	
+
 	private boolean agreeFactoringClause;
 	
 	private Map<Long, String> factoringCompMap;
@@ -236,14 +226,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.financialAccList = financialAccList;
 	}
 
-	public String getAccountNo() {
-		return accountNo;
-	}
-
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
-
 	public boolean isRemoveFactoring() {
 		return removeFactoring;
 	}
@@ -266,22 +248,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setLoaId(Long loaId) {
 		this.loaId = loaId;
-	}
-
-	public String getSupplierAddress() {
-		return supplierAddress;
-	}
-
-	public void setSupplierAddress(String supplierAddress) {
-		this.supplierAddress = supplierAddress;
-	}
-
-	public String getSupplierBankAddress() {
-		return supplierBankAddress;
-	}
-
-	public void setSupplierBankAddress(String supplierBankAddress) {
-		this.supplierBankAddress = supplierBankAddress;
 	}
 
 	public Long getContractVerId() {
@@ -327,46 +293,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.agreeFactoringClause = agreeFactoringClause;
 	}
 
-	public String getSupplierContactPerson() {
-		return supplierContactPerson;
-	}
-
-	public void setSupplierContactPerson(String supplierContactPerson) {
-		this.supplierContactPerson = supplierContactPerson;
-	}
-
-	public String getSupplierTelNo() {
-		return supplierTelNo;
-	}
-
-	public void setSupplierTelNo(String supplierTelNo) {
-		this.supplierTelNo = supplierTelNo;
-	}
-
-	public String getSupplierFaxNo() {
-		return supplierFaxNo;
-	}
-
-	public void setSupplierFaxNo(String supplierFaxNo) {
-		this.supplierFaxNo = supplierFaxNo;
-	}
-
-	public String getSupplierEmail() {
-		return supplierEmail;
-	}
-
-	public void setSupplierEmail(String supplierEmail) {
-		this.supplierEmail = supplierEmail;
-	}
-
-	public String getSupplierBranch() {
-		return supplierBranch;
-	}
-
-	public void setSupplierBranch(String supplierBranch) {
-		this.supplierBranch = supplierBranch;
-	}
-
 	public Map<String, SmSupplierBank> getSupplierBankAccountMap() {
 		if(supplierBankAccountMap==null) {
 			supplierBankAccountMap = new HashMap<String, SmSupplierBank>();
@@ -386,29 +312,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.originalAccountNo = originalAccountNo;
 	}
 
-	public String getSupplierBankName() {
-		return supplierBankName;
+	public String getAccountNo() {
+		return accountNo;
 	}
 
-	public void setSupplierBankName(String supplierBankName) {
-		this.supplierBankName = supplierBankName;
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
 	}
-
-	public String getSupplierBankBranch() {
-		return supplierBankBranch;
-	}
-
-	public void setSupplierBankBranch(String supplierBankBranch) {
-		this.supplierBankBranch = supplierBankBranch;
-	}
-
-	public String getSupplierBankTelNo() {
-		return supplierBankTelNo;
-	}
-
-	public void setSupplierBankTelNo(String supplierBankTelNo) {
-		this.supplierBankTelNo = supplierBankTelNo;
-	}	
-	
 	
 }

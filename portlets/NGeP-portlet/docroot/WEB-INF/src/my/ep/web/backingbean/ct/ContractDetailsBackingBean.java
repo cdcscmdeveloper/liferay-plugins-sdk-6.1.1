@@ -103,6 +103,7 @@ import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -340,9 +341,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    }
 		    
 		    retriveZonesByContractVer();
-		    combineSupAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+	    	getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+	    	getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 		    renderUpdateCheckbox(this.getManagedBean().getContractVer());
-		    this.getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+		    this.getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		    
 	        this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
@@ -360,7 +362,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
 		if(ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE) &&
 			this.getManagedBean().isUpdateContract()) {
-			if(!ctContractVer.getCtContractValue().getSupplierCompanyName().equals(
+			if(!ctContractVer.getCtContractValue().getSupplierName().equals(
 		      this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
 		    	this.getManagedBean().setUpdateCompanyName(true);
 		    }
@@ -498,7 +500,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
             CtContractVer ctContractVer = this.getManagedBean().getContractVer();
             if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
-            	ctContractVer.getCtContractValue().setSupplierCompanyName(this.getManagedBean().getSupplierCompanyName());
+            	ctContractVer.getCtContractValue().setSupplierName(this.getManagedBean().getSupplierCompanyName());
             }
             
             if (ctContractVer.getCtContractValue().isAddressChange()) {
@@ -646,44 +648,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	   return items;
 	}
-    
-    public void combineSupAddress(SmAddress supplierAddress){
-    	
-    	StringBuilder address = new StringBuilder();
-    	String strSpace =", ";
-    	if(supplierAddress.getAddress1() != null){
-    		address.append(supplierAddress.getAddress1());
-    		address.append(strSpace);
-    	
-    	}if(supplierAddress.getAddress2() != null){
-    		address.append(supplierAddress.getAddress2());
-    		address.append(strSpace);
-    	
-    	}if(supplierAddress.getAddress3() != null){
-    		address.append(supplierAddress.getAddress3());
-    		address.append(strSpace);
-    	
-    	}if(supplierAddress.getAddress4() != null){
-    		address.append(supplierAddress.getAddress4());
-    		address.append(strSpace);
-    		
-    	}if(supplierAddress.getPmDistrict().getDistrictName() != null){
-    		address.append(supplierAddress.getPmDistrict().getDistrictName());
-    		address.append(strSpace);
-    	
-    	}if(supplierAddress.getPmState().getStateName() != null){
-    		address.append(supplierAddress.getPmState().getStateName());
-    		address.append(strSpace);
-    	
-    	}if(supplierAddress.getPmCountry().getCountryName() != null){
-    		address.append(supplierAddress.getPmCountry().getCountryName());
-    		address.append("\n");
-    	}if(supplierAddress.getPostcode() != null){
-    		address.append(supplierAddress.getPostcode());
-    	}
-    	this.getManagedBean().setSmAddress(supplierAddress);
-    	this.getManagedBean().setSupplierAddress(address.toString());
-    }
     
     public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
@@ -1559,7 +1523,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 		else {
 			this.getManagedBean().setSupplierCompanyName(
-				this.getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+				this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		}
 	}
 	
@@ -1570,6 +1534,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		else {
 			this.getManagedBean().setSmAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		}
-		combineSupAddress(this.getManagedBean().getSmAddress());
+		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 	}
 }

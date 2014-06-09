@@ -274,7 +274,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
 					valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
 					valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierCompanyName());
+					valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 					valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 					
 					StrSubstitutor sub = new StrSubstitutor(valuesMap);
@@ -929,7 +929,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			
 			valuesMap.put("LOA_NO", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
 			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierCompanyName());
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			if(pmAddressType!=null) {
 				valuesMap.put("ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 				//valuesMap.put("ADDRESS", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress().getAddress1());
@@ -1395,7 +1395,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 if(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
 			    	    && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
-					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBankAccountNo())){
+					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())){
 						 this.getManagedBean().setSupplierBank(supplierBank);
 						 if(supplierBank.getSmAddress() != null)
 						    CombineBankAddress(supplierBank.getSmAddress());

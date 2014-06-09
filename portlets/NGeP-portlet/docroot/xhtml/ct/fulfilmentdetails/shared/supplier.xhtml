@@ -33,7 +33,7 @@
 		     </h:panelGrid>
           </h:panelGrid>
           <p:outputLabel value="Branch Name" />
-          <p:inputText disabled="true" style="width:222px;" /> 
+          <p:inputText disabled="true" style="width:222px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" /> 
           <h:panelGroup>
             <div style="height: 40px; vertical-align:top;">
                 <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
@@ -55,37 +55,37 @@
 		     </h:panelGrid>
            </h:panelGrid>
            <p:outputLabel value="Contact Person" />  
-           <p:inputText disabled="true" style="width:170px;" value="Mr Kamal" />
+           <p:inputText disabled="true" style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
            <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-           <p:inputText  value="309-98-93039"  disabled="true" style="width:170px;" />
+           <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  disabled="true" style="width:170px;" />
            <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
            <p:inputText  disabled="true" style="width:170px;"  
-              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.faxNo}"/>  
+              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}"/>  
            <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-           <p:inputText disabled="true" style="width:170px;" value="test@company.com"/>
+           <p:inputText disabled="true" style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
         </h:panelGrid>
         <h:panelGrid columns="2" style="width:100%;"  columnClasses="columnWidth30,columnWidth30" 
            rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored}">
            <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-           <p:inputText  value="CIMB BANK" disabled="true" style="width:170px;" />
+           <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankName}" disabled="true" style="width:170px;" />
            <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
-           <p:inputText value="0111-2345-8795" disabled="true" style="width:170px;"/> 
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}" disabled="true" style="width:170px;"/> 
            <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
-           <p:inputText value="CYBERJAYA"  disabled="true" style="width:170px;" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankBranch}"  disabled="true" style="width:170px;" />
            <h:panelGroup>
               <div style="height: 60px; vertical-align: top;">
                    <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
                </div>
            </h:panelGroup>
 	       <h:panelGrid>
-              <p:inputTextarea id="bankAddress"  value="Prima 5-A, Jalan Teknokrat 5,63000 Cyberjaya, Selangor Malaysia" 
+              <p:inputTextarea id="bankAddress" value="#{contractDetailsBackingBean.getFullAddress(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" 
                  disabled="true" rows="4" cols="31"  autoResize="false" style="margin-bottom: 5px;"/>
 	       </h:panelGrid>
 	       <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
            <p:inputText disabled="true" style="width:170px;"
-              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.phoneNo}"   /> 
+              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankPhoneNo}"   /> 
            <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-           <p:inputText  value="309-98-93039" disabled="true" style="width:170px;"/>  
+           <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankFaxNo}" disabled="true" style="width:170px;"/>  
          </h:panelGrid>
          <h:panelGrid columns="2" style="width:100%;"  columnClasses="columnWidth30,columnWidth30" 
               rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}">
@@ -94,9 +94,3 @@
        </h:panelGrid>
     </p:panel>
 </ui:composition>
-
-
-
-
-                                       
-                                       
