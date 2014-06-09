@@ -73,7 +73,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, "review-purchase-inq");
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, "review-purchase-in-default");
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-supplier-view");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
 
 		// Contract Management
