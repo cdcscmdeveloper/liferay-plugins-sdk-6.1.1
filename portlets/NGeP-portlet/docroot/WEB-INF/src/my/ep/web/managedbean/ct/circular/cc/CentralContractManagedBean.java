@@ -82,6 +82,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private TreeNode centralZoneTrees;
 	
+	private int selectedTabIndex;
+	
 	private List<CtContractZone> contractItemZones;
 	
 	public boolean isUpdateAction() {
@@ -306,7 +308,10 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setContractItemZones(List<CtContractZone> contractItemZones) {
 		this.contractItemZones = contractItemZones;
 	}
-	
-	
-	
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
 }

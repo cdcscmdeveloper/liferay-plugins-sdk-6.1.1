@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  <p:column headerText="UOM" style="width: 10%;">
 			      <ac:lov id="uomLovId" lovId="PM_UOM" size="8" 
-				     headerText="UOM Lov" update=":form:tabview:panelItemDt"
+				     headerText="UOM Lov" update="@([id$=panelItemDt])" 
 				     value="#{data.pmUom.uomName}" conditionField="recordStatus^1"
 				     saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			      </ac:lov>

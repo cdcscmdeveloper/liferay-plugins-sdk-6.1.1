@@ -15,7 +15,7 @@
 			 <p:column headerText="#{lbl['lbl.ct.cc.phyloa']}" > <h:outputText value="#{data.ctContract.loaPhysicalNo}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" > <h:outputText value="#{data.ctContract.contractPhysicalNo}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctname']}" ><h:outputText value="#{data.ctContract.contractName}" /> </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.supplierCompanyName}" /></p:column>
+			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.supplierName}" /></p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}" ><h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
@@ -176,7 +176,7 @@
 			<div class="ppRightBtn"> 
 				<p:commandButton value="Select" process="contractDlg" icon="ui-icon-accept"
 					action="#{centralContractBackingBean.addSelectedContract}"
-					update="centralContractDt,popupButtonCal,popupButtonCal1" onclick="contractDlg.hide();" />
+					update="centralContractDt" onclick="contractDlg.hide();" />
 				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="contractDlg.hide();" />
 			</div>	
 		</p:panel>
