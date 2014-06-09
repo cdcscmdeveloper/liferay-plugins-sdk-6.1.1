@@ -10,7 +10,7 @@
 				value="Referring to AP201, the followings are the reasons where contract needs special approval:-" />
 			<p:spacer height="10" />
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="true" value="#{!amendmentBackingBean.managedBean.contractVer.ctContract.recordStatus}" />
+				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="Contract is not active" />
 			</h:panelGrid>

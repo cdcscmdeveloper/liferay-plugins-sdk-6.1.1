@@ -68,6 +68,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -1291,7 +1292,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			if(resDTO.getCtContractVer().getCtContractItems().size() > 0){
 				 for(CtContractItem ctContractItem : resDTO.getCtContractVer().getCtContractItems()){
-					 if(ctContractItem.isRecordStatus())
+					 if(ctContractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)
 					    ctContractItem.setChkStatusId(1);
 				    else
 					 ctContractItem.setChkStatusId(0);
@@ -1300,7 +1301,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			if(resDTO.getCtContractVer().getCtAgencies().size() > 0){
 				for(CtAgency ctAgency : resDTO.getCtContractVer().getCtAgencies()){
-					 if(ctAgency.isRecordStatus())
+					 if(ctAgency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)
 						 ctAgency.setChkStatusId(1);
 				    else
 				    	ctAgency.setChkStatusId(0);

@@ -400,10 +400,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				}
 				valuesMap.put("REASON_LIST", terminationReason.toString());
 				if(getManagedBean().isRemedy()) {
-					valuesMap.put("REMEDY_START_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
-					valuesMap.put("REMEDY_END_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
-					valuesMap.put("TERMINATE_EFF_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()));
+					if(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()!=null) {
+						valuesMap.put("TERMINATE_EFF_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()));
+					}
 				}
+				if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
+					valuesMap.put("REMEDY_START_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
+				}
+				if(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()!=null) {
+					valuesMap.put("REMEDY_END_DATE",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
+				}				
 				if(getManagedBean().getContractVer().getApprover()!=null) {
 					valuesMap.put("APPROVER_NAME", getManagedBean().getContractVer().getApprover().getUserName());
 					valuesMap.put("APPROVER_DESIGNATION", getManagedBean().getContractVer().getApprover().getDesignation());

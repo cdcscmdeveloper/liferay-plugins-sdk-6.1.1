@@ -9,7 +9,7 @@
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 			<p:outputLabel value="Account No"/>
 			<p:selectOneMenu  style="width:210px; margin-bottom: 5px;" 
-			   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBankAccountNo}">
+			   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
 			   <f:selectItem itemLabel="-Select One-" itemValue=""/>
 			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>
 			    <p:ajax event="change" process="@this" update="paymentDetails" listener="#{amendmentBackingBean.changeAccountActionListener}"/>

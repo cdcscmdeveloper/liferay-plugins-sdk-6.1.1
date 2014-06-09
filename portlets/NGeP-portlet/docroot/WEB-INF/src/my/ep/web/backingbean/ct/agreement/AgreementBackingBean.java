@@ -1131,7 +1131,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
+//				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
 				// TODO hardcode to get the value, should remove after have real data
 				reqDTO.setOrgProfileId(1003L);
 			} else { // Central Contract	

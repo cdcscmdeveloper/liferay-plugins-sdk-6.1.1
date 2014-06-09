@@ -117,12 +117,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
 	
-	private String supplierContactPerson;
-	private String supplierTelNo;
-	private String supplierMobileNo;
-	private String supplierFaxNo;
-	private String supplierEmail;
-	
 	private String editorValue;
 	
 	private boolean termAndConditionFlg;
@@ -648,46 +642,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setItemServiceExist(boolean itemServiceExist) {
 		this.itemServiceExist = itemServiceExist;
-	}
-
-	public String getSupplierContactPerson() {
-		return supplierContactPerson;
-	}
-
-	public void setSupplierContactPerson(String supplierContactPerson) {
-		this.supplierContactPerson = supplierContactPerson;
-	}
-
-	public String getSupplierTelNo() {
-		return supplierTelNo;
-	}
-
-	public void setSupplierTelNo(String supplierTelNo) {
-		this.supplierTelNo = supplierTelNo;
-	}
-
-	public String getSupplierMobileNo() {
-		return supplierMobileNo;
-	}
-
-	public void setSupplierMobileNo(String supplierMobileNo) {
-		this.supplierMobileNo = supplierMobileNo;
-	}
-
-	public String getSupplierFaxNo() {
-		return supplierFaxNo;
-	}
-
-	public void setSupplierFaxNo(String supplierFaxNo) {
-		this.supplierFaxNo = supplierFaxNo;
-	}
-
-	public String getSupplierEmail() {
-		return supplierEmail;
-	}
-
-	public void setSupplierEmail(String supplierEmail) {
-		this.supplierEmail = supplierEmail;
 	}
 
 	public String getEditorValue() {

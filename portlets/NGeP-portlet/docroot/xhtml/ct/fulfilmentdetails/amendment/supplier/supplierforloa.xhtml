@@ -9,9 +9,9 @@
 			<p:outputLabel value="MOF No" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
 			<p:outputLabel value="Supplier Name" />
-			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}" />
+			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 			<p:outputLabel value="Branch" />
-			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplierBranch.branchName}" />
+			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
 			<h:panelGroup>
 				<div style="height: 70px; vertical-align: top;">
 					<p:outputLabel for="address" value="Address " />
@@ -19,22 +19,22 @@
 			</h:panelGroup>
 			<h:panelGrid>
 				<p:inputTextarea id="address" disabled="true"
-					value="#{amendmentBackingBean.managedBean.supplierAddress}"
+					value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"
 					rows="4" cols="31" maxlength="200" autoResize="false"
 					style="margin-bottom: 5px;" />
 			</h:panelGrid>
 			<p:outputLabel value="Contact Person" />
-			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.supplierContactPerson}" />
+			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
 			<p:outputLabel value="Tel No" />
-			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.supplierTelNo}" />
+			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
 			<p:outputLabel value="Mobile No" />
 			<h:panelGrid columns="3" columnClasses="columnWidth30,columnWidth30">
-				<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.supplierMobileNo}" />
+				<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierMobileNo}" />
 				<p:outputLabel value="Fax No" />
-				<p:inputText style="width:140px;" disabled="true" value="#{amendmentBackingBean.managedBean.supplierFaxNo}" />
+				<p:inputText style="width:140px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
 			</h:panelGrid>
 			<p:outputLabel value="Email Id" />
-			<p:inputText style="width:95%;" disabled="true" value="#{amendmentBackingBean.managedBean.supplierEmail}" />
+			<p:inputText style="width:95%;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

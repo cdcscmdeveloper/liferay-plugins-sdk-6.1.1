@@ -102,7 +102,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -357,27 +356,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
 				getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
 		    }
-		    
-		    if(getManagedBean().getCtContract()!=null) {
-				if(getManagedBean().getCtContract().getSmSupplierBranch()!=null) {
-					getManagedBean().setSupplierContactPerson(getManagedBean().getCtContract().getSmSupplierBranch().getSmPersonnel().getName());
-					getManagedBean().setSupplierMobileNo(getManagedBean().getCtContract().getSmSupplierBranch().getSmPersonnel().getMobileNo());
-					getManagedBean().setSupplierTelNo(getManagedBean().getCtContract().getSmSupplierBranch().getPhoneNo());
-					getManagedBean().setSupplierFaxNo(getManagedBean().getCtContract().getSmSupplierBranch().getFaxNo());
-					getManagedBean().setSupplierEmail(getManagedBean().getCtContract().getSmSupplierBranch().getSmPersonnel().getEmail());
-				} else {
-					getManagedBean().setSupplierTelNo(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getPhoneNo());
-					getManagedBean().setSupplierFaxNo(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getFaxNo());
-					for(SmPersonnel smPersonnel : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmPersonnels()) {
-						if(smPersonnel.isContactPerson()) {
-							getManagedBean().setSupplierContactPerson(smPersonnel.getName());
-							getManagedBean().setSupplierEmail(smPersonnel.getEmail());
-							getManagedBean().setSupplierMobileNo(smPersonnel.getMobileNo());
-							break;
-						}
-					}
-				}
-		    }
 		} finally {
 			contractSO = null;
 		}
@@ -556,10 +534,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			return RoleCode.QCB_SECRETARY.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.QC_MEMBER.value()))
 			return RoleCode.QC_MEMBER.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_ADMIN.value()))
-			return RoleCode.SUPPLIER_ADMIN.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_USER.value()))
-			return RoleCode.SUPPLIER_USER.value();		
+		else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()))
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();		
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();				
 		else 
 			return null;
 	 }
