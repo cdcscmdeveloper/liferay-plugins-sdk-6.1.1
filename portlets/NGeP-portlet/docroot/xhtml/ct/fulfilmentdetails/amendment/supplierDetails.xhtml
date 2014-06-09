@@ -57,11 +57,6 @@
               <p:inputTextarea id="bankAddress"  value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" 
                  disabled="true" rows="4" cols="31"  autoResize="false" style="margin-bottom: 5px;"/>
 	       </h:panelGrid>
-	       <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-           <p:inputText disabled="true" style="width:170px;"
-              value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankPhoneNo}"/> 
-           <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-           <p:inputText  value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankFaxNo}" disabled="true" style="width:170px;"/>  
          </h:panelGrid>
          <h:panelGrid columns="2" style="width:100%;"  columnClasses="columnWidth30,columnWidth30" 
               rendered="#{amendmentBackingBean.managedBean.ctContract.factored}">

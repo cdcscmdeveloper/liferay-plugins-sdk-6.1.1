@@ -107,15 +107,18 @@
 		   </p:selectOneMenu>
 		   <p:inputText  style="width:200px;" disabled="true" rendered="#{supplierBackingBean.managedBean.taskId!=null}"
 		      value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
+		   <f:verbatim />
+		   <f:verbatim />		   
+		   <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>
+		   <p:inputText  disabled="true" style="width:200px;"
+		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankName}" />		
+		   <f:verbatim />
+		   <f:verbatim />			           
 		   <p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" /> 
 		   <p:inputText disabled="true" style="width:200px;"
 		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />
-		   <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>
-		   <p:inputText  disabled="true" style="width:200px;"
-		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankName}" />
-		   <p:outputLabel  value="Tel No"/>
-		   <p:inputText   disabled="true" style="width:200px;"
-		      value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankPhoneNo}" />
+		   <f:verbatim />
+		   <f:verbatim />			     
            <h:panelGroup>
 			 <div style="height:40px; vertical-align: top">
 				 <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
@@ -124,7 +127,9 @@
 		   <h:panelGrid>
 		       <p:inputTextarea id="bankAddress" rows="3" cols="37" disabled="true" maxlength="250"
 		         value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
-		   </h:panelGrid>               
+		   </h:panelGrid>  
+		   <f:verbatim />
+		   <f:verbatim />			                
         </h:panelGrid>
       </p:panel>
 	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">

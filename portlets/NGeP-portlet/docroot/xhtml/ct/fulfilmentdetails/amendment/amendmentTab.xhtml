@@ -60,13 +60,6 @@
 				</tr>
 			</table>	 
 		</p:panel>
-		<p:menu>
-	        <p:submenu label="#{lbl['lbl.ct.amend.amend']}">
-	            <p:menuitem value="#{lbl['lbl.ss.sidemenu.market.research']}" outcome="/xhtml/sc/directpurchase/directPurchase.xhtml" />
-	            <p:menuitem value="#{lbl['lbl.ss.sidemenu.request.list']}" outcome="/xhtml/sc/directpurchase/requestList.xhtml" disabled="true"/>
-	            <p:menuitem value="#{lbl['lbl.ss.sidemenu.remarks']}" outcome="/xhtml/sc/directpurchase/directPurchaseRemarks.xhtml"/>
-	        </p:submenu>
-	    </p:menu>		
 		<p:tabView id="tabview" value="#{lbl['lbl.ct.amend.amend']}" dynamic="true" orientation="left">
 			<p:tab title="#{lbl['lbl.ct.menu.fd']}"	rendered="#{amendmentBackingBean.managedBean.ackFA == null}">
 				<ui:include src="fulfilmentDetails.xhtml" />

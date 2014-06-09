@@ -288,22 +288,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
-		getManagedBean().getContractVer().getCtContractValue().setBankPhoneNo(null);
-		getManagedBean().getContractVer().getCtContractValue().setBankFaxNo(null);
 		
 		if(supplierBank!=null) {
 			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-			if(supplierBank.getSmSupplierBranch()!=null) {
-				getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
-			}			
-			for(PmAddressType pmAddressType : supplierBank.getPmFinancialOrg().getPmAddressTypes()) {
-				if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-					getManagedBean().getContractVer().getCtContractValue().setBankAddress(pmAddressType.getPmAddress());
-					getManagedBean().getContractVer().getCtContractValue().setBankPhoneNo(pmAddressType.getPmAddress().getPhoneNo());
-					getManagedBean().getContractVer().getCtContractValue().setBankFaxNo(pmAddressType.getPmAddress().getFaxNo());
-					break;
-				}
-			}
+			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
+			getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
 		}
 	}
 	 
