@@ -79,6 +79,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierMofNoCriteria;
@@ -156,7 +157,6 @@ public class SimpleQuoteBackingBean extends
 		catalogueReqDTO.setDocId(cmSupplierItemId);
 		CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
 		ScQuote scQuote = getManagedBean().getScQuote();
-		scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		getManagedBean().setQuoteNo(quoteSO.generateQuoteNo());
 		
 		// adding multiple suppliers in supplier criteria
@@ -199,6 +199,7 @@ public class SimpleQuoteBackingBean extends
 						serviceTemplateSpecBean.setSpecMaster(serviceTpl);
 						getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
 						getManagedBean().setServiceFlag(Boolean.TRUE);
+						
 					} 
 				}else if (icode < ParameterConst.PRODUCT_OR_SERVICE) { // product
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
@@ -217,7 +218,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
-
+		
 		// TODO check flag for panel item or non contract item
 		if(itemPanelFlag){
 			getManagedBean().setPanel(Boolean.TRUE);
@@ -245,7 +246,6 @@ public class SimpleQuoteBackingBean extends
 		workFlowStatuses.add(workFlowStatus);
 		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		scQuote.setWorkflowStatuses(workFlowStatuses);
-		scQuote.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote));
 		getManagedBean().setRemarks(initializeRemarks(scQuote));
@@ -271,7 +271,7 @@ public class SimpleQuoteBackingBean extends
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-			quote.setQuoteNo(quoteSO.generateQuoteNo());
+			//quote.setQuoteNo(quoteSO.generateQuoteNo());
 
 			ScRequestItem requestItem = new ScRequestItem();
 			List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
@@ -293,6 +293,7 @@ public class SimpleQuoteBackingBean extends
 			quote.setProcurementType(resDTO.getPmParameter());
 			quote.setPanel(getManagedBean().isPanel());
 			quote.setZonal(getManagedBean().isZonal());
+			quote.setQuoteNo(getManagedBean().getQuoteNo());
 			
 			// zone details
 			if(!getManagedBean().getZoneTrees().isEmpty()){
@@ -387,10 +388,12 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("submitSimpleQuote");
 		IQuoteSO quoteSO = null;
 		ScRequestNote requestNote;
+		List<ScQuoteDoc> quoteDocs = null;
 		try {
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQuoteSO.class);
+			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -403,8 +406,7 @@ public class SimpleQuoteBackingBean extends
 			quote.setProcurementType(resDTO.getPmParameter());
 			quote.setPanel(getManagedBean().isPanel());
 			quote.setZonal(getManagedBean().isZonal());
-
-			quote.setQuoteNo(quoteSO.generateQuoteNo());
+            quote.setQuoteNo(getManagedBean().getQuoteNo());
 			ScRequestItem requestItem = new ScRequestItem();
 			List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 			requestItems.add(requestItem);
@@ -421,6 +423,25 @@ public class SimpleQuoteBackingBean extends
 			requestNote.setQuote(quote);
 			quote.setRequestNote(requestNote);
 			quote.setCreatedDate(DateUtils.getCurrentDate());
+			
+			// WorkFlow Status
+			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
+			ScSQWorkFlowStatus workFlowStatus = new ScSQWorkFlowStatus();
+			workFlowStatus.setQuote(quote);
+			PmStatus status = new PmStatus();
+			status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			if (status != null) {
+				statusReqDTO.setStatusId(status.getStatusId());
+				StatusResDTO statusResDTO = iStatusSO
+						.retrieveStatusByStatusId(statusReqDTO);
+				workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			}
+			workFlowStatus.setCurrent(Boolean.TRUE);
+			workFlowStatuses.add(workFlowStatus);
+			getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			quote.setWorkflowStatuses(workFlowStatuses);
+			
 			// zone details
 			if(!getManagedBean().getZoneTrees().isEmpty()){
 				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
@@ -435,7 +456,9 @@ public class SimpleQuoteBackingBean extends
 
 			// by business nature
 			if(getManagedBean().getBusinessNatureCriterias() !=null){
-				quote.setBusinessNatureCriterias(getBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias(), quote));
+				if(quote.getBusinessNatureCriterias() == null || quote.getBusinessNatureCriterias().isEmpty()){
+					quote.setBusinessNatureCriterias(getBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias(), quote));
+				}
 			}
 
 			// by supplier 
@@ -456,28 +479,34 @@ public class SimpleQuoteBackingBean extends
 			}
 			//remarks
 			quote.setRemarks(initializeRemarks(quote));
+			
 			// tpl spec - product
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
-				ScQuoteDoc quoteDoc = new ScQuoteDoc();
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
-					quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
-					quoteDoc.setQuote(getManagedBean().getScQuote());
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+					if(quote.getQuoteDocs() == null){
+						quoteDocs = new ArrayList<ScQuoteDoc>();
+						ScQuoteDoc quoteDoc  = new ScQuoteDoc();
+						quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+						quoteDoc.setQuote(getManagedBean().getScQuote());
+						quoteDocs.add(quoteDoc);
+						quote.setQuoteDocs(quoteDocs);	
+					}
 				}
 			}
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
-				ScQuoteDoc quoteDoc = new ScQuoteDoc();
-				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+				if(quote.getQuoteDocs() != null && !quote.getQuoteDocs().isEmpty() && quote.getQuoteDocs().size() >0){
+					if(quote.getQuoteDocs() == null){
+					quoteDocs = new ArrayList<ScQuoteDoc>();
+					ScQuoteDoc quoteDoc  = new ScQuoteDoc();
 					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
 					quoteDoc.setQuote(getManagedBean().getScQuote());
 					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+					quote.setQuoteDocs(quoteDocs);	
 				}
+			  }	
 			}
+			
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -1658,10 +1687,12 @@ public class SimpleQuoteBackingBean extends
 						if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 							productTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+							getManagedBean().setProductFlag(Boolean.TRUE);
 							// service Tpl Spe
 						} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 							serviceTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+							getManagedBean().setServiceFlag(Boolean.TRUE);
 						}
 					}
 				}
@@ -1750,7 +1781,7 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				// supplier list
-				if(scQuote.getScQuoteSuppliers() !=null && scQuote.getScQuoteSuppliers().size() > 0){
+				if(scQuote.getScQuoteSuppliers() != null && !scQuote.getScQuoteSuppliers().isEmpty() && scQuote.getScQuoteSuppliers().size() > 0){
 					getManagedBean().getSupplierList().addAll(scQuote.getScQuoteSuppliers());
 				}
 
@@ -1768,46 +1799,73 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO = new QuoteReqDTO();
 				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 				quoteReqDTO.setQuoteId(quoteId);
-				quoteReqDTO.setFetchSubEntity(true);
-				QuoteResDTO  quoteResDTO = quoteSO.onSimpleQuoteClosed(quoteReqDTO);
+				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				//get RequestNote Backing bean and manage bean and set Request Note to RequestNote manage bean
 				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 				RequestNoteBackingBean requestNoteBackingBean = (RequestNoteBackingBean) portletSession.getAttribute("requestNoteBackingBean");
 				if (requestNoteBackingBean == null) {
 					requestNoteBackingBean = new RequestNoteBackingBean();
 				}
-				ScQuote scQuote =  quoteResDTO.getQuoteBidDtl();
 
-				if(scQuote != null){
-					ScRequestNote requestNote =  scQuote.getRequestNote();
-					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scQuote.getRequestNote().getRequestNoteDtls().get(0).getScRequestSupplierItem());
+				if(quote != null){
+					ScRequestNote requestNote =  quote.getRequestNote();
+					if(requestNote != null){
+					//requestNoteBackingBean.getManagedBean().setRequestSupplierItem(quote.getRequestNote().getRequestNoteDtls().get(0).getScRequestSupplierItem());
 					token = facesScopes.getBPMAuthenticationCtxToken();
 					BpmRequestDTO reqBPMDTO = new BpmRequestDTO();
 					reqBPMDTO.setCtxToken(token);
 					reqBPMDTO.setTaskId(getManagedBean().getTaskId());
 					res = bpmSO.getTaskDetails(reqBPMDTO);
 					requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
-
-					requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
+				     
+					// remarks
+				    requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
 					requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
-					requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNote.getRequestNoteDtls());
+					
+					ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
+					SmSupplier  smSupplier = new SmSupplier();
+					smSupplier.setSupplierId(127L);
+					requestSupplierItem.setSmSupplier(smSupplier);
+					List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+		            for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+		            	parameterReqDTO = new ParameterReqDTO();
+		            	parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+		            	parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+		            	ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		                requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
+		                requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
+		                
+		                
+		                // TODO  hard code request supp item and proc type
+		            	requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+		        		parameterReqDTO = new ParameterReqDTO();
+						parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+						parameterReqDTO.setParameterCode("N");
+						ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		            	requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+		            	
+		            	requestNoteDtl.setAssignedUser(new PmUser());
+		            	requestNoteDtls.add(requestNoteDtl);
+					}
+					
+					requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 					requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
 					requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
-					//requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
-					//requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
+					requestNoteBackingBean.getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
+					
 					ScRequestNoteDtl scRequestNoteDtl = requestNote.getRequestNoteDtls().get(0);
-					parameterReqDTO = new ParameterReqDTO();
-					parameterReqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-					parameterReqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
-					ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-					scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 					requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
-
-					requestNoteBackingBean.initialInformation(new ScRequestNote());
-
-					requestNoteBackingBean.populateUserDivisionList();
+					requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+					requestNoteBackingBean.getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+			      }
 				}	
-
+				
+				// For status 
+				requestNoteBackingBean.getCurrentStatus(res.getDocStatus().longValue());
+				//approvers list
+				requestNoteBackingBean.initialInformation(new ScRequestNote());
+				// ptj drop down
+				requestNoteBackingBean.populateUserDivisionList();
 				// page navigation to request note
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");

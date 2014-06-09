@@ -542,8 +542,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
             for (ScRequestSupplierItem requestSupplierItem : getManagedBean().getScPrInquiry().getScRequestSupplierItems()) {
             	ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
             	parameterReqDTO = new ParameterReqDTO();
-            	parameterReqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-            	parameterReqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+            	parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+            	parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
             	ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
                 requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
                 requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
@@ -572,15 +572,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 			parameterReqDTO = new ParameterReqDTO();
-        	parameterReqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-        	parameterReqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+        	parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+        	parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
         	ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
         	scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 			requestNoteBackingBean.initialInformation(new ScRequestNote());
 			requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 			requestNoteBackingBean.populateUserDivisionList();
-			requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+			requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			
 			//redirect to RequestNote screen
 			return "commonRequestNote";

@@ -319,14 +319,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 			   ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-			   parameterReqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-			   parameterReqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+			   parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+			   parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			   ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			   scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 		       requestNote.setRemarks(results);
 			   getManagedBean().setRequestNote(requestNote);
 			   getManagedBean().setOutComes(res.getAction());
-			   getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+			   getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			   getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
 			   initialInformation(requestNote);
 			   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
@@ -412,8 +412,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	   if(getManagedBean().getSelectedRequestNoteDtls() != null) {
 		  for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getSelectedRequestNoteDtls()) {
 			 if(getManagedBean().getRequestNoteDtls().contains(selectedReqDtl)){
-			    reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-			    reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+			    reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+			    reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				selectedReqDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 				PmUser pmUser = new PmUser();
@@ -480,7 +480,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setUser(facesScopes.getUserSessionBean());
-			if (getManagedBean().getRequestNote().getRemarks() != null && getManagedBean().getRequestNote().getRemarks().size()>0) {
+			if (getManagedBean().getRequestNote().getRemarks() != null && !getManagedBean().getRequestNote().getRemarks().isEmpty()) {
 			   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
 			} else {
 				 remark.setRemark("");
@@ -781,8 +781,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		scRequestNoteDtl.setScRequestNote(requestNote);
 		scRequestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
 	    reqDTO = new ParameterReqDTO();
-	    reqDTO.setParameterType(ParameterTypeConst.RN_FULFILLMENT_TYPE);
-	    reqDTO.setParameterCode(ParameterConst.FULFILLMENT_ONE_OFF);
+	    reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+	    reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setFulfillmentType(resDTO.getPmParameter());
 	    
@@ -824,7 +824,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		requestNote.setRequestNoteDtls(requestNoteDtls);
 		populateUserDivisionList();
 		getManagedBean().setRequestNote(requestNote);
-		getManagedBean().setFulfillmentType(ParameterConst.FULFILLMENT_ONE_OFF);
+		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		getCurrentStatus(status.getStatusId());
 		initialInformation(requestNote);
 		initializeRemarks(requestNote);
@@ -929,11 +929,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		List<PmUser> userlist = new ArrayList<PmUser>();
 		if(requestNoteDtl.getFulfillmentType() != null ){
-		if (requestNoteDtl.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILLMENT_ONE_OFF)) {
+		if (requestNoteDtl.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 			userlist = userListByRole(RoleCode.REQUISITIONER.value());
 			getManagedBean().setUserList(userlist);
 			
-		 } else if (requestNoteDtl.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILLMENT_PERIODIC)) {
+		 } else if (requestNoteDtl.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 			List<String> roleList= new ArrayList<String>();
 			roleList.add(RoleCode.DESK_OFFICER.value());
 			roleList.add(RoleCode.REQUISITIONER.value());
