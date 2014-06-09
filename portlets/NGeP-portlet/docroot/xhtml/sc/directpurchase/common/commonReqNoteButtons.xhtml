@@ -56,12 +56,12 @@
 								</c:if>
 								<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
 								<p:commandButton value="#{action}" process="@all"
-									rendered="#{!requestNoteBackingBean.managedBean.isPrInquiry() or  !unspscCodeBackingBean.isRequisitioner()}"
+									rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{requestNoteBackingBean.updateBpmTask(action)}" />
 
 								<p:commandButton value="#{action}" process="@all"
-									rendered="#{requestNoteBackingBean.managedBean.isPrInquiry() and unspscCodeBackingBean.isRequisitioner()}"
+									rendered="#{unspscCodeBackingBean.isRequisitioner()}"
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{requestNoteBackingBean.submitAction}" />
 							</c:forEach></td>

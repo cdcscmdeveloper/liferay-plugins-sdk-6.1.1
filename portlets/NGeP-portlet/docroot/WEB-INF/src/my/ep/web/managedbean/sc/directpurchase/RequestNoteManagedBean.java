@@ -33,7 +33,7 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class RequestNoteManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-	private String sourceMethod = ParameterConst.METHOD_SC;
+	private String sourceMethod;
 	private	ScRequestNote	requestNote = new ScRequestNote(); //contain request list information
 	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
 	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();

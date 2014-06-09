@@ -140,7 +140,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<ScQuoteSupplier> selectedPanelSuppliers;
 
 	// quoteSuppliers for  supplier list
-	private List<ScQuoteSupplier> supplierList; 
+	private List<ScQuoteSupplier> supplierList = new ArrayList<ScQuoteSupplier>();
 	private List<ScQuoteSupplier> selectedSupplierList;
 	private List<SmSupplier> compareSuppliers = new ArrayList<SmSupplier>();
 

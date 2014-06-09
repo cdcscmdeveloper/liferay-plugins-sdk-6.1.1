@@ -99,9 +99,22 @@
 				  </p:commandLink> 
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
+				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
+				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
+				        style="width:120px;">  
+					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					   <f:selectItems
+							value="#{requestNoteDtl.scRequestSupplierItem.requestNoteItem.supplierItems}" 
+							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
+							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
+					</p:selectOneMenu>
+					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
+				</p:column>
+				
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}"
 					style="width:10%">
-					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
+					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"  rendered="#{!requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}"	
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -112,20 +125,10 @@
 							itemValue="#{supplierItemPrice.priceType.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.priceType)}"  size="8" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" />
+					
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
-				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
-				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
-				        style="width:120px;" required="true">  
-					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
-					   <f:selectItems
-							value="#{requestNoteDtl.scRequestSupplierItem.requestNoteItem.supplierItems}" 
-							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
-							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
-					</p:selectOneMenu>
-					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
-				</p:column>
+				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%;text-align:right">
 					<ui:fragment
@@ -185,20 +188,23 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:15%">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:16%">
 					<p:inputText style="width:20px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="2" maxlength="3"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
-					<p:selectOneMenu  style="width:75px;"
+					<p:selectOneMenu  style="width:75px;" rendered="#{!requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
-					<p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.deliveryTerm,requestNoteDtl.deliverTermType)}" 
+					    size="6" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" />
+					    <p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
+				
 				</p:column>
-		
 			</p:dataTable>
 		</h:panelGrid>
+		
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy">
 			<p:row>
 				<p:column>
@@ -230,8 +236,8 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-						process="@all" icon="ui-icon-submit"
-						action="#{requestNoteBackingBean.applyForRequestNote}"
+						process="@this" icon="ui-icon-submit" partialSubmit="true" immediate="true"
+						actionListener="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
 					
 				   </p:column>
