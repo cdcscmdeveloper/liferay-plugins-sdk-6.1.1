@@ -148,7 +148,8 @@
 										style="margin-bottom: 5px;">
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
-										<p:ajax event="change" update="reqDtlId" process="@form" 
+											
+										<p:ajax event="change" update="reqDtlId" process="@this , orderQty" 
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
 									</p:selectOneMenu> <p:commandLink style="text-align:left">
 										<p:graphicImage

@@ -554,12 +554,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 				   resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+				  getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
 			  } else {
 				  reqDTO = new ParameterReqDTO();
 				  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 				  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 				   resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+				  getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 			  }
 			
 			if (cmSupplierItem.getCmPricings() != null
@@ -1025,7 +1027,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
 			if(getManagedBean().getOrgProfileId() != null){
-				userReqDto.setOrgProfileId(getManagedBean().getOrgProfileId());
+				//userReqDto.setOrgProfileId(getManagedBean().getOrgProfileId());
 			}
 			
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);

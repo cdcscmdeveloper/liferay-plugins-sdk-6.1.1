@@ -7,7 +7,6 @@
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
 		header="ADD TO CART" width="540 " height="460" resizable="true"
 		dynamic="true" modal="true">
-		
 		<p:panel id="addToCartId">
 			<p:messages id="cartmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -88,44 +87,42 @@
 							<p:ajax event="change" update="justiId"
 								listener="#{requestNoteBackingBean.procurementTypeEvent}"
 								process="@this" />
-						</p:selectOneRadio></td>
-					<td><p:message id="procTypeMsg" for="procType" display="icon" /></td>
+						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
+					
 				</tr>
-				<tr>
-					<td colspan="2"><p:outputPanel id="justiId">
-							<table>
-								<tr>
-									<ui:fragment
-										rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-										<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
-										<td><p:selectOneMenu
-												style="width: 120px;margin-bottom: 5px;"
-												value="#{requestNoteBackingBean.managedBean.justificationType}">
-												<f:selectItems
-													value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-												<p:ajax event="change" update="justiId"
-													listener="#{requestNoteBackingBean.justificationTypeEvent}"
-													process="@this" />
-											</p:selectOneMenu></td>
-									</ui:fragment>
-								</tr>
-								<tr>
-									<ui:fragment
-										rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-										<td
-											style="vertical-align: top; text-align: left; width: 200px;"><p:outputLabel
-												value="#{lbl['lbl.sc.just.rmks']}" /></td>
-										<td><p:inputTextarea
-												value="#{requestNoteBackingBean.managedBean.justification}"
-												rows="4" cols="65" style="margin-bottom: 5px;" /></td>
-									</ui:fragment>
-								</tr>
-							</table>
-						</p:outputPanel></td>
-				</tr>
+				
 			</table>
-		</p:panel>
-
+			
+			<p:outputPanel id="justiId">
+				<table style="width: 94.5%">
+					<tr>
+						<ui:fragment
+							rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
+							<td><p:selectOneMenu
+									style="margin-bottom: 5px;"
+									value="#{requestNoteBackingBean.managedBean.justificationType}">
+									<f:selectItems
+										value="#{requestNoteBackingBean.managedBean.justDropdown}" />
+									<p:ajax event="change" update="justiId"
+										listener="#{requestNoteBackingBean.justificationTypeEvent}"
+										process="@this" />
+								</p:selectOneMenu></td>
+						</ui:fragment>
+					</tr>
+					<tr>
+						<ui:fragment
+							rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
+							<td style="vertical-align: top; text-align: left; width: 200px;"><p:outputLabel
+									value="#{lbl['lbl.sc.just.rmks']}" /></td>
+							<td><p:inputTextarea
+									value="#{requestNoteBackingBean.managedBean.justification}"
+									rows="4" cols="65" style="margin-bottom: 5px;" /></td>
+						</ui:fragment>
+					</tr>
+				</table>
+			</p:outputPanel>
+	</p:panel>
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
@@ -139,5 +136,6 @@
 			</p:row>
 		</p:panelGrid>
 		  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/>
+	
 	</p:dialog>
 </ui:composition>

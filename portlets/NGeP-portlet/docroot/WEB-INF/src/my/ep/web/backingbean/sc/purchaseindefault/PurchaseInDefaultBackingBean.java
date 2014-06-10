@@ -478,7 +478,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
 		    if(getManagedBean().getPmOrgProfile() != null){
-		    	userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+		    	//userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
 		    }
 		    UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
