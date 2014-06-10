@@ -711,6 +711,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public String backToPervious() {
 		log.info("backToPervious");
 		getManagedBean().setOrgProfileId(null);
+		getManagedBean().setProcurementType("");
+		getManagedBean().setJustification("");
+		getManagedBean().setJustificationType("");
 		return "catalogueSearch";
 	}
 

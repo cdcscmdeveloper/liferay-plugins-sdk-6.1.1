@@ -114,7 +114,7 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}"
 					style="width:10%">
-					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"  rendered="#{!requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}"	
+					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -125,7 +125,7 @@
 							itemValue="#{supplierItemPrice.priceType.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.priceType)}"  size="8" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" />
+				<!-- 	<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.priceType)}"  size="8" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" /> -->
 					
 				</p:column>
 				
@@ -232,7 +232,7 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-						process="@this" icon="ui-icon-submit" partialSubmit="true" immediate="true"
+						process="@this" icon="ui-icon-submit" partialSubmit="true"
 						actionListener="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
 					
