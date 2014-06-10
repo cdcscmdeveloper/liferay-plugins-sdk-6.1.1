@@ -65,7 +65,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}" style="width:25%;white-space: normal;">
 					<p:commandLink
-						value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}"
+						value="#{requestNoteDtl.requestItem.itemName}"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
 						oncomplete="itemDtlPopup.show();" />
@@ -79,14 +79,14 @@
 				  
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
-						<p:commandLink value="Emergency" partialSubmit="true"
+						<p:commandLink value="Emergency" partialSubmit="true" process="@this"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 
 					</ui:fragment>
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A'}">
-						<p:commandLink value="Ad hoc" partialSubmit="true"
+						<p:commandLink value="Ad hoc" partialSubmit="true" process="@this"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
@@ -94,7 +94,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}"  style="width:10%">
-				    <p:commandLink partialSubmit="true">
+				    <p:commandLink partialSubmit="true"  process="@this" >
 				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
 				  </p:commandLink> 
 				</p:column>
@@ -105,7 +105,7 @@
 				        style="width:120px;">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
-							value="#{requestNoteDtl.scRequestSupplierItem.requestNoteItem.supplierItems}" 
+							value="#{requestNoteDtl.requestItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
 							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
 					</p:selectOneMenu>
@@ -172,7 +172,7 @@
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
 					   disabled="true" size="4" />
 				</p:column>
 				
@@ -193,14 +193,10 @@
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="2" maxlength="3"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
-					<p:selectOneMenu  style="width:75px;" rendered="#{!requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}"
+					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.deliveryTerm,requestNoteDtl.deliverTermType)}" 
-					    size="6" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" />
-					    <p:message id="deliveryTermByMsg" for="deliveryTerm" display="icon" />
-				
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -210,7 +206,7 @@
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"></h:outputText>
 					<p:spacer width="6px;"/>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.reqNoteFulfillmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}" disabled="true" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}" disabled="true" />
 					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>

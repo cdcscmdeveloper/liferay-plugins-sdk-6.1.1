@@ -45,6 +45,8 @@
 							      var="pmOrgProfile"
 							      itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 							     itemValue="#{pmOrgProfile.orgProfileId}" />
+							      <p:ajax event="change"  update="@([id$=approversId])" partialSubmit="true" 
+							     process="@this"  listener="#{purchaseInDefaultBackingBean.ptjNameEvent}"/>
 					        </p:selectOneMenu></td>
 							<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
 							</tr>
@@ -249,7 +251,7 @@
 	</h:panelGroup>
    </p:panel>
 
-	<p:panel label="#{lbl['lbl.sc.approve.list']}"
+	<p:panel label="#{lbl['lbl.sc.approve.list']}" id="approversId"
 		header="#{lbl['lbl.sc.approve.list']}" toggleable="true"
 		toggleSpeed="500">
 

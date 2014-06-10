@@ -12,16 +12,16 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 				<td><p:inputText disabled="true"
 					 value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,
-					      requestNoteBackingBean.managedBean.requestNoteDtl.procurementType)}" /></td>
+					      requestNoteBackingBean.managedBean.procurementType)}" /></td>
 	    	</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
-				<td><p:inputText disabled="true"  value="#{requestNoteBackingBean.showJustDescription(requestNoteBackingBean.managedBean.requestNoteDtl.justificationType)}"/></td>
+				<td><p:inputText disabled="true"  value="#{requestNoteBackingBean.showJustDescription(requestNoteBackingBean.managedBean.justificationType)}"/></td>
 			 </tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel
 						value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.justTypeOption}" /></td>
-				<td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
+				<td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.justification}"
 						rows="4" cols="48" style="margin-bottom: 5px;"  rendered="#{requestNoteBackingBean.managedBean.justTypeOption}"/></td>
 			</tr>
 		</table>

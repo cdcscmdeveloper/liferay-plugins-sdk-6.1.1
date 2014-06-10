@@ -11,7 +11,7 @@
 		<p:panel id="addToCartId">
 			<p:messages id="cartmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
-			<table style="width: 0%">
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 					<td><p:inputText disabled="true" size="33"
@@ -66,7 +66,7 @@
 										style="margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.price.type']}"
 										required="#{requestNoteBackingBean.managedBean.required}"
-										value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode}">
+										value="#{requestNoteBackingBean.managedBean.priceType}">
 										<f:selectItems
 											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
 									</p:selectOneMenu></td>
@@ -80,8 +80,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 					<td><p:selectOneRadio style="margin-bottom: 5px;"
 							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
-							disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'G'}"
-							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}"
+							disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType eq 'G'}"
+							value="#{requestNoteBackingBean.managedBean.procurementType}"
 							required="#{requestNoteBackingBean.managedBean.required}">
 							<f:selectItems
 								value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
@@ -100,7 +100,7 @@
 										<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
 										<td><p:selectOneMenu
 												style="width: 120px;margin-bottom: 5px;"
-												value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justificationType}">
+												value="#{requestNoteBackingBean.managedBean.justificationType}">
 												<f:selectItems
 													value="#{requestNoteBackingBean.managedBean.justDropdown}" />
 												<p:ajax event="change" update="justiId"
@@ -116,7 +116,7 @@
 											style="vertical-align: top; text-align: left; width: 200px;"><p:outputLabel
 												value="#{lbl['lbl.sc.just.rmks']}" /></td>
 										<td><p:inputTextarea
-												value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
+												value="#{requestNoteBackingBean.managedBean.justification}"
 												rows="4" cols="65" style="margin-bottom: 5px;" /></td>
 									</ui:fragment>
 								</tr>

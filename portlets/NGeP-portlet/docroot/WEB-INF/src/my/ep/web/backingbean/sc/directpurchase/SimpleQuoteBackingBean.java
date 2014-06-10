@@ -1810,7 +1810,7 @@ public class SimpleQuoteBackingBean extends
 				if(quote != null){
 					ScRequestNote requestNote =  quote.getRequestNote();
 					if(requestNote != null){
-					//requestNoteBackingBean.getManagedBean().setRequestSupplierItem(quote.getRequestNote().getRequestNoteDtls().get(0).getScRequestSupplierItem());
+					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(quote.getRequestNote().getRequestNoteDtls().get(0).getScRequestSupplierItem());
 					token = facesScopes.getBPMAuthenticationCtxToken();
 					BpmRequestDTO reqBPMDTO = new BpmRequestDTO();
 					reqBPMDTO.setCtxToken(token);
@@ -1824,28 +1824,28 @@ public class SimpleQuoteBackingBean extends
 					
 					ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
 					SmSupplier  smSupplier = new SmSupplier();
-					smSupplier.setSupplierId(127L);
 					requestSupplierItem.setSmSupplier(smSupplier);
+					
 					List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-		            for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-		            	parameterReqDTO = new ParameterReqDTO();
-		            	parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-		            	parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-		            	ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		                requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-		                requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
-		                
-		                
-		                // TODO  hard code request supp item and proc type
-		            	requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
-		        		parameterReqDTO = new ParameterReqDTO();
+					for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+						parameterReqDTO = new ParameterReqDTO();
+						parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+						parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+						requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
+						requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
+
+						// TODO  hard code request supp item and proc type
+						requestSupplierItem.setRequestNoteItem(requestNoteDtl.getRequestItem());
+						requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+						parameterReqDTO = new ParameterReqDTO();
 						parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 						parameterReqDTO.setParameterCode("N");
 						ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		            	requestNoteDtl.setProcurementType(resDTO.getPmParameter());
-		            	
-		            	requestNoteDtl.setAssignedUser(new PmUser());
-		            	requestNoteDtls.add(requestNoteDtl);
+						requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+
+						requestNoteDtl.setAssignedUser(new PmUser());
+						requestNoteDtls.add(requestNoteDtl);
 					}
 					
 					requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -1855,7 +1855,7 @@ public class SimpleQuoteBackingBean extends
 					
 					ScRequestNoteDtl scRequestNoteDtl = requestNote.getRequestNoteDtls().get(0);
 					requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
-					requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+					requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 					requestNoteBackingBean.getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 			      }
 				}	
