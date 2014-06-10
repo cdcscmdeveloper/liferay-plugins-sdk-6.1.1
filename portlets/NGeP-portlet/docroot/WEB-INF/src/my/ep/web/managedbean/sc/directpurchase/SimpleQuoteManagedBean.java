@@ -207,7 +207,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 				}
 
 				if(getProductOrService() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.tplSpecMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("quoteDocs.quoteTplSpecMaster.itemTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getProductOrService()));
 				}
 
 				QuoteReqDTO reqDTO = new QuoteReqDTO();
