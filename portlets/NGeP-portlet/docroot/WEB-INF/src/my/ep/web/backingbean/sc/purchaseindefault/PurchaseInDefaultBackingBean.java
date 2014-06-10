@@ -477,7 +477,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		    if(getManagedBean().getPmOrgProfile() != null){
+		    	userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+		    }
+		    UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
@@ -640,6 +643,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	 public void deleteUploadFile() {
 		 debugLogger("deleteUploadFile");
 		 getManagedBean().getAttachments().clear();
+	 }
+	 
+	 public PmOrgProfile ptjNameEvent() {
+		 if(getManagedBean().getPmOrgProfile() != null){
+			 initialInformation(getManagedBean().getPurchaseInDefault());
+		 }
+		 return null;
 	 }
 
 	 /**
