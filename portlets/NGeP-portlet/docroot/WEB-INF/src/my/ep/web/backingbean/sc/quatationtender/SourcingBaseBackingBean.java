@@ -3,10 +3,16 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +20,9 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -48,6 +56,15 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -134,6 +151,67 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public File downloadFile(String filePath, String fileName) throws IOException {
+		System.out.println("Inside downloadFile(..)");
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			    
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); 
+				buffer = new byte[4096]; 
+			}
+			input.close();	
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		//use to upload back to database
+		File file = new File(filePath);
+		return file;
+	}
+	
+	public void converthtmlToDocFile(String content, String filePath){
+		System.out.println("Inside converthtmlToDocFile(..)");
+		WordprocessingMLPackage wordMLPackage;
+	 	try {
+	 		wordMLPackage = WordprocessingMLPackage.createPackage();
+	 		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+	 		afiPart.setBinaryData(content.getBytes());
+	 		afiPart.setContentType(new ContentType("text/html"));
+	 		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+	 		 
+	 		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+	 		ac.setId(altChunkRel.getId() );
+	 		wordMLPackage.getMainDocumentPart().addObject(ac);
+	 		wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html");
+	 		wordMLPackage.save(new java.io.File(filePath));
+	 	} catch (InvalidFormatException e) {
+	 		e.printStackTrace();
+	 	}catch (Docx4JException e) {
+ 			e.printStackTrace();
+ 		}
+	 	System.out.println("Exit converthtmlToDocFile(..)");
 	}
 
 	public void preRenderView() {
@@ -231,11 +309,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (OrganizationType.MINISTRY.value().equals(
 					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
 				scQt.setMinistryOrgProfile(parentOrgProfile);
+				break;
 			}
 			// Department
 			else if (OrganizationType.DEPARTMENT.value().equals(
 					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
 				scQt.setDepartmentOrgProfile(parentOrgProfile);
+				break;
 			}
 
 			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
