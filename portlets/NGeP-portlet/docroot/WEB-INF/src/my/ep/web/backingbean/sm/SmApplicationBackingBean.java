@@ -331,33 +331,6 @@ public class SmApplicationBackingBean extends
 						.println("******** My Company Basic is null ********");
 			}
 
-			if (smAppl.getSmFacilities() != null
-					&& smAppl.getSmFacilities().isEmpty()
-					&& !smAppl.getApplType().equalsIgnoreCase(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				System.out.println("*** Empty Facility******");
-				SmFacility fac = new SmFacility();
-				if (smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					// fac.setOwnerName("Sample");
-					fac.setFacilityType("H");
-				}
-				SmAddress addr = setDefaultAddr();
-				fac.setSmAppl(smAppl);
-				fac.setSmAddress(addr);
-				fac.setRevNo(1);
-				smAppl.getSmFacilities().add(fac);
-				this.getManagedBean().setBasicCompanyFacility(fac);
-				getManagedBean()
-						.setBasicOffFacStates(
-								retrievePmStateList(addr.getPmCountry()
-										.getCountryId()));
-
-			} else {
-				setApplicationFailities(smAppl.getSmFacilities());
-				// TODO
-			}
-
 			getManagedBean().setSmAppl(smAppl);
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
 				System.out.println("*** Empty list of staff *****"
@@ -407,6 +380,32 @@ public class SmApplicationBackingBean extends
 			calculateCapital();
 			calculateBumiPercentageTotals();
 			updateSmAppl(applicationType, "");
+			if (smAppl.getSmFacilities() != null
+					&& smAppl.getSmFacilities().isEmpty()
+					&& !smAppl.getApplType().equalsIgnoreCase(
+							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				System.out.println("*** Empty Facility******");
+				SmFacility fac = new SmFacility();
+				if (smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					// fac.setOwnerName("Sample");
+					fac.setFacilityType("H");
+				}
+				SmAddress addr = setDefaultAddr();
+				fac.setSmAppl(smAppl);
+				fac.setSmAddress(addr);
+				fac.setRevNo(1);
+				smAppl.getSmFacilities().add(fac);
+				this.getManagedBean().setBasicCompanyFacility(fac);
+				getManagedBean()
+						.setBasicOffFacStates(
+								retrievePmStateList(addr.getPmCountry()
+										.getCountryId()));
+
+			} else {
+				setApplicationFailities(smAppl.getSmFacilities());
+				// TODO
+			}
 			return setNavigationForAppl(applicationType);
 
 			/*
@@ -492,98 +491,6 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return result;
-	}
-
-	// TODO Remove the method added only for demo purpose
-	public void assignTaskListSampleForDemo(String bpmApplType) {
-
-		IMofRegistrationSO mofRegistrationSO = null;
-
-		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			SmSupplier smApplSupplier = retriveSupplierById((long) 3)
-					.getSmSupplier();
-			if (smApplSupplier == null) {
-				smApplSupplier = new SmSupplier();
-				// smApplSupplier.setSupplierName("My Sample Supplier");
-				smApplSupplier.setBusinessType("1");
-				smApplSupplier.setRegNo("12345");
-				smApplSupplier.setEstablishDate(new Date());
-				smApplSupplier.setWebSite("www.samplecompany.com");
-			}
-
-			SmAppl bpmSmAppl = smApplSupplier.getSmAppl();
-			if (bpmSmAppl == null) {
-				bpmSmAppl = new SmAppl();
-			}
-			if (bpmApplType.equalsIgnoreCase("N")) {
-				bpmSmAppl.setApplNo("KN-20102013-1111");
-			} else if (bpmApplType.equalsIgnoreCase("B")) {
-				bpmSmAppl.setApplNo("KB-25102013-2222");
-			} else if (bpmApplType.equalsIgnoreCase("U")) {
-				bpmSmAppl.setApplNo(" KU-28102013-3333");
-			} else if (bpmApplType.equalsIgnoreCase("A")) {
-				bpmSmAppl.setApplNo(" KA-28102013-4444");
-			} else if (bpmApplType.equalsIgnoreCase("R")) {
-				bpmSmAppl.setApplNo(" KR-31102013-5555");
-			} else if (bpmApplType.equalsIgnoreCase("C")) {
-				bpmSmAppl.setApplNo(" KC-01112013-6666");
-			} else {
-				bpmSmAppl.setApplNo("UNKNOWNAPPL");
-			}
-
-			bpmSmAppl.setSmSupplier(smApplSupplier);
-			// mofRegAppl.setSmAddress(smAddress);
-			// 1- For Contractor, 2 - For Consultant
-			bpmSmAppl.setSupplierType(SupplierManagementConst.STYPE_CONSULTANT);
-			bpmSmAppl.setApplType(bpmApplType);
-			// TODO Set default not null values -- Start insert appl ---
-			// bpmSmAppl.getPmStatus().setStatusId(20001l);
-			// sm.setSmAddress(new SmAddress());
-			// SmAddress smAddress = setDefaultAddr();
-			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
-			bpmSmAppl.setCreatedBy(1l);
-			boolean isNewAppln = true;
-			for (int i = 0; i < smApplSupplier.getSmAppls().size(); i++) {
-				SmAppl app = smApplSupplier.getSmAppls().get(i);
-				if (bpmSmAppl.getApplId() == app.getApplId()) {
-					System.out.println("****** Update Application******** ");
-					isNewAppln = false;
-					smApplSupplier.getSmAppls().set(i, bpmSmAppl);
-					break;
-				}
-			}
-			if (isNewAppln) {
-				System.out
-						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
-				smApplSupplier.getSmAppls().add(bpmSmAppl);
-			}
-
-			getManagedBean().setSmSupplier(smApplSupplier);
-			// TODO Set default not null values -- End insert appl ---
-
-			bpmSmAppl = defaultSmAppl(bpmSmAppl);
-			bpmSmAppl
-					.setSmStaffTotals(getStaffList(bpmSmAppl.getSupplierType()));
-			getManagedBean().setSmAppl(bpmSmAppl);
-			getManagedBean().setTabActiveIndex(0);
-			// TODo Remove hard code later
-			if (getManagedBean().isApproverUser()
-					|| getManagedBean().isPoUser()) {
-				System.out.println("**** LOGIN IS PO or APPROVER *******");
-				getManagedBean().getSmAppl().setSupportingDocMode("O");
-			}
-
-		} catch (Exception e) {
-			System.out.println(" **** Unknown Expection ******* ");
-			e.printStackTrace();
-
-		} finally {
-			mofRegistrationSO = null;
-		}
 	}
 
 	public String deletePendingMofApplication() {
