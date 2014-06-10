@@ -17,63 +17,54 @@
 			vertical-align: top;
 		}
 		</style>
-		<f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
 		<p:panel>
-			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-			<table style="width: 100%;">
-				<tr>
-					<td>
-						<p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" 
-							rendered="#{agreementBackingBean.managedBean.taskId==null}" />
-					</td>
-					<td class="ppRightBtn">
-						<ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" ajax="false" process="@form"
-								styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
-								action="#{agreementBackingBean.createAgreement(outcome)}" />
-						</ui:repeat>
-					</td>
-				</tr>
-			</table>
-			<table style="width: 99%; margin-left: 0px;" class="header-info">
-				<tr style="margin-button: 0px;">
-					<td><p:outputLabel value="#{lbl['lbl.ct.loaNo']}" /></td>
-					<td>
-						<p:inputText size="20" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.loaPhysicalNo}" />
-					</td>
-					<td><p:outputLabel value="#{lbl['lbl.ct.cno']}" /></td>
-					<td>
-						<p:inputText size="20" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.contractNo}" />
-					</td>
-					<td><p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" /></td>
-					<td>
-						<p:inputText size="30" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" />
-					</td>
-					<td><p:outputLabel value="#{lbl['lbl.ct.cc.status']}" /></td>
-					<td>
-						<p:inputText size="40" disabled="true"
-							value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctAgreement.status.statusId)}"  />
-					</td>
-				</tr>
-			</table>
+		    <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
+	          <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+			  <ui:include src="/xhtml/ct/agreement/agreementButtons.xhtml" />
+			  <ui:include src="/xhtml/ct/agreement/agreementHeader.xhtml" />
 		</p:panel>
-		<p:tabView id="agreementTab" orientation="left">
-			<p:tab id="agDetail" title="Create Agreement">
-				<ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml" />
-				<ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml" />
-				<ui:include src="/xhtml/ct/agreement/standardDocument.xhtml" />
-				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-			</p:tab>
-			<p:tab id="agCreate" title="Signing Agreement">
-				<ui:include src="/xhtml/ct/agreement/agencySignerWitnes.xhtml" />
-				<ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml" />
-			</p:tab>
-			<p:tab id="signedDetail" title="Signed Details" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
-				<ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml" />
-			</p:tab>
-			<p:tab id="approverSetting" title="Approver Setting" rendered="#{!agreementBackingBean.isApprover()}">
-				<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		  <tr>
+			<td width="20%" valign="top">
+				<p:tabMenu styleClass="sidemenu"
+					activeIndex="#{agreementBackingBean.managedBean.selectedTabIndex}"
+					style="display : table-caption;">
+                    <p:menuitem value="Create Agreement" update="@form">
+						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="0" />
+					</p:menuitem>
+					<p:menuitem value="Signing Agreement" update="@form">
+						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
+					</p:menuitem>
+					<p:menuitem value="Signed Details" update="@form">
+						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					 <p:menuitem value="Approver Setting" update="@form" rendered="#{!agreementBackingBean.isApprover()}">
+						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
+					</p:menuitem>
+				</p:tabMenu>
+			</td>
+			<td width="80%">
+				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 0}">
+					<ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml" />
+				    <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml" />
+				    <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml" />
+				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+				</c:if>
+				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 1}">
+					<ui:include src="/xhtml/ct/agreement/agencySignerWitnes.xhtml" />
+				    <ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml" />
+				</c:if>
+	
+				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 2}">
+					<ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml" />
+				</c:if>
+				
+				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 3 and !agreementBackingBean.isApprover()}">
+					<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
+				</c:if>
+				
+			</td>
+		</tr>
+		</table>
 	</ui:define>
 </ui:composition>

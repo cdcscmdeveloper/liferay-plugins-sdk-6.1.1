@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div align="left" class="header-info">
+	  <table style="width: 99%; margin-left: 0px;">
+				<tr style="margin-button: 0px;">
+					<td><p:outputLabel value="#{lbl['lbl.ct.loaNo']}" /></td>
+					<td>
+						<p:inputText size="20" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.ct.cno']}" /></td>
+					<td>
+						<p:inputText size="20" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.contractNo}" />
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" /></td>
+					<td>
+						<p:inputText size="30" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" />
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.ct.cc.status']}" /></td>
+					<td>
+						<p:inputText size="40" disabled="true"
+							value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctAgreement.status.statusId)}"  />
+					</td>
+				</tr>
+			</table>	 
+	</div>
+</ui:composition>

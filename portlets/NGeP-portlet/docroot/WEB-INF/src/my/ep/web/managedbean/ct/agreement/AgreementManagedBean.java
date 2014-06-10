@@ -58,6 +58,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private Map<String, SmPersonnel> supplierUserMap;
 	
 	private CtAgreement ctAgreement;
+	private int selectedTabIndex;
 	
 	public AgreementManagedBean(){
 		
@@ -266,6 +267,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setUploadStampedAndSignedPage(boolean uploadStampedAndSignedPage) {
 		this.uploadStampedAndSignedPage = uploadStampedAndSignedPage;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 	
 }

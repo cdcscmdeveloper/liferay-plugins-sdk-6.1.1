@@ -173,6 +173,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
             reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
 			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setSelectedTabIndex(0);
 			
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();

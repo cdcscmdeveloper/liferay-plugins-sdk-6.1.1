@@ -1342,6 +1342,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			reqDTO.setUpdateAction(true);
+			amendBB.getManagedBean().setSelectedTabIndex(0);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB.setAmendmentContractVer(resDTO);
 			
