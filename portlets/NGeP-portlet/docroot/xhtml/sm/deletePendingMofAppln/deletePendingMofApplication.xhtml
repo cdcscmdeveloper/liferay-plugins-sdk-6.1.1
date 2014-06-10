@@ -25,36 +25,60 @@
 			<br />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:outputLabel value="Application No." /></td>
+					<td><p:outputLabel value="Application No : " /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smAppl.applNo}" readonly="true"
-							disabled="true" /></td>
+							disabled="true" size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Application Type." /></td>
-					<td><p:inputText value=" Type Of Application " readonly="true"
-							disabled="true" /></td>
+					<td><p:outputLabel value="Application Type : " /></td>
+					<td><p:inputText value="New Mof Application " readonly="true"
+							disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"
+							size="35" /> <p:inputText value=" Renew Mof Application "
+							readonly="true" disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
+							size="35" /> <p:inputText
+							value=" Update Mof Profile Application " readonly="true"
+							disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'U'}"
+							size="35" /> <p:inputText
+							value="Application For Bumiputera Status" readonly="true"
+							disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}"
+							size="35" /> <p:inputText
+							value="Application For Additional Category Codes" readonly="true"
+							disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'A'}"
+							size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Submitted Date " /></td>
-					<td><p:inputText value="22-10-2013" readonly="true"
-							disabled="true" /></td>
+					<td><p:outputLabel value="Submitted On : " /></td>
+					<td><p:inputText readonly="true"
+							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+							disabled="true" size="35">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Current Status" /></td>
-					<td>-- TBC Based on the status --</td>
+					<td><p:outputLabel value="Current Status : " /></td>
+					<td><p:inputText readonly="true"
+							value="#{backingBean.managedBean.currentStatus}" disabled="true"
+							size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
-					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;" /></td>
+					<td><p:outputLabel value="Reason : " /></td>
+					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;"
+							value="#{backingBean.managedBean.supplierRemarks}" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Attach Supporting Doc (If any)" /></td>
+					<td><p:outputLabel value="Supporting Doc (If any)" /></td>
 					<td><p:fileUpload mode="simple" /></td>
 
 				</tr>
