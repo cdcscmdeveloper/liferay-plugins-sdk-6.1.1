@@ -24,7 +24,7 @@
 					<p:menuitem value="Item" update="@form">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="Setting" update="@form">
+					<p:menuitem value="Setting" update="@form" rendered="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 				</p:tabMenu>

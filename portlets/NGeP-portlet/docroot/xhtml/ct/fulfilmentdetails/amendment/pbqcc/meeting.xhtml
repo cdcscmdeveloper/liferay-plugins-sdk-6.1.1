@@ -13,10 +13,10 @@
              <ac:paginator for="meetingTable" />
               <p:column selectionMode="multiple" style="width:2%;" />
 			  <p:column style="width:25%;" headerText="Date Of Meeting">
-			     <p:calendar value="#{data.meetingDate}" size="25" id="calMeeting" readonlyInput="true" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			     <p:calendar value="#{data.meetingDate}" size="25" id="calMeeting" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			  </p:column> 
 			  <p:column style="width:55%;" headerText="Location Of Meeting">
-				    <p:inputText value="#{data.meetingLocation}" style="width:95%;" maxlength="50"/>
+				    <p:inputText value="#{data.meetingLocation}" style="width:95%;"/>
 			  </p:column> 
 			  <p:column style="width:20%;" headerText="Status">
 				 <p:selectOneMenu value="#{data.meetingStatusId}" style="with:150px;">
@@ -115,7 +115,7 @@
                     <f:selectItem itemLabel="Existing List" itemValue="1"/>  
                     <f:selectItem itemLabel="New" itemValue="2" /> 
                       <p:ajax event="change"  listener="#{amendmentBackingBean.radioButtonForMeeting}" 
-                         process="@this" update=":form:tabview:changeField1"/> 
+                         process="@this" update="@([id$=changeField1])"/> 
                  </p:selectOneRadio> 
 	        </h:panelGrid>
 	        <p:outputPanel id="changeField1">

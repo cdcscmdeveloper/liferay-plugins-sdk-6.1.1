@@ -16,7 +16,7 @@
 			<p:column headerText="Upload" styleClass="column-align-center" style="width:15%;">
 				<h:panelGroup id="uploadLetterPg" rendered="#{data.docDefinitionTypeCode.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
 					<p:commandButton oncomplete="uploadLetterPg.show();return false;"
-						icon="iconAttachment" update=":form:tabview:loaContentDt" />
+						icon="iconAttachment" update="@([id$=loaContentDt])" />
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="Action" styleClass="column-align-center" style="width:20%;">
@@ -42,7 +42,7 @@
 				fileUploadListener="#{amendmentBackingBean.fileUpload}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update=":form:tabview:loaContentDt">
+				update="@([id$=loaContentDt])">
 			</p:fileUpload>
 		</p:dialog>
 		<p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" header="Delete Confirmation" styleClass="screen-title"
@@ -84,7 +84,7 @@
 				fileUploadListener="#{amendmentBackingBean.fileUpload}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update=":form:tabview:uploadLoaPg">
+				update="@([id$=uploadLoaPg])">
 			</p:fileUpload>
 		</p:dialog>		
 	</p:panel>

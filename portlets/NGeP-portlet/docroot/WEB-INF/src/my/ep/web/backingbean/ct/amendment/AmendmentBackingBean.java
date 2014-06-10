@@ -205,6 +205,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			reqDTO.setTaskId(taskId);
 			ctReqDTO.setUpdateAction(false);
 			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setSelectedTabIndex(0);
 			
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();

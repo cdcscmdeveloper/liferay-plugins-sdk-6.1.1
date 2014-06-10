@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<table style="width: 100%;">
+	  <tr>
+	     <td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="#{amendmentBackingBean.managedBean.taskId==null}" /></td>
+		 <td class="ppRightBtn">
+			<ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
+			  <p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
+				 action="#{amendmentBackingBean.saveContractAmendment(outcome)}" rendered="#{amendmentBackingBean.managedBean.memberSignOff}" />						
+			</ui:repeat>
+		  </td>
+		</tr>
+	</table>	
+</ui:composition>
+	

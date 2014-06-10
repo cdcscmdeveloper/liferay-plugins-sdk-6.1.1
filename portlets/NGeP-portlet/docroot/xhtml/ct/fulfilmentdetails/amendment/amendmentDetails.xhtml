@@ -15,7 +15,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
-					<p:ajax event="change" update=":form:tabview:amend" process="@form" listener="#{amendmentBackingBean.onContractExtensionChecked}" />
+					<p:ajax event="change" update="@([id$=amend])" process="@form" listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.conExtension']}" />
@@ -42,7 +42,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change" update=":form:tabview:amend" process="@form" /> 
+					<p:ajax event="change"  update="@([id$=amend])" process="@form" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
@@ -51,7 +51,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
-					<p:ajax event="change" update=":form:tabview:amend" process="@form"/> 
+					<p:ajax event="change"  update="@([id$=amend])" process="@form"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}"  />

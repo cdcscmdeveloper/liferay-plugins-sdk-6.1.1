@@ -120,6 +120,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String editorValue;
 	
 	private boolean termAndConditionFlg;
+	private int selectedTabIndex;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -658,6 +659,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
 		this.termAndConditionFlg = termAndConditionFlg;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 }

@@ -12,7 +12,7 @@
 				rowKey="#{data}" selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"
 				lazy="true" widgetVar="ctItemsTable">
 				<ac:paginator for="itemTable" />
-				<p:ajax event="rowSelect" update=":form:tabview:changeField" />
+				<p:ajax event="rowSelect" update="@([id$=changeField])" />
 				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;">
 					<p:outputLabel value="#{data.itemName}"	style="float:left;width:55%;" />
 				</p:column>
@@ -36,7 +36,7 @@
 					<p:inputText size="10" value="#{data.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 					</p:inputText>
-					<p:commandLink update=":form:tabview:dlgItemMaxQty" oncomplete="dlgItemMaxQty.show();return false;">
+					<p:commandLink update="@([id$=dlgItemMaxQty])" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 					</p:commandLink>
@@ -264,7 +264,7 @@
 				value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeService)}"
 				selection="#{amendmentBackingBean.managedBean.selectedItem}" >
 				<ac:paginator for="serviceTable" />
-				<p:ajax event="rowSelect" update=":form:tabview:showServicePrice" />
+				<p:ajax event="rowSelect" update="@([id$=showServicePrice])" />
 				<p:column headerText="Item Name">
 					<p:outputLabel value="#{data.itemName}" style="float:left;" />
 				</p:column>
