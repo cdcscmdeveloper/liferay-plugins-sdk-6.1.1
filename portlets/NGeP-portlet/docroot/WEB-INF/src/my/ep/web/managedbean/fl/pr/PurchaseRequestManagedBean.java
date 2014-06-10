@@ -185,6 +185,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<PmSubSetia> subSetiaList;
 	private List<PmPrgActivity> prgActivityList;
 	private List<SelectItem> manualAddrList;
+	private List<SelectItem> supplierBranchesList;
 	
 	// set chargeline for selected items
 	private String votFundCode;
@@ -1664,6 +1665,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPrgActivityId(Long prgActivityId) {
 		this.prgActivityId = prgActivityId;
+	}
+
+	/**
+	 * @return the supplierBranchesList
+	 */
+	public List<SelectItem> getSupplierBranchesList() {
+		return supplierBranchesList;
+	}
+
+	/**
+	 * @param supplierBranchesList the supplierBranchesList to set
+	 */
+	public void setSupplierBranchesList(List<SelectItem> supplierBranchesList) {
+		this.supplierBranchesList = supplierBranchesList;
 	}
 
 	

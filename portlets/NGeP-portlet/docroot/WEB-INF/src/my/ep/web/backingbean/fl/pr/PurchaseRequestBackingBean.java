@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -73,10 +74,13 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -105,6 +109,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -916,7 +921,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//flReqDTO.setFlWorkflowDocType(flPurchaseOrd.getDocType());
 			//resDTO = fulfilmentSO.getStatusDesc(flReqDTO);
 			
-			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
@@ -936,6 +940,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if (null != res.getAction() && !"".equals(res.getAction())) {
 				getManagedBean().setSubmitButtonStatus(false);
 			}
+			if(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches() != null && !resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches().isEmpty()){
+				getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches());
+			}
+			
 		}
 	}
 	
@@ -1078,52 +1086,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return retrievePTJList;
 		
 	}
-	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
-	    	
-	    	StringBuilder address = new StringBuilder();
-	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch()){
-	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
-	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    	    		address.append(strSpace);
-	    	    		
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    	    		address.append("\n");
-	    	    	}if(null !=fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	    	}
-	    	    	if(null != address.toString()){
-	    	    		//System.out.println("addresss     "+address.toString());
-	    	    	}
-	    			
-	    		}
-	    		
-	    	}
-	    	
-	    	this.getManagedBean().setSupplierAddress(address.toString());
-	    }
 	 
 	//submission of the Accumulative Procurement Value  by item/PTJ/supplier/year value to be <= RM50K
 	// with the exception of emergency procurement and G2G procurement
@@ -1755,6 +1717,36 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return manualAddrList;
 	}
 	
+	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
+		
+		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
+		supplierBranches.add(new SelectItem("", "- Select One -"));
+		for (SmSupplierBranch supplierBranch : branches) {
+			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
+		}
+		getManagedBean().setSupplierBranchesList(supplierBranches);
+		return supplierBranches;
+	}
+	
+	public void getSelectedSupplierBranchDtl(Long supplierBranchId){
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setBranchId(supplierBranchId);
+		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+		
+		SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+		FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
+		supplierDtl.setBranchName(supplierBranch.getBranchName());
+		supplierDtl.setFaxNo(supplierBranch.getFaxNo());
+		supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
+		supplierDtl.setSmAddress(supplierBranch.getSmAddress());
+		supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+		supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+		supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+		supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
+		supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+	}
+	
 	//get chargeline code by ID
 	
 	public String getVotFundCodeById(Long votFundId) {
@@ -1854,5 +1846,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			addPurchsedItems();
 		}
 	}
+	
 	
 }
