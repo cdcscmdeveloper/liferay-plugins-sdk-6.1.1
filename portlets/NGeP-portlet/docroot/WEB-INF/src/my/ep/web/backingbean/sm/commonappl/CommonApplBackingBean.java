@@ -8,20 +8,27 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
+import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -321,13 +328,16 @@ public class CommonApplBackingBean extends
 			setNavigationForDraftAppl(appl.getApplType());
 			// }
 
-		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")) {
+		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")
+				&& resDTO.getProcessName().equalsIgnoreCase(
+						"MOF Registration Cancellation")) {
 			System.out
 					.println("**********MOF Registration Cancellation***********"
 							+ taskId);
 			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
-			System.out.println("********Review Cancellation********");
+			System.out
+					.println("********Review RegistrationCancellation********");
 			System.out.println("********Assign Site Visit APPID********"
 					+ srcObj.getDocumentId());
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -348,6 +358,47 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
+		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")
+				&& resDTO.getProcessName().equalsIgnoreCase(
+						"MOF Application Cancellation")) {
+			System.out
+					.println("**********MOF Application Cancellation***********"
+							+ taskId);
+			SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
+			this.getManagedBean().setTaskName(resDTO.getTaskName());
+			System.out.println("********Review Cancellation********");
+			System.out.println("********Assign Site Visit APPID********"
+					+ srcObj.getDocumentId());
+			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+			mofResDto = retriveApplicationById(srcObj.getDocumentId());
+			SmAppl appl = mofResDto.getSmAppl();
+			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+			// TODO Change this impl to get values from DB and set
+			// smSupplier , smAppl of the managedBean
+			// smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+			// appl, mofResDto.getSmSupplier());
+			// smApplBB.getManagedBean().getSmAppl()
+			// .setApplId(new Long(smObj.getDocumentId()));
+			SmRemaksResDTO remResDTO = getRemarksByDoc(
+					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
+					appl.getApplId());
+			StringBuffer sb = new StringBuffer();
+			if (resDTO != null && remResDTO.getRemarksList() != null
+					&& !remResDTO.getRemarksList().isEmpty()) {
+
+				for (SmRemark rem : remResDTO.getRemarksList()) {
+					sb.append(rem.getRemark()).append("\n");
+				}
+			}
+			smApplBB.getManagedBean().setSupplierRemarks(sb.toString());
+			smApplBB.getManagedBean().setSmAppl(appl);
+			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
+			smApplBB.getManagedBean().setTaskId(taskId);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/deletePendingMofAppln/cancelPendingApplicationDescisionPage.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Respond SDO Inquiry")) {
 			Object bpmObj = new Object();
 			SupportingDocInquiryBackingBean suppDocIn = new SupportingDocInquiryBackingBean();
@@ -521,6 +572,16 @@ public class CommonApplBackingBean extends
 		}
 	}
 
+	private SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(docId);
+		reqDTO.setDocType(docType);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISmRemarksSO.class);
+		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
+		return resDTO;
+	}
+
 	private MofRegistrationResDTO retriveApplicationById(int applId) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -532,7 +593,7 @@ public class CommonApplBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setApplId(applId);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrievePendingApplicationDetails(reqDto);
+					.retrieveSmApplicationDetailsById(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {

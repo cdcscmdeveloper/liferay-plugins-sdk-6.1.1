@@ -177,7 +177,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> selectedPersonnels;
 
 	private SmPersonnel selectedPersonnel;
-	
+
 	private SmPersonnel addrUpdatePersonnel;
 
 	private List<SmStaffExperience> selectedPersJobFunctions;
@@ -341,10 +341,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal equiCompCapTotal;
 
 	private boolean validResubmit;
-	
+
 	private boolean draftedAppl;
 
 	public SmApplicationManagedBean() {
+		System.out.println("******** Enter Managed Bean *******888");
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
 		System.out.println(" << ======= Login USer === >>  "
@@ -358,22 +359,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			roleNames.add(r.getName());
 		}
 		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
-				|| sc.hasRoleUser(SupplierManagementConst.PO_SA)
-				|| sc.hasRoleUser(SupplierManagementConst.PO_SK)) {
+				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
 			setPoUser(true);
 			System.out.println("  *** LOGGED IN USER IS PO ****");
 		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
-				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_SA)
-				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_SK)) {
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)) {
 			setApproverUser(true);
 			System.out.println("  *** LOGGED IN USER IS APPROVER ****");
-		} else if (sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+		} else if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
 			setSupplierUser(true);
 			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
 		}
+		// if(sc.getUserScreenName().equalsIgnoreCase("user011")){
+		// setSupplierUser(true);
+		// }else if(sc.getUserScreenName().equalsIgnoreCase("user027")){
+		// setPoUser(true);
+		// }else if(sc.getUserScreenName().equalsIgnoreCase("user028")){
+		// setApproverUser(true);
+		// }
 		// if (roleNames.contains("HQ_PO")) {
 		// setPoUser(true);
 		// } else if (roleNames.contains("HQ_REG_APPROVER")) {

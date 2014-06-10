@@ -197,7 +197,7 @@ public class SmApplicationBackingBean extends
 	public void processDraftApplication(String applicationType,
 			boolean fromBpm, SmAppl appl, SmSupplier supp) {
 		proceedToApplication(applicationType, fromBpm, appl, supp);
-		//updateSmAppl(applicationType, "");
+		// updateSmAppl(applicationType, "");
 
 	}
 
@@ -587,37 +587,43 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String deletePendingMofApplication() {
-
+		IMofRegistrationSO mofRegistrationSO = null;
 		try {
-			SmSupplier smSupplier = retriveSupplierById((long) 3)
-					.getSmSupplier();
-			if (smSupplier == null) {
-				smSupplier = new SmSupplier();
-				// smSupplier.setSupplierName("My Sample Supplier");
-				smSupplier.setBusinessType("1");
-				smSupplier.setRegNo("12345");
-				smSupplier.setEstablishDate(new Date());
-				smSupplier.setWebSite("www.samplecompany.com");
-			}
-			// TODO the smappl is supposed to be get the latest application from
-			// sm supplier
-			SmAppl smAppl = new SmAppl();
-			smAppl.setApplNo("KB-25102013-1234");
-			smAppl.setPmStatus(new PmStatus());
-			smAppl.getPmStatus().setStatusId(2l);
-			smAppl.setApplType("B");
 
+			// SmSupplier smSupplier = retriveSupplierById((long) 3)
+			// .getSmSupplier();
+
+			SmSupplier smSupplier = getCurrentSupplier();
+			System.out.println("****** Testing the delete pending *********"
+					+ smSupplier.getSupplierId());
 			getManagedBean().setSmSupplier(smSupplier);
-			// TODO Set default not null values -- End insert appl ---
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSmSupplier(smSupplier);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrievePendingApplicationDetails(reqDto);
+			if (resDTO.getSmAppl() == null) {
+				throw new EpException(MessageConst.ERROR_722528);
+			} else {
 
-			smAppl = defaultSmAppl(smAppl);
-			getManagedBean().setSmAppl(smAppl);
+				SmAppl smAppl = defaultSmAppl(resDTO.getSmAppl());
+				getManagedBean().setSmAppl(smAppl);
+				if (getManagedBean().getSmAppl().getPmStatus() != null) {
+					setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
+							.getStatusId().toString());
+				}
+			}
+
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
 
 		} catch (Exception e) {
-			System.out.println(" **** Unknown Expection ******* ");
 			e.printStackTrace();
-			return SupplierManagementConst.DEFAULT_DEL_PENDING_MOF_APPLN;
+			throw new EpException(MessageConst.ERROR_722505);
+			// return SupplierManagementConst.DEFAULT_DEL_PENDING_MOF_APPLN;
+		} finally {
+			mofRegistrationSO = null;
 		}
 	}
 
@@ -3626,28 +3632,26 @@ public class SmApplicationBackingBean extends
 	public String submitDeletePendingMofApplToBpm() {
 		IMofRegistrationSO regSo = null;
 		try {
-
-			SmAppl bpmAppl = getManagedBean().getSmAppl();
-			System.out.println("*** DELTE PENDING MOF STATUS === >>> "
-			// + bpmAppl.getPmStatus().getStatusId()
-					+ " -- CURRENT APPL TYPE --- " + bpmAppl.getApplType());
-			// if (bpmAppl.getPmStatus().getStatusId() == 1) {
-			getManagedBean().setDelPendAckMsg(" is delete successfully.");
-			// TODO directly delete the pending record from the DB
-			// } else {
-			// TODO remove hard code id later
-			bpmAppl.setApplId(7898l);
+			if (getManagedBean().getSupplierRemarks().equalsIgnoreCase("")
+					|| getManagedBean().getSupplierRemarks() == null) {
+				throw new EpException(MessageConst.ERROR_722529);
+			}
+			SmRemark remark = new SmRemark();
+			remark.setDocId(getManagedBean().getSmAppl().getApplId());
+			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL);
+			remark.setRemark(getManagedBean().getSupplierRemarks());
+			saveSmRemarks(remark);
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
-			// TODO remove hard code later
-			reqDTO.setOutcome("SUBMIT");
+			reqDTO.setOutcome(SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
 			reqDTO.setSupplierId(this.getManagedBean().getSmAppl()
 					.getSmSupplier().getSupplierId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
+			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
+					.equalsIgnoreCase("O")) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
@@ -3657,12 +3661,19 @@ public class SmApplicationBackingBean extends
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			resDTO = regSo.initiateSmDelPendingApplicationTask(reqDTO);
-			getManagedBean()
-					.setDelPendAckMsg(
-							" is submitted successfully. Please wait for further notification.");
-			// }
 
-			return SupplierManagementConst.DELETE_PENDING_MOF_APPL_SUCCESS;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700005,
+									new String[] {
+											"Delete pending application",
+											getManagedBean().getSmAppl()
+													.getApplNo() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		} catch (Exception e) {
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
 		} finally {
@@ -6132,7 +6143,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setApplId(applId);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrievePendingApplicationDetails(reqDto);
+					.retrieveSmApplicationDetailsById(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {

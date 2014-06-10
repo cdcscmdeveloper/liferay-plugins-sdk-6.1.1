@@ -150,11 +150,13 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_TRAVEL= "PG";
 
 	// PO and Approver
-	public static final String PO_HQ = "UPS_PO_HQ";
+	public static final String PO_HQ = "UPS_PO";
 	public static final String PO_SA = "UPS_PO_SA";
 	public static final String PO_SK = "UPS_PO_SK";
+	public static final String PO_HQ_TEMP = "UPS_PO_HQ";
 
-	public static final String APPROVER_HQ = "UPS_APPROVER_HQ";
+	public static final String APPROVER_HQ = "UPS_APPROVER";
+	public static final String APPROVER_HQ_TEMP = "UPS_APPROVER_HQ";
 	public static final String APPROVER_SA = "UPS_APPROVER_SA";
 	public static final String APPROVER_SK = "UPS_APPROVER_SK";
 
@@ -163,6 +165,8 @@ public class SupplierManagementConst {
 
 	public static final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
 	public static final String MOF_SUPPLIER_ADMIN = "MOF_SUPPLIER_ADMIN";
+	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
+	public static final String MOF_SUPPLIER_USER = "MOF_SUPPLIER_USER";
 
 	// SmPersonnel Parameter for staff role
 
