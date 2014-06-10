@@ -33,7 +33,7 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class RequestNoteManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-	private String sourceMethod;
+	private String sourceMethod = ParameterConst.METHOD_SC;
 	private	ScRequestNote	requestNote = new ScRequestNote(); //contain request list information
 	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
 	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
@@ -63,6 +63,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String processName;
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
+    
+    private String justification;
+    private String justificationType;
+    private String procurementType;
+    private String priceType;
+    
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
@@ -457,6 +463,55 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
+	/**
+	 * @return the justification
+	 */
+	public String getJustification() {
+		return justification;
+	}
+	/**
+	 * @param justification the justification to set
+	 */
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+	/**
+	 * @return the justificationType
+	 */
+	public String getJustificationType() {
+		return justificationType;
+	}
+	/**
+	 * @param justificationType the justificationType to set
+	 */
+	public void setJustificationType(String justificationType) {
+		this.justificationType = justificationType;
+	}
+	/**
+	 * @return the procurementType
+	 */
+	public String getProcurementType() {
+		return procurementType;
+	}
+	/**
+	 * @param procurementType the procurementType to set
+	 */
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+	/**
+	 * @return the priceType
+	 */
+	public String getPriceType() {
+		return priceType;
+	}
+	/**
+	 * @param priceType the priceType to set
+	 */
+	public void setPriceType(String priceType) {
+		this.priceType = priceType;
+	}
+	
 	
 	
 }
