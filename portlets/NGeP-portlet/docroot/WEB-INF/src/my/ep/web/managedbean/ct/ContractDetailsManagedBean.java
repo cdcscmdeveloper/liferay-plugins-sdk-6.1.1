@@ -139,6 +139,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Map<String, PmUser> userMap;
 	private SmSupplierBank smSupplierBanks;
 	private boolean chkConceValue;
+	private int selectedTabIndex;
 	 
 	public String[] getAction() {
 		return action;
@@ -792,5 +793,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setTerminationTypeId(Long terminationTypeId) {
 		this.terminationTypeId = terminationTypeId;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}	
 }

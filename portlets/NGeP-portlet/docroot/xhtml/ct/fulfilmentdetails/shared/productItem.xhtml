@@ -11,7 +11,7 @@
         <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true">
            <ac:paginator for="itemTable"/>
-           <p:ajax event="rowSelect" update=":form:tabview:changeField"  />
+           <p:ajax event="rowSelect" update=":form:changeField"  />
 		   <p:column headerText="Item Name">
 		     <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
 		   <p:column headerText="UOM">
@@ -36,7 +36,7 @@
 		    <h:outputLabel for="show" value="Show" style="width:50px;"/>  
 		      <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
 		         <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-		         <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
+		         <p:ajax event="change" update="@([id$=changeField])" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
 			  </p:selectOneMenu>         
 		  </h:panelGrid>
 		  <p:spacer height="20"/>

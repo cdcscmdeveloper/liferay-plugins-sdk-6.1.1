@@ -248,6 +248,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setTaskName(res.getTaskName());
 			this.getManagedBean().setAction(outcome);
 			this.getManagedBean().setTaskId(taskId);
+			 this.getManagedBean().setSelectedTabIndex(0);
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
@@ -1383,6 +1384,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
 		    getManagedBean().setUpdateContract(true);
 	        getManagedBean().setViewContract(false);
+	        this.getManagedBean().setSelectedTabIndex(0);
 			return CONTRACT_PAGE;
 		} finally {
 			contractSO = null;

@@ -10,7 +10,7 @@
 		<p:dataTable id="tableDeduction" var="datas" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
 		   	rowKey="#{datas}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}" > 
 		   	<ac:paginator for="tableDeduction" />
-		   	   <p:ajax event="rowSelect" update=":form:tabview:clauseDescp"  />
+		   	   <p:ajax event="rowSelect" update=":form:clauseDescp"  />
 		          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:650px;">
 	        	     <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 	              </p:column> 
@@ -36,7 +36,7 @@
            <div class="ppRightBtn"> 
            <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null}">
         	  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" icon="ui-icon-add" 
-        	     action="#{contractDetailsBackingBean.addDeductionClause()}" update="tableClause"
+        	     action="#{contractDetailsBackingBean.addDeductionClause()}" update="@([id$=tableClause])"
         	     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
         	      ParameterConst.deductionTypeAdvancePayment}" >
 		  	  </p:commandButton>
@@ -57,7 +57,7 @@
                   styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="tableClause" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=tableClause])" process="@form" 
 				actionListener="#{contractDetailsBackingBean.deleteClauseDetails()}" onclick="dlgDeduction.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
 		   </div>

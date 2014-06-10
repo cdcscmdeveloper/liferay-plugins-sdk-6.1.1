@@ -52,7 +52,7 @@
                  <p:column styleClass="column-align-center">
                     <h:panelGroup id="uploadBondPg">
 				      <p:commandButton oncomplete="uploadBondDlg.show();return false;" icon="iconAttachment" 
-					     update=":form:tabview:tableBond" rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}"  >
+					     update=":form:tableBond" rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}"  >
 					      <f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" /></p:commandButton>	
 				     <h:commandLink value="#{contractDetailsBackingBean.fileNames(varBond.filePath)}" style="float:left;" styleClass="blue_font" 
 				         action="#{contractDetailsBackingBean.downloadFile(varBond.filePath)}" />					
@@ -79,7 +79,7 @@
 			  fileUploadListener="#{contractDetailsBackingBean.fileUpload}" 
 			  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			  update=":form:tabview:tableBond" >
+			  update=":form:tableBond" >
 		    </p:fileUpload> 
 	     </p:dialog>
 	     <p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" header="Delete Confirmation" styleClass="screen-title"  

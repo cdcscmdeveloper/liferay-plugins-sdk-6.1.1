@@ -11,7 +11,7 @@
         <p:dataTable id="centralitemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true">
            <ac:paginator for="centralitemTable"/>
-           <p:ajax event="rowSelect" update=":form:tabview:changeCentralItemField"  />
+           <p:ajax event="rowSelect" update=":form:changeCentralItemField"  />
 		   <p:column headerText="Item Name">
 		     <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
 		   <p:column headerText="UOM">

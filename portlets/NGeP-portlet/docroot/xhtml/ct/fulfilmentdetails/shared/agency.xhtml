@@ -13,7 +13,7 @@
        <p:dataTable id="tableAgencyDetails" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{data}">
              <ac:paginator for="tableAgencyDetails"/>
-             <p:ajax event="rowSelect" update=":form:tabview:agencyId" />
+             <p:ajax event="rowSelect" update=":form:agencyId" />
              <p:column selectionMode="multiple" style="width:2%;" />
              <p:column headerText="#{lbl['lbl.ct.agn.model.min']}">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
@@ -58,7 +58,7 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="tableAgencyDetails" process="@form" 
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=tableAgencyDetails])" process="@form" 
 				actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"/>
 			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
@@ -77,7 +77,7 @@
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="ministry" value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" style="width:230px">
             	   <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" process="@this" update="tableAgency,department" listener="#{contractDetailsBackingBean.reset}"/>
+            	   <p:ajax event="change" process="@this" update="@([id$=tableAgency],[id$=department])" listener="#{contractDetailsBackingBean.reset}"/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                   <p:selectOneMenu  style="width:70px" disabled="true">
@@ -95,7 +95,7 @@
             	 <p:selectOneMenu id="department" value="#{contractDetailsBackingBean.managedBean.departmentProfileId}" 
             	    style="width:230px" >
             		<f:selectItems value="#{contractDetailsBackingBean.getDepartmentDropdown()}"/>
-            		<p:ajax event="change" update="tableAgency" process="@this" listener="#{contractDetailsBackingBean.resetDepartment}"/> 
+            		<p:ajax event="change" update="@([id$=tableAgency])" process="@this" listener="#{contractDetailsBackingBean.resetDepartment}"/> 
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                  <p:selectOneMenu  style="width:70px" disabled="true">
@@ -116,7 +116,8 @@
                  <p:inputText style="width:220px;"/>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
-       		         <p:commandButton value="#{lbl['lbl.btn.search']}" action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search"   update="tableAgency"/> 
+       		         <p:commandButton value="#{lbl['lbl.btn.search']}" action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search"   
+       		           update="@([id$=tableAgency])"/> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"/>
 		       </div>
 			   <p:spacer height="2"/>
@@ -133,7 +134,7 @@
 			 </p:dataTable>
              <f:facet name="footer">
 			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="Select"   process="@form" update="tableAgencyDetails,dialogAgency" 
+				<p:commandButton value="Select"   process="@form" update="@([id$=tableAgencyDetails],[id$=dialogAgency])" 
 				action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
                 <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>

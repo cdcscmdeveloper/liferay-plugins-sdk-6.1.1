@@ -11,7 +11,7 @@
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
            <ac:paginator for="serviceTable"/>
-              <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
+              <p:ajax event="rowSelect" update=":form:showServicePrice"/>
 		      <p:column headerText="Item Name">
 		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
 		      </p:column>       
