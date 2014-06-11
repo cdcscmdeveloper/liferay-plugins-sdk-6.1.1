@@ -180,6 +180,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
+	public void setSelectedTabValue(int tabValue){
+		this.getManagedBean().setSelectedTabIndex(tabValue);
+	}
+	
 	private List<String> getAvailableApproverList() {
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
@@ -248,7 +252,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setTaskName(res.getTaskName());
 			this.getManagedBean().setAction(outcome);
 			this.getManagedBean().setTaskId(taskId);
-			 this.getManagedBean().setSelectedTabIndex(0);
+			this.getManagedBean().setSelectedTabIndex(0);
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
@@ -1346,6 +1350,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			amendBB.getManagedBean().setSelectedTabIndex(0);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB.setAmendmentContractVer(resDTO);
+			
+			amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(amendBB.getManagedBean().getRemarkList(), amendBB.getManagedBean().getAttachmentList()); 
 			
 		}finally {
 			contractSO = null;
