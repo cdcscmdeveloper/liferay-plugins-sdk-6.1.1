@@ -370,7 +370,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			CtCircularVer circularVer = this.getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
-				circularVer.setDocType(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR);
+				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
@@ -526,7 +526,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
-			
+			getManagedBean().setSelectedTabIndex(0);
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
@@ -601,6 +601,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			

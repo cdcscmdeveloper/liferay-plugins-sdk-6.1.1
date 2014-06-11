@@ -200,9 +200,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 				}
 			}*/
-			
+
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().getApproverModel().getSource().clear();
-			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -233,7 +233,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			System.out.println("taskId:" + taskId);
 
 			if(taskId==null) {
-				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
+				if(isPanelAdmin() || isCentralContractAdmin()) {
+					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
+				}
 				return;
 			}
 			
@@ -304,12 +306,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
-			if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)){
+			/*if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)){
 			    reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
 			 }else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)){
 				 reqDTO.setFilterStatusId(ContractStatusConst.CQ_APPROVED);
-			 }
-			CircularResDTO resDTO = circularSO.retrieveCircularVerList(reqDTO);
+			 }*/
+			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
 			}
@@ -343,7 +345,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularName()));	
 				}
 				if(getManagedBean().getSearchSupplierName()!=null && getManagedBean().getSearchSupplierName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName()));
 				}			
 				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularFileRefNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo()));	
@@ -392,7 +394,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null){
-				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR);
+				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			}
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -894,6 +896,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = null;
 			getManagedBean().setSelectedPanelItems(null);
 			this.getManagedBean().setSelectedPanelZone(null);
+			this.getManagedBean().setSelectedTabIndex(0);
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
