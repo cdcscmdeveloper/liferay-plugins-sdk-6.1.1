@@ -15,7 +15,7 @@
 		<f:event listener="#{purchaseRequestBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
-		<ui:include src="prReviewHeaderPage.xhtml" />
+	
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
@@ -50,7 +50,7 @@
 				</c:if>
 			</tr>
 		</table>
-		
+		<ui:include src="prReviewHeaderPage.xhtml" />
 		<p:spacer height="20px" />
 		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="false">
 		<p:ajax event="tabChange" listener="#{purchaseRequestBackingBean.onTabChange}" update="#{purchaseRequestBackingBean.className}"></p:ajax>
