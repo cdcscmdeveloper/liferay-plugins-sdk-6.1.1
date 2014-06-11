@@ -24,10 +24,10 @@
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						update=":form:prtabs:preparedOrgProfileId" readonly="true"
+						update=":form:prtabs:preparedOrgProfileId" readonly="true" buttonLabel="Add"
 						size="39"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
-					</ac:lov> <ac:lovPopup /></td>
+					</ac:lov> </td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -38,7 +38,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
 						update=":form:prtabs:issuedOrgProfileId" readonly="true"
-						size="39"
+						size="39" buttonLabel="Add"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>

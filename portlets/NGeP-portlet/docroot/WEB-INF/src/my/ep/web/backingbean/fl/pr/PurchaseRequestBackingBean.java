@@ -351,15 +351,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}else {
+					setValidationFulfilmentField(resDTO);
 				}
-			} else {
-				throw new EpException(MessageConst.ERROR_700020);
-			}
+			} 
 		}  finally {
 			fulfilmentRequestSO = null;
 		}
 		return null;
 	
+	}
+
+	private void setValidationFulfilmentField(FulfilmentResDTO resDTO) {
+		getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+		
 	}
 
 	public void flDeliveryAddrList() {
