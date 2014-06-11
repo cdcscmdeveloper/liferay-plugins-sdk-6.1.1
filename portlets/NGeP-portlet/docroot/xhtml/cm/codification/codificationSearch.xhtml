@@ -7,8 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<script>
-	$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('Item Code Search'); 
-	
+		$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find(
+				'.portlet-title-text').html('Item Code Search');
 	</script>
 
 	<h:panelGroup id="cmUNSPSCsearchID">
@@ -86,7 +86,14 @@
 
 					<p:commandLink
 						action="#{codificationBackingBean.goToExtensionSearch(unspscObj)}"
-						rendered="#{unspscObj.unspscLevel eq 3}">
+						rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
+							#{unspscObj.unspscCode}
+							</p:commandLink>
+
+					<p:commandLink action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj)}"
+						rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
+						onclick="confirmationPopUp.show()"
+						update=":form:confirmationPopUpId">
 							#{unspscObj.unspscCode}
 							</p:commandLink>
 
@@ -122,6 +129,13 @@
 			header="Codification Search" width="800" height="500">
 
 			<ui:include src="codificationSearchPopUp.xhtml"></ui:include>
+
+		</p:dialog>
+
+		<p:dialog id="confirmationPopUp" widgetVar="confirmationPopUp"
+			modal="true" header="Add To Catalogue" width="300" height="130">
+
+			<ui:include src="addServiceConfirmationPopUp.xhtml"></ui:include>
 
 		</p:dialog>
 

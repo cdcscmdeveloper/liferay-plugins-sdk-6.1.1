@@ -86,6 +86,7 @@ public class CodificationBackingBean extends
 	public static final String NAV_TO_DELETE_EXTENSION = "deleteExtension";
 	public static final String NAV_TO_CONTRACTED_ITEM = "contractedItem";
 	public static final String NAV_TO_ASSIGN_PRODUCT_CODE = "assignProductCode";
+	public static final String NO_75 = "75";
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
@@ -174,7 +175,8 @@ public class CodificationBackingBean extends
 		protected ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
 
-			System.out.println("........search extension combination.................");
+			System.out
+					.println("........search extension combination.................");
 			System.out.println("Unspsc Code:"
 					+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 
@@ -223,7 +225,8 @@ public class CodificationBackingBean extends
 							.getSearchValue().toString()));
 				}
 
-				CodificationResDTO resDTO = codificationSO.searchExtension(reqDTO);
+				CodificationResDTO resDTO = codificationSO
+						.searchExtension(reqDTO);
 
 				return resDTO.getExtensionResultBean();
 			} finally {
@@ -894,7 +897,7 @@ public class CodificationBackingBean extends
 	public String insertContractedItemCode() {
 		System.out.println("**********insertContractedItemCode************");
 		FacesContext facesContext = null;
-		
+
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		IRequestItemSO ReqItemSO = (IRequestItemSO) BusinessDelegate
@@ -1038,7 +1041,7 @@ public class CodificationBackingBean extends
 				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
 				codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
 
-			    facesContext = FacesContext.getCurrentInstance();
+				facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1065,7 +1068,7 @@ public class CodificationBackingBean extends
 																.getUserLocale())));
 			}
 			return NAV_TO_ASSIGN_PRODUCT_CODE;
-		}else{
+		} else {
 			facesContext = FacesContext.getCurrentInstance();
 			facesContext
 					.addMessage(
@@ -1079,10 +1082,9 @@ public class CodificationBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
-			return "";	
+			return "";
 		}
 
-		
 	}
 
 	public String createExtCode() {
@@ -1839,10 +1841,19 @@ public class CodificationBackingBean extends
 								.getUnspscTitle());
 
 		if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
-			if (StringUtils.isBlank((String)typeFilterBean.getSearchValue())) {
-				facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-						.getMessage("select from the list if you don't want to request new one.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes().getUserLocale())));
+			if (StringUtils.isBlank((String) typeFilterBean.getSearchValue())) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"select from the list if you don't want to request new one.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 				return "";
 			}
 			// get object from selected values :
@@ -1855,20 +1866,39 @@ public class CodificationBackingBean extends
 					.setTypeName(cmType.getTypeName());
 			this.getManagedBean().getRequestExtCode()
 					.setTypeId(cmType.getTypeId());
-		}else{//request new checked for Type
-			if(this.getManagedBean().getRequestExtCode().getTypeName().isEmpty()){
-					facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-							.getMessage("Fill up the Request New field for those are selected.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes().getUserLocale())));
-					return "";
+		} else {// request new checked for Type
+			if (this.getManagedBean().getRequestExtCode().getTypeName()
+					.isEmpty()) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"Fill up the Request New field for those are selected.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return "";
 			}
 		}
 
 		if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
-			if (StringUtils.isBlank((String)brandFilterBean.getSearchValue())) {
-				facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-						.getMessage("select from the list if you don't want to request new one.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes().getUserLocale())));
+			if (StringUtils.isBlank((String) brandFilterBean.getSearchValue())) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"select from the list if you don't want to request new one.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 				return "";
 			}
 			// get object from selected values :
@@ -1882,21 +1912,40 @@ public class CodificationBackingBean extends
 			this.getManagedBean().getRequestExtCode()
 					.setBrandId(cmBrand.getBrandId());
 
-		}else{//request new checked for Brand
-			if(this.getManagedBean().getRequestExtCode().getBrandName().isEmpty()){
-					facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-							.getMessage("Fill up the Request New field for those are selected.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes().getUserLocale())));
-					return "";
+		} else {// request new checked for Brand
+			if (this.getManagedBean().getRequestExtCode().getBrandName()
+					.isEmpty()) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"Fill up the Request New field for those are selected.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return "";
 			}
 		}
-		
 
 		if (!this.getManagedBean().getRequestExtCode().isRequestMeasurement()) {
-			if (StringUtils.isBlank((String)measurementFilterBean.getSearchValue())) {
-				facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-						.getMessage("select from the list if you don't want to request new one.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes().getUserLocale())));
+			if (StringUtils.isBlank((String) measurementFilterBean
+					.getSearchValue())) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"select from the list if you don't want to request new one.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 				return "";
 			}
 			// get object from selected values :
@@ -1908,24 +1957,43 @@ public class CodificationBackingBean extends
 					.setMeasurementId(cmMeasurement.getMeasurementId());
 			this.getManagedBean().getRequestExtCode()
 					.setMeasurementName(cmMeasurement.getMeasurementName());
-		}else{//request new checked for Measurment
-			if(this.getManagedBean().getRequestExtCode().getMeasurementName().isEmpty()){
-					facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-							.getMessage("Fill up the Request New field for those are selected.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes().getUserLocale())));
-					return "";
+		} else {// request new checked for Measurment
+			if (this.getManagedBean().getRequestExtCode().getMeasurementName()
+					.isEmpty()) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"Fill up the Request New field for those are selected.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return "";
 			}
 		}
-		
+
 		if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
-			if (StringUtils.isBlank((String)colorFilterBean.getSearchValue())) {
-				facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-						.getMessage("select from the list if you don't want to request new one.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes().getUserLocale())));
+			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"select from the list if you don't want to request new one.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 				return "";
 			}
 			// get object from selected values :
-			
+
 			Long colorId = Long.valueOf(colorFilterBean.getSearchValue()
 					.toString());
 			CmColor selectedCmColor = null;
@@ -1936,19 +2004,28 @@ public class CodificationBackingBean extends
 			this.getManagedBean().getRequestExtCode()
 					.setColorId(selectedCmColor.getColorId());
 
-		}else{//request new checked for Color
-			if(this.getManagedBean().getRequestExtCode().getColorName().isEmpty()){
-					facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils
-							.getMessage("Fill up the Request New field for those are selected.",MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes().getUserLocale())));
-					return "";
+		} else {// request new checked for Color
+			if (this.getManagedBean().getRequestExtCode().getColorName()
+					.isEmpty()) {
+				facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										MessageUtils
+												.getMessage(
+														"Fill up the Request New field for those are selected.",
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return "";
 			}
 		}
 
-
 		this.getManagedBean().getRequestExtCodeList()
 				.add(this.getManagedBean().getRequestExtCode());
-		
+
 		if (this.getManagedBean().getRequestExtCodeList() == null
 				|| this.getManagedBean().getRequestExtCodeList().isEmpty()) {
 			facesContext.addMessage(
@@ -1989,17 +2066,23 @@ public class CodificationBackingBean extends
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
 
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage("Extension Code Request successfully submited.",
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		//Hide contractedItemPopUp if everything done.
-	    RequestContext.getCurrentInstance().execute("contractedItemPopUp.hide()");
+		facesContext
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								MessageUtils
+										.getMessage(
+												"Extension Code Request successfully submited.",
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes()
+														.getUserLocale())));
+		// Hide contractedItemPopUp if everything done.
+		RequestContext.getCurrentInstance().execute(
+				"contractedItemPopUp.hide()");
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
 	}
-
 
 	public void requestNewColor() {
 
@@ -2036,6 +2119,14 @@ public class CodificationBackingBean extends
 			this.getManagedBean().setMeasurementDisable(true);
 		}
 	}
+	
+	public void goToAddServiceConfirmPopUp(CmUnspsc unspscObj) {
+         // set commodity
+		System.out.println("...............goToAddServiceConfirmPopUp..............");
+		System.out.println("..............unspscObj.getUnspscCode()="+unspscObj.getUnspscCode());
+			this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
+			
+	}
 
 	/**
 	 * get faces scopes
@@ -2045,6 +2136,25 @@ public class CodificationBackingBean extends
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+
+	public boolean productCode(String unspscCode) {
+		System.out.println(".........productCode.........");
+		System.out.println("......unspscCode="+unspscCode);
+		
+		boolean flag = true;
+		String segmentCode = "";
+
+		segmentCode = unspscCode.substring(0, 2);
+		
+		if (segmentCode.compareTo(NO_75) > 0) {
+			
+			flag = false;
+		}
+
+		System.out.println("flag:" + flag);
+
+		return flag;
 	}
 
 }
