@@ -4746,7 +4746,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/cm/publicCatalogue/publicCatalogueView.xhtml
+					/xhtml/cm/publicCatalogue/preRenderPublicCatalogueView.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
@@ -4755,7 +4755,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>publicCatalogue</title>
+				<title>Catalogue Search</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>
