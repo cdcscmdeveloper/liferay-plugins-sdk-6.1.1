@@ -920,7 +920,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//flReqDTO.setFlWorkflowStatusId(Long.parseLong(String.valueOf(flPurchaseOrd.getPurchaseRequestId())));
 			//flReqDTO.setFlWorkflowDocType(flPurchaseOrd.getDocType());
 			//resDTO = fulfilmentSO.getStatusDesc(flReqDTO);
-			
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
@@ -1727,8 +1727,46 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 		return supplierBranches;
 	}
+	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
+		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setBranchId(new Long(supplierBranchId));
+		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+		
+		SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+		FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
+		supplierDtl.setBranchName(supplierBranch.getBranchName());
+		supplierDtl.setFaxNo(supplierBranch.getFaxNo());
+		supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
+		supplierDtl.setSmAddress(supplierBranch.getSmAddress());
+		supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+		supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+		supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+		supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
+		supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+		StringBuilder branckAddress = new StringBuilder();
+    	String strSpace = " ";
+		if(null != supplierBranch.getSmAddress()){
+			if(null != supplierBranch.getSmAddress().getAddress1()){
+				branckAddress.append(supplierBranch.getSmAddress().getAddress1());
+				branckAddress.append(strSpace);
+			}if(null != supplierBranch.getSmAddress().getAddress2()){
+				branckAddress.append(supplierBranch.getSmAddress().getAddress2());
+				branckAddress.append(strSpace);
+			}if(null != supplierBranch.getSmAddress().getAddress3()){
+				branckAddress.append(supplierBranch.getSmAddress().getAddress3());
+				branckAddress.append(strSpace);
+			}if(null != supplierBranch.getSmAddress().getAddress4()){
+				branckAddress.append(supplierBranch.getSmAddress().getAddress4());
+				branckAddress.append(strSpace);
+			}
+		}
+		this.getManagedBean().setSupplierAddress(branckAddress.toString());
+	}
 	
-	public void getSelectedSupplierBranchDtl(Long supplierBranchId){
+	
+	public void getSelectedSupplierBranchDtl1(Long supplierBranchId){
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setBranchId(supplierBranchId);
@@ -1746,6 +1784,56 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
 		supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
 	}
+	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	    	
+	    	StringBuilder address = new StringBuilder();
+	    	String strSpace = " ";
+	    	if(null != fulfilmentRequest.getSmSupplier()){
+	    		if(null !=fulfilmentRequest.getSmSupplier().getSmAppl()){
+	    			if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic()){
+	    				if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+	    					if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress()){
+	    						if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress4()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress4());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictName()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictName());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateName()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateName());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryName()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryName());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+		    	    	    		address.append(strSpace);
+	    						}if(null != fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateName()){
+	    							address.append(fulfilmentRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateName());
+		    	    	    		address.append(strSpace);
+	    						}if(null != address.toString()){
+	    		    	    		System.out.println("HQ addresss     "+address.toString());
+	    		    	    	}
+	    						
+	    						
+	    					}
+	    					
+	    				}
+	    			}
+	    		}
+	    	}	
+	    	
+	    	this.getManagedBean().setSupplierAddress(address.toString());
+	    }
 	
 	//get chargeline code by ID
 	
