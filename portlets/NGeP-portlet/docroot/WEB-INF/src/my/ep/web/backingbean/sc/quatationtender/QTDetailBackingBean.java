@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -41,6 +42,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -2373,6 +2376,9 @@ public class QTDetailBackingBean extends
 	}
 
 	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		ParameterResDTO parameterResDTO;
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(commType);
 		reqDTO.setQtId(qtId);
@@ -2386,6 +2392,43 @@ public class QTDetailBackingBean extends
 			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 
 			qtCommitte = resDTO.getScQtCommittee();
+			
+			// BO
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			// SC
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			// OC
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			// EC
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			// TEC
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
+			// FEC
+			parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			
 
 			if (null == qtCommitte) {
 				qtCommitte = new ScQtCommittee();
@@ -2395,7 +2438,7 @@ public class QTDetailBackingBean extends
 				qtCommitte.setQtCommitteRemarks(null);
 				qtCommitte.setScQtMeetings(null);
 				ScCommittee committee = new ScCommittee();
-				committee.setCommitteeType(commType);
+				committee.setCommitteeType(parameterResDTO.getPmParameter());
 				setUserDetails(committee);
 				PmStatus committeStatus = new PmStatus();
 				committeStatus.setStatusId(60200l);

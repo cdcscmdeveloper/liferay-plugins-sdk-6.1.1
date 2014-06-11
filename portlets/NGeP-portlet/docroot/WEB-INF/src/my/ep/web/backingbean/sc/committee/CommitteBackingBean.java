@@ -232,7 +232,7 @@ public class CommitteBackingBean extends
 			if (!StringUtils.isBlank(committeeType)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("scCommittee.committeeType");
+				bean.setSearchField("scCommittee.committeeType.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(committeeType);
 				searchFilterBean.add(bean);
@@ -462,21 +462,21 @@ public class CommitteBackingBean extends
 		debugLogger("editAction");
 
 		this.getManagedBean().setHeaderTitle(
-				scQtCommittee.getScCommittee().getCommitteeType());
+				scQtCommittee.getScCommittee().getCommitteeType().getParameterCode());
 		this.getManagedBean().setScCommittee(scQtCommittee.getScCommittee());
 
-		if (getManagedBean().getScCommittee().getCommitteeType()
+		if (getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
 				.equalsIgnoreCase("OC")
-				|| getManagedBean().getScCommittee().getCommitteeType()
+				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
 						.equalsIgnoreCase("EC")
-				|| getManagedBean().getScCommittee().getCommitteeType()
+				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
 						.equalsIgnoreCase("TEC")
-				|| getManagedBean().getScCommittee().getCommitteeType()
+				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
 						.equalsIgnoreCase("FEC")) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			String commType = scQtCommittee.getScCommittee().getCommitteeType();
+			PmParameter commType = scQtCommittee.getScCommittee().getCommitteeType();
 			Long qtId = scQtCommittee.getScQt().getQtId();
-			reqDTO.setCommitteeType(commType);
+			reqDTO.setCommitteeType(commType.getParameterCode());
 			reqDTO.setQtId(qtId);
 			CommitteResDTO resDTO = null;
 			ICommitteSO committeSO;
@@ -538,9 +538,9 @@ public class CommitteBackingBean extends
 				|| getManagedBean().getScCommittee().getCommitteeType()
 						.equals("QCA")) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			String commType = scQtCommittee.getScCommittee().getCommitteeType();
+			PmParameter commType = scQtCommittee.getScCommittee().getCommitteeType();
 			Long qtId = scQtCommittee.getScQt().getQtId();
-			reqDTO.setCommitteeType(commType);
+			reqDTO.setCommitteeType(commType.getParameterCode());
 			reqDTO.setQtId(qtId);
 			CommitteResDTO resDTO = null;
 			ICommitteSO committeSO;
@@ -721,8 +721,8 @@ public class CommitteBackingBean extends
 				+ getManagedBean().getScCommittee().getCommitteeType());
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setCommitteeType(getManagedBean().getScCommittee()
-				.getCommitteeType());
+		/*reqDTO.setCommitteeType(getManagedBean().getScCommittee()
+				.getCommitteeType());*/
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = null;
 		try {

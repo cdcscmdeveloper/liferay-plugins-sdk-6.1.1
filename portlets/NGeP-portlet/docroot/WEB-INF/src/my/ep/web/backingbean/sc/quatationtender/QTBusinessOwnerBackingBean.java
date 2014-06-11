@@ -30,6 +30,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -365,6 +366,13 @@ public class QTBusinessOwnerBackingBean extends
 				.getScCommittee();
 
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		// BO
+		ParameterResDTO parameterResDTO;
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+		parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
+		parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 
 		// Setting the pm status for New User
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -406,7 +414,7 @@ public class QTBusinessOwnerBackingBean extends
 			user.setEmail(member.getEmail());
 
 			// Identification Code
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			//ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO
 					.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 			parameterReqDTO
@@ -415,7 +423,7 @@ public class QTBusinessOwnerBackingBean extends
 					.retrieveParameterByTypeAndCode(parameterReqDTO)
 					.getPmParameter();
 			user.setIdentificationCode(identificationCode);
-
+			
 			// pmUser.setPmAddressTypes(null);
 
 			// User Notification
@@ -511,7 +519,7 @@ public class QTBusinessOwnerBackingBean extends
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
 		}
-		scCommittee.setCommitteeType("BO");
+		scCommittee.setCommitteeType(parameterResDTO.getPmParameter());
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
 		scQtCommittee.setScCommittee(scCommittee);
 		this.getManagedBean().setScQtCommittee(scQtCommittee);

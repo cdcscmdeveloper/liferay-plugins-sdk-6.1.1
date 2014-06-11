@@ -335,7 +335,7 @@ public class QTCommitteBackingBean extends
 		for (TabBean tabBean : tabs) {
 			for (ScCommittee scCommittee : treeBeans) {
 				if (tabBean.getTitleName().equalsIgnoreCase(
-						CommitteType.getValue(scCommittee.getCommitteeType()))) {
+						CommitteType.getValue(scCommittee.getCommitteeType().getParameterCode()))) {
 					tabBean.setScCommittee(treeBeans.get(0));
 					break;
 				}
