@@ -57,7 +57,6 @@ import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -531,7 +530,7 @@ public class EvaluationBackingBean extends
 			// evaluationSO.prepareComplianceSummaryResults(reqDTO);
 			EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 			summaryReqDTO.setQtId(791L);
-			summaryReqDTO.setEvalStage(1);
+			//summaryReqDTO.setEvalStage(1);
 			resDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
 			if (null != resDTO.getQulifiedSuppliers()
 					&& resDTO.getQulifiedSuppliers().getResultList().isEmpty()) {
