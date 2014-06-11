@@ -15,10 +15,10 @@
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
-				update=":form:prtabs:applyBulkChargeDialog,@(.chargeLineSection)" />
+				update=":form:applyBulkChargeDialog,@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
-				update=":form:prtabs:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
+				update=":form:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
 			<p:column>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
@@ -98,7 +98,7 @@
 						value="Bulk Update" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						oncomplete="applyBulkCharge.show();"
-						update=":form:prtabs:applyBulkChargeDialog"
+						update=":form:applyBulkChargeDialog"
 						action="#{purchaseRequestBackingBean.clearPopupLists}" /></td>
 
 			</tr>
@@ -299,7 +299,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Apply" icon="ui-icon-accept"
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update=":form:prtabs:applyBulkChargeDialog,chargeLineTbl"
+				update=":form:applyBulkChargeDialog,chargeLineTbl"
 				action="#{purchaseRequestBackingBean.chargeLineApply}"
 				oncomplete="applyBulkCharge.hide();">
 			</p:commandButton>

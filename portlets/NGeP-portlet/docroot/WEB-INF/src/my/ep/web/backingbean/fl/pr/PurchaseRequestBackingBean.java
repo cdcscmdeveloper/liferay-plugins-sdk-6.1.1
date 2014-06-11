@@ -935,6 +935,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				outcome[i++] = action;
 			}
 			
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getSumOrderedQty(getManagedBean().getFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
@@ -1929,13 +1930,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		PurchaseRequestBackingBean.subSetiaCodeMap = subSetiaCodeMap;
 	}
 	
-	public void onTabChange(TabChangeEvent tevent){
-		if("prChargeLineTabId".equals(tevent.getTab().getId())){
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==3){
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.prChargeLinePnlClass)");
 			getVotFundList(4L);
 		}
-		if("prItemsTabId".equals(tevent.getTab().getId())){
+		if(selectedTabIndex==1){
 			addPurchsedItems();
 		}
 	}

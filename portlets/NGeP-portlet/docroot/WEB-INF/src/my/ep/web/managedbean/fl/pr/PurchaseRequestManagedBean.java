@@ -212,6 +212,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private boolean deleteButtonHide;
 	
+	private int selectedTabIndex;
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -1679,6 +1680,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierBranchesList(List<SelectItem> supplierBranchesList) {
 		this.supplierBranchesList = supplierBranchesList;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 	

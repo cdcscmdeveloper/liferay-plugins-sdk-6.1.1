@@ -12,10 +12,8 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<f:event listener="#{purchaseRequestBackingBean.preRenderView}"
-			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
-	
+		<f:event listener="#{purchaseRequestBackingBean.preRenderView}" type="preRenderView" />
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
@@ -51,55 +49,68 @@
 			</tr>
 		</table>
 		<ui:include src="prReviewHeaderPage.xhtml" />
-		<p:spacer height="20px" />
-		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="false">
-		<p:ajax event="tabChange" listener="#{purchaseRequestBackingBean.onTabChange}" update="#{purchaseRequestBackingBean.className}"></p:ajax>
-			<p:tab id="prGeneralTabId" title="General">
-				<ui:include src="prGeneral.xhtml" />
-			</p:tab>
-			<p:tab id="prItemsTabId" title="Delivery Address and Item " >
-				<ui:include src="prItem.xhtml" />
-			</p:tab>
-			<p:tab id="prOrderSummeryTabId" title="Order Summary">
-				<ui:include src="prordersummary.xhtml" />
-			</p:tab>
-			<p:tab id="prChargeLineTabId" title="Charge Line Summary" >
-				<ui:include src="chargeline.xhtml" />
-			</p:tab>
-			<p:tab id="settingsTabId" title="Approval Setting"
-				rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}">
-				<p:panel id="settingId" header="Approver Setting" toggleable="true"
-					toggleSpeed="500">
-					<h:panelGrid columns="1">
-						<h:panelGrid columns="2">
-							<h:outputLabel value="Approver Group" style="text-align: top" />
-							<p:selectOneMenu
-								value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}"
-								style="width:350px; margin-bottom:5px;">
-								<p:ajax event="change"
-									listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"
-									process="@this" update="approverpickList" />
-								<f:selectItems
-									value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
-							</p:selectOneMenu>
-
-						</h:panelGrid>
-						<h:panelGrid style="width:500px">
-							<p:pickList id="approverpickList"
-								value="#{purchaseRequestBackingBean.managedBean.approverModel}"
-								var="data" itemValue="#{data}" itemLabel="#{data}"
-								showTargetControls="true" filterMatchMode="contains">
-								<f:facet name="sourceCaption">Available</f:facet>
-								<f:facet name="targetCaption">Selected</f:facet>
-								<p:column style="width:75%;">
-									<h:outputText value="#{data}" />
-								</p:column>
-							</p:pickList>
-						</h:panelGrid>
-					</h:panelGrid>
-				</p:panel>
-			</p:tab>
-		</p:tabView>
-
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top">
+					<p:tabMenu styleClass="sidemenu" style="display : table-caption;"
+						activeIndex="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" >
+						<p:menuitem value="General"	update="@form">
+							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="Delivery Address and Item" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>	
+						<p:menuitem value="Order Summary" update="@form">
+							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="2" />
+						</p:menuitem>	
+						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">
+							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="3" />
+						</p:menuitem>	
+						<p:menuitem value="Approval Setting" update="@form" rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" >
+							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="4" />
+						</p:menuitem>																								
+					</p:tabMenu></td>
+				<td width="80%">
+					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 0}" >
+						<ui:include src="prGeneral.xhtml" />
+					</p:outputPanel>
+					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="prItem.xhtml" />
+					</p:outputPanel>		
+					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="prordersummary.xhtml" />
+					</p:outputPanel>	
+					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 3}">
+						<ui:include src="chargeline.xhtml" />
+					</p:outputPanel>	
+					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 4}">
+						<p:panel id="settingId" header="Approver Setting" toggleable="true" toggleSpeed="500">
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="2">
+									<h:outputLabel value="Approver Group" style="text-align: top" />
+									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
+										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
+										<p:ajax event="change" process="@this" update="approverpickList"
+											listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"  />
+										<f:selectItems value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+								<h:panelGrid style="width:500px">
+									<p:pickList id="approverpickList" var="data" itemValue="#{data}" itemLabel="#{data}"
+										value="#{purchaseRequestBackingBean.managedBean.approverModel}"
+										showTargetControls="true" filterMatchMode="contains">
+										<f:facet name="sourceCaption">Available</f:facet>
+										<f:facet name="targetCaption">Selected</f:facet>
+										<p:column style="width:75%;">
+											<h:outputText value="#{data}" />
+										</p:column>
+									</p:pickList>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:panel>
+					</p:outputPanel>																			
+				</td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>
