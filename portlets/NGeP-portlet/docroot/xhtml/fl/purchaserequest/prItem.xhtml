@@ -167,7 +167,7 @@
 			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();"
-				update="addressDataTable,@(.orderSummaryChange) ">
+				update=":form:itemDetPanelGroup,addressDataTable,@(.orderSummaryChange) ">
 			</p:commandButton>
 		</div>
 	</p:dialog>
@@ -348,7 +348,7 @@
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"
 				oncomplete="addManualDeliveryAddr.hide();"
-				update="addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange)">
+				update=":form:itemDetPanelGroup,addManualDelAddrDialog,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
 		</div>
 	</p:dialog>
