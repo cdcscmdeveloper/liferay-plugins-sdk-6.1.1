@@ -294,7 +294,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setDeleteButtonHide(true);
 	}
 
-	public String fulfillmentRequestAction(String action) {
+	public String fulfillmentRequestAction(String action) throws Exception {
 
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -306,8 +306,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr flItemAddress: address.getFlFulfilmentItemAddr()){
 					flItemAddress.getFlFulfilmentItem().getPmVotFund().getVotFundId();
 				}
-				
-				
 			}
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(1L);
@@ -329,7 +327,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 			
 			if(null==reqDTO.getSelectedApprovers() || reqDTO.getSelectedApprovers().isEmpty()){
-				throw new EpException(" Select Approver from Approver Settings .");
+				throw new EpException(MessageConst.ERROR_750017);
 			}
 
 			
@@ -355,16 +353,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		} finally {
+		}  finally {
 			fulfilmentRequestSO = null;
 		}
 		return null;
@@ -880,11 +871,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	public String navigateToPurchaseRequest() {
 		getManagedBean().getSelectedRequestNote();
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		this.getManagedBean().setOutComes(new String[] {"Submit"});
+		this.getManagedBean().setOutComes(new String[] { "Submit" });
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
 	}
 
@@ -909,6 +900,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
+			
 			//System.out.println("req id from BPM::::::: "+flPurchaseOrd.getPurchaseRequestId());
 			//System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getDocType());
 			
@@ -930,10 +922,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if(!isFlFulfilmentRequisitioner()) {
 				resDTO.getFlFulfilmentRequest().setApprovedDate(new Timestamp(System.currentTimeMillis()));
 			}
+			
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
+			
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getSumOrderedQty(getManagedBean().getFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setOutComes(outcome);
 			getManagedBean().setTaskName(res.getTaskName());
 			getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
