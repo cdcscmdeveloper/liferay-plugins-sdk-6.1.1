@@ -427,11 +427,11 @@ public class ApprovalBackingBean extends
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
 		for (ScQtCommittee scQtCommittee : qtCommittees) {
 			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee()
-					.getCommitteeType())) {
+					.getCommitteeType().getParameterCode())) {
 				TabBean bean = new TabBean(CommitteType.getValue(scQtCommittee
-						.getScCommittee().getCommitteeType()),
+						.getScCommittee().getCommitteeType().getParameterCode()),
 						getCommitteeTypeDtl(scQtCommittee.getScCommittee()
-								.getCommitteeType(), scQtCommittee.getScQt()
+								.getCommitteeType().getParameterCode(), scQtCommittee.getScQt()
 								.getQtId()));
 				committeTabs.add(bean);
 			}
@@ -479,4 +479,25 @@ public class ApprovalBackingBean extends
 		return approval;
 	}
 
+	public String viewApprovalAction() {
+		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
+	}
+
+	public void handleFileAttachment(FileUploadEvent event) {
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			ScQtApprovalAttachment attachment = getManagedBean()
+					.getScQtApproval().getScQtApprovalAttachment();
+			if (null == attachment) {
+				attachment = new ScQtApprovalAttachment();
+				attachment.setScQtApproval(scQtApproval);
+			}
+			attachment.setUser(facesScopes.getUserSessionBean());
+			attachment
+					.setChangedDate(new Timestamp(System.currentTimeMillis()));
+			uploadAttachment(event.getFile(), attachment);
+			scQtApproval.setScQtApprovalAttachment(attachment);
+		}
+	}
 }
