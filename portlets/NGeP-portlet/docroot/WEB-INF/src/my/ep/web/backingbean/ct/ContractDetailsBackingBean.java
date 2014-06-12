@@ -308,7 +308,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 }
 		
 		 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
-			 getManagedBean().setScheduleOption("1");
 		    this.getManagedBean().setChkSchedule(true);
 		    SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 			Calendar cal = Calendar.getInstance();
@@ -324,7 +323,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }
 		    
 		 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
-			 getManagedBean().setScheduleOption("2");
 			 SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 		     Calendar cal = Calendar.getInstance();
 			 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
@@ -956,11 +954,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
        this.getManagedBean().setChkSchedule(false);
   	   this.getManagedBean().setChkProgressive(false);
-  	   
-	   if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("1"))
-		   this.getManagedBean().setChkSchedule(true);
-	   else if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("2"))
-		  this.getManagedBean().setChkProgressive(true);
+  	   if(this.getManagedBean().getFrequencySchedule().equalsIgnoreCase("S")){
+  		   this.getManagedBean().getCtContract().setFrequencySchedule(true);
+  	   }else if(this.getManagedBean().getFrequencySchedule().equalsIgnoreCase("P")){
+  		 this.getManagedBean().getCtContract().setFrequencySchedule(false);
+  	   }
 	   
 	}
     

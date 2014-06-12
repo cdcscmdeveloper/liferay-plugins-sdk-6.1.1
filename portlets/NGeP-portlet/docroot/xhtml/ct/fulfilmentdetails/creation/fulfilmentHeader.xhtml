@@ -5,28 +5,34 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<div align="left" class="header-info">
-		<table style="width: 99%; margin-left: 0px;">
-				<tr style="margin-button: 0px;">
-				  <td><p:outputLabel value="#{lbl['lbl.ct.loaNo']}" /></td>
-					<td><p:inputText size="20" disabled="true"
-								value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}"  />	
-					</td>		
-					<td><p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-					</td>
-					<td> <p:inputText size="20" disabled="true"
-								value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
-					</td>
-					<td><p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-					</td>
-					<td><p:inputText size="30" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>
-					</td>					
-					<td><p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
-					</td>
-					<td> <p:inputText size="20"
-								value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}"
-								disabled="true" />
-					</td>
-				</tr>
-			</table>	    				 
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.cno']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{contractDetailsBackingBean.managedBean.ctContract.contractNo}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+					#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+					#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}
+				</td>
+			</tr>
+		</table>
 	</div>
+	<p:spacer height="10px"></p:spacer>
 </ui:composition>

@@ -6,6 +6,7 @@ package my.ep.web.managedbean.ct;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private boolean scheduleType;
 	private boolean chkProgressive;
-	private String scheduleOption="1";
 	private CtSchedule ctSchedulesDel;
 	private boolean chkSchedule;
 	private boolean chkScheduleNulValue;
@@ -140,6 +140,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private SmSupplierBank smSupplierBanks;
 	private boolean chkConceValue;
 	private int selectedTabIndex;
+	private Map<String,Object> radioButtonSchedule;
+	private String frequencySchedule ="S";
 	 
 	public String[] getAction() {
 		return action;
@@ -203,14 +205,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
 		this.itemCeilingQuantity = itemCeilingQuantity;
-	}
-
-	public String getScheduleOption() {
-		return scheduleOption;
-	}
-
-	public void setScheduleOption(String scheduleOption) {
-		this.scheduleOption = scheduleOption;
 	}
 
 	public boolean isChkSchedule() {
@@ -801,5 +795,28 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}	
+	}
+
+	public Map<String, Object> getRadioButtonSchedule() {
+		if(radioButtonSchedule == null){
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
+			radioButtonSchedule.put("Frequency Schedule", "S");
+			radioButtonSchedule.put("Progressive Payment", "P");
+		}
+		return radioButtonSchedule;
+	}
+
+	public void setRadioButtonSchedule(Map<String, Object> radioButtonSchedule) {
+		this.radioButtonSchedule = radioButtonSchedule;
+	}
+
+	public String getFrequencySchedule() {
+		return frequencySchedule;
+	}
+
+	public void setFrequencySchedule(String frequencySchedule) {
+		this.frequencySchedule = frequencySchedule;
+	}
+
+	
 }

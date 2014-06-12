@@ -8,13 +8,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" >
-            <p:selectOneRadio id="radiOptions" value="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" required="true" 
+            <p:selectOneRadio id="radiOptions" value="#{contractDetailsBackingBean.managedBean.frequencySchedule}" required="true" 
                disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio}">  
-                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="true"/>  
-                  <f:selectItem itemLabel="#{lbl['lbl.ct.sched.progre']}" itemValue="false" /> 
+               <f:selectItems value="#{contractDetailsBackingBean.managedBean.radioButtonSchedule}" />
                   <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" 
                          process="@this" update=":form:paymentSchedule"/> 
-            </p:selectOneRadio> 
+         </p:selectOneRadio>
          </h:panelGrid>  
          <p:outputPanel id="paymentSchedule">   
          <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" style="width:100%;">    
