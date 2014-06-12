@@ -179,10 +179,8 @@
 		<table style="width: 100%">
 			<tr>
 				<td>
-					<h:panelGrid columns="2" style="float:right;">
-						<h:outputLabel value="*" styleClass="mandatory" />
 						<p:outputLabel value="Country" />
-					</h:panelGrid>				
+						<h:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td><p:selectOneMenu id="manCountry" required="false"
 						label="Country"
@@ -198,8 +196,7 @@
 							update="manState" />
 					</p:selectOneMenu>
 					<p:message for="manCountry" display="icon" /></td>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="State" /></td>
+				<td><p:outputLabel value="State" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="manState" required="false"
 						label="State"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
@@ -216,8 +213,8 @@
 					<p:message for="manState" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Address Line 1" /></td>
+				<td>
+					<p:outputLabel value="Address Line 1" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="address1" label="Address Line 1"
 						required="false"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
@@ -242,8 +239,8 @@
 				<td><p:inputText
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 						size="35" /></td>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Distict" /></td>
+				<td>
+					<p:outputLabel value="Distict" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="manDistrict" required="false"
 						label="District"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
@@ -268,8 +265,8 @@
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 						size="35" /></td>
 
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="City/Town" /></td>
+				<td>
+					<p:outputLabel value="City/Town" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="manCity" required="false" label="City"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityCode}"
 						style="width: 207px;margin-bottom: 5px;">
@@ -285,8 +282,8 @@
 				<td><p:inputText
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 						size="35" /></td>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Postal Code" /></td>
+				<td>
+					<p:outputLabel value="Postal Code" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="postCode" required="false"
 						label="Post Code"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
@@ -294,13 +291,13 @@
 					<p:message for="postCode" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Contact Person" /></td>
+				<td>
+					<p:outputLabel value="Contact Person" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35" id="contactPerson" required="false"
 						label="Contact Person" />
 					<p:message for="contactPerson" display="icon" /></td>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Delivery Address" /></td>
+				<td>
+					<p:outputLabel value="Delivery Address" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="manAddress" label="Manual Address"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -311,16 +308,16 @@
 					<p:message for="manAddress" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Email" /></td>
+				<td>
+					<p:outputLabel value="Email" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="email" required="false" label="Emnail"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
 						size="35" />
 					<p:message for="email" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Tel.No." /></td>
+				<td>
+					<p:outputLabel value="Tel.No." /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="telNo" required="false" label="Tel No"
 						value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
 						size="20" />
