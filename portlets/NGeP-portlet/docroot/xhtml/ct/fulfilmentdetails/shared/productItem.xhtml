@@ -195,7 +195,7 @@
 				  <p:outputLabel value="#{data.ctAgency.orgProfile.orgName}" style="float:left;" />
 				</p:column>              
 				<p:column headerText="Ceiling Quantity" style="text-align: right;">
-					<p:inputText style="width:70px;" styleClass="ppRightBtn" value="#{data.ceilingQuantity}">
+					<p:inputText style="width:70px;" styleClass="ppRightBtn" maxlength="24" value="#{data.ceilingQuantity}">
 					 <f:convertNumber pattern="#,###.00" /></p:inputText>
 				</p:column>            
 				<p:column headerText="Effective Date">

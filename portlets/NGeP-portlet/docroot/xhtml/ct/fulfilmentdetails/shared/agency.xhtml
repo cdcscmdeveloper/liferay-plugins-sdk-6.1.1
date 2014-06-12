@@ -25,7 +25,7 @@
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
-				<p:inputText value="#{data.ceilingAmount}" styleClass="ppRightBtn" style="width:110px;">
+				<p:inputText value="#{data.ceilingAmount}" maxlength="23" styleClass="ppRightBtn" style="width:110px;">
 				 	<f:convertNumber pattern="#,###.00" /> 
 				</p:inputText>
 		   	 </p:column>

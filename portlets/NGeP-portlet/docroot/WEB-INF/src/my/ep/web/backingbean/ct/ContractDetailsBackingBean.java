@@ -302,7 +302,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
 		      if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
 		    	 this.getManagedBean().setFlgPaymentTracking(true);
-		    	 this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
+		    	 calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
 		      }
 		   }
 		 }
@@ -380,6 +380,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
 			this.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
 		}
+	}
+	
+	public void calAdvancePaymentTracking(Long contractId){
+		
 	}
 	
 	private SmAddress retrieveLatestSupplierAddress() {
@@ -1445,6 +1449,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         	return str;
         return format.format(time); 
     } 
+	
+	public BigDecimal calculatePaidPercentage(){
+		return (this.getManagedBean().getCtFulfilments().getPaidInvoiceAmt().multiply(new BigDecimal(100))).divide(this.getManagedBean().getCtFulfilments().getPaidAdvancePayment());
+		
+	}
+	public BigDecimal calculateBalanceToPaid(){
+		return this.getManagedBean().getCtFulfilments().getPaidAdvancePayment().subtract(this.getManagedBean().getCtFulfilments().getPaidInvoiceAmt());
+	}
 
 	public CtDeductionClause[] getChkDeductionClause() {
 		return chkDeductionClause;

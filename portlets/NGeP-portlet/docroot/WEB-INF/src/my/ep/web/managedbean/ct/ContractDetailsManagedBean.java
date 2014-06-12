@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtFulfilment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -142,6 +143,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private int selectedTabIndex;
 	private Map<String,Object> radioButtonSchedule;
 	private String frequencySchedule ="S";
+	
+	private CtFulfilment ctFulfilments;
 	 
 	public String[] getAction() {
 		return action;
@@ -818,5 +821,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.frequencySchedule = frequencySchedule;
 	}
 
-	
+	public CtFulfilment getCtFulfilments() {
+		return ctFulfilments;
+	}
+
+	public void setCtFulfilments(CtFulfilment ctFulfilments) {
+		this.ctFulfilments = ctFulfilments;
+	}
 }

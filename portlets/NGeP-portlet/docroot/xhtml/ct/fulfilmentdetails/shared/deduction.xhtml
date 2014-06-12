@@ -28,8 +28,8 @@
         	   rowKey="#{data}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
                <ac:paginator for="tableClause" />   
                    <p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}">
-                    <p:inputTextarea value="#{data.clauseDescription}" disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking}" 
-                       rows="1" cols="180" styleClass="ui-inputtextarea"></p:inputTextarea>
+                    <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" cols="180"
+                       disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking}" styleClass="ui-inputtextarea"></p:inputTextarea>
                     </p:column>    
            </p:dataTable>
            <p:spacer height="2" />

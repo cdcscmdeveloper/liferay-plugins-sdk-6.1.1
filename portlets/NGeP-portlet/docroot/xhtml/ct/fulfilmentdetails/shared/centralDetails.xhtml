@@ -8,11 +8,11 @@
 	   <h:panelGrid columns="5" style="width:93%;" 
 	      columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20,columnWidth15">
 		     <p:outputLabel id="centralNo" value="#{lbl['lbl.ct.cno']}" />
-		     <p:inputText for="centralNo" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" 
-			   disabled="true" style="width:170px;" />
+		     <p:inputText for="centralNo" disabled="true" style="width:170px;"
+		        maxlength="17"  value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
 		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		     <p:inputText for="centralphyNo" value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"
-		        style="width:170px;" />				
+		     <p:inputText for="centralphyNo" style="width:170px;"  maxlength="30"
+		       value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>				
 		     <h:panelGrid columns="3">
 		       <p:selectBooleanCheckbox 
 			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
@@ -34,7 +34,7 @@
 		     <h:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
 		     <h:panelGrid columns="3">
 		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:65px;" 
-		          value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
+		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                <p:spacer width="2" />
                <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
                  style="width:100px;" >
@@ -42,9 +42,8 @@
 			   </p:selectOneMenu>
 			</h:panelGrid>	
 			<p:outputLabel id="centralSignDate" value="Signed Date" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
-			<p:inputText for="centralSignDate" 
-			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
-			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
+			<p:inputText for="centralSignDate"  disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"
+			   style="width:170px;" value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
 			<h:panelGrid columns="3">
@@ -62,7 +61,7 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="centralContractName"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true" style="margin-bottom: 5px;"
+				required="false" rows="3" cols="31" maxlength="1000" disabled="true" style="margin-bottom: 5px;"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<h:outputLabel value="Agreement No" 
@@ -84,7 +83,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" validator="#{webappBean.checkSpaces}"  required="true" autoResize="false">
+		  rows="4" cols="113" validator="#{webappBean.checkSpaces}" maxlength="200"  required="true" autoResize="false">
 		  </p:inputTextarea>	
 	     <p:message for="centralJustificationLbl"/>
 	  </h:panelGrid>		
