@@ -11,13 +11,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.pm.authorization.mergerules.IDataRestrValueSO;
-import my.ep.biz.service.pm.authorization.mergerules.IFieldRestrValueSO;
+import my.ep.biz.service.pm.authorization.screenrestriction.IScreenRestrSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.authorization.mergerules.DataRestrValueReqDTO;
-import my.ep.dto.authorization.mergerules.DataRestrValueResDTO;
-import my.ep.dto.authorization.mergerules.FieldRestrValueReqDTO;
-import my.ep.dto.authorization.mergerules.FieldRestrValueResDTO;
+import my.ep.dto.authorization.screenrestriction.ScreenRestrReqDTO;
+import my.ep.dto.authorization.screenrestriction.ScreenRestrResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmFieldRestrValue;
 import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
@@ -98,26 +95,26 @@ public class SecurityFilterUtil {
 	 * @return SecurityFiltersBean
 	 */
 	private static SecurityFiltersBean getScreenFilters(Long userId,
-			String screenId) {
+			String screenCode) {
 		FacesScopes facesScope = new FacesScopes();
 		SecurityFiltersBean securityFiltersBean = getSecurityFiltersBean(facesScope);
 
 		if (userId != null) {
-			if (!StringUtils.isBlank(screenId)) {
+			if (!StringUtils.isBlank(screenCode)) {
 				HashMap<String, Map<String, String>> authScreenFilters = securityFiltersBean
 						.getAuthScreenFilters();
-				if (!authScreenFilters.containsKey(screenId)) {
-					IFieldRestrValueSO screenRestrictionSO = null;
+				if (!authScreenFilters.containsKey(screenCode)) {
+					IScreenRestrSO screenRestrictionSO = null;
 					try {
-						screenRestrictionSO = (IFieldRestrValueSO) BusinessDelegate
+						screenRestrictionSO = (IScreenRestrSO) BusinessDelegate
 								.getInstance().getServiceObject(
 										ModuleCodeConst.PROFILE_MANAGEMENT,
-										IFieldRestrValueSO.class);
-						FieldRestrValueReqDTO requestDTO = new FieldRestrValueReqDTO();
-						requestDTO.setScreenId(screenId);
+										IScreenRestrSO.class);
+						ScreenRestrReqDTO requestDTO = new ScreenRestrReqDTO();
+						requestDTO.setScreenCode(screenCode);
 						requestDTO.setUserId(userId);
-						FieldRestrValueResDTO screenRestrictionResDTO = screenRestrictionSO
-								.getScreenFilterData(requestDTO);
+						ScreenRestrResDTO screenRestrictionResDTO = screenRestrictionSO
+								.getFieldRestrValueData(requestDTO);
 
 						List<PmFieldRestrValue> fieldRestrValues = screenRestrictionResDTO
 								.getFieldRestrValues();
@@ -125,17 +122,7 @@ public class SecurityFilterUtil {
 						HashMap<String, String> compMap = new HashMap<String, String>();
 						if (fieldRestrValues != null) {
 							for (PmFieldRestrValue fieldRestrData : fieldRestrValues) {
-								screenRestr = fieldRestrData.getPmScreenRestr();
-								System.out.println("ScreenCode : "
-										+ screenRestr.getScreenCode());
-								System.out.println("RoleCode : "
-										+ fieldRestrData.getPmRole()
-												.getRoleCode());
-								System.out.println("UserID ; "
-										+ requestDTO.getUserId());
-								System.out.println("ComponentID : "
-										+ fieldRestrData.getPmScreenRestr()
-												.getComponentId());							
+								screenRestr = fieldRestrData.getPmScreenRestr();						
 
 								if (screenRestr != null) {
 
@@ -145,7 +132,7 @@ public class SecurityFilterUtil {
 							}
 						}
 
-						authScreenFilters.put(screenId, compMap);
+						authScreenFilters.put(screenCode, compMap);
 
 					} finally {
 						screenRestrictionSO = null;
@@ -263,33 +250,34 @@ public class SecurityFilterUtil {
 	}
 
 	
-	public static void applyDataFilters(Long userId, String screenId) {
+	public static void applyDataFilters(Long userId, String screenCode) {
 		debugLogger(new StringBuilder().append("applyDataFilters[")
 				.append("userId:").append(userId).append(", screenId:")
-				.append(screenId).append("]"));
+				.append(screenCode).append("]"));
+		
 		FacesScopes facesScope = new FacesScopes();
 		SecurityFiltersBean securityFiltersBean = getSecurityFiltersBean(facesScope);
 
 		// Make sure userId and screenId is not empty
 		if (!StringUtils.isBlank(userId.toString())){
-		if (!StringUtils.isBlank(screenId)) {
+		if (!StringUtils.isBlank(screenCode)) {
 			Map<String, Map<String, List<PmScreenRestr>>> autDataFilters = securityFiltersBean
 					.getAutDataFilters();
-			if (!autDataFilters.containsKey(screenId)) {
-				IDataRestrValueSO dataRestrictionSO = null;
+			if (!autDataFilters.containsKey(screenCode)) {
+				IScreenRestrSO screenRestrSO = null;
 				try {
-					dataRestrictionSO = (IDataRestrValueSO) BusinessDelegate
+					screenRestrSO = BusinessDelegate
 							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-									IDataRestrValueSO.class);			
+									IScreenRestrSO.class);			
 
-					DataRestrValueReqDTO requestDTO = new DataRestrValueReqDTO();
-					requestDTO.setScreenId(screenId);
-					requestDTO.setUserId(userId.toString());
+					ScreenRestrReqDTO reqDTO = new ScreenRestrReqDTO();
+					reqDTO.setUserId(userId);
+					reqDTO.setScreenCode(screenCode);
 
-					DataRestrValueResDTO dataRestrictionResDTO = dataRestrictionSO
-							.getRestrictionData(requestDTO);
-					List<PmScreenRestr> screenMetadatas = dataRestrictionResDTO
-							.getDataRestrValues();
+					ScreenRestrResDTO resDTO = screenRestrSO
+							.getDataRestrValueData(reqDTO);
+					List<PmScreenRestr> screenMetadatas = resDTO
+							.getScreenRestrs();
 					Map<String, List<PmScreenRestr>> screenMetadataMap = new HashMap<String, List<PmScreenRestr>>();
 
 					if (screenMetadatas != null) {
@@ -332,11 +320,11 @@ public class SecurityFilterUtil {
 
 					// Put to the map with the key as screen id in
 					// securityFiltersBean
-					securityFiltersBean.getAutDataFilters().put(screenId,
+					securityFiltersBean.getAutDataFilters().put(screenCode,
 							screenMetadataMap);
 
 				} finally {
-					dataRestrictionSO = null;
+					screenRestrSO = null;
 				}
 			}
 			
