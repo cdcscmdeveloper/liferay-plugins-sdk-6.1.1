@@ -712,8 +712,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void addCancelledCircular(){
 		log.info("PanelBackingBean.addCancelledCircular()");
-        try {	
-			getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+        try {
+        	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
+        		cancelCircular.setCancelCircularId(null);
+        		cancelCircular.setCtCancelCircularReq(null);
+        	}
+        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+        	getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -724,6 +729,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
+			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

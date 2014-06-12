@@ -228,7 +228,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						SearchOperator.OPERATOR_EQUALS.value(), 
 						ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
 				reqDTO.setCancelCircularSearchBean(searchBean);
-				 reqDTO.setFilterStatusId(ContractStatusConst.CQ_APPROVED);
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
@@ -246,7 +245,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void addCancelledCircular() {
 		log.info("CentralContractBackingBean.addCancelledCircular()");
         try {	
+        	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
+        		cancelCircular.setCancelCircularId(null);
+        		cancelCircular.setCtCancelCircularReq(null);
+        	}
         	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+        	getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -257,6 +261,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		log.info("CentralContractBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
+			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
