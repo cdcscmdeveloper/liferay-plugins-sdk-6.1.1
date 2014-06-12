@@ -2378,7 +2378,7 @@ public class QTDetailBackingBean extends
 	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
 		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		ParameterResDTO parameterResDTO;
+		ParameterResDTO parameterResDTO = null;
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(commType);
 		reqDTO.setQtId(qtId);
@@ -2393,42 +2393,37 @@ public class QTDetailBackingBean extends
 
 			qtCommitte = resDTO.getScQtCommittee();
 			
-			// BO
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			// SC
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			// OC
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			// EC
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			// TEC
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			// FEC
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
-			parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
+			if("BO".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			} else if("SC".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			} else if("OC".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			} else if("EC".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			} else if("TEC".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			} else if("FEC".equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			}
 
 			if (null == qtCommitte) {
 				qtCommitte = new ScQtCommittee();

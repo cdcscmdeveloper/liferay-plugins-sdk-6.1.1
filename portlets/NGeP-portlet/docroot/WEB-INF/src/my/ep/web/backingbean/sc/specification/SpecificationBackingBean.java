@@ -8618,6 +8618,7 @@ public class SpecificationBackingBean extends
 			// specMaster.setDurationMonth(12);
 			specMaster.setTemplateStatus("D");
 			specMaster.setScQtDocs(null);
+			specMaster.setScQuoteDocs(null);
 			specMaster.setChangedBy(2L);
 			specMaster.setCreatedBy(2L);
 			specMaster.setBrandNew(false);
