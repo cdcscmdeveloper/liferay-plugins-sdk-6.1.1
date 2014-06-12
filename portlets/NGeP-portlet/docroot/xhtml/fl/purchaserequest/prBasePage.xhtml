@@ -21,7 +21,7 @@
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" ajax='false'
+						<p:commandButton value="#{bpmAction}" update="@form" 
 							styleClass="ui-button"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
