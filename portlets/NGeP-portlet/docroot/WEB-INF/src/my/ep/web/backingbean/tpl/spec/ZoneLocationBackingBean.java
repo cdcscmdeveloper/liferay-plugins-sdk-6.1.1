@@ -74,17 +74,27 @@ public class ZoneLocationBackingBean extends BaseBackingBean<ZoneLocationManaged
 			List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTO(tplSpecLocs);
 			
 			TreeNode locationTree = LocationSingleton.getInstance().buildLocationTree(
-					tplSpecZoneDtl, 
+					null, 
 					states, 
 					districts, 
 					divisions, 
 					cities, 
 					TplSpecZoneLoc.class);
 			
+			expandTreeNode(locationTree);
+			
 			getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
 			getManagedBean().setLocationTree(locationTree);
 		} finally {
 			specZoneLocSO = null;
+		}
+	}
+	
+	private void expandTreeNode(TreeNode node) {
+		node.setExpanded(true);
+		
+		for (TreeNode childNode : node.getChildren()) {
+			expandTreeNode(childNode);
 		}
 	}
 }

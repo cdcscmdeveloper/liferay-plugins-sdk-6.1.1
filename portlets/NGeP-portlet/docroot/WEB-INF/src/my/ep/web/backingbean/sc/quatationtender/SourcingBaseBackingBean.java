@@ -43,9 +43,9 @@ import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -373,7 +373,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return userName;
 	}
 	
-	public String getSupplierAddress(PmAddress pmAddress) {
+	public String getSupplierAddress(SmAddress pmAddress) {
 		StringBuilder address = new StringBuilder();
 		
 		if (pmAddress != null) {

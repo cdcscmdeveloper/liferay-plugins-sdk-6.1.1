@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -35,6 +36,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -46,7 +49,11 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -104,45 +111,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 	}
 
-	/**
-	 * getting Approver drop down listing
-	 */
-	public List<PmUser> getApproverNames() {
-		List<PmUser> approverUserNames = this.getManagedBean().getApproverName();
-
-		if (approverUserNames == null) {
-			IUserSO userSO = null;
-			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-				// Get Approver Users
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setRoleCode(RoleCode.APPROVER.value());
-
-				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				approverUserNames = resDTO.getUserList();
-				System.out.println("Approver List: " + approverUserNames.size());
-				this.getManagedBean().setApproverName(approverUserNames);
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
-								.toString(), ex.getMessage()));
-			} finally {
-				userSO = null;
-			}
-		}
-		return approverUserNames;
-	}
-
 	public String createLOAAction(ScLoiLoa scLoiLoa) {
 		debugLogger("createLOAAction");
 		
 		IQTAwardSO qtAwardSO = null;
-		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -165,7 +137,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			scLoa.setContractSigner(new PmUser());
 			
 			getManagedBean().setScLoa(scLoa);
-			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());			
+			
+			getManagedBean().setScRequestNote(resDTO.getScRequestNote());
+			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+			
+			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
+			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
+			handleBranchDetailsChanged();
+			
 			getManagedBean().setLoaAgencyWitness(new ScLoaWitness());
 
 			//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
@@ -201,17 +180,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			
 			getManagedBean().setContractSignerList(resDTO.getContractSignerList());
 
-			SmSupplierBranch branch = new SmSupplierBranch();
-			SmSupplierBranch branch1 = new SmSupplierBranch();
-			SmSupplierBranch branch2 = new SmSupplierBranch();
-			branch.setBranchName("HQ");
-			branch1.setBranchName("Putrajaya");
-			branch2.setBranchName("Ampang");
-			bList.add(branch);
-			bList.add(branch1);
-			bList.add(branch2);
-			getManagedBean().setBranchsList(bList);
-
 			/*branch.setSmAppl(getManagedBean().getScQtProposalRanking()
 					.getScQtProposalEvaluate().getScQtProposal()
 					.getScQtSupplier().getSmSupplier().getSmAppl());*/
@@ -245,6 +213,25 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 		
 		return QTConstants.LOA_PAGE;
+	}
+	
+	public List<TplSpecZoneDtl> getZoneList() {
+		ISpecZoneLocSO specZoneLocSO = null;
+		try {
+			specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
+
+			SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+			reqDTO.setDocType("QTZ");
+			reqDTO.setDocId(146L);
+
+			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlsByDocIdNType(reqDTO);
+			
+			return resDTO.getZonesList();
+
+		} finally {
+			specZoneLocSO = null;
+		}
 	}
 	
 	public String editLOAAction(ScLoiLoa scLoiLoa) {
@@ -380,32 +367,48 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
-		String name = this.getManagedBean().getBranchName();
-		/*if (name.equalsIgnoreCase("HQ")) {
-			getManagedBean().getScLoa().setSupplierAddress("abcd");
-			getManagedBean().getScLoa().setSupplierPhoneNo(7324797l);
-			getManagedBean().getScLoa().setSupplierFaxNo(1234L);
-			getManagedBean().getScLoa().setSupplierContact("KBB SDN BHD");
-			getManagedBean().getScLoa().setSupplierContactMobil(7324810l);
-			getManagedBean().getScLoa().setSupplierContactEmail("hq@gmail.com");
-		} else if (name.equalsIgnoreCase("Putrajaya")) {
-			getManagedBean().getScLoa().setSupplierAddress("xyz");
-			getManagedBean().getScLoa().setSupplierPhoneNo(6789L);
-			getManagedBean().getScLoa().setSupplierFaxNo(4567L);
-			getManagedBean().getScLoa().setSupplierContact("KBB SDN BHD");
-			getManagedBean().getScLoa().setSupplierContactMobil(7324811l);
-			getManagedBean().getScLoa().setSupplierContactEmail(
-					"putra@gmail.com");
+		
+		ScLoiLoa scLoiLoa = this.getManagedBean().getScLoa().getScLoiLoa();
+		String selectedSupplierBranchName = this.getManagedBean().getSelectedSupplierBranchName();
+		
+		if (selectedSupplierBranchName == null) {
+			SmPersonnel supplierHQPersonnel = this.getManagedBean().getSupplierHQPersonnel();
+			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl().getSmCompanyBasic();
+			
+			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+					log.info("found hq address");
+					
+					scLoiLoa.setSupplierBranch("HQ");
+					scLoiLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
+					scLoiLoa.setSupplierContact(supplierHQPersonnel.getName());
+					scLoiLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneNo());
+					scLoiLoa.setSupplierFaxNo(smCompanyBasic.getFaxNo());
+					scLoiLoa.setSupplierMobNo(supplierHQPersonnel.getMobileNo());
+					scLoiLoa.setSupplierEmail(supplierHQPersonnel.getEmail());
+					
+					break;
+				}
+			}
 		} else {
-			getManagedBean().getScLoa().setSupplierAddress("aaaaa");
-			getManagedBean().getScLoa().setSupplierPhoneNo(23489L);
-			getManagedBean().getScLoa().setSupplierFaxNo(65432L);
-			getManagedBean().getScLoa().setSupplierContact("XYZ SDN BHD");
-			getManagedBean().getScLoa().setSupplierContactMobil(732111l);
-			getManagedBean().getScLoa().setSupplierContactEmail(
-					"sara@gmail.com");
-		}*/
-
+			List<SmSupplierBranch> supplierBranchs = this.getManagedBean().getBranchsList();
+			
+			for (SmSupplierBranch supplierBranch : supplierBranchs) {
+				if (supplierBranch.getBranchName().equals(selectedSupplierBranchName)) {
+					log.info("found branch address");
+					
+					scLoiLoa.setSupplierBranch(supplierBranch.getBranchName());
+					scLoiLoa.setSupplierAddress(supplierBranch.getSmAddress());
+					scLoiLoa.setSupplierContact(supplierBranch.getSmPersonnel().getName());
+					scLoiLoa.setSupplierPhoneNo(supplierBranch.getPhoneNo());
+					scLoiLoa.setSupplierFaxNo(supplierBranch.getFaxNo());
+					scLoiLoa.setSupplierMobNo(supplierBranch.getSmPersonnel().getMobileNo());
+					scLoiLoa.setSupplierEmail(supplierBranch.getSmPersonnel().getEmail());
+					
+					break;
+				}
+			}	
+		}
 	}
 
 	/**

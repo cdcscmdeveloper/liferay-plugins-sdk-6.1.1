@@ -10,6 +10,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
@@ -18,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -46,8 +48,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<ScPerformanceBond> selectScBondDtlList;
 	
 	private PmCurrency pmCurrency;
-	
-	private String branchName;
+
 	private List<SelectItem> selectItemList;
 
 	private List<ScQtDeduction> scQtDeductionList;
@@ -61,9 +62,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	
 	private int selectedTabIndex;
+	private String selectedSupplierBranchName;
 	private String selectedContractAgency;
+	private ScRequestNote scRequestNote;
 	private ScQtFinalization scQtFinalization;
 	private ScLoa scLoa;
+	private SmPersonnel supplierHQPersonnel;
 	private ScLoaWitness loaAgencyWitness;
 	private ScLoaWitness loaSupplierWitness;
 	private List<ScQtRecommendDtl> scQtRecommendDtls;
@@ -218,20 +222,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the branchName
-	 */
-	public String getBranchName() {
-		return branchName;
-	}
-
-	/**
-	 * @param branchName the branchName to set
-	 */
-	public void setBranchName(String branchName) {
-		this.branchName = branchName;
-	}
-
-	/**
 	 * @return the selectItemList
 	 */
 	public List<SelectItem> getSelectItemList() {
@@ -374,6 +364,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedSupplierBranchName
+	 */
+	public String getSelectedSupplierBranchName() {
+		return selectedSupplierBranchName;
+	}
+
+	/**
+	 * @param selectedSupplierBranchName the selectedSupplierBranchName to set
+	 */
+	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
+		this.selectedSupplierBranchName = selectedSupplierBranchName;
+	}
+
+	/**
 	 * @return the selectedContractAgency
 	 */
 	public String getSelectedContractAgency() {
@@ -385,6 +389,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedContractAgency(String selectedContractAgency) {
 		this.selectedContractAgency = selectedContractAgency;
+	}
+
+	/**
+	 * @return the scRequestNote
+	 */
+	public ScRequestNote getScRequestNote() {
+		return scRequestNote;
+	}
+
+	/**
+	 * @param scRequestNote the scRequestNote to set
+	 */
+	public void setScRequestNote(ScRequestNote scRequestNote) {
+		this.scRequestNote = scRequestNote;
 	}
 
 	/**
@@ -413,6 +431,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScLoa(ScLoa scLoa) {
 		this.scLoa = scLoa;
+	}
+
+	/**
+	 * @return the supplierHQPersonnel
+	 */
+	public SmPersonnel getSupplierHQPersonnel() {
+		return supplierHQPersonnel;
+	}
+
+	/**
+	 * @param supplierHQPersonnel the supplierHQPersonnel to set
+	 */
+	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
+		this.supplierHQPersonnel = supplierHQPersonnel;
 	}
 
 	/**

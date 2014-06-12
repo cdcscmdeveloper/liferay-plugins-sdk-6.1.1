@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" header="#{lbl['lbl.tpl.spec.zone.details']}" width="600" height="500">
+	<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" header="#{lbl['lbl.tpl.spec.zone.details']}" modal="true" width="350" height="200">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -21,40 +21,31 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				<p:outputLabel value="#{lbl['lbl.tpl.spec.location.name']}" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<p:tree id="treeZoneLoc"
-					value="#{zoneLocationBackingBean.managedBean.locationTree}"
-					var="location">
-					
-					<p:treeNode type="state">
-						#{location.pmState.stateName}
-					</p:treeNode>
-					
-					<p:treeNode type="division">
-						#{location.pmDivision.divisionName}
-					</p:treeNode>
-					
-					<p:treeNode type="district">
-						#{location.pmDistrict.districtName}
-					</p:treeNode>
-					
-					<p:treeNode type="city">
-						#{location.pmCity.cityName}
-					</p:treeNode>
-				</p:tree>
+				<p:panel header="#{lbl['lbl.tpl.spec.location.name']}">
+					<p:tree id="treeZoneLoc"
+						value="#{zoneLocationBackingBean.managedBean.locationTree}"
+						var="location">
+						
+						<p:treeNode type="state">
+							#{location.pmState.stateName}
+						</p:treeNode>
+						
+						<p:treeNode type="division">
+							#{location.pmDivision.divisionName}
+						</p:treeNode>
+						
+						<p:treeNode type="district">
+							#{location.pmDistrict.districtName}
+						</p:treeNode>
+						
+						<p:treeNode type="city">
+							#{location.pmCity.cityName}
+						</p:treeNode>
+					</p:tree>
+				</p:panel>
 			</td>
 		</tr>
 		</table>
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.sc.close']}"
-				icon="ui-icon-accept" oncomplete="zoneLocPopup.hide();">
-			</p:commandButton>
-		</div>
 
 	</p:dialog>
 </ui:composition>
