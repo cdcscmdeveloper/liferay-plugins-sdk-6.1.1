@@ -30,11 +30,10 @@
 				</table>
 
 				<h:panelGroup id="frontPageId"
-					rendered="#{pCatalogueBackingBean.managedBean.frontPage}"
-					style="margin-top:10px;">
+					rendered="#{pCatalogueBackingBean.managedBean.frontPage}">
 
 					<p:panel header="Popular UNSPSC Categories in Family level"
-						toggleable="true">
+						style="margin-top:10px;" toggleable="true">
 
 
 
@@ -47,7 +46,9 @@
 									<td>#{popular.unspscTitle}</td>
 								</tr>
 								<tr>
-									<td>More....</td>
+									<td><p:commandLink value="More...."
+											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}"
+											update=":form"></p:commandLink></td>
 								</tr>
 							</table>
 
@@ -60,18 +61,31 @@
 				</h:panelGroup>
 
 				<h:panelGroup id="resultpl"
-					rendered="#{!pCatalogueBackingBean.managedBean.frontPage}"
-					style="margin-top:10px;">
-					<table style="width: 100%;">
-						<tr>
-							<td width="30%"><ui:repeat var="family"
-									value="#{pCatalogueBackingBean.managedBean.familyList}">
-									<table>
-										<tr>
-											<td>#{family.unspscTitle}</td>
-										</tr>
-									</table>
-								</ui:repeat></td>
+					rendered="#{!pCatalogueBackingBean.managedBean.frontPage}">
+					<table style="width: 100%; margin-top: 10px;">
+						<tr style="vertical-align: top;">
+							<td width="30%">
+
+								<table style="width:100%;">
+									<tr>
+										<td><p:outputLabel value="Categories" style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
+									</tr>
+									<tr style="padding-top:10px;">
+										<td><ui:repeat var="family"
+												value="#{pCatalogueBackingBean.managedBean.familyList}">
+												<table>
+													<tr>
+														<td><p:commandLink value="#{family.unspscTitle}"
+																action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(family)}"
+																update=":form" /></td>
+													</tr>
+												</table>
+											</ui:repeat></td>
+									</tr>
+								</table>
+
+
+							</td>
 							<td width="70%"><p:dataGrid columns="3" rows="9"
 									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
 									id="catalogueGridViewID" var="supplierItem">
