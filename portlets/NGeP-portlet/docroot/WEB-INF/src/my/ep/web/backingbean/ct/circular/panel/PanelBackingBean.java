@@ -60,6 +60,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -306,11 +307,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularType(getManagedBean().getCircularDocType());
-			/*if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)){
-			    reqDTO.setFilterStatusId(ContractStatusConst.PQ_APPROVED);
-			 }else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)){
-				 reqDTO.setFilterStatusId(ContractStatusConst.CQ_APPROVED);
-			 }*/
 			CircularResDTO resDTO = circularSO.retrieveActiveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
@@ -366,6 +362,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
+					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
+						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+								PmStatus cancelStatus = new PmStatus();
+								cancelStatus.setStatusId(0L);
+								circularVer.setStatus(cancelStatus);
+							}
+							if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
+								if(circularVer.getCtCircular().getLatestCircularVer() != null)
+									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+							}
+						}
+					}
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {

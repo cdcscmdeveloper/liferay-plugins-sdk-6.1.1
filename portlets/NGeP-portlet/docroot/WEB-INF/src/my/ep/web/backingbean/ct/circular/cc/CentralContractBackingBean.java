@@ -63,6 +63,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -333,6 +334,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
+					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
+						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+								PmStatus cancelStatus = new PmStatus();
+								cancelStatus.setStatusId(0L);
+								circularVer.setStatus(cancelStatus);
+							}
+							if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.CQ_REJECTED)) {
+								if(circularVer.getCtCircular().getLatestCircularVer() != null)
+									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+							}
+						}
+					}
 					return resDTO.getCircularVerResultBean();
 				}
 			} catch (Exception e) {

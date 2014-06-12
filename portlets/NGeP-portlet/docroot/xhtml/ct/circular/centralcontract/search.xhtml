@@ -57,10 +57,11 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Status" >
-					<h:outputText value="#{centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
+					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cc.status.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="Action" styleClass="column-align-center">
-					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or data.status.statusId == CtStatusConst.cqRejected}"
+					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or 
+						(data.status.statusId == CtStatusConst.cqRejected and data.ctCircular.latestCircularVer != null)}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
 					</p:commandLink>
