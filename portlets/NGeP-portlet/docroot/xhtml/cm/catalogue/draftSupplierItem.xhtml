@@ -79,7 +79,7 @@
 				#{lbl['lbl.cm.start.date']}*
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
-				showOn="button" size="10"
+				showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>

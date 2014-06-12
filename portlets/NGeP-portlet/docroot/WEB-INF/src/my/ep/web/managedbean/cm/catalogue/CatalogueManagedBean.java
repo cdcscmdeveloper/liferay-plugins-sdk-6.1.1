@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,6 +167,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<VCmSupplierItem> ctRequestList;
 	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
 	private boolean displayCatalogue = false;
+	
+	private Date currentDate = new Date();
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -1302,6 +1305,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.displayCatalogue = displayCatalogue;
 	}
 
+
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	
+	
 	
 	
 

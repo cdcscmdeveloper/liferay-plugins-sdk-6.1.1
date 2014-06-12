@@ -46,7 +46,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button"
+				<p:calendar value="#{price.startDate}" showOn="button" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
