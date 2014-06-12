@@ -43,9 +43,9 @@
 		
 		   <div style="text-align: left; margin-right:8px;margin-top:8px; float: right;">
 
-			<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.docType}">
+			<p:selectOneMenu id="docTypeId" style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.docType}">
 			<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="ALL"></f:selectItem>
-			 <f:selectItems value="#{bpmTasklistBackingBean.getRadioButtonValues(ParameterTypeConst.documentTypes)}" />
+			 <f:selectItems value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
 				<p:ajax event="change"
 					onstart="resetPaginator()"
 					oncomplete="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"

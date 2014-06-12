@@ -10,6 +10,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -24,6 +25,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
@@ -45,6 +47,8 @@ public class BPMTaskListBackingBean extends
 	public	static	final	String	DIRECT_PURCHASE_REVIEW_PATH	=	"review-directpurchase";
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
+	
+	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
 	public BPMTaskListBackingBean() {
 		this.getManagedBean().setBpmMap(null);
@@ -379,5 +383,11 @@ public class BPMTaskListBackingBean extends
 			return flFulFilmentOrderList;
 	}
 
-
+	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
+		if (docTypeSearchBean == null) {
+			docTypeSearchBean = createSearchBean(PmParameterDesc.class, "docTypeId");
+		}
+		
+		return docTypeSearchBean;
+	}
 }
