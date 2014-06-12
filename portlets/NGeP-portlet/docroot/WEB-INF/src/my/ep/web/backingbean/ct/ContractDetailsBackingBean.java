@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -400,7 +399,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	/*Implementation of search methode*/
 	public void searchContract() {
-		ISearchBean<VCtContract> searchBean = new SearchBean<VCtContract>();
+		ISearchBean<VCtContract> searchBean = createSearchBean(VCtContract.class, "contractTbl");
 		IContractSO contractSO = null;
 		try {
 			if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {

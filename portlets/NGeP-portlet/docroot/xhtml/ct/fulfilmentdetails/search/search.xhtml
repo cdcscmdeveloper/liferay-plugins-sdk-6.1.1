@@ -45,15 +45,15 @@
 		   </p:selectOneMenu>
 		</h:panelGrid>
 	  	<div class="ppRightBtn"> 
-        	<p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractDetailsBackingBean.searchContract}" icon="ui-icon-search"   update="dataTable"/>
+        	<p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractDetailsBackingBean.searchContract}" icon="ui-icon-search"   update="contractTbl"/>
              <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{contractDetailsBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
 	  	</div>	
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.panel.result']}" toggleable="true"	toggleSpeed="500">
 			<div style="overflow-x: auto">
-				<p:dataTable id="dataTable" var="data" rowIndexVar="index" rowKey="#{data}" lazy="true"
+				<p:dataTable id="contractTbl" var="data" rowIndexVar="index" rowKey="#{data}" lazy="true"
 					value="#{contractDetailsBackingBean.managedBean.contractList}" >
-					<ac:paginator for="dataTable" />
+					<ac:paginator for="contractTbl" />
 					<p:column headerText="#{lbl['lbl.ct.search.cno']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>					

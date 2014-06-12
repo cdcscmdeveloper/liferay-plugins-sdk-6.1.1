@@ -15,9 +15,9 @@
 
 				<p:menuitem value="#{lbl['lbl.bpm.my.tasks']}"
 					action="#{bpmTasklistBackingBean.goToMyTasks(0)}" update="@form" />
-				<p:menuitem value="#{lbl['lbl.bpm.catalogue.item.approval']}" rendered="#{unspscCodeBackingBean.catalogueAdmin}"
+				<p:menuitem id="catItemApprMenu" value="#{lbl['lbl.bpm.catalogue.item.approval']}" rendered1="#{unspscCodeBackingBean.catalogueAdmin}"
 					action="#{bpmTasklistBackingBean.goToMyTasks(1)}" update="@form" />
-				<p:menuitem value="#{lbl['lbl.bpm.pending.delivery.list']}" rendered="#{unspscCodeBackingBean.requisitioner}"
+				<p:menuitem id="pendingDelListMenu" value="#{lbl['lbl.bpm.pending.delivery.list']}" rendered1="#{unspscCodeBackingBean.requisitioner}"
 					action="#{bpmTasklistBackingBean.goToMyTasks(2)}" update="@form" />
 			</p:tabMenu>
 

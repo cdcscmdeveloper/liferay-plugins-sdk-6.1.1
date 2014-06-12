@@ -17,6 +17,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -124,7 +125,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			managedBean = managedBeanClazz.newInstance();
 			FacesScopes facesScopes = new FacesScopes();
 			facesScopes.setSessionScope(managedBeanName, managedBean);
-		}catch(Exception ex){
+		} catch(EpException ex){
+			throw ex;
+		} catch(Exception ex){
 			log.error("Failed to renew managed bean: " + managedBeanName, ex);
 		}
 		return managedBean;
@@ -254,7 +257,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * 			the component id.
 	 * @return	ISearchBean instance.
 	 */
-	protected <RETURN_CLASS extends Serializable> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {		
+	protected <RETURN_CLASS extends Serializable> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
 		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
@@ -340,7 +343,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		    	items[i++] = new SelectItem(
 		    			parameterDesc.getPmParameter().getParameterCode(), 
 		    			parameterDesc.getCodeName());
-		    	System.out.println("Code : "+parameterDesc.getPmParameter().getParameterCode()+ " | "+ "CodeName : "+parameterDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -466,10 +468,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
+		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
+	}
+	
+	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(parameterType);
+					.getParameterDescListBySearchBean(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()];
 		    int i = 0;
