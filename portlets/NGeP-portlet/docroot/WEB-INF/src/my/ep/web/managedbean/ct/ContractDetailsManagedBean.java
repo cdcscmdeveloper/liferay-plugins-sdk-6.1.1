@@ -142,7 +142,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean chkConceValue;
 	private int selectedTabIndex;
 	private Map<String,Object> radioButtonSchedule;
-	private String frequencySchedule ="S";
+	private String frequencySchedule;
 	
 	private CtFulfilment ctFulfilments;
 	 

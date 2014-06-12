@@ -357,6 +357,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
+			if(this.getManagedBean().getCtContract().isFrequencySchedule()){
+			    this.getManagedBean().setFrequencySchedule("S");
+			}else{
+				 this.getManagedBean().setFrequencySchedule("P");
+			}
+			
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
