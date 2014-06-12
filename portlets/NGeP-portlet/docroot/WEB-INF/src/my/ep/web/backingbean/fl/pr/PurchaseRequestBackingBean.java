@@ -6,6 +6,8 @@ package my.ep.web.backingbean.fl.pr;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -108,8 +110,11 @@ import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -1735,40 +1740,48 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setBranchId(new Long(supplierBranchId));
-		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
-		
-		SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
-		FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
-		supplierDtl.setBranchName(supplierBranch.getBranchName());
-		supplierDtl.setFaxNo(supplierBranch.getFaxNo());
-		supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
-		supplierDtl.setSmAddress(supplierBranch.getSmAddress());
-		supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
-		supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
-		supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
-		supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
-		supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
-		StringBuilder branckAddress = new StringBuilder();
-    	String strSpace = " ";
-		if(null != supplierBranch.getSmAddress()){
-			if(null != supplierBranch.getSmAddress().getAddress1()){
-				branckAddress.append(supplierBranch.getSmAddress().getAddress1());
-				branckAddress.append(strSpace);
-			}if(null != supplierBranch.getSmAddress().getAddress2()){
-				branckAddress.append(supplierBranch.getSmAddress().getAddress2());
-				branckAddress.append(strSpace);
-			}if(null != supplierBranch.getSmAddress().getAddress3()){
-				branckAddress.append(supplierBranch.getSmAddress().getAddress3());
-				branckAddress.append(strSpace);
-			}if(null != supplierBranch.getSmAddress().getAddress4()){
-				branckAddress.append(supplierBranch.getSmAddress().getAddress4());
-				branckAddress.append(strSpace);
+		if(supplierBranchId!=null) {
+			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setBranchId(new Long(supplierBranchId));
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+			
+			SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
+			supplierDtl.setBranchName(supplierBranch.getBranchName());
+			supplierDtl.setFaxNo(supplierBranch.getFaxNo());
+			supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
+			supplierDtl.setSmAddress(supplierBranch.getSmAddress());
+			supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+			supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+			supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+			supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
+			supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+		} else { // reset to HQ info
+			SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
+			supplierDtl.setSupplierName(supplier.getCompanyName());		
+			supplierDtl.setBranchCode(null);
+			supplierDtl.setBranchName(null);
+			supplierDtl.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
+			supplierDtl.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
+			
+			for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
+				if(smPersonnel.isContactPerson()){
+					supplierDtl.setContactEmail(smPersonnel.getEmail());
+					supplierDtl.setContactFaxNo(smPersonnel.getFaxNo());
+					supplierDtl.setContactMobileNo(smPersonnel.getMobileNo());
+					supplierDtl.setContactPerson(smPersonnel.getName());
+					supplierDtl.setContactPhoneNo(smPersonnel.getPhoneNo());
+					break;
+				}
+			}
+			for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					supplierDtl.setSmAddress(smCompanyAddress.getSmAddress());
+				}
 			}
 		}
-		this.getManagedBean().setSupplierAddress(branckAddress.toString());
 	}
 	
 	
@@ -1943,5 +1956,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	public void updateDeliveryDate() {
+		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+		int deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);
+		calendar.add(Calendar.DATE, deliveryTerm);
+		getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+		
+		//update delivery address
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
+			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
+		}
+	}
 	
 }

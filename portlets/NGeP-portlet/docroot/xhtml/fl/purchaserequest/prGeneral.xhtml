@@ -16,28 +16,33 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 120px;"><p:outputLabel
-						value="* #{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId"
+				<td style="width: 130px;">
+					<p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td><p:inputText size="5" id="preparedOrgProfileId" readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						update=":form:prtabs:preparedOrgProfileId" readonly="true" buttonLabel="Add"
+						update=":form:preparedOrgProfileId" readonly="true" buttonLabel="Add"
 						size="39"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> </td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId"
+				<td>
+					<p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td><p:inputText size="5" id="issuedOrgProfileId" readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
 					<p:spacer width="5" /> <ac:lov id="issuePtj"
 						lovId="PM_ORG_PROFILE" headerText="IssuePtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						update=":form:prtabs:issuedOrgProfileId" readonly="true"
+						update=":form:issuedOrgProfileId" readonly="true"
 						size="39" buttonLabel="Add"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
@@ -52,21 +57,28 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true" /> <p:spacer
-						width="5" /> <p:inputText size="39" disabled="true" /></td>
+				<td>
+					<p:inputText size="5" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" /> 
+					<p:spacer width="5" /> 
+					<p:inputText size="39" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="3" valign="top" style="width: 120px;"><p:outputLabel
-						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
-						style=" margin-bottom:5px;"
+				<td rowspan="3" valign="top" style="width: 130px;">
+					<p:outputLabel value="#{lbl['lbl.fl.title']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td rowspan="3">
+					<p:inputTextarea cols="50" rows="4" id="title"
+						style=" margin-bottom:5px;" label="Title"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
-						required="true" /> <p:message for="title"
-								showDetail="false" showSummary="true" display="icon" /></td>
+						required="true" /> 
+					<p:message for="title" display="icon" />
+				</td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25" disabled="true"
@@ -88,8 +100,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
+				<td>
+					<p:inputText size="12" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" /> 
+					<p:spacer width="5" /> 
+					<p:inputText size="2" value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}" disabled="true" />
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.approvedDate}">
@@ -99,22 +114,23 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" readonly="true" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+				<td><p:calendar mode="popup" readonlyInput="true" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
+						<p:ajax event="dateSelect" listener="#{purchaseRequestBackingBean.updateDeliveryDate}" update="delEndDate" />
 					</p:calendar></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" readonly="true" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				<td><p:calendar id="delEndDate" mode="popup" readonlyInput="true" disabled="true" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
 					</p:calendar></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="SUPPLIER DETAIL" toggleable="true">
+	<p:panel id="supplierPnl" header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 120px;"><p:outputLabel
+				<td style="width: 130px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
@@ -138,14 +154,13 @@
 				<td><p:selectOneMenu id="suppBranch"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
 						style="width: 360px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="suppBranchList"
 							value="#{purchaseRequestBackingBean.managedBean.supplierBranchesList}"
 							itemLabel="#{suppBranchList.branchName}"
 							itemValue="#{suppBranchList.supplierBranchId}" />
 						<p:ajax event="change"
 							listener="#{purchaseRequestBackingBean.getSelectedSupplierBranchDtl}"
-							update="smAddress" />
+							update="supplierPnl" />
 					</p:selectOneMenu>
 					</td>
 			</tr>
@@ -154,7 +169,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true" id="smAddress"
 						style=" margin-bottom:5px;"
-						value="#{purchaseRequestBackingBean.managedBean.supplierAddress}" /></td>
+						value="#{purchaseRequestBackingBean.getFullAddress(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
