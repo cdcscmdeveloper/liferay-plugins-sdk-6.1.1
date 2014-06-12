@@ -32,7 +32,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -58,6 +57,7 @@ import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -65,7 +65,6 @@ import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
@@ -128,7 +127,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -374,34 +373,45 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	public void flDeliveryAddrList() {
 		AddressReqDTO reqDTO = new AddressReqDTO();
-		// TODO
-		reqDTO.setOrgProfileId(4L);
-		reqDTO.setAddressType("B");
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
-		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
-			setManualAddressList();
-		}
-		
 	}
+	
 	public void flManualDeliveryAddr() {
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
-		//getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
-		//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
 		getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
-		//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
-		getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
+		// default to Malaysia
+		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
+		CountryReqDTO countryReqDTO = new CountryReqDTO();
+		countryReqDTO.setCountryCode("MY");
+		getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmState(new PmState());
-		getManagedBean().getFlManulaAddress().getPmAddress().getPmState().setStateId(1L);
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getFlManulaAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmCity(new PmCity());
-		getManagedBean().getFlManulaAddress().getPmAddress().getPmCity().setCityId(1L);
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
-		getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision().setDivisionId(1L);
+		getManagedBean().getFlManulaAddress().setReceivingGrp(new PmAddressType());
+		
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryId(getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().getCountryId());
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		getManagedBean().setStateList(resDTO.getStateList());
+		
+		if(getManagedBean().getAddressTypesList()==null) {
+			AddressReqDTO addReqDTO = new AddressReqDTO();
+			addReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+			addReqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+			AddressResDTO addResDTO = addressSO.retrieveAddressTypeList(addReqDTO);
+			getManagedBean().setAddressTypesList(addResDTO.getAddressTypeList());
+		}
+		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
+			setManualAddressList();
+		}		
 	}
 	
 	public void updateDeliveryAddrDt() {
@@ -409,8 +419,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
 			return;
 		}
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		FlDeliveryAddress deliveryAddr = null;
 		int i = 0;
 		for (PmAddressType addrType : getManagedBean().getSelectedPmDelAddrList()) {
@@ -422,13 +430,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if (!isAddressContains) {
 				deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				 deliveryAddr.setPmAddress(addrType.getPmAddress());
-				//deliveryAddr.setAddressType(addrType);
-				deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
-				deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
-				paramReqDTO.setParameterId(574L);
-				deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
-				deliveryAddr.setDeliveryTerm(10);
+				deliveryAddr.setPmAddress(addrType.getPmAddress());
+				deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
+				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
+				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
+				deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
 				if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
 				}
@@ -442,9 +448,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	public void updateManualDeliveryAddrDt() {
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			return;
 		}
@@ -455,13 +458,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setPmAddress(manualAddr);
 		deliveryAddr.setCheckManualAddress(true);
-		deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
-		deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
-		paramReqDTO.setParameterId(574L);
-		deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
-		deliveryAddr.setDeliveryTerm(10);
+		deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
+		deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
+		deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
+		deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
+		deliveryAddr.setReceivingGrp(getManagedBean().getFlManulaAddress().getReceivingGrp());
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
+		
+		// add to cart validation
+		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
+		getManagedBean().setRequired(Boolean.FALSE);
+	}
+	
+	public void closeListener() {
+		log.info("closeListener");
+		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
+		getManagedBean().setRequired(Boolean.FALSE);
 	}
 	
 	/**
@@ -503,23 +516,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}*/
 	
 	public void removeAddRow(){
-		try {
-			if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().iterator();
-				while(delAddressIterator.hasNext()){
-					FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
-					if(deliveryAddress.isSelectedAddressRowDelete()){
-						delAddressIterator.remove();
-					}
+		if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().iterator();
+			while(delAddressIterator.hasNext()){
+				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
+				if(deliveryAddress.isSelectedAddressRowDelete()){
+					delAddressIterator.remove();
 				}
 			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
+				getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
+				populateItemsForSelectedAddress(getManagedBean().getShowAllItemsRows());
+			} else {
+				getManagedBean().setSelectedDelAddr(null);
+			}
 		}
 	}
+	
 	public void selectAddrEvent() {
 		clearItemsForSelectedAddress();
 		populateItemsForSelectedAddress(getManagedBean().getShowAllItemsRows());
@@ -1164,6 +1177,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
 		getManagedBean().setDivisionList(resDTO.getDivisionList());
+		
+		if(resDTO.getDivisionList().size()==0) {
+			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+			districtReqDTO.setStateId(stateId);
+			IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());			
+		}
 	}
 	
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
@@ -1715,17 +1736,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setManualAddressMap(addressTypeMap);
 	}
 	
-	public List<SelectItem> getDeliveryAddressByDistrictList(Long districtId){
+	public void retrieveDeliveryAddressList(AjaxBehaviorEvent e) {
+		Long districtId = (Long) e.getComponent().getAttributes().get("value");
 		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
 		
 		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
 		manualAddrList.add(new SelectItem("", "- Select One -"));
-		List<PmAddressType> addrList = getManagedBean().getManualAddressList();
-		for (PmAddressType obj : addrList) {
-			manualAddrList.add(new SelectItem(obj.getPmAddress().getAddressId(),obj.getPmAddress().getAddressName()));
+		if(getManagedBean().getManualAddressList()!=null) {
+			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
+				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
+			}
 		}
 		getManagedBean().setManualAddrList(manualAddrList);
-		return manualAddrList;
 	}
 	
 	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
