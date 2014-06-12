@@ -26,7 +26,7 @@
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						update=":form:preparedOrgProfileId" readonly="true" buttonLabel="Add"
+						update=":form:preparedOrgProfileId" readonly="true"
 						size="39"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> </td>
@@ -43,9 +43,9 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
 						update=":form:issuedOrgProfileId" readonly="true"
-						size="39" buttonLabel="Add"
+						size="39"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
-					</ac:lov> <ac:lovPopup /></td>
+					</ac:lov></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
@@ -212,5 +212,5 @@
 			</tr>
 		</table>
 	</p:panel>
-
+ <ac:lovPopup />
 </ui:composition>
