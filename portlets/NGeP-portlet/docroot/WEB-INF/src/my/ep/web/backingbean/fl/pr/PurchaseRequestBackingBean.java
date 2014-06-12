@@ -1937,7 +1937,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getVotFundList(4L);
 		}
 		if(selectedTabIndex==1){
-			addPurchsedItems();
+			if(getManagedBean().getSelectedDelAddr()==null) { 
+				addPurchsedItems();
+			}
 		}
 	}
 	
