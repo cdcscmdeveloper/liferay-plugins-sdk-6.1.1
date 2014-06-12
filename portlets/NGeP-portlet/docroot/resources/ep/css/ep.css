@@ -4963,3 +4963,9 @@ table.rptTbl {
 #slides a:link, #slides a:visited { color: #333; }
 
 #slides a:hover, #slides a:active { color: #9e2020; }
+
+
+.publicCatGridCol td{
+	
+	width: 25% !important;
+}
