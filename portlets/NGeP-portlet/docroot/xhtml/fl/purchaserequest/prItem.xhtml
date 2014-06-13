@@ -85,19 +85,24 @@
 				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}">
 			</p:commandButton>
 		</div>
-		<p:confirmDialog message="Do you want to delete the record?"
-			severity="alert" widgetVar="delAddrDlg" closable="true"
-			appendToBody="true" header="Delete Confirmation">
-			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
-					partialSubmit="true"
-					action="#{purchaseRequestBackingBean.removeAddRow()}"
-					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
-					oncomplete="delAddrDlg.hide();" />
-				<p:commandButton value="No" icon="ui-icon-reject"
-					onclick="delAddrDlg.hide()" type="button" />
+		<p:dialog id="delAddrDlg" widgetVar="delAddrDlg" header="Delete Confirmation" styleClass="screen-title"
+			resizable="false" modal="true" width="325" height="90">
+			<h:panelGrid columns="3">
+				<p:graphicImage library="ep/images/design" name="exclamation.png"
+					value="/resources/ep/images/design/exclamation.png"
+					styleClass="ui-icon-complain"></p:graphicImage>
+				<p:spacer width="10" />
+				<p:inputTextarea value="Are you sure you want to delete this record?" rows="2"
+					cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
 			</h:panelGrid>
-		</p:confirmDialog>
+			<div class="ppRightBtn">
+				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true"
+					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)" 
+					action="#{purchaseRequestBackingBean.removeAddRow()}"
+					oncomplete="delAddrDlg.hide();" />
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delAddrDlg.hide();" type="button" />
+			</div>
+		</p:dialog>
 	</p:panel>
 	<h:panelGroup id="itemDetPanelGroup">
 		<p:panel id="itemDetPanel" header="ITEM LIST" toggleable="true">
@@ -110,10 +115,11 @@
 				<p:column headerText=" Item Code">
 					<h:outputText value="#{flItem.scRequestItem.cmItem.extensionCode}" />
 				</p:column>
-				<p:column headerText="Item Name">
+				<p:column headerText="Item Name" style="white-space:normal;">
 					<h:outputText value="#{flItem.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="UOM">
+					<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />
 				</p:column>
 				<p:column headerText="Unit Price (RM)" style="text-align:right">
 					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}">
@@ -122,7 +128,7 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Ordered Qty." style="text-align:right">
-					<p:inputText value="#{flItem.orderedQty}" size="5"
+					<p:inputText value="#{flItem.orderedQty}" size="5" styleClass="colFloatRight"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -253,7 +259,7 @@
 							size="35" /></td>
 					<td></td>
 					<td>
-						<p:outputLabel value="Distict" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+						<p:outputLabel value="District" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manDistrict" required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="District"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
@@ -320,6 +326,7 @@
 					<td><p:selectOneMenu id="manAddress" label="Manual Address" required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
 	
@@ -363,7 +370,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Ok" icon="ui-icon-accept" process="@this addManualDelAddrDialog"
 				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
-				update="addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
+				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this" 
 				action="#{purchaseRequestBackingBean.closeListener}" partialSubmit="true" >
@@ -426,10 +433,10 @@
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="Tel. No.">
-				<h:outputText />
+				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" />
 			</p:column>
 			<p:column headerText="Email">
-				<h:outputText />
+				<h:outputText value="#{receivingOfficer.pmUser.email}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
