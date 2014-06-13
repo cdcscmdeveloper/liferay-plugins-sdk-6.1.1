@@ -10,11 +10,14 @@
 	<p:dialog header="#{lbl['lbl.sc.eva.reminder']}"
 		widgetVar="reminder" position="top" width="600" height="400">
 		<p:panel>
-			<p:dataTable id="committeeReminder" var="reminderpopup" editable="true">
+			
+			<p:dataTable id="committeeReminder" var="reminder"
+				value="#{suppFinalizationBackingBean.managedBean.committeeEndorsementList}"
+				rowKey="#{reminder}" rowIndexVar="index">
 				<ac:paginator for="committeeReminder" />
-				
+
 				<p:column headerText="#{lbl['lbl.sc.name']}" style="width:100%">
-					<h:outputText value="readOnly"></h:outputText>
+					<h:outputText value="#{reminder.scCommitteeMember.memberName}" rendered="#{reminder.scCommitteeMember.memberRole != 'C'}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -39,6 +42,7 @@
 				value="#{lbl['lbl.btn.send']}"
 				style="float:right;" 
 				onclick="reminder.hide();"
+				action="#{suppFinalizationBackingBean.sendReminder}"
 				icon="ui-icon-mail"/>
 		</div>
 	</p:dialog>

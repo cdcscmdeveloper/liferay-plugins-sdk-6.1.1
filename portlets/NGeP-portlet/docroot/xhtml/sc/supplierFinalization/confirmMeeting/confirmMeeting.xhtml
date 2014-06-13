@@ -108,7 +108,7 @@
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
 									<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
-										<h:outputText value="#{lbl['lbl.sc.chairperson']}"/>
+										<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeDtl.memberRole eq 'C'}" />
 									</ui:fragment>
 									
 									<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">

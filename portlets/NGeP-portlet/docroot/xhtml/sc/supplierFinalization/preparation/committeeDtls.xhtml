@@ -51,7 +51,7 @@
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
 									<ui:fragment rendered="#{committeeDtl.scCommitteeMember.PNP}">
-										<h:outputText value="Chairperson" rendered="#{committeeDtl.memberRole eq 'C'}" />
+										<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeDtl.memberRole eq 'C'}" />
 									</ui:fragment>
 									<ui:fragment rendered="#{!committeeDtl.scCommitteeMember.PNP}">
 										<p:selectOneMenu

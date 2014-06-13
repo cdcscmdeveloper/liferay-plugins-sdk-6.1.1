@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -41,10 +42,13 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -55,8 +59,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -717,6 +723,39 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 		} finally {
 			meetingSO = null;
+		}
+	}
+	
+	public void sendReminder(){
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		
+			PmUser user = new FacesScopes().getUserSessionBean();
+			reqDTO.setUserId(user.getUserId().toString());
+			reqDTO.setCommitteMembers(getManagedBean().getCommitteeEndorsementList());
+			
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveDocumentsByDocCategory(reqDTO);
+			if (resDTO.isSuccessful()) {
+				String label = CommonMethod.getMessageCommon("lbl.sc.supplier.finalization");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_700026, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), label}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+				 // clear data
+				super.renewSesionObject();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+			} else {
+				throw new EpException("Failed.");
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
 		}
 	}
 	
