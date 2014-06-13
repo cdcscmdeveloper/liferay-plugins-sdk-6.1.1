@@ -841,6 +841,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 this.getManagedBean().setCentralZoneTrees(rootLocationTree);
 	  }
    
+   public void searchReset(){
+		this.getManagedBean().setSearchCircularNo(null);
+		this.getManagedBean().setSearchCircularName(null);
+		this.getManagedBean().setSearchFileRefNo(null);
+		this.getManagedBean().setSearchStartDate(null);
+		this.getManagedBean().setSearchEndDate(null);
+	}
+   
    public void searchCircularVer() {
 		try { 
 			circularVerPagingDataModel.reloadData();

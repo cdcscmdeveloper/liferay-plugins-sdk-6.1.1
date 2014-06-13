@@ -50,9 +50,9 @@
 	  	</div>	
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.panel.result']}" toggleable="true"	toggleSpeed="500">
-			<div style="overflow-x: auto">
-				<p:dataTable id="contractTbl" var="data" rowIndexVar="index" rowKey="#{data}" lazy="true"
-					value="#{contractDetailsBackingBean.managedBean.contractList}" >
+			<div style="overflow-x: auto">				
+				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.contractDataModel}"
+					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" >
 					<ac:paginator for="contractTbl" />
 					<p:column headerText="#{lbl['lbl.ct.search.cno']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
@@ -83,48 +83,48 @@
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:12%;">
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" 
-					   	 rendered="#{data.fdStatus == 1}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="pause.png"
-						  value="/resources/ep/images/design/pause.png" title="#{lbl['lbl.ct.search.susContract']}" />
-					   </p:commandLink>
-					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}"
-					   	 rendered="#{data.fdStatus == 1}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="terminate.png"
-						  value="/resources/ep/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
-					   </p:commandLink>
-					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" 
-					      rendered="#{data.fdStatus == 1}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="revise.png"
-						   value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
-					   </p:commandLink>
-					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoUpdatePage}"
-					     rendered="#{data.fdStatus == 1}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="evaluate.png"
-						   value="/resources/ep/images/design/evaluate.png" title="#{lbl['lbl.ct.search.update']}" />
-					   </p:commandLink>						
-					   <p:spacer width="5" rendered="#{data.fdStatus == 1}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png" title="#{lbl['lbl.ct.search.viewCt']}" />
-					   </p:commandLink>
-					   <p:spacer width="5" rendered="#{data.terminate or data.mutualTerminate or data.remedy}" />
-					   <p:commandLink action="#{contractDetailsBackingBean.gotoTerminateHistoryPage}" 
-					     rendered="#{data.terminate or data.mutualTerminate or data.remedy}" >
-						 <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data.ctContract}" />
-						 <p:graphicImage library="ep/images/design" name="history_frame.png"
-							value="/resources/ep/images/design/history_frame.png" title="#{lbl['lbl.ct.search.viewHistory']}" />
-					   </p:commandLink>
+						<p:commandLink rendered="#{data.fdStatus == 1}"
+							onclick="gotoSuspendPage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
+							<p:graphicImage library="ep/images/design" name="pause.png"
+						  		value="/resources/ep/images/design/pause.png" title="#{lbl['lbl.ct.search.susContract']}" />
+						</p:commandLink>					   
+					   	<p:spacer width="5" rendered="#{data.fdStatus == 1}" />
+					  	<p:commandLink rendered="#{data.fdStatus == 1}"
+							onclick="gotoTerminatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
+							<p:graphicImage library="ep/images/design" name="terminate.png"
+						  		value="/resources/ep/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
+						</p:commandLink>
+					   	<p:spacer width="5" rendered="#{data.fdStatus == 1}" />
+					   	<p:commandLink rendered="#{data.fdStatus == 1}"
+							onclick="gotoAmendPage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
+							<p:graphicImage library="ep/images/design" name="revise.png"
+						   		value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
+						</p:commandLink>
+						<p:spacer width="5" rendered="#{data.fdStatus == 1}" />					   
+					   	<p:commandLink rendered="#{data.fdStatus == 1}"
+							onclick="gotoUpdatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
+							<p:graphicImage library="ep/images/design" name="evaluate.png"
+						   		value="/resources/ep/images/design/evaluate.png" title="#{lbl['lbl.ct.search.update']}" />
+						</p:commandLink>
+						<p:spacer width="5" rendered="#{data.fdStatus == 1}" />
+					   	<p:commandLink onclick="gotoViewPage([{name:'contractVerId',value:'#{data.ctContract.currentContractVer.contractVerId}'}])">
+							<p:graphicImage library="ep/images/design" name="document.png"
+								value="/resources/ep/images/design/document.png" title="#{lbl['lbl.ct.search.viewCt']}" />
+						</p:commandLink>
+						<p:spacer width="5" rendered="#{data.terminate or data.mutualTerminate or data.remedy}" />
+					   	<p:commandLink rendered="#{data.terminate or data.mutualTerminate or data.remedy}"
+							onclick="gotoTerminateHistoryPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'contractVerId',value:'#{data.ctContract.currentContractVer.contractVerId}'}])">
+							<p:graphicImage library="ep/images/design" name="history_frame.png"
+								value="/resources/ep/images/design/history_frame.png" title="#{lbl['lbl.ct.search.viewHistory']}" />
+						</p:commandLink>
 					</p:column>
-				</p:dataTable>
+				</p:dataTable>						
+				<p:remoteCommand name="gotoSuspendPage" action="#{contractDetailsBackingBean.gotoSuspendPage}" />
+				<p:remoteCommand name="gotoTerminatePage" action="#{contractDetailsBackingBean.gotoTerminatePage}" />
+				<p:remoteCommand name="gotoAmendPage" action="#{contractDetailsBackingBean.gotoAmendPage}" />
+				<p:remoteCommand name="gotoUpdatePage" action="#{contractDetailsBackingBean.gotoUpdatePage}" />
+				<p:remoteCommand name="gotoViewPage" action="#{contractDetailsBackingBean.gotoViewPage}" />
+				<p:remoteCommand name="gotoTerminateHistoryPage" action="#{contractDetailsBackingBean.gotoTerminateHistoryPage}" />
 			</div>
 		</p:panel>
 	</ui:define>

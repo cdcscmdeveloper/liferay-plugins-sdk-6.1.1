@@ -30,7 +30,8 @@
 				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton value="Search" action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
+				<p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
+				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{centralContractBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="Result" toggleable="true">

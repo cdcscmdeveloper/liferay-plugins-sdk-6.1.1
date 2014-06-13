@@ -291,12 +291,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}		
 	}
 	
+	public void searchReset(){
+		this.getManagedBean().setSearchCircularNo(null);
+		this.getManagedBean().setSearchCircularName(null);
+		this.getManagedBean().setSearchSupplierName(null);
+		this.getManagedBean().setSearchFileRefNo(null);
+		this.getManagedBean().setSearchItemName(null);
+		this.getManagedBean().setSearchStartDate(null);
+		this.getManagedBean().setSearchEndDate(null);
+	}
+	
 	public void searchCircularVer() {
 		try { 
 			circularVerPagingDataModel.reloadData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
 		}			
 	}
 	

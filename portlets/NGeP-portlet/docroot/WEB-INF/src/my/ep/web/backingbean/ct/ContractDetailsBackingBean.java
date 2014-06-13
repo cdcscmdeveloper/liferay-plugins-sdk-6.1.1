@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -100,6 +101,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
@@ -149,6 +152,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtDeductionClause[] chkDeductionClause;
 	List<CtContractItem> ContractItemServiceList;
 	private CtProgressivePayment[] selectedProgressive;
+	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	
 	public ContractDetailsBackingBean() {
 	    if(this.getManagedBean().getAction() == null) {
@@ -405,67 +409,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	/*Implementation of search methode*/
 	public void searchContract() {
-		ISearchBean<VCtContract> searchBean = createSearchBean(VCtContract.class, "contractTbl");
-		IContractSO contractSO = null;
-		try {
-			if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtNumber()));	
-			
-			}if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
-				this.getManagedBean().getCtName()));	
-			
-			}if(this.getManagedBean().getCtCircularNo()!=null && this.getManagedBean().getCtCircularNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtCircularNo()));	
-			
-			}if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtCircularName()));	
-			
-			}if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
-				getManagedBean().getCtSupplierId()));	
-			
-			}if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtSupplierName()));	
-			
-			}if(this.getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
-				
-			}if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtPhysicalNo()));	
-			
-			}if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-				getManagedBean().getCtLOANo()));	
-			}if(getManagedBean().getCtContractStatus()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
-				getManagedBean().getCtContractStatus()));	
-			}if(getManagedBean().getTerminationTypeId() != null) {
-				String parameterCode = retrieveParameterById(getManagedBean().getTerminationTypeId());
-				if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-				}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-				}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-				}
-			}
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setvCtContractSearchBean(searchBean);
-			ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
-			this.getManagedBean().setContractList(resDTO.getvCtContractResultBean().getResultList());
-			this.getManagedBean().setSelectedIndex(0);
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
-		} finally {
-			contractSO = null;	
+		try { 
+			contractDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 		}
 	}
 	
@@ -480,6 +428,94 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setCtDateEnd(null);	
 		this.getManagedBean().setCtPhysicalNo(null);	
 		this.getManagedBean().setCtLOANo(null);		
+	}
+	
+	public IPagingDataModel<VCtContract> getContractDataModel() {
+		return contractDataModel;
+	}
+
+	public void setContractDataModel(IPagingDataModel<VCtContract> contractDataModel) {
+		this.contractDataModel = contractDataModel;
+	}
+
+	private class ContractPagingDataModel extends PagingDataModel<VCtContract> {
+		private static final long serialVersionUID = 1L;
+
+		public ContractPagingDataModel() {
+			super("contractTbl");
+		}
+		
+		@Override
+		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
+			//SmSupplier smSupp = new SmSupplier();
+			//PmOrgProfile defaultOrgProfile = new PmOrgProfile();
+			IContractSO contractSO = null;
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			try {
+				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtNumber()));
+				
+				}if(getManagedBean().getCtName()!=null && getManagedBean().getCtName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtName()));	
+				
+				}if(getManagedBean().getCtCircularNo()!=null && getManagedBean().getCtCircularNo().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtCircularNo()));	
+				
+				}if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtCircularName()));	
+				
+				}if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
+					getManagedBean().getCtSupplierId()));	
+				
+				}if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtSupplierName()));	
+				
+				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
+					
+				}if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtPhysicalNo()));	
+				
+				}if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+					getManagedBean().getCtLOANo()));	
+				}if(getManagedBean().getCtContractStatus()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
+					getManagedBean().getCtContractStatus()));	
+				}if(getManagedBean().getTerminationTypeId() != null) {
+					String parameterCode = retrieveParameterById(getManagedBean().getTerminationTypeId());
+					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}
+				}
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setvCtContractSearchBean(searchBean);
+				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
+				//getManagedBean().setContractList(resDTO.getvCtContractResultBean().getResultList());
+				getManagedBean().setSelectedIndex(0);
+				if(resDTO.isSuccessful()) {
+					return resDTO.getvCtContractResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 	
     public String saveContract(String action) throws Exception{
@@ -1243,19 +1279,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoTerminatePage() {
-
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
 		TerminationBackingBean trBB= null;
 		try{
+			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
+			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
+			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
-				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			if(contractVerId == null) {
+				reqDTO.setContractId(contractId);
+				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 			}			
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -1286,19 +1325,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	} 
 	
 	public String gotoSuspendPage() {
-		
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
 		SuspensionBackingBean suspBB = null;
 		try{
-            reqDTO = new ContractReqDTO();
+			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
+			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
+			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			
+			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
-				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			if(contractVerId == null) {
+				reqDTO.setContractId(contractId);
+				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 			}			
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
@@ -1344,14 +1386,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public String gotoAmendPage() {
 		IContractSO contractSO = null;
 		try {
+			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
+			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
+			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			AmendmentBackingBean amendBB = new AmendmentBackingBean();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
-				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			if(contractVerId == null) {
+				reqDTO.setContractId(contractId);
+				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 			}
-			reqDTO.setContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			reqDTO.setUpdateAction(true);
 			amendBB.getManagedBean().setSelectedTabIndex(0);
@@ -1371,8 +1417,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoViewPage() {
+		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+    	ctReqDTO.setContractVerId(contractVerId);
 	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
@@ -1384,13 +1431,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public String gotoUpdatePage(){
 		IContractSO contractSO = null;
 		try {
+			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
+			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
+			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			if(getManagedBean().getCtContract().getLatestContractVer()==null) {
-				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				getManagedBean().getCtContract().setLatestContractVer(contractSO.getLatestContractVer(reqDTO).getCtContractVer());
+			if(contractVerId == null) {
+				reqDTO.setContractId(contractId);
+				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 			}		
-			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			reqDTO.setUpdateAction(true);
 			
@@ -1408,9 +1459,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String gotoTerminateHistoryPage() {
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+		
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
-		ctReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
-    	ctReqDTO.setContractVerId(this.getManagedBean().getCtContract().getCurrentContractVer().getContractVerId());
+		ctReqDTO.setContractId(contractId);
+    	ctReqDTO.setContractVerId(contractVerId);
 	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
