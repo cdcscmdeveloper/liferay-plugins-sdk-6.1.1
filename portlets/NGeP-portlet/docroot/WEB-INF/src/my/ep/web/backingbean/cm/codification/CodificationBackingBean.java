@@ -2137,24 +2137,26 @@ public class CodificationBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
-	public boolean productCode(String unspscCode) {
-		System.out.println(".........productCode.........");
-		System.out.println("......unspscCode="+unspscCode);
+	
+	
+	public boolean productCode(String unspscCode){
 		
 		boolean flag = true;
 		String segmentCode = "";
-
+		
 		segmentCode = unspscCode.substring(0, 2);
 		
-		if (segmentCode.compareTo(NO_75) > 0) {
-			
+		
+		if(segmentCode.compareTo(NO_75)>0){
 			flag = false;
 		}
-
-		System.out.println("flag:" + flag);
-
+	
+		System.out.println("flag:"+flag);
+		
 		return flag;
 	}
+	
+	
+
 
 }

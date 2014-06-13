@@ -605,7 +605,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	}
 
-	public String getParentCode(long code){
+	public static String getParentCode(long code){
 
 		String parent = null;
 
