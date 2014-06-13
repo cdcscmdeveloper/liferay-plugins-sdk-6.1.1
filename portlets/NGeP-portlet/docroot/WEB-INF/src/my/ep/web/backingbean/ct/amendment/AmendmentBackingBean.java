@@ -256,6 +256,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				this.getManagedBean().setPrepareLOA(true);
 				this.getManagedBean().setMemberSignOff(true);
 				this.getManagedBean().setWitnessHeader("AGENCY WITNESS DETAILS");
+				if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && 
+						this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
+					this.getManagedBean().setDecisionPbQcLOA(true);
+				}
 				if (this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
 					ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 					ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);

@@ -55,6 +55,8 @@
 					            rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>
 					         <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
 					           rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(6)}"/>
+					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(7)}"/> 
 					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
 					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>  
 					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
@@ -74,6 +76,8 @@
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
 					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>
+					              <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(6)}"/> 
 					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
 					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>   
 					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
@@ -92,6 +96,8 @@
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>
 					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/> 
 					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
 					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(2)}"/> 
                                <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
@@ -194,11 +200,15 @@
 					<ui:include src="pbqcc/meeting.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 5 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
+				<p:outputPanel rendered="#{(((amendmentBackingBean.managedBean.selectedTabIndex == 5 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
 				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
 				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
-				   (amendmentBackingBean.managedBean.signUpdateDecision)}">
+				   (amendmentBackingBean.managedBean.signUpdateDecision)) or (((amendmentBackingBean.managedBean.selectedTabIndex == 7 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
+				 (amendmentBackingBean.managedBean.selectedTabIndex ==6 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==5 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				   (amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA)) }">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
 				</p:outputPanel>
 				

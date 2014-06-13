@@ -122,6 +122,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean termAndConditionFlg;
 	private int selectedTabIndex;
 	
+	private boolean decisionPbQcLOA;
+	
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -669,4 +671,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
+	public boolean isDecisionPbQcLOA() {
+		return decisionPbQcLOA;
+	}
+
+	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
+		this.decisionPbQcLOA = decisionPbQcLOA;
+	}
 }
