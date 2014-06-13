@@ -12,7 +12,7 @@
       .column-align-center { text-align: center !important;}
        .top-aligned-columns td{ vertical-align: top;}
    </style> 
-    <p:panel>
+    <p:panel id="panelHeader">
     	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
     	<table style="width: 100%;">
     		<tr>
@@ -28,10 +28,14 @@
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
 	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
            <p:inputText id="projectNames" style="width:200px;" required="true" autocomplete="off" requiredMessage="Project name required"
-               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}" > </p:inputText>
+               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}" >
+               <p:ajax event="blur" update="panelHeader"></p:ajax>
+                </p:inputText>
            <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}"  />
 		   <p:inputText id="projectDesc" style="width:400px;" required="true"  autocomplete="off" requiredMessage="Project description required"
-		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}"></p:inputText>
+		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}">
+		       <p:ajax event="blur" update="panelHeader"></p:ajax>
+		   </p:inputText>
          </h:panelGrid>
 	     <p:spacer height="10"/>
           <p:dataTable id="associateCreation" 

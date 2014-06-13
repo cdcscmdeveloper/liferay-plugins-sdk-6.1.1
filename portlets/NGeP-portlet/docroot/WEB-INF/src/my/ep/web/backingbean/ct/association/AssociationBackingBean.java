@@ -97,8 +97,15 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
 				SearchOperator.OPERATOR_LESS_EQUAL.value(), this.getManagedBean().getCtDateEnd()));	
 				
-			}
-			if(this.getManagedBean().getCtProductCode()!=null && this.getManagedBean().getCtProductCode().length()>0) {
+			}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(), this.getManagedBean().getCtDateStart()));	
+		    
+			}if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
+		    	searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
+						SearchOperator.OPERATOR_LESS_EQUAL.value(), this.getManagedBean().getCtDateEnd()));	
+					
+	        }if(this.getManagedBean().getCtProductCode()!=null && this.getManagedBean().getCtProductCode().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractPhysicalNo",
 				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtProductCode()));	
 			}

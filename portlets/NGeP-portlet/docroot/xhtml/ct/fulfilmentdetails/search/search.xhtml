@@ -27,10 +27,10 @@
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" style="width:170px;"/> 
            <p:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" 
-            pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" />
+            pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" readonlyInput="true" />
            <p:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="popupButtonCal1" 
-             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  showOn="button" />
+             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  showOn="button" readonlyInput="true" />
            <p:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" style="width:170px;"/>                     
            <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
