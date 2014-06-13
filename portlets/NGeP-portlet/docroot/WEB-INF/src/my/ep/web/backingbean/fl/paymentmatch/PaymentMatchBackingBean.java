@@ -30,8 +30,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
@@ -446,5 +444,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		 */
 	public static void setSubSetiaCodeMap(Map<Long, String> subSetiaCodeMap) {
 		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
+	}
+	
+	public FulfilmentResDTO getPaymentAdviseByPaymentAdviseId(Long paymentAdviseId){
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setPaymentAdviseId(paymentAdviseId);
+		FulfilmentResDTO resDTO = paymentMatchSO.retrievePaymentAdviseByPaymentId(reqDTO);
+		resDTO.getPaymentAdvice();//this is the payment advise object
+		return resDTO;
 	}
 }
