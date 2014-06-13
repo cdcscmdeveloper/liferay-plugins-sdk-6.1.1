@@ -4839,6 +4839,10 @@ input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hove
 	width: 30%;
 }
 
+.columnWidth50 {
+	width: 50%;
+}
+
 .columnWidth80 {
 	width: 80%;
 }
