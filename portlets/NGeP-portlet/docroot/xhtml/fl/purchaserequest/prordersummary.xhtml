@@ -12,7 +12,7 @@
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="Delivery Address">
+			<p:column headerText="Delivery Address" style="white-space:normal;">
 				<h:outputText rendered="#{delAddressSummary.addressType != null}"
 					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}" />
 				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
@@ -51,11 +51,11 @@
 					<p:column headerText="Item Code">
 						<h:outputText value="#{newItems.scRequestItem.cmItem.extensionCode}"/> 
 					</p:column>
-					<p:column headerText="Item Name">
+					<p:column headerText="Item Name" style="white-space:normal;">
 						<h:outputText value="#{newItems.scRequestItem.itemName}" />
 					</p:column>
 					<p:column headerText="UOM">
-						<h:outputText />
+						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" />
 					</p:column>
 					<p:column headerText="Unit Price (RM)">
 						<h:outputText value="#{newItems.unitPrice}"
