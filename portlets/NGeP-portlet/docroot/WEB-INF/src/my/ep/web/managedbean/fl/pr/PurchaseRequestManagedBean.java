@@ -32,6 +32,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
@@ -171,6 +172,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	// charge Line dropdown lists
 	private List<PmVotFund> votFundList;
+	private List<PmGlAccount> glAccountList;
 	private List<PmProject> projectList;
 	private List<PmSetia> setiaList;
 	private List<PmSubSetia> subSetiaList;
@@ -186,10 +188,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String prgActivityCode;
 	
 	private Long votFundId;
+	private Long assetIndId;
+	private Long glAccountId;
 	private Long projectId;
 	private Long setiaId;
 	private Long subSetiaId;
 	private Long prgActivityId;
+	private String financingTypeCode;
 	
 	//receving officer List
 	private List<PmAddressType> receivingOffList;
@@ -275,6 +280,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private void prepareChargeLineTreeNode(
 			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
 		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
+		setOrderedAmtGrandTotal(grandTotalOrderAmt);
 		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
 			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
@@ -1689,6 +1695,41 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	public List<PmGlAccount> getGlAccountList() {
+		if(glAccountList==null) {
+			glAccountList = new ArrayList<PmGlAccount>();
+		}
+		return glAccountList;
+	}
+
+	public void setGlAccountList(List<PmGlAccount> glAccountList) {
+		this.glAccountList = glAccountList;
+	}
+
+	public Long getAssetIndId() {
+		return assetIndId;
+	}
+
+	public void setAssetIndId(Long assetIndId) {
+		this.assetIndId = assetIndId;
+	}
+
+	public Long getGlAccountId() {
+		return glAccountId;
+	}
+
+	public void setGlAccountId(Long glAccountId) {
+		this.glAccountId = glAccountId;
+	}
+
+	public String getFinancingTypeCode() {
+		return financingTypeCode;
+	}
+
+	public void setFinancingTypeCode(String financingTypeCode) {
+		this.financingTypeCode = financingTypeCode;
 	}
 
 	

@@ -31,7 +31,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -63,8 +63,7 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
@@ -98,6 +97,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
@@ -182,6 +182,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private String queryDesc;
 	
 	private static Map<Long, String> votFundCodeMap = new HashMap<Long, String>();
+	private static Map<Long, String> glAccountCodeMap = new HashMap<Long, String>();
 	private static Map<Long, String> progmActivityCodeMap = new HashMap<Long, String>();
 	private static Map<Long, String> projectCodeMap = new HashMap<Long, String>();
 	private static Map<Long, String> setiaCodeMap = new HashMap<Long, String>();
@@ -288,9 +289,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 //		getVotFundList(4L);
 		
-		
-		//get GL_ACCOUNT details
-		//getGlAccount(4L);
 		
 		// get AG Officer details
 		//getAgAccount(4L);
@@ -1203,7 +1201,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							
 							getManagedBean().setSetiaCode("");
 							
-							getManagedBean().setSubSetiaCode((""));
+							getManagedBean().setSubSetiaCode("");
 							
 						}
 						
@@ -1211,20 +1209,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 				}
 	}
+	
 	public void clearPopupLists(){
 		getManagedBean().setVotFundId(0L);
+		getManagedBean().setAssetIndId(null);
+		getManagedBean().setGlAccountId(null);
 		getManagedBean().setPrgActivityId(0L);
 		getManagedBean().setProjectId(0L);
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);
-		getManagedBean().setVotFundList(new ArrayList<PmVotFund>());
-		getVotFundList(4L);
+		getManagedBean().setFinancingTypeCode(null);
 		getManagedBean().setProjectList(new ArrayList<PmProject>());
 		getManagedBean().setPrgActivityList(new ArrayList<PmPrgActivity>());
 		getManagedBean().setSetiaList(new ArrayList<PmSetia>());
 		getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
-		
-		
 	}
 	
 	public void onNodeUnSelect() {
@@ -1315,6 +1313,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				pmPrgActivity.setPrgActivityId(getManagedBean().getPrgActivityId());
 				pmPrgActivity.setPrgActivityCode(getManagedBean().getPrgActivityCode());
 				
+				ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+				paramReqDTO.setParameterId(getManagedBean().getAssetIndId());
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				PmParameter assetInd = parameterSO.retrieveParameterById(paramReqDTO).getPmParameter();
+				
 				for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
 					for(TreeNode children:selectedNode.getChildren()){
 						//do it for others
@@ -1322,12 +1325,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						FlFulfilmentItemAddr childItemAddress=(FlFulfilmentItemAddr)children.getData();
 						
 						childItemAddress.setPmSubSetia(pmSubSetia);
+						childItemAddress.setAssetInd(assetInd);
 						childItemAddress.setPmPrgActivity(pmPrgActivity);
 						childItemAddress.setPmVotFund(pmVotFund);
 						
 						childItemAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 						childItemAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
 						childItemAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
+						childItemAddress.getFlFulfilmentItem().setAssetInd(assetInd);
 					}
 					FlFulfilmentItemAddr childItemAddress=(FlFulfilmentItemAddr)selectedNode.getData();
 					//Code for multiple delivery addresses based on item code
@@ -1339,6 +1344,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							itemDelAddress.setPmSubSetia(pmSubSetia);
 							itemDelAddress.setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.setPmVotFund(pmVotFund);
+							itemDelAddress.setAssetInd(assetInd);
 							
 							itemDelAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 							itemDelAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
@@ -1549,32 +1555,35 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public OrgProfileResDTO getVotFundList(Long profileId){
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(profileId);
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
 		
-			for(PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
-				votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund.getVotFundCode());
-			}
+		for (PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
+			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund.getVotFundCode());
+		}
+		for(PmGlAccount pmGlAcount : resDTO.getPmOrgProfile().getPmPtjGroup().getPmGlAccounts()) {
+			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount.getGlAccCode());
+		}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
+		getManagedBean().setGlAccountList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmGlAccounts());
 		
 		return resDTO;
 	}
 	
 	public ProjectSetiaResDTO getProjectList(AjaxBehaviorEvent e) {
 		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
-		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
+		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		reqDTO.setVotFundId(votFundId);
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
 		
-		
-			for(PmProject pmProject : resDTO.getProjectList()) {
-				projectCodeMap.put(pmProject.getProjectId(), pmProject.getProjectCode());
-			}
+		for (PmProject pmProject : resDTO.getProjectList()) {
+			projectCodeMap.put(pmProject.getProjectId(), pmProject.getProjectCode());
+		}
 		getManagedBean().setProjectId(0L);	
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
@@ -1589,10 +1598,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setVotFundId(votFundId);
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
 		
-		
-			for(PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
-				progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity.getPrgActivityCode());
-			}
+		for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
+			progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity.getPrgActivityCode());
+		}
 		getManagedBean().setPrgActivityId(0L);	
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
@@ -1632,6 +1640,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return resDTO;
 	}
 	
+	public ProjectSetiaResDTO getFinancingType(AjaxBehaviorEvent e) {
+		Long subSetiaId = (Long) e.getComponent().getAttributes().get("value");
+		IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IProjectSetiaSO.class);
+		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+		reqDTO.setSubSetiaId(subSetiaId);
+		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetia(reqDTO);
+		
+		getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingType().getParameterCode());
+		return resDTO;
+	}
 	
 	public void getUserProfiles(){
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
@@ -1640,14 +1658,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
 		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
 		fulfilmentReqDTO.setPmUser(userResDTO.getPmUser());
-	}
-	
-	public GlAccountResDTO getGlAccount(Long orgProfileId){
-		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject("pm",IGlAccountSO.class);
-		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
-		reqDTO.setOrgProfileId(orgProfileId);
-		GlAccountResDTO resDTO = glAccountSO.retrieveGlAccountList(reqDTO);
-		return resDTO;
 	}
 	
 	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
@@ -1915,9 +1925,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
+			getManagedBean().setSelectedNode(null);
+			getManagedBean().setVotFundCode(null);
+			
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.prChargeLinePnlClass)");
-			getVotFundList(4L);
+			getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 		}
 		if(selectedTabIndex==1){
 			if(getManagedBean().getSelectedDelAddr()==null) { 

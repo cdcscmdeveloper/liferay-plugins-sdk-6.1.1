@@ -86,7 +86,7 @@
 					Total: <p:spacer width="10px" />
 					<h:outputText
 						value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
-						<f:convertNumber pattern="#,#00.00" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</td>
 			</tr>
@@ -209,19 +209,18 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-						<f:selectItem itemLabel="Value1" itemValue="1" />
-						<f:selectItem itemLabel="Value2" itemValue="2" />
+				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" >
+						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;">
+				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{purchaseRequestBackingBean.managedBean.glAccountId}" >
 						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-						<f:selectItem itemLabel="Value1" itemValue="1" />
-						<f:selectItem itemLabel="Value2" itemValue="2" />
+						<f:selectItems var="glAccount"
+							value="#{purchaseRequestBackingBean.managedBean.glAccountList}"
+							itemLabel="#{glAccount.glAccCode}"
+							itemValue="#{glAccount.glAccountId}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -281,16 +280,18 @@
 							value="#{purchaseRequestBackingBean.managedBean.subSetiaList}"
 							itemLabel="#{subSetiaList.subSetiaCode}"
 							itemValue="#{subSetiaList.subSetiaId}" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.getFinancingType}"
+							update="financingType" />							
 					</p:selectOneMenu></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
-						<f:selectItem itemLabel="Value1" itemValue="1" />
-						<f:selectItem itemLabel="Value2" itemValue="2" />
+				<td>
+					<p:selectOneMenu id="financingType" style="margin-bottom:15px;" disabled="true" value="#{purchaseRequestBackingBean.managedBean.financingTypeCode}" >
+						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownCodeValues(ParameterTypeConst.financingType)}" />
 					</p:selectOneMenu></td>
 			</tr>
 
