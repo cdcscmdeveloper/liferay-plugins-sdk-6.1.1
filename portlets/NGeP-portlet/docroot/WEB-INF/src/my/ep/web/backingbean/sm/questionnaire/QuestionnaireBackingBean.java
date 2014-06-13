@@ -468,4 +468,66 @@ public class QuestionnaireBackingBean extends
         document.close();
         outputStream.close();
     }
+	
+	public void validateQuestionnaire(Long applId, String targetUrl){
+		System.out.println("********QuestionnaireBackingBean Start******");
+		if(applId != null && targetUrl != null){
+			this.getManagedBean().setTargetUrl(targetUrl);
+			try{
+				SmSupplier supplier = getSmSupplier();
+				if(!supplier.getSmAppl().isQuestionnaire()){
+					this.getManagedBean().setSmSupp(supplier);
+					System.out.println("********QuestionnaireBackingBean******" + applId);
+					//System.out.println("********QuestionnaireBackingBean type******" + type);
+
+					retrieveQuestionnaire();
+					//this.getManagedBean().setTargetUrl(targetUrl);
+					this.getManagedBean().setSmSupp(supplier);
+					SmMofAccount mofAcc = retrieveLatestMofAccount();
+					this.getManagedBean().setSmMofAccount(mofAcc);
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+					return;
+				}
+//				else{
+//					FacesContext fc = FacesContext.getCurrentInstance();
+//					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,targetUrl);
+//				}
+			}catch(Exception ex){
+				System.out.println("Exception>>>>" + ex.getMessage());
+			}
+		}
+	}
+	
+	public SmMofAccount retrieveLatestMofAccount(){
+		SmMofAccount smMofAcc = new SmMofAccount();
+		try {
+			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+	
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+			
+			reqDto.setSupplierId(getSmSupplier().getSupplierId());
+			System.out.println("*********Supplier ID>" + reqDto.getSupplierId());
+			resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
+			SmSupplier supplier = resDto.getSmSupplier();
+			Date now = new Date();
+			
+			for(SmMofAccount mofAcc : supplier.getSmMofAccounts()){
+				System.out.println("11111111111111111" + mofAcc);
+				if(mofAcc.getEffDate().before(now) && mofAcc.getExpDate().after(now)){
+					System.out.println("***mofAcc.getSupplierType()****" + mofAcc.getSupplierType());
+					if(mofAcc.getSupplierType().equalsIgnoreCase(supplier.getSmAppl().getSupplierType())){
+						smMofAcc = mofAcc;
+					}
+				}
+			}
+			
+		}catch(Exception ex){
+			System.out.println("**********retrieveLatestMofAccount exception>>>>>>" + ex.getMessage());
+		}
+		
+		return smMofAcc;
+	}
 }

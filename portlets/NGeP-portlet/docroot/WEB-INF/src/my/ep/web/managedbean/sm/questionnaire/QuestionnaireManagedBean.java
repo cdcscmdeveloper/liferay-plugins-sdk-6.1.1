@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
@@ -17,16 +18,18 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<SmQuestion> smQuestionLs;
 	private SmSupplier smSupp;
 	private List<SmSupplierAnswer> smSuppAnswerLs;
+	private SmMofAccount smMofAccount;
 
 	private String mofCertSerialNo;
 	private String mofAccountNo;
 	private String effDate;
 	private String expDate;
 	private String regDate;
+	private String targetUrl;
 	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
@@ -90,5 +93,33 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+
+	/**
+	 * @return the targetUrl
+	 */
+	public String getTargetUrl() {
+		return targetUrl;
+	}
+
+	/**
+	 * @param targetUrl the targetUrl to set
+	 */
+	public void setTargetUrl(String targetUrl) {
+		this.targetUrl = targetUrl;
 	}
 }
