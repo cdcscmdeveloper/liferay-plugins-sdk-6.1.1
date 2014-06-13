@@ -28,9 +28,9 @@
 
 			<p:column headerText="First Recommendation">
 				<p:selectOneMenu id="catPassed" value="#{catApp.passed}">
-					<f:selectItem itemLabel="---Select---" itemValue="#{null}"/>
-					<f:selectItem itemValue="true" itemLabel="Approve" />
-					<f:selectItem itemValue="false" itemLabel="Reject" />
+					<f:selectItem noSelectionOption="true" itemLabel="---Select---" />>
+					<f:selectItem itemValue="1" itemLabel="Approve" />
+					<f:selectItem itemValue="0" itemLabel="Reject" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
