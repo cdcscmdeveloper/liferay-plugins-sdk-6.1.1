@@ -182,7 +182,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}else{
 			for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getSelectedDelAddressList()){
 				for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
-					System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemName());
+					//System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemName());
 					itemAddress.getDeliveredQty();
 					itemAddress.getDeliveredAmt();
 					if(null==itemAddress.getDeliveredAmt()){
@@ -259,6 +259,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(flOrder);
 		}
+		getManagedBean().getFulfilmentRequest();
 	}
 
 

@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
@@ -205,7 +206,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		
 		return itemAddress;
 	}
-	
 	
 	/**
 	 * @return the docType

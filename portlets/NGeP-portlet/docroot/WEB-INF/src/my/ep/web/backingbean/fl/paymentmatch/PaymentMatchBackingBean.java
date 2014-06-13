@@ -46,6 +46,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -130,7 +131,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				   for(TreeNode subNode:childNode.getChildren()){
 					   FlFulfilmentItemAddr subData=(FlFulfilmentItemAddr)subNode.getData();
 					   flItem=subData.getFlFulfilmentItem();
-					  
 				   }
 				   paymentItem.setFlPaymentAdvice(paymentAdvice);
 				   paymentItem.setFlItem(flItem);
@@ -244,7 +244,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			paymentDeduction.setDeductionAmt(paymentAdvice.getFeeAmt());
 			paymentDeduction.setDeductionDesc(" ");
 			paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
-			paymentDeduction.setPmGlAccount(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmGlAccounts().get(0));
+			paymentDeduction.setPmGlAccount(new PmGlAccount());
+			//paymentDeduction.setPmGlAccount(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmGlAccounts().get(0));
 			paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
 			paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
 
@@ -252,7 +253,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setDocType(resDTO.getInvoice().getFlRequest().getDocType());
 			
 			// get address for supplier
-			combineSupAddress(resDTO.getInvoice().getFlRequest());
+			//combineSupAddress(resDTO.getInvoice().getFlRequest());
 			
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			// pm summary
@@ -270,7 +271,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().getPaymentAdvice();
 	}
 	
-	public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	/*public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
 	    StringBuilder address = new StringBuilder();
 	    String strSpace = " ";
@@ -313,7 +314,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	    }	
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
-	}
+	}*/
 	 
 	public void onTabChange(TabChangeEvent tevent){
 		if("pmChargeLineTabId".equals(tevent.getTab().getId())){

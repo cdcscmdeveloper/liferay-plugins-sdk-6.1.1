@@ -56,7 +56,7 @@
 			<tr>
 				<td rowspan="3" valign="top" style="width: 117px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="6"
+				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						style=" margin-bottom:5px;"
 						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
 				<td style="width: 119px;"><p:outputLabel
@@ -73,21 +73,22 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
-				<f:convertDateTime
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
+						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</p:inputText></td>
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10"/> <p:spacer
+				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
-				<td>
-					<p:inputText size="25" disabled="true"  value="#{flOrderBB.managedBean.flRequest.approvedDate}" >
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>
-				</td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.approvedDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
@@ -97,13 +98,14 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
-				<td>
-					<p:selectOneRadio value="#{flOrderBB.managedBean.factoringCheck}" >
+				<td><p:selectOneRadio
+						value="#{flOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
-						<p:ajax event="change" process="@this" listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)" partialSubmit="true" />
-					</p:selectOneRadio>
-				</td>
+						<p:ajax event="change" process="@this"
+							listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)"
+							partialSubmit="true" />
+					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
@@ -122,7 +124,7 @@
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.regNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
@@ -135,105 +137,113 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.smSupplier.companyName}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.branchName}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{flOrderBB.managedBean.supplierAddress}" /></td>
+						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.supplierBranch.phoneNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="19" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.supplierBranch.faxNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="25" /></td>
+				<td><p:inputText disabled="true" size="25"
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<h:panelGroup styleClass="factStyle" id="factStyle">
-	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{flOrderBB.managedBean.factoringCheck eq 'true'}">
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 117px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
-						<f:selectItem itemLabel="Select One" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td style="width: 117px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-				<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;" >
-						<f:selectItem itemLabel="Select One" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
-						style=" margin-bottom:5px;"
-						value="#{flOrderBB.managedBean.supplierAddress}" /></td>
-			</tr>
-			<tr>
-				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.telno']}" /></td>
-				<td><table style="width: 100%">
-						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.supplierBranch.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
-									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.supplierBranch.faxNo}" /></td>
-						</tr>
-					</table></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="25" /></td>
-			</tr>
-		</table>
-	</p:panel>
+		<p:panel header="FACTORING DETAILS" toggleable="true"
+			rendered="#{flOrderBB.managedBean.factoringCheck eq 'true'}">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 117px;"><p:outputLabel
+							value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
+					<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
+							<f:selectItem itemLabel="Select One" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 117px;"><p:outputLabel
+							value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
+					<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
+							<f:selectItem itemLabel="Select One" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.fl.supp.address']}" /></td>
+					<td><p:inputTextarea cols="50" rows="8" disabled="true"
+							style=" margin-bottom:5px;"
+							value="#{flOrderBB.managedBean.supplierAddress}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 100px;"><p:outputLabel
+							value="#{lbl['lbl.fl.supp.telno']}" /></td>
+					<td><table style="width: 100%">
+							<tr>
+								<td style="width: 25px;"><p:inputText size="15"
+										disabled="true"
+										value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+								<td style="width: 65px;"><p:outputLabel
+										value="#{lbl['lbl.fl.supp.faxno']}" /></td>
+								<td><p:inputText size="19" disabled="true"
+										value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+							</tr>
+						</table></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
+					<td><p:inputText disabled="true" size="50"
+							value="#{flOrderBB.flRequest.flSupplierDtl.contactPerson}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
+					<td><p:inputText disabled="true" size="50"
+							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
+					<td><p:inputText disabled="true" size="25"
+							value="#{flOrderBB.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+				</tr>
+			</table>
+		</p:panel>
 	</h:panelGroup>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">

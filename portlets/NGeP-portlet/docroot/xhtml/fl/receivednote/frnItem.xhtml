@@ -26,7 +26,7 @@
 			<p:column headerText="Item Name">
 				<p:outputLabel value="#{item.flDelOrderItem.flItem.cmItem.itemName}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
-				<p:outputLabel value="#{item.flItem.qtItem.itemName}"
+				<p:outputLabel value="#{item.flDelOrderItem.flItem.cmItem.itemName}"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
 			</p:column>
 			<p:column headerText="UOM">
@@ -56,11 +56,11 @@
 			</p:column>
 			<p:column headerText="Received Qty." >
 				<p:inputText value="#{item.receivedQty}" 
-					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product' and receivedNoteBackingBean.managedBean.docType eq 'PR'}">
 					<p:ajax update="receivedAmt" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
 					</p:inputText>
 				<h:outputText
-					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
+					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service' and receivedNoteBackingBean.managedBean.docType eq 'PR'}"
 					value="#{item.receivedQty}" />
 				<p:inputText value="#{item.receivedQty}"
 				rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}"/>

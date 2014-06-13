@@ -402,9 +402,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	public void onTabChange(TabChangeEvent tevent){
 		if("invItemTabId".equals(tevent.getTab().getId())){
-			if(null==getManagedBean().getChargeLineItemRoot()){
-				 getManagedBean().populateChargeLineData();
-			}
+				if(null==getManagedBean().getChargeLineItemRoot()){
+					 getManagedBean().populateChargeLineData();
+				}
 			setClassName("@(.invItemPnlClass)");
 		}
 		if("invSummaryTabId".equals(tevent.getTab().getId())){

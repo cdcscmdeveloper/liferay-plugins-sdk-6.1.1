@@ -54,7 +54,10 @@
 							value="#{doItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
 					<p:column headerText="Item Name">
-						<h:outputText value="#{doItems.scRequestItem.itemName}" />
+						<h:outputText value="#{doItems.scRequestItem.itemName}"
+							rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
+						<h:outputText value="#{doItems.scRequestItem.itemName}"
+							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
 					</p:column>
 					<p:column headerText="UOM">
 						<h:outputText />
@@ -75,7 +78,6 @@
 					</p:column>
 					<p:column headerText="Delivery &lt;br /&gt; Qty.">
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							
 							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product' and createDOBackingBean.managedBean.docType eq 'PR'}">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
 								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
@@ -87,8 +89,10 @@
 						</p:inputText>
 						<p:inputText value="#{doItems.deliveredQty}" disabled="true"
 							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR'}" />
-						<p:inputText value="#{item.deliveredQty}"
+						<p:inputText value="#{doItems.deliveredQty}" size="5"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
+							<p:ajax event="blur" update="delAmountTxt" process="@this"
+								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 						</p:inputText>
 					</p:column>
 					<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)">
@@ -101,6 +105,10 @@
 								rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service'}">
 								<f:convertNumber pattern="#,#00.00" />
 							</p:inputText>
+							<h:outputText value="#{doItems.deliveredAmt}" size="5"
+								rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
+								<f:convertNumber pattern="#,#00.00" />
+							</h:outputText>
 
 						</h:panelGroup>
 					</p:column>
@@ -114,7 +122,7 @@
 						<h:outputText value="#{doItems.receivedQty}" />
 					</p:column>
 				</p:dataTable>
-				
+
 			</p:rowExpansion>
 
 		</p:dataTable>

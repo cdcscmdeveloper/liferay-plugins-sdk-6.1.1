@@ -203,7 +203,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 		doMB.getManagedBean().setStatusDesc(statusDesc);
 		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
-		combineSupAddress(resDTO.getFlFulfilmentRequest());
+		//combineSupAddress(resDTO.getFlFulfilmentRequest());
 
 		return NAV_TO_CREATE_DO;
 
@@ -324,7 +324,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
-				combineSupAddress(resDTO.getFlFulfilmentRequest());
+				//combineSupAddress(resDTO.getFlFulfilmentRequest());
 			} else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -333,7 +333,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
 				resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 				
-				combineSupAddress(resDTO.getFlFulfilmentRequest());
+				//combineSupAddress(resDTO.getFlFulfilmentRequest());
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
 					flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
@@ -363,7 +363,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		System.out.println("=======get id value=====" + id);
 		getManagedBean().setFactoringCheck(id);
 	}
-	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	 /*public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
@@ -406,7 +406,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	    	}	
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
-	    }
+	    }*/
 	 public void retrieveOrderAmount(FlFulfilmentItemAddr fulfilmentItemAddr){
 			int unitPrice = 0;
 			int ordQnty = 0;

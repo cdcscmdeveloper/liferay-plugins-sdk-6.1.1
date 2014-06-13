@@ -449,8 +449,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if (!isAddressContains) {
 				FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-				//deliveryAddr.setAddressType(addrType.getAddressType());
-				deliveryAddr.setPmAddress(addrType.getAddressType().getPmAddress());
+				deliveryAddr.setAddressType(addrType.getAddressType());
+				//deliveryAddr.setPmAddress(addrType.getAddressType().getPmAddress());
 				paramReqDTO.setParameterId(574L);
 				deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
 				deliveryAddr.setDeliveryTerm(10);
@@ -494,7 +494,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			return false;
 		}
 		for(FlDeliveryAddress flAddress:flDeliveryAddresses){
-			if(addrType.getAddressType().getPmAddress().getAddressId()==flAddress.getPmAddress().getAddressId()){
+			if(addrType.getAddressType().getAddressTypeId()==flAddress.getAddressType().getAddressTypeId()){
 				isContains=true;
 			}
 		}
@@ -627,6 +627,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			///flItemAddr.setUnitPrice(resDTO.getItemPrice());
 			flItemAddr.setUnitPrice(new BigDecimal(20));
 			flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
+			flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
+			
 			
 			if(getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr() == null){
 				getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
@@ -1077,6 +1079,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 		    flItemAddress.setItemType(pmParameter);
 		    flItemAddress.setCmItem(cmItem);
+		    flItemAddress.getScRequestItem().setCmItem(cmItem);
 		    //flItem.setPmVotFund(pmVotFund);
 		    
 		   // preparing FlFulfilmentItem for SAVE

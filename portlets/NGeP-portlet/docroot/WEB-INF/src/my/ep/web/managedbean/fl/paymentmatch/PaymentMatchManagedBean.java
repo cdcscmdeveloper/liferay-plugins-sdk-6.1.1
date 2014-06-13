@@ -27,7 +27,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author admin
  *
  */
-@ManagedBean
+@ManagedBean(name = "pmMB")
 @SessionScoped
 public class PaymentMatchManagedBean extends BaseManagedBean{
 

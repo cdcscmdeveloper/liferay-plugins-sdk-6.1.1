@@ -193,18 +193,21 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			if(null !=this.getFlRequest().getFlDeliveryAddresses()){
 				for(FlDeliveryAddress  deliveryAddress :this.getFlRequest().getFlDeliveryAddresses()){
 					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
+						//System.out.println("11111111111111111111111111111111111     "+deliveryAddress.getAddressType().getPmAddress().getAddressId());
+						
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+							//System.out.println("777777777777   "+itemAddress.getCmItem().getExtensionCode());
 							
 							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
 							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-							//itemAddress.getCmItem().getItemId()
-							//itemAddress.getScRequestItem().getRequestNoteItemId()
-							if(chargeLineItemsMap.containsKey(itemAddress.getCmItem().getItemId())){
+							//itemAddress.getCmItem().setExtensionCode(itemAddress.getCmItem().getExtensionCode());
+							
+							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
 								//code for calculating duplicate charge line order amount and quantity for same unit price 
 								//Condition for checking unit price same.
 								boolean notContained=true;
-								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getCmItem().getItemId())){
+								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
 									if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
 										//BigDecimal chargeOrderedAmt=containedItem.getChargeOrderedAmt();
 										containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
@@ -213,14 +216,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 									}
 								}
 								if(notContained){
-									chargeLineItemsMap.get(itemAddress.getCmItem().getItemId()).add(itemAddress);
+									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
 								}
 								
 							} else {
 								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
 								itemAddressList.add(itemAddress);
 								//Copy order amount ,qty to charge line fields and set.
-								chargeLineItemsMap.put(itemAddress.getCmItem().getItemId(),itemAddressList);
+								chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
 							}
 						}
 					}
@@ -238,11 +241,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
 			if(null!=flItemAddress){
 				//Do create New Item Address and copy the first element data manually.
-				//flItemAddress.getScRequestItem().getRequestNoteItemId()
-				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getCmItem().getItemId().toString(),flItemAddress,chargeLineItemRoot);
+				
+				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
 				BigDecimal totalOrderAmt=new BigDecimal(0);
 				for(FlFulfilmentItemAddr itemAddr:itemAddress){
-					new DefaultTreeNode(itemAddr.getCmItem().getItemId().toString(),itemAddr,childItemNode);
+					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
 					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
 				}
 				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
@@ -266,20 +269,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
 		itemAddress.setScRequestItem(new ScRequestItem());
 		itemAddress.setParent(true);
-		//itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		if(null==itemAddress.getCmItem()){
-			itemAddress.setCmItem(new CmItem());
-			
-		}
-		itemAddress.getCmItem().setItemId(flFulfilmentItemAddr.getCmItem().getItemId());
+		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
 		
-		//itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
+		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
 		System.out.println("item code::9999999999999999 : "+flFulfilmentItemAddr.getCmItem().getExtensionCode());
 		if(null==itemAddress.getCmItem()){
 			itemAddress.setCmItem(new CmItem());
 		}
 		itemAddress.getCmItem().setExtensionCode(flFulfilmentItemAddr.getCmItem().getExtensionCode());
-		itemAddress.getCmItem().setItemName(flFulfilmentItemAddr.getCmItem().getItemName());
+		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
 		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
