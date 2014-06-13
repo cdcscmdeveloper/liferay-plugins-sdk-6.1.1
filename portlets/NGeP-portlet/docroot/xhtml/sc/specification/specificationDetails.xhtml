@@ -11,59 +11,69 @@
 		toggleable="true">
 
 		<table style="width: 100%">
-
 			<tr>
-				<td rowspan="3" valign="top" style="width: 145px;"><h:outputLabel
-						value="Title" /></td>
-				<td rowspan="3" style="width: 100px;"><p:inputTextarea
-						readonly="true" rows="4" cols="50"
+				<td><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
+				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.so.title']}"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
-						disabled="true"></p:inputTextarea></td>
-
-				<td style="width: 200px;"><h:outputLabel
-						value="Quotation/Tender Type" /></td>
-				<td><p:inputText readonly="true"
-						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
-						disabled="true"></p:inputText></td>
+						required="true" cols="130" rows="2" disabled="true"
+						readonly="true" style=" margin-bottom:5px;" maxlength="100" /></td>
 			</tr>
-
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
-				<td><p:inputText
+				<td colspan="3"><p:inputText
 						value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}"
-						readonly="true" disabled="true"></p:inputText></td>
+						readonly="true" disabled="true" size="30" /></td>
 			</tr>
-
-
 			<tr>
-				<td><h:outputLabel value="Open For" /></td>
-
-
-				<td><p:inputText readonly="true" 
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
+				</td>
+				<td><p:inputText readonly="true" style="text-align: right;"
+						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
+						disabled="true" size="30">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+				<td colspan="3"><p:inputTextarea rows="3" cols="30"
+						style="margin-bottom:5px;"
+						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
+						readonly="true" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="Quotation/Tender Type" /></td>
+				<td><p:inputText readonly="true" size="30"
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
+						disabled="true" /></td>
+				<td style="width: 200px;"><h:outputLabel value="Open For" /></td>
+				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
-						disabled="true"></p:inputText></td>
+						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.type']}" /></td>
-				<td><p:inputText readonly="true"
-						value="#{specificationBackingBean.managedBean.scQt.itemType}"
-						disabled="true"></p:inputText></td>
-
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.spec.peocure.category']}" /></td>
+				<td><p:selectOneMenu disabled="true"
+						style="width: 178px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.spec.peocure.category']}"
+						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+					</p:selectOneMenu></td>
 				<td><h:outputLabel value="Zone/Location" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, specificationBackingBean.managedBean.scQt.zonal)}"></p:inputText>
-
+				<td><p:inputText readonly="true" disabled="true" size="30"
+						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, specificationBackingBean.managedBean.scQt.zonal)}" />
 				</td>
 			</tr>
-
 			<tr>
 				<td><h:outputLabel
-						value="* #{lbl['lbl.sc.spec.evaluation.type']}" /></td>
-				<td><p:inputText
+						value="#{lbl['lbl.sc.spec.evaluation.type']}" /></td>
+				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
-						readonly="true" disabled="true"></p:inputText></td>
+						readonly="true" disabled="true" /></td>
 				<td><h:outputLabel
-						value="*#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
+						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 				<!-- update=":form:businessSpecId:recommendationid" -->
 				<td><p:selectOneRadio id="techEvaluation" required="true"
 						label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
@@ -75,46 +85,20 @@
 					</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
 				</td>
 			</tr>
-
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
-				</td>
-				<td><p:inputText readonly="true"
-						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
-						disabled="true">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
-
-
-
-			</tr>
-			<tr>
-				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
-				<td><p:inputTextarea rows="3" cols="50"
-						style="margin-bottom:5px;"
-						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
-						readonly="true" disabled="true"></p:inputTextarea></td>
-			</tr>
-			<tr>
-
-
-				<td><h:outputLabel value="*#{lbl['lbl.sc.spec.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" required="true"
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
+				<td><p:inputText id="proposalId" required="true" size="30"
 						label="#{lbl['lbl.sc.spec.max.proposal']}"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;"></p:inputText> <p:message
 						id="maxProposal" for="proposalId" display="icon"></p:message></td>
 			</tr>
-
-
-
 			<tr>
 				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
 						label="#{lbl['lbl.sc.spec.ful.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-						style="margin-bottom:5px;">
+						style="width: 178px;margin-bottom: 5px;">
 						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
 				<f:selectItem itemLabel="Periodic(As and When Basis)" itemValue="2" />
 				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" /> -->
@@ -126,30 +110,16 @@
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
 				</td>
-
-
-
-
-
-
 				<td><h:outputLabel
 						value="*#{lbl['lbl.sc.spec.complete.period']}" escape="false" /></td>
-				<td><p:inputText id="contract" required="true"
+				<td><p:inputText id="contract" required="true" size="30"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;" /> <h:outputText value="(Month)" /> <p:message
 						id="completion" for="contract" display="icon"></p:message></td>
-
 			</tr>
-
-
-
 		</table>
-
 	</p:panel>
-
-
-
 	<p:panel header="Zone/Location Info"
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
@@ -190,14 +160,8 @@
 						<p:treeNode type="district">
 							<h:outputText value="#{location.pmDistrict.districtName}" />
 						</p:treeNode>
-
-
-
-
 					</p:tree>
 				</p:column>
-
-
 
 			</p:dataTable>
 		</h:panelGrid>
