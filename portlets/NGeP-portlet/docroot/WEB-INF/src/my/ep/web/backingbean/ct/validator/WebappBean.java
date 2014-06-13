@@ -49,8 +49,8 @@ public class WebappBean {
     public void checkSpaces(FacesContext ctx, UIComponent fieldName, Object obj){
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
-        String errMsg="Only alphabets,numbers,underscore,hyphen are allowed";
-        String pattern="[[a-zA-Z][\\d][_][-]]+$";//[a-zA-Z]=alphabet; [\\d]or[0-9]=number; $=line end follows;
+        String errMsg="Only alphabets,underscore,hyphen are allowed";
+        String pattern="^[a-zA-Z\\s]+$";  
 
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));

@@ -37,22 +37,30 @@
 					</td>
 				</tr>
 			</table>
-			<table style="width: 99%; margin-left: 0px;" class="header-info">
-				<tr style="margin-button: 0px;">
-					<td><p:outputLabel value="#{lbl['lbl.ct.cno']}" /></td>
-					<td><p:inputText size="20" disabled="true"
-							value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" />
-					</td>
-					<td><p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" /></td>
-					<td><p:inputText size="35" disabled="true"
-							value="#{suspensionBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" />
-					</td>
-					<td><p:outputLabel value="Status" /></td>
-					<td><p:inputText size="30" disabled="true"
-							value="#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}" />
-					</td>
-				</tr>
-			</table>
+			<div align="left" class="header-info">
+			 <table style="width: 100%">
+			<tr>
+				<td style="width: 15%">
+					<h:outputLabel value="#{lbl['lbl.ct.cno']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+					#{suspensionBackingBean.managedBean.ctContract.contractNo}
+				</td>
+				<td style="width: 15%">
+					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+					#{suspensionBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+				</td>
+				<td style="width: 20%" class="header-info-text">
+					#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}
+				</td>
+			</tr>
+	      </table>
+	    </div>
 		</p:panel>
 		<ui:include src="suspendDetails.xhtml" />
 		<ui:include src="suspendItem.xhtml" />

@@ -1,36 +1,50 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}" toggleable="true"  toggleSpeed="500">
-       <p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}" 
-         widgetVar="ctItemsTable"  filteredValue="#{suspensionBackingBean.ctFilterItems}">
-		  <ac:paginator for="itemTable"/>
-            <p:column  style="width:15%;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
-		       <p:outputLabel value="#{suspensionBackingBean.getParameterDesc(data.itemType)}" style="float:left;"/>
-		    </p:column> 
-		    <p:column id="modelColumn" filterBy="#{data.itemName}" headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" filterMatchMode="contains" style="width:45%;">
-             <p:outputLabel value ="#{data.itemName}" style="float:left;width:55%;"/>
-           </p:column>
-           <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
-		     <p:calendar value="#{data.effDate}" id="calItem1" size="15" showOn="button" 
-		        disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		   </p:column> 	
-		   <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
-		     <p:calendar value="#{data.expDate}" id="calItem2" size="15" showOn="button"
-		        disabled="#{data.chkStatusId == 1 ? true : false}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-		   </p:column> 	
-		   <p:column style="width:10%;" headerText="Status">
-			  <p:selectOneMenu  value="#{data.chkStatusId}" style="width:85px;">
-				<f:selectItem itemValue="0" itemLabel="Inactive" />
-			    <f:selectItem itemValue="1" itemLabel="Active" />
-				<p:ajax event="change" process="@this" update="itemTable"/>
-			</p:selectOneMenu>	 
-		   </p:column>
-	  </p:dataTable>	
-    </p:panel>                    
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}"
+		toggleable="true" toggleSpeed="500">
+		<p:dataTable id="itemTable" var="data"
+			value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
+			widgetVar="ctItemsTable"
+			filteredValue="#{suspensionBackingBean.ctFilterItems}">
+			<ac:paginator for="itemTable" />
+			<p:column style="width:15%;"
+				headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
+				<p:outputLabel
+					value="#{suspensionBackingBean.getParameterDesc(data.itemType)}"
+					style="float:left;" />
+			</p:column>
+			<p:column id="modelColumn" filterBy="#{data.itemName}"
+				headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"
+				filterMatchMode="contains" style="width:45%;">
+				<p:outputLabel value="#{data.itemName}"
+					style="float:left;width:55%;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}"
+				style="width:15%;">
+				<p:calendar value="#{data.effDate}" id="calItem1" size="15"
+					showOn="button" readonlyInput="true"
+					disabled="#{data.chkStatusId == 1 ? true : false}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}"
+				style="width:15%;">
+				<p:calendar value="#{data.expDate}" id="calItem2" size="15"
+					showOn="button" readonlyInput="true"
+					disabled="#{data.chkStatusId == 1 ? true : false}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</p:column>
+			<p:column style="width:10%;" headerText="Status">
+				<p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
+					<f:selectItem itemValue="0" itemLabel="Inactive" />
+					<f:selectItem itemValue="1" itemLabel="Active" />
+					<p:ajax event="change" process="@this" update="itemTable" />
+				</p:selectOneMenu>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
 </ui:composition>
