@@ -158,17 +158,21 @@ public class QuestionnaireBackingBean extends
 		// replace value in velocity template
 		String coverHtml = getCoverHtmlFromVelocity(smSupplier);
 		String contentHtml = getContentHtmlFromVelocity(smSupplier);
+		String lampiranBHtml = getLampiranBFromVelocity();
 		
 		// generate pdf from html string
 		OutputStream os1 = new FileOutputStream("D:\\HKS\\cover.pdf");
         OutputStream os2 = new FileOutputStream("D:\\HKS\\content.pdf");
+//        OutputStream os3 = new FileOutputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates/lampiranB.pdf"));
         generatePdf(os1, coverHtml);
         generatePdf(os2, contentHtml);
+//        generatePdf(os3, lampiranBHtml);
 		
 		// combine all pdf into 1
         List<InputStream> list = new ArrayList<InputStream>();        
-        list.add(new FileInputStream(new File("D:\\HKS\\cover.pdf")));
-        list.add(new FileInputStream(new File("D:\\HKS\\content.pdf")));
+        list.add(new FileInputStream(new File("D://HKS//cover.pdf")));
+        list.add(new FileInputStream(new File("D://HKS//content.pdf")));
+        list.add(new FileInputStream(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates/lampiranB.pdf"))));
 		
         OutputStream combined = new FileOutputStream(new File("D:\\HKS\\combined.pdf"));
         
@@ -251,6 +255,7 @@ public class QuestionnaireBackingBean extends
     	Velocity.init(p);
 
     	Template template = Velocity.getTemplate( "vc-cover.vm" );
+//    	Template template = Velocity.getTemplate( "vc-bumi.vm" );
     	
     	log.info("template: " + template);
     	
@@ -302,7 +307,8 @@ public class QuestionnaireBackingBean extends
     	String stateName = smAddress.getPmState().getStateName();
     	String countryName = smAddress.getPmCountry().getCountryName();
     	
-    	String regDate = supplier.getCreatedDate().toString();
+    	String regDate = ft.format(supplier.getCreatedDate());
+    	this.getManagedBean().setRegDate(regDate);
     	
     	List<SmPersonnel> personnelList = new ArrayList<SmPersonnel>();
     	for(SmPersonnel personnel : supplier.getSmAppl().getSmPersonnels()) {
@@ -310,7 +316,6 @@ public class QuestionnaireBackingBean extends
     			personnelList.add(personnel);
     		}
     	}
-    	
     	
     	context.put("mofCertSerialNo", mofCertSerialNo);
     	context.put("mofAccountNo", mofAccountNo);
@@ -364,11 +369,33 @@ public class QuestionnaireBackingBean extends
     	context.put("mofAccountNo", this.getManagedBean().getMofAccountNo());
     	context.put("effDate", this.getManagedBean().getEffDate());
     	context.put("expDate", this.getManagedBean().getExpDate());
+    	context.put("regDate", this.getManagedBean().getRegDate());
     	
     	context.put("categoryList", categoryList);
     	
     	StringWriter output = new StringWriter();
     	    	
+    	template.merge(context, output);
+    	log.debug("html output: " + output);
+    	
+    	return output.toString();
+    }
+    
+    public String getLampiranBFromVelocity()  throws Exception {
+    	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
+
+    	Properties p = new Properties();
+    	p.setProperty( "file.resource.loader.path", myTemplatePath);
+    	Velocity.init(p);
+
+    	Template template = Velocity.getTemplate( "vc-lampiran-b.vm" );
+    	
+    	log.info("template: " + template);
+    	
+    	VelocityContext context = new VelocityContext();
+    	
+    	StringWriter output = new StringWriter();
+    	
     	template.merge(context, output);
     	log.debug("html output: " + output);
     	

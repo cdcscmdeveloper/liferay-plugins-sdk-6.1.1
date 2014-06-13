@@ -26,6 +26,7 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	private String mofAccountNo;
 	private String effDate;
 	private String expDate;
+	private String regDate;
 	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
@@ -81,5 +82,13 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 
 	public void setExpDate(String expDate) {
 		this.expDate = expDate;
+	}
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 }
