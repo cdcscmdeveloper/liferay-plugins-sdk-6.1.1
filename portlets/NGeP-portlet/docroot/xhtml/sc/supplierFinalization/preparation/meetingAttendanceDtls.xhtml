@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+		<table style="border: 0px;width:100%; align:center">
+			<tr>
+				<td> 
+					<td width="100%" align="left" valign="top">
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.save']}" 
+								process="@all"
+								partialSubmit="true"
+								action="#{suppFinalizationBackingBean.saveMeetingAttDtls}"
+								icon="ui-icon-save" />
+						</div>
+						
+						<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+							<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+								value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"
+								rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+								selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
+								<ac:paginator for="meetingAttDtlTbl" />
+	
+								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.name']}">
+									<h:inputText value="#{committeeDtl.scCommitteeMember.memberName}"/>
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sc.id.no']}">
+									<h:inputText value="#{committeeDtl.scCommitteeMember.icPassport}"/>
+								</p:column>
+								
+							</p:dataTable>
+							
+							<p:spacer height="10px"></p:spacer>
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									process="@this,meetingAttDtlTbl" 
+									partialSubmit="true"
+									action="#{suppFinalizationBackingBean.addMeetingAttDtls}"
+									update="meetingAttDtlTbl" 
+									icon="ui-icon-add" />
+									
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									process="@this, meetingAttDtlTbl" partialSubmit="true"
+									icon="ui-icon-delete"
+									action="#{suppFinalizationBackingBean.deleteRowAction(suppFinalizationBackingBean.managedBean.meetingAttendanceList, suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}"
+									update="meetingAttDtlTbl" />
+			
+							</div>
+						</p:panel> 
+	
+					</td>
+				</td>
+			</tr>
+		</table>
+		
+</ui:composition>
+
+
+
+
+
+
+
+
+
+
+
+

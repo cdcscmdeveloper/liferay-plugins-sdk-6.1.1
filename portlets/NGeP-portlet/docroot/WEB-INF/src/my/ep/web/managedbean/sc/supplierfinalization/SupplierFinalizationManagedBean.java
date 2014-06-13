@@ -5,463 +5,115 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.pm.ParameterConst;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtReport;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.primefaces.model.TreeNode;
+import my.ep.web.sc.quationtender.common.QTConstants;
 
 /**
- * @author sri Supplier Finalization Managed Bean
+ * @author Faradiana
+ * Supplier Finalization Managed Bean
  */
-@ManagedBean(name = "sfManagedBean")
+@ManagedBean(name = "suppFinalizationManagedBean")
 @SessionScoped
 public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	private String selectItem;
-	private String[] decisionArray;
-	private String optionType = "Basic";
-	private String selectionMode;
-	private int tabActiveIndex;
 
-	// Enable and disable Parameters
-	private boolean awardType = true;
-	private boolean byItemStatus;
-	private boolean byPackageStatus;
-	private boolean reEvaluation;
-	private boolean fhAuthority;
-	private boolean basicSelection = true; // basicSelection option for basic
-											// selection
-	private boolean multipleItemSelection; // multipleItemSelection option for
-											// multiple selection
-	private boolean bySupplierSelection; // bySupplierSelection option for By
-											// Supplier Selection
-	private boolean locVisible; // location enabled and disabled
-	private boolean shortlistedSuppVisible; // Shortlisted Supplier List Enable
-											// and disable
-	private boolean recommendedSuppVisible; // Recommend Supplier List Enable
-											// and disable
-
-	private List<ScQtMeeting> meetingDetails; // meetingDetails list for Meeting
-												// Details in Preparation tab
-	private List<ScQtCommitteeActivity> committeeMemberList; // committeeMemberList
-																// for Committee
-																// member list
-																// Details in
-																// Preparation
-																// tab
+	private int activeIndex;
+	private int prepareActiveIndex;
+	
+	//Header
 	private ScQt scQt;
-	private ScQtProposalRanking scQtProposalRanking; // for Supplier Details
-	// for selected zone to get Shortlisted Supplier listing and Recommended
-	// supplier Listing
-	private ScQtMeeting scQtMeeting;
-
-	private ScQtEvaluationResult scQtEvaluationResult;
-	private List<ScQtEvaluationResult> qualifiedSupplist;
-	private List<ScQtEvaluationResult> disQualifiedSupplist;
-	private List<ScQtCommitteeActivity> committeeSignOffMemberlist;
-
-	private List<ScRequestItem> itemPreSummarylist; // for Item List in Summary
-	private List<ScRequestItem> itemSuppFinalizationlist; // for Item List in
-														// Supplier Finalization
-	private List<ScQtEvaluationResult> recommendedSuppList; // for Recommended
-															// Supplier Listing
-	private List<ScRequestItem> selectedItemsSummary; // for Selected Items in
-													// Summary
-	private List<ScRequestItem> selectedItemsSuppFinalization; // for Selected Items
-															// in Supplier
-															// Finalization
-	private List<ScQtEvaluationResult> shortlistedSuppList; // for
-															// ShortlistedSupplier
-															// Listing
-	private Integer totalSelectedSupplier; // Total for selected suppliers
-	private Integer totalQulifiedSupplier; // Total for Qualified Suppliers
-	private Integer totalDisQualifiedSupplier; // Total for DisQualified
-												// Suppliers
-
-	private boolean summaryByItemStatus;
-	private boolean summaryByPackageStatus = true;
-	private String zoneName1;
-
-	private List<ScQtEvaluationResult> qualifiedSuppByItemList;
-	private List<ScQtEvaluationResult> disQualifiedSuppByItemList;
-	private Integer totalQulifiedSupplierByItem; // Total for Qualified
-													// Suppliers By Item
-	private Integer totalDisQualifiedSupplierByItem; // Total for DisQualified
-														// Suppliers By Item
-
-	private boolean award = false;
-	private TreeNode rootLocationTree;
-	private TreeNode[] selectedNodes;
+	
+	//Preparation
+	private ScQtCommittee scQtCommittee;
+	
+	private List<ScQtMeeting> meetingList;
+	private List<ScQtMeeting> selectedMeetingList;
+	private List<ScQtCommitteeActivity> committeeList;
+	private List<ScQtMeeting> selectedCommitteeList;
+	private List<ScQtCommitteRemarks> committeeRemarkList;
+	private List<ScQtMeetingAttendance> meetingAttendanceList;
+	private List<ScQtMeetingAttendance> selectedMeetingAttList;
+	
+	//Briefing Paper/Kertas Taklimat
+	private ScQtReport scQtReport;
+	private List<PmDocument> documentList;
+	
+	//Supplier Finalization
+	private String decisionType = ParameterConst.DECISION_RECOMMEND_SUPPLIER;
+	private String recommendType = ParameterConst.RECOMMEND_TYPE_PACKAGE;
+	private String biddingEndorsement;
+	private String loiLoaPreparedBy = ParameterConst.LOILOA_PREPARED_BY_DO;
+	private String fwdHigherAuthority = "false";
+	private String finalizationCommittee;
+	private String reason;
+	private String reEvaluateBy;
+	private String reEvaluateReqFor;
+	private String reqSpecChanges;
+	private String recommendBy = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
+	private String selectionMode = QTConstants.SF_SINGLE;
+	private String awardSupplier; 
+	
+	private boolean isItemize;
+	private boolean isRecommendSupplier;
+	private boolean isReEvaluate;
+	private boolean isRePublish;
+	private boolean isForward;
+	private boolean isSingleAward;
+	private boolean isMultipleAward;
+	private boolean isOnlineBidding;
+	private boolean isMultipleLoi;
+	
+	private ScQtEvaluationResult shortlistedSupplier;
+	private ScQtFinalization scQtFinalization;
+	
+	private List<ScQtEvaluationResult> shortlistedSupplierList;
+	private List<ScQtEvaluationResult> recommendedSupplierList;
+	private List<ScRequestItem> itemList;
+	private List<ScRequestItem> selectedItemList; 
+	private List<SmSupplier> awardSupplierList; 
+	
+	//Committee Endorsement
+	private List<ScQtCommitteeActivity> committeeEndorsementList;
 
 	/**
-	 * @return the selectedNodes
+	 * @return the activeIndex
 	 */
-	public TreeNode[] getSelectedNodes() {
-		return selectedNodes;
+	public int getActiveIndex() {
+		return activeIndex;
 	}
 
 	/**
-	 * @param selectedNodes
-	 *            the selectedNodes to set
+	 * @param activeIndex the activeIndex to set
 	 */
-	public void setSelectedNodes(TreeNode[] selectedNodes) {
-		this.selectedNodes = selectedNodes;
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
 	}
 
 	/**
-	 * @return the rootLocationTree
+	 * @return the prepareActiveIndex
 	 */
-	public TreeNode getRootLocationTree() {
-		return rootLocationTree;
+	public int getPrepareActiveIndex() {
+		return prepareActiveIndex;
 	}
 
 	/**
-	 * @param rootLocationTree
-	 *            the rootLocationTree to set
+	 * @param prepareActiveIndex the prepareActiveIndex to set
 	 */
-	public void setRootLocationTree(TreeNode rootLocationTree) {
-		this.rootLocationTree = rootLocationTree;
-	}
-
-	/**
-	 * @return the scQtEvaluationResult
-	 */
-	public ScQtEvaluationResult getScQtEvaluationResult() {
-		return scQtEvaluationResult;
-	}
-
-	/**
-	 * @param scQtEvaluationResult
-	 *            the scQtEvaluationResult to set
-	 */
-	public void setScQtEvaluationResult(
-			ScQtEvaluationResult scQtEvaluationResult) {
-		this.scQtEvaluationResult = scQtEvaluationResult;
-	}
-
-	/**
-	 * @return the award
-	 */
-	public boolean isAward() {
-		return award;
-	}
-
-	/**
-	 * @param award
-	 *            the award to set
-	 */
-	public void setAward(boolean award) {
-		this.award = award;
-	}
-
-	/**
-	 * @return the totalQulifiedSupplierByItem
-	 */
-	public Integer getTotalQulifiedSupplierByItem() {
-		return totalQulifiedSupplierByItem;
-	}
-
-	/**
-	 * @param totalQulifiedSupplierByItem
-	 *            the totalQulifiedSupplierByItem to set
-	 */
-	public void setTotalQulifiedSupplierByItem(
-			Integer totalQulifiedSupplierByItem) {
-		this.totalQulifiedSupplierByItem = totalQulifiedSupplierByItem;
-	}
-
-	/**
-	 * @return the totalDisQualifiedSupplierByItem
-	 */
-	public Integer getTotalDisQualifiedSupplierByItem() {
-		return totalDisQualifiedSupplierByItem;
-	}
-
-	/**
-	 * @param totalDisQualifiedSupplierByItem
-	 *            the totalDisQualifiedSupplierByItem to set
-	 */
-	public void setTotalDisQualifiedSupplierByItem(
-			Integer totalDisQualifiedSupplierByItem) {
-		this.totalDisQualifiedSupplierByItem = totalDisQualifiedSupplierByItem;
-	}
-
-	/**
-	 * @return the qualifiedSuppByItemList
-	 */
-	public List<ScQtEvaluationResult> getQualifiedSuppByItemList() {
-		return qualifiedSuppByItemList;
-	}
-
-	/**
-	 * @param qualifiedSuppByItemList
-	 *            the qualifiedSuppByItemList to set
-	 */
-	public void setQualifiedSuppByItemList(
-			List<ScQtEvaluationResult> qualifiedSuppByItemList) {
-		this.qualifiedSuppByItemList = qualifiedSuppByItemList;
-	}
-
-	/**
-	 * @return the disQualifiedSuppByItemList
-	 */
-	public List<ScQtEvaluationResult> getDisQualifiedSuppByItemList() {
-		return disQualifiedSuppByItemList;
-	}
-
-	/**
-	 * @param disQualifiedSuppByItemList
-	 *            the disQualifiedSuppByItemList to set
-	 */
-	public void setDisQualifiedSuppByItemList(
-			List<ScQtEvaluationResult> disQualifiedSuppByItemList) {
-		this.disQualifiedSuppByItemList = disQualifiedSuppByItemList;
-	}
-
-	/**
-	 * @return the zoneName1
-	 */
-	public String getZoneName1() {
-		return zoneName1;
-	}
-
-	/**
-	 * @param zoneName1
-	 *            the zoneName1 to set
-	 */
-	public void setZoneName1(String zoneName1) {
-		this.zoneName1 = zoneName1;
-	}
-
-	/**
-	 * @return the summaryByItemStatus
-	 */
-	public boolean isSummaryByItemStatus() {
-		return summaryByItemStatus;
-	}
-
-	/**
-	 * @param summaryByItemStatus
-	 *            the summaryByItemStatus to set
-	 */
-	public void setSummaryByItemStatus(boolean summaryByItemStatus) {
-		this.summaryByItemStatus = summaryByItemStatus;
-	}
-
-	/**
-	 * @return the summaryByPackageStatus
-	 */
-	public boolean isSummaryByPackageStatus() {
-		return summaryByPackageStatus;
-	}
-
-	/**
-	 * @param summaryByPackageStatus
-	 *            the summaryByPackageStatus to set
-	 */
-	public void setSummaryByPackageStatus(boolean summaryByPackageStatus) {
-		this.summaryByPackageStatus = summaryByPackageStatus;
-	}
-
-	/**
-	 * @return the byItemStatus
-	 */
-	public boolean isByItemStatus() {
-		return byItemStatus;
-	}
-
-	/**
-	 * @param byItemStatus
-	 *            the byItemStatus to set
-	 */
-	public void setByItemStatus(boolean byItemStatus) {
-		this.byItemStatus = byItemStatus;
-	}
-
-	/**
-	 * @return the byPackageStatus
-	 */
-	public boolean isByPackageStatus() {
-		return byPackageStatus;
-	}
-
-	/**
-	 * @param byPackageStatus
-	 *            the byPackageStatus to set
-	 */
-	public void setByPackageStatus(boolean byPackageStatus) {
-		this.byPackageStatus = byPackageStatus;
-	}
-
-	/**
-	 * @return the selectItem
-	 */
-	public String getSelectItem() {
-		return selectItem;
-	}
-
-	/**
-	 * @param selectItem
-	 *            the selectItem to set
-	 */
-	public void setSelectItem(String selectItem) {
-		this.selectItem = selectItem;
-	}
-
-	/**
-	 * @return the awardType
-	 */
-	public boolean isAwardType() {
-		return awardType;
-	}
-
-	/**
-	 * @param awardType
-	 *            the awardType to set
-	 */
-	public void setAwardType(boolean awardType) {
-		this.awardType = awardType;
-	}
-
-	/**
-	 * @return the decisionArray
-	 */
-	public String[] getDecisionArray() {
-		return decisionArray;
-	}
-
-	/**
-	 * @param decisionArray
-	 *            the decisionArray to set
-	 */
-	public void setDecisionArray(String[] decisionArray) {
-		this.decisionArray = decisionArray;
-	}
-
-	/**
-	 * @return the reEvaluation
-	 */
-	public boolean isReEvaluation() {
-		return reEvaluation;
-	}
-
-	/**
-	 * @param reEvaluation
-	 *            the reEvaluation to set
-	 */
-	public void setReEvaluation(boolean reEvaluation) {
-		this.reEvaluation = reEvaluation;
-	}
-
-	/**
-	 * @return the fhAuthority
-	 */
-	public boolean isFhAuthority() {
-		return fhAuthority;
-	}
-
-	/**
-	 * @param fhAuthority
-	 *            the fhAuthority to set
-	 */
-	public void setFhAuthority(boolean fhAuthority) {
-		this.fhAuthority = fhAuthority;
-	}
-
-	/**
-	 * @return the basicSelection
-	 */
-	public boolean isBasicSelection() {
-		return basicSelection;
-	}
-
-	/**
-	 * @param basicSelection
-	 *            the basicSelection to set
-	 */
-	public void setBasicSelection(boolean basicSelection) {
-		this.basicSelection = basicSelection;
-	}
-
-	/**
-	 * @return the multipleItemSelection
-	 */
-	public boolean isMultipleItemSelection() {
-		return multipleItemSelection;
-	}
-
-	/**
-	 * @param multipleItemSelection
-	 *            the multipleItemSelection to set
-	 */
-	public void setMultipleItemSelection(boolean multipleItemSelection) {
-		this.multipleItemSelection = multipleItemSelection;
-	}
-
-	/**
-	 * @return the optionType
-	 */
-	public String getOptionType() {
-		return optionType;
-	}
-
-	/**
-	 * @param optionType
-	 *            the optionType to set
-	 */
-	public void setOptionType(String optionType) {
-		this.optionType = optionType;
-	}
-
-	/**
-	 * @return the tabActiveIndex
-	 */
-	public int getTabActiveIndex() {
-		return tabActiveIndex;
-	}
-
-	/**
-	 * @param tabActiveIndex
-	 *            the tabActiveIndex to set
-	 */
-	public void setTabActiveIndex(int tabActiveIndex) {
-		this.tabActiveIndex = tabActiveIndex;
-	}
-
-	/**
-	 * @return the meetingDetails
-	 */
-	public List<ScQtMeeting> getMeetingDetails() {
-		return meetingDetails;
-	}
-
-	/**
-	 * @param meetingDetails
-	 *            the meetingDetails to set
-	 */
-	public void setMeetingDetails(List<ScQtMeeting> meetingDetails) {
-		this.meetingDetails = meetingDetails;
-	}
-
-	/**
-	 * @return the committeeMemberList
-	 */
-	public List<ScQtCommitteeActivity> getCommitteeMemberList() {
-		return committeeMemberList;
-	}
-
-	/**
-	 * @param committeeMemberList
-	 *            the committeeMemberList to set
-	 */
-	public void setCommitteeMemberList(
-			List<ScQtCommitteeActivity> committeeMemberList) {
-		this.committeeMemberList = committeeMemberList;
+	public void setPrepareActiveIndex(int prepareActiveIndex) {
+		this.prepareActiveIndex = prepareActiveIndex;
 	}
 
 	/**
@@ -472,288 +124,505 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt
-	 *            the scQt to set
+	 * @param scQt the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
 	}
 
 	/**
-	 * @return the qualifiedSupplist
+	 * @return the scQtCommittee
 	 */
-	public List<ScQtEvaluationResult> getQualifiedSupplist() {
-		return qualifiedSupplist;
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
 	}
 
 	/**
-	 * @param qualifiedSupplist
-	 *            the qualifiedSupplist to set
+	 * @param scQtCommittee the scQtCommittee to set
 	 */
-	public void setQualifiedSupplist(
-			List<ScQtEvaluationResult> qualifiedSupplist) {
-		this.qualifiedSupplist = qualifiedSupplist;
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
 	}
 
 	/**
-	 * @return the disQualifiedSupplist
+	 * @return the meetingList
 	 */
-	public List<ScQtEvaluationResult> getDisQualifiedSupplist() {
-		return disQualifiedSupplist;
+	public List<ScQtMeeting> getMeetingList() {
+		return meetingList;
 	}
 
 	/**
-	 * @param disQualifiedSupplist
-	 *            the disQualifiedSupplist to set
+	 * @param meetingList the meetingList to set
 	 */
-	public void setDisQualifiedSupplist(
-			List<ScQtEvaluationResult> disQualifiedSupplist) {
-		this.disQualifiedSupplist = disQualifiedSupplist;
+	public void setMeetingList(List<ScQtMeeting> meetingList) {
+		this.meetingList = meetingList;
 	}
 
 	/**
-	 * @return the committeeSignOffMemberlist
+	 * @return the selectedMeetingList
 	 */
-	public List<ScQtCommitteeActivity> getCommitteeSignOffMemberlist() {
-		return committeeSignOffMemberlist;
+	public List<ScQtMeeting> getSelectedMeetingList() {
+		return selectedMeetingList;
 	}
 
 	/**
-	 * @param committeeSignOffMemberlist
-	 *            the committeeSignOffMemberlist to set
+	 * @param selectedMeetingList the selectedMeetingList to set
 	 */
-	public void setCommitteeSignOffMemberlist(
-			List<ScQtCommitteeActivity> committeeSignOffMemberlist) {
-		this.committeeSignOffMemberlist = committeeSignOffMemberlist;
+	public void setSelectedMeetingList(List<ScQtMeeting> selectedMeetingList) {
+		this.selectedMeetingList = selectedMeetingList;
 	}
 
 	/**
-	 * @return the locVisible
+	 * @return the committeeList
 	 */
-	public boolean isLocVisible() {
-		return locVisible;
+	public List<ScQtCommitteeActivity> getCommitteeList() {
+		return committeeList;
 	}
 
 	/**
-	 * @param locVisible
-	 *            the locVisible to set
+	 * @param committeeList the committeeList to set
 	 */
-	public void setLocVisible(boolean locVisible) {
-		this.locVisible = locVisible;
+	public void setCommitteeList(List<ScQtCommitteeActivity> committeeList) {
+		this.committeeList = committeeList;
 	}
 
 	/**
-	 * @return the shortlistedSuppVisible
+	 * @return the selectedCommitteeList
 	 */
-	public boolean isShortlistedSuppVisible() {
-		return shortlistedSuppVisible;
+	public List<ScQtMeeting> getSelectedCommitteeList() {
+		return selectedCommitteeList;
 	}
 
 	/**
-	 * @param shortlistedSuppVisible
-	 *            the shortlistedSuppVisible to set
+	 * @param selectedCommitteeList the selectedCommitteeList to set
 	 */
-	public void setShortlistedSuppVisible(boolean shortlistedSuppVisible) {
-		this.shortlistedSuppVisible = shortlistedSuppVisible;
+	public void setSelectedCommitteeList(List<ScQtMeeting> selectedCommitteeList) {
+		this.selectedCommitteeList = selectedCommitteeList;
 	}
 
 	/**
-	 * @return the recommendedSuppVisible
+	 * @return the committeeRemarkList
 	 */
-	public boolean isRecommendedSuppVisible() {
-		return recommendedSuppVisible;
+	public List<ScQtCommitteRemarks> getCommitteeRemarkList() {
+		return committeeRemarkList;
 	}
 
 	/**
-	 * @param recommendedSuppVisible
-	 *            the recommendedSuppVisible to set
+	 * @param committeeRemarkList the committeeRemarkList to set
 	 */
-	public void setRecommendedSuppVisible(boolean recommendedSuppVisible) {
-		this.recommendedSuppVisible = recommendedSuppVisible;
+	public void setCommitteeRemarkList(List<ScQtCommitteRemarks> committeeRemarkList) {
+		this.committeeRemarkList = committeeRemarkList;
 	}
 
 	/**
-	 * @return the bySupplierSelection
+	 * @return the meetingAttendanceList
 	 */
-	public boolean isBySupplierSelection() {
-		return bySupplierSelection;
+	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
+		return meetingAttendanceList;
 	}
 
 	/**
-	 * @param bySupplierSelection
-	 *            the bySupplierSelection to set
+	 * @param meetingAttendanceList the meetingAttendanceList to set
 	 */
-	public void setBySupplierSelection(boolean bySupplierSelection) {
-		this.bySupplierSelection = bySupplierSelection;
+	public void setMeetingAttendanceList(
+			List<ScQtMeetingAttendance> meetingAttendanceList) {
+		this.meetingAttendanceList = meetingAttendanceList;
 	}
 
 	/**
-	 * @return the recommendedSuppList
+	 * @return the selectedMeetingAttList
 	 */
-	public List<ScQtEvaluationResult> getRecommendedSuppList() {
-		return recommendedSuppList;
+	public List<ScQtMeetingAttendance> getSelectedMeetingAttList() {
+		return selectedMeetingAttList;
 	}
 
 	/**
-	 * @param recommendedSuppList
-	 *            the recommendedSuppList to set
+	 * @param selectedMeetingAttList the selectedMeetingAttList to set
 	 */
-	public void setRecommendedSuppList(
-			List<ScQtEvaluationResult> recommendedSuppList) {
-		this.recommendedSuppList = recommendedSuppList;
+	public void setSelectedMeetingAttList(
+			List<ScQtMeetingAttendance> selectedMeetingAttList) {
+		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
 
 	/**
-	 * @return the shortlistedSuppList
+	 * @return the scQtReport
 	 */
-	public List<ScQtEvaluationResult> getShortlistedSuppList() {
-		return shortlistedSuppList;
+	public ScQtReport getScQtReport() {
+		return scQtReport;
 	}
 
 	/**
-	 * @param shortlistedSuppList
-	 *            the shortlistedSuppList to set
+	 * @param scQtReport the scQtReport to set
 	 */
-	public void setShortlistedSuppList(
-			List<ScQtEvaluationResult> shortlistedSuppList) {
-		this.shortlistedSuppList = shortlistedSuppList;
+	public void setScQtReport(ScQtReport scQtReport) {
+		this.scQtReport = scQtReport;
 	}
 
 	/**
-	 * @return the totalSelectedSupplier
+	 * @return the documentList
 	 */
-	public Integer getTotalSelectedSupplier() {
-		return totalSelectedSupplier;
+	public List<PmDocument> getDocumentList() {
+		return documentList;
 	}
 
 	/**
-	 * @param totalSelectedSupplier
-	 *            the totalSelectedSupplier to set
+	 * @param documentList the documentList to set
 	 */
-	public void setTotalSelectedSupplier(Integer totalSelectedSupplier) {
-		this.totalSelectedSupplier = totalSelectedSupplier;
+	public void setDocumentList(List<PmDocument> documentList) {
+		this.documentList = documentList;
 	}
 
 	/**
-	 * @return the totalQulifiedSupplier
+	 * @return the decisionType
 	 */
-	public Integer getTotalQulifiedSupplier() {
-		return totalQulifiedSupplier;
+	public String getDecisionType() {
+		return decisionType;
 	}
 
 	/**
-	 * @param totalQulifiedSupplier
-	 *            the totalQulifiedSupplier to set
+	 * @param decisionType the decisionType to set
 	 */
-	public void setTotalQulifiedSupplier(Integer totalQulifiedSupplier) {
-		this.totalQulifiedSupplier = totalQulifiedSupplier;
+	public void setDecisionType(String decisionType) {
+		this.decisionType = decisionType;
 	}
 
 	/**
-	 * @return the totalDisQualifiedSupplier
+	 * @return the recommendType
 	 */
-	public Integer getTotalDisQualifiedSupplier() {
-		return totalDisQualifiedSupplier;
+	public String getRecommendType() {
+		return recommendType;
 	}
 
 	/**
-	 * @param totalDisQualifiedSupplier
-	 *            the totalDisQualifiedSupplier to set
+	 * @param recommendType the recommendType to set
 	 */
-	public void setTotalDisQualifiedSupplier(Integer totalDisQualifiedSupplier) {
-		this.totalDisQualifiedSupplier = totalDisQualifiedSupplier;
+	public void setRecommendType(String recommendType) {
+		this.recommendType = recommendType;
 	}
 
 	/**
-	 * @return the itemPreSummarylist
+	 * @return the biddingEndorsement
 	 */
-	public List<ScRequestItem> getItemPreSummarylist() {
-		return itemPreSummarylist;
+	public String getBiddingEndorsement() {
+		return biddingEndorsement;
 	}
 
 	/**
-	 * @param itemPreSummarylist
-	 *            the itemPreSummarylist to set
+	 * @param biddingEndorsement the biddingEndorsement to set
 	 */
-	public void setItemPreSummarylist(List<ScRequestItem> itemPreSummarylist) {
-		this.itemPreSummarylist = itemPreSummarylist;
+	public void setBiddingEndorsement(String biddingEndorsement) {
+		this.biddingEndorsement = biddingEndorsement;
 	}
 
 	/**
-	 * @return the itemSuppFinalizationlist
+	 * @return the loiLoaPreparedBy
 	 */
-	public List<ScRequestItem> getItemSuppFinalizationlist() {
-		return itemSuppFinalizationlist;
+	public String getLoiLoaPreparedBy() {
+		return loiLoaPreparedBy;
 	}
 
 	/**
-	 * @param itemSuppFinalizationlist
-	 *            the itemSuppFinalizationlist to set
+	 * @param loiLoaPreparedBy the loiLoaPreparedBy to set
 	 */
-	public void setItemSuppFinalizationlist(
-			List<ScRequestItem> itemSuppFinalizationlist) {
-		this.itemSuppFinalizationlist = itemSuppFinalizationlist;
+	public void setLoiLoaPreparedBy(String loiLoaPreparedBy) {
+		this.loiLoaPreparedBy = loiLoaPreparedBy;
 	}
 
 	/**
-	 * @return the selectedItemsSummary
+	 * @return the fwdHigherAuthority
 	 */
-	public List<ScRequestItem> getSelectedItemsSummary() {
-		return selectedItemsSummary;
+	public String getFwdHigherAuthority() {
+		return fwdHigherAuthority;
 	}
 
 	/**
-	 * @param selectedItemsSummary
-	 *            the selectedItemsSummary to set
+	 * @param fwdHigherAuthority the fwdHigherAuthority to set
 	 */
-	public void setSelectedItemsSummary(List<ScRequestItem> selectedItemsSummary) {
-		this.selectedItemsSummary = selectedItemsSummary;
+	public void setFwdHigherAuthority(String fwdHigherAuthority) {
+		this.fwdHigherAuthority = fwdHigherAuthority;
 	}
 
 	/**
-	 * @return the selectedItemsSuppFinalization
+	 * @return the finalizationCommittee
 	 */
-	public List<ScRequestItem> getSelectedItemsSuppFinalization() {
-		return selectedItemsSuppFinalization;
+	public String getFinalizationCommittee() {
+		return finalizationCommittee;
 	}
 
 	/**
-	 * @param selectedItemsSuppFinalization
-	 *            the selectedItemsSuppFinalization to set
+	 * @param finalizationCommittee the finalizationCommittee to set
 	 */
-	public void setSelectedItemsSuppFinalization(
-			List<ScRequestItem> selectedItemsSuppFinalization) {
-		this.selectedItemsSuppFinalization = selectedItemsSuppFinalization;
+	public void setFinalizationCommittee(String finalizationCommittee) {
+		this.finalizationCommittee = finalizationCommittee;
 	}
 
 	/**
-	 * @return the scQtProposalRanking
+	 * @return the reason
 	 */
-	public ScQtProposalRanking getScQtProposalRanking() {
-		return scQtProposalRanking;
+	public String getReason() {
+		return reason;
 	}
 
 	/**
-	 * @param scQtProposalRanking
-	 *            the scQtProposalRanking to set
+	 * @param reason the reason to set
 	 */
-	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
-		this.scQtProposalRanking = scQtProposalRanking;
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 	/**
-	 * @return the scQtMeeting
+	 * @return the reEvaluateBy
 	 */
-	public ScQtMeeting getScQtMeeting() {
-		return scQtMeeting;
+	public String getReEvaluateBy() {
+		return reEvaluateBy;
 	}
 
 	/**
-	 * @param scQtMeeting
-	 *            the scQtMeeting to set
+	 * @param reEvaluateBy the reEvaluateBy to set
 	 */
-	public void setScQtMeeting(ScQtMeeting scQtMeeting) {
-		this.scQtMeeting = scQtMeeting;
+	public void setReEvaluateBy(String reEvaluateBy) {
+		this.reEvaluateBy = reEvaluateBy;
+	}
+
+	/**
+	 * @return the reEvaluateReqFor
+	 */
+	public String getReEvaluateReqFor() {
+		return reEvaluateReqFor;
+	}
+
+	/**
+	 * @param reEvaluateReqFor the reEvaluateReqFor to set
+	 */
+	public void setReEvaluateReqFor(String reEvaluateReqFor) {
+		this.reEvaluateReqFor = reEvaluateReqFor;
+	}
+
+	/**
+	 * @return the reqSpecChanges
+	 */
+	public String getReqSpecChanges() {
+		return reqSpecChanges;
+	}
+
+	/**
+	 * @param reqSpecChanges the reqSpecChanges to set
+	 */
+	public void setReqSpecChanges(String reqSpecChanges) {
+		this.reqSpecChanges = reqSpecChanges;
+	}
+
+	/**
+	 * @return the recommendBy
+	 */
+	public String getRecommendBy() {
+		return recommendBy;
+	}
+
+	/**
+	 * @param recommendBy the recommendBy to set
+	 */
+	public void setRecommendBy(String recommendBy) {
+		this.recommendBy = recommendBy;
+	}
+
+	/**
+	 * @return the isItemize
+	 */
+	public boolean isItemize() {
+		return isItemize;
+	}
+
+	/**
+	 * @param isItemize the isItemize to set
+	 */
+	public void setItemize(boolean isItemize) {
+		this.isItemize = isItemize;
+	}
+
+	/**
+	 * @return the isRecommendSupplier
+	 */
+	public boolean isRecommendSupplier() {
+		return isRecommendSupplier;
+	}
+
+	/**
+	 * @param isRecommendSupplier the isRecommendSupplier to set
+	 */
+	public void setRecommendSupplier(boolean isRecommendSupplier) {
+		this.isRecommendSupplier = isRecommendSupplier;
+	}
+
+	/**
+	 * @return the isReEvaluate
+	 */
+	public boolean isReEvaluate() {
+		return isReEvaluate;
+	}
+
+	/**
+	 * @param isReEvaluate the isReEvaluate to set
+	 */
+	public void setReEvaluate(boolean isReEvaluate) {
+		this.isReEvaluate = isReEvaluate;
+	}
+
+	/**
+	 * @return the isRePublish
+	 */
+	public boolean isRePublish() {
+		return isRePublish;
+	}
+
+	/**
+	 * @param isRePublish the isRePublish to set
+	 */
+	public void setRePublish(boolean isRePublish) {
+		this.isRePublish = isRePublish;
+	}
+
+	/**
+	 * @return the isForward
+	 */
+	public boolean isForward() {
+		return isForward;
+	}
+
+	/**
+	 * @param isForward the isForward to set
+	 */
+	public void setForward(boolean isForward) {
+		this.isForward = isForward;
+	}
+
+	/**
+	 * @return the isSingleAward
+	 */
+	public boolean isSingleAward() {
+		return isSingleAward;
+	}
+
+	/**
+	 * @param isSingleAward the isSingleAward to set
+	 */
+	public void setSingleAward(boolean isSingleAward) {
+		this.isSingleAward = isSingleAward;
+	}
+
+	/**
+	 * @return the isMultipleAward
+	 */
+	public boolean isMultipleAward() {
+		return isMultipleAward;
+	}
+
+	/**
+	 * @param isMultipleAward the isMultipleAward to set
+	 */
+	public void setMultipleAward(boolean isMultipleAward) {
+		this.isMultipleAward = isMultipleAward;
+	}
+
+	/**
+	 * @return the isOnlineBidding
+	 */
+	public boolean isOnlineBidding() {
+		return isOnlineBidding;
+	}
+
+	/**
+	 * @param isOnlineBidding the isOnlineBidding to set
+	 */
+	public void setOnlineBidding(boolean isOnlineBidding) {
+		this.isOnlineBidding = isOnlineBidding;
+	}
+
+	/**
+	 * @return the isMultipleLoi
+	 */
+	public boolean isMultipleLoi() {
+		return isMultipleLoi;
+	}
+
+	/**
+	 * @param isMultipleLoi the isMultipleLoi to set
+	 */
+	public void setMultipleLoi(boolean isMultipleLoi) {
+		this.isMultipleLoi = isMultipleLoi;
+	}
+
+	/**
+	 * @return the committeeEndorsementList
+	 */
+	public List<ScQtCommitteeActivity> getCommitteeEndorsementList() {
+		return committeeEndorsementList;
+	}
+
+	/**
+	 * @param committeeEndorsementList the committeeEndorsementList to set
+	 */
+	public void setCommitteeEndorsementList(
+			List<ScQtCommitteeActivity> committeeEndorsementList) {
+		this.committeeEndorsementList = committeeEndorsementList;
+	}
+
+	/**
+	 * @return the shortlistedSupplierList
+	 */
+	public List<ScQtEvaluationResult> getShortlistedSupplierList() {
+		return shortlistedSupplierList;
+	}
+
+	/**
+	 * @param shortlistedSupplierList the shortlistedSupplierList to set
+	 */
+	public void setShortlistedSupplierList(
+			List<ScQtEvaluationResult> shortlistedSupplierList) {
+		this.shortlistedSupplierList = shortlistedSupplierList;
+	}
+
+	/**
+	 * @return the recommendedSupplierList
+	 */
+	public List<ScQtEvaluationResult> getRecommendedSupplierList() {
+		return recommendedSupplierList;
+	}
+
+	/**
+	 * @param recommendedSupplierList the recommendedSupplierList to set
+	 */
+	public void setRecommendedSupplierList(
+			List<ScQtEvaluationResult> recommendedSupplierList) {
+		this.recommendedSupplierList = recommendedSupplierList;
+	}
+
+	/**
+	 * @return the itemList
+	 */
+	public List<ScRequestItem> getItemList() {
+		return itemList;
+	}
+
+	/**
+	 * @param itemList the itemList to set
+	 */
+	public void setItemList(List<ScRequestItem> itemList) {
+		this.itemList = itemList;
+	}
+
+	/**
+	 * @return the selectedItemList
+	 */
+	public List<ScRequestItem> getSelectedItemList() {
+		return selectedItemList;
+	}
+
+	/**
+	 * @param selectedItemList the selectedItemList to set
+	 */
+	public void setSelectedItemList(List<ScRequestItem> selectedItemList) {
+		this.selectedItemList = selectedItemList;
 	}
 
 	/**
@@ -764,11 +633,69 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectionMode
-	 *            the selectionMode to set
+	 * @param selectionMode the selectionMode to set
 	 */
 	public void setSelectionMode(String selectionMode) {
 		this.selectionMode = selectionMode;
 	}
+
+	/**
+	 * @return the shortlistedSupplier
+	 */
+	public ScQtEvaluationResult getShortlistedSupplier() {
+		return shortlistedSupplier;
+	}
+
+	/**
+	 * @param shortlistedSupplier the shortlistedSupplier to set
+	 */
+	public void setShortlistedSupplier(ScQtEvaluationResult shortlistedSupplier) {
+		this.shortlistedSupplier = shortlistedSupplier;
+	}
+
+	/**
+	 * @return the awardSupplier
+	 */
+	public String getAwardSupplier() {
+		return awardSupplier;
+	}
+
+	/**
+	 * @param awardSupplier the awardSupplier to set
+	 */
+	public void setAwardSupplier(String awardSupplier) {
+		this.awardSupplier = awardSupplier;
+	}
+
+	/**
+	 * @return the awardSupplierList
+	 */
+	public List<SmSupplier> getAwardSupplierList() {
+		return awardSupplierList;
+	}
+
+	/**
+	 * @param awardSupplierList the awardSupplierList to set
+	 */
+	public void setAwardSupplierList(List<SmSupplier> awardSupplierList) {
+		this.awardSupplierList = awardSupplierList;
+	}
+
+	/**
+	 * @return the scQtFinalization
+	 */
+	public ScQtFinalization getScQtFinalization() {
+		return scQtFinalization;
+	}
+
+	/**
+	 * @param scQtFinalization the scQtFinalization to set
+	 */
+	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
+		this.scQtFinalization = scQtFinalization;
+	}
+	
+	
+	
 
 }

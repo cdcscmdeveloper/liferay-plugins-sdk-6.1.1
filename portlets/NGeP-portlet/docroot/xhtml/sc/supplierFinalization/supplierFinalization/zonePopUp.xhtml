@@ -15,16 +15,16 @@
 					<td width="20%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.sf.zone.name']}" /></td>
 					<td width="80%"><p:inputText readonly="true"
-							value="#{sfBackingBean.managedBean.scQtZoneCriteria.zoneName}"
+							value="#{suppFinalizationBackingBean.managedBean.scQtZoneCriteria.zoneName}"
 							size="30" /></td>
 				</tr>
 				<tr>
 					<td width="20%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.sf.loc.name']}" /></td>
 					<td width="80%"><p:panel></p:panel> <p:tree id="treeZoneLocPopup"
-							value="#{sfBackingBean.managedBean.rootLocationTree}"
+							value="#{suppFinalizationBackingBean.managedBean.rootLocationTree}"
 							var="deliveryloc"
-							selection="#{sfBackingBean.managedBean.selectedNodes}"
+							selection="#{suppFinalizationBackingBean.managedBean.selectedNodes}"
 							selectionMode="checkbox">
 							<p:treeNode>
 								<h:outputText value="#{deliveryloc.locationName}" />

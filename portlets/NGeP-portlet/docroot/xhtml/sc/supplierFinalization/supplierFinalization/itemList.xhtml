@@ -1,0 +1,88 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+		<p:dataTable id="itemListTbl" var="item"
+			value="#{suppFinalizationBackingBean.managedBean.itemList}"
+			rows="10"
+			selection="#{suppFinalizationBackingBean.managedBean.selectedItemList}"
+			rowKey="#{item.requestNoteItemId}" rowIndexVar="rowIndex">
+			<ac:paginator for="itemListTbl" />
+
+			<p:column selectionMode="multiple" style="width:2%" /> 
+			<p:column headerText="#{lbl['lbl.sc.item']}">
+				<h:outputText value="#{item.itemName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.item.type']}">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.itemType)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.uom']}">
+				<h:outputText value="#{item.uom.uomName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.price.type']}">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.tplSpecQuestion.clPriceTypeCode)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.recommend.by']}">
+				<h:column>
+					<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
+						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendByDropDown()}" />
+						<p:ajax event="change" update=":form:tab:itemListTbl" listener="#{suppFinalizationBackingBean.awardSupplierEvent}" process="@this" />
+	   				</p:selectOneMenu>	
+				</h:column>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
+				<p:dataTable id="selectedSupplierListTbl" var="supplier"
+					value="#{item.awardSupplierList}"
+					rowKey="#{supplier.supplierId}" rowIndexVar="rowIndex">
+					
+					<p:column>
+						<p:commandLink update=":form:suppDtlPopUp"
+							action="#{suppFinalizationBackingBean.supplier}"
+							oncomplete="suppDtlWidgetVar.show();">
+							<f:setPropertyActionListener value="#{supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
+							<h:outputText value="#{supplier.companyName}" />
+						</p:commandLink>
+					</p:column>
+					
+				</p:dataTable>	
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+				<h:inputText value=""/>
+			</p:column>
+		</p:dataTable>
+		
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20">
+			
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
+					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
+	   			</p:selectOneMenu>
+				
+				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
+					process="@this"
+					partialSubmit="true"
+					action="#{suppFinalizationBackingBean.awardSupplierEvent}"
+					icon="ui-icon-check" 
+					update=":form:tab:itemListTbl:selectedSupplierListTbl"/>
+			</h:column>
+			
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>

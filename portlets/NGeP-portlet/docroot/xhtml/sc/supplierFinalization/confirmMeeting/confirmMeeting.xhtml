@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	  
+		<table style="border: 0px;width:100%; align:center">
+			<tr>
+				<td> 
+					<td width="100%" align="left" valign="top">
+						<p:messages id="confirmMeeting" showDetail="true" autoUpdate="true" closable="true" />
+						
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.save']}" 
+								process="@all"
+								partialSubmit="true"
+								action="#{suppFinalMeetingBackingBean.saveCommitteeAction}"
+								icon="ui-icon-save" />
+								
+							<p:commandButton value="#{lbl['lbl.btn.submit']}"
+								process="@this" 
+								partialSubmit="true"
+								action="#{suppFinalMeetingBackingBean.submitAction}"
+								icon="ui-icon-submit" />
+						</div>
+						<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
+
+						<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+							<p:dataTable var="meeting" id="meetingTbl"
+								widgetVar="meetingDtls"
+								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
+								selection="#{suppFinalMeetingBackingBean.managedBean.meetingMultiSelect}"
+								editable="true" rowIndexVar="index" style="width:100%"
+								rowKey="#{meeting}">
+								<ac:paginator for="meetingTbl" />
+					
+								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
+									style="width:30%">
+									<p:calendar value="#{meeting.meetingDate}" 
+										showOn="button"
+										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+									</p:calendar>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.location']}">
+									<p:inputTextarea value="#{meeting.meetingLocation}" rows="2" cols="100"></p:inputTextarea>
+								</p:column>
+							</p:dataTable>
+							
+							<p:spacer height="10"></p:spacer>
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									process="@this,meetingTbl" 
+									partialSubmit="true"
+									action="#{suppFinalMeetingBackingBean.addMeetingAction}"
+									oncomplete="meetingDtls.paginator.endLink.click();"
+									update="meetingTbl" 
+									icon="ui-icon-add" />
+									
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									icon="ui-icon-delete"
+									action="#{suppFinalMeetingBackingBean.deleteMeetingDetails}"
+									update="meetingTbl" />
+							</div>
+						</p:panel>
+
+						<p:panel header="#{lbl['lbl.sc.member.list']}" toggleable="true">
+							<p:dataTable id="memberListTbl" 
+								var="committeeMember"
+								widgetVar="committeeMemberWidVar"
+								value="#{suppFinalMeetingBackingBean.managedBean.committeeMemberActivity}"
+								selection="#{suppFinalMeetingBackingBean.managedBean.committeeActivitySelect}"
+								rowKey="#{committeeMember}">
+								<ac:paginator for="memberListTbl" />
+					
+								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.name']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sc.id.no']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.icPassport}"></h:outputText>
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sc.designation']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.designation}"></h:outputText>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.email']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.email}"></h:outputText>
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sc.grade']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sc.pnp']}">
+									<h:outputText value="#{committeeMember.scCommitteeMember.PNP}"></h:outputText>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.role']}">
+									<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
+										<h:outputText value="#{lbl['lbl.sc.chairperson']}"/>
+									</ui:fragment>
+									
+									<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
+										<p:selectOneMenu value="#{committeeMember.scCommitteeMember.memberRole}" style="width: 110px;margin-bottom: 5px;">
+											<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+										</p:selectOneMenu>
+									</ui:fragment>
+								</p:column>
+							</p:dataTable>
+					
+							<p:spacer height="10"></p:spacer>
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.clone']}"
+									process="@this" 
+									partialSubmit="true" 
+									oncomplete="cloneMemberWidgetVar.show();"
+									actionListener="#{suppFinalMeetingBackingBean.addCloneCommittee}"
+									update="form:cloneDialogId" 
+									icon="ui-icon-clone" />
+								
+								<p:commandButton value="#{lbl['lbl.btn.add']}" 
+									process="@this"
+									partialSubmit="true"
+									actionListener="#{suppFinalMeetingBackingBean.addCommitteeDetails}"
+									icon="ui-icon-add" 
+									update=":form:newMemberDialogId"
+									oncomplete="newMemberWidgetVar.show();" />
+								
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									icon="ui-icon-delete"
+									action="#{suppFinalMeetingBackingBean.deleteCommitteeMembers}"
+									update="memberListTbl" />
+							</div>
+						</p:panel>
+
+						<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+							<table style="width: 100%" id="remarkslist">
+								<tr>
+									<td class="TableFieldLeft" style="width: 96px;">
+										<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
+									</td>
+									
+									<td class="TableFieldRight">
+										<p:dataGrid var="remarkVar"
+											value="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
+											rowIndexVar="remarkIndex" columns="1">
+											<table>
+												<tr>
+													<td rowspan="2" valign="top">
+														<h:graphicImage height="30"
+															value="#{suppFinalMeetingBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+															width="30" />
+													</td>
+													<td width="5"></td>
+													<td>
+														<h:outputText value="#{remarkVar.createdUser.userName}" />,
+														<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+															<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+														</h:outputText>
+													</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>
+														<p:inputTextarea cols="40" value="#{remarkVar.remark}"
+															rendered="#{remarkVar.remarkId eq null}" /> 
+														<h:outputText value="#{remarkVar.remark}"
+															rendered="#{remarkVar.remarkId ne null}"
+															style="display: inline-block; width:220px;word-wrap: break-word;" />
+													</td>
+												</tr>
+											</table>
+										</p:dataGrid>
+									</td>
+								</tr>
+							</table>
+						</p:panel>
+						
+						<ui:include src="addExistingCommittee.xhtml" />
+						<ui:include src="cloneCommittee.xhtml" />
+					</td>
+				</td>
+			</tr>
+		</table>
+		
+	</ui:define>
+</ui:composition>
+
+
+

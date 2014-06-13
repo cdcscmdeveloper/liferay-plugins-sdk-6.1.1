@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:spacer height="20px" />	
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20"
+			rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier and !suppFinalizationBackingBean.managedBean.itemize}">
+			
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu id="recommendBy" value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
+					<f:selectItems value="#{suppFinalizationBackingBean.getRecommendByDropDown()}" />
+					<p:ajax event="change" update=":form:tab:onlineBiddingPanel,:form:tab:supplierListTbl" listener="#{suppFinalizationBackingBean.recommendByEvent}" process="@this" />
+	   			</p:selectOneMenu>
+			</h:column>
+		</h:panelGrid>
+		
+		<p:spacer height="20px" />
+		<p:dataTable id="supplierListTbl" var="shortlistedSupp"
+			value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}" rows="10"
+			rowKey="#{shortlistedSupp.evaluationResultId}"
+			rowIndexVar="rowIndex">
+			<ac:paginator for="supplierListTbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.proposal.id']}">
+				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalNo}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				<p:commandLink update=":form:suppDtlPopUp"
+					action="#{suppFinalizationBackingBean.showSupplierDetails}"
+					oncomplete="suppDtlWidgetVar.show();">
+					<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
+					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumi.status']}">
+				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}">
+				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}">
+				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.mof.status']}">
+				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.status']}">
+				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.selection']}" style="text-align: center;"
+				selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/> 
+		</p:dataTable>
+		<p:spacer height="20px" />
+	</p:panel>
+
+</ui:composition>

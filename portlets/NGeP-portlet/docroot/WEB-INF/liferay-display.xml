@@ -89,8 +89,7 @@
             <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scCommitteMaintance" />
             <portlet id="scPresentation Demo" />
-            <portlet id="Supplier Finalization"/>
-            <portlet id="Pre-Supplier Finalization"/>
+            <portlet id="scSupplierFinalization"/>
             <portlet id="Bidding List" />
             <portlet id="PurchaseInquiry"/>
             <portlet id="Simple Quote"></portlet>

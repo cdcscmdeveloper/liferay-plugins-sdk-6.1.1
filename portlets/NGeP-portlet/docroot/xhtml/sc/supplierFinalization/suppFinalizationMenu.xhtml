@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	
+		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
+		
+		<p:tabView id="tab" dynamic="true" cache="true" orientation="top">
+			<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabMenuChangeAction}" immediate="true" />
+		
+			<p:tab title="#{lbl['lbl.sc.preparation']}">
+				<p:spacer height="10px"></p:spacer>
+				<ui:include src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
+			</p:tab>
+		
+			<p:tab title="#{lbl['lbl.sc.briefing.paper']}">
+				<p:spacer height="10px"></p:spacer>
+				<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
+			</p:tab>
+			
+			<p:tab title="#{lbl['lbl.sc.supplier.finalization']}">
+				<p:spacer height="10px"></p:spacer>
+				<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
+			</p:tab>
+			
+			<p:tab title="#{lbl['lbl.sc.committee.endorsement']}">
+				<p:spacer height="10px"></p:spacer>
+				<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
+			</p:tab>
+		
+		</p:tabView>
+		
+		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierDetailsPopUp.xhtml" />
+		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/reminder.xhtml" />
+		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
+	</ui:define>
+	
+</ui:composition>

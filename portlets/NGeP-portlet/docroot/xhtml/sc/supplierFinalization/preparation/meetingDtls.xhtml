@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+		<table style="border: 0px;width:100%; align:center">
+			<tr>
+				<td> 
+					<td width="100%" align="left" valign="top">
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.save']}" 
+								process="@all"
+								partialSubmit="true"
+								action="#{suppFinalizationBackingBean.saveMeetingDtls}"
+								icon="ui-icon-save" />
+						</div>
+						
+						<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+							<p:dataTable id="meetingDtlTbl" var="meetingDtl" 
+								value="#{suppFinalizationBackingBean.managedBean.meetingList}" rows="10"
+								rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
+								selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingList}">
+								<ac:paginator for="meetingDtlTbl" />
+	
+								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.meeting.date']}" style="width:18%">
+									<p:calendar value="#{meetingDtl.meetingDate}"
+										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+										id="notdate" showOn="button" />
+								</p:column>
+	
+								<p:column headerText="#{lbl['lbl.sc.location']}" style="width:30%">
+									<p:inputTextarea value="#{meetingDtl.meetingLocation}" rows="2" cols="50"/>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
+									<p:selectOneMenu value="#{backingBean.managedBean.newSupplierType}">
+										<f:selectItem itemLabel="Pending " itemValue="1" />
+										<f:selectItem itemLabel="Done" itemValue="2" />
+										<f:selectItem itemLabel="Cancel" itemValue="3" />
+									</p:selectOneMenu>
+									<!-- p:inputText value="#{suppFinalizationBackingBean.getStatusDescById(meetingDtl.meetingStatus.statusId)}" size="70" /-->
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
+									<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30"/>
+								</p:column>
+							</p:dataTable>
+							
+							<p:spacer height="10px"></p:spacer>
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									process="@this,meetingDtlTbl" 
+									partialSubmit="true"
+									action="#{suppFinalizationBackingBean.addMeetingDtls}"
+									update="meetingDtlTbl" 
+									icon="ui-icon-add" />
+									
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									process="@this, meetingDtlTbl" partialSubmit="true"
+									icon="ui-icon-delete"
+									action="#{suppFinalizationBackingBean.deleteRowAction(suppFinalizationBackingBean.managedBean.meetingList, suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
+									update="meetingDtlTbl" />
+			
+							</div>
+						</p:panel> 
+	
+					</td>
+				</td>
+			</tr>
+		</table>
+</ui:composition>
+
+
+
+
+
+
+
+
+
+
+
+

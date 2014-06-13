@@ -3517,7 +3517,7 @@
 		</security-role-ref>
 	</portlet>	 
 	<portlet>
-	 	<portlet-name>Supplier Finalization</portlet-name>
+	 	<portlet-name>scSupplierFinalization</portlet-name>
 	 	<display-name>Supplier Finalization</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
@@ -3525,7 +3525,7 @@
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/sc/supplierFinalization/supplierFinalizationMain.xhtml
+	 			/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
@@ -3552,42 +3552,6 @@
 	 	</security-role-ref>
 	 </portlet>
 	 
-	  <portlet>
-	 	<portlet-name>Pre-Supplier Finalization</portlet-name>
-	 	<display-name>Pre-Supplier Finalization</display-name>
-	 	<portlet-class>
-	 		org.portletfaces.bridge.GenericFacesPortlet
-	 	</portlet-class>
-	 	<init-param>
-	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>
-	 			/xhtml/sc/supplierFinalization/presupplierFinalizationMain.xhtml
-	 		</value>
-	 	</init-param>
-	 	<expiration-cache>0</expiration-cache>
-	 	<supports>
-	 		<mime-type>text/html</mime-type>
-	 		<portlet-mode>view</portlet-mode>
-	 	</supports>
-	 	<portlet-info>
-	 		<title>Pre-Supplier Finalization</title>
-	 		<short-title>NewJSFPortlet</short-title>
-	 		<keywords></keywords>
-	 	</portlet-info>
-	 	<security-role-ref>
-	 		<role-name>administrator</role-name>
-	 	</security-role-ref>
-	 	<security-role-ref>
-	 		<role-name>guest</role-name>
-	 	</security-role-ref>
-	 	<security-role-ref>
-	 		<role-name>power-user</role-name>
-	 	</security-role-ref>
-	 	<security-role-ref>
-	 		<role-name>user</role-name>
-	 	</security-role-ref>
-	 </portlet>
-
 	  <portlet>
 	  	<portlet-name>Welcome</portlet-name>
 	  	<display-name>Welcome</display-name>
