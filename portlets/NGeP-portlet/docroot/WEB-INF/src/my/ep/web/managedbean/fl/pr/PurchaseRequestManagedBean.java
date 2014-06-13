@@ -186,6 +186,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String setiaCode;
 	private String subSetiaCode;
 	private String prgActivityCode;
+	private String votFundType;
 	
 	private Long votFundId;
 	private Long assetIndId;
@@ -1730,6 +1731,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setFinancingTypeCode(String financingTypeCode) {
 		this.financingTypeCode = financingTypeCode;
+	}
+
+	/**
+	 * @return the votFundType
+	 */
+	public String getVotFundType() {
+		return votFundType;
+	}
+
+	/**
+	 * @param votFundType the votFundType to set
+	 */
+	public void setVotFundType(String votFundType) {
+		this.votFundType = votFundType;
 	}
 
 	

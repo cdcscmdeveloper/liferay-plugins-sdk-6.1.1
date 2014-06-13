@@ -183,6 +183,7 @@
 	<p:dialog id="applyBulkChargeDialog" header="Bulk Update"
 		widgetVar="applyBulkCharge" showEffect="fade" hideEffect="fade"
 		modal="true" width="500px" height="400px" resizable="false">
+		<p:messages id="bulkUpdateMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
@@ -227,7 +228,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.charge.program.activity']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="prgActivity"
+				<td><p:selectOneMenu id="prgActivity" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A'}"
 						value="#{purchaseRequestBackingBean.managedBean.prgActivityId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -240,7 +241,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="project"
+				<td><p:selectOneMenu id="project" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A'}"
 						value="#{purchaseRequestBackingBean.managedBean.projectId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -256,7 +257,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="setia"
+				<td><p:selectOneMenu id="setia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' and purchaseRequestBackingBean.managedBean.votFundType eq 'B'}"
 						value="#{purchaseRequestBackingBean.managedBean.setiaId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -272,7 +273,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.subsetia']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="subSetia"
+				<td><p:selectOneMenu id="subSetia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' and purchaseRequestBackingBean.managedBean.votFundType eq 'B'}"
 						value="#{purchaseRequestBackingBean.managedBean.subSetiaId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -290,7 +291,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 						style="margin-bottom:15px;" /></td>
 				<td>
-					<p:selectOneMenu id="financingType" style="margin-bottom:15px;" disabled="true" value="#{purchaseRequestBackingBean.managedBean.financingTypeCode}" >
+					<p:selectOneMenu id="financingType" 
+					 style="margin-bottom:15px;" disabled="true" value="#{purchaseRequestBackingBean.managedBean.financingTypeCode}" >
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownCodeValues(ParameterTypeConst.financingType)}" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -301,8 +303,7 @@
 			<p:commandButton value="Apply" icon="ui-icon-accept"
 				process="@this,chargeAss,applyBulkChargeDialog"
 				update=":form:applyBulkChargeDialog,chargeLineTbl"
-				action="#{purchaseRequestBackingBean.chargeLineApply}"
-				oncomplete="applyBulkCharge.hide();">
+				action="#{purchaseRequestBackingBean.chargeLineApply}">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"
 				oncomplete="applyBulkCharge.hide();">

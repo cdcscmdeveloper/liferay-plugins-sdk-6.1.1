@@ -181,7 +181,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private String queryItemName;
 	private String queryDesc;
 	
-	private static Map<Long, String> votFundCodeMap = new HashMap<Long, String>();
+	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
 	private static Map<Long, String> glAccountCodeMap = new HashMap<Long, String>();
 	private static Map<Long, String> progmActivityCodeMap = new HashMap<Long, String>();
 	private static Map<Long, String> projectCodeMap = new HashMap<Long, String>();
@@ -1287,11 +1287,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				//(getManagedBean().getSelectedNodes().length >0 && null !=getManagedBean().getSelectedNodes())
 			}else{
 				
-				if(null == getManagedBean().getVotFundId() || null== getManagedBean().getProjectId() || 
-						null == getManagedBean().getPrgActivityId() || null == getManagedBean().getSetiaId() ||
-						null== getManagedBean().getSubSetiaId()){
-					throw new EpException("Please Select All Dropdowns");
-				}
+//				if(null == getManagedBean().getVotFundId() || null== getManagedBean().getProjectId() || 
+//						null == getManagedBean().getPrgActivityId() || null == getManagedBean().getSetiaId() ||
+//						null== getManagedBean().getSubSetiaId()){
+//					throw new EpException("Please Select All Dropdowns");
+//				}
 				updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); 
 				//
 				PmVotFund pmVotFund=new PmVotFund();
@@ -1313,6 +1313,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				pmPrgActivity.setPrgActivityId(getManagedBean().getPrgActivityId());
 				pmPrgActivity.setPrgActivityCode(getManagedBean().getPrgActivityCode());
 				
+				if(getManagedBean().getAssetIndId() == null ){
+					throw new EpException(MessageConst.EP_MAJ_00001);
+				}
 				ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 				paramReqDTO.setParameterId(getManagedBean().getAssetIndId());
 				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -1362,6 +1365,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 			}
 			getManagedBean().populateChargeLineData();
+			// add to cart validation
+			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
 		
 	}
 	//itemAddress.getScRequestItem().getRequestNoteItemId().equals(arg0)
@@ -1561,7 +1566,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
 		
 		for (PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
-			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund.getVotFundCode());
+			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
 		for(PmGlAccount pmGlAcount : resDTO.getPmOrgProfile().getPmPtjGroup().getPmGlAccounts()) {
 			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount.getGlAccCode());
@@ -1584,6 +1589,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		for (PmProject pmProject : resDTO.getProjectList()) {
 			projectCodeMap.put(pmProject.getProjectId(), pmProject.getProjectCode());
 		}
+		PmVotFund votFund = votFundCodeMap.get(votFundId);
+		getManagedBean().setVotFundType(votFund.getVotFundType());
 		getManagedBean().setProjectId(0L);	
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
@@ -1837,7 +1844,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	//get chargeline code by ID
 	
 	public String getVotFundCodeById(Long votFundId) {
-		return votFundCodeMap.get(votFundId);
+		return votFundCodeMap.get(votFundId).getVotFundCode();
 	}
 	public String getprogActivityCodeById(Long progActvId) {
 		return progmActivityCodeMap.get(progActvId);
@@ -1855,14 +1862,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	/**
 	 * @return the votFundCodeMap
 	 */
-	public static Map<Long, String> getVotFundCodeMap() {
+	public static Map<Long, PmVotFund> getVotFundCodeMap() {
 		return votFundCodeMap;
 	}
 
 	/**
 	 * @param votFundCodeMap the votFundCodeMap to set
 	 */
-	public static void setVotFundCodeMap(Map<Long, String> votFundCodeMap) {
+	public static void setVotFundCodeMap(Map<Long, PmVotFund> votFundCodeMap) {
 		PurchaseRequestBackingBean.votFundCodeMap = votFundCodeMap;
 	}
 
