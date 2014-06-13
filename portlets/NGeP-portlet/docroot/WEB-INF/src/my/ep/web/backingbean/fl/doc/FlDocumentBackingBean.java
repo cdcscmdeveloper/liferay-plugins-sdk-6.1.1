@@ -47,6 +47,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -66,6 +67,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
 
 /**
  * Backingbean for Fulfillment document
@@ -263,6 +265,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(null!=buttonVal && !"".equals(buttonVal)){
 				PrBB.getManagedBean().setSubmitButtonStatus(false);
 			}
+			// for selected Approver List
+			if (PrBB.getManagedBean().getApproverModel() == null) {
+				//System.out.println("--renew--");
+				//List<String> source = getAvailableApproverList();
+				List<String> source = new ArrayList<String>();
+				List<String> target = new ArrayList<String>();
+				PrBB.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			}
+			PrBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
+			PrBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			PrBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			NavgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals("CR")){
@@ -332,22 +344,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			NavgPage=NAV_TO_MAINTAIN_FRN;
 		}else if(docType.equals("PA")){
-			
-			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
-			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoice(reqDTO);
-			PaymentMatchBackingBean paBB = new PaymentMatchBackingBean();
-			/*invBB.getManagedBean().setButtonVal(buttonVal);
-			invBB.getManagedBean().setDocProcess(docType);
-			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
-			
-			
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject("fl",IPaymentMatchSO.class);
-			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNote(reqDTO);
-			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
-			recNoteBB.getManagedBean().setButtonVal(buttonVal);
-			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());*/
+			reqDTO.setPaymentAdviseId(Long.valueOf(flDocId));
+			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);
+			PaymentMatchBackingBean pmBB = new PaymentMatchBackingBean();
+			pmBB.getManagedBean().setButtonVal(buttonVal);
+			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
 			NavgPage=NAV_TO_MAINTAIN_PA;
 		}
 		return NavgPage;
@@ -564,6 +566,28 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
 	}
+	/*private List<String> getAvailableApproverList() {
+		List<String> availableApprovers = new ArrayList<String>();
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			// TODO
+			reqDTO.setOrgProfileId(1250l);
+			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
+			for (PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
+				getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
+				availableApprovers.add(user.getPmUser().getUserName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Circular save failed."));
+		} finally {
+			userSO = null;
+		}
+		return availableApprovers;
+	}*/
 	
 	
 	

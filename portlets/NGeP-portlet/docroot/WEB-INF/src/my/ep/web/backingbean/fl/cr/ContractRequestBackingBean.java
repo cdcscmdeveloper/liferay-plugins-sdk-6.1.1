@@ -781,9 +781,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
-			if(contractResDTO.getContract().getSmSupplierBranch() != null){
+			//TODO
+			/*if(contractResDTO.getContract().getSmSupplierBranch() != null){
 				getManagedBean().getFlRequest().setSupplierBranch(contractResDTO.getContract().getSmSupplierBranch());
-			}
+			}*/
 			getLoginUserOrg();
 			// getManagedBean().setMinistryName(getManagedBean().getPmUserOrg().getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
 
@@ -1134,7 +1135,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch()){
+	    	//TODO
+	    	/*if(null != fulfilmentRequest.getSupplierBranch()){
 	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
 	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1()){
 	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
@@ -1172,7 +1174,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	    			
 	    		}
 	    		
-	    	}
+	    	}*/
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
