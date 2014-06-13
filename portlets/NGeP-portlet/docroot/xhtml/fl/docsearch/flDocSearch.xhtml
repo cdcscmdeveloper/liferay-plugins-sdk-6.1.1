@@ -33,7 +33,7 @@
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}"
-						style="width: 127px;" />
+						 style="padding-left: 130px;"/>
 					<p:selectOneMenu id="searchDocTypeDD" style="width: 207px;"
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
@@ -171,7 +171,7 @@
 				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
 					style="text-align: center">
 					<p:commandLink
-						rendered="#{flDocument.docType == 'CR' or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
+						rendered="#{flDocument.docType == 'CR' or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"

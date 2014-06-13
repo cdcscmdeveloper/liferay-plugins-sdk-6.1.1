@@ -4,14 +4,18 @@
 package my.ep.web.managedbean.fl.doc;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.DualListModel;
+
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -68,6 +72,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String flSupplier;
 	private String flPmOfficer;
 	private String flApprover;
+	
+	// for selected Approver List
+	private DualListModel<String> approverModel;
+	private HashMap<String, PmUserGroupUser> approverMap;
 
 	public String getTempLoginId() {
 		return tempLoginId;
@@ -463,6 +471,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setFlApprover(String flApprover) {
 		this.flApprover = flApprover;
+	}
+
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		return approverMap;
+	}
+
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
 	}
 	
 }

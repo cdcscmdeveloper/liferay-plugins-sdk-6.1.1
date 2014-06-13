@@ -64,6 +64,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	
 	private BigDecimal deductionAmt ;
 	
+	private String buttonVal;
+	
 	public void populateChargeLineData(){
 		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
@@ -374,5 +376,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setDeductionAmt(BigDecimal deductionAmt) {
 		this.deductionAmt = deductionAmt;
+	}
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 }

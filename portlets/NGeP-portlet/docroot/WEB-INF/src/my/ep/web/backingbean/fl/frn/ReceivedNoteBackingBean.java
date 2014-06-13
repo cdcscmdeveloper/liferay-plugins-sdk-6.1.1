@@ -157,7 +157,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 			getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 			
-			combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
+			//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
 			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 			int i = 0;
@@ -195,7 +195,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		reqDTO.setPmUser(userResDTO.getPmUser());
 	}
 	
-	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	/* public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
@@ -239,7 +239,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	    	}	
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
-	    }
+	    }*/
 	 
 	 public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
 			BigDecimal receivedAmt = new BigDecimal(0);
