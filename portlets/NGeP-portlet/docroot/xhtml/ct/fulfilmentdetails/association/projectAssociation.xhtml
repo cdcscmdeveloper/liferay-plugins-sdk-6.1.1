@@ -14,32 +14,38 @@
     <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="4" style="width:100%;">
         <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
-        <p:inputText value="#{associationBackingBean.managedBean.projectName}"  style="width:170px;"/>
+        <p:inputText  maxlength="100" style="width:170px;"
+          value="#{associationBackingBean.managedBean.projectName}"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
-        <p:inputText  value="#{associationBackingBean.managedBean.ctName}" style="width:170px;" />
+        <p:inputText maxlength="1000" style="width:170px;"
+           value="#{associationBackingBean.managedBean.ctName}"  />
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
-        <p:inputText value="#{associationBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+        <p:inputText maxlength="200"  style="width:170px;"
+          value="#{associationBackingBean.managedBean.projectDescription}"/>
         <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
-        <p:inputText value="#{associationBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
+        <p:inputText style="width:170px;"
+           value="#{associationBackingBean.managedBean.ctSupplierName}"/>
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" id="calefdate"
-         pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+        <p:calendar style="width:130px;" id="calefdate" readonlyInput="true" showOn="button"
+            value="#{associationBackingBean.managedBean.ctDateStart}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-        <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateEnd}" id="calepdate" 
-         pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+        <p:calendar id="calepdate" style="width:130px;"  readonlyInput="true" showOn="button"
+          value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-        <p:inputText  value="#{associationBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
+        <p:inputText   style="width:170px;"
+           value="#{associationBackingBean.managedBean.ctProductCode}"/>
       </h:panelGrid>
       <div class="ppRightBtn"> 
-        <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
-          action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
-           <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{associationBackingBean.searchReset}" 
-             icon="ui-icon-search"   update="associatePanelId"/>
+        <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"
+           icon="ui-icon-search" action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
+           <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" 
+              action="#{associationBackingBean.searchReset}" icon="ui-icon-search"   update="associatePanelId"/>
       </div>
 	</p:panel>
 	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
-      <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" 
-		 selection="#{associationBackingBean.ctSelectAssociation}" rowKey="#{data}">
+      <p:dataTable id="associateSearch" var="data" 
+         value="#{associationBackingBean.managedBean.associationList}"  
+         rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}">
 	     <ac:paginator for="associateSearch"/>
 		 <p:column selectionMode="multiple" style="width:18px;" />
 		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
@@ -56,19 +62,26 @@
 		   </p:commandLink> 
 		  </p:column> 
 		</p:dataTable>
-		<p:spacer height="4"/>
-		<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		   header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
-           <h:panelGrid columns="2">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
-		       process="@form" update="associateSearch"  onclick="confirmation.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
-		   </h:panelGrid>
-		 </p:confirmDialog>
-		 <div class="ppRightBtn">
+		<div class="ppRightBtn">
 		   <p:commandButton value="Create"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
-	       <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete"/>
+	       <p:commandButton value="Delete" process="@form" onsuccess="dlgAssociateDel.show()" icon="ui-icon-delete"/>
 	     </div>
+		<p:spacer height="4"/>
+		 <p:dialog id="dlgAssociateDel" widgetVar="dlgAssociateDel" styleClass="screen-title"
+		    header="#{lbl['lbl.ct.dialong.cofirm.header']}"  resizable="false" modal="true" width="325" height="90">  
+           <h:panelGrid columns="3">
+            <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                 styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=associateSearch])"
+		        process="@form" actionListener="#{associationBackingBean.deleteAssociation()}" onclick="dlgAssociateDel.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgAssociateDel.hide();" type="button" />
+		   </div>
+        </p:dialog>  
 	  </p:panel>
    </ui:define>
 </ui:composition>

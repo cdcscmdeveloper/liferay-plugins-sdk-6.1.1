@@ -11,15 +11,7 @@
     <style>
       .column-align-center { text-align: center !important;}
        .top-aligned-columns td{ vertical-align: top;}
-       .ui-messages-info-icon, .ui-messages-warn-icon, .ui-messages-error-icon, .ui-messages-fatal-icon, .ui-message-info-icon, .ui-message-warn-icon, .ui-message-error-icon, .ui-message-fatal-icon {
-    background: url("../images/icons/error_msg.png") no-repeat scroll 0 0 transparent !important;
-    display: block !important;
-    float: left !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
-}
-    </style> 
+   </style> 
     <p:panel>
     	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
     	<table style="width: 100%;">
@@ -34,30 +26,24 @@
 	 </p:panel>
      <p:panel id="projectId" header="Project Associate Creation" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
-	       <h:outputLabel for="projectNames" value="#{lbl['lbl.ct.asearch.model.pname']}" />
-	       <h:panelGrid columns="2">
-              <p:inputText id="projectNames"  value="#{associationBackingBean.managedBean.ctAssociation.projectName}" 
-                style="width:200px;" validator="#{webappBean.checkSpaces}" required="true"> </p:inputText>
-              <p:message for="projectNames"/>
-           </h:panelGrid>
-            
-		     <h:outputLabel for="projectDesc" value="#{lbl['lbl.ct.asearch.model.pdes']}"  />
-		     <h:panelGrid columns="1">
-             <p:inputText id="projectDesc" value="#{associationBackingBean.managedBean.ctAssociation.description}"  
-               style="width:400px;" validator="#{webappBean.checkSpaces}" required="true"></p:inputText>
-             <p:message for="projectDesc"/>
-           </h:panelGrid>
-	     </h:panelGrid>
+	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
+           <p:inputText id="projectNames" style="width:200px;" required="true" autocomplete="off" requiredMessage="Project name required"
+               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}" > </p:inputText>
+           <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}"  />
+		   <p:inputText id="projectDesc" style="width:400px;" required="true"  autocomplete="off" requiredMessage="Project description required"
+		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}"></p:inputText>
+         </h:panelGrid>
 	     <p:spacer height="10"/>
-          <p:dataTable id="associateCreation" var="data" value="#{associationBackingBean.managedBean.associateSearchList}" 
+          <p:dataTable id="associateCreation" 
+             var="data" value="#{associationBackingBean.managedBean.associateSearchList}" 
              selection="#{associationBackingBean.deleteSelectedContractList}" rowKey="#{data}">
-               <ac:paginator for="associateCreation"/>
+             <ac:paginator for="associateCreation"/>
                <p:column selectionMode="multiple" style="width:2%;" />
                <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}" style="width:15%;">
 			     <h:outputText value="#{data.contractNo}"/>
 			   </p:column>
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}" style="width:20%;">
-				 <h:outputText  value="#{data.latestContractVer.ctContractValue.supplierCompanyName}"/>
+				 <h:outputText  value="#{data.latestContractVer.ctContractValue.supplierName}"/>
 			   </p:column>
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" style="width:10%;">
 				<h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
@@ -76,21 +62,28 @@
 				 <h:outputText  value="#{data.ownerOrgProfile.orgName}"/>
 			   </p:column>
 			</p:dataTable> 
-			<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		       header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
-               <h:panelGrid columns="2">
-		         <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" update=":form"
-		           process="@form" onclick="confirmation.hide();" actionListener="#{associationBackingBean.deleteAdvanceContract()}"/>
-			     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
-			   </h:panelGrid>
-		     </p:confirmDialog>
-          	 <p:spacer height="5"/>
-			   <div class="ppRightBtn">
+			<div class="ppRightBtn">
 			      <p:commandButton value="Add" process="@this" icon="ui-icon-add" onclick="dlg2.show();">
 			         <p:ajax event="change" update="associateCreation" process="@this" />
 			      </p:commandButton>
-			      <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete" />     
+			      <p:commandButton value="Delete" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />     
 			   </div>
+			 <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
+               resizable="false" modal="true" width="325" height="90">  
+           <h:panelGrid columns="3">
+            <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                 styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=associateCreation])" process="@form" 
+				actionListener="#{associationBackingBean.deleteAdvanceContract()}" onclick="dlgDel.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+		   </div>
+        </p:dialog>  
+       
          </p:panel>
 		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.asearch.model1.header']}" widgetVar="dlg2" modal="true" width="750" height="350">
 		   <p:panel id="advancePanel">
@@ -112,7 +105,7 @@
                        	<h:outputText value="#{data.contractName}" />
 					</p:column> 
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}">
-                       	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierCompanyName}" />
+                       	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" >
                        <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
