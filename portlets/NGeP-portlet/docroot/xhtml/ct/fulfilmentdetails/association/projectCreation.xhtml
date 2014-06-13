@@ -26,12 +26,12 @@
 	 </p:panel>
      <p:panel id="projectId" header="Project Associate Creation" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
-	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
+	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']} *" />
            <p:inputText id="projectNames" style="width:200px;" required="true" autocomplete="off" requiredMessage="Project name required"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}" >
                <p:ajax event="blur" update="panelHeader"></p:ajax>
                 </p:inputText>
-           <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}"  />
+           <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']} *" />
 		   <p:inputText id="projectDesc" style="width:400px;" required="true"  autocomplete="off" requiredMessage="Project description required"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}">
 		       <p:ajax event="blur" update="panelHeader"></p:ajax>
