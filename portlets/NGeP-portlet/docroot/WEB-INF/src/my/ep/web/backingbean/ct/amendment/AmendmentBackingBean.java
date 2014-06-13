@@ -160,6 +160,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		if(this.getManagedBean().getAction() == null) {
 			 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 		}
+		 ContractBackingBean ctBackingBean = new ContractBackingBean();
+		  ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -169,9 +171,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	@PostConstruct
 	public void initializeContractValue() throws ParseException { 
-		  ContractBackingBean ctBackingBean = new ContractBackingBean();
-		  ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		  if(this.getManagedBean().getCtCommitteeMember() == null){
+		   if(this.getManagedBean().getCtCommitteeMember() == null){
 			  this.getManagedBean().setCtCommitteeMember(new CtCommitteeMember());
 			  if(this.getManagedBean().getCtCommitteeMember().getPmUser() == null){
 				  this.getManagedBean().getCtCommitteeMember().setPmUser(new PmUser());				  
@@ -180,6 +180,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				  this.getManagedBean().getCtCommitteeMember().setMemberRole(new PmParameter());
 			  }
 		  }
+	}
+	
+	public void setSelectedTabValue(int tabValue){
+		this.getManagedBean().setSelectedTabIndex(tabValue);
 	}
 
 	public void preRenderView() throws UnsupportedEncodingException {
@@ -229,10 +233,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			ctReqDTO.setTaskName(res.getTaskName());
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			this.getManagedBean().setSelectedTabIndex(0);
 			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			setAmendmentContractVer(resDTO);
+			 if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
+					 this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+				this.getManagedBean().setBpkSaSkApprover(true);
+			 }
 			
 	        if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
 	           res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
@@ -1473,6 +1482,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 
 	public boolean getCompareUser() {
 		if (getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()))
+			return true;
+		if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()))
 			return true;
 		else
 			return false;
