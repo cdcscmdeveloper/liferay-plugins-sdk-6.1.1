@@ -7,10 +7,8 @@
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
 		header="ADD TO CART" width="540 " height="460" resizable="true"
 		 modal="true" dynamic="true">
-		 	
 		<p:panel id="addToCartId">
 		<p:messages id="cartmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
@@ -53,12 +51,15 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-					<td><p:inputText size="33" styleClass="ppRightBtn"
+					<td><p:inputText size="33" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="13" id="oderQtyId" 
+					       validatorMessage="must be a signed decimal number  between 0.0  and 9999999.99999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
+							 <f:validateDoubleRange for="oderQtyId" minimum="0.0" maximum="9999999.99999" />
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /> 
+					 <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
@@ -77,7 +78,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> 
+					   <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio style="margin-bottom: 5px;"
 							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
 							disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType eq 'G'}"
@@ -89,9 +91,7 @@
 								listener="#{requestNoteBackingBean.procurementTypeEvent}"
 								process="@this" />
 						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
-					
 				</tr>
-				
 			</table>
 			
 			<p:outputPanel id="justiId">
@@ -134,8 +134,6 @@
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-close" oncomplete="addToCartPopup.hide();"
 						partialSubmit="true" />
-						
-						
 				</p:column>
 			</p:row>
 		</p:panelGrid>

@@ -4,36 +4,59 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-   <div class="header-info">
-	<h:panelGrid border="0" width="100%"
-		columns="8" id="rnHeaderId">
-		<h:outputLabel value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
-		<p:inputText disabled="true"
-			value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}" />
-
-		<h:outputLabel value="#{lbl['lbl.sc.request.note.header.ptj.name']}" />
-		<p:inputText disabled="true"
-			value="#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}" size="45"/>
-
-		<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
-		<p:inputText disabled="true"
-			value="#{requestNoteBackingBean.managedBean.sourceMethod}" />
-
-		<h:outputLabel value="#{lbl['lbl.sc.request.note.header.status']}" />
-		<p:inputText disabled="true"
-			value="#{requestNoteBackingBean.managedBean.requestNoteStatus}" />
-	</h:panelGrid>
+	<h:panelGroup id="rnHeaderId">
+	 <div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+				</td>
+				
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.ptj.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+				   #{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
+				</td>
+				
+				<td style="width: 6%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+				  #{requestNoteBackingBean.managedBean.sourceMethod}
+				</td>
+				
+				<td style="width: 6%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.status']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+				  #{requestNoteBackingBean.managedBean.requestNoteStatus}
+				</td>
+				
+			</tr>
+		</table>
 	</div>
-	<p:panel id="glb_panel_request_list"
-		header="#{lbl['lbl.sc.panel.title.item.detail']}" toggleable="true"
-		toggleSpeed="500">
+	</h:panelGroup>
+	
+	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
+		<f:facet name="header">
+			 <h:outputText value="* " styleClass="mandatory" />
+			 <h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
+		</f:facet>
           <p:outputPanel>	
 			<table style="width:0%">
 				<tr>
 					<ui:fragment
 						rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
-						<td style="width: 95px;"><p:outputLabel
-								value="#{lbl['lbl.sc.request.note.ptj.name']}" /></td>
+						<td style="width: 95px;">
+						
+						<p:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
+						 <p:outputLabel value="*" styleClass="mandatory" />
+						
+						</td>
 						<td><p:selectOneMenu required="true" id="ptjName"  label="#{lbl['lbl.sc.request.note.ptj.name']}"
 								value="#{requestNoteBackingBean.managedBean.orgProfileId}"
 								styleClass="divisionclass"
@@ -77,7 +100,7 @@
 					</p:commandLink>
 				</p:column>
 				  
-				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%;">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
 						<p:commandLink value="Emergency" partialSubmit="true" process="@this"
 							update=":form:justPopup"
@@ -91,15 +114,24 @@
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 					</ui:fragment>
+					
+					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G'}">
+					     <h:outputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"/>	
+					</ui:fragment>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}"  style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:10%;">
 				    <p:commandLink partialSubmit="true"  process="@this" >
 				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
 				  </p:commandLink> 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  style="width:10%">
+				<p:column style="width:10%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
+					</f:facet>
+				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
 				        style="width:120px;">  
@@ -112,8 +144,12 @@
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.price.type']}"
-					style="width:10%">
+				<p:column style="width:10%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
+					</f:facet>
+				
 					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
@@ -125,10 +161,7 @@
 							itemValue="#{supplierItemPrice.priceType.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
-				<!-- 	<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.priceType)}"  size="8" disabled="true" rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Simple Quote'}" /> -->
-					
 				</p:column>
-				
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%;text-align:right">
 					<ui:fragment
@@ -176,7 +209,11 @@
 					   disabled="true" size="4" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.loa.prepare.by']}"  style="width:10%">
+				<p:column style="width:10%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
+					</f:facet>
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -188,10 +225,14 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"  style="width:16%">
+			    <p:column style="width:16%">
+			        <f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
+					</f:facet>
 					<p:inputText style="width:20px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
-					   size="2" maxlength="3"
+					   size="2" maxlength="4"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
 					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">
@@ -206,7 +247,8 @@
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"></h:outputText>
 					<p:spacer width="6px;"/>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}" disabled="true" />
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}"
+					 disabled="true"  size="10"/>
 					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
@@ -235,17 +277,20 @@
 						process="@this" icon="ui-icon-submit" partialSubmit="true"
 						actionListener="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
-					
-				   </p:column>
-				   
-				   <p:column width="100%" style="text-align:right">
-				     	<p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
-					       process="@this,requestListDataTable" partialSubmit="true"
-						   action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
-						   update="requestListDataTable"
-						   icon="ui-icon-delete"/> 
-				   	</p:column>
-				   
+              </p:column>
+               
+				<p:column width="100%" style="text-align:right">
+				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+					<p:commandButton value="#{lbl['lbl.sc.action.add.item']}" icon="ui-icon-add"
+						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+
+					<p:commandButton
+						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+						process="@this" partialSubmit="true"
+						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
+						update="requestListDataTable" icon="ui-icon-delete" />
+				</c:if>
+				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>

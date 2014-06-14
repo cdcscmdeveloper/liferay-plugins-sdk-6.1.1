@@ -5,20 +5,30 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="prInqPanel">
-	   <div class="header-info">
-		<h:panelGrid border="0"  width="100%" 
-			columns="6" id="prHeaderId">
-			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
-			<p:inputText disabled="true"  value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}"/>
-			
-			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.header.ptj.name']}" />
-			<p:inputText disabled="true" size="45" value="#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}"/>		
-			
-			<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />	
-			<p:inputText disabled="true" value="#{purchaseInquiryBackingBean.managedBean.priStatus}"  />												
-			
-	    </h:panelGrid>
-	    </div>
+	    <div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 13%">
+					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+					#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}
+				</td>
+				<td style="width: 13%">
+					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.header.ptj.name']}" />
+				</td>
+				<td style="width: 30%" class="header-info-text">
+				#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}
+				</td>
+				<td style="width: 13%">
+					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
+				</td>
+				<td style="width: 21%" class="header-info-text">
+				#{purchaseInquiryBackingBean.managedBean.priStatus}
+				</td>
+			</tr>
+		</table>
+	</div>
 	
 	<p:panel header=" INQUIRY DETAIL" toggleable="true" id="addToCartId">
 		<table>
@@ -27,8 +37,9 @@
 				<table style="width:100%">
 				 <tr>
  				  <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.selectedPtj.brandNew}">
- 				 <td style="width: 250px;">
-						    <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" /></td>
+ 				        <td style="width: 250px;">
+						   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
+						    <p:outputLabel value="*" styleClass="mandatory" /></td>
 						 <td> <p:selectOneMenu  label="#{lbl['lbl.sc.price.inquiry.ptj.name']}" id="ptjName" required="true"
 						     value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
 						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
@@ -38,8 +49,8 @@
 							   var="pmOrgProfile"
 							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 							   itemValue="#{pmOrgProfile.orgProfileId}" />
-							 <p:ajax event="change" update="ptjId, prHeaderId" 
-							     process="@all"  listener="#{purchaseInquiryBackingBean.ptjNameEvent}"/>
+							 <p:ajax event="change" update="prInqPanel"  partialSubmit="true"
+							     process="@this"  listener="#{purchaseInquiryBackingBean.ptjNameEvent}"/>
 					</p:selectOneMenu></td>
 					<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
 			    	</ui:fragment>
@@ -91,12 +102,18 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /></td>
-				<td ><p:inputText disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.requestNoteItem.quantity}" style="text-align:right;"/></td>
+				<td ><p:inputText disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"  
+				           label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="13" id="oderQtyId" 
+					       validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999.99999"
+						   value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.requestNoteItem.quantity}" styleClass="ppRightBtn">
+						      <f:validateDoubleRange for="oderQtyId" minimum="0.0" maximum="9999999.99999" />
+						</p:inputText>
+			     </td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
+				<td style="width: 250px;">
+				   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.price.type']}" /> 
+				   <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 				   <table>
 						   <tr>
@@ -138,8 +155,9 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /></td>
+				<td style="width: 250px;">
+				   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /> 
+				   <p:outputLabel value="*" styleClass="mandatory" /></td>
 						
 				<td><p:inputText id="dayToResponse" size="2" maxlength="2" required="true" label="#{lbl['lbl.sc.price.inquiry.day.to.resp']}"
 				         disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
@@ -162,7 +180,9 @@
 			    
 					<table style="width: 100%">
 					  <tr>
-						 <td style="width: 250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
+						 <td style="width: 250px">
+						     <p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />  
+						     <p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio style="margin-bottom: 5px;"  
 						        id="procType" required="true" label="#{lbl['lbl.sc.procurement.type']}"
 								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
@@ -206,13 +226,14 @@
 	<p:panel header="RESPONSE DETAIL" toggleable="true">
 		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:60%">
 			<p:row>
-				<p:column width="25%">
-					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
-				</p:column>
-				<p:column width="25%">
+					<p:column width="25%">
+						<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
+						 <p:outputLabel value="*" styleClass="mandatory" />
+					</p:column>
+					<p:column width="25%">
 					<p:selectOneRadio  id="stockAvailable"  label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
 					    disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable}"
+						value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
 						rendered="true" required="#{purchaseInquiryBackingBean.managedBean.supplierFlag}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}" itemValue="0" />
@@ -243,7 +264,12 @@
 				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.offered']}" style="width:15%">
+			<p:column style="width:15%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
+			</f:facet>
+			
 				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" size="30"  id="itemPrice"
 				  disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}">
 				    <f:convertNumber
@@ -257,7 +283,7 @@
 
 	<p:panel header="Remarks" toggleable="true">
 
-		<table style="width: 100%">
+	<table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="19%"></td>
 			
@@ -280,11 +306,10 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" required="true" label="Remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" id="remark"/>
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+								<p:inputTextarea style="width:350px;"  maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}"  id="remark" />
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
-							 <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 
-							     <p:message id="remarkMsg" for="remark" display="icon" /></td>
+							
 						</tr>
 					</table>
 				</p:dataGrid>

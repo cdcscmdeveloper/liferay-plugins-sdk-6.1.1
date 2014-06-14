@@ -29,7 +29,7 @@
 	      <p:panelGrid styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="60%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.sc.close']}"
+						<p:commandButton value="#{lbl['lbl.sc.close']}"  partialSubmit="true" process="@this"
 							onclick="justPopup.hide()" icon="ui-icon-close" />
 					</p:column>
 				</p:row>

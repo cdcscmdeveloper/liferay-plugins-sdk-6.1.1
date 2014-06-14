@@ -19,10 +19,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				    rendered="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
 					icon="ui-icon-submit" action="#{requestNoteBackingBean.addToRequestNote}"/>
 
-				<p:commandButton 
-					value="#{lbl['lbl.sc.common.cancel']}" action="#{purchaseInquiryBackingBean.backToPervious}" immediate="true"
-					icon="ui-icon-cancel" />
-					 
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"/>

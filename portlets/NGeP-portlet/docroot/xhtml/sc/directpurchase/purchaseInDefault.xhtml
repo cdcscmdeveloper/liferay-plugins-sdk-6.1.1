@@ -4,22 +4,38 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<div class="header-info">
-	<h:panelGrid border="0" cellpadding="4" cellspacing="4" width="100%" 
-		columns="8">
-		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}" disabled="true"/>
-
-		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}" disabled="true" />
-
-		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
-		<p:inputText value="#{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}" disabled="true" />
-
-		<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
-		<p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.managedBean.pidStatus}"/>
-
-	</h:panelGrid>
+	 <div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
+				</td>
+				
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
+				</td>
+				<td style="width: 16%" class="header-info-text">
+				 #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}
+				</td>
+				
+				<td style="width: 8%">
+					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+				   #{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}
+				</td>
+				
+				<td style="width: 8%">
+					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+				  #{purchaseInDefaultBackingBean.managedBean.pidStatus}
+				</td>
+			</tr>
+		</table>
 	</div>
 	
 	<p:panel header="CONTRACT DETAIL" toggleable="true">
@@ -31,7 +47,8 @@
 				  <tr>
  				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.selectedPmOrgProfile.brandNew}">
  				     <td style="width: 250px;">
-						    <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /></td>
+ 				      <p:outputLabel value="*" styleClass="mandatory" />
+					  <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /></td>
 					 <td> 
 					  <table>
 					    <tr>
@@ -98,8 +115,12 @@
       </table>
       </p:panel>
       
-      <p:panel header="ITEM DETAIL" toggleable="true">
-       <p:spacer height="10px"/>
+      <p:panel toggleable="true">
+      <f:facet name="header">
+			 <h:outputText value="* " styleClass="mandatory" />
+			 <h:outputText value="#{lbl['lbl.sc.purchase.in.default.item.details']}" />
+		</f:facet>
+       <p:spacer height="5px"/>
       <p:dataTable id="respDtl" var="itemPrice"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctItemPrices}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
@@ -130,13 +151,18 @@
 		</p:dataTable>
 
      </p:panel>
-	<p:panel header="REQUEST DETAIL" toggleable="true"  id="reqDtlId">
+	<p:panel toggleable="true"  id="reqDtlId">
+	  <f:facet name="header">
+			 <h:outputText value="* " styleClass="mandatory" />
+			 <h:outputText value="#{lbl['lbl.sc.purchase.in.default.req.details']}" />
+		</f:facet>
 	   <p:spacer height="3px"/>
 	      <h:panelGroup>
 			<table style="width:90%">
 			<tr>
-			   <td style="width: 250px;"><p:outputLabel
-								value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
+			   <td style="width: 250px;">
+			   <p:outputLabel value="*" styleClass="mandatory" />
+			   <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
 					<td>
 						<table>
 							<tr>
@@ -167,11 +193,18 @@
 	  <p:panel id="orderQty" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
 		 <table style="width: 90%">
 			 <tr>
-			  <td style="width: 250px;"><p:outputLabel
+			  <td style="width: 250px;">
+			     <p:outputLabel value="*" styleClass="mandatory" />
+			  <p:outputLabel
 				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /></td>
-			 <td><p:inputText id="ordqty" label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" style="text-align:right;" size="42" 
-			       disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
-			       </td>
+			 <td><p:inputText id="ordqty"  maxlength="13"
+			       validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999.99999"
+			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
+			       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" 
+			       styleClass="ppRightBtn" size="42" 
+			       disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
+			         <f:validateDoubleRange for="ordqty" minimum="0.0" maximum="9999999.99999" />
+				 </p:inputText></td>
 			</tr>
 		</table>
 	 </p:panel>
@@ -196,10 +229,9 @@
 					</td>
 				  </tr>
 				   <tr><td></td>
-					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" id="remark" label="Remarks" required="true"
-					               disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"/>
+					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}" id="remark" label="Remarks" required="true"/>
 					               
-						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
 					  <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 
 					        <p:message id="remarkMsg" for="remark" display="icon" /></td>
@@ -252,9 +284,11 @@
 	</h:panelGroup>
    </p:panel>
 
-	<p:panel label="#{lbl['lbl.sc.approve.list']}" id="approversId"
-		header="#{lbl['lbl.sc.approve.list']}" toggleable="true"
-		toggleSpeed="500">
+	<p:panel id="approversId" toggleable="true" toggleSpeed="500">
+		 <f:facet name="header">
+			 <h:outputText value="* " styleClass="mandatory" />
+			 <h:outputText value="#{lbl['lbl.sc.approve.list']}" />
+		</f:facet>
 
 		<table style="width: 100%">
 			<tr>
