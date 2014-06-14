@@ -139,6 +139,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	// getUserGroup
 	private Map<Long, PmUserGroup> userGroupMap;
+	private List<PmUserGroup> userGroupList;
 	private String fulfilmentRequisitioner;
 	
 	//getSuplier address details
@@ -1763,6 +1764,17 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setGlAccountCode(String glAccountCode) {
 		this.glAccountCode = glAccountCode;
+	}
+
+	public List<PmUserGroup> getUserGroupList() {
+		if(userGroupList==null) {
+			userGroupList = new ArrayList<PmUserGroup>();
+		}
+		return userGroupList;
+	}
+
+	public void setUserGroupList(List<PmUserGroup> userGroupList) {
+		this.userGroupList = userGroupList;
 	}
 
 	

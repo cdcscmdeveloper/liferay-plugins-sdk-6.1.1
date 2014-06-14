@@ -126,7 +126,7 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Ordered Qty." style="text-align:right">
-					<p:inputText value="#{flItem.orderedQty}" size="5" styleClass="colFloatRight"
+					<p:inputText value="#{flItem.orderedQty}" size="5" styleClass="colFloatRight" maxlength="14"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -227,7 +227,7 @@
 				<tr>
 					<td>
 						<p:outputLabel value="Address Line 1" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="address1" label="Address Line 1"
+					<td><p:inputText id="address1" label="Address Line 1" maxlength="255"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
 							size="35" />
@@ -252,7 +252,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 2" /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="255" 
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 							size="35" /></td>
 					<td></td>
@@ -279,7 +279,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 3" /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 							size="35" /></td>
 					<td></td>
@@ -298,14 +298,14 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 4" /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 							size="35" /></td>
 					<td></td>		
 					<td>
 						<p:outputLabel value="Postal Code" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode" required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="Post Code"
+							label="Post Code" maxlength="10"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
 							size="34" />
 					</td>
@@ -314,7 +314,7 @@
 				<tr>
 					<td>
 						<p:outputLabel value="Address Name" /></td>
-					<td><p:inputText size="35" id="contactPerson" 
+					<td><p:inputText size="35" id="contactPerson" maxlength="255" 
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.addressName}"
 							label="Address Name" />
 					</td>
@@ -335,7 +335,7 @@
 				<tr>
 					<td>
 						<p:outputLabel value="Email" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="email" required="#{purchaseRequestBackingBean.managedBean.required}" label="Email"
+					<td><p:inputText id="email" required="#{purchaseRequestBackingBean.managedBean.required}" label="Email" maxlength="80"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
 							size="35" />
 					</td>
@@ -344,7 +344,7 @@
 				<tr>
 					<td>
 						<p:outputLabel value="Tel.No." /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="telNo" required="#{purchaseRequestBackingBean.managedBean.required}" label="Tel No"
+					<td><p:inputText id="telNo" required="#{purchaseRequestBackingBean.managedBean.required}" label="Tel No" maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
 							size="35" />
 					</td>
@@ -352,13 +352,13 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax.No." /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
 							size="35" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Mobile.No." /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
 							size="35" required="false" /></td>
 				</tr>
