@@ -37,7 +37,6 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -565,10 +564,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	public void onRowSelect(SelectEvent event) {
-		ScQtBriefingRegistration briefingRegistration = (ScQtBriefingRegistration) event
+		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
 		this.getManagedBean().setBriefingAttendanceList(
-				briefingRegistration.getScQtBriefingAttendances());
+				briefingRegistration.getBsvAttendance());
 	}
 
 	public void addSupplierDetails() {

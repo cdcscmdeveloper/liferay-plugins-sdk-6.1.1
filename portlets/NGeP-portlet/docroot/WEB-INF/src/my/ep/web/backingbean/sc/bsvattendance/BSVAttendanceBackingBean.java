@@ -17,6 +17,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -33,8 +34,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefing;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
@@ -42,6 +41,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -105,8 +105,11 @@ public class BSVAttendanceBackingBean extends
 			this.getManagedBean().setSiteVisitDetailsList(
 					resDTO.getSiteVisitList());
 			this.getManagedBean().setScQtBsv(resDTO.getScQtBsv());
-
-			initializeRemarks();
+			getManagedBean().setRemarks(
+					getManagedBean().getScQtBsv().getBsvRemarks());
+			if (null == getManagedBean().getRemarks()
+					|| getManagedBean().getRemarks().isEmpty())
+				initializeRemarks();
 
 			ScQtBsvRegistration scQtBriefingRegistration = new ScQtBsvRegistration();
 			scQtBriefingRegistration.setSupplier(new SmSupplier());
@@ -140,7 +143,7 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * To show registration details when user clicks register button
 	 */
-	public String registerSupplier(ScQtBriefing briefing) {
+	public String registerSupplier(ScQtBsvDtl briefing) {
 		log.info("** attendanceRegistration **");
 		this.getManagedBean().setPreviousPage("bsvAttendanceRegisterMain");
 
@@ -154,7 +157,7 @@ public class BSVAttendanceBackingBean extends
 
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
 
-				reqDTO.setQtBriefingId(briefing.getQtBriefingId());
+				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
 
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingRegistrationList(reqDTO);
@@ -261,42 +264,37 @@ public class BSVAttendanceBackingBean extends
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			// Save Briefing Details Status
 			List<ScQtBsvDtl> list = getManagedBean().getBriefingDetailsList();
-			if (list != null) {
-				System.out.println("briefing list size" + list.size());
+			if (null != list && !list.isEmpty()) {
 				briefingDetails.addAll(list);
 			}
 
 			// Save Site visit Details Status
-			list = getManagedBean().getSiteVisitDetailsList();
-			if (list != null) {
-				System.out.println("site visit list size" + list.size());
+			List<ScQtBsvDtl> siteVisitlist = getManagedBean()
+					.getSiteVisitDetailsList();
+			if (null != siteVisitlist && !siteVisitlist.isEmpty()) {
 				briefingDetails.addAll(list);
 			}
 
 			for (ScQtBsvDtl scQtBriefing : briefingDetails) {
 				scQtBriefing.setQtBsvRegistrations(null);
 			}
-
+			BriefingResDTO resDTO = null;
 			if (briefingDetails.size() > 0) {
 
 				reqDTO.setQtBriefingList(briefingDetails);
-				qTBriefingSO.saveQTDtl(reqDTO);
-
-				// ScQt scQt = getManagedBean().getScQt();
-
-				// renewSesionObject();
-
-				// retrieveBriefingSiteVisitList(scQt.getQtId());
+				resDTO = qTBriefingSO.saveQTDtl(reqDTO);
 			}
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.",
-							"Briefing Site Visit "));
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700004,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException();
+			}
+
 		} finally {
 			qTBriefingSO = null;
 		}
@@ -307,8 +305,9 @@ public class BSVAttendanceBackingBean extends
 	 * Method To call to save Briefing Registration details
 	 */
 	public void saveBriefingAttendance() {
+		IQTBriefingSO qTBriefingSO=null;
 		try {
-			IQTBriefingSO qTBriefingSO = BusinessDelegate.getInstance()
+			 qTBriefingSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
@@ -323,23 +322,25 @@ public class BSVAttendanceBackingBean extends
 
 			reqDTO.setQtBriefingList(briefingDetails);
 
-			qTBriefingSO.saveQTDtl(reqDTO);
+			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
 
-			ScQt scQt = getManagedBean().getScQt();
+			// ScQt scQt = getManagedBean().getScQt();
 
-			renewSesionObject();
+			// renewSesionObject();
 
-			retrieveBriefingSiteVisitList(scQt.getQtId());
+			// retrieveBriefingSiteVisitList(scQt.getQtId());
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700004,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.",
-							"Briefing Registration. "));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException();
+			}
+		} finally {
+			qTBriefingSO = null;
 		}
 
 	}
@@ -584,6 +585,8 @@ public class BSVAttendanceBackingBean extends
 	public void onRowSelect(SelectEvent event) {
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
+		this.getManagedBean()
+				.setSelectedbriefRegistration(briefingRegistration);
 		/*
 		 * // TODO Need to add a call to SM to get the authorised persons list.
 		 * List<SmPersonnel> authorisedPersons = null;
@@ -625,13 +628,29 @@ public class BSVAttendanceBackingBean extends
 				briefingRegistration.getBsvAttendance());
 	}
 
+	/**
+	 * Method to delete the registrations
+	 */
 	public void deleteSupplierDetails() {
-		this.getManagedBean().getSelectedbriefRegistration().setDeleted(true);
+		List<ScQtBsvRegistration> registrations = this.getManagedBean()
+				.getBriefingRegistrationList();
+		for (ScQtBsvRegistration registration : registrations) {
+			if (registration
+					.getSupplier()
+					.getCompanyName()
+					.equalsIgnoreCase(
+							this.getManagedBean()
+									.getSelectedbriefRegistration()
+									.getSupplier().getCompanyName())) {
+				registrations.remove(registration);
+				break;
+			}
+		}
 	}
 
-	public void showLocationDtls(ScQtBriefing briefing) {
+	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		this.getManagedBean().setAddress(briefing.getPmAddress().getAddress1());
+		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
 	}
 
 	/**
@@ -641,13 +660,13 @@ public class BSVAttendanceBackingBean extends
 	 * @param attandedList
 	 * @return
 	 */
-	private boolean isAttandedForBSV(ScQtBriefingAttendance attandance,
-			List<ScQtBriefingAttendance> attandedList) {
+	private boolean isAttandedForBSV(ScQtBsvAttendance attandance,
+			List<ScQtBsvAttendance> attandedList) {
 		boolean flag = false;
 		if (null != attandedList && !attandedList.isEmpty()) {
-			for (ScQtBriefingAttendance scQtBriefingAttendance : attandedList) {
-				if (scQtBriefingAttendance.getIcPassport().equalsIgnoreCase(
-						attandance.getIcPassport())) {
+			for (ScQtBsvAttendance scQtBriefingAttendance : attandedList) {
+				if (scQtBriefingAttendance.getIcPassPort().equalsIgnoreCase(
+						attandance.getIcPassPort())) {
 					flag = true;
 					break;
 				}
@@ -704,7 +723,6 @@ public class BSVAttendanceBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStatusSO.class);
 		ScQtBSVRemark remark = new ScQtBSVRemark();
-		;
 
 		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -718,9 +736,12 @@ public class BSVAttendanceBackingBean extends
 			StatusResDTO statusResDTO = iStatusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			remark.setPmStatus(statusResDTO.getPmStatus());
-			getManagedBean().getRemarks().add(remark);
 
 		}
+		if (null == getManagedBean().getRemarks()) {
+			getManagedBean().setRemarks(new ArrayList<ScQtBSVRemark>());
+		}
+		getManagedBean().getRemarks().add(remark);
 	}
 
 }

@@ -52,7 +52,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 
 	private ScQtBsvDtl scQtBriefing;
 
-	private ScQtBsvRegistration selectedbriefRegistration; // Selected
+	private ScQtBsvRegistration selectedbriefRegistration= new ScQtBsvRegistration(); // Selected
 															// Briefing
 															// Registration
 															// for
