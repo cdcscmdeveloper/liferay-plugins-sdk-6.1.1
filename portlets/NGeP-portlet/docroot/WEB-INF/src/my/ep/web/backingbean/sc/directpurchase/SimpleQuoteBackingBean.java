@@ -653,6 +653,7 @@ public class SimpleQuoteBackingBean extends
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setUser(facesScopes.getUserSessionBean());
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			if (getManagedBean().getScQuote().getRemarks() != null
 					&& getManagedBean().getRemarks().size() > 0) {
 				remark.setRemark(getManagedBean().getRemarks()
@@ -1670,15 +1671,20 @@ public class SimpleQuoteBackingBean extends
 				List<ScSQRemark> results= new ArrayList<ScSQRemark>();
 				if(scQuote.getRemarks() != null){
 					for (ScSQRemark remark : scQuote.getRemarks()) {
-						remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-						remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-						remark.setChangedBy(remark.getCreatedBy());
-						remark.setUser(facesScopes.getUserSessionBean());
+						remark.setUser(remark.getCreatedUser());
 						results.add(remark);
 					}
-					getManagedBean().setRemarks(scQuote.getRemarks());
+					ScSQRemark remark = new ScSQRemark();
+					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					remark.setChangedBy(remark.getCreatedBy());
+					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					remark.setUser(facesScopes.getUserSessionBean());
+					remark.setCreatedUser(facesScopes.getUserSessionBean());
+					remark.setQuote(scQuote);
+					results.add(remark);
 				}
 				scQuote.setRemarks(results);
+				getManagedBean().setRemarks(results);
 
 				// service and product
 				if(scQuote.getQuoteDocs() != null){

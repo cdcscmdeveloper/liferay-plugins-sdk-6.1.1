@@ -55,6 +55,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private String priStatus;
 	private boolean requisitionerFlag;
 	private boolean supplierFlag;
+	private Integer stockAvailable;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -377,6 +378,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedPtj(PmOrgProfile selectedPtj) {
 		this.selectedPtj = selectedPtj;
+	}
+
+	/**
+	 * @return the stockAvailable
+	 */
+	public Integer getStockAvailable() {
+		return stockAvailable;
+	}
+
+	/**
+	 * @param stockAvailable the stockAvailable to set
+	 */
+	public void setStockAvailable(Integer stockAvailable) {
+		this.stockAvailable = stockAvailable;
 	}
 
 	

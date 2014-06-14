@@ -322,6 +322,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setUser(facesScopes.getUserSessionBean());
+				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
 				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
 				} 
@@ -567,18 +568,27 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					 contractItem	=	ConIresDTO.getCtContractItem();
 					 purchaseInDefault.setContractedItem(contractItem);
 				 }
-				 List<ScPIDRemark> results= new ArrayList<ScPIDRemark>();
-				 for (ScPIDRemark remark : purchaseInDefault.getRemarks()) {
+				 List<ScPIDRemark> results =  new ArrayList<ScPIDRemark>();
+				 if(purchaseInDefault.getRemarks() != null){
+					 for (ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()) {
+						 scPIDRemark.setUser(scPIDRemark.getCreatedUser());
+						 results.add(scPIDRemark);
+					}
+					
+					 ScPIDRemark remark = new ScPIDRemark();
 					 remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					 remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					 remark.setChangedBy(remark.getCreatedBy());
-					 remark.setChangedDate(remark.getCreatedDate());
+					 remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					 remark.setUser(facesScopes.getUserSessionBean());
+					 remark.setCreatedUser(facesScopes.getUserSessionBean());
+					 remark.setPurchaseInDefault(purchaseInDefault);
 					 results.add(remark);
+					 purchaseInDefault.setRemarks(results);
 				 }
-				 purchaseInDefault.setRemarks(results);
+				 
+				
 				 List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-				 ScPurchaseInDefaultAttachment attachment =purchaseInDefault.getScPurchaseInDefaultAttachment();
+				 ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
 				 attachment.setUser(facesScopes.getUserSessionBean());
 				 attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
 				 attachments.add(attachment);

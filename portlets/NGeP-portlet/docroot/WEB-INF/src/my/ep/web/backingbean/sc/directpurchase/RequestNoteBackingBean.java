@@ -317,17 +317,23 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
-				List<ScRequestNoteRemark> results= new ArrayList<ScRequestNoteRemark>();
-				if( requestNote.getRemarks() !=null){
-					for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
-						remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-						remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-						remark.setChangedBy(remark.getCreatedBy());
-						remark.setChangedDate(remark.getCreatedDate());
-						remark.setUser(facesScopes.getUserSessionBean());
-						results.add(remark);
+				 List<ScRequestNoteRemark> results =  new ArrayList<ScRequestNoteRemark>();
+				 if(requestNote.getRemarks() != null){
+					 for (ScRequestNoteRemark noteRemark : requestNote.getRemarks()) {
+						 noteRemark.setUser(noteRemark.getCreatedUser());
+						 results.add(noteRemark);
 					}
-				}
+					 ScRequestNoteRemark remark = new ScRequestNoteRemark();
+					 remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					 remark.setChangedBy(remark.getCreatedBy());
+					 remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					 remark.setUser(facesScopes.getUserSessionBean());
+					 remark.setCreatedUser(facesScopes.getUserSessionBean());
+					 remark.setRequestNote(requestNote);
+					 results.add(remark);
+					 requestNote.setRemarks(results);
+				 }
+				
 				
 				if (requestNote.getSourceMethod().equalsIgnoreCase(ParameterConst.REQUEST_NOTE_SQ)) {
 					getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
@@ -341,7 +347,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			   parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			   ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			   scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-		       requestNote.setRemarks(results);
 			   getManagedBean().setRequestNote(requestNote);
 			   getManagedBean().setOutComes(res.getAction());
 			   getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -412,8 +417,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	  
+						
+					} else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null, 
+								MessageUtils.getMessage(MessageConst.INFO_700010, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+						FacesContext fc = FacesContext.getCurrentInstance();
 						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 					}
+					
+					
 				}	} else {
 					throw new EpException("Failed.");
 				}
@@ -498,6 +514,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setUser(facesScopes.getUserSessionBean());
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			if (getManagedBean().getRequestNote().getRemarks() != null && !getManagedBean().getRequestNote().getRemarks().isEmpty()) {
 			   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
 			} else {
@@ -1004,6 +1021,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 		}
+		// update item details data table
+		RequestContext.getCurrentInstance().update("requestListDataTable");
 	}
 	
 	/**
@@ -1110,7 +1129,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestNoteDtls.add(scRequestNoteDtl);
 				   
 					// Request Supplier Items
-					List<ScRequestSupplierItem> requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+					List<ScRequestSupplierItem> requestSupplierItems ;
+					if(scRequestNoteDtl.getRequestItem().getSupplierItems() != null){
+						requestSupplierItems = scRequestNoteDtl.getRequestItem().getSupplierItems();
+					} else {
+						requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+					}
+					
 					ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
 					requestSupplierItem.setRequestNoteItem(requestItem);
 					requestSupplierItems.add(scReqSupplierItem);
