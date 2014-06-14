@@ -1,0 +1,101 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="contentSection">
+	<ui:include src="/xhtml/sc/loi/loiHeader.xhtml" />
+     <p:messages id="loiMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+     
+		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
+			toggleable="false">
+			
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+				columns="2" columnClasses="columnWidth20">
+
+				<h:column>
+					<h:outputLabel value="#{lbl['lbl.sc.loiloa.award.type']}" />
+				</h:column>
+				<h:column>
+					<p:inputText value="#{loiLoaDetailBackingBean.managedBean.qt.awardType}" disabled="true" />
+				</h:column>
+				
+				<h:column>
+					<h:outputLabel value="Recommended By" />
+				</h:column>
+				<h:column>
+					<p:inputText value="#{loiLoaDetailBackingBean.managedBean.qt.awardType}" disabled="true" />
+				</h:column>
+				
+			</h:panelGrid>
+			<p:spacer height="20px"></p:spacer>
+			
+			<p:dataTable id="list" var="evaluationResultList"
+				value="#{loiLoaDetailBackingBean.managedBean.scQtEvaluationResultList}"
+				rows="10" rowIndexVar="rowIndex">
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}"
+					style="width:40%">
+					<h:outputText
+						value="#{evaluationResultList.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+					style="width:20%">
+					<p:commandButton icon="ui-icon-add"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{lOIDetailBackingBean.createLOIAction(evaluationResultList, doctype)}" />
+
+					<p:commandButton icon="ui-icon-edit"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+		
+     <p:panel header="lOI/LOA LIST" toggleable="false">
+		<p:dataTable id="LoaLoiId">
+
+				<p:column headerText="lOI/LOA No"
+					style="width:40%">
+					<h:outputText value="123" />
+				</p:column>
+
+
+				<p:column headerText="Type"
+					style="width:40%">
+					<h:outputText value="SQ123" />
+				</p:column>
+
+
+				<p:column headerText="Item"
+					style="width:40%">
+					<h:outputText value="notebook23" />
+				</p:column>
+
+
+				<p:column headerText="Status"
+					style="width:40%">
+					<h:outputText value="test" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+				style="width:20%">
+				<p:commandButton icon="ui-icon-edit"
+					style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;" />
+			</p:column>
+
+		</p:dataTable>
+		
+		
+		<p:commandLink icon="ui-icon-add" value="createLoi" action="#{lOIDetailBackingBean.createLOI}"
+					style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;" />
+		
+   </p:panel>
+
+
+	</ui:define>
+</ui:composition>
