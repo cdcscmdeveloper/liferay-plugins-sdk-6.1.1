@@ -15,18 +15,15 @@
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
-				update=":form:applyBulkChargeDialog,@(.chargeLineSection)" />
+				update="@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
-				update=":form:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
+				update="@(.chargeLineSection)"></p:ajax>
 			<p:column>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
 					rendered="#{chargeLineNode.parent == 'true'}"
 					styleClass="myCustomChekBox">
-					<p:ajax event="change"
-						listener="#{purchaseRequestBackingBean.clearPopupLists}"
-						update="@(.chargeLineSection)"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="COA">
@@ -38,12 +35,12 @@
 					value="#{chargeLineNode.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Item Name">
+			<p:column headerText="Item Name" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="UOM">
-				<h:outputText value="Unit"
+			<p:column headerText="UOM" style="white-space:normal;">
+				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Unit Price (RM)" style="text-align:right">
@@ -97,7 +94,6 @@
 				<td colspan="4" style="text-align: left"><p:commandButton
 						value="Bulk Update" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
-						oncomplete="applyBulkCharge.show();"
 						update=":form:applyBulkChargeDialog"
 						action="#{purchaseRequestBackingBean.clearPopupLists}" /></td>
 
@@ -115,11 +111,11 @@
 							value="#{purchaseRequestBackingBean.managedBean.votFundCode}"
 							size="9" disabled="true" /> </td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
-					<td><p:inputText
+					<td><p:inputText value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.assetInd,purchaseRequestBackingBean.managedBean.assetIndCode)}"
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-					<td><p:inputText
+					<td><p:inputText value="#{purchaseRequestBackingBean.managedBean.glAccountCode}"
 							size="9" disabled="true" /></td>
 				</tr>
 				<tr>
@@ -145,7 +141,7 @@
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 							style="margin-bottom:15px;" /></td>
-					<td><p:inputText
+					<td><p:inputText value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.financingType,purchaseRequestBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
 
 				</tr>
@@ -183,6 +179,7 @@
 	<p:dialog id="applyBulkChargeDialog" header="Bulk Update"
 		widgetVar="applyBulkCharge" showEffect="fade" hideEffect="fade"
 		modal="true" width="500px" height="400px" resizable="false">
+		<p:panel id="bulkUpdatePnl">
 		<p:messages id="bulkUpdateMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<table style="width: 100%">
 			<tr>
@@ -217,7 +214,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{purchaseRequestBackingBean.managedBean.glAccountId}" >
-						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="glAccount"
 							value="#{purchaseRequestBackingBean.managedBean.glAccountList}"
 							itemLabel="#{glAccount.glAccCode}"
@@ -291,18 +288,17 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 						style="margin-bottom:15px;" /></td>
 				<td>
-					<p:selectOneMenu id="financingType" 
-					 style="margin-bottom:15px;" disabled="true" value="#{purchaseRequestBackingBean.managedBean.financingTypeCode}" >
-						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownCodeValues(ParameterTypeConst.financingType)}" />
-					</p:selectOneMenu></td>
+					<p:inputText id="financingType" disabled="true" 
+						value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.financingType,purchaseRequestBackingBean.managedBean.financingTypeCode)}" />
+				</td>
 			</tr>
-
 		</table>
+		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Apply" icon="ui-icon-accept"
+			<p:commandButton value="Apply" icon="ui-icon-accept" 
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update=":form:applyBulkChargeDialog,chargeLineTbl"
+				update="bulkUpdatePnl,chargeLineTbl"
 				action="#{purchaseRequestBackingBean.chargeLineApply}">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"

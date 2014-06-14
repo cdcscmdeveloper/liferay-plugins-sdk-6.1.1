@@ -182,6 +182,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	// set chargeline for selected items
 	private String votFundCode;
+	private String assetIndCode;
+	private String glAccountCode;
 	private String projectCode;
 	private String setiaCode;
 	private String subSetiaCode;
@@ -221,9 +223,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	
 	public void populateChargeLineData(){
-		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
-			prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
+		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = processChargeLineItems();
+		prepareChargeLineTreeNode(chargeLineItemsMap, chargeLineItemRoot);
 	}
 
 	/**
@@ -318,7 +320,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
 		
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
-		System.out.println("item code::9999999999999999 : "+flFulfilmentItemAddr.getCmItem().getExtensionCode());
+		itemAddress.getScRequestItem().setUom(flFulfilmentItemAddr.getScRequestItem().getUom());
 		if(null==itemAddress.getCmItem()){
 			itemAddress.setCmItem(new CmItem());
 		}
@@ -1745,6 +1747,22 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setVotFundType(String votFundType) {
 		this.votFundType = votFundType;
+	}
+
+	public String getAssetIndCode() {
+		return assetIndCode;
+	}
+
+	public void setAssetIndCode(String assetIndCode) {
+		this.assetIndCode = assetIndCode;
+	}
+
+	public String getGlAccountCode() {
+		return glAccountCode;
+	}
+
+	public void setGlAccountCode(String glAccountCode) {
+		this.glAccountCode = glAccountCode;
 	}
 
 	
