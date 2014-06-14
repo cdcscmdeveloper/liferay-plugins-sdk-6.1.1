@@ -193,84 +193,117 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 * submitAction method to submit request note details
 	 * return String
 	 */
-	public String submitAction() {
+	public String submitAction(String outcome) {
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
     try {
-    	List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-		if (this.getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() > 0) {
-			for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
-				for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
-					if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
-						requestNoteDtl.setScRequestSupplierItem(supplierItem);
-					}
-				}
-				requestNoteDtls.add(requestNoteDtl);
-			}
-			requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
-		}
-		
-		// Target Approver
-		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-			ScRequestNoteApprovalUser approvalUser = new ScRequestNoteApprovalUser();
-		    requestNote.setApprovalUsers(createTargetApprover(approvalUser));
-		}
-		 List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-		 ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
-    	 PmStatus status = new PmStatus();
-    	 status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-    	 StatusReqDTO statusReqDTO = new StatusReqDTO();
-    	 if (status != null) {
-    	     statusReqDTO.setStatusId(status.getStatusId());
-    		 StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-    		 workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-    	  }
-    	 workFlowStatus.setRequestNote(requestNote);
-	     workFlowStatus.setCurrent(true);
-	     workFlowStatuses.add(workFlowStatus);
-	     requestNote.setWorkFlowStatuses(workFlowStatuses);
-	     
-		// Remarks
-		requestNote.setRemarks(initializeRemarks(requestNote));
-		requestNoteReqDTO.setRequestNote(requestNote);
-		if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
-			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
-		} else {
-			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
-		}
-		
-	    requestNote.setPmOrgProfile(ptjNameEvent());
-		requestNoteReqDTO.setRequestNote(requestNote);
-		//Hoa: when submit need to set submit in the reqDTO to true
-		requestNoteReqDTO.setSubmit(Boolean.TRUE);
-		FacesScopes face = new FacesScopes();
-		String token =face.getBPMAuthenticationCtxToken();
-		requestNoteReqDTO.setToken(token);
-		requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
-		if (requestNoteResDTO.isSuccessful()) {
-			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, 
-					null,
-					MessageUtils.getMessage(MessageConst.INFO_700005, 
-							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, 
-							new FacesScopes().getUserLocale())));
-			// clear data
-			super.renewSesionObject();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
-		}else {
-			throw new EpException("Failed.");
-		}
+    	
+    	if(StringUtils.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT,outcome)){
+    		List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+    		if (this.getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() > 0) {
+    			for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
+    				for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
+    					if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
+    						requestNoteDtl.setScRequestSupplierItem(supplierItem);
+    					}
+    				}
+    				requestNoteDtls.add(requestNoteDtl);
+    			}
+    			requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+    		}
+
+    		// Target Approver
+    		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
+    			ScRequestNoteApprovalUser approvalUser = new ScRequestNoteApprovalUser();
+    			requestNote.setApprovalUsers(createTargetApprover(approvalUser));
+    		}
+    		List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+    		ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
+    		PmStatus status = new PmStatus();
+    		status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+    		StatusReqDTO statusReqDTO = new StatusReqDTO();
+    		if (status != null) {
+    			statusReqDTO.setStatusId(status.getStatusId());
+    			StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+    			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+    		}
+    		workFlowStatus.setRequestNote(requestNote);
+    		workFlowStatus.setCurrent(true);
+    		workFlowStatuses.add(workFlowStatus);
+    		requestNote.setWorkFlowStatuses(workFlowStatuses);
+
+    		// Remarks
+    		requestNote.setRemarks(initializeRemarks(requestNote));
+    		requestNoteReqDTO.setRequestNote(requestNote);
+    		if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
+    			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
+    		} else {
+    			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+    		}
+
+    		requestNote.setPmOrgProfile(ptjNameEvent());
+    		requestNoteReqDTO.setRequestNote(requestNote);
+    		//Hoa: when submit need to set submit in the reqDTO to true
+    		requestNoteReqDTO.setSubmit(Boolean.TRUE);
+    		FacesScopes face = new FacesScopes();
+    		String token =face.getBPMAuthenticationCtxToken();
+    		requestNoteReqDTO.setToken(token);
+    		requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+    		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
+    		if (requestNoteResDTO.isSuccessful()) {
+    			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+    					FacesMessage.SEVERITY_INFO, 
+    					null,
+    					MessageUtils.getMessage(MessageConst.INFO_700005, 
+    							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
+    							MessageUtils.BUNDLE_COMMON_MESSAGES, 
+    							new FacesScopes().getUserLocale())));
+    			// clear data
+    			super.renewSesionObject();
+    			FacesContext fc = FacesContext.getCurrentInstance();
+    			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+    		}else {
+    			throw new EpException("Failed.");
+    		}
+
+    	} else {
+    		BpmRequestDTO reqBpm = new BpmRequestDTO();
+    		FacesScopes facesScopes = new FacesScopes();
+    		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+    		try {
+    			reqBpm.setTaskId(getManagedBean().getTaskId());
+    			reqBpm.setOutcome(outcome);
+    			if (null != ctxToken) {
+    				reqBpm.setCtxToken(ctxToken);
+    				BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
+    				boolean result = resBpm != null ? resBpm.isSuccessful() : false;
+    				if (result) {
+    					if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+    						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+    								FacesMessage.SEVERITY_INFO, null, 
+    								MessageUtils.getMessage(MessageConst.INFO_700010, 
+    										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+    										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+    						FacesContext fc = FacesContext.getCurrentInstance();
+    						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+    					}
+    				} else{
+    					throw new EpException("Failed.");
+    				}
+    			}
+    		} finally {
+    			bpmSO = null;
+    		}
+    	}
     }    
-	    finally {
-			directPurchaseSO = null;
-		}
-		return null;
+    finally {
+    	directPurchaseSO = null;
+    }
+    return null;
 	}
 	
 	/**
