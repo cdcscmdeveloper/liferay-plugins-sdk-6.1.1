@@ -6174,14 +6174,14 @@ public class SmApplicationBackingBean extends
 							.getSmCompanyAddresses().get(0).getSmAddress()
 							.getPmState().getStateName()
 							.equalsIgnoreCase("Sabah")) {
-						sb.append(" 357-2");
+						sb.append("357-2");
 					} else if (getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0).getSmAddress()
 							.getPmState().getStateName()
 							.equalsIgnoreCase("Sarawak")) {
-						sb.append(" 357-3");
+						sb.append("357-3");
 					} else {
-						sb.append(" 357-0");
+						sb.append("357-0");
 					}
 					sb.append(generateMofNum(sb.toString()));
 				}
