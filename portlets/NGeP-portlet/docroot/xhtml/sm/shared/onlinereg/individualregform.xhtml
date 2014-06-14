@@ -133,9 +133,6 @@
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
-		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sm.prev']}" immediate="true"
-				action="#{registrationBackingBean.returnToSignUp}" />
-		</div>
+		
 	</c:if>
 </ui:composition>

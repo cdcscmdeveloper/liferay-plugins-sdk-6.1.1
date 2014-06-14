@@ -919,6 +919,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return true;
 	}
+
+	public void resetSessionData() {
+
+		this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
+		this.getManagedBean().setAgreeTC(false);
+		this.getManagedBean().setSmSupp(null);
+		this.getManagedBean().setSmAppl(null);
+		resetBusinessNatureSelection();
+	}
 	
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
