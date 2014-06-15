@@ -357,6 +357,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	private void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+		getManagedBean().getFulfilmentRequest().setTitle(getManagedBean().getFulfilmentRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
