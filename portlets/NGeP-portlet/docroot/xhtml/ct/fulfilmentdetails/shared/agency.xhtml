@@ -17,9 +17,6 @@
              <p:column selectionMode="multiple" style="width:2%;" />
              <p:column headerText="#{lbl['lbl.ct.agn.model.min']}">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
-			 </p:column>             
-             <p:column headerText="#{lbl['lbl.ct.agn.jabatan']}">
-				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.agn.ptj']}">
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
@@ -77,31 +74,11 @@
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="ministry" value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" style="width:230px">
             	   <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" process="@this" update="@([id$=tableAgency],[id$=department])" listener="#{contractDetailsBackingBean.reset}"/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                   <p:selectOneMenu  style="width:70px" disabled="true">
             	    <f:selectItem itemLabel="And" itemValue=""/>
                  </p:selectOneMenu>
-                
-                 <p:selectOneMenu for="department"  style="width:100px;" disabled="true" >
-            	    <f:selectItem itemLabel="Department" itemValue=""/>
-                 </p:selectOneMenu>
-				 <p:spacer height="1"/>
-                 <p:selectOneMenu  style="width:70px" disabled="true">
-            	    <f:selectItem itemLabel="Equals" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-            	 <p:selectOneMenu id="department" value="#{contractDetailsBackingBean.managedBean.departmentProfileId}" 
-            	    style="width:230px" >
-            		<f:selectItems value="#{contractDetailsBackingBean.getDepartmentDropdown()}"/>
-            		<p:ajax event="change" update="@([id$=tableAgency])" process="@this" listener="#{contractDetailsBackingBean.resetDepartment}"/> 
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu  style="width:70px" disabled="true">
-            	    <f:selectItem itemLabel="And" itemValue=""/>
-                 </p:selectOneMenu>
-                 
                  <p:selectOneMenu for="ptjcodename"  style="width:100px;">
                     <f:selectItem itemLabel="-Select One-" itemValue=""/>
             	    <f:selectItem itemLabel="PTJ Code" itemValue="Code"/>
@@ -121,8 +98,8 @@
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"/>
 		       </div>
 			   <p:spacer height="2"/>
-              <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.managedBean.pmOrgProfileList}" 
-                selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}">
+              <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.agencyDataModel}" rowIndexVar="rowIndex"
+				selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
                     <p:column selectionMode="multiple" style="width:18px;"/>        
                     <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">

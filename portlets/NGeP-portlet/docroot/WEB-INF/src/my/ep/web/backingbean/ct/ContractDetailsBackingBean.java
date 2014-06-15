@@ -28,7 +28,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -129,7 +129,7 @@ import com.liferay.portal.util.PortalUtil;
  * @since 26/9/2013
  */
 @ManagedBean (name = "contractDetailsBackingBean")
-@RequestScoped
+@ViewScoped
 public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
 
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
@@ -153,6 +153,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	List<CtContractItem> ContractItemServiceList;
 	private CtProgressivePayment[] selectedProgressive;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
+	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();
 	
 	public ContractDetailsBackingBean() {
 	    if(this.getManagedBean().getAction() == null) {
@@ -407,7 +408,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return smAddress;
 	}
 	
-	/*Implementation of search methode*/
+	/*Implementation of search method for contract*/
 	public void searchContract() {
 		try { 
 			contractDataModel.reloadData();
@@ -447,8 +448,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		@Override
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
-			//SmSupplier smSupp = new SmSupplier();
-			//PmOrgProfile defaultOrgProfile = new PmOrgProfile();
 			IContractSO contractSO = null;
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
@@ -512,7 +511,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
-				//getManagedBean().setContractList(resDTO.getvCtContractResultBean().getResultList());
 				getManagedBean().setSelectedIndex(0);
 				if(resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
@@ -834,35 +832,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 	     }
 	   return items;
-	}
-	 
-	 public List<PmOrgProfile> getPtjCodeName(){
-			
-		   try{
-		      IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			  OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			  reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			 
-			  if(this.getManagedBean().getDepartmentProfileId() == null)
-				  this.getManagedBean().setDepartmentProfileId(1L);
-			  
-			  reqDTO.setParentOrgProfileId(this.getManagedBean().getDepartmentProfileId());
-			  OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-			  this.getManagedBean().setPmOrgProfileList(resDTO.getOrgProfileList());
-			}catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			 }
-		return this.getManagedBean().getPmOrgProfileList();
-	}
-	 
-	public void reset(){
-	   this.getManagedBean().setPmOrgProfileList(null); 
-	}
-	    
-	public void resetDepartment(){
-	   this.getManagedBean().setPmOrgProfileList(null);
-	    	//getPtjCodeName();	 
 	}
 	 
 	public SelectItem[] getSearchStatusDropdown() {
@@ -1256,10 +1225,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   }
 	}
 			
-	public void searchAgencyDetails(){
-		getPtjCodeName();	 
-	}
-			
 	public void onRowSelect(SelectEvent event) {}/*End*//*End Item Details*/
     public void onEdit(RowEditEvent event){}
 	public void onCancel(RowEditEvent event){}/*End Deduction*/
@@ -1623,5 +1588,73 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setSmAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		}
 		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+	}
+	
+	/*Implementation of search method for agency*/
+	public void searchAgencyDetails() {
+		try { 
+			agencyDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
+		}
+	}
+	
+	public IPagingDataModel<PmOrgProfile> getAgencyDataModel() {
+		return agencyDataModel;
+	}
+
+	public void setAgencytDataModel(IPagingDataModel<PmOrgProfile> agencyDataModel) {
+		this.agencyDataModel = agencyDataModel;
+	}
+
+	private class AgencyPagingDataModel extends PagingDataModel<PmOrgProfile> {
+		private static final long serialVersionUID = 1L;
+
+		public AgencyPagingDataModel() {
+			super("tableAgency");
+		}
+		
+		@Override
+		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {
+			
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			try {
+				// Filter By - parameterType
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"orgTypeCode.pmParameterType.parameterType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterTypeConst.ORGANISATION_TYPES));
+				
+				// Filter By - Org Type
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"orgTypeCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							OrganizationType.DIVISION.value()));
+				
+				// Filter By - Parent Org Profile Id
+				Long ministryProfileId = getManagedBean().getMinistryProfileId();
+				if (ministryProfileId == null) {
+					ministryProfileId = 0L;
+				}
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"parentOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ministryProfileId));
+				
+				 IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				 reqDTO.setOrgProfileSearchBean(searchBean);
+				 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileList(reqDTO);
+				 if(resDTO.isSuccessful()) {
+					 return resDTO.getOrgProfileResultBean();
+				 }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 }
