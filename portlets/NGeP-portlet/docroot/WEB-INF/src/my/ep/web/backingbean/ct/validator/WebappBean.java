@@ -3,17 +3,11 @@ package my.ep.web.backingbean.ct.validator;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,11 +20,6 @@ import java.util.regex.Pattern;
 @ManagedBean(name="webappBean")
 @ApplicationScoped
 public class WebappBean {
-    private String webRoot = "/dcmt";
-
-    public String getWebRoot() {
-        return webRoot;
-    }
     
     public void validateEmail(FacesContext ctx, UIComponent fieldName, Object obj){
 		 String errMsg="Email not valid";
@@ -54,6 +43,30 @@ public class WebappBean {
 
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+    }
+    
+    public void checkInputField(FacesContext ctx, UIComponent fieldName, Object obj){
+        String inputValue=(String)obj;
+        inputValue=inputValue==null? "":inputValue;
+        if(!inputValue.isEmpty()){
+           String errMsg="Only alphabets,underscore,hyphen are allowed";
+           String pattern="^[a-zA-Z\\s]+$";  
+          if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+          }
+        }
+    }
+    
+    public void validateNumbers(FacesContext ctx, UIComponent fieldName, Object obj){
+        String inputValue=(String)obj;
+        inputValue=inputValue==null? "":inputValue;
+        if(!inputValue.isEmpty()){
+             String errMsg="Only numbers allow";
+             String pattern="^[a-zA-Z0-9]+$";  
+           if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+          }
         }
     }
 

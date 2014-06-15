@@ -15,7 +15,7 @@
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
 		 	  <p:inputText for="physicalNo" value="#{terminationBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
-			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
+			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true" 
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
@@ -102,7 +102,7 @@
        <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth30,columnWidth25,columnWidth40">
           <p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" />
           <h:panelGrid columns="3">
-	          <p:selectOneMenu style="width:180px;"
+	          <p:selectOneMenu required="true" requiredMessage="Please select from menu" style="width:180px;"
 	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}"
 				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
 				 <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
@@ -117,45 +117,57 @@
           <p:outputLabel value="Decision Date" />
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" readonlyInput="true"
                id="calItem1" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:outputLabel value="* File Ref. No." rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
-		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" style="width:170px;" maxlength="100"
-               rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
-		  <p:outputLabel value="* Termination Effective Date" rendered="#{terminationBackingBean.managedBean.remedy}"/>
+		
+		  <p:outputLabel value="File Ref. No.*" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
+		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
+		      style="width:170px;" maxlength="100"  required="true" requiredMessage="Please enter file reference no" 
+		     validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
+		 
+		  <p:outputLabel value="Termination Effective Date *" rendered="#{terminationBackingBean.managedBean.remedy}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.terminationEffDate}"
-          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true" 
+          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true" required="true" requiredMessage="Please select termination effective date"
                 id="calItem2" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
-		  <p:outputLabel value="* Remedy Start Date" rendered="#{terminationBackingBean.managedBean.remedy}"/>
+		
+		  <p:outputLabel value="Remedy Start Date *" rendered="#{terminationBackingBean.managedBean.remedy}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"
-          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true" 
+          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true"  required="true" requiredMessage="Please select remedy start date"
                 id="calItem3" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:outputLabel value="* Remedy End Date" rendered="#{terminationBackingBean.managedBean.remedy}"/>
+		 
+		  <p:outputLabel value="Remedy End Date *" rendered="#{terminationBackingBean.managedBean.remedy}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
-          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true" 
+          		rendered="#{terminationBackingBean.managedBean.remedy}" readonlyInput="true" required="true" requiredMessage="Please select remedy end date"
                 id="calItem4" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />
 		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />                
-		  <p:outputLabel value="* Last Remedy File No." rendered="#{terminationBackingBean.managedBean.termination}"/>
+		  
+		  <p:outputLabel value="Last Remedy File No. *" rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" style="width:170px;" maxlength="100"
-               rendered="#{terminationBackingBean.managedBean.termination}"/>
-		  <p:outputLabel value="* Last Remedy Notice Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+              validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination}" required="true" requiredMessage="Please select last remedy file no"/>
+		 
+		  <p:outputLabel value="Last Remedy Notice Date *" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar id="calItem6" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
-              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" 
+              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" required="true" requiredMessage="Please select last remedy notice date"
               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:outputLabel value="* Last Remedy Start Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		
+		  <p:outputLabel value="Last Remedy Start Date *" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"
-          		rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" 
+          		rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" required="true" requiredMessage="Please select last remedy start date"
                 id="calItem7" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		  <p:outputLabel value="* Last Remedy End Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		
+		  <p:outputLabel value="Last Remedy End Date *" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
-          		rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true"  
+          		rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true"  required="true" requiredMessage="Please select last remedy end date"
                 id="calItem8" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
-		  <p:outputLabel value="* Recommended Agency" rendered="#{terminationBackingBean.managedBean.termination}"/>
+		
+		  <p:outputLabel value="Recommended Agency *" rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}" style="width:170px;"
-               rendered="#{terminationBackingBean.managedBean.termination}"/>
-		  <p:outputLabel value="* Recommended Agency Date" rendered="#{terminationBackingBean.managedBean.termination}"/>
+               rendered="#{terminationBackingBean.managedBean.termination}" required="true" requiredMessage="Please select recommended agency"/>
+		
+		  <p:outputLabel value="Recommended Agency Date *" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar id="calItem9" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
-              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" 
+              showOn="button" rendered="#{terminationBackingBean.managedBean.termination}" readonlyInput="true" required="true" requiredMessage="Please select recommended agency date"
               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		  
+		
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">

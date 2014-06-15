@@ -89,10 +89,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 	private CtTerminationReason[] selectedTerminationReasonsList;
+	private ContractBackingBean ctBB = null;
 	
 	public TerminationBackingBean(){
 		if(this.getManagedBean().getAction() == null) 
 			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
+		
+		if(ctBB == null){
+			 ctBB = new ContractBackingBean();
+			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		}
 	}
 	
 	@PostConstruct

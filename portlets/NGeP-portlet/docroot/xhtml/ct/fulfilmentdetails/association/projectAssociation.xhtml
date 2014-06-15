@@ -15,16 +15,16 @@
       <h:panelGrid columns="4" style="width:100%;">
         <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
         <p:inputText  maxlength="100" style="width:170px;"
-          value="#{associationBackingBean.managedBean.projectName}"/>
+          value="#{associationBackingBean.managedBean.projectName}" validator="#{webappBean.checkSpaces}"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
         <p:inputText maxlength="1000" style="width:170px;"
-           value="#{associationBackingBean.managedBean.ctName}"  />
+           value="#{associationBackingBean.managedBean.ctName}" validator="#{webappBean.checkInputField}" />
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
         <p:inputText maxlength="200"  style="width:170px;"
-          value="#{associationBackingBean.managedBean.projectDescription}"/>
+          value="#{associationBackingBean.managedBean.projectDescription}" validator="#{webappBean.checkSpaces}"/>
         <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
         <p:inputText style="width:170px;"
-           value="#{associationBackingBean.managedBean.ctSupplierName}"/>
+           value="#{associationBackingBean.managedBean.ctSupplierName}" validator="#{webappBean.checkInputField}"/>
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
         <p:calendar style="width:130px;" id="calefdate" readonlyInput="true" showOn="button"
             value="#{associationBackingBean.managedBean.ctDateStart}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -33,7 +33,7 @@
           value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
         <p:inputText   style="width:170px;"
-           value="#{associationBackingBean.managedBean.ctProductCode}"/>
+           value="#{associationBackingBean.managedBean.ctProductCode}" validator="#{webappBean.validateNumbers}"/>
       </h:panelGrid>
       <div class="ppRightBtn"> 
         <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"

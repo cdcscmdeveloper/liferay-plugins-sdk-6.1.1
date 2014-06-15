@@ -24,19 +24,35 @@
 				<p:outputLabel value="#{data.itemName}"
 					style="float:left;width:55%;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}"
-				style="width:15%;">
-				<p:calendar value="#{data.effDate}" id="calItem1" size="15"
-					showOn="button" readonlyInput="true"
-					disabled="#{data.chkStatusId == 1 ? true : false}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
+			   <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			      <p:calendar value="#{data.effDate}" size="10" id="effDateActive" showOn="button"
+			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			    </h:panelGroup>
+			    <h:panelGroup id="effDateItemId" rendered="#{data.chkStatusId == 0}">
+			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
+			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+			           <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
+			      </p:calendar>
+			    </h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}"
-				style="width:15%;">
-				<p:calendar value="#{data.expDate}" id="calItem2" size="15"
-					showOn="button" readonlyInput="true"
-					disabled="#{data.chkStatusId == 1 ? true : false}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
+			  <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			      <p:calendar value="#{data.expDate}" size="15" id="expDateActive" showOn="button"
+			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			    </h:panelGroup>
+			    <h:panelGroup id="expDateItemId" rendered="#{data.chkStatusId == 0}">
+			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
+			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+                    <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
+			      </p:calendar>
+			      <p:spacer width="5"/>
+                    <p:commandLink id="validateAction" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
+		               styleClass="column-align-center" rendered="#{data.validateScheduleDate}">
+		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
+			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+		           </p:commandLink>
+			    </h:panelGroup>
 			</p:column>
 			<p:column style="width:10%;" headerText="Status">
 				<p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
@@ -46,5 +62,17 @@
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
+		<p:dialog id="dlgItemDateValidation" widgetVar="dlgItemDateValidation" header="Error List" styleClass="screen-title"  
+            resizable="false" modal="true" width="325" height="90">  
+             <h:panelGrid columns="3">
+                <p:graphicImage library="ep/images/design" name="exclamation.png"
+			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			    <p:spacer width="10"/>
+                <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+            </h:panelGrid>
+            <div class="ppRightBtn">
+		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
+		   </div>
+         </p:dialog>    	
 	</p:panel>
 </ui:composition>

@@ -20,6 +20,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
@@ -58,10 +59,16 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	 private List<CtContractItem> ctFilterItems;
 	 private List<CtContractItem> ctContractItems;
+	 ContractBackingBean ctBB = null;
 	 public SuspensionBackingBean(){
 	    if (this.getManagedBean().getAction() == null) {
 	    	this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
 	    }
+	    
+	    if(ctBB == null){
+			  ctBB = new ContractBackingBean();
+			  ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+			}
 	 }
 	 
 	 private FacesScopes getFacesScopes(){
@@ -100,7 +107,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
@@ -140,7 +147,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			  reqDTO = new ContractReqDTO();
 			  String token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
-			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		   
 		      reqDTO.setToken(token);
 		      reqDTO.setOutcome(action);
@@ -209,6 +216,40 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			  }
 		   return null;
 	 } 
+	 
+	 public void validateDate(CtAgency agency){
+		 
+		 if (agency.getExpDate().before(agency.getEffDate())) {
+			 for (CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
+					if(dataList.toString().equalsIgnoreCase(agency.toString())){
+						dataList.setValidateScheduleDate(true); 
+					}
+		     }
+		 }else{
+			 for(CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
+				    if(dataList.toString().equalsIgnoreCase(agency.toString())){
+				        dataList.setValidateScheduleDate(false);
+				    }
+				 }
+		 }
+	}
+	 
+public void validateItemDate(CtContractItem ctItems){
+		 
+		 if (ctItems.getExpDate().before(ctItems.getEffDate())) {
+			 for (CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
+					if(dataList.toString().equalsIgnoreCase(ctItems.toString())){
+						dataList.setValidateScheduleDate(true); 
+					}
+		     }
+		 }else{
+			 for(CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
+				    if(dataList.toString().equalsIgnoreCase(ctItems.toString())){
+				        dataList.setValidateScheduleDate(false);
+				    }
+				 }
+		 }
+	}
 	 
 	 public String convertTime(Date time){ 
 	        String str ="";

@@ -23,47 +23,46 @@
 	   <f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
 	   <h:panelGroup rendered="#{terminationBackingBean.managedBean.taskId==null}">
 			<div align="left" class="screen-title" style="border-bottom: 0px">
-			Contract Termination
-			</div>	   
+			    Contract Termination</div>	   
 		</h:panelGroup>
-	   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	  	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
 	   <table style="width: 100%;">
 	     <tr>
 	    	<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" rendered="#{terminationBackingBean.managedBean.taskId==null}" oncomplete="window.history.back();" /></td>
 	    	<td class="ppRightBtn">
 	    		<c:if test="#{!terminationBackingBean.managedBean.viewContract}">
 				  	<ui:repeat var="outcome" value="#{terminationBackingBean.managedBean.action}">
-				        <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
-				           action="#{terminationBackingBean.saveContractTermination(outcome)}" />
+				        <p:commandButton value="#{outcome}"  process="@form" styleClass="ui-button" ajax="false" validateClient="true" 
+				         icon="ui-icon-#{fn:toLowerCase(outcome)}" action="#{terminationBackingBean.saveContractTermination(outcome)}" />
 			        </ui:repeat>  
 		        </c:if>   			
 	    	</td>
 	    </tr>
 	  </table>
-	  <table style="width: 99%; margin-left: 0px;" class="header-info">
-				<tr style="margin-button: 0px;">
-					<td>
-							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-					</td>
-					<td>
-							<p:inputText size="20" disabled="true"
-								value="#{terminationBackingBean.managedBean.ctContract.contractNo}"  />
-					</td>
-					 <td>
-		    			   <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-					</td>
-					<td>
-						   <p:inputText size="30" disabled="true" value="#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
-					</td>											
-					<td>
-		  				   <p:outputLabel value="Status" />
-					</td>
-					<td>
-						<p:inputText size="20" disabled="true"
-								value="#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.contractVer.status.statusId)}" />
-					</td>
-				</tr>
-			</table>	 
+	  <div align="left" class="header-info">
+	   <table style="width: 100%">
+			<tr>
+				<td style="width: 15%">
+					<h:outputLabel value="#{lbl['lbl.ct.cno']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+					#{terminationBackingBean.managedBean.ctContract.contractNo}
+				</td>
+				<td style="width: 15%">
+					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+					#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+				</td>
+				<td style="width: 20%" class="header-info-text">
+					#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.contractVer.status.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
 	</p:panel>
 		<ui:include src="termination.xhtml" />
 		<ui:include src="terminationRecord.xhtml" />
