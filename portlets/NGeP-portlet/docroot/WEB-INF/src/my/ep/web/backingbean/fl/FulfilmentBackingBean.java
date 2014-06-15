@@ -174,7 +174,7 @@ public class FulfilmentBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 
 		if (remarkList.size() == 0
-				|| !compareUserName(remarkList.get(0).getCreatedUsername())) {
+				|| !compareUserName(remarkList.get(0).getUserId())) {
 			FlRemark remark = new FlRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
