@@ -121,7 +121,9 @@
 		  <p:outputLabel value="File Ref. No.*" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
 		      style="width:170px;" maxlength="100"  required="true" requiredMessage="Please enter file reference no" 
-		     validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}"/>
+		     validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
+		     <f:validateLength maximum="100"/> 
+		     </p:inputText>
 		 
 		  <p:outputLabel value="Termination Effective Date *" rendered="#{terminationBackingBean.managedBean.remedy}"/>
           <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.terminationEffDate}"
@@ -142,7 +144,9 @@
 		  
 		  <p:outputLabel value="Last Remedy File No. *" rendered="#{terminationBackingBean.managedBean.termination}"/>
 		  <p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" style="width:170px;" maxlength="100"
-              validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination}" required="true" requiredMessage="Please select last remedy file no"/>
+              validator="#{webappBean.validateNumbers}"  rendered="#{terminationBackingBean.managedBean.termination}" required="true" requiredMessage="Please select last remedy file no">
+              <f:validateLength maximum="100"/> 
+              </p:inputText>
 		 
 		  <p:outputLabel value="Last Remedy Notice Date *" rendered="#{terminationBackingBean.managedBean.termination}"/>
           <p:calendar id="calItem6" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
