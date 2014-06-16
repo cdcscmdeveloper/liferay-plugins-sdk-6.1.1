@@ -739,7 +739,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		        		remark.setUser(remark.getCreatedUser());
 		        		results.add(remark);
 		        	}
-		        	ScPRIRemark remark = getManagedBean().getRemark();
+		        	ScPRIRemark remark = new ScPRIRemark();
 		        	remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		        	remark.setChangedBy(remark.getCreatedBy());
 		        	remark.setUser(facesScopes.getUserSessionBean());
@@ -755,7 +755,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		        	remark.setCreatedUser(facesScopes.getUserSessionBean());
 		        	results.add(remark);
 		        	remark.setPrInquiry(prInquiry);
-		        	getManagedBean().setRemark(remark);
 		        	prInquiry.setRemarks(results);
 		        }
 				 
