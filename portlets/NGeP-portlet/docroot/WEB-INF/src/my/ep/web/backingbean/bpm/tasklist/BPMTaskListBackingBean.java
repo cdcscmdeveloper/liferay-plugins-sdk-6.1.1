@@ -384,10 +384,10 @@ public class BPMTaskListBackingBean extends
 	}
 
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
-		if (docTypeSearchBean == null) {
-			docTypeSearchBean = createSearchBean(PmParameterDesc.class, "docTypeId");
+		if (this.docTypeSearchBean == null) {
+			this.docTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "docTypeId");
 		}
 		
-		return docTypeSearchBean;
+		return this.docTypeSearchBean;
 	}
 }

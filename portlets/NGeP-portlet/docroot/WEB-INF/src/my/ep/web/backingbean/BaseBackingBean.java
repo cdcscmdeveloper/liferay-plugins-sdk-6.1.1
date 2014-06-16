@@ -5,7 +5,6 @@ package my.ep.web.backingbean;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -257,7 +256,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * 			the component id.
 	 * @return	ISearchBean instance.
 	 */
-	protected <RETURN_CLASS extends Serializable> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
 		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
