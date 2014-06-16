@@ -126,7 +126,7 @@
 				fileUploadListener="#{agreementBackingBean.uploadAgreement}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="@([id$=uploadAgPg])">
+				update=":form:uploadAgPg">
 			</p:fileUpload>
 		</p:dialog>				
 	</p:panel>
