@@ -399,7 +399,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		IContractSupplierSO supplierSO = null;
 		try {
 			ContractSupplierReqDTO reqDTO = new ContractSupplierReqDTO();
-			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 
 			if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
