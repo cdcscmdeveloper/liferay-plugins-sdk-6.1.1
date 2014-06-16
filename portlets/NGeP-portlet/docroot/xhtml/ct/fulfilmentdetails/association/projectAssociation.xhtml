@@ -36,7 +36,7 @@
            value="#{associationBackingBean.managedBean.ctProductCode}" validator="#{webappBean.validateNumbers}"/>
       </h:panelGrid>
       <div class="ppRightBtn"> 
-        <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"
+        <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" process="@this"
            icon="ui-icon-search" action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
            <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" 
               action="#{associationBackingBean.searchReset}" icon="ui-icon-search"   update="associatePanelId"/>
@@ -63,7 +63,7 @@
 		  </p:column> 
 		</p:dataTable>
 		<div class="ppRightBtn">
-		   <p:commandButton value="Create"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
+		   <p:commandButton value="Create" process="@this"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
 	       <p:commandButton value="Delete" process="@form" onsuccess="dlgAssociateDel.show()" icon="ui-icon-delete"/>
 	     </div>
 		<p:spacer height="4"/>

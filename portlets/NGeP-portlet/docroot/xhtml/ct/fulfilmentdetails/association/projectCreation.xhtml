@@ -27,18 +27,22 @@
      <p:panel id="projectId" header="Project Associate Creation" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
 	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']} *" />
-           <p:inputText id="projectNames" style="width:200px;" required="true" autocomplete="off" requiredMessage="Project name required"
-               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}" >
+	       <h:panelGrid columns="2">
+           <p:inputText id="projectNames" style="width:200px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
+               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}">
                <f:validateLength maximum="100"/> 
-               <p:ajax event="blur" update="panelHeader"></p:ajax>
-               
-                </p:inputText>
+               <p:ajax event="blur" update="panelHeader"/></p:inputText>
+               <p:message for="projectNames" display="icon"/>
+           </h:panelGrid>
            <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']} *" />
-		   <p:inputText id="projectDesc" style="width:400px;" required="true"  autocomplete="off" requiredMessage="Project description required"
+            <h:panelGrid columns="2">
+		   <p:inputText id="projectDesc" style="width:400px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}">
 		        <f:validateLength maximum="200"/> 
-		       <p:ajax event="blur" update="panelHeader"></p:ajax>
+		     <p:ajax event="blur" update="panelHeader"/>
 		   </p:inputText>
+		    <p:message for="projectDesc" display="icon"/>
+		   </h:panelGrid>
          </h:panelGrid>
 	     <p:spacer height="10"/>
           <p:dataTable id="associateCreation" 
@@ -70,7 +74,7 @@
 			   </p:column>
 			</p:dataTable> 
 			<div class="ppRightBtn">
-			      <p:commandButton value="Add" process="@this" icon="ui-icon-add" onclick="dlg2.show();">
+			      <p:commandButton value="Add" process="@form" icon="ui-icon-add" onclick="dlg2.show();">
 			         <p:ajax event="change" update="associateCreation" process="@this" />
 			      </p:commandButton>
 			      <p:commandButton value="Delete" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />     
