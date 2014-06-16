@@ -44,24 +44,24 @@
 				</p:tabMenu>
 			</td>
 			<td width="80%">
-				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 0}">
+			 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 0}">
 					<ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml" />
 				    <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml" />
 				    <ui:include src="/xhtml/ct/agreement/standardDocument.xhtml" />
 				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-				</c:if>
-				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 1}">
+				</p:outputPanel>
+				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="/xhtml/ct/agreement/agencySignerWitnes.xhtml" />
 				    <ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml" />
-				</c:if>
+				</p:outputPanel>
 	
-				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 2}">
+				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 2}">
 					<ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml" />
-				</c:if>
+			     </p:outputPanel>
 				
-				<c:if test="#{agreementBackingBean.managedBean.selectedTabIndex == 3 and !agreementBackingBean.isApprover()}">
+				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 3 and !agreementBackingBean.isApprover()}">
 					<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
-				</c:if>
+				</p:outputPanel>
 				
 			</td>
 		</tr>

@@ -109,7 +109,7 @@
 				</h:panelGrid>
 				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
-					icon="iconAttachment" value="Upload" update="@([id$=uploadAgPg])" />
+					icon="iconAttachment" value="Upload" update=":form:uploadAgPg" />
 				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
 				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}"
 					style="float:left;" styleClass="blue_font"
