@@ -186,21 +186,38 @@
 		</table>
 	</p:panel>
 	<h:panelGroup styleClass="factStyle" id="factStyle">
-		<p:panel header="FACTORING DETAILS" toggleable="true"
+		<p:panel header="FACTORING DETAILS" toggleable="true" id="factoringCompPnl"
 			rendered="#{flOrderBB.managedBean.factoringCheck eq 'true'}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-					<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="Select One" itemValue="1" />
+					<td><p:selectOneMenu id="factoringComp" 
+					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.financialOrgId}" 
+					style="width: 325px;margin-bottom:5px;">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItems var="factoringComp"
+							value="#{flOrderBB.managedBean.pmFinancialOrgs}"
+							itemLabel="#{factoringComp.finOrgName}"
+							itemValue="#{factoringComp.financialOrgId}" />
+						<p:ajax event="change"
+							listener="#{flOrderBB.getSelectedFactoringCompDtl}"
+							update="factoringCompPnl" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-					<td><p:selectOneMenu style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="Select One" itemValue="1" />
+					<td><p:selectOneMenu id="factoringBranch" 
+					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItems var="factoringBranch"
+							value="#{flOrderBB.managedBean.factoringBranchList}"
+							itemLabel="#{factoringBranch.finOrgName}"
+							itemValue="#{factoringBranch.financialBranchId}" />
+						<p:ajax event="change"
+							listener="#{flOrderBB.getSelectedFactoringBranchDtl}"
+							update="factoringCompPnl" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -229,7 +246,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.flRequest.flSupplierDtl.contactPerson}" /></td>
+							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -240,7 +257,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{flOrderBB.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
