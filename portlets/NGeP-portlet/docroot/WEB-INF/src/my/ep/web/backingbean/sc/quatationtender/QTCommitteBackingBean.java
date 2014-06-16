@@ -571,7 +571,12 @@ public class QTCommitteBackingBean extends
 				committeeMember.setPNP(user.isPMP());
 				committeeMember.setPmUser(user);
 				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-				committeeMember.setMemberRole(user.getMemberRole());
+				
+				if(committeeMember.isPNP() == true) {
+					committeeMember.setMemberRole("C");
+				} else {
+					committeeMember.setMemberRole(user.getMemberRole());
+				}
 				committeeMember.setAccessRight("E");
 				committeeMember.setScCommittee(scCommittee);
 				setUserDetails(committeeMember);
