@@ -18,7 +18,7 @@
     		<tr>
     			<td><p:commandButton value="Back" icon="ui-icon-back" ajax="false" immediate="true" action="#{associationBackingBean.gotoCancelPage}"/></td>
     			<td class="ppRightBtn">
-			    	<p:commandButton value="Save" icon="ui-icon-save" ajax="false" validateClient="true" 
+			    	<p:commandButton value="Save" icon="ui-icon-save" ajax="false" validateClient="true" process="@form"
 			       		action="#{associationBackingBean.createAssociation}" style="margin-right:0px;" />  			
     			</td>
     		</tr>
