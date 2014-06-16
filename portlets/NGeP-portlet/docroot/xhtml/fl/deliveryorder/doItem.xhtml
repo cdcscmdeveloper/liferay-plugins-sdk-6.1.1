@@ -78,17 +78,20 @@
 					</p:column>
 					<p:column headerText="Delivery &lt;br /&gt; Qty.">
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product' and createDOBackingBean.managedBean.docType eq 'PR'}">
+							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product' and createDOBackingBean.managedBean.docType eq 'PR' }">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
 								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
-						</p:inputText>
+						</p:inputText>   
+						<h:outputText value="#{doItems.deliveredAmt}" size="5"
+							rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
+						</h:outputText>
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR'}">
+							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR' }">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
 								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 						</p:inputText>
 						<p:inputText value="#{doItems.deliveredQty}" disabled="true"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR'}" />
+							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR' }" />
 						<p:inputText value="#{doItems.deliveredQty}" size="5"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"

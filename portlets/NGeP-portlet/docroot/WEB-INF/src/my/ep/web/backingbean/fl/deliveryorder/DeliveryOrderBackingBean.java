@@ -92,12 +92,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			
 			// do validation for selected address have items with delmount and delQty or not....
-			checkItemsWithDoAddress();
+			checkItemsWithDoAddress(actionName);
 			
 			Long fulfilmentOrderId = Long.valueOf(flOrderId);
 			log.info("fulfilmentOrderId::: "+fulfilmentOrderId);
 			String  statusId = this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			
 			for(FlDeliveryAddress flDeliveryAddress:getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				/*flDeliveryAddress.getAttachmentList().size();
@@ -144,10 +145,23 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
-			
-			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
+			if("UPDATE".equalsIgnoreCase(action)){
+				reqDTO.setPmUser(getManagedBean().getPmUser());
+				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
+			}
+			else{
+				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
+			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700043;
+				
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					messageId = MessageConst.INFO_700043;
+				} else if(action.equalsIgnoreCase("UPDATE")) {
+					messageId = MessageConst.INFO_700047;
+				} 
+				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -174,22 +188,27 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return null;
 	}
 	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
-	private void checkItemsWithDoAddress() {
+	private void checkItemsWithDoAddress(String actionName) {
 		// TODO Auto-generated method stub
 		getManagedBean().getSelectedDelAddressList().size();
 		if(getManagedBean().getSelectedDelAddressList().size()==0){
 			throw new EpException(" Select Deliver Address .");
 		}else{
-			for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getSelectedDelAddressList()){
-				for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
-					//System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemName());
-					itemAddress.getDeliveredQty();
-					itemAddress.getDeliveredAmt();
-					if(null==itemAddress.getDeliveredAmt()){
-						throw new EpException(" Del Qty and Del Amout is Required .");
+			if(!"UPDATE".equalsIgnoreCase(actionName)){
+				for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getSelectedDelAddressList()){
+					for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+						System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemType());
+						System.out.println("Doc type is ::: "+getManagedBean().getDocType());
+						itemAddress.getDeliveredQty();
+						itemAddress.getDeliveredAmt();
+						if(null==itemAddress.getDeliveredAmt()){
+							throw new EpException(" Del Qty and Del Amout is Required .");
+						}
 					}
 				}
+				
 			}
+			
 		}
 		
 	}
@@ -236,14 +255,15 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 	}
 	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
-		int delQtyCal=0;
-		int delAmtCal=0;
-		int unitPriceCal=0;
-		unitPriceCal=itemAddress.getUnitPrice().intValue();
-		delQtyCal= itemAddress.getDeliveredQty().intValue();
-		delAmtCal=unitPriceCal*delQtyCal;
-		BigDecimal total=new BigDecimal(delAmtCal);
-		itemAddress.setDeliveredAmt(total);
+		
+		BigDecimal unitPriceCal=new BigDecimal(0.0);
+		BigDecimal delQtyCal=new BigDecimal(0.0);
+		BigDecimal delAmtCal=new BigDecimal(0.0);
+		
+		unitPriceCal=itemAddress.getUnitPrice();
+		delQtyCal= itemAddress.getDeliveredQty();
+		delAmtCal = unitPriceCal.multiply(delQtyCal);
+		itemAddress.setDeliveredAmt(delAmtCal);
 	}
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());

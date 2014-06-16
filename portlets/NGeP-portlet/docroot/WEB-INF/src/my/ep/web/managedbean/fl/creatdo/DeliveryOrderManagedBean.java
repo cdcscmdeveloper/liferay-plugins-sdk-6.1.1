@@ -18,6 +18,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 //import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -77,6 +78,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
 	private List<FlRemark> remarkList;
 	private List<FlAttachment> attachmentList;
+	
+	private PmUser pmUser;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -560,6 +563,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentList(List<FlAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 	
 }

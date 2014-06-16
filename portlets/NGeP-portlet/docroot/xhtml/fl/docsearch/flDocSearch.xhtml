@@ -48,7 +48,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkTitle}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.title']}" />
-					<p:inputText size="50"
+					<p:inputText size="88"
 						value="#{flDocumentBackingBean.managedBean.searchTitle}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
@@ -57,7 +57,7 @@
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
-						style="width: 366px;">
+						style="width: 620px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="statusList"
 							value="#{flDocumentBackingBean.managedBean.docStatusList}"
@@ -68,7 +68,7 @@
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="cmWidth1">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
-				<p:inputText size="50"
+				<p:inputText size="88"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docDoInvStatusSearch">
