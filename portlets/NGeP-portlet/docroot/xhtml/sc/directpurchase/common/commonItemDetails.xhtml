@@ -43,18 +43,18 @@
 	
 	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-			 <h:outputText value="* " styleClass="mandatory" />
 			 <h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
+			  <h:outputText value="* " styleClass="mandatory" />
 		</f:facet>
           <p:outputPanel>	
-			<table style="width:0%">
+			<table style="width:100%">
 				<tr>
 					<ui:fragment
 						rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
 						<td style="width: 95px;">
 						
 						<p:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
-						 <p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="*" styleClass="mandatory" />
 						
 						</td>
 						<td><p:selectOneMenu required="true" id="ptjName"  label="#{lbl['lbl.sc.request.note.ptj.name']}"
