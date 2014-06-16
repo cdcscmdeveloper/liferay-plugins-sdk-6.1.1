@@ -13,7 +13,7 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForBumi,'PersonnelInfo')}"
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <ui:include
@@ -24,13 +24,13 @@
 							<td><div align="left" style="width: 100%">
 									<p:commandButton value="#{lbl['lbl.sm.prev']}"
 										actionListener="#{backingBean.setTabValue('2','1')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,'BasicInfo')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 										update=":form" icon="ui-icon-prev" />
 								</div></td>
 							<td><div align="right" style="width: 100%">
 									<p:commandButton value="#{lbl['lbl.sm.next']}"
 										actionListener="#{backingBean.setTabValue('2','3')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,'PersonnelInfo')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 										update=":form" icon="ui-icon-next" iconPos="right" />
 								</div></td>
 

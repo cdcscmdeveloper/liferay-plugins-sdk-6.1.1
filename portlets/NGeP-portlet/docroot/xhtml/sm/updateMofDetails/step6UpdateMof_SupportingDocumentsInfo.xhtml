@@ -13,7 +13,8 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							icon="ui-icon-save" style="margin-bottom:5px;" />
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForUpdate,backingBean.managedBean.currentPageType)}"
+							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 						<p:commandButton value="Submit Application"
 							style="margin-bottom:5px;"
 							action="#{backingBean.submitUpdateMofApplToBpm}" />
@@ -29,8 +30,8 @@
 								<tr>
 									<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 											actionListener="#{backingBean.setTabValue('5','4')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,'BasicInfo')}" update=":form"
-											icon="ui-icon-prev" /></td>
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+											update=":form" icon="ui-icon-prev" /></td>
 								</tr>
 							</table>
 						</div>
@@ -44,7 +45,7 @@
 								<tr>
 									<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 											actionListener="#{backingBean.setTabValue('5','4')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,'BasicInfo')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form" icon="ui-icon-prev" /></td>
 								</tr>
 							</table>

@@ -14,7 +14,7 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,'BasicInfo')}"
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <p:outputPanel id="supDocPan">
@@ -25,14 +25,14 @@
 							src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
 						<c:choose>
 							<c:when
-								test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+								test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 								<div class="nav-wrapper">
 									<table style="width: 100%">
 										<tr>
 											<td><div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev']}"
 														actionListener="#{backingBean.setTabValue('8','7')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 														update=":form" icon="ui-icon-prev" />
 												</div></td>
 
@@ -40,7 +40,7 @@
 													<p:commandButton value="#{lbl['lbl.sm.next']}"
 														icon="ui-icon-next" iconPos="right"
 														actionListener="#{backingBean.setTabValue('8','9')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
 														update=":form" />
 												</div></td>
 										</tr>
@@ -54,7 +54,7 @@
 											<td><div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev']}"
 														actionListener="#{backingBean.setTabValue('6','5')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 														update=":form" icon="ui-icon-prev" />
 												</div></td>
 
@@ -62,7 +62,7 @@
 													<p:commandButton value="#{lbl['lbl.sm.next']}"
 														icon="ui-icon-next" iconPos="right"
 														actionListener="#{backingBean.setTabValue('6','7')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
 														update=":form" />
 												</div></td>
 										</tr>
@@ -84,14 +84,14 @@
 											<td><div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev']}"
 														actionListener="#{backingBean.setTabValue('8','7')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 														update=":form" icon="ui-icon-prev" />
 												</div></td>
 											<td><div align="right" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.next']}"
 														icon="ui-icon-next" iconPos="right"
 														actionListener="#{backingBean.setTabValue('8','9')}"
-														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,'BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
 														update=":form" />
 												</div></td>
 										</tr>
@@ -105,14 +105,14 @@
 											<td><div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev']}"
 														actionListener="#{backingBean.setTabValue('6','5')}"
-														action="#{backingBean.updateSmAppl('N','BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 														update=":form" icon="ui-icon-prev" />
 												</div></td>
 											<td><div align="right" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.next']}"
 														icon="ui-icon-next" iconPos="right"
 														actionListener="#{backingBean.setTabValue('6','7')}"
-														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,'BasicInfo')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
 														update=":form" />
 												</div></td>
 										</tr>

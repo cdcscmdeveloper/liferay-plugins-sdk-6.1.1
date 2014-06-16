@@ -85,7 +85,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -379,7 +378,7 @@ public class SmApplicationBackingBean extends
 			calcPersonnelListCount();
 			calculateCapital();
 			calculateBumiPercentageTotals();
-			updateSmAppl(applicationType, "");
+			updateSmAppl(applicationType, "", "");
 			if (smAppl.getSmFacilities() != null
 					&& smAppl.getSmFacilities().isEmpty()
 					&& !smAppl.getApplType().equalsIgnoreCase(
@@ -406,6 +405,8 @@ public class SmApplicationBackingBean extends
 				setApplicationFailities(smAppl.getSmFacilities());
 				// TODO
 			}
+			getManagedBean().setCurrentPageType(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			return setNavigationForAppl(applicationType);
 
 			/*
@@ -559,17 +560,28 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void updateSmApplBpmSubmit(String applType, String pageType,
-			boolean isBpmSubmit) {
-		testUpdateSmAppl(applType, pageType, isBpmSubmit);
+	public void updateSmApplBpmSubmit(String applType, String currentPageType,
+			String outputPageType, boolean isBpmSubmit) {
+		testUpdateSmAppl(applType, currentPageType, outputPageType, isBpmSubmit);
 	}
 
-	public void updateSmAppl(String applType, String pageType) {
-		testUpdateSmAppl(applType, pageType, false);
+	public void updateSmAppl(String applType, String currentPageType,
+			String outputPageType) {
+		System.out.println("******* Current Page Before **** "
+				+ currentPageType);
+		System.out
+				.println("******* Current page before in managed bean ********"
+						+ getManagedBean().getCurrentPageType());
+		System.out.println("********** Output Page before ***********"
+				+ outputPageType);
+		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
+		System.out
+				.println("******* Current page AFTER in managed bean ********"
+						+ getManagedBean().getCurrentPageType());
 	}
 
-	public boolean testUpdateSmAppl(String applType, String pageType,
-			Boolean isBpmSubmit) {
+	public boolean testUpdateSmAppl(String applType, String currentPageType,
+			String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
 		boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -589,7 +601,7 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-			valid = validateBeforeSave(applType, pageType);
+			valid = validateBeforeSave(applType, currentPageType);
 			// valid = true;
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
@@ -602,9 +614,11 @@ public class SmApplicationBackingBean extends
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.updateApplication(reqDto);
+				getManagedBean().setCurrentPageType(outputPageType);
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
+				getManagedBean().setCurrentPageType(currentPageType);
 			}
 			// if (valid) {
 			// valid = retriveLatestApplAfterUpdate(pageType);
@@ -626,13 +640,13 @@ public class SmApplicationBackingBean extends
 		//
 		// }
 		finally {
-			isError = retriveLatestApplAfterUpdate(pageType);
+			isError = retriveLatestApplAfterUpdate(currentPageType);
 			mofRegistrationSO = null;
 		}
 		return isError;
 	}
 
-	private boolean retriveLatestApplAfterUpdate(String pageType) {
+	private boolean retriveLatestApplAfterUpdate(String currentPageType) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -670,7 +684,8 @@ public class SmApplicationBackingBean extends
 				setDefaultApproverReviewSection();
 			}
 
-			if (pageType.equalsIgnoreCase("CapitalInfo")) {
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 				System.out.println(" ****8 This is capital ********* ");
 				for (int i = 0; i < getManagedBean().getSmAppl()
 						.getSmSupplierBranches().size(); i++) {
@@ -693,6 +708,7 @@ public class SmApplicationBackingBean extends
 			}
 			return true;
 		} catch (Exception e) {
+			getManagedBean().setCurrentPageType(currentPageType);
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
@@ -864,11 +880,11 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private Boolean validateBeforeSave(String applType, String pageType) {
-		System.out.println("******* Page Type ********" + pageType);
+	private Boolean validateBeforeSave(String applType, String currentPageType) {
+		System.out.println("******* Page Type ********" + currentPageType);
 		boolean validSave = true;
-		switch (pageType) {
-		case "BasicInfo":
+		switch (currentPageType) {
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 			if (this.getManagedBean().getSmAppl().getSmFacilities().isEmpty()) {
 				this.getManagedBean().getSmAppl().getSmFacilities()
 						.add(this.getManagedBean().getBasicCompanyFacility());
@@ -921,7 +937,7 @@ public class SmApplicationBackingBean extends
 			System.out.println("******** Before save cert size ******"
 					+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 			break;
-		case "CapitalInfo":
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			// assignEnteredStaffValues();
 			if (getManagedBean().getSmapplShareHolders() == null
 					|| getManagedBean().getSmapplShareHolders().isEmpty()) {
@@ -953,7 +969,7 @@ public class SmApplicationBackingBean extends
 			}
 			calcPersonnelListCount();
 			break;
-		case "PersonnelInfo":
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 			int mgmtCount = 0;
 			int staffCount = 0;
 			int directorCount = 0;
@@ -1107,7 +1123,7 @@ public class SmApplicationBackingBean extends
 			}
 			calculateBumiPercentageTotals();
 			break;
-		case "BankInfo":
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
 			int payAccCnt = 0;
 
 			for (SmSupplierBank bank : getManagedBean().getSmAppl()
@@ -1124,7 +1140,7 @@ public class SmApplicationBackingBean extends
 				throw new EpException(MessageConst.ERROR_722515);
 			}
 			break;
-		case "SupportingDocs":
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& getManagedBean().getSmAppl().getSmSupplierCategories()
 							.size() > 0) {
@@ -3317,7 +3333,8 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 			}
 			getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-			updateSmAppl(bpmAppl.getApplType(), "BasicInfo");
+			updateSmAppl(bpmAppl.getApplType(),
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "");
 			// }
 			System.out.println(" **** SUPPORTING DOC MODE ****"
 					+ bpmAppl.getSupportingDocMode());
@@ -3588,13 +3605,13 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public String saveApplicationAsDraft(String applType, String pageType) {
-		System.out.println("****** Save As Draft **********");
+	public String saveApplicationAsDraft(String applType, String currentPageType) {
+		System.out.println("****** Save As Draft **********" + currentPageType);
 		boolean valid = false;
 		try {
-			valid = validateBeforeSave(applType, pageType);
+			valid = validateBeforeSave(applType, currentPageType);
 			if (valid) {
-				valid = intializeSaveDraftBpm(pageType);
+				valid = intializeSaveDraftBpm(currentPageType);
 			}
 			if (!valid) {
 				System.out.println("******* Process No Valid ******");
@@ -3631,7 +3648,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	@SuppressWarnings("finally")
-	private boolean intializeSaveDraftBpm(String pageType) {
+	private boolean intializeSaveDraftBpm(String currentPageType) {
 		System.out.println("*********  intializeSaveDraftBpm ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = false;
@@ -3668,7 +3685,7 @@ public class SmApplicationBackingBean extends
 		} finally {
 			regSo = null;
 			if (valid) {
-				return retriveLatestApplAfterUpdate(pageType);
+				return retriveLatestApplAfterUpdate(currentPageType);
 			} else {
 				return valid;
 			}
@@ -3793,8 +3810,9 @@ public class SmApplicationBackingBean extends
 
 			System.out.println("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			validSiteVisit = testUpdateSmAppl("Basic", getManagedBean()
-					.getSmAppl().getApplType(), true);
+			validSiteVisit = testUpdateSmAppl(getManagedBean().getSmAppl()
+					.getApplType(),
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
 			if (res.equalsIgnoreCase("Approve")) {
 				validSiteVisit = updateSmSupplierInfo(getManagedBean()
 						.getSmAppl().getApplType());

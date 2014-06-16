@@ -228,6 +228,23 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
 	public static final String PM_STATUS_DELETE_COMPANY = "20188";
+	
+	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
+	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
+	public static final String SM_APPL_PAGE_TYPE_EQUITY= "EQUITYINFO";
+	public static final String SM_APPL_PAGE_TYPE_PERSONNEL = "PERSONNELINFO";
+	public static final String SM_APPL_PAGE_TYPE_BANK = "BANKINFO";
+	public static final String SM_APPL_PAGE_TYPE_CATEGORY = "CATEGORYINFO";
+	public static final String SM_APPL_PAGE_TYPE_FACTORY = "FACTORYINFO";
+	public static final String SM_APPL_PAGE_TYPE_EQUIP = "EQUIPINFO";
+	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = "SUPPORTDOCSINFO";
+	public static final String SM_APPL_PAGE_TYPE_PAYMENT = "PAYMENTINFO";
+	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCSREV = "SUPPORTDOCSREVIEW";
+	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
+	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
+	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
+	
+	
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
@@ -472,6 +489,62 @@ public class SupplierManagementConst {
 
 	public String getACC_MOF() {
 		return ACC_MOF;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_BASIC() {
+		return SM_APPL_PAGE_TYPE_BASIC;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_BRANCH() {
+		return SM_APPL_PAGE_TYPE_BRANCH;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_EQUITY() {
+		return SM_APPL_PAGE_TYPE_EQUITY;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_PERSONNEL() {
+		return SM_APPL_PAGE_TYPE_PERSONNEL;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_BANK() {
+		return SM_APPL_PAGE_TYPE_BANK;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_CATEGORY() {
+		return SM_APPL_PAGE_TYPE_CATEGORY;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_FACTORY() {
+		return SM_APPL_PAGE_TYPE_FACTORY;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_EQUIP() {
+		return SM_APPL_PAGE_TYPE_EQUIP;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_SUPPORTDOCS() {
+		return SM_APPL_PAGE_TYPE_SUPPORTDOCS;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_PAYMENT() {
+		return SM_APPL_PAGE_TYPE_PAYMENT;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_SUPPORTDOCSREV() {
+		return SM_APPL_PAGE_TYPE_SUPPORTDOCSREV;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_SITEVISITREV() {
+		return SM_APPL_PAGE_TYPE_SITEVISITREV;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_PODEC() {
+		return SM_APPL_PAGE_TYPE_PODEC;
+	}
+
+	public String getSM_APPL_PAGE_TYPE_APPRDEC() {
+		return SM_APPL_PAGE_TYPE_APPRDEC;
 	}
 
 }

@@ -14,7 +14,7 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,'BasicInfo')}"
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 						<p:commandButton value="Submit For Payment"
 							action="#{backingBean.submitRenewMofApplToBpm}"
@@ -33,8 +33,8 @@
 										<td><div align="left" style="width: 99%">
 												<p:commandButton value="#{lbl['lbl.sm.prev']}"
 													actionListener="#{backingBean.setTabValue('9','8')}"
-													action="#{backingBean.updateSmAppl}" update=":form"
-													icon="ui-icon-prev" />
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+													update=":form" icon="ui-icon-prev" />
 											</div></td>
 
 									</tr>
@@ -48,8 +48,8 @@
 										<td><div align="left" style="width: 99%">
 												<p:commandButton value="#{lbl['lbl.sm.prev']}"
 													actionListener="#{backingBean.setTabValue('7','6')}"
-													action="#{backingBean.updateSmAppl}" update=":form"
-													icon="ui-icon-prev" />
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+													update=":form" icon="ui-icon-prev" />
 											</div></td>
 
 

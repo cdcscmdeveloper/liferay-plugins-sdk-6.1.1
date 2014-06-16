@@ -34,7 +34,7 @@
 										<p:commandButton value="#{lbl['lbl.sm.next']}"
 											icon="ui-icon-next" iconPos="right"
 											actionListener="#{backingBean.setTabValue(0,1)}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 											update=":form" />
 									</div>
 								</td>
@@ -70,7 +70,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.next']}"
 								icon="ui-icon-next" iconPos="right"
 								actionListener="#{backingBean.setTabValue(0,1)}"
-								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 								update=":form" />
 						</div>
 					</td>

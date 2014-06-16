@@ -12,7 +12,7 @@
 			<td><p:outputPanel>
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <h:inputHidden
@@ -28,13 +28,13 @@
 							<td><div align="left" style="width: 99%">
 									<p:commandButton value="#{lbl['lbl.sm.prev']}"
 										actionListener="#{backingBean.setTabValue('6','5')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}" update=":form"
-										icon="ui-icon-prev" />
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+										update=":form" icon="ui-icon-prev" />
 								</div></td>
 							<td><div align="right" style="width: 99%">
 									<p:commandButton value="#{lbl['lbl.sm.next']}"
 										actionListener="#{backingBean.setTabValue('6','7')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form" icon="ui-icon-next" iconPos="right" />
 								</div></td>
 						</tr>

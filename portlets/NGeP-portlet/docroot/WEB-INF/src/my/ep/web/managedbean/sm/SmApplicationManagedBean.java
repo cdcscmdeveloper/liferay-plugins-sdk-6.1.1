@@ -344,6 +344,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private boolean draftedAppl;
 
+	private String currentPageType;
+
 	public SmApplicationManagedBean() {
 		System.out.println("******** Enter Managed Bean *******888");
 		// TODO Checking the user role
@@ -1993,6 +1995,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDraftedAppl(boolean draftedAppl) {
 		this.draftedAppl = draftedAppl;
+	}
+
+	public String getCurrentPageType() {
+		return currentPageType;
+	}
+
+	public void setCurrentPageType(String currentPageType) {
+		this.currentPageType = currentPageType;
 	}
 
 }

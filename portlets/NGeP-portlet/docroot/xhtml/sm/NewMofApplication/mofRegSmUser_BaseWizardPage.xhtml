@@ -28,7 +28,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab eq 0}" /> -->
 									<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 0}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
 								</li>
@@ -38,7 +39,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 1}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 1}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" />
 								</li>
@@ -48,7 +50,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 2}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 
@@ -57,7 +60,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 3}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
@@ -66,7 +70,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 4}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
@@ -75,7 +80,8 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+										update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
 
@@ -86,7 +92,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
 											<p:commandLink value="#{lbl['lbl.sm.factoryStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
 										<li><h:outputText
@@ -94,7 +101,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
 											<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
 										<li><h:outputText
@@ -102,7 +110,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
 											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
 										<li><h:outputText
@@ -110,7 +119,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 9}" />
 											<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 9}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" /></li>
 									</c:when>
@@ -120,7 +130,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
 											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
 										<li><h:outputText
@@ -128,7 +139,8 @@
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
 											<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-												action="#{backingBean.updateSmAppl}" update=":form"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
+												update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
 									</c:otherwise>
@@ -200,8 +212,8 @@
 								<td></td>
 								<td>
 									<div align="right" style="width: 99%" class="button-wrapper">
-										<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-											action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+										<p:commandButton value="Drafts"
+											action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 											update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 									</div>
 								</td>
@@ -219,7 +231,7 @@
 									<td>
 										<div align="right" style="width: 99%" class="button-wrapper">
 											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" icon="ui-icon-save"
 												style="margin-bottom:5px;" />
 										</div>

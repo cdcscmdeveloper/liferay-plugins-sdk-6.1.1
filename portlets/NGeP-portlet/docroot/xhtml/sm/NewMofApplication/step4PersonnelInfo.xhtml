@@ -10,7 +10,7 @@
 			<tr>
 				<td style="width: 20%; vertical-align: baseline;"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
-				<td> <ui:include
+				<td><ui:include
 						src="/xhtml/sm/shared/mofRegistration/personnelInfoForm.xhtml" />
 					<div class="nav-wrapper">
 						<table style="width: 100%">
@@ -18,13 +18,13 @@
 								<td><div align="left" style="width: 99%">
 										<p:commandButton value="#{lbl['lbl.sm.prev']}"
 											actionListener="#{backingBean.setTabValue('3','2')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 											update=":form" icon="ui-icon-prev" />
 									</div></td>
 								<td><div align="right" style="width: 99%">
 										<p:commandButton value="#{lbl['lbl.sm.next']}"
 											actionListener="#{backingBean.setTabValue('3','4')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'PersonnelInfo')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form" icon="ui-icon-next" iconPos="right" />
 									</div></td>
 							</tr>
@@ -45,13 +45,13 @@
 					<td><div align="left" style="width: 99%">
 							<p:commandButton value="#{lbl['lbl.sm.prev']}"
 								actionListener="#{backingBean.setTabValue('3','2')}"
-								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'BasicInfo')}"
+								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 								update=":form" icon="ui-icon-prev" />
 						</div></td>
 					<td><div align="right" style="width: 99%">
 							<p:commandButton value="#{lbl['lbl.sm.next']}"
 								actionListener="#{backingBean.setTabValue('3','4')}"
-								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,'PersonnelInfo')}"
+								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 								update=":form" icon="ui-icon-next" iconPos="right" />
 						</div></td>
 				</tr>

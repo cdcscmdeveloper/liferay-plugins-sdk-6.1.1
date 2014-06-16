@@ -13,7 +13,7 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 						<p:commandButton value="Submit Application"
 							style="margin-bottom:5px;"
@@ -46,7 +46,7 @@
 									<tr>
 										<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 												actionListener="#{backingBean.setTabValue('7','6')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 												update=":form" icon="ui-icon-prev" /></td>
 
 									</tr>
@@ -57,7 +57,7 @@
 									<tr>
 										<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 												actionListener="#{backingBean.setTabValue('5','4')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,'BasicInfo')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 												update=":form" icon="ui-icon-prev" /></td>
 
 									</tr>
