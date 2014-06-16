@@ -118,9 +118,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 		if (getManagedBean().getFactoring() == null) {
 			initializeFactoring();
+		} 
+		if(ctBB == null){
 			ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		} 
+		}
 	}
 	
 	private void initializeFactoring() {
