@@ -8,10 +8,13 @@
 
 	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.so.bo.new']}"
 		widgetVar="newbusinessowner" modal="true" position="top">
-		<p:panel toggleable="true" styleClass="qtAddMember">
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
+			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
-				<p:selectOneRadio
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:selectOneRadio id="selection"
 					value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
 						value="#{qTBusinessOwnerBackingBean.managedBean.selections}" />
@@ -19,6 +22,7 @@
 						listener="#{qTBusinessOwnerBackingBean.userSelcetionAction}"
 						update="newProfile"></p:ajax>
 				</p:selectOneRadio>
+				<p:message id="selectionMsg" for="selection" display="icon" />
 			</h:panelGrid>
 
 			<p:panel id="newProfile" style="width:100%;margin-top:10px;">
@@ -114,67 +118,86 @@
 						<table>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.name']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.name']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="name" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.name']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.memberName}"
-										size="30" /></td>
+										size="30" maxlength="50" /> <p:message id="nameMsg"
+										for="name" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /></td>
-								<td><p:selectOneMenu id="apptypeaction"
+										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneMenu id="idtype" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.idtype']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.idType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="idtypeMsg" for="idtype" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
 							<tr>
 								<td style="width: 130px;"><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /></td>
-								<td><p:inputText id="idNos"
+										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText id="idNos" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.idno']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}"
-										size="30" /></td>
+										size="30" maxlength="15" /> <p:message id="idNosMsg"
+										for="idNos" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /></td>
-								<td><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText id="grade" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.grade']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.grade}"
-										size="30" /></td>
+										size="30" maxlength="10" /> <p:message id="gradeMsg"
+										for="grade" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /></td>
-								<td><p:selectOneRadio
+										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneRadio id="pnp" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.pp']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.PNP}">
 										<f:selectItem itemLabel="Yes" itemValue="true" />
 										<f:selectItem itemLabel="No" itemValue="false" />
-									</p:selectOneRadio></td>
+									</p:selectOneRadio> <p:message id="pnpMsg" for="pnp" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /></td>
-								<td><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText id="designation" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.designation']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.designation}"
-										size="30" /></td>
+										size="30" maxlength="50" /> <p:message id="designationMsg"
+										for="designation" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.email']}" /></td>
-								<td><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.email']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText id="email" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.email']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.email}"
-										size="30" /></td>
+										size="30" maxlength="80" /> <p:message id="emailMsg"
+										for="email" display="icon" /></td>
 								<td />
 								<td />
 							</tr>
@@ -182,15 +205,17 @@
 					</p:panel>
 				</c:if>
 			</p:panel>
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-				style="float:right;"
-				action="#{qTBusinessOwnerBackingBean.cancelCommitteAction}"
-				oncomplete="newbusinessowner.hide();" update="businessownerId"
-				icon="ui-icon-cancel" />
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
-				onclick="newbusinessowner.hide();" update="businessownerId"
-				process="@this, newProfile" icon="ui-icon-check"
-				actionListener="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+					process="@this, newProfile, bopanel"
+					action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
+					ajax="true" icon="ui-icon-check" update="businessownerId, bopanel" />
+
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					action="#{qTBusinessOwnerBackingBean.cancelCommitteAction}"
+					oncomplete="newbusinessowner.hide();" update="businessownerId"
+					icon="ui-icon-cancel" />
+			</div>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

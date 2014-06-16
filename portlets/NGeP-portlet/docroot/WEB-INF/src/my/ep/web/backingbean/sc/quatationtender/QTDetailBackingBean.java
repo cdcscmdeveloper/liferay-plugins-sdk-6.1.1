@@ -842,7 +842,6 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					
 				}
 				List<ScQtBsvDtl> briefBeansList = getManagedBean()
 						.getBriefingZoneBean().get(0).getBriefingList();
@@ -1053,7 +1052,7 @@ public class QTDetailBackingBean extends
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField(QTConstants.PROCUREMENT_MODE);
+				bean.setSearchField("scQt.procurementMode.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);

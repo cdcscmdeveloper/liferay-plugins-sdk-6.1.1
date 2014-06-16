@@ -566,7 +566,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void onRowSelect(SelectEvent event) {
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
-		this.getManagedBean().setBriefingAttendanceList(
+		this.getManagedBean().setScQtBsvAttendanceList(
 				briefingRegistration.getBsvAttendance());
 	}
 

@@ -40,8 +40,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
@@ -343,7 +343,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String previousPage;
 	private List<ScQtBsvRegistration> briefingRegistrationList;
 	private ScQtBsvRegistration selectedbriefRegistration;
-	private List<ScQtBriefingAttendance> briefingAttendanceList;
+	private List<ScQtBsvAttendance> scQtBsvAttendanceList;
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private List<TplSpecZoneDtl> zones;
 	private List<ScRemark> remarks;
@@ -380,7 +380,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtApprovalRequest> scQtApprovalRequestList;
 	private String approvalType;
 	private ISearchResultBean<ScQtCommittee> qtCommittes;
-	
+
 	private List<ScQtCheckList> technicalSpecList;
 	private List<ScQtCheckList> financialSpecList;
 
@@ -404,8 +404,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 					node0);
 		}
 
-		//getBudgetApproverNames();
-		//getCommitteeApproverNames();
+		// getBudgetApproverNames();
+		// getCommitteeApproverNames();
 		getPTJApproverNames();
 		getPublicationApprovalNames();
 
@@ -427,18 +427,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				selectedApprover);
 	}
 
-	/*private void getCommitteeApproverNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover = userResDTO.getUserList();
-		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		committeeApprovalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
-	}*/
+	/*
+	 * private void getCommitteeApproverNames() { IUserSO iUserSO = (IUserSO)
+	 * BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	 * UserReqDTO userReqDto = new UserReqDTO();
+	 * userReqDto.setRoleCode(RoleCode.APPROVER.value()); UserResDTO userResDTO
+	 * = iUserSO.retrieveUserListByRole(userReqDto); List<PmUser>
+	 * availableApprover = userResDTO.getUserList(); List<PmUser>
+	 * selectedApprover = new ArrayList<PmUser>(); committeeApprovalUsers = new
+	 * DualListModel<PmUser>(availableApprover, selectedApprover); }
+	 */
 
 	private void getPTJApproverNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
@@ -453,18 +452,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				selectedApprover);
 	}
 
-	/*private void getBudgetApproverNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover = userResDTO.getUserList();
-		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		budgetApprovalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
-	}*/
+	/*
+	 * private void getBudgetApproverNames() { IUserSO iUserSO = (IUserSO)
+	 * BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	 * UserReqDTO userReqDto = new UserReqDTO();
+	 * userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value()); UserResDTO
+	 * userResDTO = iUserSO.retrieveUserListByRole(userReqDto); List<PmUser>
+	 * availableApprover = userResDTO.getUserList(); List<PmUser>
+	 * selectedApprover = new ArrayList<PmUser>(); budgetApprovalUsers = new
+	 * DualListModel<PmUser>(availableApprover, selectedApprover); }
+	 */
 
 	public String getALPHA_NUM() {
 		return ALPHA_NUM;
@@ -2007,15 +2005,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.previousPage = previousPage;
 	}
 
-	public List<ScQtBriefingAttendance> getBriefingAttendanceList() {
-		return briefingAttendanceList;
-	}
-
-	public void setBriefingAttendanceList(
-			List<ScQtBriefingAttendance> briefingAttendanceList) {
-		this.briefingAttendanceList = briefingAttendanceList;
-	}
-
 	public List<PmUser> getPmUsersList() {
 		return pmUsersList;
 	}
@@ -2272,6 +2261,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setFinancialSpecList(List<ScQtCheckList> financialSpecList) {
 		this.financialSpecList = financialSpecList;
+	}
+
+	public List<ScQtBsvAttendance> getScQtBsvAttendanceList() {
+		return scQtBsvAttendanceList;
+	}
+
+	public void setScQtBsvAttendanceList(
+			List<ScQtBsvAttendance> scQtBsvAttendanceList) {
+		this.scQtBsvAttendanceList = scQtBsvAttendanceList;
 	}
 
 }

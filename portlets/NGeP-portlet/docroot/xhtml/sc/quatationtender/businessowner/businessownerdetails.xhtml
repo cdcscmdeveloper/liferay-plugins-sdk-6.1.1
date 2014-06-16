@@ -7,19 +7,25 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.so.business.owner']}" toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.so.business.owner']}" />
+		</f:facet>
 		<p:dataTable id="businessownerId"
 			value="#{qTBusinessOwnerBackingBean.managedBean.scCommitteeMemberList}"
 			var="businessowner" rowIndexVar="index" editable="true"
 			rowKey="#{businessowner}"
 			selection="#{qTBusinessOwnerBackingBean.managedBean.selectScCommitteMember}">
 
-			<p:ajax event="rowSelectRadio" listener="#{qTBusinessOwnerBackingBean.consolidateRowSelectRadio}" />
-			
+			<p:ajax event="rowSelectRadio"
+				listener="#{qTBusinessOwnerBackingBean.consolidateRowSelectRadio}" />
+
 			<ac:paginator for="businessownerId" />
 
 			<p:column style="width:2%">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox id="selAllChk" value1="#{qTBusinessOwnerBackingBean.consolidateSelectAll}">
+					<p:selectBooleanCheckbox id="selAllChk"
+						value1="#{qTBusinessOwnerBackingBean.consolidateSelectAll}">
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{businessowner.selected}">
@@ -48,7 +54,12 @@
 				<h:outputText value="#{businessowner.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
-				style="width:10%" selectionMode="single" />
+				style="width:10%" selectionMode="single">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.so.bo.consolidate']}" />
+				</f:facet>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
@@ -81,23 +92,21 @@
 		<h:panelGroup id="approvalSpec">
 			<p:panel
 				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq ne '0'}">
-				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
-					columnClasses="columnWidth30">
-					<h:column>
-						<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
-					</h:column>
-					<h:column>
-						<p:selectOneMenu id="ministryspec" label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
-							value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
-							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
-							<f:selectItems
-								value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
-								var="appName" itemLabel="#{appName.userName}"
-								itemValue="#{appName.userId}" />
-						</p:selectOneMenu>
-						<p:message id="ministryspecMsg" for="ministryspec" display="icon" />
-					</h:column>
+				<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
+
+					<p:selectOneMenu id="ministryspec"
+						label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
+						value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+						<f:selectItems
+							value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
+							var="appName" itemLabel="#{appName.userName}"
+							itemValue="#{appName.userId}" />
+					</p:selectOneMenu>
+					<p:message id="ministryspecMsg" for="ministryspec" display="icon" />
 				</h:panelGrid>
 			</p:panel>
 		</h:panelGroup>

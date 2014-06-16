@@ -9,25 +9,28 @@
 		<div align="left" class="header-info">
 			<table>
 				<tr>
-					<td style="width: 275px"><h:outputLabel
-							value="#{lbl['lbl.so.qtnno']}" /></td>
-					<td><p:inputText value="#{qTDetailBB.managedBean.qt.qtNo}"
-							disabled="true" size="21" /></td>
-					<td style="width: 350px"><h:outputLabel
-							value="#{lbl['lbl.so.planno']}" /></td>
-					<td><p:inputText
-							value="#{qTDetailBB.managedBean.qt.ppPlan.planNo}"
-							disabled="true" size="21" /></td>
-					<td style="width: 400px"><h:outputLabel
-							value="#{lbl['lbl.so.ptj.name']}" /></td>
-					<td><p:inputText
-							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}"
-							disabled="true" size="50" /></td>
-					<td style="width: 200px"><h:outputLabel
-							value="#{lbl['lbl.so.status']}" /></td>
-					<td><p:inputText
-							value="#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qt.qtStatus.statusId)}"
-							disabled="true" size="30" /></td>
+					<td style="width: 275px">
+						<h:outputLabel value="#{lbl['lbl.so.qtnno']}" />
+					</td>
+					<td style="width: 15%" class="header-info-text">
+						#{qTDetailBB.managedBean.qt.qtNo}
+					</td>
+					<td style="width: 350px">
+						<h:outputLabel value="#{lbl['lbl.so.planno']}" />
+					</td>
+					<td style="width: 10%" class="header-info-text">
+						#{qTDetailBB.managedBean.qt.ppPlan.planNo}</td>
+					<td style="width: 400px">
+						<h:outputLabel value="#{lbl['lbl.so.ptj.name']}" />
+					</td>
+					<td style="width: 30%" class="header-info-text">
+						#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}</td>
+					<td style="width: 200px">
+						<h:outputLabel value="#{lbl['lbl.so.status']}" />
+					</td>
+					<td style="width: 15%" class="header-info-text">
+						#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qt.qtStatus.statusId)}
+					</td>
 				</tr>
 			</table>
 		</div>

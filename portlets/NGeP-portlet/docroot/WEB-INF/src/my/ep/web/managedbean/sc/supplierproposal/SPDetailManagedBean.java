@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -49,6 +50,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private ScQtCheckList scQtCheckList;
 	private long days;
+	private int activeIndex;
+	private int proposalIndex;
 
 	// Tab Menu
 	private int prepareActiveIndex;
@@ -69,6 +72,11 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtProposalScore scQtProposalScore;
 
 	private ScQtDoc scQtDoc;
+
+	private List<TplSpecZoneDtl> zones;
+	private TplSpecZoneDtl selectedZone;
+	private int prepareProposal;
+	private List<ScQtProposal> qtProposalsList;
 
 	// Federal Government
 	private List<ScLoa> scLoaList;
@@ -489,6 +497,54 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setDays(long days) {
 		this.days = days;
+	}
+
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+
+	public int getPrepareProposal() {
+		return prepareProposal;
+	}
+
+	public void setPrepareProposal(int prepareProposal) {
+		this.prepareProposal = prepareProposal;
+	}
+
+	public List<ScQtProposal> getQtProposalsList() {
+		return qtProposalsList;
+	}
+
+	public void setQtProposalsList(List<ScQtProposal> qtProposalsList) {
+		this.qtProposalsList = qtProposalsList;
+	}
+
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
+	}
+
+	public int getProposalIndex() {
+		return proposalIndex;
+	}
+
+	public void setProposalIndex(int proposalIndex) {
+		this.proposalIndex = proposalIndex;
 	}
 
 }

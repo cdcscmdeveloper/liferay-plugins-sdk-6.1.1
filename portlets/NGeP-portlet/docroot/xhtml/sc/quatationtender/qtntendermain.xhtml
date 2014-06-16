@@ -9,8 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
+		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
 		<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true"
 			id="qtsearchid">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
@@ -20,14 +21,14 @@
 				<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
 				<p:inputText id="qtnno"
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}"
-					size="29" />
+					size="29" maxlength="21" />
 
 				<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
-						value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+						value="#{qTDetailBB.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
@@ -135,31 +136,27 @@
 
 			<br />
 
-			
+
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td width="100%"><h:outputLabel value="Select PTJ" /></td>
-					<td class="ppRightBtn" style="white-space: nowrap;">
-						
-						<p:selectOneMenu
-								value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
-								<f:selectItem itemLabel="Select One" itemValue="null" />
-								<f:selectItems
-									value="#{qTDetailBB.managedBean.userDivisionList}"
-									var="pmOrgProfile"
-									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change"
-									listener="#{qTDetailBB.handlePTJNameChanged(qTDetailBB.managedBean.qt.pmOrgProfile)}" />
-							</p:selectOneMenu>
-						<p:commandButton
-								value="#{lbl['lbl.so.qtmscreen']}"
-								action="#{qTBusinessOwnerBackingBean.createBusinessOwner}" icon="ui-icon-add"
-								rendered="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId != 'null'}" />
+					<td class="ppRightBtn" style="white-space: nowrap;"><p:selectOneMenu
+							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
+							<f:selectItem itemLabel="Select One" itemValue="null" />
+							<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
+								var="pmOrgProfile"
+								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+								itemValue="#{pmOrgProfile.orgProfileId}" />
+							<p:ajax event="change"
+								listener="#{qTDetailBB.handlePTJNameChanged(qTDetailBB.managedBean.qt.pmOrgProfile)}" />
+						</p:selectOneMenu> <p:commandButton value="#{lbl['lbl.so.qtmscreen']}"
+							action="#{qTBusinessOwnerBackingBean.createBusinessOwner}"
+							icon="ui-icon-add"
+							rendered="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId != 'null'}" />
 					</td>
 				</tr>
 			</table>
-			
+
 			<br />
 			<br />
 		</p:panel>

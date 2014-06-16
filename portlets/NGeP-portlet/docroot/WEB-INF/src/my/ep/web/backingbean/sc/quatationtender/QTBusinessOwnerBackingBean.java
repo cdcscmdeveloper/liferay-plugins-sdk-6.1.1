@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -67,6 +68,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
@@ -231,6 +233,14 @@ public class QTBusinessOwnerBackingBean extends
 			usernameSearchBean.setSearchValue(getManagedBean().getName());
 			searchBean.getDataFilterBeans().add(usernameSearchBean);
 
+		}
+		
+		if(getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())) {
+			SearchFilterBean idtypeSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			idtypeSearchBean.setSearchField("identificationCode.parameterCode");
+			idtypeSearchBean.setSearchValue(getManagedBean().getIdentificationType());
+			searchBean.getDataFilterBeans().add(idtypeSearchBean);
 		}
 
 		if (getManagedBean().getIdentificationNo() != null
@@ -523,6 +533,9 @@ public class QTBusinessOwnerBackingBean extends
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
 		scQtCommittee.setScCommittee(scCommittee);
 		this.getManagedBean().setScQtCommittee(scQtCommittee);
+		
+		// BO validation
+		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
 	}
 
 	public void deleteBusinessOwner() {
@@ -583,10 +596,20 @@ public class QTBusinessOwnerBackingBean extends
 			detailSO = getDetailSO();
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
-
-			QuationTenderResDTO quationTenderResDTO = (QuationTenderResDTO) detailSO
-					.saveQTDtl(quationTenderReqDTO);
-			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
+			
+			List<FacesMessage> messages = new ArrayList<FacesMessage>();
+	        for (Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages(); iter.hasNext();)
+	        {
+	            messages.add(iter.next());
+	            //iter.remove();
+	        }
+	        if (messages.size() == 0)
+	        {
+	        	quationTenderResDTO = (QuationTenderResDTO) detailSO
+						.saveQTDtl(quationTenderReqDTO);
+				this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+	        }
 
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
@@ -629,11 +652,22 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		// No need to set the below fields automatically set by listener
 		setUserDetails(scQt);
-
+		
 		// Setting the Business Owner details to Qtdetails
-		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();		
-		qtCommittees.add(this.getManagedBean().getScQtCommittee());
-		scQt.setScQtCommittees(qtCommittees);
+		if(this.getManagedBean().getScCommitteeMemberList() != null && !this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
+			List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();		
+			qtCommittees.add(this.getManagedBean().getScQtCommittee());
+			scQt.setScQtCommittees(qtCommittees);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_100022,
+									new String[] { "Business Owner", },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
 
 		// Constructing reqDto
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
@@ -648,17 +682,28 @@ public class QTBusinessOwnerBackingBean extends
 			detailSO = getDetailSO();
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
+			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
+			
+			List<FacesMessage> messages = new ArrayList<FacesMessage>();
+	        for (Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages(); iter.hasNext();)
+	        {
+	            messages.add(iter.next());
+	            //iter.remove();
+	        }
+	        if (messages.size() == 0)
+	        {
+	        	FacesScopes facesScopes = new FacesScopes();
+				String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+				quationTenderReqDTO.setToken(ctxToken);
+				quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				quationTenderReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				
+	        	quationTenderResDTO = detailSO
+	 					.submitQT(quationTenderReqDTO);
+	        }
 
-			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			quationTenderReqDTO.setToken(ctxToken);
-			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			quationTenderReqDTO.setPayLoad(this.getManagedBean()
-					.getQuotationTenderDataType());
-
-			QuationTenderResDTO quationTenderResDTO = detailSO
-					.submitQT(quationTenderReqDTO);
-			if (quationTenderResDTO.isSuccessful()) {
+	        if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 
 				FacesContext
@@ -713,6 +758,7 @@ public class QTBusinessOwnerBackingBean extends
 		this.getManagedBean().setScQtCommittee(qtCommitte);
 		this.getManagedBean().setScCommitteeMemberList(
 				qtCommitte.getScCommittee().getScCommitteeMembers());
+		this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		PmStatus qtStatus = new PmStatus();
 		qtStatus.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
 		scQt.setQtStatus(qtStatus);
