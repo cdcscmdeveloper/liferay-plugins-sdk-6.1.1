@@ -56,7 +56,7 @@
 		   <h:outputText value="#{associationBackingBean.getAssocContractCount(data.associationId)}" />
 		 </p:column>
 		 <p:column style="width:15%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
-		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" styleClass="column-align-center">
+		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			  <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
 			  <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 		   </p:commandLink> 
