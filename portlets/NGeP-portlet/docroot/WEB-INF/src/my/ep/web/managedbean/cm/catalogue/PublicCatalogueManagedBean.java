@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.cm.catalogue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
-import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "pCatalogueMB")
 @SessionScoped
@@ -37,6 +37,11 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private List <CmSupplierItem> catalogueList;
 	private List <CmUnspsc> popularFamilyList;
 	private boolean frontPage = true;
+	private BigDecimal priceForm;
+	private BigDecimal priceTo;
+	private String familyCode;
+	private List<String> familyCodeList;
+	
 	
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -203,6 +208,51 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public void setFrontPage(boolean frontPage) {
 		this.frontPage = frontPage;
 	}
+
+
+	public BigDecimal getPriceForm() {
+		return priceForm;
+	}
+
+
+	public void setPriceForm(BigDecimal priceForm) {
+		this.priceForm = priceForm;
+	}
+
+
+	public BigDecimal getPriceTo() {
+		return priceTo;
+	}
+
+
+	public void setPriceTo(BigDecimal priceTo) {
+		this.priceTo = priceTo;
+	}
+
+
+	public String getFamilyCode() {
+		return familyCode;
+	}
+
+
+	public void setFamilyCode(String familyCode) {
+		this.familyCode = familyCode;
+	}
+
+
+	public List<String> getFamilyCodeList() {
+		if(familyCodeList==null){
+			familyCodeList = new ArrayList<String>();
+		}
+		return familyCodeList;
+	}
+
+
+	public void setFamilyCodeList(List<String> familyCodeList) {
+		this.familyCodeList = familyCodeList;
+	}
+	
+	
 
 	
 	

@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -20,7 +18,6 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.managedbean.cm.catalogue.PublicCatalogueManagedBean;
@@ -68,16 +65,16 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 		if(resDTO.getList()!=null && resDTO.getList().size()>0){
 			for(int i=0; i<resDTO.getList().size(); i++){
-				
+
 				Object[] obj = (Object[]) resDTO.getList().get(i);
-				
+
 				String familyCode = (String)obj[0] + "0000";
-				
+
 				System.out.println("*********familyCode**********"+familyCode);
 				codeReqDTO.setUnspscCode(familyCode);
-				
+
 				CodificationResDTO codeResDTO =  codeSO.searchUnspscObj(codeReqDTO);
-				
+
 				this.getManagedBean().getPopularFamilyList().add(codeResDTO.getUnspscObj());
 			}
 		}
@@ -96,6 +93,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().setFrontPage(false);
+		this.getManagedBean().setFamilyCodeList(null);
 		try {
 
 
@@ -136,6 +134,13 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 				CodificationResDTO codeResDTO = codificationSO.searchUnspscObj(codeReqDTO);
 
 				this.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
+				
+				if(code!=null && code.trim().length()>0){
+					String subString = code.substring(0, 4);
+					 this.getManagedBean().getFamilyCodeList().add(subString);
+				}
+				
+				
 
 			}
 
@@ -147,45 +152,92 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		}
 		//return "publicCatalogueView";
 	}
-	
-	
+
+
 	public void preRenderPublicCatView(){
-		
+
 		this.getManagedBean().setFrontPage(true);
 		popularFamilyList();
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "publicCatalogueView");
 	}
+
 	
 	
-	
-	public void searchCatalogueByFamilyLevel(CmUnspsc family){
+	public void searchCatalogueByPrice(){
+
+		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		this.getManagedBean().setFrontPage(false);
+		this.getManagedBean().setCatalogueList(null);
 		
+		String subString = "";
+
+		
+		System.out.println("getFamilyCode:"+this.getManagedBean().getFamilyCode());
+
+		reqDTO.getSubStringFamilyCode().add(this.getManagedBean().getFamilyCode());
+
+		if(this.getManagedBean().getPriceForm()!=null && this.getManagedBean().getPriceForm().compareTo(new BigDecimal("0.00"))>0){
+			reqDTO.setPriceFrom(this.getManagedBean().getPriceForm());
+		}
+
+		if(this.getManagedBean().getPriceTo()!=null && this.getManagedBean().getPriceTo().compareTo(new BigDecimal("0.00"))>0){
+			reqDTO.setPriceTo(this.getManagedBean().getPriceTo());
+		}
+
+		CatalogueResDTO resDTO = catalogueSO.findPubCatalogueByFamilyLevel(reqDTO);
+
+		System.out.println("***********************"+resDTO.getViewPublicSuppItemResultBean().getResultList());
+
+		for(VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean().getResultList()){
+
+			this.getManagedBean().getCatalogueList().add(view.getCmSupplierItem());
+		}
+
+	}
+	
+
+
+	public void searchCatalogueByFamilyLevel(CmUnspsc family){
+
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
 		System.out.println("getUnspscCode******"+family.getUnspscCode());
-		
-		String subString = family.getUnspscCode().substring(0, 4);
-		
-		System.out.println("subString:"+subString);
-		
-		reqDTO.setSubStringFamilyCode(subString);
+		String subString = "";
+
+		if(family.getUnspscCode()!=null && family.getUnspscCode().trim().length()>0){
+			 subString = family.getUnspscCode().substring(0, 4);
+			 this.getManagedBean().setFamilyCode(subString);
+		}
+		System.out.println("getFamilyCode:"+this.getManagedBean().getFamilyCode());
+
+		reqDTO.getSubStringFamilyCode().add(this.getManagedBean().getFamilyCode());
+
+		if(this.getManagedBean().getPriceForm()!=null && this.getManagedBean().getPriceForm().compareTo(new BigDecimal("0.00"))>0){
+			reqDTO.setPriceFrom(this.getManagedBean().getPriceForm());
+		}
+
+		if(this.getManagedBean().getPriceTo()!=null && this.getManagedBean().getPriceTo().compareTo(new BigDecimal("0.00"))>0){
+			reqDTO.setPriceTo(this.getManagedBean().getPriceTo());
+		}
+
 		CatalogueResDTO resDTO = catalogueSO.findPubCatalogueByFamilyLevel(reqDTO);
-		
+
 		System.out.println("***********************"+resDTO.getViewPublicSuppItemResultBean().getResultList());
-		
+
 		for(VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean().getResultList()){
-			
+
 			this.getManagedBean().getCatalogueList().add(view.getCmSupplierItem());
 		}
-		
-		
+
+
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().getFamilyList().add(family);
-		
+
 	}
 
 

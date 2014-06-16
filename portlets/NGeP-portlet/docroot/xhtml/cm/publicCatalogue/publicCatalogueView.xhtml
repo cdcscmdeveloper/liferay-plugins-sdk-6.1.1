@@ -6,6 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
@@ -66,11 +67,12 @@
 						<tr style="vertical-align: top;">
 							<td width="30%">
 
-								<table style="width:100%;">
+								<table style="width: 100%;">
 									<tr>
-										<td><p:outputLabel value="Categories" style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
+										<td><p:outputLabel value="Categories"
+												style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
 									</tr>
-									<tr style="padding-top:10px;">
+									<tr style="padding-top: 10px;">
 										<td><ui:repeat var="family"
 												value="#{pCatalogueBackingBean.managedBean.familyList}">
 												<table>
@@ -82,6 +84,21 @@
 												</table>
 											</ui:repeat></td>
 									</tr>
+									<tr>
+										<td><p:outputLabel value="Price Range"
+												style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
+									</tr>
+									<tr>
+										<td>RM <p:inputText
+												value="#{pCatalogueBackingBean.managedBean.priceForm}"
+												size="15" /> - RM <p:inputText
+												value="#{pCatalogueBackingBean.managedBean.priceTo}"
+												size="15" /> <p:commandButton value="Go"
+												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
+												update=":form" />
+										</td>
+									</tr>
+
 								</table>
 
 
@@ -91,10 +108,30 @@
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>
 
+									<table>
+										<tr>
+											<td><h:panelGroup
+													rendered="#{fn:length(supplierItem.cmImages) == 0 }">
 
-							#{supplierItem.cmItem.itemName}
+													<img src="/NGeP-portlet/images/noImage.jpg"
+														style="height: 100px; width: 100px; left: 0px !important;" />
 
-						</p:dataGrid></td>
+												</h:panelGroup> <h:panelGroup
+													rendered="#{fn:length(supplierItem.cmImages) > 0 }">
+
+													<img
+														src="/NGeP-portlet/images/#{supplierItem.cmImages[0].imageName}"
+														style="height: 100px; width: 100px; left: 0px !important;" />
+
+												</h:panelGroup></td>
+										</tr>
+										<tr>
+											<td><h:outputText
+													value="#{supplierItem.cmItem.itemName}" /></td>
+										</tr>
+									</table>
+
+								</p:dataGrid></td>
 						</tr>
 
 					</table>
