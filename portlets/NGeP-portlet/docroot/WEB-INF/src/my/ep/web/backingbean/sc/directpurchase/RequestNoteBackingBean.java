@@ -158,6 +158,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		requestNoteReqDTO.setRequestNote(requestNote);
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 	    requestNote.setPmOrgProfile(ptjNameEvent());
+	    
+	    if(requestNote.getRemarks() != null ){
+	    	for (int i = 0; i < requestNote.getRemarks().size(); i++) {
+	    		ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
+	    		if(StringUtils.isBlank(remark.getRemark())){
+	    			requestNote.getRemarks().remove(remark);
+	    		}	
+	    	} 
+	    }
+	    
 		requestNoteReqDTO.setRequestNote(requestNote);
 		// when save need to set submit in the reqDTO to false
 		requestNoteReqDTO.setSubmit(Boolean.FALSE);
@@ -243,6 +253,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     		} else {
     			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
     		}
+    		
+    		if(requestNote.getRemarks() != null ){
+    			for (int i = 0; i < requestNote.getRemarks().size(); i++) {
+    				ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
+    				if(StringUtils.isBlank(remark.getRemark())){
+    					requestNote.getRemarks().remove(remark);
+    				}	
+    			} 
+    		}
 
     		requestNote.setPmOrgProfile(ptjNameEvent());
     		requestNoteReqDTO.setRequestNote(requestNote);
@@ -313,6 +332,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
@@ -363,6 +383,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					 remark.setUser(facesScopes.getUserSessionBean());
 					 remark.setCreatedUser(facesScopes.getUserSessionBean());
 					 remark.setRequestNote(requestNote);
+					 PmStatus status = new PmStatus();
+					 status.setStatusId(res.getDocStatus().longValue());
+					 StatusReqDTO statusReqDTO = new StatusReqDTO();
+					 if (status != null) {
+						 statusReqDTO.setStatusId(status.getStatusId());
+						 StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+						 remark.setPmStatus(statusResDTO.getPmStatus());
+					 }
 					 results.add(remark);
 					 requestNote.setRemarks(results);
 				 }

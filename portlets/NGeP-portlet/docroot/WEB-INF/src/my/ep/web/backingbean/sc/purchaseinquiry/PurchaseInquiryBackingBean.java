@@ -382,7 +382,13 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 workFlowStatus.setCurrent(true);
 			    // workFlowStatuses.add(workFlowStatus);
 			     prInquiry.setWorkflowStatuses(workFlowStatuses);
-				 
+			     
+			     if(prInquiry.getRemarks() != null ){
+			    	 if(StringUtils.isBlank(prInquiry.getRemarks().get(0).getRemark())){
+			    			 prInquiry.getRemarks().remove(prInquiry.getRemarks().get(0).getRemark());
+					}
+			     }
+			   
 				 String token = facesScopes.getBPMAuthenticationCtxToken();
 				 reqDTO.setToken(token);
 			     reqDTO.setPrInquiryDetail(prInquiry);
@@ -424,6 +430,14 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   //call prInquirySO submitPrice method
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
+			   if(prInquiry.getRemarks() != null ){
+				   for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
+					   ScPRIRemark remark = prInquiry.getRemarks().get(i);
+					   if(StringUtils.isBlank(remark.getRemark())){
+						   prInquiry.getRemarks().remove(remark);
+					   }	
+				   } 
+			   }
 			   prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 			   reqDTO.setPrInquiryDetail(prInquiry);
 			   FacesScopes facesScopes = new FacesScopes();
@@ -497,7 +511,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
 				remark.setRemark(getManagedBean().getScPrInquiry().getRemarks()
 						.get(0).getRemark());
-			}
+			} 
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
 		    StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -651,7 +665,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			
 			//redirect to RequestNote screen
 			return "commonRequestNote";
-		}else{
+		}else {
 			//cancel BPM task
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
@@ -693,6 +707,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
  public void preRenderView() {
 	 HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 	 HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+	 IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	 String taskId = originalServletRequest.getParameter("taskId");
 	 if (StringUtils.isNotBlank(taskId)) {
 		 this.getManagedBean().setTaskId(taskId);
@@ -724,14 +739,23 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		        		remark.setUser(remark.getCreatedUser());
 		        		results.add(remark);
 		        	}
-		        	ScPRIRemark remark = new ScPRIRemark();
+		        	ScPRIRemark remark = getManagedBean().getRemark();
 		        	remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		        	remark.setChangedBy(remark.getCreatedBy());
 		        	remark.setUser(facesScopes.getUserSessionBean());
 		        	remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		        	PmStatus status = new PmStatus();
+					status.setStatusId(res.getDocStatus().longValue());
+				    StatusReqDTO statusReqDTO = new StatusReqDTO();
+				    if (status != null) {
+				     statusReqDTO.setStatusId(status.getStatusId());
+				     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+				     remark.setPmStatus(statusResDTO.getPmStatus());
+				    }
 		        	remark.setCreatedUser(facesScopes.getUserSessionBean());
 		        	results.add(remark);
 		        	remark.setPrInquiry(prInquiry);
+		        	getManagedBean().setRemark(remark);
 		        	prInquiry.setRemarks(results);
 		        }
 				 
