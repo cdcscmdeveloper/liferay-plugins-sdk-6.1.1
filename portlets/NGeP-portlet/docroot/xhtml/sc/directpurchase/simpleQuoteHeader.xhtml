@@ -4,26 +4,40 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-   <div class="header-info">
-		<h:panelGrid border="0" width="100%" styleClass="header-info"
-			columns="8" id="headerId">
-			<h:outputLabel
-				value="#{lbl['lbl.sc.sq.gen.info.header.simple.quote.no']}" />
-			<p:inputText disabled="true"
-				value="#{simpleQuoteBackingBean.managedBean.quoteNo}" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.proc.type']}" />
-			<p:inputText disabled="true"
-				value="#{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.procurementType)}" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.ptn.name']}" />
-			<p:inputText disabled="true" size="30"
-				value="#{simpleQuoteBackingBean.managedBean.ptjName}" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.status']}" />
-			<p:inputText disabled="true"
-				value="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus}" />
-
-		</h:panelGrid>
+	<p:panel id="headerId">
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.simple.quote.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{simpleQuoteBackingBean.managedBean.quoteNo}
+				</td>
+				
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.proc.type']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+				  #{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.procurementType)}
+				</td>
+				
+				<td style="width: 6%">
+					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.ptn.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+				   #{simpleQuoteBackingBean.managedBean.ptjName}
+				</td>
+				
+				<td style="width: 6%">
+					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.status']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+				 #{simpleQuoteBackingBean.managedBean.simpleQuoteStatus}
+				</td>
+				
+			</tr>
+		</table>
 	</div>
+	</p:panel>
 </ui:composition>

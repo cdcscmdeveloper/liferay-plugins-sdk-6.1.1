@@ -14,11 +14,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
-					 
-				<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" 
-				    rendered="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"
-					icon="ui-icon-submit" action="#{requestNoteBackingBean.addToRequestNote}"/>
-
+				
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"/>
@@ -42,7 +38,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						</c:if>
 						
 						<p:commandButton value="#{action}" process="@all" rendered="#{!unspscCodeBackingBean.requisitioner}"
-								styleClass="ui-button" icon="#{iconVar}"
+								styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
 								actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />
 						</c:forEach>
 

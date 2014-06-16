@@ -134,7 +134,7 @@
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
-				        style="width:120px;">  
+				        style="width:120px;" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
@@ -230,14 +230,15 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
 					</f:facet>
-					<p:inputText style="width:20px;text-align:right;" required="true" 
+					<p:inputText style="width:25px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
-					   size="2" maxlength="4"
+					   size="6" maxlength="4"  
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
 					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
+					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -286,7 +287,7 @@
 
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-						process="@this" partialSubmit="true"
+						process="@form" partialSubmit="true"
 						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
 						update="requestListDataTable" icon="ui-icon-delete" />
 				</c:if>

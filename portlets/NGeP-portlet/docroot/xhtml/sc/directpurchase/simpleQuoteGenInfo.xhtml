@@ -13,6 +13,7 @@
 				    <tr>
 					    <c:if test ="#{simpleQuoteBackingBean.managedBean.pmOrgProfile.brandNew}">
 						 <td style="width: 150px">
+						   <p:outputLabel value="*" styleClass="mandatory" />
 						    <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.ptn.name']}" /></td>
 						 <td> <p:selectOneMenu id="ptjName" label="Ptj Name" required="true"
 						     value="#{simpleQuoteBackingBean.managedBean.orgProfileId}"
@@ -48,7 +49,8 @@
 				<td><p:inputText disabled="true" size="20" value="#{simpleQuoteBackingBean.managedBean.createdBy}"/></td>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.title']}" /></td>
+				<td style="width: 150px;">
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td style="width: 150px;" colspan="4">
 					<table>
 						<tr>
@@ -61,7 +63,8 @@
 					</table></td>
 			  </tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /></td>
+				<td>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio style="margin-bottom: 5px;"  
 				        id="procurementType" required="true"
 				        label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
@@ -103,8 +106,8 @@
 			   </p:outputPanel></td>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /></td>
+				<td style="width: 150px;">
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:selectOneRadio id="zonal" required="true"
 				         value="#{simpleQuoteBackingBean.managedBean.zonal}" 
@@ -127,7 +130,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /></td>
+				<td style="width: 150px;">
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<table>
 						<tr>
@@ -145,7 +149,8 @@
 					</table>
 				</td>
 			
-				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /></td>
+				<td style="width: 150px;">
+				 <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:calendar showOn="button" id="endDate"  
 				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
@@ -157,7 +162,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /></td>
+				<td style="width: 150px;">
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio id="noOfQuote" label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" required="true"
 				      value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
@@ -191,8 +197,8 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" required="true"/>
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}"  required="true"/>
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							 <td style="vertical-align: top;padding-right: 1px;text-align: right;">  
 							    <p:message id="remarksMsg" for="remarks" display="icon" /></td>
