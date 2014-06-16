@@ -139,15 +139,15 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
-	
-	//Site Visit
+
+	// Site Visit
 	public static final String CAT_TYPE_TRANSPORTATION = "A";
 	public static final String CAT_TYPE_WORKSHOP = "B";
 	public static final String CAT_TYPE_INSURANCE = "I";
 	public static final String CAT_TYPE_DOCKYARD = "L";
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
-	public static final String CAT_TYPE_TRAVEL= "PG";
+	public static final String CAT_TYPE_TRAVEL = "PG";
 
 	// PO and Approver
 	public static final String PO_HQ = "UPS_PO";
@@ -228,10 +228,11 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
 	public static final String PM_STATUS_DELETE_COMPANY = "20188";
-	
+	public static final long PM_STATUS_PO_REVIEW = 20104;
+
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
-	public static final String SM_APPL_PAGE_TYPE_EQUITY= "EQUITYINFO";
+	public static final String SM_APPL_PAGE_TYPE_EQUITY = "EQUITYINFO";
 	public static final String SM_APPL_PAGE_TYPE_PERSONNEL = "PERSONNELINFO";
 	public static final String SM_APPL_PAGE_TYPE_BANK = "BANKINFO";
 	public static final String SM_APPL_PAGE_TYPE_CATEGORY = "CATEGORYINFO";
@@ -243,8 +244,6 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
-	
-	
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;

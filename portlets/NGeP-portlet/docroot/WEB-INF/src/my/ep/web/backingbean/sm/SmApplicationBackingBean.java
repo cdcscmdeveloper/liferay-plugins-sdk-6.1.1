@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -34,9 +35,12 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
@@ -71,6 +75,8 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -442,6 +448,35 @@ public class SmApplicationBackingBean extends
 				.getServiceObject("sm", ISmRemarksSO.class);
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
+	}
+
+	private String getPOLoginId(Long statusId, Long docId) {
+		System.out.println("*** This is resubmit to get po ****** ");
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		reqDTO.setStatusId(statusId);
+		reqDTO.setApplId(docId);
+		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
+		SmWorkFlowStatusResDTO resDTO = reqSO
+				.retrieveCurrentWorkDFlowByDocAndStatusId(reqDTO);
+		String poLogin = null;
+		if (resDTO != null && resDTO.getWorkflowStatus() != null
+				&& resDTO.getWorkflowStatus().getChangedBy() != null) {
+			System.out.println("******** The user id from the data ******* "
+					+ resDTO.getWorkflowStatus().getChangedBy());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(resDTO.getWorkflowStatus().getChangedBy());
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IUserSO.class);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			if (userResDTO != null && userResDTO.getPmUser() != null) {
+				poLogin = userResDTO.getPmUser().getLoginId();
+				System.out
+						.println("******* After retrieve po details ******** ");
+			}
+		}
+		return poLogin;
 	}
 
 	private boolean validateBeforeProceed(Long supplierId,
@@ -3329,6 +3364,7 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			if (getManagedBean().getSmAppl().isResubmit()) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
+
 			} else {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 			}
@@ -3353,6 +3389,12 @@ public class SmApplicationBackingBean extends
 				reqDTO.setTaskId(getManagedBean().getTaskId());
 			} else {
 				reqDTO.setUpdateTask(false);
+			}
+
+			if (getManagedBean().getSmAppl().isResubmit()) {
+				reqDTO.setPoLoginId(getPOLoginId(
+						SupplierManagementConst.PM_STATUS_PO_REVIEW,
+						getManagedBean().getSmAppl().getApplId()));
 			}
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -3719,6 +3761,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			reqDTO.setOnlineDoc(false);
 		}
+
+		reqDTO.setResubmit(bpmAppl.isResubmit());
 
 		return reqDTO;
 	}
