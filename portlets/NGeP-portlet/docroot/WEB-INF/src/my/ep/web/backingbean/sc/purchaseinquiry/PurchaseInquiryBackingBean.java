@@ -384,11 +384,13 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			     prInquiry.setWorkflowStatuses(workFlowStatuses);
 			     
 			     if(prInquiry.getRemarks() != null ){
-			    	 if(StringUtils.isBlank(prInquiry.getRemarks().get(0).getRemark())){
-			    			 prInquiry.getRemarks().remove(prInquiry.getRemarks().get(0).getRemark());
-					}
+			    	 for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
+			    		 ScPRIRemark remark = prInquiry.getRemarks().get(i);
+			    		 if(StringUtils.isBlank(remark.getRemark())){
+			    			 prInquiry.getRemarks().remove(remark);
+			    		 }	
+			    	 } 
 			     }
-			   
 				 String token = facesScopes.getBPMAuthenticationCtxToken();
 				 reqDTO.setToken(token);
 			     reqDTO.setPrInquiryDetail(prInquiry);
