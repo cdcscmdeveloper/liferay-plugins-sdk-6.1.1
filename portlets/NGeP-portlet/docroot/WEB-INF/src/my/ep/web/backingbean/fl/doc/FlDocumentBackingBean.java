@@ -316,8 +316,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			NavgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals("DO")){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			reqDTO.setDeliveryOrderId(Long.valueOf(368));
-			//FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrder(reqDTO);
+			reqDTO.setDeliveryOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 			
 			DeliveryOrderBackingBean doBB=new DeliveryOrderBackingBean();

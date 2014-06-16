@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -25,6 +26,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
@@ -36,7 +39,9 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -356,12 +361,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	
 	public void factoringChecked(AjaxBehaviorEvent e) {
-		
 		System.out.println("====enter process checked====");
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
 		getManagedBean().setFactoringCheck(id);
+		
+		getFactoringCompanyDtl();
+		
 	}
 	 /*public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
@@ -437,15 +444,51 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().getFulfilmentOrder().isFactored();
 		}
 		
-		public void getFactoringCompanyDetails(){
+		public void getFactoringCompanyDtl(){
+			if(getManagedBean().getFulfilmentOrder().getPmFinancialOrg() == null){
+				getManagedBean().getFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
+			}
+			
 			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-			
-			reqDTO.setServiceType("FC");
+			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
 			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
-			resDTO.getFinancialOrgList();
-			for(PmFinancialOrg financialOrg : resDTO.getFinancialOrgList()){
-				financialOrg.getFinOrgName();
+			getManagedBean().setPmFinancialOrgs(resDTO.getFinancialOrgList());
+		}
+		
+		public void getSelectedFactoringCompDtl(AjaxBehaviorEvent e){
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialOrgId(financialOrgId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+			
+			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
+			FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
+			financialOrgReqDTO.setFinancialOrgId(financialOrgId);
+			FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retrieveFinancialOrgById(financialOrgReqDTO);
+			if(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && !financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs().isEmpty()){
+				getManagedBean().setFactoringBranchList(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs());
 			}
+		
+		}
+
+		private String combineAddress(PmAddress address) {
+			String fullAddress = address.getAddress1() + ", " + address.getAddress2()+ ", " +address.getAddress3()+ ", " +address.getAddress4();
+			return fullAddress;
+		}
+		
+		public void getSelectedFactoringBranchDtl(AjaxBehaviorEvent e){
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			Long financialBranchId = (Long) e.getComponent().getAttributes().get("value");
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialBranchId(financialBranchId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
 		}
 }

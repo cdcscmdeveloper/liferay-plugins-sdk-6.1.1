@@ -16,6 +16,8 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmFinancialBranch;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -52,6 +54,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
+	private List<PmFinancialOrg> pmFinancialOrgs;
+	private List<PmFinancialBranch> factoringBranchList;
 	
 	private List<FlFulfilmentItem> flItemList;
 	private DualListModel<String> approverModel;
@@ -448,6 +452,34 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setTermDays(String termDays) {
 		this.termDays = termDays;
+	}
+
+	/**
+	 * @return the pmFinancialOrgs
+	 */
+	public List<PmFinancialOrg> getPmFinancialOrgs() {
+		return pmFinancialOrgs;
+	}
+
+	/**
+	 * @param pmFinancialOrgs the pmFinancialOrgs to set
+	 */
+	public void setPmFinancialOrgs(List<PmFinancialOrg> pmFinancialOrgs) {
+		this.pmFinancialOrgs = pmFinancialOrgs;
+	}
+
+	/**
+	 * @return the factoringBranchList
+	 */
+	public List<PmFinancialBranch> getFactoringBranchList() {
+		return factoringBranchList;
+	}
+
+	/**
+	 * @param factoringBranchList the factoringBranchList to set
+	 */
+	public void setFactoringBranchList(List<PmFinancialBranch> factoringBranchList) {
+		this.factoringBranchList = factoringBranchList;
 	}
 
 }

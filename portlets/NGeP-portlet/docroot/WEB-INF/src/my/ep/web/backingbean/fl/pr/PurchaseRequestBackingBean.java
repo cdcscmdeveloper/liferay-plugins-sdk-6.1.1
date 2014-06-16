@@ -625,45 +625,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setShowAllItemsRows(allItemsList);
 	}
 	
-	private List<ScRequestNoteDtl> getScRequestNoteDLs() {
-	//	resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName()
-		List<ScRequestNoteDtl> scList=new ArrayList<>();
-		ScRequestNoteDtl aNote=new ScRequestNoteDtl();
-		aNote.setScRequestSupplierItem(new ScRequestSupplierItem());
-		aNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		//aNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
-		aNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(1L);
-		//aNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("P");
-		aNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Blue Pen");
-		scList.add(aNote);
-		ScRequestNoteDtl bNote=new ScRequestNoteDtl();
-		bNote.setScRequestSupplierItem(new ScRequestSupplierItem());
-		bNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
-		bNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(33L);
-		//bNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
-		bNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Apsara Pencil");
-		scList.add(bNote);
-		ScRequestNoteDtl cNote=new ScRequestNoteDtl();
-		cNote.setScRequestSupplierItem(new ScRequestSupplierItem());
-		cNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
-		cNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(34L);
-		//cNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
-		cNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("Red Pen");
-		scList.add(cNote);
-		ScRequestNoteDtl dNote=new ScRequestNoteDtl();
-		dNote.setScRequestSupplierItem(new ScRequestSupplierItem());
-		dNote.getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		//bNote.getScRequestSupplierItem().getRequestNoteItem().setAmount(new Double(100));
-		dNote.getScRequestSupplierItem().getRequestNoteItem().setRequestNoteItemId(50L);
-		//dNote.getScRequestSupplierItem().getRequestNoteItem().setItemType("S");
-		dNote.getScRequestSupplierItem().getRequestNoteItem().setItemName("HB Pencil");
-		scList.add(dNote);
-		
-		return scList;
-	}
-
 	public void addPurchsedItems1() {
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
@@ -680,59 +641,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setRequestNoteWithDtlsList(noteDtlList);
 		//noteDtlList.get(0).getScRequestSupplierItem().getSupplierItemPrices().get(0).getItemPrice();
 	}
-
-	public void updatePurchasedItemDt() {
-		FlFulfilmentItem flItem = null;
-		//If no items are selected then simply return;
-		if(null==getManagedBean().getSelectedPurchasedItemList()){
-			return;
-		}
-		for (ScRequestNoteDtl purchaseItem : getManagedBean().getSelectedPurchasedItemList()) {
-			boolean isItemContains=isPurchaseItemContains(purchaseItem,getManagedBean().getSelectedDelAddr());
-			if(!isItemContains){
-				flItem = new FlFulfilmentItem();
-				flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				//flItem.setScRequestNoteDtl(purchaseItem);
-				//flItem.setScRequestNoteDtl(requestNoteDtl);
-				//getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
-				getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
-				
-				FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
-				//flItem.setItemType("P");
-				BigDecimal unitPrice = new BigDecimal("200");
-				flItemAddr.setUnitPrice(unitPrice);
-				//flItemAddr.setOrderedAmt(orderedAmt);
-				
-				flItemAddr.setFlFulfilmentItem(flItem);
-				if(null==getManagedBean().getSelectedDelAddr()){
-					getManagedBean().setSelectedDelAddr(new FlDeliveryAddress());
-				}
-				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-				//If no purchase items are already there, Then create empty list.
-				if(null == getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
-					getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
-				}
-				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
-			}
-		}
-	}
-
-	private boolean isPurchaseItemContains(ScRequestNoteDtl purchaseItem,
-			FlDeliveryAddress selectedDelAddr) {
-		boolean isContains=false;
-		//If no delveryAddress is there then return false.
-		if(null==selectedDelAddr || 
-				null==selectedDelAddr.getFlFulfilmentItemAddr() || selectedDelAddr.getFlFulfilmentItemAddr().isEmpty()){
-			return false;
-		}
-		for(FlFulfilmentItemAddr flItemAddr:selectedDelAddr.getFlFulfilmentItemAddr()){
-			if(purchaseItem.getRequestNoteDtlId()==flItemAddr.getScRequestItem().getRequestNoteItemId()){
-				isContains=true;
-			}
-		}
-		return isContains;
-	}
-
 
 	public void selectedItemRow() {
 		getManagedBean().setSelectedRowFlg(true);
@@ -773,47 +681,53 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return availableApprovers;
 	}
 	
-	public void retrieveOrderAmount(FlFulfilmentItemAddr flItem){
+	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-		reqDTO.setRequestSupplierItemId(flItem.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
-		reqDTO.setPriceType(flItem.getScSupplierItemPrice().getPriceType());
-		
-		if(null == flItem.getOrderedQty()){
-			flItem.setOrderedAmt(new BigDecimal("0"));
+		reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
+		reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
+		Map<Long, FlFulfilmentItem> flItemMap = new HashMap<Long, FlFulfilmentItem>();
+		  
+		if(null == flItemAddr.getOrderedQty()){
+			flItemAddr.setOrderedAmt(new BigDecimal("0"));
 		} else {
-			reqDTO.setOrderQuantity(flItem.getOrderedQty());
+			reqDTO.setOrderQuantity(flItemAddr.getOrderedQty());
 			PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
-			flItem.setUnitPrice(purResDTO.getUnitPrice());
-			flItem.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
-			flItem.setOrderedAmt(flItem.getOrderedQty().multiply(flItem.getUnitPrice()));
-			flItem.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+			flItemAddr.setUnitPrice(purResDTO.getUnitPrice());
+			flItemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+			flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
+			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			
-			if(flItem.getFlFulfilmentItem()!=null) {
-				flItem.getFlFulfilmentItem().setUnitPrice(flItem.getUnitPrice());
+			if(flItemAddr.getFlFulfilmentItem()!=null) {
+				flItemAddr.getFlFulfilmentItem().setUnitPrice(flItemAddr.getUnitPrice());
 			} else {
 				FlFulfilmentItem fulfilmentItem = new FlFulfilmentItem();
 				fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 				fulfilmentItem.setChargeLineSeq(1);
-				fulfilmentItem.setItemType(flItem.getItemType());
-				fulfilmentItem.setCmItem(flItem.getCmItem());
-				fulfilmentItem.setPmVotFund(flItem.getPmVotFund());
-				fulfilmentItem.setAssetInd(flItem.getAssetInd());
-				fulfilmentItem.setPmGlAccount(flItem.getPmGlAccount());
-				fulfilmentItem.setPmPrgActivity(flItem.getPmPrgActivity());
-				fulfilmentItem.setPmSubSetia(flItem.getPmSubSetia());
-				fulfilmentItem.setUnitPrice(flItem.getUnitPrice());
-			    flItem.setFlFulfilmentItem(fulfilmentItem);
+				fulfilmentItem.setItemType(flItemAddr.getItemType());
+				fulfilmentItem.setCmItem(flItemAddr.getCmItem());
+				fulfilmentItem.setPmVotFund(flItemAddr.getPmVotFund());
+				fulfilmentItem.setAssetInd(flItemAddr.getAssetInd());
+				fulfilmentItem.setPmGlAccount(flItemAddr.getPmGlAccount());
+				fulfilmentItem.setPmPrgActivity(flItemAddr.getPmPrgActivity());
+				fulfilmentItem.setPmSubSetia(flItemAddr.getPmSubSetia());
+				fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
+			    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
+
+			    if(flItemMap.get(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId()) ==  null){
+			    	getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItemAddr.getFlFulfilmentItem());
+			    	flItemMap.put(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId(), flItemAddr.getFlFulfilmentItem());
+			    }
 			}
 		}
 		// add  or remove items to Selected delivery address
-		itemsToSelectedAddress(flItem);
+		itemsToSelectedAddress(flItemAddr);
 	}
 	
-	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItem) {
-		if(null== flItem.getOrderedQty() || flItem.getOrderedQty().doubleValue()==0) {
+	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
+		if(null== flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0) {
 			for(FlFulfilmentItemAddr item:getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
-				if(flItem.getScRequestItem().getRequestNoteItemId().longValue()==item.getScRequestItem().getRequestNoteItemId().longValue()){
+				if(flItemAddr.getScRequestItem().getRequestNoteItemId().longValue()==item.getScRequestItem().getRequestNoteItemId().longValue()){
 					getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().remove(item);
 					break;
 				}
@@ -821,15 +735,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}else{
 			boolean itemExisted=false;
 			for (FlFulfilmentItemAddr selectedItem : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()) {
-				if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(flItem.getScRequestItem().getRequestNoteItemId())) {
-					selectedItem.setOrderedAmt(flItem.getOrderedAmt());
-					selectedItem.setOrderedQty(flItem.getOrderedQty());
+				if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
+					selectedItem.setOrderedAmt(flItemAddr.getOrderedAmt());
+					selectedItem.setOrderedQty(flItemAddr.getOrderedQty());
 					itemExisted=true;
 					break;
 				}
 			}
 			if(!itemExisted){
-				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItem);
+				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
 			}
 		}
 	}
