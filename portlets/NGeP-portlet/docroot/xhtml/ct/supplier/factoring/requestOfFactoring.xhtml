@@ -59,9 +59,9 @@
 	  <p:panel id="loaId" header="LOA Details" toggleable="true"  toggleSpeed="500">
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
 			<p:outputLabel value="LOA No." />
-			  <h:panelGrid columns="2">
+			  <h:panelGrid columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			     <p:selectOneMenu id="menuLoaId" style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
-			         rendered="#{supplierBackingBean.managedBean.taskId==null}" required="true" label="LOA No">
+			         required="true" label="LOA No">
 			         <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
 			         <p:ajax event="change" process="@this" update="loaId,headerDetails" listener="#{supplierBackingBean.setActionListener()}"/> 
 		          </p:selectOneMenu>
