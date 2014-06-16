@@ -18,6 +18,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 
@@ -32,6 +34,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	private int activeIndex;
 	private int prepareActiveIndex;
+	private int zoneActiveIndex;
 	
 	//Header
 	private ScQt scQt;
@@ -54,7 +57,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Supplier Finalization
 	private String decisionType = ParameterConst.DECISION_RECOMMEND_SUPPLIER;
 	private String recommendType = ParameterConst.RECOMMEND_TYPE_PACKAGE;
-	private String biddingEndorsement;
+	private String biddingEndorsement = ParameterConst.ONLINE_BIDDING_MEETING;
 	private String loiLoaPreparedBy = ParameterConst.LOILOA_PREPARED_BY_DO;
 	private String fwdHigherAuthority = "false";
 	private String finalizationCommittee;
@@ -78,6 +81,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
+	private TplSpecZoneDtl tplSpecZoneDtl;
+	private ScQtEvaluationResult recommendedSupplier;
 	
 	private List<ScQtEvaluationResult> shortlistedSupplierList;
 	private List<ScQtEvaluationResult> recommendedSupplierList;
@@ -87,6 +92,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
+	private List<ScQtCommitteeActivity> reminderList;
+	
+	private String subject;
+	private String message;
+	private String pinNo;
 
 	/**
 	 * @return the activeIndex
@@ -693,6 +703,104 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
+	}
+
+	/**
+	 * @return the reminderList
+	 */
+	public List<ScQtCommitteeActivity> getReminderList() {
+		return reminderList;
+	}
+
+	/**
+	 * @param reminderList the reminderList to set
+	 */
+	public void setReminderList(List<ScQtCommitteeActivity> reminderList) {
+		this.reminderList = reminderList;
+	}
+
+	/**
+	 * @return the pinNo
+	 */
+	public String getPinNo() {
+		return pinNo;
+	}
+
+	/**
+	 * @param pinNo the pinNo to set
+	 */
+	public void setPinNo(String pinNo) {
+		this.pinNo = pinNo;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the zoneActiveIndex
+	 */
+	public int getZoneActiveIndex() {
+		return zoneActiveIndex;
+	}
+
+	/**
+	 * @param zoneActiveIndex the zoneActiveIndex to set
+	 */
+	public void setZoneActiveIndex(int zoneActiveIndex) {
+		this.zoneActiveIndex = zoneActiveIndex;
+	}
+
+	/**
+	 * @return the tplSpecZoneDtl
+	 */
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+	/**
+	 * @param tplSpecZoneDtl the tplSpecZoneDtl to set
+	 */
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+	/**
+	 * @return the recommendedSupplier
+	 */
+	public ScQtEvaluationResult getRecommendedSupplier() {
+		return recommendedSupplier;
+	}
+
+	/**
+	 * @param recommendedSupplier the recommendedSupplier to set
+	 */
+	public void setRecommendedSupplier(ScQtEvaluationResult recommendedSupplier) {
+		this.recommendedSupplier = recommendedSupplier;
 	}
 	
 	

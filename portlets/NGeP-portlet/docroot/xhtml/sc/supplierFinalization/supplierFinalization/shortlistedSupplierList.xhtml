@@ -19,23 +19,47 @@
 			<h:column>
 				<p:selectOneMenu id="recommendBy" value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getRecommendByDropDown()}" />
-					<p:ajax event="change" update=":form:tab:onlineBiddingPanel,:form:tab:supplierListTbl" listener="#{suppFinalizationBackingBean.recommendByEvent}" process="@this" />
+					<p:ajax event="change" update=":form:tab:onlineBiddingPanel,:form:tab:supplierListTblSingle,:form:tab:supplierListTblMultiple" 
+						listener="#{suppFinalizationBackingBean.recommendByEvent}" process="@this" />
 	   			</p:selectOneMenu>
 			</h:column>
 		</h:panelGrid>
 		
 		<p:spacer height="20px" />
-		<p:dataTable id="supplierListTbl" var="shortlistedSupp"
-			value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}" rows="10"
-			rowKey="#{shortlistedSupp.evaluationResultId}"
-			rowIndexVar="rowIndex">
-			<ac:paginator for="supplierListTbl" />
+		<p:dataTable id="supplierListTblSingle"
+			var="shortlistedSupp" 
+			widgetVar="shortlistedSuppDtls"
+			value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
+			selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
+			editable="true" rowIndexVar="index" style="width:100%"
+			rowKey="#{shortlistedSupp}"
+			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
+			<ac:paginator for="supplierListTblSingle" />
 			
-			<p:column headerText="#{lbl['lbl.sc.proposal.id']}">
+			<p:columnGroup type="header">
+	        	<p:row>
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.proposal.id']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
+	               	<p:column colspan="3" headerText="#{lbl['lbl.sc.supplier.status']}" style="text-align: center;"/>
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
+	           	</p:row>
+	           	<p:row>
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" />
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" />
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" />
+	           	</p:row>
+	       	</p:columnGroup>
+			
+			<p:column>
 				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalNo}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+			<p:column>
 				<p:commandLink update=":form:suppDtlPopUp"
 					action="#{suppFinalizationBackingBean.showSupplierDetails}"
 					oncomplete="suppDtlWidgetVar.show();">
@@ -44,32 +68,116 @@
 				</p:commandLink>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.bumi.status']}">
-				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
+			<p:column>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi)}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.offered.price']}">
+			<p:column>
 				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}">
+			<p:column>
 				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+			<p:column>
 				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.mof.status']}">
+			<p:column>
 				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.status']}">
-				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
+			
+			<p:column>
+				<h:outputText value="" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.selection']}" style="text-align: center;"
-				selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/> 
+			<p:column>
+				<h:outputText value="" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="" />
+			</p:column>
+			
+			<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/> 
+		</p:dataTable>
+		
+		<p:dataTable id="supplierListTblMultiple"
+			var="shortlistedSupp" 
+			widgetVar="shortlistedSuppDtls"
+			value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
+			selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplierList}"
+			editable="true" rowIndexVar="index" style="width:100%"
+			rowKey="#{shortlistedSupp}"
+			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
+			<ac:paginator for="supplierListTblMultiple" />
+			
+			<p:columnGroup type="header">
+	        	<p:row>
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.proposal.id']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
+	           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
+	               	<p:column colspan="3" headerText="#{lbl['lbl.sc.supplier.status']}" style="text-align: center;"/>
+	               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
+	           	</p:row>
+	           	<p:row>
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" />
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" />
+	               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" />
+	           	</p:row>
+	       	</p:columnGroup>
+			
+			<p:column>
+				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalNo}" />
+			</p:column>
+			
+			<p:column>
+				<p:commandLink update=":form:suppDtlPopUp"
+					action="#{suppFinalizationBackingBean.showSupplierDetails}"
+					oncomplete="suppDtlWidgetVar.show();">
+					<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
+					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi)}" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" />
+			</p:column>
+
+			<p:column>
+				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" />
+			</p:column>
+
+			<p:column>
+				<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="" />
+			</p:column>
+			
+			<p:column>
+				<h:outputText value="" />
+			</p:column>
+			
+			<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/>  
 		</p:dataTable>
 		<p:spacer height="20px" />
 	</p:panel>
