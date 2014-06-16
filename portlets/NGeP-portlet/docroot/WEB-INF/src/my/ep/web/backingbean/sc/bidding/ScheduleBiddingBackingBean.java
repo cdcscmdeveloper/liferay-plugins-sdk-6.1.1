@@ -33,36 +33,43 @@ public class ScheduleBiddingBackingBean extends
 		BaseBackingBean<ScheduleBiddingManagedBean> {
 
 	public ScheduleBiddingBackingBean() {
-		System.out
-				.println("++++++++++******retriveScheduleBidDetails called********++++++++");
+		System.out.println("******retriveScheduleBidDetails called********");
 		retriveScheduleBidDetails();
 	}
 
 	public void applyBidDates() {
 
-		/*
-		 * System.out.println(" ---- Selected start date ----" +
-		 * this.getManagedBean().getBidStart());
-		 * System.out.println(" ---- Selected end date ----" +
-		 * this.getManagedBean().getBidEnd());
-		 * System.out.println(" ---- Selected list values ----" +
-		 * this.getManagedBean().getSelectedRequestItems().size());
-		 * 
-		 * if (getManagedBean().getSelectedRequestItems().size() > 0)
-		 * 
-		 * { for (ScRequestItem sc1 :
-		 * getManagedBean().getSelectedRequestItems()) {
-		 * 
-		 * if (getManagedBean().getScQt().getRequestItems().contains(sc1)) {
-		 * sc1.getScBidItemList().getScBidSchedule()
-		 * .setStartDate(getManagedBean().getBidStart());
-		 * sc1.getScBidItemList().getScBidSchedule()
-		 * .setEndDate(getManagedBean().getBidEnd()); getManagedBean()
-		 * .getScQt() .getRequestItems()
-		 * .set(getManagedBean().getScQt().getRequestItems() .indexOf(sc1),
-		 * sc1); } } } else {
-		 * System.out.println("---- Please select at-least one item ---- "); }
-		 */
+		System.out.println(" **** Selected start date ***S"
+				+ this.getManagedBean().getBidStart());
+		System.out.println(" ---- Selected end date ----"
+				+ this.getManagedBean().getBidEnd());
+		System.out.println(" ---- Selected list values ----"
+				+ this.getManagedBean().getSelectedScBidScheduleList().size());
+
+		if (getManagedBean().getSelectedScBidScheduleList().size() > 0)
+
+		{
+			for (ScBidSchedule bidSchedule : getManagedBean()
+					.getSelectedScBidScheduleList()) {
+
+				if (getManagedBean().getScBid().getScBidSchedules()
+						.contains(bidSchedule)) {
+
+					bidSchedule.setStartDate(getManagedBean().getBidStart());
+					bidSchedule.setEndDate(getManagedBean().getBidEnd());
+
+					getManagedBean()
+							.getScBid()
+							.getScBidSchedules()
+							.set(getManagedBean().getScBid()
+									.getScBidSchedules().indexOf(bidSchedule),
+									bidSchedule);
+				}
+			}
+		} else {
+
+			System.out.println("---- Please select at-least one item ---- ");
+		}
 
 	}
 
@@ -160,6 +167,9 @@ public class ScheduleBiddingBackingBean extends
 							.println("*******++++++++requestItemlist is not null and size is not zero++++++++********");
 					if (resDTO.getScRequestItemList().size() != 0) {
 
+						System.out
+								.println("*******++++++++requestItemlist size is not zero++++++++********");
+
 						for (ScRequestItem reqItem : resDTO
 								.getScRequestItemList()) {
 
@@ -211,12 +221,15 @@ public class ScheduleBiddingBackingBean extends
 			scheduleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION,
 					IScheduleBiddingSO.class);
-			
-			this.getManagedBean().getScBid().setScBidContactPersons(this.getManagedBean().getScBidContactPersonList());
+
+			this.getManagedBean()
+					.getScBid()
+					.setScBidContactPersons(
+							this.getManagedBean().getScBidContactPersonList());
 
 			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
 			reqDTO.setScBid(this.getManagedBean().getScBid());
-			
+
 			scheduleSO.submitScheduleBidDetails(reqDTO);
 		}
 
