@@ -220,16 +220,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				item.setCmBrand(brandObj);
 				item.setCmMeasurement(meaObj);
 				item.setCmColor(colorObj);
-				item.setItemName(commodity
-						.getUnspscTitle()
-						+ " "
-						+ typeObj.getTypeName()
-						+ " "
-						+ brandObj.getBrandName()
-						+ " "
-						+ meaObj.getMeasurementName()
-						+ " "
-						+ colorObj.getColorName());
+				item.setItemName(commodity.getUnspscTitle());//because for service extension parts are NA, just leave empty.
 				item.setExtensionCode(bb.getManagedBean()
 						.getSelectedUNSPSCObj().getUnspscCode()
 						+ typeObj.getTypeCode()

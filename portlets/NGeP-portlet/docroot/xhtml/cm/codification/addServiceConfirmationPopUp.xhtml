@@ -8,19 +8,36 @@
 
 	<h:panelGroup id="confirmationPopUpId">
 
-<p:panel>
-		<div style="text-align: left;">
-			<p:outputLabel value="#{lbl['lbl.cm.add.service.to.cataloque.confirmation.msg']}"></p:outputLabel>
-		</div>
-		<p:spacer height="30px;" />
-	
-		<div style="text-align: right;">
-		<p:commandButton value="OK"
-						action="#{catalogueBackingBean.addServiceToMaintain()}" oncomplete="confirmationPopUp.hide()"
+		<p:panel>
+
+			<div style="text-align: left; float: left;">
+				<p:outputLabel
+					value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"></p:outputLabel>
+
+				<p:outputLabel
+					value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"></p:outputLabel>
+			</div>
+
+			<br />
+<p:spacer height="20px;" />
+			<div style="text-align: left; float: left;">
+				<p:outputLabel
+					value="#{lbl['lbl.cm.add.service.to.cataloque.confirmation.msg']}"></p:outputLabel>
+			</div>
+			<br />
+			<p:spacer height="30px;" />
+			<div style="text-align: right; float: right;">
+				<p:commandButton value="Back" icon="ui-icon-prev"
+					onclick="confirmationPopUp.hide()" />
+
+				<p:commandButton value="OK"
+					action="#{catalogueBackingBean.addServiceToMaintain()}"
+					oncomplete="confirmationPopUp.hide()"
 					update=":form:confirmationPopUpId,:form:cmUNSPSCsearchID" />
-		</div>
-	<div class="clear"></div>
-</p:panel>
+			</div>
+
+			<div class="clear"></div>
+		</p:panel>
 
 	</h:panelGroup>
 
