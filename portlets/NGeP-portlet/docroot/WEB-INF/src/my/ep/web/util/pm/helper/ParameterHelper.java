@@ -16,6 +16,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmDataRestrValue;
+import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -145,6 +147,18 @@ public class ParameterHelper {
 				searchBeanKey.append(KEY_SEPARATOR);
 				searchBeanKey.append(searchFilterBean.getSearchValue());
 			}
+		}
+		
+		for (PmScreenRestr pmScreenRestr : searchBean.getDataFilterMetadatas()) {
+			if (searchBeanKey.length() > 0) {
+				searchBeanKey.append(KEY_SEPARATOR);
+			}
+			
+			for (PmDataRestrValue pmDataRestrValue : pmScreenRestr.getPmDataRestrValues()) {
+				searchBeanKey.append(pmDataRestrValue.getDataRestrValueId());
+				searchBeanKey.append(KEY_SEPARATOR);
+			}
+			
 		}
 		
 		return searchBeanKey.toString();
