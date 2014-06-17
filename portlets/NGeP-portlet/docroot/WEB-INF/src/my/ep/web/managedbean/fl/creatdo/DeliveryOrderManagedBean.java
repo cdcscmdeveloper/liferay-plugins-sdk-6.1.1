@@ -80,6 +80,10 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlAttachment> attachmentList;
 	
 	private PmUser pmUser;
+	private String supplierDoRef;
+	
+	//tab menu
+	private int selectedTabIndex;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -577,6 +581,34 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the supplierDoRef
+	 */
+	public String getSupplierDoRef() {
+		return supplierDoRef;
+	}
+
+	/**
+	 * @param supplierDoRef the supplierDoRef to set
+	 */
+	public void setSupplierDoRef(String supplierDoRef) {
+		this.supplierDoRef = supplierDoRef;
 	}
 	
 }

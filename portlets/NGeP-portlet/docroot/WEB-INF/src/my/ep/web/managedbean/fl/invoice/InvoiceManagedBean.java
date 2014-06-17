@@ -23,6 +23,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -68,6 +69,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private BigDecimal invAmtGrandTotal ;
 	private String serviceCharge ;
 	
+	//tab menu
+	private int selectedTabIndex;
+	
+	private PmUser pmUser;
+	
 	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
@@ -79,7 +85,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
 		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
 			if(null !=this.getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlDeliveryAddress  deliveryAddress :this.getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlDeliveryAddress  deliveryAddress :this.getFulfilmentRequest().getFlDeliveryAddresses()){
 					//getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses();
 					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
@@ -424,5 +430,29 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setServiceCharge(String serviceCharge) {
 		this.serviceCharge = serviceCharge;
+	}
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 }

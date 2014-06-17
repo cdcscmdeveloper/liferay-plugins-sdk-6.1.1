@@ -106,7 +106,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					flDeliveryAddress.getAttachmentList().get(0).getFileName();
 				}*/
 				FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
-				flDeliveryOrder.setSupplierDoRef("SM123");
+				if(null == getManagedBean().getSupplierDoRef()){
+					//TODO
+					// do valudation
+				}else{
+					flDeliveryOrder.setSupplierDoRef(getManagedBean().getSupplierDoRef());
+				}
+				
 				flDeliveryOrder.setEstStartDate(new Timestamp(System.currentTimeMillis()));
 				flDeliveryOrder.setFlRequest(getManagedBean().getFulfilmentRequest());
 				flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
@@ -147,6 +153,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setToken(token);
 			if("UPDATE".equalsIgnoreCase(action)){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
+				if(null == getManagedBean().getSupplierDoRef()){
+					//TODO
+					// do valudation
+				}else{
+					getManagedBean().getFlDeliveryOrder().setSupplierDoRef(getManagedBean().getSupplierDoRef());
+				}
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 			}

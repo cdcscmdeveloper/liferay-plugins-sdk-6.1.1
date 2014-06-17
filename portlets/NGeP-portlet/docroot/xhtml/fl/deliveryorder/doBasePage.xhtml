@@ -10,7 +10,8 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<f:event listener="#{createDOBackingBean.preRenderView}" type="preRenderView" />	
+		<f:event listener="#{createDOBackingBean.preRenderView}"
+			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
@@ -50,14 +51,31 @@
 			</tr>
 		</table>
 		<ui:include src="doReviewHeaderPage.xhtml" />
-		<p:spacer height="20px" />
-		<p:tabView id="dotabs" orientation="left" widgetVar="tt">
-			<p:tab title="General">
-				<ui:include src="doGeneral.xhtml" />
-			</p:tab>
-			<p:tab title="Delivery Items">
-				<ui:include src="doItem.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top"><p:tabMenu styleClass="sidemenu"
+						style="display : table-caption;"
+						activeIndex="#{createDOBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="Delivery Items" update="@form">
+							<f:setPropertyActionListener
+								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="doGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="doItem.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

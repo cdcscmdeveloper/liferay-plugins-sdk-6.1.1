@@ -35,10 +35,10 @@
 			<p:column>
 				<h:outputText value="* Supplier DO.No." />
 				<p:spacer width="4" />
-				<p:inputText size="9"></p:inputText>
+				<p:inputText size="9" value="#{createDOBackingBean.managedBean.supplierDoRef}"></p:inputText>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
-					update=":form:dotabs:addRemarmAttachmentDialog">
+					update=":form:addRemarmAttachmentDialog">
 					<p:graphicImage library="ep/images/design" name="attach.png"
 						value="/resources/ep/images/design/attach.png"
 						title="Remark and Attachment" />

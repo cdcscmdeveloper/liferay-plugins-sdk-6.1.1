@@ -330,12 +330,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			NavgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals("IN")){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
-			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoice(reqDTO);
+			reqDTO.setInvoiceId(Long.valueOf(flDocId));
+			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setButtonVal(buttonVal);
 			invBB.getManagedBean().setDocProcess(docType);
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+			//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+			invBB.getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
+			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			NavgPage=NAV_TO_MAINTAIN_INV;
 		}
 		else if(docType.equals("FN")){

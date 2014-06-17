@@ -109,18 +109,14 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		if(null==getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){
 			getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-			
 		}
-		//if(!"retrieveAmount".equals(actionMethod)){
-			//getManagedBean().populateChargeLineData();
-		//}
-		
 	}
 
 	public String submitAction(String action) {
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 
@@ -129,7 +125,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 			if(null==getManagedBean().getChargeLineItemRoot()){
 				getManagedBean().populateChargeLineData();
-				canInvSummary();
+				calInvSummary();
 			}
 			TreeNode root= getManagedBean().getChargeLineItemRoot();
 			List<FlInvoiceItem> invoiceItemList=new ArrayList<FlInvoiceItem>();
@@ -190,9 +186,21 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
+			if("UPDATE".equalsIgnoreCase(action)){
+				reqDTO.setPmUser(getManagedBean().getPmUser());
+				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
+					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
+				}
+				reqDTO.setInvoice(getManagedBean().getInvoice());
+				resDTO = invoiceSO.invoiceModification(reqDTO);
+			}else{
+				resDTO = invoiceSO.saveInvoice(reqDTO);
+			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700026;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -202,19 +210,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getInvoice().getInvoiceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
-			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}	
-			else {
-				throw new EpException("Failed.");
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}	
+				else {
+					throw new EpException("Failed.");
+				}
 			}
 			
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}finally {
 			invoiceSO = null;
 		}
@@ -358,19 +362,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	   //canInvSummary();
 		
 	}
-	public void canInvSummary(){
-		 //TreeNode root= getManagedBean().getChargeLineItemRoot();
-		/*BigDecimal invoiceTotalAmount=new BigDecimal(0);
-		 for(FlDeliveryAddress  deliveryAddress :getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){
-				//getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses();
-				if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-					for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-						BigDecimal chargeInvAmt= (null==itemAddress.getChargeInvAmt())?itemAddress.getReceivedAmt():itemAddress.getChargeInvAmt();
-						invoiceTotalAmount=invoiceTotalAmount.add(chargeInvAmt); 
-					}
-				}	
-		 }	*/
-		
+	public void calInvSummary(){
 		if(null==getManagedBean().getChargeLineItemRoot()){
 			getManagedBean().populateChargeLineData();
 		}
@@ -400,16 +392,17 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		   getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 		  // getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);
 	}
-	public void onTabChange(TabChangeEvent tevent){
-		if("invItemTabId".equals(tevent.getTab().getId())){
-				if(null==getManagedBean().getChargeLineItemRoot()){
-					 getManagedBean().populateChargeLineData();
-				}
-			setClassName("@(.invItemPnlClass)");
-		}
-		if("invSummaryTabId".equals(tevent.getTab().getId())){
-			canInvSummary();
+	
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==1){
+			if(null==getManagedBean().getChargeLineItemRoot()){
+				 getManagedBean().populateChargeLineData();
 			}
+		setClassName("@(.invItemPnlClass)");
+		}
+		if(selectedTabIndex==2){
+			calInvSummary();
+		}
 	}
 	/*private String actionMethod="";
 	
