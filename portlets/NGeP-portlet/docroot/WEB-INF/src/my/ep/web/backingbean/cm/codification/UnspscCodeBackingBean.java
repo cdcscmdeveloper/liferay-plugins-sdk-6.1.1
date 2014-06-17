@@ -1662,12 +1662,30 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 		System.out.println("unspsc.getRequestId()"+unspsc.getRequestId());
-		codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-		RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+	
+		
+		
+		if(unspsc.getItemId()!=null && unspsc.getItemId().size()>0){
+			for(String itemId:unspsc.getItemId()){
+				System.out.println("itemId:"+itemId);
+				codeDTO.setRequestId(new Long(itemId));
+				RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+				this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
+
+				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+			}
+		}else{
+			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+			this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
+			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+		}
+		
+		
 
 
 		this.getManagedBean().setTaskName(res.getTaskName());
-		this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+		
 		/*if(resDTO.getRequestCode().getCmRecommendCodes()!=null && resDTO.getRequestCode().getCmRecommendCodes().size()>0){
 			//codeBB.getManagedBean().setRecommendUnspscList(recommendUnspscList)
 		}*/
@@ -1698,6 +1716,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}else if(res.getTaskName().equalsIgnoreCase("Select Recommended")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "selectRecommendUnspscCode.xhtml");
+		}else if(res.getTaskName().equalsIgnoreCase("Publish Extension Code")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCodeII.xhtml");
 		}else{
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewUnspscCode");
