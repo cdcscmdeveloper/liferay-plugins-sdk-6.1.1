@@ -155,12 +155,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700043;
-				
+				/*
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700043;
 				} else if(action.equalsIgnoreCase("UPDATE")) {
 					messageId = MessageConst.INFO_700047;
-				} 
+				} */
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
