@@ -696,7 +696,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
 				reqDTO.setExcludeLoaIdList(amendmentResDTO.getAmendmentLoaIds());
 			}
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAListBySupplier(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, "- Select One -");
