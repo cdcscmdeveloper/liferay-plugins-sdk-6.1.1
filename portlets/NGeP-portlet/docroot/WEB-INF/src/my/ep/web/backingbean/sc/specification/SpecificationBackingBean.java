@@ -2422,10 +2422,7 @@ public class SpecificationBackingBean extends
 		setUserDetails(this.getManagedBean().getSupplierCriteria());
 		scQt.setScQtSupplierCriteria(this.getManagedBean()
 				.getSupplierCriteria());
-		if(null!=this.getManagedBean()
-				.getSupplierCriteria().getQtSupplierCriteriaId()){
 		
-		}
 		List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
 		if ("O".equalsIgnoreCase(scQt.getQtType())) {
 			List<ScQtCategory> openList = this.getManagedBean()
