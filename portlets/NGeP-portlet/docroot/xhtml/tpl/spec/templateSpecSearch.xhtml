@@ -103,7 +103,7 @@
 								#{templateSpecBackingBean.getParameterDesc(tplMasterObj.templateTypeCode)}
 							</p:column>
 							<p:column style="width:10%">
-								#{tplMasterObj.createdBy}
+								#{tplMasterObj.createdUser.userName}
 							</p:column>
 							<p:column style="width:7%">
 								<h:outputText value="#{tplMasterObj.createdDate}" >
