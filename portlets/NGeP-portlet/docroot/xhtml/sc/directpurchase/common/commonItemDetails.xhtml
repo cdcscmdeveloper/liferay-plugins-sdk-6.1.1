@@ -43,8 +43,9 @@
 	
 	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-			 <h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
-			  <h:outputText value="* " styleClass="mandatory" />
+		 <h:outputText value="* " styleClass="mandatory" />
+		 <h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
+			 
 		</f:facet>
           <p:outputPanel>	
 			<table style="width:100%">
@@ -232,7 +233,7 @@
 					</f:facet>
 					<p:inputText style="width:25px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
-					   size="6" maxlength="4"  
+					   size="6" maxlength="4"  validatorMessage="Delivery Term : must be '4' digits only!" 
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
 					<p:selectOneMenu  style="width:75px;"
 						value="#{requestNoteDtl.deliverTermType}">

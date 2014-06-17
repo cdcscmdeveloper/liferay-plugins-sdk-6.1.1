@@ -47,8 +47,7 @@
 				  <tr>
  				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.selectedPmOrgProfile.brandNew}">
  				     <td style="width: 250px;">
- 				      <p:outputLabel value="*" styleClass="mandatory" />
-					  <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /></td>
+					  <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 					 <td> 
 					  <table>
 					    <tr>
@@ -139,7 +138,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">
 				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" 
-				     size="30"  required="true"
+				     size="30"  required="true" maxlength="23"
 				     id="unitPrice" label="#{lbl['lbl.sc.purchase.in.default.unit.price']}"
 				     disabled="#{!purchaseInDefaultBackingBean.managedBean.approverFlag}">
 				      <f:convertNumber
@@ -161,8 +160,7 @@
 			<table style="width:90%">
 			<tr>
 			   <td style="width: 250px;">
-			   <p:outputLabel value="*" styleClass="mandatory" />
-			   <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.just']}" /></td>
+			   <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.just']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
@@ -194,9 +192,8 @@
 		 <table style="width: 90%">
 			 <tr>
 			  <td style="width: 250px;">
-			     <p:outputLabel value="*" styleClass="mandatory" />
 			  <p:outputLabel
-				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /></td>
+				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
 			 <td><p:inputText id="ordqty"  maxlength="13"
 			       validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999.99999"
 			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
@@ -212,7 +209,7 @@
 	 <h:panelGroup id="rmkId">   
 		   <table style="width: 90%">
 			 <tr>
-			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="Remark"/></td>
+			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="Remark"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -247,14 +244,14 @@
 	   <table style="width: 90%">
 		<tr>
 			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
-			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/></td>
+			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
 				 disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}" value="Attach file(s)" />
 		  </td>
 		</tr>
 		 <tr><td/>
-			<td><p:dataGrid id="attachId" value="#{purchaseInDefaultBackingBean.managedBean.attachments}" rendered="true"
+			<td><p:dataGrid id="attachId" value="#{purchaseInDefaultBackingBean.managedBean.attachments}"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" 
 					style="width:100%">
 			    <table>
@@ -262,7 +259,7 @@
 				    <td rowspan="2" style="vertical-align: top;" align="left">
 					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 					  </td>
-				   <td><h:outputText value="#{attachFile.user.userName}"/>, 
+				   <td><h:outputText value="#{attachFile.user.userName}" />, 
 					 <h:outputText  value="#{attachFile.changedDate}">
 					  	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					 </h:outputText></td>

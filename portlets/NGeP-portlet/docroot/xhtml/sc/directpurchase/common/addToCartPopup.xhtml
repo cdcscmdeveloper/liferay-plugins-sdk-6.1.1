@@ -52,9 +52,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
 					<td><p:inputText size="33" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="13" id="oderQtyId" 
-					       validatorMessage="must be a signed decimal number  between 0.0  and 9999999.99999"
+					       validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999.99999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
-							 <f:validateDoubleRange for="oderQtyId" minimum="0.0" maximum="9999999.99999" />
 						</p:inputText></td>
 				</tr>
 				<tr>

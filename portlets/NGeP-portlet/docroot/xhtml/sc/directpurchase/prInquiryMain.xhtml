@@ -7,7 +7,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
    <ui:define name="contentSection">
-   <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+   <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" id="mainMsg"/>
    <ac:title value="#{lbl['lbl.sc.pr.inquiry']}"/>
    <p:panel id="mainPanel">
    <div align="right">

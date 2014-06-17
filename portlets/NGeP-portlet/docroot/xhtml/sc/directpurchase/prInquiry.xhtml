@@ -106,7 +106,6 @@
 				           label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="13" id="oderQtyId" 
 					       validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999.99999"
 						   value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.requestNoteItem.quantity}" styleClass="ppRightBtn">
-						      <f:validateDoubleRange for="oderQtyId" minimum="0.0" maximum="9999999.99999" />
 						</p:inputText>
 			     </td>
 			</tr>
@@ -270,7 +269,7 @@
 				<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
 			</f:facet>
 			
-				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" size="30"  id="itemPrice"
+				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" maxlength="23" size="30"  id="itemPrice"
 				  disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}" required="#{!unspscCodeBackingBean.isRequisitioner()}">
 				    <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>

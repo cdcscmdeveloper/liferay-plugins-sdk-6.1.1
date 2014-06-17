@@ -13,8 +13,7 @@
 				    <tr>
 					    <c:if test ="#{simpleQuoteBackingBean.managedBean.pmOrgProfile.brandNew}">
 						 <td style="width: 150px">
-						   <p:outputLabel value="*" styleClass="mandatory" />
-						    <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.ptn.name']}" /></td>
+						    <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.ptn.name']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
 						 <td> <p:selectOneMenu id="ptjName" label="Ptj Name" required="true"
 						     value="#{simpleQuoteBackingBean.managedBean.orgProfileId}"
 						     styleClass="divisionclass" style="width: 250px;">
