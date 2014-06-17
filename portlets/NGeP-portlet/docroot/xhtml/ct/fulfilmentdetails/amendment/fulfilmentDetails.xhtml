@@ -27,7 +27,7 @@
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#,###.00" />
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="Signed Date" />
+			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}" />
 			<p:inputText for="signBy" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}">
@@ -36,11 +36,11 @@
 				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
-			 <p:outputLabel id="astatus" value="Agreement Status" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			 <p:inputText for="astatus" style="width:170px;" disabled="true" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="Contract Title" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
 			</div>
 			</h:panelGroup>
 		    <h:panelGrid>
@@ -49,7 +49,7 @@
 				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="Agreement Status" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<p:inputText for="astatus1" style="width:170px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:180px;">
@@ -58,12 +58,12 @@
 			    <p:ajax event="change" update="justificationPanel,exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
-			 <p:outputLabel value="Concession" />
+			 <p:outputLabel value="#{lbl['lbl.ct.chkbx.concession']}" />
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
-		     <p:outputLabel value="Fee Exemption"/>
+		     <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}"/>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
@@ -83,7 +83,7 @@
 			     <p:ajax event="change" update="justificationPanel" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.ap201']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		    <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.bondReq ? false : true}"
@@ -99,7 +99,7 @@
 	       amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
 		    <div style="height:80px; vertical-align:top;">
-			   <p:outputLabel for="justificationLbl" value="* Justification" />
+			   <p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification']}" />
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid>

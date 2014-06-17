@@ -46,7 +46,7 @@
 		           </p:commandLink>
 			    </h:panelGroup>
 			 </p:column> 	
-			 <p:column headerText="Status" style="width:10%;">
+			 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
 			  <p:selectOneMenu value="#{data.chkStatusId}" style="width:75px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
@@ -64,7 +64,7 @@
                 <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
             </h:panelGrid>
             <div class="ppRightBtn">
-		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
+		      <p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
 		   </div>
          </p:dialog>    	
       </p:panel>                

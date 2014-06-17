@@ -7,19 +7,19 @@
    <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
     <h:panelGrid columns="2" style="width:100%" styleClass="top-aligned-columns">
        <h:panelGrid columns="2" style="width:95%;" columnClasses="columnWidth15,columnWidth30">
-          <p:outputLabel value="Business Reg. No." />  
+          <p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" />  
           <h:panelGrid columns="4">
              <p:inputText disabled="true" size="10" 
                 value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.epNo}" />
              <p:spacer width="5"/>
-             <p:outputLabel value="MOF No." />  
+             <p:outputLabel value="#{lbl['lbl.ct.amend.mofno']}" />  
              <p:inputText disabled="true" size="10" 
              	value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
           </h:panelGrid>
-          <p:outputLabel value="Supplier Name" />  
+          <p:outputLabel value="#{lbl['lbl.ct.amend.suppname']}" />  
           <p:inputText disabled="true" style="width:222px;" 
              value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-          <p:outputLabel value="Branch Name" />  
+          <p:outputLabel value="#{lbl['lbl.ct.amend.branchname']}" />  
           <p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" /> 
           <h:panelGroup>
             <div style="height: 40px; vertical-align:top;">
@@ -30,7 +30,7 @@
              <p:inputTextarea id="supplierAddress" disabled="true" value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}" 
                 rows="4" cols="31" maxlength="200"  autoResize="false" style="margin-bottom: 5px;" />
            </h:panelGrid>
-           <p:outputLabel value="Contact Person" />  
+           <p:outputLabel value="#{lbl['lbl.ct.ament.cperson']}" />  
            <p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
            <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
            <p:inputText  value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  disabled="true" style="width:170px;" />
