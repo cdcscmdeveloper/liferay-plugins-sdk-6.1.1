@@ -414,31 +414,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		log.debug("Exit createSupAgreement(.)");
 		return null;
 	}
-	
-    public SelectItem[] getDepartmentDropdown(Long ministryId) {
-    	
-		SelectItem[] items = null;     
-		try{
-		   int i = 1;
-		   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-		   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		   reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-		   reqDTO.setParentOrgProfileId(ministryId);
-		   OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-		   List<PmOrgProfile> list = resDTO.getOrgProfileList();
-		   items = new SelectItem[list.size()+1];
-	       items[0] = new SelectItem(null, "- Select One -");
-	       for(PmOrgProfile orgProfile : list) {
-		       items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
-	       }
-		 }catch (Exception e) {
-	    	   e.printStackTrace();
-	    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-	     }
-	   return items;
-	}
     
-    public SelectItem[] getPtjCodeName(Long departmentId){
+    public SelectItem[] getPtjCodeName(Long ministryId){
 		
     	SelectItem[] items = null;     
 		try{
@@ -447,10 +424,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		   reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			 
-		   if(departmentId == null)
-			   departmentId = 1L;
+		   if(ministryId == null)
+			   ministryId = 1L;
 			  
-		   reqDTO.setParentOrgProfileId(departmentId);
+		   reqDTO.setParentOrgProfileId(ministryId);
 		   OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 		   List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		   items = new SelectItem[list.size()+1];

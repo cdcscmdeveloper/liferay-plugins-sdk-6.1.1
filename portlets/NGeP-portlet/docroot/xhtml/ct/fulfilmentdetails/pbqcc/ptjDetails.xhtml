@@ -7,11 +7,9 @@
 	 <p:panel id="ptjD" header="PTJ Details" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="Ministry" />
-			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile.orgName}" style="width:170px;" disabled="true" />
+			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.parentOrgProfile.orgName}" style="width:170px;" disabled="true" />
 			<p:outputLabel value="Approver Name" />
 			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.approver.userName}" style="width:130px;" disabled="true"/>				
-			<p:outputLabel value="Jabatan" />
-			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.parentOrgProfile.orgName}" />
 			<p:outputLabel value="Approver Contact" />
 			<p:inputText style="width:130px;" disabled="true" value="02349234" />
 		    <p:outputLabel value="PTJ" />
