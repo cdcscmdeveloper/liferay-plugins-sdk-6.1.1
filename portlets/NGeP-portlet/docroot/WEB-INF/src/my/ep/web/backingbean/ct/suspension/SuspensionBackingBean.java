@@ -83,7 +83,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			this.getManagedBean().setTaskId(taskId);
 			if(taskId==null) {
 				return;
 			}
@@ -102,7 +101,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			Object obj = res.getPojo();
 			this.getManagedBean().setTaskName(res.getTaskName());
 			this.getManagedBean().setAction(res.getAction());
-			
+			this.getManagedBean().setTaskId(taskId);
 			CTContractSuspensionDataType dataType = (CTContractSuspensionDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
