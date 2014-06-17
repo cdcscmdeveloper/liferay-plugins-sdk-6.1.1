@@ -210,7 +210,7 @@ public class LocationSingleton {
 			
 			for (PmState state : allStates) {
 				//LocationDTO stateLocation = new LocationDTO(state);
-				System.out.println("======display state name==="+state.getStateName());
+				
 				LOCATION_CLASS locCriteria = locClass.newInstance();
 				locCriteria.setPmState(state);
 				TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
@@ -241,7 +241,7 @@ public class LocationSingleton {
 					if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 					
 						for (PmDivision division : state.getPmDivisions()) {
-							System.out.println("======display location 2 division not null name==="+division.getDivisionName());
+							
 							LOCATION_CLASS locCriteria1 = locClass.newInstance();
 							locCriteria1.setPmDivision(division);
 							TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
@@ -473,7 +473,7 @@ public class LocationSingleton {
 		
 		for (PmState state : allStates) {
 			//LocationDTO stateLocation = new LocationDTO(state);
-			System.out.println("======display state name==="+state.getStateName());
+			
 			ScQtLocCriteria locCriteria= new ScQtLocCriteria();
 			locCriteria.setPmState(state);
 			TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
@@ -504,7 +504,7 @@ public class LocationSingleton {
 				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 				
 					for (PmDivision division : state.getPmDivisions()) {
-						System.out.println("======display location 2 division not null name==="+division.getDivisionName());
+						
 						ScQtLocCriteria locCriteria1= new ScQtLocCriteria();
 						locCriteria1.setPmDivision(division);
 						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
@@ -636,7 +636,7 @@ public class LocationSingleton {
 		
 		for (PmState state : allStates) {
 			//LocationDTO stateLocation = new LocationDTO(state);
-			System.out.println("======display state name==="+state.getStateName());
+			
 			TplSpecZoneLoc locCriteria= new TplSpecZoneLoc();
 			locCriteria.setPmState(state);
 			TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
@@ -668,7 +668,7 @@ public class LocationSingleton {
 				if(state.getPmDivisions() != null && !state.getPmDivisions().isEmpty()){
 				
 					for (PmDivision division : state.getPmDivisions()) {
-						System.out.println("======display location 2 division not null name==="+division.getDivisionName());
+						
 						TplSpecZoneLoc locCriteria1= new TplSpecZoneLoc();
 						locCriteria1.setPmDivision(division);
 						TreeNode divisionNode = new DefaultTreeNode("division",locCriteria1, stateNode);
@@ -1553,7 +1553,7 @@ public class LocationSingleton {
 	public TreeNode constuctTreeNode(TplSpecZoneDtl tplSpecZoneDtl, List<TplSpecZoneLoc> specLocs){
 		TreeNode root=new DefaultTreeNode("root",null);
 		if(tplSpecZoneDtl!=null){
-			TreeNode zoneNode = new DefaultTreeNode("zone",specLocs.get(0).getTplSpecZoneDtl(),root);
+			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneDtl,root);
 			List<PmState> states = new ArrayList<PmState>();
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			TreeNode stateNode=null;
