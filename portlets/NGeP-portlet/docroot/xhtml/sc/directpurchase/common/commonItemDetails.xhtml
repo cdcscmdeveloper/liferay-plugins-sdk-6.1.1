@@ -234,12 +234,15 @@
 					<p:inputText style="width:25px;text-align:right;" required="true" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"  validatorMessage="Delivery Term : must be '4' digits only!" 
-					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"/>
-					<p:selectOneMenu  style="width:75px;"
+					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}">
+					    <f:convertNumber integerOnly="true" for="deliveryTerm"/>
+					   </p:inputText>
+					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
+					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>

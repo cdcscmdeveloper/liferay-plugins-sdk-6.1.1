@@ -41,16 +41,22 @@
 				</TR>
 			</table>
 		</p:panel>
-		<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="ZoneLocation.hide();" process="@all"
-				update="@this, zoneLocationDataTable,zonePopupPanel"   partialSubmit="true"
-				actionListener="#{simpleQuoteBackingBean.updateZone}">
-	   </p:commandButton>
-				&#160;&#160;
-		
-		
-		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
-			onclick="ZoneLocation.hide();"></p:commandButton>
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="60%" style="text-align:right">
+					<p:commandButton
+						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+						icon="ui-icon-ok" onclick="ZoneLocation.hide();" process="@all"
+						update="@this, zoneLocationDataTable,zonePopupPanel"
+						partialSubmit="true"
+						actionListener="#{simpleQuoteBackingBean.updateZone}" />
+
+					<p:commandButton
+						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+						icon="ui-icon-close" onclick="ZoneLocation.hide();" />
+
+				</p:column>
+			</p:row>
+		</p:panelGrid>
 	</p:dialog>
 </ui:composition>

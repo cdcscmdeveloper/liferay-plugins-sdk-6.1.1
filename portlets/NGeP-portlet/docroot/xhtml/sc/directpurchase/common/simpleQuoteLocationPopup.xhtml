@@ -32,16 +32,22 @@
 				</TR>
 			</table>
 		</p:panel>
-		<p:commandButton
-				value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-				style="float:right;" onclick="locationPopup.hide();" process="@all"
-				update="@this, locationDataTable,locPopupPanel" partialSubmit="true"
-				actionListener="#{simpleQuoteBackingBean.updateLocation}">
-	   </p:commandButton>
-				&#160;&#160;
 		
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="60%" style="text-align:right">
+					<p:commandButton
+						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"  onclick="locationPopup.hide();"
+						process="@all" update="@this, locationDataTable,locPopupPanel"
+						partialSubmit="true" icon="ui-icon-ok"
+						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
+						<p:commandButton
+							value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" icon="ui-icon-close"
+							onclick="locationPopup.hide();" />
+							
+					</p:column>
+			</p:row>
+		</p:panelGrid>
 		
-		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
-			onclick="locationPopup.hide();"></p:commandButton>
 	</p:dialog>
 </ui:composition>
