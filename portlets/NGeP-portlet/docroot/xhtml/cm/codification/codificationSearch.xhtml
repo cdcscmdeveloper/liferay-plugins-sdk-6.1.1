@@ -12,7 +12,7 @@
 	</script>
 
 	<h:panelGroup id="cmUNSPSCsearchID">
-		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser}">
+		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
@@ -118,7 +118,7 @@
 			<div class="clear"></div>
 			<div style="text-align: right;">
 				<p:commandButton value="Request UNSPSC"
-					rendered="#{unspscCodeBackingBean.supplierUser}"
+					rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}"
 					action="#{unspscCodeBackingBean.requestUnspscCode}" />
 			</div>
 

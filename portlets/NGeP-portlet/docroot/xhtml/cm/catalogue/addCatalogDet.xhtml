@@ -42,7 +42,7 @@
 		<div style="text-align: right;">
 
 			<h:panelGroup
-				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
 				<p:commandButton value="#{lbl['lbl.cm.submit']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					icon="ui-icon-submit"
@@ -85,7 +85,7 @@
 		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
 
 			<h:panelGroup
-				rendered="#{(unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin) 
+				rendered="#{(unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier) 
 				and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and catalogueBackingBean.managedBean.displayCatalogue}">
 				<table width="100%;">
 					<tr>
@@ -332,7 +332,7 @@
 			</p:tab>
 
 			<p:tab id="remarkId" title="Reject Reason"
-				rendered="#{(unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin)
+				rendered="#{(unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier)
 				and (catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' )}">
 
 				<ui:include src="remark.xhtml"></ui:include>

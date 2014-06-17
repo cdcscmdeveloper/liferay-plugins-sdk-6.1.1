@@ -11,9 +11,10 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="true"></p:messages>
 
-		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser}">
+		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
@@ -130,13 +131,21 @@
 				</table>
 
 				<div style="text-align: right;">
-					<p:commandButton value="Search" icon="ui-icon-search"
+					<p:commandButton value="Search" icon="ui-icon-search" id="searchButtonId"
 						action="#{codificationBackingBean.extensionCodeSearch}"
 						update="itemTableID" />
 					<p:commandButton value="Back" icon="ui-icon-back"
 						action="#{codificationBackingBean.backToPrev}" />
 				</div>
 			</p:panel>
+
+
+
+			<p:blockUI block=":form" trigger="searchButtonId">
+				<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
+
 
 
 
@@ -189,10 +198,10 @@
 				<div class="clear"></div>
 				<div style="text-align: right;">
 					<p:commandButton value="Request Extension"
-						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
+						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}"
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
 					<p:commandButton value="Add" icon="ui-icon-add"
-						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
+						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}"
 						action="#{catalogueBackingBean.addToMaintain()}" />
 				</div>
 
