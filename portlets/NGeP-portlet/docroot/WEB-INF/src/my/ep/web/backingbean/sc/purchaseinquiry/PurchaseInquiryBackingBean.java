@@ -604,69 +604,82 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
 			ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
+			
+			// checking wheather stock available or not
+			if(prInquiry.getIsStockAvailable().equals("1")){
+				ScRequestNote	requestNote	=	prInquiry.getScRequestSupplierItems().get(0).getRequestNoteItem().getRequestNote();
+				reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+				RequestNoteResDTO resDTO = directPurchaseSO.getRequestNote(reqDTO);
+				requestNote	=	resDTO.getRequestNoteDetail();
 
-			ScRequestNote	requestNote	=	prInquiry.getScRequestSupplierItems().get(0).getRequestNoteItem().getRequestNote();
-			reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-			RequestNoteResDTO resDTO = directPurchaseSO.getRequestNote(reqDTO);
-			requestNote	=	resDTO.getRequestNoteDetail();
-
-			//get RequestNote Backing bean and manage bean and set Request Note to RequestNote manage bean
-			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-			RequestNoteBackingBean requestNoteBackingBean = (RequestNoteBackingBean) portletSession.getAttribute("requestNoteBackingBean");
-			if (requestNoteBackingBean == null) {
-				requestNoteBackingBean = new RequestNoteBackingBean();
-			}
-			List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-			if( prInquiry.getScRequestSupplierItems() != null && !prInquiry.getScRequestSupplierItems().isEmpty()){
-				for (ScRequestSupplierItem requestSupplierItem : prInquiry.getScRequestSupplierItems()) {
-				    requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
-					ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
-					requestItem.setSupplierItems(prInquiry.getScRequestSupplierItems());
-					parameterReqDTO = new ParameterReqDTO();
-					parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-					parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-					ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-					requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-					requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
-					requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
-					requestNoteDtl.setRequestItem(requestItem);
-					requestNoteDtl.setAssignedUser(new PmUser());
+				//get RequestNote Backing bean and manage bean and set Request Note to RequestNote manage bean
+				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+				RequestNoteBackingBean requestNoteBackingBean = (RequestNoteBackingBean) portletSession.getAttribute("requestNoteBackingBean");
+				if (requestNoteBackingBean == null) {
+					requestNoteBackingBean = new RequestNoteBackingBean();
 				}
-				requestNoteDtls.add(requestNoteDtl);
+				List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+				if( prInquiry.getScRequestSupplierItems() != null && !prInquiry.getScRequestSupplierItems().isEmpty()){
+					for (ScRequestSupplierItem requestSupplierItem : prInquiry.getScRequestSupplierItems()) {
+						requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+						ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
+						requestItem.setSupplierItems(prInquiry.getScRequestSupplierItems());
+						parameterReqDTO = new ParameterReqDTO();
+						parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+						parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+						requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
+						requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
+						requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+						requestNoteDtl.setRequestItem(requestItem);
+						requestNoteDtl.setAssignedUser(new PmUser());
+					}
+					requestNoteDtls.add(requestNoteDtl);
+				}
+				initializeRemarks(prInquiry);
+				requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				FacesScopes facesScopes = new FacesScopes();
+				String token = facesScopes.getBPMAuthenticationCtxToken();
+				BpmRequestDTO reqBPMDTO = new BpmRequestDTO();
+				reqBPMDTO.setCtxToken(token);
+				reqBPMDTO.setTaskId(getManagedBean().getTaskId());
+				BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
+				requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
+
+				requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
+				requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
+				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
+				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
+				requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
+				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
+				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
+				requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
+				requestNoteBackingBean.initialInformation(new ScRequestNote());
+				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+				requestNoteBackingBean.populateUserDivisionList();
+				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//redirect to RequestNote screen
+				return "commonRequestNote";
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage("Stock not available !",
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),getManagedBean().getScPrInquiry().getPrInquiryNo()},
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
 			}
-			initializeRemarks(prInquiry);
-			requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-			BpmRequestDTO reqBPMDTO = new BpmRequestDTO();
-			reqBPMDTO.setCtxToken(token);
-			reqBPMDTO.setTaskId(getManagedBean().getTaskId());
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
-			requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
-			
-	        requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
-			requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
-			requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
-		    requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
-			requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
-			requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
-			requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
-			ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-			parameterReqDTO = new ParameterReqDTO();
-        	parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-        	parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-        	ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-        	scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-			requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
-			requestNoteBackingBean.initialInformation(new ScRequestNote());
-			requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
-			requestNoteBackingBean.populateUserDivisionList();
-			requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			
-			//redirect to RequestNote screen
-			return "commonRequestNote";
 		}else {
 			//cancel BPM task
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -701,6 +714,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			}
 			return null;
 		}
+		return null;
 	}
 	
 	 /**
@@ -821,7 +835,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 	}
 		}
 	  }
-	
+	 
+	 
 	public void ptjNameEvent() {
 		if (getManagedBean().getOrgProfileId() != null) {
 			for (PmOrgProfile orgProfile : getManagedBean()
