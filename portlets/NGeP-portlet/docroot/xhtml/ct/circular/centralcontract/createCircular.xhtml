@@ -35,9 +35,9 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
 				action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt" />
-			<p:commandButton value="Delete" process="@this" 
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 			  partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"/>				
 		</div>
 		
@@ -49,9 +49,9 @@
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=contactPersonDt])"
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=contactPersonDt])"
 		       process="@all" actionListener="#{centralContractBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
-			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delCtPersonDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delCtPersonDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
         
@@ -72,12 +72,12 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
 				action="#{centralContractBackingBean.addExemptedOrg()}" update="exemptedOrgDt" />
-			<p:commandButton value="Delete" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delExemptedOrgDlg.show()"/>				
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delExemptedOrgDlg.show()"/>				
 		</div>
 		
-		<p:dialog id="delExemptedOrgDlg" header="Delete Confirmation" resizable="false"
+		<p:dialog id="delExemptedOrgDlg" header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="325" height="90">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -85,9 +85,9 @@
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=exemptedOrgDt])"
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=exemptedOrgDt])"
 		       process="@all" actionListener="#{centralContractBackingBean.deleteExemptedOrg()}" onclick="delExemptedOrgDlg.hide();"/>
-			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delExemptedOrgDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delExemptedOrgDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  	
         
@@ -99,7 +99,7 @@
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="Circular No.">
+			<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
 				<h:outputText value="#{data.circularVer.circularNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
@@ -108,9 +108,9 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" icon="ui-icon-add" oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
 				actionListener="#{centralContractBackingBean.addCancelCircularListener()}" />
-			<p:commandButton value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" icon="ui-icon-delete"
 				action="#{centralContractBackingBean.deleteCancelCircular()}" update="cancelCircularDt" />			
 		</div>		
 	</p:panel>
@@ -122,19 +122,19 @@
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="Circular No.">
+				<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
 					<h:outputText value="#{data.circularVer.circularNo}" style="width:200px;" />
 				</p:column>
-				<p:column headerText="Circular Name">
+				<p:column headerText="#{lbl['lbl.ct.cc.cname']}">
 					<h:outputText value="#{data.circularVer.name}" style="width:300px;" />
 				</p:column>									
 			</p:dataTable>
 			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
-				<p:commandButton value="Select" icon="ui-icon-accept" process="cancelCircularDlg" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" icon="ui-icon-accept" process="cancelCircularDlg" 
 					action="#{centralContractBackingBean.addCancelledCircular}"
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
-				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
 		</p:panel>
 	</p:dialog>
