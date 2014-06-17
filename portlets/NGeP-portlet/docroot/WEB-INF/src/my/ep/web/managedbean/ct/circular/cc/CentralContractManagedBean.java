@@ -44,6 +44,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String circularAdmin;
+	private String action;
 	
 	private boolean updateAction;
 	private boolean updateTypeDisable;
@@ -313,5 +314,11 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
 	}
 }

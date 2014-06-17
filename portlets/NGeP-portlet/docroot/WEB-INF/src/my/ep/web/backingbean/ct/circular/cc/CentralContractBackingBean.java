@@ -380,7 +380,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			//validateCircular(outcome);
+			validateCircular(action);
 			
 			CtCircular circular = this.getManagedBean().getCircular();
 			if(circular==null) {
@@ -439,26 +439,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-					return "circularBase.xhtml?faces-redirect=true";
 				}
 			  }else {
 					throw new EpException("Failed.");
 			  }
-		  }catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			if(e instanceof EpException) {
-				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			}
-		  }finally {
+		  } finally {
 			  circularSO = null;
 		  }
 		return null;		
-				
-			
 	}
 	
 	private void validateCircular(String outcome) {
@@ -466,18 +454,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularDetailSO.class);
 		
 		if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-			throw new EpException("100022", new String[]{"Circular Letter"});
+			throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 		}
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException("100022", new String[]{"Remark"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
-				throw new EpException("100022", new String[]{"Selected approver(s)"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}
 		}
 		
@@ -546,6 +534,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setAction(action);
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
@@ -659,15 +648,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-
-			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
-				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
-			}// TODO hardcode to get the value, should remove after have real data
-			reqDTO.setOrgProfileId(1392L);
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 
-			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {

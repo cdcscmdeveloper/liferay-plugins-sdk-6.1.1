@@ -7,29 +7,49 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<table style="width: 100%" >
 			<tr>
-				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
-				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
-				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
-				<td rowspan="2"><p:inputTextarea cols="31" rows="3" 
-						style=" margin-bottom:5px;"
-						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+				<td style="width: 15%;">
+					<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td style="width: 200px">
+					<p:inputText id="circularNoTxt" style="width:190px;" required="true" label="#{lbl['lbl.ct.cc.cno']}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" />
+				</td>
+				<td>
+					<p:message for="circularNoTxt" display="icon" />
+				</td>
+				<td rowspan="2" valign="top" style="width: 15%;">
+					<p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td rowspan="2" style="width: 180px">
+					<p:inputTextarea id="circularNameTxt" cols="31" rows="3" style=" margin-bottom:5px;" label="#{lbl['lbl.ct.cc.cname']}"
+						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+				</td>
+				<td>
+					<p:message for="circularNameTxt" display="icon" />	
 				</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
-				<td><p:inputText  style="width:170px;"
+				<td><p:inputText  style="width:190px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
+				<td></td>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
 			    <td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
+				<td></td>
 			</tr>
 			<tr>
-			<td><h:outputLabel value="* #{lbl['lbl.ct.cc.upload']}" /></td>
+			<td>
+				<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
 			<td><h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg" value="Choose file" 

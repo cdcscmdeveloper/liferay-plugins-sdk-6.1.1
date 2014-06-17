@@ -82,6 +82,10 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
 
 		// Contract Management
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
@@ -257,19 +261,6 @@ public class BPMTaskListBackingBean extends
 				}
 			}
 			log.info("url:" + url);
-			
-			if(process.equalsIgnoreCase(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)) {
-				reqDTO.setCtxToken(token);
-				reqDTO.setTaskId(taskId);
-				BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-				Object obj = res.getPojo();
-				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
-				if(dataType.getType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
-					url = "central-contract-circular";
-				} else {
-					url = "panel-circular";
-				}
-			}
 			
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
