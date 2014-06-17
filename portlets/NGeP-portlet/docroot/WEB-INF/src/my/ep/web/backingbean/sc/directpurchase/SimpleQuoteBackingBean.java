@@ -842,7 +842,7 @@ public class SimpleQuoteBackingBean extends
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
-				if (!treeNode.getParent().isSelected()) {
+				if (treeNode.getParent().isSelected()) {
 					List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
 					locationDTOs.addAll(locationDTO);
 				}

@@ -473,37 +473,37 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			return items;
 		}
 		
-	 public void initialInformation(ScPurchaseInDefault purchaseInDefault){
-		    DualListModel<PmUser>	approvalUsers;
+		public void initialInformation(ScPurchaseInDefault purchaseInDefault){
+			DualListModel<PmUser>	approvalUsers;
 			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-		    if(getManagedBean().getPmOrgProfile() != null){
-		    	//userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
-		    }
-		    UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+			if(getManagedBean().getPmOrgProfile() != null){
+				userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+			}
+			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
-			
-		    if (purchaseInDefault.getApprovalUsers().size() > 0
-				&& purchaseInDefault != null) {
-			   for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
-				    selectedApprover.add(purchaseInDefault.getApprovalUsers().get(i).getPmUser());
-				    for (int j = 0; j < availableApprover.size(); j++) {
-					    if (purchaseInDefault.getApprovalUsers().get(i).getPmUser().getUserId()
-							.equals(availableApprover.get(j).getUserId())) {
-						availableApprover.remove(availableApprover.get(j));
+
+			if (purchaseInDefault.getApprovalUsers().size() > 0
+					&& purchaseInDefault != null) {
+				for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
+					selectedApprover.add(purchaseInDefault.getApprovalUsers().get(i).getPmUser());
+					for (int j = 0; j < availableApprover.size(); j++) {
+						if (purchaseInDefault.getApprovalUsers().get(i).getPmUser().getUserId()
+								.equals(availableApprover.get(j).getUserId())) {
+							availableApprover.remove(availableApprover.get(j));
+						}
 					}
 				}
-			}
-		    approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
-			getManagedBean().setApprovalUsers(approvalUsers);
+				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
+				getManagedBean().setApprovalUsers(approvalUsers);
 			} else {
 				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
 				getManagedBean().setApprovalUsers(approvalUsers);
 			}
-	   }
+		}
 	 
 	 /**
 	  * to get Ptj drop down Listing in purchase in default

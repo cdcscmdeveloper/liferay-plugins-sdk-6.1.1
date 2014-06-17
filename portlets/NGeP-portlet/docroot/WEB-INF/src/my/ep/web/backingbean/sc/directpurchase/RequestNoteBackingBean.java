@@ -1,4 +1,5 @@
 /**
+
  * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.directpurchase;
@@ -13,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -1058,7 +1060,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setRoleCode(roleCode);
 			if(getManagedBean().getOrgProfileId() != null){
-				//reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			  reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
 			}
 			IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
@@ -1113,7 +1115,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
 			if(getManagedBean().getOrgProfileId() != null){
-				//userReqDto.setOrgProfileId(getManagedBean().getOrgProfileId());
+			   userReqDto.setOrgProfileId(getManagedBean().getOrgProfileId());
 			}
 			
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
@@ -1288,7 +1290,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
-
+	
+	
+	public void validateOrderQty(BigDecimal orderQty){
+		if (orderQty != null) {
+			try {
+				Double.parseDouble(orderQty.toString());
+			} catch (NumberFormatException ex) {
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Error", "Order Qty : must be a decimal number between 0.0 and 9999999.99999"));
+			}
+		} 
+	}
+	
 	public String cancel() {
 		log.info("cancel");
 		// clear request note data
