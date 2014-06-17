@@ -41,7 +41,6 @@ import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -149,7 +148,19 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			if(resDTO.isSuccessful()) {
 				this.renewSesionObject();
 				retrieveTemplateSpecMaster(templateSpecBean);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Record save successfully", "Record ID: "+resDTO.getSpecMaster().getSpecMasterId()));
+				
+				getManagedBean().setTemplateSpecBean(templateSpecBean);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_100002,
+										new String[] {},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
 			
 		} finally {
@@ -171,8 +182,21 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpecAnswer(reqDTO);
 
 			if(resDTO.isSuccessful()) {
+				this.renewSesionObject();
 				retrieveTemplateSpecMaster(templateSpecBean);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Record save successfully", "Record ID: "+specMaster.getSpecMasterId()));
+				
+				getManagedBean().setTemplateSpecBean(templateSpecBean);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_100002,
+										new String[] {},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
 
 		} finally {
@@ -287,9 +311,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			}
 			
 			newQuestion.setClAnswerRequired(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -308,9 +329,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			for(PmUom uom : resDTO.getPmUomList()) {
 				items[i++] = new SelectItem(uom.getUomId(), uom.getUomCode()+" "+uom.getUomName());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			uomSO = null;
 		}
@@ -334,9 +352,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			for(PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			orgProfileSO = null;
 		}
@@ -386,9 +401,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setClFulfilmentTypeCode(resDTO.getPmParameter());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -418,9 +430,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			
 			specQuestion.setTplSpecTierQties(null);
 			specQuestion.setTplSpecEstimations(specEstimations);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -445,9 +454,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				specQuestion.setScoreTypeCode(resDTO.getPmParameter());	
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -464,9 +470,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setScoreTypeCode(resDTO.getPmParameter());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -483,9 +486,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setClDeliveryTermTypeCode(resDTO.getPmParameter());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -558,9 +558,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 					SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlsByDocIdNType(reqDTO);
 					
 					specZoneDtls = resDTO.getZonesList();
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new EpException(e.getMessage());
 				} finally {
 					specZoneLocSO = null;
 				}	
@@ -620,6 +617,19 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyOkAction");
+		
+		ITemplateSpecSO templateSpecSO = null;
+		try {
+			List<TplSpecTierQty> specTierQties = templateSpecBean.getSelectedSpecQuestion().getTplSpecTierQties();
+			
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			
+			templateSpecSO.validateTierQty(specTierQties);
+			
+		} finally {
+			templateSpecSO = null;
+		}
 		
 		templateSpecBean.setSelectedSpecQuestion(null);
 		
@@ -702,38 +712,51 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			try {
 				templateSpecSO = BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
 				
-				SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-				SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("processType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								TemplateSpecConst.PROCESS_TYPE_STANDARD));
 				
 				if(getManagedBean().getSearchProcurementCategoryId()!=null) {
-					equalFilterBean.setSearchField("procurementCategory.parameterId");
-					equalFilterBean.setSearchValue(getManagedBean().getSearchProcurementCategoryId());
-					searchBean.getDataFilterBeans().add(equalFilterBean);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("procurementCategory.parameterId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchProcurementCategoryId()));
 				}
+				
 				if(getManagedBean().getSearchTemplateTypeId()!=null) {
-					equalFilterBean.setSearchField("templateTypeCode.parameterId");
-					equalFilterBean.setSearchValue(getManagedBean().getSearchTemplateTypeId());
-					searchBean.getDataFilterBeans().add(equalFilterBean);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("templateTypeCode.parameterId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchTemplateTypeId()));
 				}
+				
 				if(getManagedBean().getSearchOrgProfileId()!=null) {
-					equalFilterBean.setSearchField("orgProfile.orgProfileId");
-					equalFilterBean.setSearchValue(getManagedBean().getSearchOrgProfileId());
-					searchBean.getDataFilterBeans().add(equalFilterBean);
-				}		
-				if(getManagedBean().getSearchItemTypeId()!=null) {
-					equalFilterBean.setSearchField("itemTypeCode.parameterId");
-					equalFilterBean.setSearchValue(getManagedBean().getSearchItemTypeId());
-					searchBean.getDataFilterBeans().add(equalFilterBean);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("orgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchOrgProfileId()));
 				}
+				
+				if(getManagedBean().getSearchItemTypeId()!=null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("itemTypeCode.parameterId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchItemTypeId()));
+				}
+				
 				if(getManagedBean().getSearchSpecTypeId()!=null) {
-					equalFilterBean.setSearchField("specTypeCode.parameterId");
-					equalFilterBean.setSearchValue(getManagedBean().getSearchSpecTypeId());
-					searchBean.getDataFilterBeans().add(equalFilterBean);
-				}			
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("specTypeCode.parameterId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchSpecTypeId()));
+				}
+				
 				if(getManagedBean().getSearchSpecName()!=null) {
-					likeFilterBean.setSearchField("specName");
-					likeFilterBean.setSearchValue(getManagedBean().getSearchSpecName());
-					searchBean.getDataFilterBeans().add(likeFilterBean);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("specName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getSearchSpecName()));
 				}
 
 				// Order by created date
@@ -745,17 +768,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				if(resDTO.isSuccessful()) {
 					return resDTO.getSearchResultBean();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								MessageUtils.getMessage(MessageConst.EP_MAJ_00001, 
-										null, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, 
-										new FacesScopes().getUserLocale()),
-								null));
 			} finally {
 				templateSpecSO = null;
 			}
