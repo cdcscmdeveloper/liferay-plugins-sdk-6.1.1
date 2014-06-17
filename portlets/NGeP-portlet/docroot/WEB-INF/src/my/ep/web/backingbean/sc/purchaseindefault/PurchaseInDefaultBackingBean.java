@@ -169,7 +169,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	
 			getCurrentStatus(status.getStatusId());  
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-			initialInformation(scPurchaseInDefault);
+			//initialInformation(scPurchaseInDefault);
 			populatePtjDropDownList();
 			retrieveReasonDescListByCategory();
 			return "purchaseInDefaultMain";

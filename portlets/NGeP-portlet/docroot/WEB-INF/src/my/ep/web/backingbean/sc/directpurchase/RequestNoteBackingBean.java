@@ -934,7 +934,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setRequestNote(requestNote);
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		getCurrentStatus(status.getStatusId());
-		initialInformation(requestNote);
+		//initialInformation(requestNote);
 		initializeRemarks(requestNote);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		

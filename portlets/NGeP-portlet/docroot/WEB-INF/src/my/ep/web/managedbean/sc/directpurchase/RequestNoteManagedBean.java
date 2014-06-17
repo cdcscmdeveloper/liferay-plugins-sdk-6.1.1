@@ -40,7 +40,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
 	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 	private List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
-	private	DualListModel<PmUser>	approvalUsers;
+	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
 	private	String	fulfillmentType;
 	private	Long	assignedToUserId;
 	private	String	periodType;

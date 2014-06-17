@@ -138,7 +138,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.unit.price']}" style="width:15%">
 				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" 
-				     size="30"  required="true" maxlength="23"
+				     size="30"  required="true" maxlength="19"
 				     id="unitPrice" label="#{lbl['lbl.sc.purchase.in.default.unit.price']}"
 				     disabled="#{!purchaseInDefaultBackingBean.managedBean.approverFlag}">
 				      <f:convertNumber
@@ -194,11 +194,11 @@
 			  <td style="width: 250px;">
 			  <p:outputLabel
 				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
-			 <td><p:inputText id="ordqty"  maxlength="17"
+			 <td><p:inputText id="ordqty"  maxlength="14"
 			       validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999.99999"
 			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
 			       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" 
-			       styleClass="ppRightBtn" size="42" 
+			       styleClass="ppRightBtn" size="42"  
 			       disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
 			         <f:validateDoubleRange for="ordqty" minimum="0.0" maximum="9999999.99999" />
 				 </p:inputText></td>

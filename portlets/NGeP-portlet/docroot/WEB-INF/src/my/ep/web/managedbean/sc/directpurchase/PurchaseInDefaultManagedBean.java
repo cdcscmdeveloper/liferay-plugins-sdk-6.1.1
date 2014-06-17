@@ -44,7 +44,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
     
 	private ScRequestSupplierItem scRequestSupplierItem;
 	private	List<CmPricing> listPricingItems	=	new ArrayList<>();
-	private	DualListModel<PmUser>	approvalUsers;
+	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
 	private CmSupplierItem supplierItem;
 	private SelectItem[] justifications; //justification drop down 
 	private List<ScPurchaseInDefaultAttachment> attachments;

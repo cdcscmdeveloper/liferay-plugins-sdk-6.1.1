@@ -68,7 +68,7 @@
 									var="pmOrgProfile"
 									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change" update="rnHeaderId ,itemDtlId" partialSubmit="true"
+								<p:ajax event="change" update="@form" partialSubmit="true"
 									process="@this"
 									listener="#{requestNoteBackingBean.ptjNameEvent}" />
 							</p:selectOneMenu>
