@@ -191,7 +191,7 @@
 						
 					<ui:param name="componentName" value="Assets" />
 					<ui:param name="scoringPnlId" value="assetId" />
-					<ui:param name="scoringPnlName" value="Scoring For Net Amount"></ui:param>
+					<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -207,7 +207,7 @@
 					</div>
 				</h:panelGroup>
 			</p:panel>
-			<p:panel header="Scoring For Total Net Amount"
+			<p:panel header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>

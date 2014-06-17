@@ -15,7 +15,7 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.backAction}" />
 
 
@@ -44,25 +44,25 @@
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="Item Type" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
 					<td><p:inputText
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}"
 							disabled="true" size="30" /></td>
-					<td><h:outputLabel value="Specification Type" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
 				<tr>
 
-					<td><h:outputLabel value="Local Goods" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:inputText disabled="true"></p:inputText></td>
 				</tr>
 
 
 				<tr>
 
-					<td><h:outputLabel value="Status" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 				</tr>

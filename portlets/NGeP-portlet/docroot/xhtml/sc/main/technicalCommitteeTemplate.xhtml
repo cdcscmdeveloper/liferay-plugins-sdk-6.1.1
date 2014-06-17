@@ -15,13 +15,13 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
 				action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
 
-			<p:commandButton value="Complete" style="float:right;" icon="ui-icon-check"
+			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}" style="float:right;" icon="ui-icon-check"
 				action="#{specificationBackingBean.completeTemplateSpec('sc')}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
@@ -44,10 +44,10 @@
 				</tr>
 
 				<tr>
-					<td><h:outputLabel value="Item Type" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" /></td>
-					<td><h:outputLabel value="Specification Type" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
@@ -55,7 +55,7 @@
 
 				<tr>
 
-					<td><h:outputLabel value="Local Goods" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:selectOneRadio id="estimated">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -64,10 +64,10 @@
 
 				<tr>
 
-					<td><h:outputLabel value="Status" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
-					<td><h:outputLabel value="Item Weightage" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />

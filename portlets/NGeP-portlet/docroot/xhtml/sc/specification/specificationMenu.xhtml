@@ -10,39 +10,73 @@
 
 
 	<ac:lovPopup />
-	
-	<p:tabView dynamic="true"  orientation="left" activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
-		id="businessSpecId">
-		<p:ajax event="tabChange"
-			listener="#{specificationBackingBean.businessOwnerTabChange}" />
 
-		<p:tab title="#{lbl['lbl.sc.spec.general']}">
-			<ui:include src="specificationBusinessOwner.xhtml"></ui:include>
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%;" style="vertical-align: baseline;"><p:tabMenu
+					id="businessSpecId"
+					activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
+					styleClass="sidemenu" style="display : table-caption;">
 
-		</p:tab>
-
-		<p:tab title="Supplier Qualification Criteria">
-			<ui:include src="supplierQualificationCriteria.xhtml"></ui:include>
-		</p:tab>
-
-		<p:tab title="Technical Specification">
-			<ui:include src="technicalSpecification.xhtml"></ui:include>
-		</p:tab>
-
-		<p:tab title="Financial Specification">
-			<ui:include src="financialSpecification.xhtml"></ui:include>
-		</p:tab>
-		
-		
-
-		<p:tab title="Approval" rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
-			<ui:include src="approvalBusinessOwner.xhtml"></ui:include>
-		</p:tab>
+					<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
+						action="#{specificationBackingBean.retriveSpecdetails(null)}" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+						action="#{specificationBackingBean.retriveBusinessOwnerQualificationCriteri}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.tech.specification']}"
+					actionListener="#{specificationBackingBean.retriveTechnicalSpecification}"
+						update="@form" />
 
 
+					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
+					actionListener="#{specificationBackingBean.retriveFinancialSpecification}"
+						update="@form" />
+						
+					<c:if
+						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
+
+					<p:menuitem value="#{lbl['lbl.sc.spec.approval']}" 
+					actionListener="#{specificationBackingBean.retriveApprovalRemarks}"
+					update="@form" />
+					</c:if>
 
 
+				</p:tabMenu></td>
+			<td width="80%;">
+			<div align="right">
 
-	</p:tabView>
+					<p:commandButton value="Save" update="@all"
+						action="#{specificationBackingBean.saveSpecificationDtls}"
+						icon="ui-icon-save" />
+
+				</div> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
+
+					<ui:include src="specificationBusinessOwner.xhtml"></ui:include>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '1'}">
+
+					<ui:include src="supplierQualificationCriteria.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
+					<ui:include src="technicalSpecification.xhtml"></ui:include>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
+					<ui:include src="financialSpecification.xhtml"></ui:include>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
+
+						<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
+						<ui:include src="approvalBusinessOwner.xhtml"></ui:include>
+
+					</ui:fragment>
+
+				</c:if></td>
+		</tr>
+	</table>
 
 </ui:composition>

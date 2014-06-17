@@ -11,7 +11,7 @@
 		<p:tree id="ctSupplierZones" style="border:none;"
 			value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
 			var="ctZones"  selectionMode="single" dynamic="true">
-			  <p:ajax event="select" update=":form:businessSpecId:paneltabView:totalSupplier" listener="#{specificationBackingBean.retriveZoneBySupplier}" /> 
+			  <p:ajax event="select" update=":form:paneltabView:totalSupplier" listener="#{specificationBackingBean.retriveZoneBySupplier}" /> 
 			<p:treeNode type="zone">
 				<h:outputText value="#{ctZones.name}" />
 			</p:treeNode>

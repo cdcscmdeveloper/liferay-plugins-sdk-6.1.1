@@ -9,13 +9,14 @@
 
 		<p:tabView id="paneltabView" dynamic="true">
 
-			<p:tab id="tab1" title="Panel Information"
+			<p:tab id="tab1" title="#{lbl['lbl.sc.spec.panel.information']}"
 				styleClass="noBorders tr,noBorders td">
+				
 				<ui:include
 					src="panelInformation.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab2" title="Supplier List"
+			<p:tab id="tab2" title="#{lbl['lbl.sc.spec.panel.supplier.list']}"
 				styleClass="noBorders tr,noBorders td">
 				<ui:include
 					src="panelSupplierList.xhtml" />

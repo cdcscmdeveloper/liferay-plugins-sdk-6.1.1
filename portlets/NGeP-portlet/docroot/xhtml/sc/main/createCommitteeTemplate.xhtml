@@ -16,7 +16,9 @@
 			<table>
 				<tr>
 					<td style="width: 150px;">
-					<h:outputLabel value="Standard Template" /></td>
+					<h:outputLabel value="#{lbl['lbl.sc.spec.template.spec.standard.template']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
 					<td><p:selectOneRadio
 							value="#{specificationBackingBean.managedBean.standardTemplate}">
 							<f:selectItem itemLabel="Yes" itemValue="ST"></f:selectItem>
@@ -36,7 +38,7 @@
 							<td style="width: 150px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
-									value="#{TemplateMBB.managedBean.searchItemTypeId}">
+									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
 								</p:selectOneMenu></td>
@@ -58,13 +60,13 @@
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
-							<td><h:inputText size="70" style="margin-bottom:5px;"
+							<td><h:inputText size="100" style="margin-bottom:5px;" maxlength="200"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
-							<td><p:inputText style="margin-bottom:5px;"
+							<td><p:inputText style="margin-bottom:5px;" maxlength="21" 
 									value="#{specificationBackingBean.managedBean.qtNum}" /></td>
 						</tr>
 						<tr>

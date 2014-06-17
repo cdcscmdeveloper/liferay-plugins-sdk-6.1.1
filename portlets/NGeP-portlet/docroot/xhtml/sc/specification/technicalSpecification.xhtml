@@ -21,7 +21,7 @@
 			</p:column>
 
 			<p:column headerText="Status" style="width:20%">
-			<h:outputText value="Pending" size="50"></h:outputText>
+			<h:outputText value="#{specificationBackingBean.getStatusDescById(technicalSpec.pmStatus.statusId)}" size="50"></h:outputText>
 			</p:column>
 			<p:column headerText="Created By" style="width:20%">
 				<h:outputText value="#{specificationBackingBean.retriveUserName(technicalSpec.createdBy)}" size="50"></h:outputText>
@@ -39,8 +39,8 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="Create Specification" process="@this" icon="ui-icon-add"
-				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
+			<p:commandButton value="Create Specification" process="@this" icon="ui-icon-add" 
+			actionListener="#{specificationBackingBean.technicalSpecBoValidate}"	partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
 
 		</div>

@@ -184,6 +184,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> suppCriteriaopenList;
 	private List<ScQtCategory> suppCriteriaopenSelectList;
+	private List<ScQtCategory> suppCriteriarestrictedBoSelectList;
 
 	private TreeNode rootLocationTree;
 	private TreeNode rootZoanlTree;
@@ -310,6 +311,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long panelItemId;
 	private int activeIndex;
 	private CtPanelItem ctPanelItem;
+	private boolean required = Boolean.FALSE;
+	
 
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
@@ -3536,6 +3539,35 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCtPanelItem(CtPanelItem ctPanelItem) {
 		this.ctPanelItem = ctPanelItem;
+	}
+
+	/**
+	 * @return the suppCriteriarestrictedBoSelectList
+	 */
+	public List<ScQtCategory> getSuppCriteriarestrictedBoSelectList() {
+		return suppCriteriarestrictedBoSelectList;
+	}
+
+	/**
+	 * @param suppCriteriarestrictedBoSelectList the suppCriteriarestrictedBoSelectList to set
+	 */
+	public void setSuppCriteriarestrictedBoSelectList(
+			List<ScQtCategory> suppCriteriarestrictedBoSelectList) {
+		this.suppCriteriarestrictedBoSelectList = suppCriteriarestrictedBoSelectList;
+	}
+
+	/**
+	 * @return the required
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+
+	/**
+	 * @param required the required to set
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 }
