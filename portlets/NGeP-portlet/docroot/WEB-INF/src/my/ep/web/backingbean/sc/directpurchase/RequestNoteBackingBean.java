@@ -607,8 +607,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		System.out.println("cmSupplierItemId:" + cmSupplierItemId);
 		catReqDTO.setSupplierItemId(cmSupplierItemId);
-		//CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
 		CatalogueResDTO catResDTO = catalogueSO.findActivePricing(catReqDTO);
+		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		
 		List<CmPricing> cmPricings = catResDTO.getPriceLs();
 		if(cmPricings != null && cmPricings.size() > 0){
@@ -617,7 +617,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
-			ScRequestSupplierItem requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+		    requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
 			ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
 			
 			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
@@ -659,6 +659,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 		}
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+		// update item details data table
+		//RequestContext.getCurrentInstance().update("addToCartId");
+		//RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
 	}
 	
 	private ScRequestItem createRequestItem(CmSupplierItem cmSupplierItem){
