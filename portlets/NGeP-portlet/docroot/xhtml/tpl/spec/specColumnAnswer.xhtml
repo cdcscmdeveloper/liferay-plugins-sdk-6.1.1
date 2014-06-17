@@ -32,15 +32,22 @@
 	</p:column>
 	
 	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
+		</f:facet>
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
-		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.ratePerUom}"
-			rendered="#{isQuestionTypeItem}">
+		<p:inputText id="ratePerUom" style="min-width:0px !important;width:96%;" dir="rtl" 
+			value="#{tplSpecAnswer.ratePerUom}"
+			rendered="#{isQuestionTypeItem}" required="true" maxlength="19"
+			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
 			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
+		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
 	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<h:panelGroup id="ansYearPG">
@@ -50,24 +57,38 @@
 			</p:inputText>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
+	<p:column style="width:125px;" headerText="#{lbl[answerlbl]}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl[answerlbl]}"/>
+		</f:facet>
 		<f:facet name="footer">
 			<p:inputText style="width:96%;" value="#{templateSpecBean.specMaster.specTotal}" dir="rtl" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
-			<p:inputText style="width:96%;" value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" />
-			<p:inputText style="width:96%;" dir="rtl" value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}">
+			<p:inputText id="answerText" style="width:96%;" value="#{tplSpecAnswer.answerText}" 
+				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" maxlength="200"
+				label="#{lbl[answerlbl]}" />
+			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText and question.clAnswerRequired}" />
+			<p:inputText id="answerNumeric" style="width:96%;" dir="rtl" 
+				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
+				rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
+				label="#{lbl[answerlbl]}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
-			<h:selectOneMenu style="width:100%;" value="#{tplSpecAnswer.answerCompliance}" rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}">
-				<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
+			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial) and question.clAnswerRequired}" />
+			<h:selectOneMenu id="answerCompliance" style="width:100%;" 
+				value="#{tplSpecAnswer.answerCompliance}" 
+				rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}"
+				label="#{lbl[answerlbl]}">
+				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
+			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown and question.clAnswerRequired}" />
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.note']}">
-		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.answerRemark}" rows="1" />
+		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>

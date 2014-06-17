@@ -17,12 +17,19 @@
 		</p:inputText>
 	</p:column>
 	<p:column style="width:50px;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}">
-		<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.userScore}"
-			rendered="#{!isScoring}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
+		</f:facet>
+		<p:inputText id="userScore" style="min-width:0px !important;width:96%;" dir="rtl" 
+			value="#{tplSpecAnswer.userScore}"
+			rendered="#{!isScoring}" required="true" maxlength="19"
+			label="#{lbl['lbl.tpl.spec.content.user.score']}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</p:inputText>
+		<p:message id="userScoreMsg" for="userScore" display="icon" />
 	</p:column>
 	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
-		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.userRemark}" rows="1" />
+		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>

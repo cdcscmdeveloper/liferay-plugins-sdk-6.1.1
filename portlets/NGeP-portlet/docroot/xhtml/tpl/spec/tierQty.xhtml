@@ -18,20 +18,38 @@
 		<ac:paginator for="tierQtyTbl" />
 		
 		<p:column selectionMode="multiple" style="width:20px;" />
-		<p:column headerText="#{lbl['lbl.tpl.spec.content.tier.from.qty']}">
-			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" dir="rtl" style="width:96%;" required="true">
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"/>
+			</f:facet>
+			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" dir="rtl" style="width:96%;" 
+				required="true" maxlength="19"
+				label="#{lbl['lbl.tpl.spec.content.tier.from.qty']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 			<p:message id="fromQtyMsg" for="fromQty" display="icon" />
 		</p:column>
-		<p:column headerText="#{lbl['lbl.tpl.spec.content.tier.to.qty']}">
-			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" dir="rtl" style="width:96%;" required="true">
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"/>
+			</f:facet>
+			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" dir="rtl" style="width:96%;" 
+				required="true" maxlength="19"
+				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 			<p:message id="toQtyMsg" for="toQty" display="icon" />
 		</p:column>
-		<p:column style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}" rendered="#{isSelectedPriceTypeTariff}">
-			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" dir="rtl" style="width:96%;" rendered="#{rowIndex > 0}" required="true">
+		<p:column style="width:100px;" rendered="#{isSelectedPriceTypeTariff}">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"/>
+			</f:facet>
+			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" dir="rtl" style="width:96%;" 
+				rendered="#{rowIndex > 0}" required="true" maxlength="6"
+				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</p:inputText>
 			<p:message id="subSeqMsg" for="subSeq" display="icon" />

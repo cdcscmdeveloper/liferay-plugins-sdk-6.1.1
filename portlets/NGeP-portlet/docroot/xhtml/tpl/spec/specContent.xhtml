@@ -121,6 +121,8 @@
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:310px;">
 					<h:panelGroup id="tierQtyPnl">
+						<p:messages id="tierPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+						
 						<ui:include src="tierQty.xhtml" />
 					</h:panelGroup>
 				</div>
@@ -143,6 +145,8 @@
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:370px;">
 					<h:panelGroup id="scoreSettPnl">
+						<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+						
 						<ui:include src="scoringSettings.xhtml" />
 					</h:panelGroup>
 				</div>
@@ -165,6 +169,8 @@
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:250px;">
 					<h:panelGroup id="estimationPnl">
+						<p:messages id="estPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+						
 						<ui:include src="estimationCost.xhtml" />
 					</h:panelGroup>
 				</div>

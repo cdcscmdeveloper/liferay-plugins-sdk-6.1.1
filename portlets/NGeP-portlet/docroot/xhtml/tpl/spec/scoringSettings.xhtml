@@ -12,28 +12,45 @@
 		<td width="30%">
 			<p:inputText id="answerType" value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.answerTypeCode)}" disabled="true" size="15" />
 		</td>
-		<td width="17%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" /></td>
+		<td width="17%">
+			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" />
+			<p:outputLabel value="*" styleClass="mandatory" />
+		</td>
 		<td width="36%">
-			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterId}" required="true">
+			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterId}" 
+				required="true"
+				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
 				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion)}" update="scorePG" />
 			</h:selectOneMenu>
 		</td>
 	</tr>
 	<tr>
-		<td><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" /></td>
 		<td>
-			<p:inputText id="maxScore" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.maxScore}" required="true" size="15" />
+			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
+			<p:outputLabel value="*" styleClass="mandatory" />
+		</td>
+		<td>
+			<p:inputText id="maxScore" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
+				required="true" size="15" maxlength="3"
+				label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
 			<p:message id="maxScoreMsg" for="maxScore" display="icon" />
 		</td>
-		<td><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" /></td>
+		<td>
+			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" />
+			<h:panelGroup id="weightageMan">
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}" />
+			</h:panelGroup>
+		</td>
 		<td>
 			<p:selectBooleanCheckbox id="isWeightage" value="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
-				<p:ajax partialSubmit="true" process="@this" update="weightagePG" />
+				<p:ajax partialSubmit="true" process="@this" update="weightagePG, weightageMan" />
 			</p:selectBooleanCheckbox>
 			<h:panelGroup id="weightagePG">
 				<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
-					<p:inputText id="weightage" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.weightage}" required="true" size="15">
+					<p:inputText id="weightage" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
+						required="true" size="15" maxlength="19"
+						label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</p:inputText>
 					#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.percentage']}
@@ -62,20 +79,38 @@
 			<ac:paginator for="scoringTbl" />
 			
 			<p:column selectionMode="multiple" style="width:20px;" />
-			<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}">
-				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" dir="rtl" style="width:96%;" required="true">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"/>
+				</f:facet>
+				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" dir="rtl" style="width:96%;" 
+					required="true"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
 				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}">
-				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" dir="rtl" style="width:96%;" required="true">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"/>
+				</f:facet>
+				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" dir="rtl" style="width:96%;" 
+					required="true"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
 				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
 			</p:column>
-			<p:column style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}">
-				<p:inputText id="score" value="#{tplSpecScoring.score}" dir="rtl" style="width:96%;" required="true">
+			<p:column style="width:100px;">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"/>
+				</f:facet>
+				<p:inputText id="score" value="#{tplSpecScoring.score}" dir="rtl" style="width:96%;" 
+					required="true"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
 				<p:message id="scoreMsg" for="score" display="icon" />

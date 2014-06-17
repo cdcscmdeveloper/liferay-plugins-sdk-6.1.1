@@ -39,8 +39,14 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
 		</p:column>
-		<p:column style="width:80px;" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-			<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" dir="rtl" style="width:96%;" required="true">
+		<p:column style="width:80px;">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
+			</f:facet>
+			<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" dir="rtl" style="width:96%;" 
+				required="true" maxlength="19"
+				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:message id="estCostMsg" for="estCost" display="icon" />
