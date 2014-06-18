@@ -4651,6 +4651,10 @@ label > span.ui-button-text {
 	/*border-radius:5px;*/
 }
 
+.sidemenutd {
+	overflow: hidden;
+}
+
 .sidemenu {
 	display: table-caption;
 	border: none;
