@@ -78,7 +78,7 @@
 					            (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" /> 
 					         
 					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
-					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and amendmentBackingBean.managedBean.ackFA == null 
+					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and amendmentBackingBean.managedBean.ackFA == null and
                                  amendmentBackingBean.managedBean.ctContract.zonalPricing and  (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
                                  or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>  
 					        
