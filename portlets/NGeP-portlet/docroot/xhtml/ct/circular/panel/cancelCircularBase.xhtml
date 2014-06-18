@@ -14,7 +14,7 @@
 		<ui:include src="cancelCircularHeader.xhtml" />
 		<ui:include src="cancelCircularDetail.xhtml" />
 		<c:if test="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}">
-		  <p:panel id="settingId" header="Approver Setting" toggleable="true" toggleSpeed="500">
+		  <p:panel id="settingId" header="#{lbl['lbl.ct.set.aprsetting']}" toggleable="true" toggleSpeed="500">
 		    <h:panelGrid columns="2">
 		     <h:panelGrid style="width:180px;"> <f:verbatim/></h:panelGrid>
 			   <h:panelGrid style="width:500px;">
