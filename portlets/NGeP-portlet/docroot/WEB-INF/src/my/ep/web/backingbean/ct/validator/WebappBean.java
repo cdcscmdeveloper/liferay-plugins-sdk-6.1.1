@@ -62,7 +62,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
         if(!inputValue.isEmpty()){
-             String errMsg="Only numbers allow";
+             String errMsg="Only alphabets and numbers are allow";
              String pattern="^[a-zA-Z0-9]+$";  
            if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
