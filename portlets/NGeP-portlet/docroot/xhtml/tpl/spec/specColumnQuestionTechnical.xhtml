@@ -57,7 +57,7 @@
 	</p:column>
 	
 	<c:if test="#{isItemTypeService}">
-		<p:column style="width:50px;white-space:normal;">
+		<p:column style="width:55px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
@@ -70,7 +70,7 @@
 			</p:inputText>
 			<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
 		</p:column>
-		<p:column style="width:55px;white-space:normal;">
+		<p:column style="width:60px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"/>
@@ -83,7 +83,7 @@
 			</p:inputText>
 			<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
 		</p:column>
-		<p:column style="width:60px;white-space:normal;">
+		<p:column style="width:65px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"/>
@@ -96,7 +96,7 @@
 			</p:inputText>
 			<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
 		</p:column>
-		<p:column style="width:50px;white-space:normal;" rendered="#{isDurationByItem}">
+		<p:column style="width:60px;white-space:normal;" rendered="#{isDurationByItem}">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.duration.month']}"/>
