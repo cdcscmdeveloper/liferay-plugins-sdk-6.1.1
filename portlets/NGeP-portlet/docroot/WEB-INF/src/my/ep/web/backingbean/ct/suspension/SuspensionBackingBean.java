@@ -29,6 +29,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.type.pm.RoleCode;
@@ -137,12 +138,37 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		}
 	 }
 	 
+	 public void setSuspensionStatusValue(CtContractItem item){
+		 
+		 for(CtContractItem ctitems :this.getManagedBean().getContractVer().getCtContractItems())
+		 if(ctitems.equals(item)){
+			 if(item.getChkStatusId() == 0){
+			   ctitems.setRecordStatus(false);
+		    }else{
+		    	ctitems.setRecordStatus(true);
+		    	ctitems.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		    	ctitems.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		    }
+		 }
+	 }
+	 
+    public void setSuspensionAgencyStatusValue(CtContractItem agency){
+		 
+		 for(CtAgency ctagency :this.getManagedBean().getContractVer().getCtAgencies()){
+		 if(ctagency.equals(agency)){
+			 if(ctagency.getChkStatusId() == 1){
+				 ctagency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				 ctagency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		    }
+		 }
+	   }  
+    }
 	 public String saveContractSuspension(String action){
 		  
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
-					
+			  validateSuspensionDetails(action);		
 			  reqDTO = new ContractReqDTO();
 			  String token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
@@ -178,7 +204,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      reqDTO.setUserRole(getUserRole());
 	          reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			  reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-		         
 			  ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			  if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
@@ -216,39 +241,67 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		   return null;
 	 } 
 	 
-	 public void validateDate(CtAgency agency){
+	 public void validateSuspensionDetails(String outcome){
+		
+		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			 CtRemark remark = getManagedBean().getRemarkList().get(0);
+			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
+				 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
+			 }
+	      }
+	 }
+	 
+	 public void validateAgencyDate(CtAgency agency){
 		 
-		 if (agency.getExpDate().before(agency.getEffDate())) {
+		 if (agency.getExpDate().before(agency.getEffDate()) 
+				 || agency.getExpDate().before(new Date()) || agency.getEffDate().before(new Date())) {
 			 for (CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
-					if(dataList.toString().equalsIgnoreCase(agency.toString())){
+					
+				 if(agency.getEffDate().before(new Date())){
+					 dataList.setDateLessThanCurDate(true);
+					 dataList.setValidateScheduleDate(false); 
+				
+				 } else if(dataList.toString().equalsIgnoreCase(agency.toString())){
 						dataList.setValidateScheduleDate(true); 
+						dataList.setDateLessThanCurDate(false); 
 					}
 		     }
 		 }else{
 			 for(CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
 				    if(dataList.toString().equalsIgnoreCase(agency.toString())){
 				        dataList.setValidateScheduleDate(false);
+				        dataList.setDateLessThanCurDate(false); 
 				    }
 				 }
 		 }
 	}
 	 
-public void validateItemDate(CtContractItem ctItems){
-		 
-		 if (ctItems.getExpDate().before(ctItems.getEffDate())) {
-			 for (CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
-					if(dataList.toString().equalsIgnoreCase(ctItems.toString())){
+   public void validateItemDate(CtContractItem ctItems){
+		   
+	    
+	      if(ctItems.getExpDate().before(ctItems.getEffDate()) || 
+	    	 ctItems.getEffDate().before(new Date()) || ctItems.getExpDate().before(new Date())) {
+			 for(CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
+			  
+				  if(ctItems.getEffDate().before(new Date())){
+					  dataList.setDateLessThanCurDate(true);
+					  dataList.setValidateScheduleDate(false); 
+				 
+				  } else if (dataList.toString().equalsIgnoreCase(ctItems.toString())){
 						dataList.setValidateScheduleDate(true); 
-					}
+					    dataList.setDateLessThanCurDate(false); 
+				 }
 		     }
 		 }else{
 			 for(CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
 				    if(dataList.toString().equalsIgnoreCase(ctItems.toString())){
 				        dataList.setValidateScheduleDate(false);
+				        dataList.setDateLessThanCurDate(false); 
 				    }
 				 }
 		 }
 	}
+
 	 
 	 public String convertTime(Date time){ 
 	        String str ="";
@@ -295,7 +348,22 @@ public void validateItemDate(CtContractItem ctItems){
 	}
 	 
 	public List<CtContractItem> getCtFilterItems() {
+		
+		if(ctFilterItems == null && ctFilterItems.size() == 0){
+			return ctFilterItems;
+		}else{
+		for(CtContractItem ctitem : ctFilterItems){
+			if(ctitem.getChkStatusId() == 0){
+				ctitem.setChkStatusId(0);
+			}else if(ctitem.getChkStatusId() == 1){
+				ctitem.setChkStatusId(1);
+			}else{
+				ctitem.setChkStatusId(0);
+			}
+		}
+		
 		return ctFilterItems;
+		}
 	}
 
 	public void setCtFilterItems(List<CtContractItem> ctFilterItems) {

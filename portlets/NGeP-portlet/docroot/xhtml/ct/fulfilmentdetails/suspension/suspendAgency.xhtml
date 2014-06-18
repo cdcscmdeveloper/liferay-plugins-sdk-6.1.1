@@ -13,7 +13,7 @@
 		   <p:column headerText="Ministry" style="width:20%;">
 				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
-			 <p:column headerText="PTJ" style="width:20%;">
+			 <p:column headerText="PTJ" style="width:40%;">
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
@@ -24,8 +24,13 @@
 			    <h:panelGroup id="effDateId" rendered="#{data.chkStatusId == 0}">
 			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
 			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-			           <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateDate(data)}"/> 
+			           <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
 			      </p:calendar>
+			       <p:commandLink id="curDateIdAgency" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
+		               styleClass="column-align-center" rendered="#{data.dateLessThanCurDate}">
+		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
+			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+		           </p:commandLink>
 			    </h:panelGroup>
 			 </p:column> 	
 			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
@@ -36,10 +41,10 @@
 			    <h:panelGroup id="expDateId" rendered="#{data.chkStatusId == 0}">
 			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
 			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-                    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateDate(data)}"/> 
+                    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
 			      </p:calendar>
 			      <p:spacer width="5"/>
-                    <p:commandLink id="validateAction" process="@this" onclick="dlgDateValidation.show(); return false;" 
+                    <p:commandLink id="validateActions" process="@this" onclick="dlgDateValidation.show(); return false;" 
 		               styleClass="column-align-center" rendered="#{data.validateScheduleDate}">
 		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
 			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
@@ -50,7 +55,7 @@
 			  <p:selectOneMenu value="#{data.chkStatusId}" style="width:75px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
-				<p:ajax event="change" process="@this" update="agencyDetailsTable"/>
+				<p:ajax event="change" process="@this" update="agencyDetailsTable" />
 			   </p:selectOneMenu>	
 			 </p:column> 			
 	   </p:dataTable>
@@ -61,7 +66,7 @@
                 <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			    <p:spacer width="10"/>
-                <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+                <p:inputTextarea value="Please enter correct effective and expiry date?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
             </h:panelGrid>
             <div class="ppRightBtn">
 		      <p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />

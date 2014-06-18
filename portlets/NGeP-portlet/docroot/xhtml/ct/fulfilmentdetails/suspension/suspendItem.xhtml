@@ -7,41 +7,39 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}"
 		toggleable="true" toggleSpeed="500">
-		<p:dataTable id="itemTable" var="data"
-			value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
-			widgetVar="ctItemsTable"
-			filteredValue="#{suspensionBackingBean.ctFilterItems}">
+		<p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
+			widgetVar="ctItemsTable">
 			<ac:paginator for="itemTable" />
-			<p:column style="width:15%;"
-				headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
-				<p:outputLabel
-					value="#{suspensionBackingBean.getParameterDesc(data.itemType)}"
-					style="float:left;" />
+			<p:column style="width:20%;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
+				<p:outputLabel value="#{suspensionBackingBean.getParameterDesc(data.itemType)}" style="float:left;" />
 			</p:column>
-			<p:column id="modelColumn" filterBy="#{data.itemName}"
-				headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"
-				filterMatchMode="contains" style="width:45%;">
-				<p:outputLabel value="#{data.itemName}"
-					style="float:left;width:55%;" />
+			<p:column id="modelColumn" filterBy="#{data.itemName}" headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"
+				filterMatchMode="contains" style="width:40%;"> <p:outputLabel value="#{data.itemName}" style="float:left;width:55%;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
-			   <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			   <h:panelGroup rendered="#{data.recordStatus}">
 			      <p:calendar value="#{data.effDate}" size="10" id="effDateActive" showOn="button"
 			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
-			    <h:panelGroup id="effDateItemId" rendered="#{data.chkStatusId == 0}">
+			    <h:panelGroup id="effDateItemId" rendered="#{!data.recordStatus}">
 			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
 			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 			           <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
 			      </p:calendar>
+			       <p:spacer width="5"/>
+                    <p:commandLink id="curDateId" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
+		               styleClass="column-align-center" rendered="#{data.dateLessThanCurDate}">
+		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
+			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+		           </p:commandLink>
 			    </h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
-			  <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			  <h:panelGroup rendered="#{data.recordStatus}">
 			      <p:calendar value="#{data.expDate}" size="15" id="expDateActive" showOn="button"
 			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
-			    <h:panelGroup id="expDateItemId" rendered="#{data.chkStatusId == 0}">
+			    <h:panelGroup id="expDateItemId" rendered="#{!data.recordStatus}">
 			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
 			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
                     <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
@@ -58,7 +56,8 @@
 				<p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
 					<f:selectItem itemValue="0" itemLabel="Inactive" />
 					<f:selectItem itemValue="1" itemLabel="Active" />
-					<p:ajax event="change" process="@this" update="itemTable" />
+					<p:ajax event="change" process="@this" update="itemTable" 
+					  listener="#{suspensionBackingBean.setSuspensionStatusValue(data)}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
@@ -68,7 +67,7 @@
                 <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			    <p:spacer width="10"/>
-                <p:inputTextarea value="Date is mandatory?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+                <p:inputTextarea value="Please enter correct effective and expiry date?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
             </h:panelGrid>
             <div class="ppRightBtn">
 		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
