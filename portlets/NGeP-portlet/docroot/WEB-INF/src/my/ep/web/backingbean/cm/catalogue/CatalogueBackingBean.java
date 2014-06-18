@@ -1917,16 +1917,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * ("D"); }
 			 */
 
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.getCmStandardPricing()
-					.setCmSupplierItem(
-							this.getManagedBean().getSelectedMaintainItem());
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.getCmPromotionPricing()
-					.setCmSupplierItem(
-							this.getManagedBean().getSelectedMaintainItem());
+		
 
 			for (CmPromotionTierPricing promotion : this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
@@ -2173,16 +2164,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					+ this.getManagedBean().getSelectedMaintainItem()
 							.getItemStatus());
 
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.getCmStandardPricing()
-					.setCmSupplierItem(
-							this.getManagedBean().getSelectedMaintainItem());
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.getCmPromotionPricing()
-					.setCmSupplierItem(
-							this.getManagedBean().getSelectedMaintainItem());
 
 			for (CmPromotionTierPricing promotion : this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
