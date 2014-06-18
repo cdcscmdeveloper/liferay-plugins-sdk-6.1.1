@@ -107,7 +107,7 @@
 
 					<p:column>
 
-						<p:inputText size="5" dir="rtl"
+						<p:inputText size="5" styleClass="ppNumericAlign"
 							value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
@@ -248,7 +248,7 @@
 					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
 						style="padding-right:5px;" />
 					<p:column>
-						<p:inputText size="5" dir="rtl"
+						<p:inputText size="5" styleClass="ppNumericAlign"
 							value="#{noticeBoardBackingBean.managedBean.briefSearchDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('Brief')}"
@@ -310,7 +310,7 @@
 					<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
 						style="padding-right:5px;" />
 					<p:column>
-						<p:inputText size="5" dir="rtl"
+						<p:inputText size="5" styleClass="ppNumericAlign"
 							value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}">
 							<p:ajax event="blur"
 								listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"

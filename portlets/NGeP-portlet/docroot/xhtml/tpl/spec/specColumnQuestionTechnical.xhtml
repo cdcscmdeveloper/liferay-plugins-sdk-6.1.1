@@ -62,7 +62,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
 			</f:facet>
-			<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomFrequency}" 
+			<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign" 
+				value="#{question.clUomFrequency}" 
 				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -74,7 +75,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"/>
 			</f:facet>
-			<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomPerDay}" 
+			<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{question.clUomPerDay}" 
 				rendered="#{isQuestionTypeItem and isUOMHours}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -86,7 +88,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"/>
 			</f:facet>
-			<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clUomPerMonth}" 
+			<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{question.clUomPerMonth}" 
 				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays)}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -98,7 +101,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.duration.month']}"/>
 			</f:facet>
-			<p:inputText id="duration" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clDurationMonth}" 
+			<p:inputText id="duration" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{question.clDurationMonth}" 
 				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -126,10 +130,11 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
 		</f:facet>
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
-			<p:inputText id="qty" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.clQuantity}" 
+			<p:inputText id="qty" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{question.clQuantity}" 
 				rendered="#{isPriceTypeAllStandard}" required="true" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question)}" />
 			</p:inputText>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
@@ -145,7 +150,8 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
 		</f:facet>
-		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:21%;" dir="rtl" value="#{question.clDeliveryTerm}" 
+		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:21%;" styleClass="ppNumericAlign"
+			value="#{question.clDeliveryTerm}" 
 			rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
 		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="true" style="width:75%;" 
@@ -181,7 +187,8 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}">
-			<p:inputText id="estCost" style="min-width:0px !important;width:96%;" dir="rtl" value="#{question.tplSpecEstimations[0].estimatedCost}" 
+			<p:inputText id="estCost" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{question.tplSpecEstimations[0].estimatedCost}" 
 				required="true" rendered="#{isPriceTypeStandard}"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

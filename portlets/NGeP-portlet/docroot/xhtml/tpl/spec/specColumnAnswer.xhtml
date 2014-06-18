@@ -40,7 +40,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
-		<p:inputText id="ratePerUom" style="min-width:0px !important;width:96%;" dir="rtl" 
+		<p:inputText id="ratePerUom" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" required="true" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
@@ -51,7 +51,8 @@
 	</p:column>
 	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<h:panelGroup id="ansYearPG">
-			<p:inputText style="min-width:0px !important;width:96%;" dir="rtl" value="#{tplSpecAnswer.amountPerYear}"
+			<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+				value="#{tplSpecAnswer.amountPerYear}"
 				rendered="#{isQuestionTypeItem}" disabled="true">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
@@ -64,7 +65,7 @@
 			<h:outputText value="#{lbl[answerlbl]}"/>
 		</f:facet>
 		<f:facet name="footer">
-			<p:inputText style="width:96%;" value="#{templateSpecBean.specMaster.specTotal}" dir="rtl" disabled="true" rendered="#{isSpecTypeFinancial}" />
+			<p:inputText style="width:96%;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
@@ -72,7 +73,7 @@
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" maxlength="200"
 				label="#{lbl[answerlbl]}" />
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText and question.clAnswerRequired}" />
-			<p:inputText id="answerNumeric" style="width:96%;" dir="rtl" 
+			<p:inputText id="answerNumeric" style="width:96%;" styleClass="ppNumericAlign" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">

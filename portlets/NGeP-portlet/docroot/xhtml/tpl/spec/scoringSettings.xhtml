@@ -31,7 +31,8 @@
 			<p:outputLabel value="*" styleClass="mandatory" />
 		</td>
 		<td>
-			<p:inputText id="maxScore" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
+			<p:inputText id="maxScore" styleClass="ppNumericAlign" 
+				value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
 				required="true" size="15" maxlength="3"
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
 			<p:message id="maxScoreMsg" for="maxScore" display="icon" />
@@ -48,7 +49,8 @@
 			</p:selectBooleanCheckbox>
 			<h:panelGroup id="weightagePG">
 				<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
-					<p:inputText id="weightage" dir="rtl" value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
+					<p:inputText id="weightage" styleClass="ppNumericAlign" 
+						value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
 						required="true" size="15" maxlength="19"
 						label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -84,7 +86,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"/>
 				</f:facet>
-				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" dir="rtl" style="width:96%;" 
+				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:96%;" styleClass="ppNumericAlign" 
 					required="true"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -96,7 +98,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"/>
 				</f:facet>
-				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" dir="rtl" style="width:96%;" 
+				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:96%;" styleClass="ppNumericAlign" 
 					required="true"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -108,7 +110,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"/>
 				</f:facet>
-				<p:inputText id="score" value="#{tplSpecScoring.score}" dir="rtl" style="width:96%;" 
+				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:96%;" styleClass="ppNumericAlign" 
 					required="true"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
