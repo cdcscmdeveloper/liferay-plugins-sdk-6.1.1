@@ -4662,7 +4662,7 @@ label > span.ui-button-text {
 
 .sidemenu > .ui-tabmenu-nav {
 	background-position: right center;
-	background-image: url(#{resource['ep/images/design:side_menu_gap.png']})!important;
+	background-image: none;
 	background-repeat: repeat-y;
 	background-color: #f9f9f9!important;
 	width: 125%;
@@ -4681,7 +4681,7 @@ label > span.ui-button-text {
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
 	background-position: right center;
-	background-image: url(#{resource['ep/images/design:side_menu_gap.png']});
+	background-image: none;
 	background-repeat: repeat-y;
 	background-color: #f9f9f9;
 	margin:0!important;
@@ -4692,7 +4692,6 @@ label > span.ui-button-text {
 
 .sidemenu > .ui-tabmenu-nav > .ui-tabmenuitem.ui-state-default.ui-state-active.ui-corner-top {
 	background-position: right center!important;
-	background-image: url(#{resource['ep/images/design:side_menu_arrow_green.png']})!important;
 	background-repeat: no-repeat;
 	background-color: #8CC63E!important;
 	border:0px!important;
