@@ -235,9 +235,8 @@
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"  validatorMessage="Delivery Term : must be '4' digits only!" 
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}">
-					    <f:convertNumber integerOnly="true" for="deliveryTerm"/>
 					   </p:inputText>
-					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType"
+					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType" label="Delivery Term Type"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
@@ -279,21 +278,21 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-						process="@this" icon="ui-icon-submit" partialSubmit="true"
+						process="@form " icon=""
 						actionListener="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
                
 				<p:column width="100%" style="text-align:right">
 				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
-					<p:commandButton value="#{lbl['lbl.sc.action.add.item']}" icon="ui-icon-add"
+					<p:commandButton value="#{lbl['lbl.sc.action.add.item']}" icon="ui-icon-add" partialSubmit="true" process="@this"
 						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
 
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-						process="@form" partialSubmit="true"
+						process="@this,requestListDataTable" partialSubmit="true"
 						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
-						update="requestListDataTable" icon="ui-icon-delete" />
+						update="@([id$=requestListDataTable])" icon="ui-icon-delete" />
 				</c:if>
 				</p:column>
 			</p:row>

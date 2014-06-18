@@ -27,7 +27,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.item.list']}" update="@form">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="menuId" action="#{simpleQuoteBackingBean.tabEvent}">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="@form" action="#{simpleQuoteBackingBean.tabEvent}">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					

@@ -50,7 +50,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						</c:if>
 						<p:commandButton value="#{action}" process="@all"
 								styleClass="ui-button" icon="#{iconVar}"
-								actionListener="#{purchaseInDefaultBackingBean.updateBpmTask(action)}" />
+								actionListener="#{purchaseInDefaultBackingBean.approverAction(action)}" />
 						</c:forEach>
 					</c:if></td>
 			</tr>
