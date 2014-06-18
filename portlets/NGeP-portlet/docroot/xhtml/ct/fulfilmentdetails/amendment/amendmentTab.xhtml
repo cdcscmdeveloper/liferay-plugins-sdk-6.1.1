@@ -38,86 +38,149 @@
 				<p:tabMenu  styleClass="sidemenu"
 					activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
-					<c:choose>
-					
-					 <c:when test="#{amendmentBackingBean.managedBean.ackFA == null}">
-					    <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"/>
-					    <p:menuitem value="#{lbl['lbl.ct.amend.panel.header']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(1)}"/>
-					    <c:if test="#{amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
-			                 <p:menuitem value="#{lbl['lbl.ct.menu.zone']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(2)}"/>
-					         <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>
-					         <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form"  
-					            rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}"  action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
-					         <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" 
-					            rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
-					         <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  
-					            rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>
-					         <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
-					           rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(6)}"/>
-					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(7)}"/> 
-					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>  
-					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/> 
-					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signOffDecision}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>   
-					               
-					     </c:if>
-					      <c:if test="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
-					           <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(2)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}"  action="#{amendmentBackingBean.setSelectedTabValue(3)}" />
-					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" 
-					            rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>
-					              <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(6)}"/> 
-					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>   
-					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>  
-					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signOffDecision}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>   
+					  <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"
+					           rendered="#{amendmentBackingBean.managedBean.ackFA == null}"/>
 					     
-					      </c:if>
-					      <c:if  test="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}">
-			                  <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover}"  action="#{amendmentBackingBean.setSelectedTabValue(2)}" />
-					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" 
-					            rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(2)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA}" action="#{amendmentBackingBean.setSelectedTabValue(4)}"/>
-					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/> 
-					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}" action="#{amendmentBackingBean.setSelectedTabValue(2)}"/> 
-                               <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision}" action="#{amendmentBackingBean.setSelectedTabValue(3)}"/>   
-			                   <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
-					             rendered="#{amendmentBackingBean.managedBean.signOffDecision}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>   
-					     
-			              </c:if>
+					         <p:menuitem value="#{lbl['lbl.ct.amend.panel.header']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(1)}"
+					           rendered="#{amendmentBackingBean.managedBean.ackFA == null}"/>
 					  
-			         </c:when>
-			         <c:otherwise>
-			           <c:choose>
-			            <c:when test="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}">
-					    <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"/>
-					    <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(1)}"/>
-					    <p:menuitem value="#{lbl['lbl.ct.amend.declaration']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"/>
-			          </c:when>
-			         </c:choose>
-			       </c:otherwise>
-				</c:choose>
+					         <p:menuitem value="#{lbl['lbl.ct.menu.zone']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(2)}"
+			                  rendered="#{amendmentBackingBean.managedBean.ackFA == null and amendmentBackingBean.managedBean.ctContract.zonalPricing and
+			                    (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					          rendered="#{amendmentBackingBean.managedBean.ackFA == null and amendmentBackingBean.managedBean.ctContract.zonalPricing and
+			                   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					            rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and amendmentBackingBean.managedBean.ackFA == null
+					            and amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					            (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					      
+					         <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.ackFA == null and 
+					            amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
+					            or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.ackFA == null and 
+					            amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
+					            or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					       
+					         <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(6)}"
+					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.ackFA == null and 
+					            amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
+					            or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					        
+					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(7)}"
+					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA and 
+					            amendmentBackingBean.managedBean.ackFA == null and amendmentBackingBean.managedBean.ctContract.zonalPricing and 
+					            (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" /> 
+					         
+					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					             rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and amendmentBackingBean.managedBean.ackFA == null 
+                                 amendmentBackingBean.managedBean.ctContract.zonalPricing and  (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
+                                 or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>  
+					        
+					          <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
+					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and amendmentBackingBean.managedBean.ackFA == null
+					             and amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange
+					             or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+					        
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form"  
+					             rendered="#{amendmentBackingBean.managedBean.signOffDecision and amendmentBackingBean.managedBean.ackFA == null
+					             and amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange
+					             or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" action="#{amendmentBackingBean.setSelectedTabValue(5)}"/>   
+					               
+					    
+					           <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(2)}"
+					             rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					              rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and !amendmentBackingBean.managedBean.ctContract.zonalPricing
+					              and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					         
+					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
+					             and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					           
+					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
+					               and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                       amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(5)}"
+					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
+					             and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+			                     
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(6)}"
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA and 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					              rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+					           
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>  
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
+					             rendered="#{amendmentBackingBean.managedBean.signOffDecision and 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+					   
+			                  <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}" 
+					            rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					         
+					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"
+					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					        
+					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
+					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and 
+					              (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					          
+					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}" 
+					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA and
+					               !amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+					         
+					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"
+					           rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+                               
+                               <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
+					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+			                   <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
+					              rendered="#{amendmentBackingBean.managedBean.signOffDecision and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+					     
+			          
+					    <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"
+					    rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}"/>
+					    <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(1)}"
+					     rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}"/>
+					    <p:menuitem value="#{lbl['lbl.ct.amend.declaration']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"
+					     rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}"/>
+			     
 			</p:tabMenu>
 			</td>
 			<td width="80%">
