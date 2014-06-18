@@ -247,6 +247,9 @@ public class TemplateDocBackingBean extends
 		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
 				.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 		TemplateDocReqDTO reqDTO1 = new TemplateDocReqDTO();
+		
+		System.out.println("==============>>>>>>>>>>>>>>>> " + getManagedBean().getSelectedTemplate());
+		
 		reqDTO1.setDocMasterId(getManagedBean().getSelectedTemplate()
 				.getDocMasterId());
 //		TemplateDocResDTO resDTO = templateSO
@@ -539,10 +542,10 @@ public void destroyWorld(ActionEvent actionEvent){
 			tplDocMaster.setCategoryId(new Long(getManagedBean().getCategoryId()));
 			tplDocMaster.setPmStatus(1l);
 			tplDocMaster.setTemplateStatus('F');
-     		tplDocMaster.setRecordStatus(true);
-			tplDocMaster.setChangedBy(10l);
-			tplDocMaster.setCreatedBy(1l);
-		    tplDocMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//     		tplDocMaster.setRecordStatus(true);
+//			tplDocMaster.setChangedBy(10l);
+//			tplDocMaster.setCreatedBy(1l);
+//		    tplDocMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			tplDocMaster.setDocTitle(tplDocMasterE.getDocTitle());
 			tplDocMaster.setDocDesc(tplDocMasterE.getDocDesc());
 			tplDocMaster.setDocFooter(tplDocMasterE.getDocFooter());
@@ -592,6 +595,10 @@ public void destroyWorld(ActionEvent actionEvent){
 		return "templateDocSearch";
 	}
 
+	public String backAction() {
+		return "templateDocSearch";
+	}
+	
 	public static void getDocSectionList(int level, TreeNode node,
 			List<TplDocSection> docSetionList) {
 		if (node != null && node.getData() != null) {

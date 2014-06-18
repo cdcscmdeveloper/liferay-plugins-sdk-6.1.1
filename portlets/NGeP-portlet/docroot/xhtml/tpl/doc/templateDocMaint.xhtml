@@ -12,6 +12,9 @@
 		<h:outputText value="New Template Document" styleClass="pageTitle" />
 		<table width="100%">
 			<tr>
+				<td style="text-align:left">
+					<p:commandButton action="#{templateDocBackingBean.backAction}" value="Back" />
+				</td>
 				<td style="text-align:right">
 					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="Save" />
 					<p:spacer width="5px" />
