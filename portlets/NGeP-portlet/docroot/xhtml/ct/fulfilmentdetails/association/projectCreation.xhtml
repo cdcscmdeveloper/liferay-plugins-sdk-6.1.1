@@ -18,8 +18,7 @@
     		<tr>
     			<td><p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back" ajax="false" immediate="true" action="#{associationBackingBean.gotoCancelPage}"/></td>
     			<td class="ppRightBtn">
-			    	<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save" ajax="false" validateClient="true" 
-			    	<p:commandButton value="Save" icon="ui-icon-save" ajax="false" validateClient="true" process="@form"
+			    	<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save" ajax="false" validateClient="true" process="@form"
 			       		action="#{associationBackingBean.createAssociation}" style="margin-right:0px;" />  			
     			</td>
     		</tr>
@@ -27,15 +26,20 @@
 	 </p:panel>
      <p:panel id="projectId" header="#{lbl['lbl.ct.acreation']}" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
-	       <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']} *" />
+	       	<h:panelGrid columns="2" style="float:right;">
+			  <p:outputLabel value="*" styleClass="mandatory" />
+	          <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
+	       </h:panelGrid>
 	       <h:panelGrid id="projectValidation" columns="2">
            <p:inputText id="projectNames" style="width:200px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}">
-               <f:validateLength maximum="100"/> 
-               <p:ajax event="blur" update="panelHeader,projectValidation"/></p:inputText>
+               <f:validateLength maximum="100"/> </p:inputText>
                <p:message for="projectNames" display="icon"/>
            </h:panelGrid>
-           <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']} *" />
+           	<h:panelGrid columns="2" style="float:right;">
+           	   <p:outputLabel value="*" styleClass="mandatory" />
+                 <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}" />
+             </h:panelGrid>
             <h:panelGrid id="descValidation" columns="2">
 		   <p:inputText id="projectDesc" style="width:400px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}">
