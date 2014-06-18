@@ -443,7 +443,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
 				boolean result = resBpm != null ? resBpm.isSuccessful() : false;
 				if (result) {
-					if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+					if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null, 
+								MessageUtils.getMessage(MessageConst.INFO_700007, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_REQUEST_NOTE),getManagedBean().getRequestNote().getRequestNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+					} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700026, 
