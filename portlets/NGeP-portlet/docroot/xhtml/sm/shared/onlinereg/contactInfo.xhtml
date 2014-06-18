@@ -11,8 +11,7 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.correspondenceadd']}" /></td>
-				<td class="tdContent">
-				<p:selectBooleanCheckbox id="chkAddMode"
+				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
 						<p:ajax event="change" update="pnlContactInfo" />
 						<!-- 							process="@this,txtPermAdd1,txtPermAdd2,txtPermAdd3,txtPermAdd4,txtPermPostcode,cmbPermState,cmbPermDistrict,cmbPermCity" /> -->
@@ -21,50 +20,20 @@
 
 			<tr>
 				<td class="tdTitle"></td>
-				<td class="tdContent" colspan="2">
-				<p:inputText size="40" id="conAddress1" required="#{!registrationBackingBean.managedBean.sameAddress}" label="#{lbl['lbl.sm.correspondenceadd']}"
+				<td class="tdContent" ><p:inputText size="40"
+						id="conAddress1"
+						required="#{!registrationBackingBean.managedBean.sameAddress}"
+						label="#{lbl['lbl.sm.correspondenceadd']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.address1}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" />
-				<p:message id="conAddress1Msg" for="conAddress1" display="icon" />
-						</td>
-			</tr>
+					<p:message id="conAddress1Msg" for="conAddress1" display="icon" />
+				</td>
 
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent" colspan="2"><p:inputText size="40"
-						id="conAddress2"
-						value="#{registrationBackingBean.managedBean.smResAdd.address2}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
-			</tr>
-
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent" colspan="2"><p:inputText size="40"
-						id="conAddress3"
-						value="#{registrationBackingBean.managedBean.smResAdd.address3}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
-			</tr>
-
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent" colspan="2"><p:inputText size="40"
-						id="conAddress4"
-						value="#{registrationBackingBean.managedBean.smResAdd.address4}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
-			</tr>
-
-			<tr>
-				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.postcode']}" /></td>
-				<td class="tdContent"><p:inputText size="40" required="#{!registrationBackingBean.managedBean.sameAddress}" label="#{lbl['lbl.sm.postcode']}"
-						value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}"
-						id="conPostCode" />
-						<p:message id="conPostCodeMsg" for="conPostCode" display="icon" /></td>
-						
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.state']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="cmbResState" required="#{!registrationBackingBean.managedBean.sameAddress}" label="#{lbl['lbl.sm.state']}"
+				<td class="tdContent"><p:selectOneMenu id="cmbResState"
+						required="#{!registrationBackingBean.managedBean.sameAddress}"
+						label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmState.stateId}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -74,15 +43,22 @@
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('residential')}"
 							update="cmbResDistrict" />
-					</p:selectOneMenu>
-					<p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
-					</td>
+					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
+				</td>
 			</tr>
 
 			<tr>
+				<td class="tdTitle"></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="conAddress2"
+						value="#{registrationBackingBean.managedBean.smResAdd.address2}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.district']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="cmbResDistrict" required="#{!registrationBackingBean.managedBean.sameAddress}" label="#{lbl['lbl.sm.district']}"
+				<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
+						required="#{!registrationBackingBean.managedBean.sameAddress}"
+						label="#{lbl['lbl.sm.district']}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmDistrict.districtId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -92,23 +68,50 @@
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateCityByAddType('residential')}"
 							update="cmbResCity" />
-					</p:selectOneMenu>
-					<p:message id="cmbResDistrictMsg" for="cmbResDistrict" display="icon" />
-					</td>
+					</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
+						display="icon" /></td>
+			</tr>
 
+			<tr>
+				<td class="tdTitle"></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="conAddress3"
+						value="#{registrationBackingBean.managedBean.smResAdd.address3}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.towncity']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="cmbResCity" required="#{!registrationBackingBean.managedBean.sameAddress}" label="#{lbl['lbl.sm.towncity']}"
+				<td class="tdContent"><p:selectOneMenu id="cmbResCity"
+						required="#{!registrationBackingBean.managedBean.sameAddress}"
+						label="#{lbl['lbl.sm.towncity']}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="city"
 							value="#{registrationBackingBean.managedBean.residentialCityLs}"
 							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
-					</p:selectOneMenu>
-					<p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
+					</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
 			</tr>
+
+			<tr>
+				<td class="tdTitle"></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="conAddress4"
+						value="#{registrationBackingBean.managedBean.smResAdd.address4}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+
+				<td class="tdTitle"><p:outputLabel
+						value="* #{lbl['lbl.sm.postcode']}" /></td>
+				<td class="tdContent"><p:inputText size="40"
+						required="#{!registrationBackingBean.managedBean.sameAddress}"
+						label="#{lbl['lbl.sm.postcode']}"
+						value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}"
+						id="conPostCode" /> <p:message id="conPostCodeMsg"
+						for="conPostCode" display="icon" /></td>
+			</tr>
+
+
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
