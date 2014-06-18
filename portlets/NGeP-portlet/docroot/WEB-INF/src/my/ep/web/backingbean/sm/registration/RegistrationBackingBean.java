@@ -200,6 +200,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return null;
 		}
 		
+		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
+			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			this.getManagedBean().getSmPersonnel().setPmCountry(nationality);
+		}
 		
 		return firstUserRegistration;
 	}
