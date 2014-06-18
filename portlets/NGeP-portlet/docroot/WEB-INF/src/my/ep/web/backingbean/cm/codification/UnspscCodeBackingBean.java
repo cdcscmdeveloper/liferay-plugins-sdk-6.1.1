@@ -881,11 +881,15 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				System.out.println("tempCode:"+tempCode);
 				this.getManagedBean().getRequestCode().setTempCode(tempCode);
 				this.getManagedBean().getRequestCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
-
+              
+				if(bb.productCode(tempCode)){
+					
 				this.getManagedBean().getRequestCode().setRequestType(true);
 				this.getManagedBean().getRequestCode().setRequestBrand(true);
 				this.getManagedBean().getRequestCode().setRequestColor(true);
 				this.getManagedBean().getRequestCode().setRequestMeasurement(true);
+               }
+				
 				reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 				reqDTO.setToken(token);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -913,40 +917,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 				
-				
-				//insert type, measurement and brand objects with NA values.
-				reqDTO = new CodificationReqDTO();
-				reqDTO.setUnspscCode(tempCode);
-				resDTO = unspscSO.searchCommodityObj(reqDTO);
-				CmUnspsc commodity = resDTO.getCommodityObj();
-				
-				CmType cmType = new CmType();
-				cmType.setUnspscId(commodity);
-				cmType.setTypeCode("00");
-				cmType.setTypeName("NA");
-				
-				CmBrand cmBrand = new CmBrand();
-				cmBrand.setUnspscId(commodity);
-				cmBrand.setBrandCode("000");
-				cmBrand.setBrandName("NA");
-				
-				CmMeasurement cmMeasurement = new CmMeasurement();
-				cmMeasurement.setUnspscId(commodity);
-				cmMeasurement.setMeasurementCode("000");
-				cmMeasurement.setMeasurementName("NA");
-				
-				
-				
-			
-				reqDTO.setCmType(cmType);
-				unspscSO.addNewType(reqDTO);
-				
-				reqDTO.setCmBrand(cmBrand);
-				unspscSO.addNewBrand(reqDTO);
-				
-				reqDTO.setCmMeasurement(cmMeasurement);
-				unspscSO.addNewMeasurement(reqDTO);
-				
+	
 				
 			}else if(outcome.equalsIgnoreCase("RECOMMEND")){
 
@@ -1663,9 +1634,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
-		System.out.println("unspsc.getRequestId()"+unspsc.getRequestId());
-	
 		
+		this.getManagedBean().setReviewExtCodeList(null);
 		
 		if(unspsc.getItemId()!=null && unspsc.getItemId().size()>0){
 			for(String itemId:unspsc.getItemId()){
