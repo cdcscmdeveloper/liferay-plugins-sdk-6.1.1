@@ -29,41 +29,41 @@
 			         size="24" showOn="button" /></td>
 		    </tr>
 			<tr>
-		   	     <td><h:outputLabel value="Complaint Deadline" /></td>
+		   	     <td><h:outputLabel value="#{lbl['lbl.ct.pc.compdeadline']}" /></td>
 			     <td><h:panelGroup>
 				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" style="text-align:right; width:50px;" />
-				     <h:outputText value=" months" />
+				     <h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			        </h:panelGroup>	</td>
-			<td><h:outputLabel value="Payment Day" /></td>
+			<td><h:outputLabel value="{lbl['lbl.ct.pc.paymentday']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" style="text-align:right; width:50px;" />
-				<h:outputText value=" days" />
+				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
 			</tr>
 			
 			<tr>
-			<td><h:outputLabel value="Delivery Term" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.dperiod']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" style="text-align:right; width:50px;" />
-				<h:outputText value=" days" />
+				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup>	</td>
-			<td><h:outputLabel value="Last Request Day" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.pc.lastreqday']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" style="text-align:right; width:50px;" />
-				<h:outputText value=" days" />
+				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
 			</tr>
 			
 			<tr>
-			<td><h:outputLabel value="Replacement Day" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.pc.replacementday']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" style="text-align:right; width:50px;" />
-				<h:outputText value=" days" />
+				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup>	</td>
-			<td><h:outputLabel value="Warranty Period" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.pc.warrantyperiod']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" style="text-align:right; width:50px;" />
-				<h:outputText value=" months" />
+				<h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			</h:panelGroup>	</td>
 			</tr>
 			<tr>
