@@ -17,11 +17,11 @@
 				<h:outputText  value="#{data.orgProfile.orgName}"/>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
-			    <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			    <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
 			      <p:calendar value="#{data.effDate}" size="10" id="effDateActive" showOn="button"
 			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
-			    <h:panelGroup id="effDateId" rendered="#{data.chkStatusId == 0}">
+			    <h:panelGroup id="effDateId" rendered="#{data.recordStatusFlg == 0}">
 			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
 			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 			           <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
@@ -34,11 +34,11 @@
 			    </h:panelGroup>
 			 </p:column> 	
 			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
-			    <h:panelGroup rendered="#{data.chkStatusId == 1}">
+			    <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
 			      <p:calendar value="#{data.expDate}" size="15" id="expDateActive" showOn="button"
 			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
-			    <h:panelGroup id="expDateId" rendered="#{data.chkStatusId == 0}">
+			    <h:panelGroup id="expDateId" rendered="#{data.recordStatusFlg == 0}">
 			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
 			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
                     <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
@@ -52,10 +52,10 @@
 			    </h:panelGroup>
 			 </p:column> 	
 			 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-			  <p:selectOneMenu value="#{data.chkStatusId}" style="width:75px;">
+			  <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:75px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
-				<p:ajax event="change" process="@this" update="agencyDetailsTable" />
+				<p:ajax event="change" process="@form" update="agencyDetailsTable" />
 			   </p:selectOneMenu>	
 			 </p:column> 			
 	   </p:dataTable>

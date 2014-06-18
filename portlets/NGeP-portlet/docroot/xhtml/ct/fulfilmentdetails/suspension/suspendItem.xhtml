@@ -53,10 +53,9 @@
 			    </h:panelGroup>
 			</p:column>
 			<p:column style="width:10%;" headerText="Status">
-				<p:selectOneMenu value="#{data.chkStatusId}" style="width:85px;">
-					<f:selectItem itemValue="0" itemLabel="Inactive" />
-					<f:selectItem itemValue="1" itemLabel="Active" />
-					<p:ajax event="change" process="@this" update="itemTable" 
+				<p:selectOneMenu value="#{data.recordStatusFlg}" style="width:85px;">
+				    <f:selectItems value="#{suspensionBackingBean.getItemStatusDropdown()}"/>
+					<p:ajax event="change" process="@form" update="itemTable" 
 					  listener="#{suspensionBackingBean.setSuspensionStatusValue(data)}" />
 				</p:selectOneMenu>
 			</p:column>

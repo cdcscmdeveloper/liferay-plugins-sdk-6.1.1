@@ -12,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
@@ -28,7 +29,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -58,7 +58,6 @@ import com.liferay.portal.util.PortalUtil;
 public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean> {
 
 	 private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
-	 private List<CtContractItem> ctFilterItems;
 	 private List<CtContractItem> ctContractItems;
 	 ContractBackingBean ctBB = null;
 	 public SuspensionBackingBean(){
@@ -115,15 +114,22 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			
 			if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
 				 for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
-					 ctContractItem.setChkStatusId(ctContractItem.getRecordStatusFlg());
+					 if(ctContractItem.isRecordStatus()){
+						 ctContractItem.setRecordStatusFlg(1);
+					 } else{
+						 ctContractItem.setRecordStatusFlg(0);
+					 }
 				 }
 			}
 			
 			if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
 				for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
-					ctAgency.setChkStatusId(ctAgency.getRecordStatusFlg());
-				 }
-			}
+					 if(ctAgency.isRecordStatus())
+						 ctAgency.setRecordStatusFlg(1);
+					 else
+						 ctAgency.setRecordStatusFlg(0);
+				   }
+			 }
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -142,10 +148,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 
 		 for(CtContractItem ctitems :this.getManagedBean().getContractVer().getCtContractItems())
 		 if(ctitems.equals(item)){
-			 if(item.getChkStatusId() == 0){
+			 if(item.getRecordStatusFlg() == 0){
 			   ctitems.setRecordStatus(false);
 		    }else{
 		    	ctitems.setRecordStatus(true);
+		    	item.setRecordStatusFlg(1);
 		    	ctitems.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
 		    	ctitems.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
 		    }
@@ -156,7 +163,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 
 		 for(CtAgency ctagency :this.getManagedBean().getContractVer().getCtAgencies()){
 		 if(ctagency.equals(agency)){
-			 if(ctagency.getChkStatusId() == 1){
+			 if(ctagency.getRecordStatusFlg() == 1){
 				 ctagency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				 ctagency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
 		    }
@@ -179,24 +186,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		        
 		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-		      
-		      if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-			    for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
-				    if(ctContractItem.getChkStatusId() == 1)
-					   ctContractItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					else
-					   ctContractItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-				 }
-			  }
-				
-			  if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
-				 for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
-					if(ctAgency.getChkStatusId() == 1)
-					   ctAgency.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					else
-					   ctAgency.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-				 }
-			  }
 		             
 		      reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 		      reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
@@ -243,7 +232,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 
 	 public void validateSuspensionDetails(String outcome){
 		
-		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
 				 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
@@ -333,6 +322,20 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				System.out.println(e);
 		   }
 	}
+	 
+	 public SelectItem[] getItemStatusDropdown() {
+			
+			SelectItem[] items = null;     
+			try{
+			    items = new SelectItem[2];
+			    items[0] = new SelectItem(0, "Inactive");
+			    items[1] = new SelectItem(1, "Active");  
+			 }catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			 }
+		    return items;
+		}
 		
 	private String getUserRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
@@ -347,28 +350,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			return null;
 	}
 	 
-	public List<CtContractItem> getCtFilterItems() {
-		
-		if(ctFilterItems == null && ctFilterItems.size() == 0){
-			return ctFilterItems;
-		}else{
-		for(CtContractItem ctitem : ctFilterItems){
-			if(ctitem.getChkStatusId() == 0){
-				ctitem.setChkStatusId(0);
-			}else if(ctitem.getChkStatusId() == 1){
-				ctitem.setChkStatusId(1);
-			}else{
-				ctitem.setChkStatusId(0);
-			}
-		}
-		
-		return ctFilterItems;
-		}
-	}
-
-	public void setCtFilterItems(List<CtContractItem> ctFilterItems) {
-		this.ctFilterItems = ctFilterItems;
-	}
 
 	public List<CtContractItem> getCtContractItems() {
 		return ctContractItems;
