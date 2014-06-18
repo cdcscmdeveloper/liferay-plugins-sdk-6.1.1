@@ -228,20 +228,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 		}
 		
-		
 		public void sendNotificationEmail(){
 			debugLogger("sendNotificationEmail");
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(getManagedBean().getPurchaseInDefault().getCreatedBy());
 			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
-			
+
 			INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
 			FacesScopes facesScopes = new FacesScopes();
 			NtfRequestDTO reqDTO = new NtfRequestDTO();
 			reqDTO.setTemplateId("400000");
 			reqDTO.setSenderId(userResDTO.getPmUser().getUserId().toString());
-			
+
 			List<String> userIdLst = new ArrayList<String>();
 			userIdLst.add(getManagedBean().getPurchaseInDefault().getCreatedBy().toString());
 			//userIdLst.add("1");
@@ -265,402 +264,422 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			debugLogger("END");
 		}
 
-		public void updateBpmTask(String outcome) {
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO reqBpm = new BpmRequestDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			try {
-				reqBpm.setTaskId(getManagedBean().getTaskId());
-				reqBpm.setOutcome(outcome);
-				if (null != ctxToken) {
-					reqBpm.setCtxToken(ctxToken);
-					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-					boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if(result){
-						if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-							// notification mail
-							this.sendNotificationEmail();
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700005, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 
-						} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700008, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
-						}
-					} else {
-						throw new EpException("Failed.");
-					}
-				}
-			} finally {
-				bpmSO = null;
-			}
-		} 
-	 
-		/**
-		 * initializing remarks in Purchase In Default
-		 */
-		private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
-			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
-			FacesScopes facesScopes = new FacesScopes();
-			if (results.size() == 0
-					|| !compareUserName(results.get(0).getUser().getLoginId())) {
-				ScPIDRemark remark = new ScPIDRemark();
-				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(remark.getCreatedBy());
-				remark.setUser(facesScopes.getUserSessionBean());
-				remark.setCreatedUser(facesScopes.getUserSessionBean());
-				if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
-				   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
-				} 
-				PmStatus status = new PmStatus();
-				status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
-			    StatusReqDTO statusReqDTO = new StatusReqDTO();
-			    if (status != null) {
-			     statusReqDTO.setStatusId(status.getStatusId());
-			     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-			     remark.setPmStatus(statusResDTO.getPmStatus());
-			    }
-			    remark.setPmStatus(status);
-			    remark.setPurchaseInDefault(scPurchaseInDefault);
-			    results.add(0, remark);
-			}
-			return results;
-		}
-		
-		/**
-		 * To get Approver Pick List  in Purchase In Default
-		 */
-		private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
-			List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-			 ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
-			 scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
-			 for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
-				  scPIDApprovalUser.setPmUser(pmUser);
-			      results.add(scPIDApprovalUser);
-			}
-			return results;
-		}
-		
-	  /**
-	   * To get status for pid in Purchase In Default
-	   */
-	   public void  getCurrentStatus(Long statusId) {
-		 if (statusId != null) {
-			getManagedBean().setPidStatus(getStatusDescById(statusId));
-			 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_SUBMISSION)){
-			 		//getManagedBean().setRequisitionerFlag(true);
-			 		getManagedBean().setApproverFlag(false);
-			 	} else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
-			 		//getManagedBean().setRequisitionerFlag(true);
-			 		getManagedBean().setApproverFlag(true);
-		       }
-	      }
-	  }   
-	    /**
-		 * Event for justification type drop down in pid
-		 */
-		public void justificationTypeEvent() {
-			log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType()); 
-			if(getManagedBean().getPurchaseInDefault().getReasonType() !=null){
-			if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_SS)) {
-				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
-				
-			} else if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
-				getManagedBean().setVisibleOrderQty(Boolean.TRUE);
-			
-			} else {
-				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
-			}
-			}
-			// update order qty
-			RequestContext.getCurrentInstance().update("reqDtlId");
-		}
-		
-	   /**
-		*  handleFileUpload event for file upload in pid
-	   */
-		public void handleFileUpload(FileUploadEvent event) {
-			debugLogger("handleFileUpload");
-			FacesScopes facesScopes = new FacesScopes();
-			List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-		 if (event.getFile() != null){
-			ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
-			ScPurchaseInDefaultAttachment attachment = getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment();
-			if (null == attachment) {
-				attachment = new ScPurchaseInDefaultAttachment();
-				attachment.setScPurchaseInDefault(purchaseInDefault);
-			}
-			attachment.setUser(facesScopes.getUserSessionBean());
-			attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
-			uploadAttachment(event.getFile(), attachment);
-			attachments.add(attachment);
-			getManagedBean().setAttachments(attachments);
-			
-		  }
-		}
-		
-	   /**
-		*  determineIcon for displaying image icon in  pid
-	    */	
-		public String determineIcon(ScPurchaseInDefaultAttachment attachment) {
-			debugLogger("determineIcon");
-			String imageFileName = "icon_file_default.png";
-			String ext = "";
-			
-			if(attachment != null){
-			   String fileName = attachment.getFileName();
-			   
-			if(fileName != null){
-				int mid= fileName.lastIndexOf(".");
-				ext = fileName.substring(mid+1,fileName.length());  
-			}
+   public void approverAction(String outcome) {
+	   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+	   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	   try {
+		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+		   scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
 
-			if ("doc".equals(ext) || "docx".equals(ext)){
-				imageFileName ="icon_doc.png";
-			}
-			else if ("pdf".equals(ext)){
-				imageFileName ="icon_pdf.png";
-			}
-			else if("xls".equals(ext) || "xlsx".equals(ext) || "csv".equals(ext)){
-				imageFileName ="icon_exel.png";
-			}
-			else if("jpg".equals(ext) || "bmp".equals(ext) || "png".equals(ext) || "gif".equals(ext)){
-				imageFileName ="icon_image.png";
-			}
-			else if("txt".equals(ext)){
-				imageFileName ="icon_txt.png";
-			}
-			}
-			return imageFileName;
-		}
-		
-		public void retrieveReasonDescListByCategory () {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
-			reqDTO.setLanguage("en");
-			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
-			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
-			getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
-		}
+		   if(scPurchaseInDefault.getRemarks() != null ){
+			   for (int i = 0; i < scPurchaseInDefault.getRemarks().size(); i++) {
+				   ScPIDRemark remark = scPurchaseInDefault.getRemarks().get(i);
+				   if(StringUtils.isBlank(remark.getRemark())){
+					   scPurchaseInDefault.getRemarks().remove(remark);
+				   }	
+			   } 
+		   }
 
-		public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
-			SelectItem[] items = null;
-			try {
-				items = new SelectItem[list.size()+1];
-				items[0] = new SelectItem(null, "- Select One -");
-				int i = 1;
-				for(PmReasonDesc reasonDesc : list) {
-					items[i++] = new SelectItem(
-							reasonDesc.getPmReason().getReasonCode(),
-							reasonDesc.getReasonDesc());
-				}
-			} finally{
-			}
-			return items;
-		}
-		
-		public void initialInformation(ScPurchaseInDefault purchaseInDefault){
-			DualListModel<PmUser>	approvalUsers;
-			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDto = new UserReqDTO();
-			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-			if(getManagedBean().getPmOrgProfile() != null){
-				userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
-			}
-			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-			List<PmUser> availableApprover	=	userResDTO.getUserList();
-			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
-			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
-
-			if (purchaseInDefault.getApprovalUsers().size() > 0
-					&& purchaseInDefault != null) {
-				for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
-					selectedApprover.add(purchaseInDefault.getApprovalUsers().get(i).getPmUser());
-					for (int j = 0; j < availableApprover.size(); j++) {
-						if (purchaseInDefault.getApprovalUsers().get(i).getPmUser().getUserId()
-								.equals(availableApprover.get(j).getUserId())) {
-							availableApprover.remove(availableApprover.get(j));
-						}
-					}
-				}
-				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
-				getManagedBean().setApprovalUsers(approvalUsers);
-			} else {
-				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
-				getManagedBean().setApprovalUsers(approvalUsers);
-			}
-		}
-	 
-	 /**
-	  * to get Ptj drop down Listing in purchase in default
-	  */
-	 private void populatePtjDropDownList() {
-		 debugLogger("populatePtjDropDownList");
-		 PmUser user = new FacesScopes().getUserSessionBean();
-		 if (user != null) {
-			 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			 reqDTO.setUserId(user.getUserId());
-			 reqDTO.setOrgType(OrganizationType.DIVISION.value());
-
-			 IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					 .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							 IOrgProfileSO.class);
-			 OrgProfileResDTO resDTO = orgProfileSO
-					 .retrieveOrgProfileListByOrgType(reqDTO);
-
-			 List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
-			 System.out.println("userDivisionList" + ptjList.size());
-			 getManagedBean().setPtjDropdown(ptjList);
-		 }
-	 }
-	 
-	 /**
-	  * render the view base on the task id
-	  */
-	 public void preRenderView() {
-		 HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		 HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		 String taskId = originalServletRequest.getParameter("taskId");
-		 if (StringUtils.isNotBlank(taskId)) {
-			 this.getManagedBean().setTaskId(taskId);
-			 log.info("taskId : " + taskId);
-			 IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
+		   PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefaultAfterSubmit(reqDTO);
+		 if(resDTO.isSuccessful()){
+			 BpmRequestDTO reqBpm = new BpmRequestDTO();
 			 FacesScopes facesScopes = new FacesScopes();
-			 String token = facesScopes.getBPMAuthenticationCtxToken();
-			 BpmRequestDTO reqDTO = new BpmRequestDTO();
-			 reqDTO.setCtxToken(token);
-			 reqDTO.setTaskId(taskId);
-			 BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			 this.getManagedBean().setOutComes(res.getAction());
-			 this.getManagedBean().setProcessName(res.getProcessName());
-			 Object obj = res.getPojo();
-			 SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-			 String	dpMode	=	directPurchaseDataType.getDpMode();
-			 if(ParameterConst.REQUEST_NOTE_PID.equalsIgnoreCase(dpMode)){ 
-				 // Purchase In Default	
-				 IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-				 PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-				 Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
-				 purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
-				 purchaseInDefaultReqDTO.setFetchSubEntity(true);
-				 PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
-				 ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
-				 if(purchaseInDefault.getContractedItem() != null){
-					 CtContractItem contractItem = purchaseInDefault.getContractedItem();
-					 IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-					 ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-					 contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
-					 ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
-					 contractItem	=	ConIresDTO.getCtContractItem();
-					 purchaseInDefault.setContractedItem(contractItem);
-				 }
-				 List<ScPIDRemark> results =  new ArrayList<ScPIDRemark>();
-				 if(purchaseInDefault.getRemarks() != null){
-					 for (ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()) {
-						 scPIDRemark.setUser(scPIDRemark.getCreatedUser());
-						 results.add(scPIDRemark);
-					}
-					
-					 ScPIDRemark remark = new ScPIDRemark();
-					 remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					 remark.setChangedBy(remark.getCreatedBy());
-					 remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					 remark.setUser(facesScopes.getUserSessionBean());
-					 remark.setCreatedUser(facesScopes.getUserSessionBean());
-					 remark.setPurchaseInDefault(purchaseInDefault);
-					 results.add(remark);
-					 purchaseInDefault.setRemarks(results);
-				 }
-				 
-				
-				 List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-				 ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
-				 attachment.setUser(facesScopes.getUserSessionBean());
-				 attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
-				 attachments.add(attachment);
-				 getManagedBean().setTaskId(taskId);
-				 getManagedBean().setProcessName(res.getProcessName());
-				 getManagedBean().setOutComes(res.getAction());
-				 getManagedBean().setPurchaseInDefault(purchaseInDefault);
-				 getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
-				 getManagedBean().setAttachments(attachments);
-				 getCurrentStatus(res.getDocStatus().longValue()); 
+			 String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			 reqBpm.setTaskId(getManagedBean().getTaskId());
+			 reqBpm.setOutcome(outcome);
+			 if (null != ctxToken) {
+				 reqBpm.setCtxToken(ctxToken);
+				 BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
+				 boolean result = resBpm != null ? resBpm.isSuccessful() : false;
+			   if(result){
+				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+					   // notification mail
+					   this.sendNotificationEmail();
+					   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							   FacesMessage.SEVERITY_INFO, null, 
+							   MessageUtils.getMessage(MessageConst.INFO_700005, 
+									   new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
+									   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					   FacesContext fc = FacesContext.getCurrentInstance();
+					   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
 
-				 initialInformation(purchaseInDefault);
-				 retrieveReasonDescListByCategory();
-				 justificationTypeEvent();
-				 FacesContext fc = FacesContext.getCurrentInstance();
-				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
-			 }
-		 }	
-	 }
+				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+					   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							   FacesMessage.SEVERITY_INFO, null, 
+							   MessageUtils.getMessage(MessageConst.INFO_700008, 
+									   new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
+									   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+					   FacesContext fc = FacesContext.getCurrentInstance();
+					   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+				   }
+			   } else {
+				   throw new EpException("Failed.");
+			   }
+		   }
+		   }
+		   
+	   } finally {
+		   bpmSO = null;
+		   purchaseInDefaultSO = null;
+	   }
+   } 
+
+   /**
+    * initializing remarks in Purchase In Default
+    */
+   private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
+	   IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+	   List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
+	   FacesScopes facesScopes = new FacesScopes();
+	   if (results.size() == 0
+			   || !compareUserName(results.get(0).getUser().getLoginId())) {
+		   ScPIDRemark remark = new ScPIDRemark();
+		   remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		   remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		   remark.setChangedBy(remark.getCreatedBy());
+		   remark.setUser(facesScopes.getUserSessionBean());
+		   remark.setCreatedUser(facesScopes.getUserSessionBean());
+		   if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
+			   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
+		   } 
+		   PmStatus status = new PmStatus();
+		   status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
+		   StatusReqDTO statusReqDTO = new StatusReqDTO();
+		   if (status != null) {
+			   statusReqDTO.setStatusId(status.getStatusId());
+			   StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+			   remark.setPmStatus(statusResDTO.getPmStatus());
+		   }
+		   remark.setPmStatus(status);
+		   remark.setPurchaseInDefault(scPurchaseInDefault);
+		   results.add(0, remark);
+	   }
+	   return results;
+   }
+
+   /**
+    * To get Approver Pick List  in Purchase In Default
+    */
+   private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
+	   List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
+	   ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
+	   scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
+	   for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
+		   scPIDApprovalUser.setPmUser(pmUser);
+		   results.add(scPIDApprovalUser);
+	   }
+	   return results;
+   }
+
+   /**
+    * To get status for pid in Purchase In Default
+    */
+   public void  getCurrentStatus(Long statusId) {
+	   if (statusId != null) {
+		   getManagedBean().setPidStatus(getStatusDescById(statusId));
+		   if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_SUBMISSION)){
+			   //getManagedBean().setRequisitionerFlag(true);
+			   getManagedBean().setApproverFlag(false);
+		   } else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
+			   //getManagedBean().setRequisitionerFlag(true);
+			   getManagedBean().setApproverFlag(true);
+		   }
+	   }
+   }   
+   /**
+    * Event for justification type drop down in pid
+    */
+   public void justificationTypeEvent() {
+	   log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType()); 
+	   if(getManagedBean().getPurchaseInDefault().getReasonType() !=null){
+		   if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_SS)) {
+			   getManagedBean().setVisibleOrderQty(Boolean.FALSE);
+
+		   } else if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
+			   getManagedBean().setVisibleOrderQty(Boolean.TRUE);
+
+		   } else {
+			   getManagedBean().setVisibleOrderQty(Boolean.FALSE);
+		   }
+	   }
+	   // update order qty
+	   RequestContext.getCurrentInstance().update("reqDtlId");
+   }
+
+   /**
+    *  handleFileUpload event for file upload in pid
+    */
+   public void handleFileUpload(FileUploadEvent event) {
+	   debugLogger("handleFileUpload");
+	   FacesScopes facesScopes = new FacesScopes();
+	   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+	   if (event.getFile() != null){
+		   ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+		   ScPurchaseInDefaultAttachment attachment = getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment();
+		   if (null == attachment) {
+			   attachment = new ScPurchaseInDefaultAttachment();
+			   attachment.setScPurchaseInDefault(purchaseInDefault);
+		   }
+		   attachment.setUser(facesScopes.getUserSessionBean());
+		   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		   uploadAttachment(event.getFile(), attachment);
+		   attachments.add(attachment);
+		   getManagedBean().setAttachments(attachments);
+
+	   }
+   }
+
+   /**
+    *  determineIcon for displaying image icon in  pid
+    */	
+   public String determineIcon(ScPurchaseInDefaultAttachment attachment) {
+	   debugLogger("determineIcon");
+	   String imageFileName = "icon_file_default.png";
+	   String ext = "";
+
+	   if(attachment != null){
+		   String fileName = attachment.getFileName();
+
+		   if(fileName != null){
+			   int mid= fileName.lastIndexOf(".");
+			   ext = fileName.substring(mid+1,fileName.length());  
+		   }
+
+		   if ("doc".equals(ext) || "docx".equals(ext)){
+			   imageFileName ="icon_doc.png";
+		   }
+		   else if ("pdf".equals(ext)){
+			   imageFileName ="icon_pdf.png";
+		   }
+		   else if("xls".equals(ext) || "xlsx".equals(ext) || "csv".equals(ext)){
+			   imageFileName ="icon_exel.png";
+		   }
+		   else if("jpg".equals(ext) || "bmp".equals(ext) || "png".equals(ext) || "gif".equals(ext)){
+			   imageFileName ="icon_image.png";
+		   }
+		   else if("txt".equals(ext)){
+			   imageFileName ="icon_txt.png";
+		   }
+	   }
+	   return imageFileName;
+   }
+
+   public void retrieveReasonDescListByCategory () {
+	   ReasonReqDTO reqDTO = new ReasonReqDTO();
+	   reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
+	   reqDTO.setLanguage("en");
+	   IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	   ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
+	   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+   }
+
+   public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
+	   SelectItem[] items = null;
+	   try {
+		   items = new SelectItem[list.size()+1];
+		   items[0] = new SelectItem(null, "- Select One -");
+		   int i = 1;
+		   for(PmReasonDesc reasonDesc : list) {
+			   items[i++] = new SelectItem(
+					   reasonDesc.getPmReason().getReasonCode(),
+					   reasonDesc.getReasonDesc());
+		   }
+	   } finally{
+	   }
+	   return items;
+   }
+
+   public void initialInformation(ScPurchaseInDefault purchaseInDefault){
+	   DualListModel<PmUser>	approvalUsers;
+	   IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	   UserReqDTO userReqDto = new UserReqDTO();
+	   userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
+	   if(getManagedBean().getPmOrgProfile() != null){
+		   userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+	   }
+	   UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+	   List<PmUser> availableApprover	=	userResDTO.getUserList();
+	   List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
+	   approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
+
+	   if (purchaseInDefault.getApprovalUsers().size() > 0
+			   && purchaseInDefault != null) {
+		   for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
+			   selectedApprover.add(purchaseInDefault.getApprovalUsers().get(i).getPmUser());
+			   for (int j = 0; j < availableApprover.size(); j++) {
+				   if (purchaseInDefault.getApprovalUsers().get(i).getPmUser().getUserId()
+						   .equals(availableApprover.get(j).getUserId())) {
+					   availableApprover.remove(availableApprover.get(j));
+				   }
+			   }
+		   }
+		   approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
+		   getManagedBean().setApprovalUsers(approvalUsers);
+	   } else {
+		   approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
+		   getManagedBean().setApprovalUsers(approvalUsers);
+	   }
+   }
+
+   /**
+    * to get Ptj drop down Listing in purchase in default
+    */
+   private void populatePtjDropDownList() {
+	   debugLogger("populatePtjDropDownList");
+	   PmUser user = new FacesScopes().getUserSessionBean();
+	   if (user != null) {
+		   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		   reqDTO.setUserId(user.getUserId());
+		   reqDTO.setOrgType(OrganizationType.DIVISION.value());
+
+		   IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				   .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						   IOrgProfileSO.class);
+		   OrgProfileResDTO resDTO = orgProfileSO
+				   .retrieveOrgProfileListByOrgType(reqDTO);
+
+		   List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
+		   System.out.println("userDivisionList" + ptjList.size());
+		   getManagedBean().setPtjDropdown(ptjList);
+	   }
+   }
+
+   /**
+    * render the view base on the task id
+    */
+   public void preRenderView() {
+	   HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+	   HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+	   String taskId = originalServletRequest.getParameter("taskId");
+	   if (StringUtils.isNotBlank(taskId)) {
+		   this.getManagedBean().setTaskId(taskId);
+		   log.info("taskId : " + taskId);
+		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		   FacesScopes facesScopes = new FacesScopes();
+		   String token = facesScopes.getBPMAuthenticationCtxToken();
+		   BpmRequestDTO reqDTO = new BpmRequestDTO();
+		   reqDTO.setCtxToken(token);
+		   reqDTO.setTaskId(taskId);
+		   BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		   this.getManagedBean().setOutComes(res.getAction());
+		   this.getManagedBean().setProcessName(res.getProcessName());
+		   Object obj = res.getPojo();
+		   SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
+		   String	dpMode	=	directPurchaseDataType.getDpMode();
+		   if(ParameterConst.REQUEST_NOTE_PID.equalsIgnoreCase(dpMode)){ 
+			   // Purchase In Default	
+			   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			   PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			   Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
+			   purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
+			   purchaseInDefaultReqDTO.setFetchSubEntity(true);
+			   PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+			   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+			   if(purchaseInDefault.getContractedItem() != null){
+				   CtContractItem contractItem = purchaseInDefault.getContractedItem();
+				   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+				   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+				   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
+				   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
+				   contractItem	=	ConIresDTO.getCtContractItem();
+				   purchaseInDefault.setContractedItem(contractItem);
+			   }
+			   List<ScPIDRemark> results =  new ArrayList<ScPIDRemark>();
+			   if(purchaseInDefault.getRemarks() != null){
+				   for (ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()) {
+					   scPIDRemark.setUser(scPIDRemark.getCreatedUser());
+					   results.add(scPIDRemark);
+				   }
+
+				   ScPIDRemark remark = new ScPIDRemark();
+				   remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				   remark.setChangedBy(remark.getCreatedBy());
+				   remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				   remark.setUser(facesScopes.getUserSessionBean());
+				   remark.setCreatedUser(facesScopes.getUserSessionBean());
+				   remark.setPurchaseInDefault(purchaseInDefault);
+				   results.add(remark);
+				   purchaseInDefault.setRemarks(results);
+			   }
+
+
+			   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+			   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
+			   attachment.setUser(facesScopes.getUserSessionBean());
+			   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+			   attachments.add(attachment);
+			   getManagedBean().setTaskId(taskId);
+			   getManagedBean().setProcessName(res.getProcessName());
+			   getManagedBean().setOutComes(res.getAction());
+			   getManagedBean().setPurchaseInDefault(purchaseInDefault);
+			   getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
+			   getManagedBean().setAttachments(attachments);
+			   getCurrentStatus(res.getDocStatus().longValue()); 
+
+			   initialInformation(purchaseInDefault);
+			   retrieveReasonDescListByCategory();
+			   justificationTypeEvent();
+			   FacesContext fc = FacesContext.getCurrentInstance();
+			   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
+		   }
+	   }	
+   }
 	 
-	 /**
-	  * downloadFile method for file download in pid
-	  */ 
-	 public void downloadFile(String filePath) throws IOException {
-			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-			
-			String fileName = null;
-			File file = new File(filePath);
-			fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-			
-			res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-			res.setHeader( "Content-Transfer-Encoding", "binary" );
-			res.setContentType("application/octet-stream");
-			res.flushBuffer();
-			OutputStream out = res.getOutputStream();   
-			if(filePath!=null) {
-				InputStream input = null;
-				try {
-					URLConnection uc = new URL(filePath).openConnection();
-					input = new BufferedInputStream(uc.getInputStream()); 
-				} catch (Exception e) {
-					// Cannot open connection, maybe local file
-					input = new FileInputStream(filePath);
-				}
-				byte[] buffer = new byte[4096];
-				int bytesRead;
-				while ((bytesRead = input.read( buffer )) != -1){ 
-					out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
-				}
-				input.close();			
-			}
-			out.flush();
-			out.close(); 
-			FacesContext.getCurrentInstance().responseComplete();
-		}	
-	 
-		
-	 /**
-	  *  deleteUploadFile method for deleting upload fine in pid
-	  */
-	 public void deleteUploadFile() {
-		 debugLogger("deleteUploadFile");
-		 getManagedBean().getAttachments().clear();
-	 }
-	 
-	 public PmOrgProfile ptjNameEvent() {
-		 if(getManagedBean().getPmOrgProfile() != null){
-			 initialInformation(getManagedBean().getPurchaseInDefault());
-		 }
-		 return null;
-	 }
+   /**
+    * downloadFile method for file download in pid
+    */ 
+   public void downloadFile(String filePath) throws IOException {
+	   PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+	   HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+
+	   String fileName = null;
+	   File file = new File(filePath);
+	   fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+
+	   res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+	   res.setHeader( "Content-Transfer-Encoding", "binary" );
+	   res.setContentType("application/octet-stream");
+	   res.flushBuffer();
+	   OutputStream out = res.getOutputStream();   
+	   if(filePath!=null) {
+		   InputStream input = null;
+		   try {
+			   URLConnection uc = new URL(filePath).openConnection();
+			   input = new BufferedInputStream(uc.getInputStream()); 
+		   } catch (Exception e) {
+			   // Cannot open connection, maybe local file
+			   input = new FileInputStream(filePath);
+		   }
+		   byte[] buffer = new byte[4096];
+		   int bytesRead;
+		   while ((bytesRead = input.read( buffer )) != -1){ 
+			   out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+		   }
+		   input.close();			
+	   }
+	   out.flush();
+	   out.close(); 
+	   FacesContext.getCurrentInstance().responseComplete();
+   }	
+
+
+   /**
+    *  deleteUploadFile method for deleting upload fine in pid
+    */
+   public void deleteUploadFile() {
+	   debugLogger("deleteUploadFile");
+	   getManagedBean().getAttachments().clear();
+   }
+
+   public PmOrgProfile ptjNameEvent() {
+	   if(getManagedBean().getPmOrgProfile() != null){
+		   initialInformation(getManagedBean().getPurchaseInDefault());
+	   }
+	   return null;
+   }
 
 	 /**
 	  * Page navigation to catalogue search page in Purchase in default

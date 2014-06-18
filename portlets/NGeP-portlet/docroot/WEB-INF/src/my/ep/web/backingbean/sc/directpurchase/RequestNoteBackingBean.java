@@ -248,7 +248,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     		requestNote.setWorkFlowStatuses(workFlowStatuses);
 
     		// Remarks
-    		requestNote.setRemarks(initializeRemarks(requestNote));
+    		//requestNote.setRemarks(initializeRemarks(requestNote));
     		requestNoteReqDTO.setRequestNote(requestNote);
     		if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
     			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
