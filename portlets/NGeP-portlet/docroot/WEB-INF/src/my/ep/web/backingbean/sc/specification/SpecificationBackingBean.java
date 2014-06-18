@@ -2417,11 +2417,14 @@ public class SpecificationBackingBean extends
 
 		}
 
+		
+		if(null==scQt.getScQtSupplierCriteria()){
 		this.getManagedBean().getSupplierCriteria()
 				.setScQt(this.getManagedBean().getScQt());
 		setUserDetails(this.getManagedBean().getSupplierCriteria());
 		scQt.setScQtSupplierCriteria(this.getManagedBean()
 				.getSupplierCriteria());
+		}
 		
 		List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
 		if ("O".equalsIgnoreCase(scQt.getQtType())) {
@@ -2440,7 +2443,9 @@ public class SpecificationBackingBean extends
 					categoryList.add(scQtCategory);
 
 				}
+				if(null==scQt.getScQtCategorys()){
 				scQt.setScQtCategorys(categoryList);
+				}
 			} else {
 
 				FacesContext.getCurrentInstance().addMessage(
@@ -2471,7 +2476,9 @@ public class SpecificationBackingBean extends
 					categoryList.add(scQtCategory);
 
 				}
+				if(null==scQt.getScQtCategorys()){
 				scQt.setScQtCategorys(categoryList);
+				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
