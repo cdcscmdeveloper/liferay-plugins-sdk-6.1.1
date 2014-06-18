@@ -156,7 +156,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	     requestNote.setWorkFlowStatuses(workFlowStatuses);
 	     
 		// Remarks
-		requestNote.setRemarks(initializeRemarks(requestNote));
+		//requestNote.setRemarks(initializeRemarks(requestNote));
 		requestNoteReqDTO.setRequestNote(requestNote);
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 	    requestNote.setPmOrgProfile(ptjNameEvent());
@@ -264,8 +264,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     				}	
     			} 
     		}
-
-    		requestNote.setPmOrgProfile(ptjNameEvent());
+ 
+    		if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
+    			requestNote.setPmOrgProfile(ptjNameEvent());
+    		}
+    		
     		requestNoteReqDTO.setRequestNote(requestNote);
     		//Hoa: when submit need to set submit in the reqDTO to true
     		requestNoteReqDTO.setSubmit(Boolean.TRUE);
@@ -414,6 +417,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			   getManagedBean().setOutComes(res.getAction());
 			   getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			   getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
+			   getManagedBean().setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 			   initialInformation(requestNote);
 			   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 			   // For status 
