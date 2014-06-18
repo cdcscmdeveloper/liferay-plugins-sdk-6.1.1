@@ -2147,6 +2147,15 @@ public class SpecificationBackingBean extends
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (!treeNode.getParent().isSelected()) {
+				
+					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					// LocationDTO locationDTO = (LocationDTO)
+					// treeNode.getData();
+					locationDTOs.addAll(locationDTO);
+				}
+				
+				else{
+					
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
@@ -2193,6 +2202,12 @@ public class SpecificationBackingBean extends
 					.getSelectedGeneralTreeNodes()) {
 
 				if (!treeNode.getParent().isSelected()) {
+					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+
+					allNodes.addAll(locationDTO);
+				}
+				
+				else{
 					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
 
 					allNodes.addAll(locationDTO);
