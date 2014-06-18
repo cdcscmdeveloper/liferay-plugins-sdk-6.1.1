@@ -203,9 +203,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}*/
 
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().getApproverModel().getSource().clear();
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
+				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			}
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
@@ -266,8 +268,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
+				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			}
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
@@ -400,7 +405,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		ICircularSO circularSO = null;
 		try {
-			 // validateCircular(action);
+			 validateCircular(action);
 			  circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			  if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
@@ -468,17 +473,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-					return "circularBase.xhtml?faces-redirect=true";
 				}
-			}
-		  }catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			if(e instanceof EpException) {
-				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
 		  }finally {
 			  circularSO = null;
@@ -572,6 +567,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
+			}
+			
+			if(getManagedBean().getCircularVer().getCtPanelItems().size()==0) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{"Panel Item"});
+			}
+			
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
 				throw new EpException("100022", new String[]{"Selected approver(s)"});
 			}
@@ -592,15 +595,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-
-			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			if(getFacesScopes().getUserSessionBean().getPmUserOrgs() != null && getFacesScopes().getUserSessionBean().getPmUserOrgs().size() > 0){
-				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
-			}// TODO hardcode to get the value, should remove after have real data
-			reqDTO.setOrgProfileId(1392L);
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			
-
-			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
@@ -922,6 +923,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedPanelItems(null);
 			this.getManagedBean().setSelectedPanelZone(null);
 			this.getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setAction(action);
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
@@ -939,10 +941,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 			}
 			
-			getManagedBean().getApproverModel().getSource().clear();
-			
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
+				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			}
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
@@ -1061,7 +1064,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-		String parameterCode = "";
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
 			if (paramDesc.getPmParameter().getParameterId()

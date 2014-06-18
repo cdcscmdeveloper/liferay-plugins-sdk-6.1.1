@@ -42,6 +42,7 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private String circularDocType;
 	private String circularAdmin;
+	private String action;
 	
 	private boolean updateAction;
 	
@@ -440,5 +441,13 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 }
