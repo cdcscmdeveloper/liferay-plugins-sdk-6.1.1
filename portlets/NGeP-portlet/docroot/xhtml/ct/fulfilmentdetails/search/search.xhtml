@@ -17,17 +17,17 @@
      <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500">
      	<h:panelGrid columns="4" style="width:100%;">
            <p:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" validator="#{webappBean.validateNumbers}" maxlength="17" style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" maxlength="17" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}" validator="#{webappBean.checkInputField}" maxlength="1000" style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}" maxlength="1000" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" validator="#{webappBean.validateNumbers}" maxlength="50" style="width:170px;" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" />
            <p:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" validator="#{webappBean.checkInputField}" maxlength="200" style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="200" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" maxlength="20" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" validator="#{webappBean.checkInputField}" maxlength="100" style="width:170px;"/> 
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" maxlength="100" style="width:170px;"/> 
            <p:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" 
             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" readonlyInput="true" />
@@ -35,9 +35,9 @@
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="popupButtonCal1" 
              pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  showOn="button" readonlyInput="true" />
            <p:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" validator="#{webappBean.validateNumbers}" maxlength="100" style="width:170px;"/>                     
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" maxlength="100" style="width:170px;"/>                     
            <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
-           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" validator="#{webappBean.validateNumbers}" maxlength="30" style="width:170px;" />
+           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;" />
 		   <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
 		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctContractStatus}"	style="width:200px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />

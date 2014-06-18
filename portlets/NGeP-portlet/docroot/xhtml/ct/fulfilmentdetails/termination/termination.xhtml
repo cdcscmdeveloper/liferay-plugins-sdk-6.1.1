@@ -118,19 +118,25 @@
 			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" 
 			  	oncomplete="noticeDlg.show()"/>
 		  </h:panelGrid>
-          <p:outputLabel value="#{lbl['lbl.ct.tr.decisiondt']}" />
-          <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}" readonlyInput="true"
-               id="calItem1" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		
+		  
+		  <h:panelGrid columns="2" style="float:right;">
+			<p:outputLabel value="*" styleClass="mandatory" />
+		    <p:outputLabel value="#{lbl['lbl.ct.tr.decisiondt']}" />
+		 </h:panelGrid>
+		   <h:panelGrid columns="2">
+             <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}"
+          		readonlyInput="true" required="true" label="#{lbl['lbl.ct.tr.decisiondt']}"
+                id="calItem1" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
+		      <p:message for="calItem1" display="icon"/>
+		   </h:panelGrid>
+		  
 		<h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
 			<p:outputLabel value="*" styleClass="mandatory" />
 		    <p:outputLabel value="#{lbl['lbl.ct.tr.fierefno']}" />
 		</h:panelGrid> 
 		 <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
-		      style="width:170px;" maxlength="100"  required="true" label="File Ref. No."
-		     validator="#{webappBean.validateNumbers}">
-		     <f:validateLength maximum="100"/> 
+		      style="width:170px;" maxlength="100"  required="true" label="#{lbl['lbl.ct.tr.fierefno']}">
 		     </p:inputText>
 		     <p:message for="fileRefNum" display="icon"/>
 		 </h:panelGrid>
@@ -176,8 +182,7 @@
 		  </h:panelGrid>
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
            <p:inputText id="lastRemedyFileNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" 
-             style="width:170px;" maxlength="100" validator="#{webappBean.validateNumbers}" required="true" label="Last Remedy File No">
-              <f:validateLength maximum="100"/> 
+             style="width:170px;" maxlength="100" required="true" label="Last Remedy File No">
               </p:inputText>
                 <p:message for="lastRemedyFileNo" display="icon"/>
 		  </h:panelGrid>
@@ -221,7 +226,7 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.tr.recomagency']}" />
 		 </h:panelGrid>
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-		       <p:inputText id="recomendAgency"  style="width:170px;" required="true" label="Recommended Agency"
+		       <p:inputText id="recomendAgency"  style="width:170px;" maxlength="255" required="true" label="Recommended Agency"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
                   <p:message for="recomendAgency" display="icon"/>
 		     </h:panelGrid>
@@ -249,7 +254,7 @@
                	     </p:selectOneMenu>
                  </p:column>
 		        <p:column style="width:75%;" headerText="#{lbl['lbl.ct.tr.table.descp']}">
-		           <p:inputText value="#{data.description}" style="width:98%;"/>
+		           <p:inputText value="#{data.description}" style="width:98%;" maxlength="500"/>
 		        </p:column> 
 		   </p:dataTable>
 		 </h:panelGrid>

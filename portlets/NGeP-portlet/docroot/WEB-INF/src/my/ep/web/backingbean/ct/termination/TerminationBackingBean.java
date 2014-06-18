@@ -199,6 +199,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
 				throw new EpException(MessageConst.ERROR_750044);
 			}
+			
+			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().size()==0) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
+			}
 			 
 			reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
