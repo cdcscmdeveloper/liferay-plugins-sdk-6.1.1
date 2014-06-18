@@ -314,7 +314,9 @@ public class CmSupplierZoneSingleton {
 			listDistricts = new ArrayList<PmDistrict>();
 			listDivisions = new ArrayList<PmDivision>();
 			
-			for(CmSupplierZoneDTL cmSupplierZoneDTL : zone.getCmSupplierZoneDtls()){
+			List<CmSupplierZoneDTL> zoneDTLs = zone.getCmSupplierZoneDtls();
+			
+			for(CmSupplierZoneDTL cmSupplierZoneDTL : zoneDTLs){
 				
 				if(cmSupplierZoneDTL.getPmState() != null){
 					stateIds.add(cmSupplierZoneDTL.getPmState().getStateId());

@@ -12,6 +12,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -52,6 +53,8 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	private List<CmSupplierZone> deletedCmSupplierZoneList;
 	
 	private List<CmSupplierZoneDTL> cmSupplierZoneDTLList;
+	
+	private List<CmSupplierZoneDTL> deletedCmSupplierZoneDTLList;
 
 	private CmSupplierZone selectedSupplierZone;
 	
@@ -77,6 +80,7 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	
 	private int zoneIndex = -1;
 
+	private SmSupplier currentSupplier;
 	
 	public String getState() {
 		return state;
@@ -222,6 +226,17 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	public void setCmSupplierZoneDTLList(List<CmSupplierZoneDTL> cmSupplierZoneDTLList) {
 		this.cmSupplierZoneDTLList = cmSupplierZoneDTLList;
 	}
+
+	public List<CmSupplierZoneDTL> getDeletedCmSupplierZoneDTLList() {
+		return deletedCmSupplierZoneDTLList;
+	}
+
+
+	public void setDeletedCmSupplierZoneDTLList(
+			List<CmSupplierZoneDTL> deletedCmSupplierZoneDTLList) {
+		this.deletedCmSupplierZoneDTLList = deletedCmSupplierZoneDTLList;
+	}
+
 
 	public CmSupplierZone getSelectedSupplierZone() {
 		if(selectedSupplierZone==null)
@@ -403,6 +418,16 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
 	public void setZoneIndex(int zoneIndex) {
 		this.zoneIndex = zoneIndex;
+	}
+
+
+	public SmSupplier getCurrentSupplier() {
+		return currentSupplier;
+	}
+
+
+	public void setCurrentSupplier(SmSupplier currentSupplier) {
+		this.currentSupplier = currentSupplier;
 	}
 
 }
