@@ -18,7 +18,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
 			   <h:panelGroup rendered="#{data.recordStatus}">
-			      <p:calendar value="#{data.effDate}" size="10" id="effDateActive" showOn="button"
+			      <p:calendar value="#{data.effDate}" size="15" id="effDateActive" showOn="button"
 			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
 			    <h:panelGroup id="effDateItemId" rendered="#{!data.recordStatus}">
