@@ -12,15 +12,19 @@
 		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%"><p:messages id="speccreatemessages"
-						showDetail="true" autoUpdate="true" closable="true" /> <ui:include
-						src="/xhtml/sc/specification/specificationButtons.xhtml"></ui:include>
-					<ui:include
-						src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
+						showDetail="true" autoUpdate="true" closable="true" /> 
+						<div align="right">
+						<p:commandButton
+						value="Submit"
+						icon="ui-icon-submit" /> 
+						</div>
 						<ui:include
+						src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
+					<ui:include
 						src="/xhtml/sc/specification/panelCentralContract.xhtml"></ui:include></td>
 
 			</tr>
-			
+
 		</table>
 
 	</ui:define>

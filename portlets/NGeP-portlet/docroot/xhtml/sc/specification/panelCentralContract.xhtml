@@ -11,13 +11,13 @@
 		<table>
            <tr><td>
 			<h:outputLabel value="Circular No" /></td>
-			<td><p:inputText value="#{specificationBackingBean.managedBean.cirCularNo}" readonly="true" disabled="true"></p:inputText></td></tr>
+			<td><p:inputText size="75" value="#{specificationBackingBean.managedBean.cirCularNo}" readonly="true" disabled="true"></p:inputText></td></tr>
 			<tr><td>
 				<h:outputLabel value="Circular Name"  /></td>
-		<td>	<p:inputText readonly="true" disabled="true" value="#{specificationBackingBean.managedBean.circularName}"></p:inputText></td></tr>
+		<td>	<p:inputText readonly="true" disabled="true" size="75" value="#{specificationBackingBean.managedBean.circularName}"></p:inputText></td></tr>
 		<tr><td valign="top">
 				<h:outputLabel value="Request Proceed For Central Contract " /></td>
-			<td><p:inputTextarea rows="2" cols="100"></p:inputTextarea></td></tr>
+			<td><p:inputTextarea rows="2" cols="100" maxlength="1000" value="#{specificationBackingBean.managedBean.contractremark.remark}"></p:inputTextarea></td></tr>
 
 		</table>
 
