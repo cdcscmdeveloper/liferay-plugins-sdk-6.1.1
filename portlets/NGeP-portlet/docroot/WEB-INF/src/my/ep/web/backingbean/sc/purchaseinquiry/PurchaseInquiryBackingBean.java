@@ -606,7 +606,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			
 			// checking wheather stock available or not
-			if(prInquiry.getIsStockAvailable().equals("1")){
+			if(prInquiry.getIsStockAvailable().equals(1)){
 				ScRequestNote	requestNote	=	prInquiry.getScRequestSupplierItems().get(0).getRequestNoteItem().getRequestNote();
 				reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
@@ -655,11 +655,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 				requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
+				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
+				requestNoteBackingBean.getManagedBean().setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
 				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
 				parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				
+				
 				scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 				requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 				requestNoteBackingBean.initialInformation(new ScRequestNote());
