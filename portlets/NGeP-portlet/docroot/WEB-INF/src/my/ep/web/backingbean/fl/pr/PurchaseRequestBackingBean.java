@@ -262,14 +262,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
 		
-//		if (getManagedBean().getApproverModel() == null) {
-//			//System.out.println("--renew--");
-//			List<String> source = getAvailableApproverList();
-//			//List<String> source = new ArrayList<String>();
-//			List<String> target = new ArrayList<String>();
-//			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-//		}
-		
 		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
 			initializeApproverGroup();
 		}
@@ -662,29 +654,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return null;
 	}
 
-	private List<String> getAvailableApproverList() {
-		List<String> availableApprovers = new ArrayList<String>();
-		IUserSO userSO = null;
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-
-			UserReqDTO reqDTO = new UserReqDTO();
-			// TODO
-			reqDTO.setOrgProfileId(1250l);
-			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
-			for (PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
-				getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
-				availableApprovers.add(user.getPmUser().getUserName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Circular save failed."));
-		} finally {
-			userSO = null;
-		}
-		return availableApprovers;
-	}
-	
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
