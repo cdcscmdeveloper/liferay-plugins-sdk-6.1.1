@@ -56,7 +56,7 @@
 				<p:selectOneMenu value="#{data.recordStatusFlg}"
 				   footerText="equals" filterMatchMode="equals" style="width:85px;">
 				    <f:selectItems value="#{suspensionBackingBean.getItemStatusDropdown()}"/>
-					<p:ajax event="change" process="@form" update="itemTable" 
+					<p:ajax event="change" process="@form" update=":form:itemId" 
 					  listener="#{suspensionBackingBean.setSuspensionStatusValue(data)}" />
 				</p:selectOneMenu>
 			</p:column>

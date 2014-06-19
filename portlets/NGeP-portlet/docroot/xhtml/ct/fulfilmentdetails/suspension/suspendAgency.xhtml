@@ -55,7 +55,7 @@
 			  <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:75px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
-				<p:ajax event="change" process="@form" update="agencyDetailsTable" />
+				<p:ajax event="change" process="@form" update=":form:agencyDetailsId" />
 			   </p:selectOneMenu>	
 			 </p:column> 			
 	   </p:dataTable>
