@@ -175,6 +175,7 @@
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="scoringSetPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
