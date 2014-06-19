@@ -15,7 +15,7 @@
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
-		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />	
+		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />
 		<table style="width: 100%;">
 			<tr>
 				<td style="text-align: left; width: 66px;"><p:outputLabel
@@ -31,22 +31,48 @@
 					</ui:repeat></td>
 			</tr>
 		</table>
-		<p:tabView id="pmtabs" orientation="left" dynamic="true" cache="false">
-			<p:ajax event="tabChange"
-				listener="#{paymentMatchBackingBean.onTabChange}"
-				update="#{paymentMatchBackingBean.className}"></p:ajax>
-			<p:tab id="pmGeneralTabId" title="General">
-				<ui:include src="pmGeneral.xhtml" />
-			</p:tab>
-			<p:tab id="pmChargeLineTabId" title="Charge Line Summary">
-				<ui:include src="pmChargeLine.xhtml" />
-			</p:tab>
-			<p:tab id="pmDeductionTabId" title="Deduction">
-				<ui:include src="pmDeduction.xhtml" />
-			</p:tab>
-			<p:tab id="pmSummaryTabId" title="Payment Summary">
-				<ui:include src="pmSummary.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top"><p:tabMenu styleClass="sidemenu"
+						style="display : table-caption;"
+						activeIndex="#{paymentMatchBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="Charge Line Summary" update="@form"
+							actionListener="#{paymentMatchBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="Deduction" update="@form">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+						<p:menuitem value="Payment Summary" update="@form"
+							actionListener="#{paymentMatchBackingBean.onTabChange(3)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="pmGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="pmChargeLine.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="pmDeduction.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 3}">
+						<ui:include src="pmSummary.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

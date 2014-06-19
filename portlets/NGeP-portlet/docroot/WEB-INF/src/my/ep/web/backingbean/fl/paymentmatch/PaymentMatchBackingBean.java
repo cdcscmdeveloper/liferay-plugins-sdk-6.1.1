@@ -313,17 +313,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	    	
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	}*/
-	 
-	public void onTabChange(TabChangeEvent tevent){
-		if("pmChargeLineTabId".equals(tevent.getTab().getId())){
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==1){
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
 		}
-		if("pmSummaryTabId".equals(tevent.getTab().getId())){
+		if(selectedTabIndex==3){
 			calPmSummary();
 			setClassName("@(.pmSummaryTabId)");
 		}
 	}
+	
 	public void calPmSummary(){
 		BigDecimal sampleDeductionAmt = new BigDecimal(50);
 		BigDecimal calPaymentAmt = new BigDecimal(0.0);

@@ -47,19 +47,38 @@
 			</tr>
 		</table>
 		<ui:include src="frnReviewHeaderPage.xhtml" />
-		<p:spacer height="20px" />
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="General">
-				<ui:include src="frnGeneral.xhtml" />
-			</p:tab>
-			<p:tab title="Item and Remarks" id="itemTab">
-				<ui:include src="frnItem.xhtml" />
-			</p:tab>
-			<p:tab title="Supplier Evaluation">
-				<ui:include src="frnEvaluation.xhtml" />
-			</p:tab>
-
-
-		</p:tabView>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top"><p:tabMenu styleClass="sidemenu"
+						style="display : table-caption;"
+						activeIndex="#{receivedNoteBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="Item and Remarks" update="@form">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="Supplier Evaluation" update="@form">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="frnGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="frnItem.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="frnEvaluation.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

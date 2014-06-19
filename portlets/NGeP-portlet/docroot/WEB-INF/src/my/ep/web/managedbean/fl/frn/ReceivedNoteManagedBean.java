@@ -56,6 +56,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String docType;
 	private String supplierAddress;
 	
+	private int selectedTabIndex;
+	
 	/**
 	 * @return the flRemark
 	 */
@@ -282,6 +284,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 

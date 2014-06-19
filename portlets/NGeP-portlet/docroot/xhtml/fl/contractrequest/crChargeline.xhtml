@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="CHARGE ASSIGNMENT" id="chargeAss" toggleable="true"
-		styleClass="prChargeLinePnlClass">
+		styleClass="crChargeLinePnlClass">
 
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			styleClass="chargeLineChange"
@@ -16,10 +16,10 @@
 			value="#{contractRequestBackingBean.managedBean.chargeLineItemRoot}">
 			<p:ajax event="select"
 				listener="#{contractRequestBackingBean.onNodeSelect()}"
-				update=":form:cotabs:applyBulkChargeDialog,@(.chargeLineSection)" />
+				update=":form:applyBulkChargeDialog,@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{contractRequestBackingBean.onNodeUnSelect()}"
-				update=":form:cotabs:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
+				update=":form:applyBulkChargeDialog,@(.chargeLineSection)"></p:ajax>
 			<p:column>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
@@ -97,7 +97,7 @@
 						value="Bulk Update" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						oncomplete="applyBulkCharge.show();"
-						update=":form:cotabs:applyBulkChargeDialog"
+						update=":form:applyBulkChargeDialog"
 						action="#{contractRequestBackingBean.checkNodeSelected}" /></td>
 
 			</tr>
@@ -289,7 +289,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Apply" icon="ui-icon-accept"
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update=":form:cotabs:applyBulkChargeDialog,chargeLineTbl"
+				update=":form:applyBulkChargeDialog,chargeLineTbl"
 				action="#{contractRequestBackingBean.chargeLineApply}"
 				oncomplete="applyBulkCharge.hide();">
 			</p:commandButton>

@@ -68,6 +68,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public String submitAction(String action) {
 		IReceivedNoteSO receivedNoteSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -81,10 +82,20 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			FulfilmentResDTO resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
+			if("UPDATE".equalsIgnoreCase(action)){
+				//TODO
+				// check Actual Received Date shouldnt be empty
+				 resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
+			}else{
+				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
+			}
+			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -94,22 +105,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getFulfilmentNote().getFulfilmentNoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
-			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}	
-			else {
-				throw new EpException("Failed.");
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}	
+				else {
+					throw new EpException("Failed.");
+				}
 			}
 			
-			
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		
-		} finally {
+		}  finally {
 			receivedNoteSO = null;
 		}
 		return null;

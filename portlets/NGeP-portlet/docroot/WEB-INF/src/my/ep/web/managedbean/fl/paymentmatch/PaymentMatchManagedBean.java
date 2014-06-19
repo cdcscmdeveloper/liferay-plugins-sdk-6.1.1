@@ -66,6 +66,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	
 	private String buttonVal;
 	
+	//tab menu
+	private int selectedTabIndex;
+	
 	public void populateChargeLineData(){
 		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
@@ -388,5 +391,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
+	}
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 }

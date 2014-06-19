@@ -169,6 +169,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmCity> cityList;
 	private List<PmDistrict> districtList;
 	private FlDeliveryAddress flManulaAddress;
+	//tab menu
+	private int selectedTabIndex;
+	// manual address
+	private boolean required;
 
 	public ContractRequestManagedBean(){
 
@@ -1494,6 +1498,38 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDistrictList(List<PmDistrict> districtList) {
 		this.districtList = districtList;
+	}
+
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+
+	/**
+	 * @return the required
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+
+
+	/**
+	 * @param required the required to set
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 }

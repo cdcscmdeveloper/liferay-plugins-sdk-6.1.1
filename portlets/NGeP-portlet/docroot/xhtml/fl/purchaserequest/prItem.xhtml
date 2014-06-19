@@ -192,6 +192,7 @@
 							label="Country"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="countryList"
 								value="#{purchaseRequestBackingBean.managedBean.countryList}"
 								itemLabel="#{countryList.countryName}"

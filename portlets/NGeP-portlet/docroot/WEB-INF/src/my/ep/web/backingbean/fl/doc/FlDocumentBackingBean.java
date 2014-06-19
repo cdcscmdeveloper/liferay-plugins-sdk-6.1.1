@@ -45,6 +45,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -345,10 +346,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		else if(docType.equals("FN")){
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
 			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNote(reqDTO);
+			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
 			recNoteBB.getManagedBean().setButtonVal(buttonVal);
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+			recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
+				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
+			}
 			NavgPage=NAV_TO_MAINTAIN_FRN;
 		}else if(docType.equals("PA")){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject("fl",IPaymentMatchSO.class);
