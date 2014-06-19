@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -176,7 +177,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	// private List<CtCircularZone> ctZoneSelectList;
 	private TreeNode ctZoneTrees;
 	private TreeNode[] ctZoneTreeSelectedNodes;
-	private TreeNode ctZoneSuppliers;
+	private List<TreeNode> ctZoneSuppliers=new  ArrayList<TreeNode>();
 
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
@@ -189,6 +190,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private TreeNode rootLocationTree;
 	private TreeNode rootZoanlTree;
 	private String zoneName;
+	private CtPanelZone panelZoneSelect;
 
 	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
@@ -312,6 +314,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private CtPanelItem ctPanelItem;
 	private boolean required = Boolean.FALSE;
+	private List<CtPanelZone> ctPanelZones;
+	private CtPanelSupplier ctpanelSupplier;
 	
 
 	public SpecificationManagedBean() {
@@ -2215,20 +2219,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.ctZoneTreeSelectedNodes = ctZoneTreeSelectedNodes;
 	}
 
-	/**
-	 * @return the ctZoneSuppliers
-	 */
-	public TreeNode getCtZoneSuppliers() {
-		return ctZoneSuppliers;
-	}
-
-	/**
-	 * @param ctZoneSuppliers
-	 *            the ctZoneSuppliers to set
-	 */
-	public void setCtZoneSuppliers(TreeNode ctZoneSuppliers) {
-		this.ctZoneSuppliers = ctZoneSuppliers;
-	}
+	
 
 	/**
 	 * @return the yearList
@@ -3569,5 +3560,63 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
+
+	/**
+	 * @return the ctZoneSuppliers
+	 */
+	public List<TreeNode> getCtZoneSuppliers() {
+		return ctZoneSuppliers;
+	}
+
+	/**
+	 * @param ctZoneSuppliers the ctZoneSuppliers to set
+	 */
+	public void setCtZoneSuppliers(List<TreeNode> ctZoneSuppliers) {
+		this.ctZoneSuppliers = ctZoneSuppliers;
+	}
+
+	/**
+	 * @return the panelZoneSelect
+	 */
+	public CtPanelZone getPanelZoneSelect() {
+		return panelZoneSelect;
+	}
+
+	/**
+	 * @param panelZoneSelect the panelZoneSelect to set
+	 */
+	public void setPanelZoneSelect(CtPanelZone panelZoneSelect) {
+		this.panelZoneSelect = panelZoneSelect;
+	}
+
+	/**
+	 * @return the ctPanelZones
+	 */
+	public List<CtPanelZone> getCtPanelZones() {
+		return ctPanelZones;
+	}
+
+	/**
+	 * @param ctPanelZones the ctPanelZones to set
+	 */
+	public void setCtPanelZones(List<CtPanelZone> ctPanelZones) {
+		this.ctPanelZones = ctPanelZones;
+	}
+
+	/**
+	 * @return the ctpanelSupplier
+	 */
+	public CtPanelSupplier getCtpanelSupplier() {
+		return ctpanelSupplier;
+	}
+
+	/**
+	 * @param ctpanelSupplier the ctpanelSupplier to set
+	 */
+	public void setCtpanelSupplier(CtPanelSupplier ctpanelSupplier) {
+		this.ctpanelSupplier = ctpanelSupplier;
+	}
+
+	
 
 }
