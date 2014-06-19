@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -79,6 +80,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -1416,9 +1418,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext()
 				.getRealPath("/images");
-
+		
+		StringBuilder uploadDir = new StringBuilder();
+		
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("/ngep/cm");
+		
+		System.out.println("uploadDir***"+uploadDir);
 		// String tempDir = "C://image//test//";
-
+		///ngep/cm/<ep_no>/<filenames>
 		UploadedFile item = event.getFile();
 
 		CmImage catImage = new CmImage();
@@ -1427,9 +1434,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		catImage.setImageDesc(item.getFileName());
 		catImage.setImageType("jpg");
 		catImage.setImagePath(item.getFileName());
-		catImage.setTempPath(tempDir + "/" + item.getFileName());
+		catImage.setTempPath(uploadDir.toString());
 
-		log.info("catImage.getImagePath()" + catImage.getImagePath());
+		log.info("catImage.TempPath()" + catImage.getTempPath());
 
 		// render for display
 		this.getManagedBean().getSelectedMaintainItem().getCmImages()
@@ -1446,20 +1453,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void genImage(CmImage imageObj) {
 
 		try {
-
-			/*
-			 * String tempDir = "C://image//test"; File dir = new File(tempDir);
-			 * 
-			 * System.out.println(" dir.exists()"+ dir.exists());
-			 * 
-			 * if(dir.exists()){
-			 * 
-			 * }else{ //dir.mkdirs(); boolean wasDirecotyMade = dir.mkdirs();
-			 * System.out.println("wasDirecotyMade"+wasDirecotyMade); }
-			 */
+			 String check = imageObj.getTempPath() + "/" + this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo();
+			 File dir = new File(check);
+			  
+			 System.out.println(" dir.exists()"+ dir.exists());
+			  
+			 if(dir.exists()){
+			  
+			  }else{ //dir.mkdirs(); boolean wasDirecotyMade = dir.mkdirs();
+				  dir.mkdirs();
+			 }
+			 
 
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(imageObj.getTempPath()));
+					new FileOutputStream(check + "/" + imageObj.getImageName()));
 
 			bufferedOutputStream.write(imageObj.getImage());
 
