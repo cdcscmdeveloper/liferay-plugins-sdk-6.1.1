@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.pr;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -255,17 +256,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setSelectedItemChargeSection(new FlFulfilmentItemAddr());
 			
 		}*/
-		if (getManagedBean().getApproverModel() == null) {
-			//System.out.println("--renew--");
-			List<String> source = getAvailableApproverList();
-			//List<String> source = new ArrayList<String>();
-			List<String> target = new ArrayList<String>();
-			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-		}
+		
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
+		
+//		if (getManagedBean().getApproverModel() == null) {
+//			//System.out.println("--renew--");
+//			List<String> source = getAvailableApproverList();
+//			//List<String> source = new ArrayList<String>();
+//			List<String> target = new ArrayList<String>();
+//			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+//		}
+		
 		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
 			initializeApproverGroup();
 		}
@@ -838,7 +842,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			Date currentDate = new Timestamp(System.currentTimeMillis());
+			PmOrgProfile pmOrgProfile = null;
+			for(PmUserOrg pmUserOrg : resDTO.getUserOrgList()){
+				if(pmUserOrg.getEffDate().before(currentDate)){
+					if(pmUserOrg.getExpDate() == null || pmUserOrg.getExpDate().after(currentDate)){
+						pmOrgProfile = pmUserOrg.getPmOrgProfile();
+						break;
+					}
+				}
+			}
+			
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			resDTO = userSO.retrieveUserGroupList(reqDTO);
 			if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
 				PmUserGroup pmUserGroup = new PmUserGroup();
@@ -854,6 +869,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
 				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
 				getManagedBean().getUserGroupList().add(userGroup);
+				
+				for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+					getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
+				}
 				if(i==0) {
 					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
 					List<String> source = new ArrayList<String>();

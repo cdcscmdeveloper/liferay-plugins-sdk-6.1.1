@@ -21,7 +21,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td><p:inputText size="5" id="preparedOrgProfileId" readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
@@ -37,7 +37,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td><p:inputText size="5" id="issuedOrgProfileId" readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="issuePtj"
 						lovId="PM_ORG_PROFILE" headerText="IssuePtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
@@ -50,7 +50,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgProfileId}" />
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
 						disabled="true" /></td>
