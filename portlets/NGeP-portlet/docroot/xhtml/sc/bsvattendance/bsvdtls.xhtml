@@ -5,231 +5,200 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel>
-		<c:if test="#{bsvAttendanceBackingBean.managedBean.scQtBsv.sameBsv}">
-			<p:panel header="Briefing And Site Visit Details">
 
+	<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
+		<p:panel header="Briefing And Site Visit Details" toggleable="true">
+			<div>
 				<h:outputText value="* All Attandence required for Briefing">
 				</h:outputText>
-				<br></br>
-				<p:dataTable var="brfsitdtl"
-					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
+			</div>
+			<p:spacer width="10px"></p:spacer>
+			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
+				<ac:paginator for="brfsitdtl"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+					<h:outputText value="#{brfsitdtl.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					style="width:25px">
+					<h:outputText value="#{brfsitdtl.bsvDate}">
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+					</h:outputText>
+				</p:column>
 
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{brfsitdtl.briefingDesc}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-						>
-						<h:outputText value="#{brfsitdtl.briefingDate}">
-							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-						</h:outputText>
-					</p:column>
+				<p:column headerText="#{lbl['lbl.so.location']}"
+					style="width:100px;">
+					<p:commandLink style="margin-right:20px;;"
+						actionListener="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+						oncomplete="popupLoc.show()" update="(.locationpopup)">
+						<h:outputText value="#{brfsitdtl.location}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
+					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					style="width:15px;">
+					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+					style="width:150px;">
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+					style="width:15px;">
+					<p:commandLink
+						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+						process="@this">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							value="/resources/ep/images/design/register.png" />
 
-					<p:column headerText="#{lbl['lbl.so.location']}"
-						>
-						<p:commandLink style="margin-right:20px;"
-							actionListener="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
-							oncomplete="popupLoc.show()">
-							<h:outputText value="#{brfsitdtl.location}" />
-						</p:commandLink>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}" >
-						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-						>
-						<h:outputLabel value="#{brfsitdtl.maxNoAttendance}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}">
-						<p:selectOneMenu value="#{brfsitdtl.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{brfsitdtl.pmStatus.statusId ne 60121}">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
 
-						</p:selectOneMenu>
-						<p:selectOneMenu value="#{brfsitdtl.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{brfsitdtl.pmStatus.statusId eq 60121}" disabled="true">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
+		</p:panel>
+	</c:if>
+	<c:if test="#{!bsvAttendanceBackingBean.managedBean.scQtBsv.sameBsv}">
 
-						</p:selectOneMenu>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-						>
-						<p:commandLink
-							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
-							process="@this">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
+		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
+			<h:outputText value="* All Attandence required for Briefing">
+			</h:outputText>
+			<p:spacer width="10px;">
+			</p:spacer>
+			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
+				<ac:paginator for="brfsitdtl"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+					<h:outputText value="#{brfsitdtl.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					style="width:25px;">
+					<h:outputText value="#{brfsitdtl.bsvDate}">
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+					</h:outputText>
+				</p:column>
 
-						</p:commandLink>
-					</p:column>
-				</p:dataTable>
+				<p:column headerText="#{lbl['lbl.so.location']}"
+					style="width:100px;">
+					<p:commandLink style="margin-right:20px;;"
+						action="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
+						<h:outputText value="#{brfsitdtl.location}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
+					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					style="width:15px;">
+					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+				</p:column>
 
-			</p:panel>
-		</c:if>
-		<c:if test="#{!bsvAttendanceBackingBean.managedBean.scQtBsv.sameBsv}">
+				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+					style="width:150px;">
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+					style="width:15px;">
+					<p:commandLink
+						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
+						process="@this">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							value="/resources/ep/images/design/register.png" />
+					</p:commandLink>
 
-			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}">
-				<h:outputText value="* All Attandence required for Briefing">
-				</h:outputText>
-				<br></br>
-				<p:dataTable var="brfsitdtl"
-					value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
+				</p:column>
+			</p:dataTable>
 
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{brfsitdtl.briefingDesc}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-						>
-						<h:outputText value="#{brfsitdtl.briefingDate}">
-							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.so.location']}"
-						>
-						<p:commandLink style="margin-right:20px;"
-							action="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
-							oncomplete="popupLoc.show()" update="@(.qtCount)">
-							<h:outputText value="#{brfsitdtl.location}" />
-						</p:commandLink>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}">
-						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-						>
-						<h:outputLabel value="#{brfsitdtl.maxNoAttendance}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}">
-						<p:selectOneMenu value="#{brfsitdtl.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{brfsitdtl.pmStatus.statusId ne 60121}">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
-
-						</p:selectOneMenu>
-						<p:selectOneMenu value="#{brfsitdtl.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{brfsitdtl.pmStatus.statusId eq 60121}" disabled="true">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
-
-						</p:selectOneMenu>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-						>
-						<p:commandLink
-							action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
-							process="@this">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
-						</p:commandLink>
-
-					</p:column>
-				</p:dataTable>
-
-			</p:panel>
-
-			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
-
-				<p:dataTable var="sitevisitDtls"
-					value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}">
-
-
-
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-						<h:outputText value="#{sitevisitDtls.briefingDesc}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-						>
-						<h:outputText value="#{sitevisitDtls.briefingDate}">
-							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.so.location']}"
-						>
-						<p:commandLink style="margin-right:20px;"
-							action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
-							oncomplete="popupLoc.show()" update="@(.qtCount)">
-							<h:outputText value="#{sitevisitDtls.location}" />
-						</p:commandLink>
-
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-						>
-						<h:outputLabel value="#{sitevisitDtls.maxNoAttendance}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}">
-
-						<p:selectOneMenu value="#{sitevisitDtls.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{sitevisitDtls.pmStatus.statusId ne 60121}">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
-
-						</p:selectOneMenu>
-						<p:selectOneMenu value="#{sitevisitDtls.pmStatus.statusId}"
-							style="width: 105px;" rendered="#{sitevisitDtls.pmStatus.statusId eq 60121}" disabled="true">
-							<f:selectItems
-								value="#{bsvAttendanceBackingBean.getStatusDropdownValues('SC','BSV')}" />
-
-						</p:selectOneMenu>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-						>
-						<p:commandLink
-							action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
-							process="@this">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
-						</p:commandLink>
-					</p:column>
-				</p:dataTable>
-
-			</p:panel>
-		</c:if>
-
-		<p:panel header="Remarks">
-			<table style="width: 100%">
-				<tr>
-					<td class="TableFieldLeft" width="24%"><h:outputLabel
-							value="Remark" /></td>
-					<td class="TableFieldRight"><p:dataGrid
-							value="#{bsvAttendanceBackingBean.managedBean.remarks}"
-							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-							
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{bsvAttendanceBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											height="30" width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}"></h:outputText>, <h:outputText
-											value="#{remarkVar.changedDate}">
-											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId eq null}" /> 
-											<h:outputText
-											value="#{remarkVar.remark}" rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid></td>
-				</tr>
-			</table>
 		</p:panel>
 
+		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 
+			<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}">
+				<ac:paginator for="sitevisitDtls"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
+					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					style="width:25px;">
+					<h:outputText value="#{sitevisitDtls.bsvDate}">
+						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.location']}"
+					style="width:100px;">
+					<p:commandLink style="margin-right:20px;"
+						action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
+						<h:outputText value="#{sitevisitDtls.location}" />
+					</p:commandLink>
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
+					<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					style="width:15px;">
+					<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+					style="width:150px;">
+
+					<h:outputText
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+					style="width:15px;">
+					<p:commandLink
+						action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
+						process="@this">
+						<p:graphicImage library="ep/images/design" name="register.png"
+							value="/resources/ep/images/design/register.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+	</c:if>
+
+	<p:panel header="Remarks" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td class="TableFieldLeft" width="24%"><h:outputLabel
+						value="Remark" /></td>
+				<td class="TableFieldRight"><p:dataGrid
+						value="#{bsvDetails.scQtBsv.bsvRemarks}" var="remarkVar"
+						rowIndexVar="remarkIndex" columns="1">
+
+						<table>
+							<tr>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{bsvAttendanceBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+									<h:outputText value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
 	</p:panel>
+
+
+
 </ui:composition>

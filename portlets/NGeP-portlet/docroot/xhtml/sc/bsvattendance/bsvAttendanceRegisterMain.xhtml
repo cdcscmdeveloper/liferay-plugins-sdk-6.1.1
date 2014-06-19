@@ -12,41 +12,43 @@
 	<ui:define name="contentSection">
 
 		<p:panel>
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-				closable="true" severity="error, info" />
+
 
 			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
 				width="100%">
 				<p:column>
-					<div style="float: right;">
-						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save" action="#{bsvAttendanceBackingBean.saveBriefSiteVisit}">
-						</p:commandButton>
-						<p:commandButton value="#{lbl['lbl.submit']}"
-							icon="ui-icon-submit" process="@this">
+					<div style="float: right;">						
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							icon="ui-icon-submit" action="#{bsvAttendanceBackingBean.submitBsvDetails}" process="@this">
 						</p:commandButton>
 					</div>
 				</p:column>
-
+				<p:messages id="messages" showDetail="true" autoUpdate="true"
+					closable="true" severity="error, info" />
 			</h:panelGrid>
 
 			<div align="left" class="header-info">
-				<table>
+				<table style="width: 100%">
 					<tr>
-						<td style="width: 245px"><h:outputLabel
-								value="Quotation/Tender No" /></td>
-						<td><p:inputText
-								value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}"
-								disabled="true" size="25" /></td>
+						<td style="width: 13%"><h:outputLabel
+								value="#{lbl['lbl.sc.qtn.no']}" /></td>
+						<td style="width: 15%" class="header-info-text">
+							#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}</td>
+						<td style="width: 13%"><h:outputLabel
+								value="#{lbl['lbl.sc.ptj']}" /></td>
+						<td style="width: 25%" class="header-info-text">
+							#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgCode}
+							-
+							#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgName}
 
-						<td style="width: 210px"><h:outputLabel value="PTJ Name" /></td>
-						<td><p:inputText
-								value="#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgCode} - #{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgName}"
-								disabled="true" size="25" /></td>
-						<td style="width: 198px"><h:outputLabel value="Status" /></td>
-						<td></td>
+						</td>
+						<td style="width: 13%" class="header-info-text"><h:outputLabel
+								value="#{lbl['lbl.sc.status']}" /></td>
+						<td style="width: 21%"></td>
 					</tr>
 				</table>
 			</div>
+			<p:spacer height="10px"></p:spacer>
 		</p:panel>
 		<ui:include src="bsvattandencedtls.xhtml"></ui:include>
 	</ui:define>

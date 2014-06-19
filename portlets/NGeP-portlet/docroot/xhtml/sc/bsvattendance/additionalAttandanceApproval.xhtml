@@ -4,9 +4,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.qt.bsv.reqstingptj']}">
+	<p:panel header="#{lbl['lbl.qt.bsv.reqstingptj']}" toggleable="true">
 
 		<h:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -38,13 +39,13 @@
 		</h:panelGrid>
 	</p:panel>
 
-	<p:panel header="Briefing Details">
+	<p:panel header="Briefing Details" toggleable="true">
 
 		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
 		<p:dataTable var="brfsitdtl"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
 
-
+			<ac:paginator for="brfsitdtl"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 				<h:outputText value="#{brfsitdtl.briefingDesc}" />
 			</p:column>
@@ -77,18 +78,19 @@
 		</p:dataTable>
 
 	</p:panel>
-	<p:panel header="ADDITIONAL SUPPLIER LIST FOR BRIEFING DETAILS">
+	<p:panel header="ADDITIONAL SUPPLIER LIST FOR BRIEFING DETAILS"
+		toggleable="true">
 		<p:dataTable>
 
 		</p:dataTable>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}">
+	<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
 
 		<p:dataTable var="sitevisitDtls"
 			value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}">
 
-
+			<ac:paginator for="sitevisitDtls"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 				<h:outputText value="#{sitevisitDtls.briefingDesc}" />
@@ -124,13 +126,14 @@
 		</p:dataTable>
 
 	</p:panel>
-	<p:panel header="ADDITIONAL SUPPLIER LIST FOR SITEVISIT">
+	<p:panel header="ADDITIONAL SUPPLIER LIST FOR SITEVISIT"
+		toggleable="true">
 		<p:dataTable>
 
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Remarks">
+	<p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td class="TableFieldLeft" width="24%"><h:outputLabel

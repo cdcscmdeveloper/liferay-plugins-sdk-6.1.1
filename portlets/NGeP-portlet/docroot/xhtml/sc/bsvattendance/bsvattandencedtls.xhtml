@@ -10,6 +10,7 @@
 		<ui:include src="bsvLocationPopUp.xhtml"></ui:include>
 		<c:if
 			test="#{!bsvAttendanceBackingBean.managedBean.scQt.zonal}">
+			<ui:param name="bsvDetails" value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="bsvdtls.xhtml"></ui:include>
 
 		</c:if>

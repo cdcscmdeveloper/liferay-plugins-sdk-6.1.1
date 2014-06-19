@@ -6,11 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:tabView var="zones" dynamic="true" cache="true" orientation="left"
-		value="#{bsvAttendanceBackingBean.managedBean.zones}">
-		<p:ajax event="tabChange" listener="#{bsvAttendanceBackingBean.zoneTabChange}" />
-		<p:tab title="#{zones.zoneName}">
-      <ui:include src="bsvdtls.xhtml"></ui:include>
+	<p:tabView var="zoneBean" dynamic="true" cache="true" orientation="left"
+		value="#{bsvAttendanceBackingBean.managedBean.zoneBean}">
+		<p:ajax event="tabChange"
+			listener="#{bsvAttendanceBackingBean.zoneTabChange}" />
+		<p:tab title="#{zoneBean.tplSpecZoneDtl.zoneName}">
+		<ui:param name="bsvDetails" value="#{zoneBean}"></ui:param>
+			<ui:include src="bsvdtls.xhtml"></ui:include>
 		</p:tab>
 
 
