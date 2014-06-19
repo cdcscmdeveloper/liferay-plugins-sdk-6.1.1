@@ -61,7 +61,7 @@
 			</p:column>
 		</p:dataTable>
 		<p:dialog id="dlgItemDateValidation" widgetVar="dlgItemDateValidation" header="Error List" styleClass="screen-title"  
-            resizable="false" modal="true" width="325" height="90">  
+            resizable="false" modal="true" width="350" height="90">  
              <h:panelGrid columns="3">
                 <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
@@ -69,7 +69,7 @@
                 <p:inputTextarea value="Please enter correct effective and expiry date?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
             </h:panelGrid>
             <div class="ppRightBtn">
-		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
+		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgItemDateValidation.hide();" type="button" />
 		   </div>
          </p:dialog>    	
 	</p:panel>

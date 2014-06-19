@@ -16,16 +16,14 @@
 			</p:inputText>
 			 <p:outputLabel id="receiverName" value="Receiver Name" />
 		  <p:inputText for="receiverName" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" 
-		  validator="#{webappBean.checkInputField}"	maxlength="50" style="width:170px;">
-		  <f:validateLength maximum="50"/> 
+		  maxlength="50" style="width:170px;">
 		  </p:inputText>
 		  <p:outputLabel id="dDate" value="Delivery Date" /> 
           <p:calendar for="dDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"
              id="calNoticeDate" size="24" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"/>
           <p:outputLabel id="icNo" value="Receiver IC No."/>
 		  <p:inputText for="icNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" 
-			validator="#{webappBean.validateNumbers}" maxlength="15" style="width:170px;">
-			<f:validateLength maximum="15"/> 
+			maxlength="15" style="width:170px;">
 			</p:inputText>
           <p:outputLabel id="rDate" value="Received Date" /> 
           <p:calendar for="rDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
