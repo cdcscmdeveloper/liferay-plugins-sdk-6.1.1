@@ -101,12 +101,14 @@
 
 				<p:column headerText="Effective Date" style="width:15%">
 					<h:outputText value="#{circular.startDate}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Expiry Date" style="width:15%">
 					<h:outputText value="#{circular.endDate}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Selection" selectionMode="single"

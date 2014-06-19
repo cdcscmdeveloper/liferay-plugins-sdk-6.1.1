@@ -33,6 +33,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -61,6 +62,8 @@ import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -93,6 +96,9 @@ import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -399,25 +405,21 @@ public class SpecificationBackingBean extends
 			QuationTenderReqDTO reqDTO = prepareSpecReq();
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderResDTO resDTo =null;
+			QuationTenderResDTO resDTo = null;
 			List<FacesMessage> messages = new ArrayList<FacesMessage>();
-	        for (Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages(); iter.hasNext();)
-	        {
-	            messages.add(iter.next());
-	            //iter.remove();
-	        }
-	        if (messages.size() == 0)
-	        {
-	        	resDTo =
-	       			 detailSO.saveQTDtl(reqDTO);
-	        }
-			
-			
+			for (Iterator<FacesMessage> iter = FacesContext
+					.getCurrentInstance().getMessages(); iter.hasNext();) {
+				messages.add(iter.next());
+				// iter.remove();
+			}
+			if (messages.size() == 0) {
+				resDTo = detailSO.saveQTDtl(reqDTO);
+			}
 
 			if (resDTo.isSuccessful()) {
 				ScQt scQt = resDTo.getQtDetail();
 				this.getManagedBean().setScQt(scQt);
-				
+
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -427,9 +429,7 @@ public class SpecificationBackingBean extends
 												scQt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				
-				
-			
+
 			}
 
 		} finally {
@@ -486,7 +486,7 @@ public class SpecificationBackingBean extends
 						.getPanelItemCategory())
 				|| "General".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())) {
-			System.out.println("==enter pcr");
+			
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
@@ -494,7 +494,7 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getScQt().isPanel()
 				&& "CCR".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())) {
-			System.out.println("==enter CCR");
+		
 			return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
 		return null;
@@ -2083,10 +2083,10 @@ public class SpecificationBackingBean extends
 	}
 
 	public void showZoneLocationPopup() {
-		if(null==this.getManagedBean().getSupplierCriteria()
-				.getLocationLevel()){
-			this.getManagedBean()
-					.getSupplierCriteria().setLocationLevel(new PmParameter());
+		if (null == this.getManagedBean().getSupplierCriteria()
+				.getLocationLevel()) {
+			this.getManagedBean().getSupplierCriteria()
+					.setLocationLevel(new PmParameter());
 		}
 
 		Long locationLevel = this.getManagedBean().getSupplierCriteria()
@@ -2147,15 +2147,15 @@ public class SpecificationBackingBean extends
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (!treeNode.getParent().isSelected()) {
-				
+
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
 					locationDTOs.addAll(locationDTO);
 				}
-				
-				else{
-					
+
+				else {
+
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
@@ -2206,8 +2206,8 @@ public class SpecificationBackingBean extends
 
 					allNodes.addAll(locationDTO);
 				}
-				
-				else{
+
+				else {
 					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
 
 					allNodes.addAll(locationDTO);
@@ -2352,6 +2352,8 @@ public class SpecificationBackingBean extends
 		if (null != parameter && null == parameter.getParameterId()) {
 			scQt.setPmProcurementCategory(null);
 		}
+		if(!scQt.isPanel()){
+			System.out.println("====panel no save===");
 		if (!scQt.isZonal()) {
 			scQt.setZoneLocationLevel(null);
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
@@ -2363,7 +2365,7 @@ public class SpecificationBackingBean extends
 			}
 			ScQtSupplierCriteria qtSupplierCriteria = this.getManagedBean()
 					.getSupplierCriteria();
-			
+
 			qtSupplierCriteria.setQtZoneCriterias(null);
 			if (null != qtSupplierCriteria
 					&& null != qtSupplierCriteria.getLocationLevel()
@@ -2432,21 +2434,21 @@ public class SpecificationBackingBean extends
 
 		}
 
-		
-		if(null==scQt.getScQtSupplierCriteria()){
-		this.getManagedBean().getSupplierCriteria()
-				.setScQt(this.getManagedBean().getScQt());
-		setUserDetails(this.getManagedBean().getSupplierCriteria());
-		scQt.setScQtSupplierCriteria(this.getManagedBean()
-				.getSupplierCriteria());
+		if (null == scQt.getScQtSupplierCriteria()) {
+			this.getManagedBean().getSupplierCriteria()
+					.setScQt(this.getManagedBean().getScQt());
+			setUserDetails(this.getManagedBean().getSupplierCriteria());
+			scQt.setScQtSupplierCriteria(this.getManagedBean()
+					.getSupplierCriteria());
 		}
-		
+
 		List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
 		if ("O".equalsIgnoreCase(scQt.getQtType())) {
 			List<ScQtCategory> openList = this.getManagedBean()
 					.getSuppCriteriaopenList();
 
 			if (openList != null && !openList.isEmpty()) {
+				
 				for (ScQtCategory scQtCategory : openList) {
 
 					scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
@@ -2458,8 +2460,9 @@ public class SpecificationBackingBean extends
 					categoryList.add(scQtCategory);
 
 				}
-				if(null==scQt.getScQtCategorys()){
-				scQt.setScQtCategorys(categoryList);
+				if (null == scQt.getScQtCategorys() || scQt.getScQtCategorys().isEmpty()) {
+					
+					scQt.setScQtCategorys(categoryList);
 				}
 			} else {
 
@@ -2491,8 +2494,8 @@ public class SpecificationBackingBean extends
 					categoryList.add(scQtCategory);
 
 				}
-				if(null==scQt.getScQtCategorys()){
-				scQt.setScQtCategorys(categoryList);
+				if (null == scQt.getScQtCategorys() || scQt.getScQtCategorys().isEmpty()) {
+					scQt.setScQtCategorys(categoryList);
 				}
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
@@ -2505,6 +2508,41 @@ public class SpecificationBackingBean extends
 										new FacesScopes().getUserLocale())));
 			}
 
+		}
+		}
+		else{
+			System.out.println("====panel yes save===");
+			if (null == scQt.getScQtSupplierCriteria()) {
+				
+				if (null!=this.getManagedBean().getCtPanelZones() && !this.getManagedBean().getCtPanelZones().isEmpty()) {
+					ScQtZoneCriteria zoneCriteria = this.getManagedBean()
+							.getSupplierCriteria().getQtZoneCriterias();
+					zoneCriteria.setScQtSupplierCriteria(this.getManagedBean()
+							.getSupplierCriteria());
+					setUserDetails(zoneCriteria);
+					List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
+					for (CtPanelZone panelzone : this.getManagedBean().getCtPanelZones()) {
+						TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
+						setUserDetails(zoneDtl);
+						
+					}
+					zoneCriteria.setTplSpecZoneDtls(zoneLocal);
+
+					this.getManagedBean().getSupplierCriteria()
+							.setQtZoneCriterias(zoneCriteria);
+
+				}
+				this.getManagedBean().getSupplierCriteria().setCtPanelItem(this.getManagedBean().getCtPanelItem());
+				this.getManagedBean().getSupplierCriteria()
+				.setScQt(this.getManagedBean().getScQt());
+		       setUserDetails(this.getManagedBean().getSupplierCriteria());
+		       scQt.setScQtSupplierCriteria(this.getManagedBean()
+				.getSupplierCriteria());
+		       scQt.setZoneLocationLevel(null);
+				this.getManagedBean().getSupplierCriteria().setLocationLevel(null);
+				scQt.setZonal(true);
+			}
+			
 		}
 
 		List<ScQtRemark> remarksList = this.getManagedBean()
@@ -2581,18 +2619,22 @@ public class SpecificationBackingBean extends
 							.setQtZoneCriterias(new ScQtZoneCriteria());
 					this.getManagedBean().setSupplierCriteria(
 							qtSupplierCriteria);
-					
-					if(null==this.getManagedBean().getSupplierCriteria().getLocationLevel()){
-						this.getManagedBean().getSupplierCriteria().setLocationLevel(new PmParameter());
+
+					if (null == this.getManagedBean().getSupplierCriteria()
+							.getLocationLevel()) {
+						this.getManagedBean().getSupplierCriteria()
+								.setLocationLevel(new PmParameter());
 					}
-					
+
 				} else {
 					this.getManagedBean().setSupplierCriteria(
 							tenderResDTO.getQtSupplierCriteria());
-					if(null==this.getManagedBean().getSupplierCriteria().getLocationLevel()){
-						this.getManagedBean().getSupplierCriteria().setLocationLevel(new PmParameter());
+					if (null == this.getManagedBean().getSupplierCriteria()
+							.getLocationLevel()) {
+						this.getManagedBean().getSupplierCriteria()
+								.setLocationLevel(new PmParameter());
 					}
-	
+
 				}
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					if (tenderResDTO.getQtDetail().isZonal()) {
@@ -2741,14 +2783,13 @@ public class SpecificationBackingBean extends
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-         if(this.getManagedBean().getScQt().isZonal()){
-		this.getManagedBean().getScQt().getZoneLocationLevel()
-				.setParameterId(location);
-         }
-         else{
-        	 this.getManagedBean().getSupplierCriteria().getLocationLevel()
-				.setParameterId(location);
-         }
+		if (this.getManagedBean().getScQt().isZonal()) {
+			this.getManagedBean().getScQt().getZoneLocationLevel()
+					.setParameterId(location);
+		} else {
+			this.getManagedBean().getSupplierCriteria().getLocationLevel()
+					.setParameterId(location);
+		}
 	}
 
 	public void selectSupplierLocation(AjaxBehaviorEvent event) {
@@ -6667,7 +6708,7 @@ public class SpecificationBackingBean extends
 												qt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				
+
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 			}
@@ -6758,88 +6799,117 @@ public class SpecificationBackingBean extends
 	 */
 
 	public void retriveZonesByCircularNo() {
-		String CirCularNo = this.getManagedBean().getCirCularNo();
-		CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
-		reqDTO.setCircularNo(CirCularNo);
-		ICircularDetailSO circularDetailSO = (ICircularDetailSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT,
-						ICircularDetailSO.class);
-		/*
-		 * CircularDetailResDTO resDTO = circularDetailSO
-		 * .retrieveZonesByCircularNo(reqDTO);
-		 * 
-		 * if (resDTO.getCircularZones() != null) { List<TreeNode> localList =
-		 * new ArrayList<TreeNode>(); TreeNode rootLocationTree = new
-		 * DefaultTreeNode("Root", null); //
-		 * System.out.println("=======zone size==="
-		 * +resDTO.getCircularZones().size()); //
-		 * this.getManagedBean().setCtZoneList(resDTO.getCircularZones()); for
-		 * (CtCircularZone zone : resDTO.getCircularZones()) {
-		 * System.out.println(zone.getName()); TreeNode zoneNode = new
-		 * DefaultTreeNode("zone", zone, rootLocationTree); TreeNode stateNode =
-		 * null; if (zone.getCtCircularZoneDtls() != null) { for
-		 * (CtCircularZoneDtl zoneDtl : zone .getCtCircularZoneDtls()) {
-		 * stateNode = new DefaultTreeNode("state", zoneDtl.getState(),
-		 * zoneNode); //
-		 * System.out.println(zoneDtl.getState().getStateName());pa //
-		 * System.out.println(zoneDtl.getDistrict().getDistrictName()); } }
-		 * localList.add(rootLocationTree); }
-		 * this.getManagedBean().setCtZoneTrees(rootLocationTree); }
-		 */
+		try {
+			this.getManagedBean().getSelectpanelItem();
+			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+			reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
+			IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT,
+							IPanelSupplierSO.class);
+
+			PanelSupplierResDTO resDTO = panelSupplierSO
+					.retrievePanelZonesByPanelItem(reqDTO);
+			
+				
+				if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
+					
+					for (CtPanelZone zone : resDTO.getCtPanelZones()) {
+						
+						getManagedBean().setCtZoneTrees(
+								LocationSingleton.getInstance()
+										.constuctPanelTreeNode(zone, zone.getPanelZoneDtls()));
+					}
+					
+				}
+			
+			
+		} finally{
+			
+		}
+		
 
 	}
 
 	public void updateContractZoneLocation() {
+		try {
+			if (getManagedBean().getCtZoneTreeSelectedNodes() != null) {
+				TreeNode treelocal=null;
+				for (TreeNode treeNode : getManagedBean()
+						.getCtZoneTreeSelectedNodes()) {
+					
+				 treelocal = consturctTreeNode(getManagedBean()
+							.getCtZoneTreeSelectedNodes());
 
-		if (getManagedBean().getCtZoneTreeSelectedNodes() != null) {
-			for (TreeNode treeNode : getManagedBean()
-					.getCtZoneTreeSelectedNodes()) {
-				List<TreeNode> localList = new ArrayList<TreeNode>();
-				/*
-				 * List<TreeNode> supplierList=
-				 * this.getManagedBean().getCtZoneSuppliers();
-				 * if(supplierList==null){ supplierList=new
-				 * ArrayList<TreeNode>(); }
-				 */
-
-				TreeNode treelocal = consturctTreeNode(getManagedBean()
-						.getCtZoneTreeSelectedNodes());
-
-				localList.add(treelocal);
-				this.getManagedBean().setCtZoneSuppliers(treelocal);
+					
+					
+				}
+				this.getManagedBean().getCtZoneSuppliers().add(treelocal);
 			}
+		}finally{
+			
 		}
 	}
 
 	public TreeNode consturctTreeNode(TreeNode[] selectedNode) {
 		Set<TreeNode> parentNodes = new HashSet<>();
+		List<CtPanelZone> zone=this.getManagedBean().getCtPanelZones();
+		CtPanelZone panelZone=null;
+		if(null==zone){
+			zone=new ArrayList<CtPanelZone>();
+		}
 		for (TreeNode treeNode : selectedNode) {
-
+		
+			
+			
 			if ("zone"
 					.equalsIgnoreCase((treeNode.getParent() != null) ? treeNode
 							.getParent().getType() : null)) {
+
 				parentNodes.add(treeNode.getParent());
+			
 
 			}
+			
+		
 		}
+		
+	
 
 		TreeNode root = new DefaultTreeNode("Root", null);
 		for (TreeNode node : parentNodes) {
 			TreeNode zoneNode = new DefaultTreeNode(node.getType(),
 					node.getData(), root);
+			
 			System.out.println(node.getChildCount());
 			if (node.getChildCount() > 0) {
 				for (TreeNode stateNode : node.getChildren()) {
 
 					if (stateNode.isSelected()) {
-						new DefaultTreeNode(stateNode.getType(),
+						TreeNode state=new DefaultTreeNode(stateNode.getType(),
 								stateNode.getData(), zoneNode);
+						
+						for(TreeNode districtNode:stateNode.getChildren()){
+							if (districtNode.isSelected()) {
+								new DefaultTreeNode(districtNode.getType(),
+										districtNode.getData(), state);
+								
+						}
 					}
+
 				}
 
 			}
-
+				
+				
+			}
+			
+			 panelZone=(CtPanelZone)node.getData();
+			 if(!zone.contains(panelZone)){
+			 zone.add(panelZone);
+			 }
+			this.getManagedBean().setCtPanelZones(zone);
+				
 		}
 
 		return root;
@@ -6847,23 +6917,30 @@ public class SpecificationBackingBean extends
 	}
 
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
-		/*
-		 * //CtCircularZone circularZone = (CtCircularZone) event.getTreeNode()
-		 * .getData(); PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-		 * System.out.println("====ctzone id===" +
-		 * circularZone.getCircularZoneId()); reqDTO.setCircularZoneId(1L);
-		 * IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO)
-		 * BusinessDelegate .getInstance().getServiceObject(
-		 * ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
-		 * PanelSupplierResDTO resDTO = panelSupplierSO
-		 * .retrieveSupplierByZone(reqDTO); if (resDTO.getPanelSuppliers() !=
-		 * null) { System.out.println(resDTO.getPanelSuppliers());
-		 * this.getManagedBean().setTotalSuppliers(
-		 * resDTO.getPanelSuppliers().size());
-		 * this.getManagedBean().setCtZoneSupplierList(
-		 * resDTO.getPanelSuppliers()); }
-		 */
+		
+		 CtPanelZone ctPanelzone= (CtPanelZone) event.getTreeNode()
+		 .getData(); 
+		
+		 PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+		 reqDTO.setCircularZoneId(ctPanelzone.getPanelZoneId());
+		  IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO)
+		  BusinessDelegate .getInstance().getServiceObject(
+		  ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
+		  PanelSupplierResDTO resDTO = panelSupplierSO
+		  .retrieveSupplierByZone(reqDTO); 
+		  if ( null!=resDTO.getPanelSuppliers() && !resDTO.getPanelSuppliers().isEmpty()) { 
+		  this.getManagedBean().setTotalSuppliers(
+		  resDTO.getPanelSuppliers().size());
+		  this.getManagedBean().setCtZoneSupplierList(
+		  resDTO.getPanelSuppliers()); }
+		
 
+	}
+	
+	
+	public void retriveSupplierDtls(CtPanelSupplier panelSupplier){
+		
+		this.getManagedBean().setCtpanelSupplier(panelSupplier);
 	}
 
 	public void deleteS1Tech() {
@@ -7325,6 +7402,7 @@ public class SpecificationBackingBean extends
 					.getPanelItemsByCircularVerId(reqDTO);
 			for (CtPanelItem panelItem : resDTO.getPanelItemList()) {
 				System.out.println(panelItem.getItemName());
+				this.getManagedBean().setCtPanelItem(panelItem);
 			}
 			this.getManagedBean().setCircularExpDate(
 					(circular.getEndDate().toString()));
@@ -7354,7 +7432,10 @@ public class SpecificationBackingBean extends
 		}
 		this.getManagedBean().setPanelItemCategory(
 				getParameterDesc(ctPanelItem.getItemCategoryId()));
-		panelList.add(ctPanelItem);
+		if (null != panelList && panelList.isEmpty()) {
+
+			panelList.add(ctPanelItem);
+		}
 		this.getManagedBean().setSelectpanelItem(panelList);
 
 	}

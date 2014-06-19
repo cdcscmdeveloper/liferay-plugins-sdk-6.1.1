@@ -7,19 +7,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel>
-		<h:panelGrid columns="2" style="width:50%;"
-		
-			styleClass="noBorders tr,noBorders td">
+	<p:panel header="Request Item Via Central Contract">
+		<table>
+           <tr><td>
+			<h:outputLabel value="Circular No" /></td>
+			<td><p:inputText value="#{specificationBackingBean.managedBean.cirCularNo}" readonly="true" disabled="true"></p:inputText></td></tr>
+			<tr><td>
+				<h:outputLabel value="Circular Name"  /></td>
+		<td>	<p:inputText readonly="true" disabled="true" value="#{specificationBackingBean.managedBean.circularName}"></p:inputText></td></tr>
+		<tr><td valign="top">
+				<h:outputLabel value="Request Proceed For Central Contract " /></td>
+			<td><p:inputTextarea rows="2" cols="100"></p:inputTextarea></td></tr>
 
-			<h:outputLabel value="Circular No" />
-			<p:inputText></p:inputText>
-				<h:outputLabel value="Circular Name" />
-			<p:inputText></p:inputText>
-				<h:outputLabel value="Circular No" />
-			<p:inputTextarea></p:inputTextarea>
-
-		</h:panelGrid>
+		</table>
 
 	</p:panel>
 	

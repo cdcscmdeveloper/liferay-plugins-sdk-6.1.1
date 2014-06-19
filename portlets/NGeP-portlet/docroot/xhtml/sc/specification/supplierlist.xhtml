@@ -7,81 +7,54 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="totalSupplier">
-		
-			<c:if
-				test="#{
-					 specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypePanel}">
-				<p:treeTable id="suppliersTbl" var="supplierNode"
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppliersNode}">
 
-					<p:column headerText="#{lbl['lbl.so.suppliername']}">
-						<h:outputText value="#{supplierNode.object}"
-							rendered="#{supplierNode.type == 'zone'}" />
-						<h:outputText value="#{supplierNode.object.supplierName}"
-							rendered="#{supplierNode.type == 'supplier'}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofno']}">
-						<h:outputText
-							value="#{supplierNode.object.smMofAccounts[0].mofNo}"
-							rendered="#{supplierNode.type == 'supplier' and false}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofexp']}">
-						<h:outputText
-							value="#{supplierNode.object.smMofAccounts[0].expDate}"
-							rendered="#{supplierNode.type == 'supplier' and false}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.status']}">
-						<h:outputText value="Active"
-							rendered="#{supplierNode.type == 'supplier'}" />
-					</p:column>
-				</p:treeTable>
-			</c:if>
-			<c:if
-				test="#{
-					specificationBackingBean.managedBean.scQt.qtType != PmCodeConst.quotationTenderTypePanel}">
+		<p:panel>
 
 
 
-				<p:dataTable id="suppliersTbl" var="qtSupplier"
-					value="#{specificationBackingBean.managedBean.ctZoneSupplierList}"
-					rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
 
-					<ac:paginator for="suppliersTbl" />
+			<p:dataTable id="suppliersTbl" var="qtSupplier"
+				value="#{specificationBackingBean.managedBean.ctZoneSupplierList}"
+				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
 
-					<!-- 	<p:column selectionMode="multiple" style="width:5%" /> -->
+				<ac:paginator for="suppliersTbl" />
 
-					<p:column headerText="#{lbl['lbl.so.suppliername']}">
+				<!-- 	<p:column selectionMode="multiple" style="width:5%" /> -->
+
+				<p:column headerText="#{lbl['lbl.so.suppliername']}">
+					<p:commandLink oncomplete="suppDetails.show();"
+						actionListener="#{specificationBackingBean.retriveSupplierDtls(qtSupplier)}"
+						update=":form:paneltabView:popupSuppDtl">
 						<h:outputText value="#{qtSupplier.supplier.companyName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofno']}">
-						<h:outputText
-							value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofexp']}">
-						<h:outputText
-							value="#{qtSupplier.supplier.smMofAccounts[0].expDate}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.status']}">
-						<h:outputText value="Active" />
-					</p:column>
-				</p:dataTable>
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.so.mofno']}">
+					<h:outputText value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.so.mofexp']}">
+					<h:outputText
+						value="#{qtSupplier.supplier.smMofAccounts[0].expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.so.status']}">
+					<h:outputText
+						value="#{specificationBackingBean.getStatusDescById(qtSupplier.supplier.pmStatus.statusId)}" />
+				</p:column>
+			</p:dataTable>
 
-			</c:if>
+
 
 			<br />
-        <h:outputText value="#{lbl['lbl.so.totalsup']}" />
-		<p:spacer width="5" />
-		<p:inputText
-			value="#{specificationBackingBean.managedBean.totalSuppliers}"
-			disabled="true" />
-		<p:panel id="supplierlist" header="Supplier List" toggleable="true">
-
-			<div align="right">
-				<p:commandButton value="Search" oncomplete="ctZone.show();"
-					update="ctZonedetails"
-					actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"></p:commandButton>
-			</div>
+			<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+			<p:spacer width="5" />
+			<p:inputText
+				value="#{specificationBackingBean.managedBean.totalSuppliers}"
+				disabled="true" />
 		</p:panel>
 	</h:panelGroup>
 	<ui:include src="ctZone.xhtml"></ui:include>
+
+	<ui:include src="supplierDetailsPopup.xhtml"></ui:include>
 </ui:composition>

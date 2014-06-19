@@ -14,7 +14,7 @@
 				<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30"
+				<p:inputText size="50"
 					value="#{specificationBackingBean.managedBean.cirCularNo}"
 					disabled="true" />
 				<p:spacer width="5" />
@@ -29,7 +29,7 @@
 			</h:column>
 
 			<h:column>
-				<p:inputText size="30"
+				<p:inputText size="100"
 					value="#{specificationBackingBean.managedBean.circularName}"
 					disabled="true" />
 			</h:column>
@@ -40,8 +40,9 @@
 			<h:column>
 				<p:inputText size="30"
 					value="#{specificationBackingBean.managedBean.circularExpDate}"
-					disabled="true">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+					readonly="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 			</h:column>
 
@@ -50,8 +51,7 @@
 	</p:panel>
 
 
-	<p:panel header="Circular Item Details"
-		toggleable="true">
+	<p:panel header="Circular Item Details" toggleable="true">
 
 
 		<p:dataTable id="panelDataItemList" var="panelItem"
