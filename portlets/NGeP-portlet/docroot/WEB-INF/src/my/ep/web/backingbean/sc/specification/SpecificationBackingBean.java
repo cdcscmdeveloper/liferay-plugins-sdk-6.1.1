@@ -815,12 +815,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
-				/*
-				 * if (this.getManagedBean().getSupplierCriteria()
-				 * .getLocationLevel() == null) {
-				 * this.getManagedBean().getSupplierCriteria()
-				 * .setLocationLevel(new PmParameter()); }
-				 */
+				
 
 				if (this.getManagedBean().getZoneTrees() != null
 						&& this.getManagedBean().getZoneTrees().size() == 0) {
@@ -2363,7 +2358,7 @@ public class SpecificationBackingBean extends
 															.getUserLocale())));
 		}
 		PmParameter parameter = scQt.getPmProcurementCategory();
-		if (null != parameter && null == parameter.getParameterId()) {
+		if (null == parameter || null == parameter.getParameterId()) {
 			scQt.setPmProcurementCategory(null);
 		}
 		if (!scQt.isPanel()) {
@@ -2560,11 +2555,22 @@ public class SpecificationBackingBean extends
 		} else {
 			System.out.println("====panel yes save===");
 			if (null == scQt.getScQtSupplierCriteria()) {
-
+				
+				
+				if(null==this.getManagedBean().getSupplierCriteria()){
+					this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+				}
+				
+				if(null==this.getManagedBean().getSupplierCriteria().getQtZoneCriterias()){
+					this.getManagedBean().getSupplierCriteria().setQtZoneCriterias(new ScQtZoneCriteria());
+				}
+					
 				if (null != this.getManagedBean().getCtPanelZones()
 						&& !this.getManagedBean().getCtPanelZones().isEmpty()) {
+					
 					ScQtZoneCriteria zoneCriteria = this.getManagedBean()
 							.getSupplierCriteria().getQtZoneCriterias();
+					
 					zoneCriteria.setScQtSupplierCriteria(this.getManagedBean()
 							.getSupplierCriteria());
 					setUserDetails(zoneCriteria);
@@ -2573,7 +2579,9 @@ public class SpecificationBackingBean extends
 							.getCtPanelZones()) {
 						TplSpecZoneDtl zoneDtl = new TplSpecZoneDtl();
 						setUserDetails(zoneDtl);
-
+						zoneDtl.setTplSpecZone(zoneCriteria);
+						zoneDtl.setPanelZone(panelzone);
+						zoneLocal.add(zoneDtl);    
 					}
 					zoneCriteria.setTplSpecZoneDtls(zoneLocal);
 
@@ -2588,6 +2596,7 @@ public class SpecificationBackingBean extends
 				setUserDetails(this.getManagedBean().getSupplierCriteria());
 				scQt.setScQtSupplierCriteria(this.getManagedBean()
 						.getSupplierCriteria());
+				scQt.setFulfilmentType(null);
 				scQt.setZoneLocationLevel(null);
 				this.getManagedBean().getSupplierCriteria()
 						.setLocationLevel(null);
@@ -2648,23 +2657,9 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-				/*
-				 * if(
-				 * this.getManagedBean().getScQt().getZoneLocationLevel()==null
-				 * ){ this.getManagedBean().getScQt() .setZoneLocationLevel(new
-				 * PmParameter()); } if(
-				 * this.getManagedBean().getScQt().getPmProcurementCategory
-				 * ()==null){ this.getManagedBean().getScQt()
-				 * .setPmProcurementCategory(new PmParameter()); }
-				 * 
-				 * if(
-				 * this.getManagedBean().getScQt().getFulfilmentType()==null){
-				 * this.getManagedBean().getScQt() .setFulfilmentType(new
-				 * PmParameter()); }
-				 */
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
-
+                  System.out.println("===supplier criteria null object==");
 					ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
 					qtSupplierCriteria
 							.setQtZoneCriterias(new ScQtZoneCriteria());
