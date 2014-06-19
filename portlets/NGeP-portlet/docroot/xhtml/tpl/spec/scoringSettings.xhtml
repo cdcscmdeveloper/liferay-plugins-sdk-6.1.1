@@ -119,7 +119,7 @@
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"/>
 				</f:facet>
 				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:96%;" styleClass="ppNumericAlign" 
-					required="true"
+					required="true" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
