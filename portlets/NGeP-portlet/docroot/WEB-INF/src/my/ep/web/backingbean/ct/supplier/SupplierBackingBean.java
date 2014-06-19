@@ -561,7 +561,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	   this.getManagedBean().setAccountNo(null);
    }
    
-	public void setActionListener() {
+	public void changeLoaActionListener() {
 		IContractSO contractSO = null;
 		try {
 			if (this.getManagedBean().getLoaId() != null) {

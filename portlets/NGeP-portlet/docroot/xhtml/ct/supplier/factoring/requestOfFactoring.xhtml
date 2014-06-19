@@ -16,7 +16,7 @@
 		   <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="false" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" process="@form" 
@@ -44,7 +44,7 @@
 							<h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
 					</td>
 					<td style="width: 15%" class="header-info-text">
-						#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}
+						#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}
 					</td>		
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
@@ -66,7 +66,7 @@
 			     <p:selectOneMenu id="menuLoaId" style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
 			         required="true" label="LOA No">
 			         <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
-			         <p:ajax event="change" process="@this" update="loaId,headerDetails" listener="#{supplierBackingBean.setActionListener()}"/> 
+			         <p:ajax event="change" process="@this" update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
 		          </p:selectOneMenu>
 		         <p:message for="menuLoaId" display="icon"/>
 		       </h:panelGrid>
@@ -112,7 +112,7 @@
 				 <p:outputLabel value="Authorization Ref No." />
 		  </h:panelGrid>
 		  <h:panelGrid columns="2">
-			 <p:inputText id="authRefNo" value="#{supplierBackingBean.managedBean.factoring.authRefNo}" 
+			 <p:inputText id="authRefNo" value="#{supplierBackingBean.managedBean.factoring.authRefNo}" maxlength="50"
 				style="width:200px;" label="Authorization Ref No." required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
 				<p:message for="authRefNo" display="icon" />				
 		  </h:panelGrid>
@@ -128,7 +128,7 @@
          		</h:panelGrid>
          		<h:panelGrid columns="2">
          			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
-		    			value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" 
+		    			value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" label="Start Date"
 		    			disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
 					 <p:message for="effdateCal" display="icon" />				
 				</h:panelGrid>		    			
@@ -141,7 +141,7 @@
 				</h:panelGrid>
 				<h:panelGrid columns="2">
 		 			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
-		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" 
+		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" label="End Date"
 		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
 					 <p:message for="expdateCal" display="icon" />				
 				</h:panelGrid>		  		    			 

@@ -18,7 +18,7 @@
 	    	<table style="width: 100%;">
 	    		<tr>
 	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" 
-	    			    oncomplete="window.history.back();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
+	    			    oncomplete="window.history.back();" rendered="false" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
 							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button"
