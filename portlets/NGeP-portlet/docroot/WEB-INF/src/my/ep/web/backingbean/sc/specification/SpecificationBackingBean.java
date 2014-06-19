@@ -479,7 +479,7 @@ public class SpecificationBackingBean extends
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			return "specificationCreation.xhtml?faces-redirect=true";
 		}
-		if (this.getManagedBean().getScQt().isPanel()
+		else	if (this.getManagedBean().getScQt().isPanel()
 				&& "PCR".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())
 				&& "Specific".equalsIgnoreCase(this.getManagedBean()
@@ -491,9 +491,24 @@ public class SpecificationBackingBean extends
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
 
-		if (this.getManagedBean().getScQt().isPanel()
+		else	if (this.getManagedBean().getScQt().isPanel()
 				&& "CCR".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())) {
+			
+				
+				FacesScopes facesScopes = new FacesScopes();
+				ScQtRemark remark=new ScQtRemark();
+				remark.setScQt(this.getManagedBean().getScQt());
+				remark = new ScQtRemark();
+                setUserDetails(remark);
+				remark.setCreatedUser(facesScopes.getUserSessionBean());
+				PmStatus status = new PmStatus();
+				status.setStatusId(62651L);
+				remark.setPmStatus(status);
+				this.getManagedBean().setContractremark(remark);
+				
+				
+			
 		
 			return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
@@ -7405,7 +7420,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCtPanelItem(panelItem);
 			}
 			this.getManagedBean().setCircularExpDate(
-					(circular.getEndDate().toString()));
+					circular.getEndDate());
 			this.getManagedBean().setCirCularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
 			this.getManagedBean().setCircularType(
