@@ -17,11 +17,11 @@
 			<p:outputLabel value="*" styleClass="mandatory" />
 		</td>
 		<td width="36%">
-			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterId}" 
+			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedScoreTypeId}" 
 				required="true"
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
-				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion)}" update="scorePG" />
+				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean)}" update="scorePG" />
 			</h:selectOneMenu>
 		</td>
 	</tr>
@@ -71,6 +71,8 @@
 		toggleable="true"
 		rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}">
 		
+		<ui:param name="isCompliance" value="#{templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+		
 		<p:dataTable id="scoringTbl" widgetVar="scoringWidget"
 			var="tplSpecScoring"
 			rowIndexVar="rowIndex"
@@ -81,7 +83,7 @@
 			<ac:paginator for="scoringTbl" />
 			
 			<p:column selectionMode="multiple" style="width:20px;" />
-			<p:column>
+			<p:column rendered="#{!isCompliance}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"/>
@@ -93,7 +95,7 @@
 				</p:inputText>
 				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
 			</p:column>
-			<p:column>
+			<p:column rendered="#{!isCompliance}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"/>
@@ -104,6 +106,12 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
 				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
+			</p:column>
+			<p:column rendered="#{isCompliance}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.compliance']}"/>
+				</f:facet>
+				#{tplSpecScoring.compliance ? 'Yes' : 'No'}
 			</p:column>
 			<p:column style="width:100px;">
 				<f:facet name="header">
@@ -124,12 +132,14 @@
 				process="@this, scoringTbl" partialSubmit="true"
 				action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
 				oncomplete="scoringWidget.paginator.endLink.click();"
-				update="scoringTbl" icon="ui-icon-add" />
+				update="scoringTbl" icon="ui-icon-add"
+				rendered="#{!isCompliance}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, scoringTbl" partialSubmit="true"
 				icon="ui-icon-delete"
 				action="#{templateSpecBackingBean.deleteRowAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
-				update="scoringTbl" />
+				update="scoringTbl"
+				rendered="#{!isCompliance}" />
 		</div>
 	</p:panel>
 	</h:panelGroup>

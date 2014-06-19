@@ -14,6 +14,7 @@ public class TemplateSpecBean {
 	private TplSpecMaster specMaster;
 	private String contentType;
 	private SmSupplier supplier;
+	private Long selectedScoreTypeId;
 	private TplSpecQuestion selectedSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	private List<TplSpecTierQty> selectedTierQtyList;
@@ -67,6 +68,20 @@ public class TemplateSpecBean {
 	 */
 	public void setSupplier(SmSupplier supplier) {
 		this.supplier = supplier;
+	}
+
+	/**
+	 * @return the selectedScoreTypeId
+	 */
+	public Long getSelectedScoreTypeId() {
+		return selectedScoreTypeId;
+	}
+
+	/**
+	 * @param selectedScoreTypeId the selectedScoreTypeId to set
+	 */
+	public void setSelectedScoreTypeId(Long selectedScoreTypeId) {
+		this.selectedScoreTypeId = selectedScoreTypeId;
 	}
 
 	/**

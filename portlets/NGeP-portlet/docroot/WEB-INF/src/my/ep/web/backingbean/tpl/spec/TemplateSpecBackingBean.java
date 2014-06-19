@@ -173,7 +173,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		try {
 			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
 
-			TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
 			
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
@@ -268,7 +267,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			TplSpecQuestion newQuestion = new TplSpecQuestion();
 			newQuestion.setQuestionType(questionType);
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
 			reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
@@ -321,7 +322,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	    
 		IUomSO uomSO = null;
 		try {
-			uomSO = (IUomSO)BusinessDelegate.getInstance().getServiceObject("pm",IUomSO.class);
+			uomSO = (IUomSO)BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 			UomResDTO resDTO = uomSO.retrieveUomList();
 			items = new SelectItem[resDTO.getPmUomList().size()+1];
 			items[0] = new SelectItem(null, "- Select One -");
@@ -340,7 +342,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	    
 		IOrgProfileSO orgProfileSO = null;
 		try {
-			orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+			orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
@@ -396,7 +399,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		try {
 			Long parameterId = specQuestion.getClFulfilmentTypeCode().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -412,7 +416,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		try {
 			Long parameterId = specQuestion.getClPriceTypeCode().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -441,7 +446,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		try {
 			Long parameterId = specQuestion.getAnswerTypeCode().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -460,20 +466,27 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
-	public void scoreTypeChange(TplSpecQuestion specQuestion) {
+	public void scoreTypeChange(TemplateSpecBean templateSpecBean) {
+		Long selectedScoreTypeId = templateSpecBean.getSelectedScoreTypeId();
+		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
 		IParameterSO parameterSO = null;
 		try {
-			Long parameterId = specQuestion.getScoreTypeCode().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
+			reqDTO.setParameterId(selectedScoreTypeId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setScoreTypeCode(resDTO.getPmParameter());
 		} finally {
 			parameterSO = null;
 		}
 		
+		// reset the scoring list.
+		specQuestion.setTplSpecScorings(null);
+		
+		// add compliance scoring.
+		addComplianceScoringAction(specQuestion);
 	}
 	
 	public void deliveryTermChange(TplSpecQuestion specQuestion) {
@@ -481,7 +494,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		try {
 			Long parameterId = specQuestion.getClDeliveryTermTypeCode().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -533,6 +548,43 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			
 			calcGrandTotalAmount(templateSpecBean);	
 		}
+	}
+	
+	public void scoringPopupAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("scoringPopupAction");
+		
+		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		
+		// update selected score type id
+		templateSpecBean.setSelectedScoreTypeId(
+				tplSpecQuestion.getScoreTypeCode().getParameterId());
+		
+		// add compliance scoring.
+		addComplianceScoringAction(tplSpecQuestion);
+	}
+	
+	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
+		
+		if (ParameterConst.ANSWER_TYPE_DROPDOWN.equals(tplSpecQuestion.getAnswerTypeCode().getParameterCode())) {
+			List<TplSpecScoring> specScorings = tplSpecQuestion.getTplSpecScorings();
+			
+			if (specScorings == null || specScorings.size() == 0) {
+				specScorings = new ArrayList<TplSpecScoring>();
+				
+				TplSpecScoring specScoring = new TplSpecScoring();
+				specScoring.setTplSpecQuestion(tplSpecQuestion);
+				specScoring.setCompliance(true);
+				specScorings.add(specScoring);
+				
+				specScoring = new TplSpecScoring();
+				specScoring.setTplSpecQuestion(tplSpecQuestion);
+				specScoring.setCompliance(false);
+				specScorings.add(specScoring);
+				
+				tplSpecQuestion.setTplSpecScorings(specScorings);
+			}
+		}
+		
 	}
 	
 	public void estimationPopupAction(TplSpecQuestion tplSpecQuestion) {
