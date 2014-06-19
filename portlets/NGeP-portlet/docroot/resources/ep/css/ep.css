@@ -4658,6 +4658,7 @@ label > span.ui-button-text {
 .sidemenu {
 	display: table-caption;
 	border: none;
+	width: 98%;
 }
 
 .sidemenu > .ui-tabmenu-nav {
@@ -4665,7 +4666,7 @@ label > span.ui-button-text {
 	background-image: none;
 	background-repeat: repeat-y;
 	background-color: #f9f9f9!important;
-	width: 125%;
+	width: 100%;
 	padding-top:7px!important;
 	padding-left:0px!important;
 	padding-bottom: 8000px;
