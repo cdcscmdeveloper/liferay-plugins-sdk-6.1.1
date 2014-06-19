@@ -4,6 +4,7 @@
 
 package my.ep.web.backingbean.sc.bidding;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,7 +179,7 @@ public class ScheduleBiddingBackingBean extends
 							ScBidItem item = new ScBidItem();
 
 							item.setScRequestItem(reqItem);
-							item.setDecrementAmt(200);
+							item.setDecrementAmt(BigDecimal.valueOf(200));
 
 							List<ScBidItem> bidItems = new ArrayList<ScBidItem>();
 
