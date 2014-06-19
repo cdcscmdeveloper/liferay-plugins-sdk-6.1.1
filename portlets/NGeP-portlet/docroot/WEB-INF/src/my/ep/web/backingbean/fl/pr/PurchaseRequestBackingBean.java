@@ -31,6 +31,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
@@ -64,6 +65,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
@@ -1451,6 +1454,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public OrgProfileResDTO getVotFundList(Long profileId){
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(profileId);
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
@@ -1464,7 +1468,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
-		getManagedBean().setGlAccountList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmGlAccounts());
+		
+		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+		glAccountReqDTO.setPtjGroupId(resDTO.getPmOrgProfile().getPmPtjGroup().getPtjGroupId());
+		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
+		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
 		
 		return resDTO;
 	}
