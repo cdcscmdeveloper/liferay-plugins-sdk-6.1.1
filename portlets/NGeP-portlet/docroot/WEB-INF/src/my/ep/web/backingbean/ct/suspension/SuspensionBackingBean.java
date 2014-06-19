@@ -349,7 +349,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		else
 			return null;
 	}
-	 
 
 	public List<CtContractItem> getCtContractItems() {
 		return ctContractItems;

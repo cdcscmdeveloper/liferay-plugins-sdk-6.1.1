@@ -121,7 +121,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
-
 /**
  * Backing Bean For Contract Details
  * 
@@ -1313,19 +1312,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			if(resDTO.getCtContractVer().getCtContractItems().size() > 0){
 				 for(CtContractItem ctContractItem : resDTO.getCtContractVer().getCtContractItems()){
-					 if(ctContractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)
-					    ctContractItem.setChkStatusId(1);
-				    else
-					 ctContractItem.setChkStatusId(0);
+					 if(ctContractItem.isRecordStatus())
+						 ctContractItem.setRecordStatusFlg(1);
+					 else
+						 ctContractItem.setRecordStatusFlg(0);
+					 
 				 }
 			}
 			
 			if(resDTO.getCtContractVer().getCtAgencies().size() > 0){
 				for(CtAgency ctAgency : resDTO.getCtContractVer().getCtAgencies()){
-					 if(ctAgency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)
-						 ctAgency.setChkStatusId(1);
+					 if(ctAgency.isRecordStatus())
+						 ctAgency.setRecordStatusFlg(1);
 				    else
-				    	ctAgency.setChkStatusId(0);
+				    	ctAgency.setRecordStatusFlg(0);;
 				 }
 			}
 			

@@ -134,7 +134,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean viewContract = false;
 	private boolean validateScheduleDate;
 	private boolean chkJustification;
-	private boolean flgPaymentTracking;
+	private boolean flgPaymentTracking = true;
 	private double advancePaymentAmt;
 	
 	private Map<String, PmUser> userMap;
