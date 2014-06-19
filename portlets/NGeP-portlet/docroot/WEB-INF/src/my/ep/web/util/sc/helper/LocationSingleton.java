@@ -1633,4 +1633,54 @@ public class LocationSingleton {
 		}
 	return root;
 	}
+	
+	
+	
+	
+	
+	public TreeNode constuctPanelTreeNode(CtPanelZone tplSpecZoneDtl, List<CtPanelZoneDtl> specLocs){
+		TreeNode root=new DefaultTreeNode("root",null);
+		if(tplSpecZoneDtl!=null){
+			System.out.println("===zone name==="+tplSpecZoneDtl.getClass().getName());
+			TreeNode zoneNode = new DefaultTreeNode("zone",tplSpecZoneDtl,root);
+			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			TreeNode stateNode=null;
+			TreeNode divisonNode = null;
+			//List<TreeNode> locations = new ArrayList<TreeNode>();
+			for (CtPanelZoneDtl locCriteria : specLocs) {
+				PmState pmState = locCriteria.getStateId();
+				System.out.println("===locCriteria==="+locCriteria.getClass().getName());
+				System.out.println("======state Name==="+pmState.getStateName());
+				if (null != pmState && !states.contains(pmState)) {
+					 stateNode = new DefaultTreeNode("state", locCriteria, zoneNode);					
+					//locations.add(root);
+				}
+				/*PmDivision division = locCriteria.getPmDivision();
+				
+				if (division != null) {
+					divisonNode = new DefaultTreeNode("division", locCriteria, stateNode);
+					
+				}*/
+				PmDistrict pmDistrict = locCriteria.getDistrictId();
+				
+				if (pmDistrict != null) {
+					if (divisonNode == null) {
+						 new DefaultTreeNode("district", locCriteria,
+								stateNode);
+						
+					} else {
+						 new DefaultTreeNode("district", locCriteria,
+								divisonNode);
+						
+					}
+				}
+				states.add(pmState);
+			}
+		}else{
+			
+		}
+		System.out.println("========end of method===");
+	return root;
+	}
 }
