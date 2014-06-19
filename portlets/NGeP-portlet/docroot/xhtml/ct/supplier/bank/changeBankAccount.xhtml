@@ -95,13 +95,14 @@
 		        </h:panelGroup>
 		        <h:panelGrid>
 		           <p:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.ctContract.contractName}" 
-			           rows="3" cols="35" disabled="true" autoResize="false" />	
+			           rows="3" cols="37" disabled="true" autoResize="false" />	
 			    </h:panelGrid>
 			 </h:panelGrid>
 		</p:outputPanel>
 	</p:panel>
     <p:panel id="bankId" header="Bank Details"  toggleable="true"  toggleSpeed="500">
-        <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+        <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20"
+          styleClass="top-aligned-columns">
             <h:panelGrid columns="2" style="float:right;">
 			      <p:outputLabel value="*" styleClass="mandatory" />
                   <p:outputLabel  value="Bank A/C" />
@@ -118,29 +119,24 @@
 		  </h:panelGrid>
 		   <p:inputText  style="width:200px;" disabled="true" rendered="#{supplierBackingBean.managedBean.taskId!=null}"
 		      value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
-		   <f:verbatim />
-		   <f:verbatim />		   
+	   
 		   <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>
 		   <p:inputText  disabled="true" style="width:200px;"
 		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankName}" />		
-		   <f:verbatim />
-		   <f:verbatim />			           
+		  		           
 		   <p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" /> 
 		   <p:inputText disabled="true" style="width:200px;"
 		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />
-		   <f:verbatim />
-		   <f:verbatim />			     
+		   	     
            <h:panelGroup>
 			 <div style="height:40px; vertical-align: top">
 				 <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
 			 </div>
 		   </h:panelGroup>
 		   <h:panelGrid>
-		       <p:inputTextarea id="bankAddress" rows="3" cols="35" disabled="true" maxlength="250" autoResize="false" 
+		       <p:inputTextarea id="bankAddress" rows="3" cols="37" disabled="true" maxlength="250" autoResize="false" 
 		         value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
-		   </h:panelGrid>  
-		   <f:verbatim />
-		   <f:verbatim />			                
+		   </h:panelGrid>  		                
         </h:panelGrid>
       </p:panel>
 	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
@@ -158,7 +154,7 @@
              <p:outputLabel value="Contact Person"/>  
              <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}"/>
              <p:outputLabel value="Supplier Name" /> 
-             <p:inputText disabled="true" style="width:230px;"
+             <p:inputText disabled="true" style="width:225px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
              <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />
              <p:inputText disabled="true"  style="width:200px;"
@@ -173,7 +169,7 @@
 			   </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
-				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" cols="35" autoResize="false"  
+				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" cols="37" autoResize="false"  
 				     value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"/>
 			 </h:panelGrid>
 			 <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/> 
