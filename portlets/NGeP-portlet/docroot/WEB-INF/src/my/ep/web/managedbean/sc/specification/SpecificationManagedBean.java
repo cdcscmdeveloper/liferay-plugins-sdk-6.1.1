@@ -5,6 +5,7 @@ package my.ep.web.managedbean.sc.specification;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -206,7 +207,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private TreeNode[] selectedNodes;
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode[] selectedLocNodes;
-	private String circularExpDate;
+	private Date circularExpDate;
 	private String circularType;
 
 	// template Specification variables
@@ -316,6 +317,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean required = Boolean.FALSE;
 	private List<CtPanelZone> ctPanelZones;
 	private CtPanelSupplier ctpanelSupplier;
+	private ScQtRemark contractremark;
 	
 
 	public SpecificationManagedBean() {
@@ -1792,13 +1794,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.templateSpecBean = templateSpecBean;
 	}
 
-	/**
-	 * @param circularExpDate
-	 *            the circularExpDate to set
-	 */
-	public void setCircularExpDate(String circularExpDate) {
-		this.circularExpDate = circularExpDate;
-	}
+	
 
 	/**
 	 * @return the circularType
@@ -1815,12 +1811,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.circularType = circularType;
 	}
 
-	/**
-	 * @return the circularExpDate
-	 */
-	public String getCircularExpDate() {
-		return circularExpDate;
-	}
 
 	/**
 	 * @return the index
@@ -3615,6 +3605,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCtpanelSupplier(CtPanelSupplier ctpanelSupplier) {
 		this.ctpanelSupplier = ctpanelSupplier;
+	}
+
+	/**
+	 * @return the circularExpDate
+	 */
+	public Date getCircularExpDate() {
+		return circularExpDate;
+	}
+
+	/**
+	 * @param circularExpDate the circularExpDate to set
+	 */
+	public void setCircularExpDate(Date circularExpDate) {
+		this.circularExpDate = circularExpDate;
+	}
+
+	/**
+	 * @return the contractremark
+	 */
+	public ScQtRemark getContractremark() {
+		return contractremark;
+	}
+
+	/**
+	 * @param contractremark the contractremark to set
+	 */
+	public void setContractremark(ScQtRemark contractremark) {
+		this.contractremark = contractremark;
 	}
 
 	
