@@ -267,7 +267,7 @@
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="orgProfileId" />
+					<property name="columnName" value="pmOrgValidity.orgCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.fl.pm.org.code" />
