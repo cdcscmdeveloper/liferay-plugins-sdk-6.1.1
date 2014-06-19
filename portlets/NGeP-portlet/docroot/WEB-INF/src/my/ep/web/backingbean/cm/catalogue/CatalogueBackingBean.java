@@ -331,6 +331,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				codeReqDTO.setTypeId(obj.getTypeId());
 				codeReqDTO.setColorId(obj.getColorId());
 
+				System.out.println("........obj.getBrandId()="+obj.getBrandId());
+				System.out.println("........obj.obj.getMeasurementId()="+obj.getMeasurementId());
+				System.out.println("........obj.getTypeId()="+obj.getTypeId());
+				System.out.println("........obj.getColorId()="+obj.getColorId());
+				
 				CodificationResDTO codeResDTO = codificationSO
 						.searchItem(codeReqDTO);
 
@@ -371,14 +376,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					item.setCmColor(colorObj);
 					item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj()
 							.getUnspscTitle()
-							+ " "
-							+ typeObj.getTypeName()
-							+ " "
-							+ brandObj.getBrandName()
-							+ " "
-							+ meaObj.getMeasurementName()
-							+ " "
-							+ colorObj.getColorName());
+							+ (typeObj.getTypeName().equals("NA") ? "": " "+typeObj.getTypeName())
+							+ (brandObj.getBrandName().equals("NA") ? "": " "+brandObj.getBrandName())
+							+ (meaObj.getMeasurementName().equals("NA") ? "" : " "+meaObj.getMeasurementName())
+							+ (colorObj.getColorName().equals("NA") ? "": " "+colorObj.getColorName()));
 					item.setExtensionCode(bb.getManagedBean()
 							.getSelectedUNSPSCObj().getUnspscCode()
 							+ typeObj.getTypeCode()
