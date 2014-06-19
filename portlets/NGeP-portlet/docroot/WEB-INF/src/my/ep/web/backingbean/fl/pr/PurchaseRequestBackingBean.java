@@ -105,9 +105,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -359,6 +357,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSelectedTabIndex(0);
 		getSumOrderedQty(getManagedBean().getFulfilmentRequest());
 
+		if(getManagedBean().getApproverModel()==null) {
+			List<String> source = new ArrayList<String>(); 
+	        List<String> target = new ArrayList<String>();  
+	        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}	
+		
 		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()!=null) {
 			List<String> source = new ArrayList<String>();
 			PmUserGroup userGroup = null;
