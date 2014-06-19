@@ -648,6 +648,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		if (tplSpecTierQties == null) {
 			tplSpecTierQties = new ArrayList<TplSpecTierQty>();
+			
+			tplSpecQuestion.setTplSpecTierQties(tplSpecTierQties);
 		}
 		
 		tplSpecTierQties.add(new TplSpecTierQty());
@@ -662,6 +664,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		if (tplSpecScorings == null) {
 			tplSpecScorings = new ArrayList<TplSpecScoring>();
+			
+			tplSpecQuestion.setTplSpecScorings(tplSpecScorings);
 		}
 		
 		tplSpecScorings.add(new TplSpecScoring());
