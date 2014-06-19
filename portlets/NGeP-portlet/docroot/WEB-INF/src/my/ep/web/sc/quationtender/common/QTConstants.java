@@ -95,4 +95,13 @@ public interface QTConstants {
 	public static final String BUSINESS_OWNER_SPEC_PREPARATION="/xhtml/sc/specification/specificationview.xhtml";
 	public static final String SPECIFICICATON_PREPARATION="/xhtml/sc/specification/specificationCommitteeView.xhtml";
 	public static final String BO_SPEC_CREATION_PAGE="/xhtml/sc/specification/specificationCreation.xhtml";
+	
+	//Constants for TreeNode construction..
+	public static final String NODE_ROOT="root";
+	public static final String NODE_ZONE="zone";
+	public static final String NODE_STATE="state";
+	public static final String NODE_DIVISION="division";
+	public static final String NODE_DISTRICT="district";
+	public static final String NODE_CITY="city";
+	
 }
