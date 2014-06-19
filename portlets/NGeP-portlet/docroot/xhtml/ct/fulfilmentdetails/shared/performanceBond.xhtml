@@ -47,19 +47,19 @@
 			<p:column>
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn"
 					maxlength="23" disabled="#{varBond.performanceBondId != null}"
-					style="width:60px;">
+					style="width:100px;">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 			<p:column>
-				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4"
+				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4" style="width:80px"
 					showOn="button" readonlyInput="true" size="12"
 					disabled="#{varBond.performanceBondId != null}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
 			<p:column>
-				<p:calendar value="#{varBond.expDate}" id="popupButtonCal5"
+				<p:calendar value="#{varBond.expDate}" id="popupButtonCal5" style="width:80px"
 					showOn="button" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					disabled="#{varBond.performanceBondId != null}" size="12" />
