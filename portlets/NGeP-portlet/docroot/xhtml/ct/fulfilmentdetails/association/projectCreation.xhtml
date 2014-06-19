@@ -32,7 +32,7 @@
 	       </h:panelGrid>
 	       <h:panelGrid id="projectValidation" columns="2">
            <p:inputText id="projectNames" style="width:200px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
-               value="#{associationBackingBean.managedBean.ctAssociation.projectName}" validator="#{webappBean.checkSpaces}">
+               value="#{associationBackingBean.managedBean.ctAssociation.projectName}">
                <f:validateLength maximum="100"/> </p:inputText>
                <p:message for="projectNames" display="icon"/>
            </h:panelGrid>
@@ -42,7 +42,7 @@
              </h:panelGrid>
             <h:panelGrid id="descValidation" columns="2">
 		   <p:inputText id="projectDesc" style="width:400px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
-		       value="#{associationBackingBean.managedBean.ctAssociation.description}" validator="#{webappBean.checkSpaces}">
+		       value="#{associationBackingBean.managedBean.ctAssociation.description}">
 		        <f:validateLength maximum="200"/> 
 		     <p:ajax event="blur" update="panelHeader,descValidation"/>
 		   </p:inputText>

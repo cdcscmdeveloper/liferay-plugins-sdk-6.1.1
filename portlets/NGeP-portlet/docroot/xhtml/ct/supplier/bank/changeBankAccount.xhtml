@@ -61,7 +61,10 @@
     <p:panel id="fulfilmentDetail" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
         <p:outputPanel id="ChangeBankAcc">
             <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
-                <h:outputLabel for="contractId" value="Contract No." />
+                <h:panelGrid columns="2" style="float:right;">
+			      <p:outputLabel value="*" styleClass="mandatory" />
+                  <h:outputLabel for="contractId" value="Contract No." />
+                </h:panelGrid>
                 <h:panelGrid id="menuContractId" columns="2" rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			      <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="Contract No"
 			         style="width:210px;margin-bottom: 3px;">
@@ -99,7 +102,10 @@
 	</p:panel>
     <p:panel id="bankId" header="Bank Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
-           <p:outputLabel  value="Bank A/C" />
+            <h:panelGrid columns="2" style="float:right;">
+			      <p:outputLabel value="*" styleClass="mandatory" />
+                  <p:outputLabel  value="Bank A/C" />
+             </h:panelGrid>
              <h:panelGrid id="menuBankId" columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
               <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;" label="Bank A/C"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">

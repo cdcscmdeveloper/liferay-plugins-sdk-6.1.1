@@ -16,41 +16,22 @@
     </p:panel>
     <p:panel id="associatePanelId" header="#{lbl['lbl.ct.projassociate']}"   toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="4" style="width:100%;">
-        <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
-        <h:panelGrid columns="2">
+        <p:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
         <p:inputText id="pNames"  maxlength="100" style="width:170px;" label="#{lbl['lbl.ct.asearch.pname']}"
-          value="#{associationBackingBean.managedBean.projectName}" validator="#{webappBean.checkInputField}">
-          <p:ajax event="blur" update="messageId,associatePanelId"></p:ajax>
-          </p:inputText>
-          <p:message for="pNames" display="icon"></p:message>
-         </h:panelGrid>
+          value="#{associationBackingBean.managedBean.projectName}"/>
+     
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
-        <h:panelGrid columns="2">
         <p:inputText id="contractName" maxlength="1000" style="width:170px;" label="#{lbl['lbl.ct.asearch.cname']}"
-           value="#{associationBackingBean.managedBean.ctName}" validator="#{webappBean.checkInputField}" >
-            <p:ajax event="blur" update="messageId,associatePanelId"></p:ajax>
-           </p:inputText>
-           <p:message for="contractName" display="icon"></p:message>
-         </h:panelGrid>
-         
+           value="#{associationBackingBean.managedBean.ctName}" />
+           
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
-         <h:panelGrid columns="2">
         <p:inputText id="pDescp" maxlength="200"  style="width:170px;" label="#{lbl['lbl.ct.asearch.pdes']}"
-          value="#{associationBackingBean.managedBean.projectDescription}" validator="#{webappBean.checkInputField}">
-           <p:ajax event="blur" update="messageId,associatePanelId"></p:ajax>
-          </p:inputText>
-          <p:message for="pDescp" display="icon"></p:message>
-         </h:panelGrid>
+          value="#{associationBackingBean.managedBean.projectDescription}"/>
+
          
         <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
-        <h:panelGrid columns="2">
         <p:inputText id="sName" style="width:170px;" label="#{lbl['lbl.ct.asearch.sname']}"
-           value="#{associationBackingBean.managedBean.ctSupplierName}" validator="#{webappBean.checkInputField}">
-            <p:ajax event="blur" update="messageId,associatePanelId"></p:ajax>
-           </p:inputText>
-            <p:message for="sName" display="icon"></p:message>
-         </h:panelGrid>
-         
+           value="#{associationBackingBean.managedBean.ctSupplierName}"/>
          
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
         <p:calendar style="width:130px;" id="calefdate" readonlyInput="true" showOn="button"
@@ -60,13 +41,8 @@
           value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
        
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-         <h:panelGrid columns="2">
         <p:inputText  id="ProdName"  style="width:170px;" label="#{lbl['lbl.ct.asearch.pcno']}"
-           value="#{associationBackingBean.managedBean.ctProductCode}" validator="#{webappBean.validateNumbers}">
-            <p:ajax event="blur" update="messageId,associatePanelId"></p:ajax>
-         </p:inputText>
-             <p:message for="ProdName" display="icon"></p:message>
-        </h:panelGrid>
+           value="#{associationBackingBean.managedBean.ctProductCode}" />
       </h:panelGrid>
       <div class="ppRightBtn"> 
         <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" process="@form"
