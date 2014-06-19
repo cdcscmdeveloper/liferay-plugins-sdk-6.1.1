@@ -444,6 +444,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				boolean result = resBpm != null ? resBpm.isSuccessful() : false;
 				if (result) {
 					if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+						IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+						PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+						reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+						purchaseReqSO.approvalRequestNote(reqDTO);
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
 								MessageUtils.getMessage(MessageConst.INFO_700007, 
@@ -472,11 +476,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 					} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 						//Hoa: call approvalRequestNote method to group all the request note dtl. with the same fulfilment type, assigned to, supplier in the same purchase request
-						
-						IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+						/*IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 						PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 						reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-						purchaseReqSO.approvalRequestNote(reqDTO);
+						purchaseReqSO.approvalRequestNote(reqDTO);*/
 						
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, 
