@@ -225,7 +225,7 @@
 					</td>
 				  </tr>
 				   <tr><td></td>
-					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}" id="remark" label="Remarks" required="true"/>
+					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}" id="remark" label="Remarks" required="true"/>
 					               
 						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
