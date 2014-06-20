@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -31,6 +32,7 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -138,20 +140,21 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			
 				System.out.println("SuccessMMMMMMMMMMMMMMMMM");
 				
-				FacesContext.getCurrentInstance().addMessage(
+				/*FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Records deleted successfully.", ""));
+								"Records deleted successfully.", ""));*/
+//				throw new EpException(MessageConst.INFO-711001);
 			}
          
 		} catch (Exception ex) {
 			
 			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
-			FacesContext.getCurrentInstance().addMessage(
+			/*FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
+							"Sorry We are unable to process.", ""));*/
+//			throw new EpException(MessageConst.ERROR_722527);
 		} finally {
 			zoneMaintenanceSO = null;
 		}
