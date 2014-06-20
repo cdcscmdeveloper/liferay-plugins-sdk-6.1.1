@@ -48,7 +48,7 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{suspensionBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true"
+				required="false" rows="3" style="width:170px;" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{suspensionBackingBean.managedBean.ctContract.agreement and 
@@ -109,7 +109,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="3" cols="140" disabled="true" autoResize="false" />	
+		  rows="3" style="width:700px;"  disabled="true" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

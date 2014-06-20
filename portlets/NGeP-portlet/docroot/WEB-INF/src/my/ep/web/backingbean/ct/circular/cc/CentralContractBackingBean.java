@@ -185,7 +185,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void searchContract(){
 		IContractSO contractSO = null;
 		try { 
-			contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			
 			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.CONTRACT_TYPE));
@@ -194,14 +194,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
+			
 			}if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
+			
 			}if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
 				List<Long> circularContractIdList = new ArrayList<Long>();
 				for(CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 					circularContractIdList.add(circularContract.getCtContract().getContractId());
-				}
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(),circularContractIdList));
+				}searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(),circularContractIdList));
 			}
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
