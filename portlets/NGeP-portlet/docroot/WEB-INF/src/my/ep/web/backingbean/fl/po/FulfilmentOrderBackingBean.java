@@ -491,4 +491,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
 		}
+		public String getPortletTitle() {
+			String portletTitle = " Fulfilment Document Maintenance";
+			if(getManagedBean().isRemoveFactoring()) {
+				portletTitle = "Factoring Company Removal";
+			}
+			return portletTitle;
+		}
 }

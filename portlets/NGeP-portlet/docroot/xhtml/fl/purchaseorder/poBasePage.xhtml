@@ -12,6 +12,11 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+	<script>
+			$('#portlet_flDocumentMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					'#{flOrderBB.getPortletTitle()}');
+		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
@@ -43,6 +48,13 @@
 							value="CANCEL"
 							action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton></td>
+				</c:if>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Submit"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="SUBMIT"
+							action="#{flOrderBB.fulfillmentOrderAction('SUBMIT')}">
+							<f:param name="actionName" value="SUBMIT" />
 						</p:commandButton></td>
 				</c:if>
 			</tr>

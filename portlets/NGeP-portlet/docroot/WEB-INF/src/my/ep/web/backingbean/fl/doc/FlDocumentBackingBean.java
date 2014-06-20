@@ -248,6 +248,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 		String flDocNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
+		
 		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
 		System.out.println("docType::: "+docType);
 		System.out.println("flDocNo::: "+flDocNo);
@@ -302,6 +303,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
+			if(resFlDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().isFactored()){
+				flOrderBB.getManagedBean().setRemoveFactoring(true);
+			}
+			
 			NavgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals("CO")){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);

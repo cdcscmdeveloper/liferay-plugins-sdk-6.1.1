@@ -70,6 +70,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	//for termdays
 	
 	private String termDays;
+	private boolean removeFactoring;
 	
 	
 
@@ -480,6 +481,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setFactoringBranchList(List<PmFinancialBranch> factoringBranchList) {
 		this.factoringBranchList = factoringBranchList;
+	}
+
+	/**
+	 * @return the removeFactoring
+	 */
+	public boolean isRemoveFactoring() {
+		return removeFactoring;
+	}
+
+	/**
+	 * @param removeFactoring the removeFactoring to set
+	 */
+	public void setRemoveFactoring(boolean removeFactoring) {
+		this.removeFactoring = removeFactoring;
 	}
 
 }
