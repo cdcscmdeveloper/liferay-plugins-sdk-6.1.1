@@ -78,12 +78,12 @@
 						for="companyNameId" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.estdate']} #{SmCommonUtil.testDate}" /></td>
+						value="* #{lbl['lbl.sm.estdate']}" /></td>
 				<td class="tdContent"><p:calendar id="estDateCalId"
 						navigator="true" required="true" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smSupp.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						readonly="true" size="30" showOn="button" yearRange="c-99:c+0" />
+						readonlyInput="true" size="30" showOn="button" yearRange="c-99:c+0" />
 					<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 			</tr>
 
