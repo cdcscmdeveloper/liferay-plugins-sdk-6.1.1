@@ -6,69 +6,81 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:tabView dynamic="true" cache="true" orientation="left"
-		activeIndex="#{qTDetailBB.managedBean.activeIndex}" id="qtsubId">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" style="vertical-align: baseline;"><p:tabMenu
+					styleClass="sidemenu"
+					activeIndex="#{qTDetailBB.managedBean.activeIndex}"
+					style="display : table-caption;">
+					<p:menuitem value="#{lbl['lbl.qt.qtdetails']}"
+						action="#{qTDetailBB.retrieveQuationTenderDetails(null)}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.so.committee.appointment']}"
+						action="#{qTDetailBB.retrieveCommitteeAppointmentTabDtl}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.supplierqulificationcriteria']}"
+						action="#{qTDetailBB.retrieveSuppQualificationTabDtl}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.approval']}"
+						action="#{qTDetailBB.retrieveApprovalTabDtl}" update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.tecnical.spec']}"
+						action="#{qTDetailBB.retriveTechnicalSpecification}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.finanial.spec']}"
+						action="#{qTDetailBB.retriveFinancialSpecification}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
+						action="#{qTDetailBB.retrieveBriefingSitevisitTabDtl}"
+						update="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
 
-		<p:ajax event="tabChange" listener="#{qTDetailBB.onTabChangeAction}"
-			immediate="true" />
+					<p:menuitem value="#{lbl['lbl.qt.schedule.contact']}"
+						action="#{qTDetailBB.retrieveScheduleTabDtl}" update="@form"
+						style="white-space: normal;"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
+					<p:menuitem value="#{lbl['lbl.qt.deduction.payment']}"
+						action="#{qTDetailBB.retrieveDeductionPaymentTabDtl}"
+						update="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
+					<p:menuitem value="#{lbl['lbl.qt.documents']}"
+						action="#{qTDetailBB.retrieveDocumentTabDtl}" update="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
+					<p:menuitem value="#{lbl['lbl.qt.activities']}"
+						action="#{qTDetailBB.retrieveActivitiesTabDtl}" update="@form" />
+					<p:menuitem value="#{lbl['lbl.qt.public.approval']}" update="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
 
-		<p:tab title="#{lbl['lbl.qt.qtdetails']}">
-			<ui:include src="/xhtml/sc/quatationtender/qtdetails.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.so.committee.appointment']}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.supplierqulificationcriteria']}">
-		
-			<ui:include
-				src="/xhtml/sc/quatationtender/qtsupplierqualfcriteria.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.approval']}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml" />
-		</p:tab>
-		
-		<p:tab title="#{lbl['lbl.qt.tecnical.spec']}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/qttechnicalchecklist.xhtml" />
-		</p:tab>
-		
-		<p:tab title="#{lbl['lbl.qt.finanial.spec']}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/qtfinancialchecklist.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.bsv.sample']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.schedule.contact']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
-			<ui:include src="/xhtml/sc/quatationtender/qtschedule.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.deduction.payment']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
-			<ui:include src="/xhtml/sc/quatationtender/deduction.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.documents']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
-			<ui:include src="/xhtml/sc/quatationtender/documents.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.activities']}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/qtactivitiestracking.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.qt.public.approval']}" rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
-			<ui:include
-				src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
-		</p:tab>
-
-	</p:tabView>
+				</p:tabMenu></td>
+			<td width="80%" style="vertical-align: top;"><c:if
+					test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
+					<ui:include src="qtdetails.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
+					<ui:include
+						src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
+					<ui:include src="qtsupplierqualfcriteria.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
+					<ui:include src="approvalWorkFlowMain.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+					<ui:include src="qttechnicalchecklist.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+					<ui:include src="qtfinancialchecklist.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
+					<ui:include
+						src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
+					<ui:include src="qtschedule.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
+					<ui:include src="deduction.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
+					<ui:include src="documents.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '10'}">
+					<ui:include src="qtactivitiestracking.xhtml" />
+				</c:if> <c:if test="#{qTDetailBB.managedBean.activeIndex eq '11'}">
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
+				</c:if></td>
+		</tr>
+	</table>
 
 </ui:composition>

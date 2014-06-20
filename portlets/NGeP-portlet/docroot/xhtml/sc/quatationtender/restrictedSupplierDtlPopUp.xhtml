@@ -38,9 +38,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Income Tax Reference No" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.incomeTaxNo}"
-						size="30" readonly="true" disabled="true" /></td>
+				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Establishment Date" /></td>
@@ -88,7 +86,7 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Cancel" icon="ui-icon-cancel"
+					<p:commandButton value="Cancel" icon="ui-icon-back"
 						onclick="suppDetails.hide();" />
 				</p:column>
 			</p:row>
