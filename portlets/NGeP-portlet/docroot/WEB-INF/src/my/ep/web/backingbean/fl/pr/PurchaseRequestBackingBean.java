@@ -469,6 +469,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	public void updateManualDeliveryAddrDt() {
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
+			// add to cart validation
+			RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
+			getManagedBean().setRequired(Boolean.FALSE);			
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
