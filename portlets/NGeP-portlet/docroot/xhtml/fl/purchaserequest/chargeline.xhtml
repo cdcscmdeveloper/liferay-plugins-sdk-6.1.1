@@ -225,7 +225,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.charge.program.activity']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="prgActivity" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A'}"
+				<td><p:selectOneMenu id="prgActivity" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' or empty purchaseRequestBackingBean.managedBean.prgActivityList}"
 						value="#{purchaseRequestBackingBean.managedBean.prgActivityId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -238,7 +238,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="project" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A'}"
+				<td><p:selectOneMenu id="project" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' or empty purchaseRequestBackingBean.managedBean.projectList}"
 						value="#{purchaseRequestBackingBean.managedBean.projectId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -254,7 +254,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="setia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' and purchaseRequestBackingBean.managedBean.votFundType eq 'B'}"
+				<td><p:selectOneMenu id="setia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' or purchaseRequestBackingBean.managedBean.votFundType eq 'B' or empty purchaseRequestBackingBean.managedBean.setiaList}"
 						value="#{purchaseRequestBackingBean.managedBean.setiaId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -270,7 +270,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.subsetia']}"
 						style="margin-bottom:15px;" /></td>
-				<td><p:selectOneMenu id="subSetia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' and purchaseRequestBackingBean.managedBean.votFundType eq 'B'}"
+				<td><p:selectOneMenu id="subSetia" disabled="#{purchaseRequestBackingBean.managedBean.votFundType eq 'A' or purchaseRequestBackingBean.managedBean.votFundType eq 'B' or empty purchaseRequestBackingBean.managedBean.subSetiaList}"
 						value="#{purchaseRequestBackingBean.managedBean.subSetiaId}"
 						style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />

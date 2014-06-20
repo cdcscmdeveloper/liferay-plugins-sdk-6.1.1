@@ -696,6 +696,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 			    if(flItemMap.get(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId()) ==  null){
 			    	getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItemAddr.getFlFulfilmentItem());
+			    	for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+			    		if(item.getFlFulfilmentItemAddr() == null){
+			    			item.setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
+			    		}
+			    		item.getFlFulfilmentItemAddr().add(flItemAddr);
+			    	}
 			    	flItemMap.put(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId(), flItemAddr.getFlFulfilmentItem());
 			    }
 			}
@@ -1462,17 +1468,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		for (PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
 			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
-		for(PmGlAccount pmGlAcount : resDTO.getPmOrgProfile().getPmPtjGroup().getPmGlAccounts()) {
+		
+		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+		glAccountReqDTO.setPtjGroupId(resDTO.getPmOrgProfile().getPmPtjGroup().getPtjGroupId());
+		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
+		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
+		for(PmGlAccount pmGlAcount : glAccountResDTO.getGlAccountList()) {
 			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount);
 		}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
 		
-		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-		glAccountReqDTO.setPtjGroupId(resDTO.getPmOrgProfile().getPmPtjGroup().getPtjGroupId());
-		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
-		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
+		
 		
 		return resDTO;
 	}
