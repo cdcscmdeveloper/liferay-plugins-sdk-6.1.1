@@ -6,16 +6,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="meetingPanel" header="Meeting Details" toggleable="true"  toggleSpeed="500">
+    <p:panel id="meetingPanel" header="#{lbl['lbl.ct.amend.meetingDtl']}" toggleable="true"  toggleSpeed="500">
       <div style="overflow-x:auto">
       <p:dataTable id="meetingTable" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
          selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{data}">
              <ac:paginator for="meetingTable" />
               <p:column selectionMode="multiple" style="width:2%;" />
-			  <p:column style="width:25%;" headerText="Date Of Meeting">
+			  <p:column style="width:25%;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
 			     <p:calendar value="#{data.meetingDate}" size="25" id="calMeeting" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			  </p:column> 
-			  <p:column style="width:55%;" headerText="Location Of Meeting">
+			  <p:column style="width:55%;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
 				    <p:inputText value="#{data.meetingLocation}" style="width:95%;"/>
 			  </p:column> 
 			  <p:column style="width:20%;" headerText="Status">
@@ -26,12 +26,12 @@
         </p:dataTable>
         </div>
           <div class="ppRightBtn"> 
-		       <p:commandButton value="Add" process="@form" 
+		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}" icon="ui-icon-add" update="meetingTable"/>
 		       <p:commandButton value="Delete" process="@form" partialSubmit="true"  
 		          onclick="dlgMeetingDetails.show();"  icon="ui-icon-delete" update="meetingTable"/>
 		  </div>
-		  <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" header="Delete Confirmation" styleClass="screen-title"  
+		  <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
               resizable="false" modal="true" width="350" height="90">  
               <h:panelGrid columns="3">
                  <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -41,13 +41,13 @@
                     styleClass="ui-inputtextarea"></p:inputTextarea>
               </h:panelGrid>
               <div class="ppRightBtn">
-		        <p:commandButton value="Yes" icon="ui-icon-accept" update="meetingTable" process="@form" 
+		        <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="meetingTable" process="@form" 
 			      action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
-			    <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
+			    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
 		      </div>
          </p:dialog>
       	</p:panel>
-      <p:panel id="committePanel" header="Committe Member" toggleable="true"  toggleSpeed="500">
+      <p:panel id="committePanel" header="#{lbl['lbl.ct.amend.commmember']}" toggleable="true"  toggleSpeed="500">
         <div style="overflow-x:auto">
          <p:dataTable id="committeTable" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
            selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{data}">
@@ -86,8 +86,8 @@
 	      </p:dataTable>
          </div>
          <div class="ppRightBtn"> 
-		      <p:commandButton value="Add" process="@form" onclick="memCommitteDialog.show();"  icon="ui-icon-add"/>
-		      <p:commandButton value="Delete" process="@form" onclick="dlgCommitteDetails.show();"
+		      <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" onclick="memCommitteDialog.show();"  icon="ui-icon-add"/>
+		      <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgCommitteDetails.show();"
 		         icon="ui-icon-delete" update="committeTable"/>
 		 </div>
 		 <p:dialog id="dlgCommitteDetails" widgetVar="dlgCommitteDetails" header="Delete Confirmation" styleClass="screen-title"  
@@ -100,9 +100,9 @@
                     styleClass="ui-inputtextarea"></p:inputTextarea>
               </h:panelGrid>
               <div class="ppRightBtn">
-		        <p:commandButton value="Yes" icon="ui-icon-accept" update="committeTable" process="@form" 
+		        <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="committeTable" process="@form" 
 			      action="#{amendmentBackingBean.delCommitteMembers}" onclick="dlgCommitteDetails.hide();"/>
-			    <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgCommitteDetails.hide();" type="button" />
+			    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgCommitteDetails.hide();" type="button" />
 		      </div>
          </p:dialog>
 		</p:panel>
@@ -141,7 +141,7 @@
 		           <p:commandButton value="Reset" process="@this" partialSubmit="true"  icon="ui-icon-reset" update="changeField"/>
 		        </div> 
 		      </p:panel>
-		      <p:panel id="searchResult" header="Search Result" toggleable="true"  toggleSpeed="500">
+		      <p:panel id="searchResult" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true"  toggleSpeed="500">
 		        <div style="overflow-x:auto">
                  <p:dataTable id="newCommitteTable" var="existuser" value="#{amendmentBackingBean.managedBean.externalUsers}"
                    rowKey="#{existuser}" selection="#{amendmentBackingBean.selectedPmUser}">
