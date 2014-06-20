@@ -32,18 +32,17 @@
 				</p:tabMenu>
 			</td>
 			<td width="80%">
-				<c:if test="#{centralContractBackingBean.managedBean.selectedTabIndex == 0}">
+				<p:outputPanel rendered="#{centralContractBackingBean.managedBean.selectedTabIndex == 0}">
 					<ui:include src="createCircular.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
-				</c:if>
-				<c:if test="#{centralContractBackingBean.managedBean.selectedTabIndex == 1}">
+				</p:outputPanel>
+				<p:outputPanel rendered="#{centralContractBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="contract.xhtml" />
-				</c:if>
-	
-				<c:if test="#{centralContractBackingBean.managedBean.selectedTabIndex == 2 
+				</p:outputPanel>
+				<p:outputPanel rendered="#{centralContractBackingBean.managedBean.selectedTabIndex == 2 
 				  and centralContractBackingBean.isCentralContractAdmin()}">
 					<ui:include src="approverSetting.xhtml" />
-				</c:if>
+				</p:outputPanel>
 			</td>
 		</tr>
 		</table>

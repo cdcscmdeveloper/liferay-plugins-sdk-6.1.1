@@ -30,17 +30,16 @@
 				</p:tabMenu>
 			</td>
 			<td width="80%">
-				<c:if test="#{panelBackingBean.managedBean.selectedTabIndex == 0}">
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 0}">
 					<ui:include src="circularDetail.xhtml" />
-				</c:if>
-				<c:if test="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
+				</p:outputPanel>
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="item.xhtml" />
-				</c:if>
-	
-				<c:if test="#{panelBackingBean.managedBean.selectedTabIndex == 2 
+				</p:outputPanel>
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2 
 				  and (panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin())}">
 					<ui:include src="approverSetting.xhtml" />
-				</c:if>
+				</p:outputPanel>
 			</td>
 		</tr>
 		</table>
