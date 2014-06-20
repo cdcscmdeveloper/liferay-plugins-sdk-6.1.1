@@ -60,17 +60,18 @@
 
 				<p:column headerText="Procurement Date">
 					<h:outputText value="#{contrBean.procurementDate}">
-						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="Result / Progress">
 					<h:outputText value="In Progress"
-						rendered="#{contrBean.progressStatus eq '1'}" />
-					<h:outputText value="Complete"
-						rendered="#{contrBean.progressStatus eq '2'}" />
+						rendered="#{contrBean.progressStatus eq 'P'}" />
+					<h:outputText value="Success"
+						rendered="#{contrBean.progressStatus eq 'S'}" />
 					<h:outputText value="Fail"
-						rendered="#{contrBean.progressStatus eq '3'}" />
+						rendered="#{contrBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink
@@ -120,6 +121,8 @@
 	<p:dialog header="Project Information" widgetVar="contDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
 		id="contDialog" width="500px">
+		<p:messages id="contractPrjMsg" showSummary="true" showDetail="false"
+			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -141,9 +144,11 @@
 						<tr>
 							<td><p:outputLabel value="* Contract Value (RM.)" /></td>
 
-							<td><p:inputText
+							<td><p:inputText label="Contract Value (RM.)"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
-									size="35" /></td>
+									size="35">
+
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Procurement Mode" /></td>
@@ -164,14 +169,17 @@
 							<td><p:outputLabel value="* Project Status" /></td>
 							<td><p:selectOneRadio
 									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
-									<f:selectItem itemLabel="In Progress" itemValue="1" />
-									<f:selectItem itemLabel="Complete" itemValue="2" />
-									<f:selectItem itemLabel="Fail" itemValue="3" />
+									<f:selectItem itemLabel="In Progress" itemValue="P" />
+									<f:selectItem itemLabel="Success" itemValue="S" />
+									<f:selectItem itemLabel="Fail" itemValue="F" />
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Procurement Date" /></td>
-							<td><p:calendar showOn="button"
+							<td><p:calendar showOn="button" navigator="true"
+									display="inline"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									yearRange="c-99:c+0"
 									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
@@ -232,8 +240,9 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				oncomplete="contDialog.hide();" update=":form:tt:contDt" />
-			<p:commandButton value="Cancel" onclick="contDialog.hide();" />
+				update=":form:tt:contDt" />
+			<p:commandButton value="Cancel" onclick="contDialog.hide();"
+				immediate="true" />
 		</div>
 
 	</p:dialog>

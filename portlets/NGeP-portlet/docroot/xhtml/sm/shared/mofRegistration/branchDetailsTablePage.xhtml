@@ -109,17 +109,23 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" /></td>
+					size="35" maxlength="10" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Phone NO." /></td>
-			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+			<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
+					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35"
+					maxlength="20">
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+				</p:inputText></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Fax NO." /></td>
-			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+			<td><p:inputText label="#{lbl['lbl.sm.faxno']}"
+					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35"
+					maxlength="20">
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+				</p:inputText></td>
 		</tr>
 
 	</table>

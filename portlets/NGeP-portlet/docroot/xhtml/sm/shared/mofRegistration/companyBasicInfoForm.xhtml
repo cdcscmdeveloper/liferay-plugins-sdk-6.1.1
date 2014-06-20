@@ -43,8 +43,6 @@
 				id="poBasBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.basicVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.basicVerified : false)}" />
 
-
-
 			<table style="width: 100%">
 				<tr>
 
@@ -76,7 +74,7 @@
 					<td><p:outputLabel value="* #{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							disabled="true" readonly="true" size="35" /></td>
+							disabled="true" readonly="true" size="35" maxlength="20" /></td>
 					<td><p:outputLabel value="* #{lbl['lbl.sm.estdate']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
@@ -193,7 +191,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td><p:inputText size="35"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
+							maxlength="10" /></td>
 					<td><p:outputLabel value="* #{lbl['lbl.sm.annualRev']}" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
@@ -209,12 +208,22 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText size="35"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}" /></td>
-					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText size="35"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td><p:inputText size="35" id="basPhnNum"
+							label="#{lbl['lbl.sm.phoneno']}"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"
+							maxlength="20">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText> <p:message id="basPhnNumMsg" for="basPhnNum" showSummary="true"
+							showDetail="false" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td><p:inputText size="35" id="basFaxNum"
+							label="#{lbl['lbl.sm.faxno']}"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
+							maxlength="20">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText> <p:message id="basFaxNumMsg" for="basFaxNum" showSummary="true"
+							showDetail="false" display="icon" /></td>
 
 				</tr>
 				<tr>

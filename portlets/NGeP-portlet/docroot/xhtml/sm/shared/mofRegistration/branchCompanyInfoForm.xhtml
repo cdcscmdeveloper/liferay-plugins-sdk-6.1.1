@@ -174,10 +174,8 @@
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				oncomplete="banchDialog.hide();" type="submit" partialSubmit="true"
 				process="display" update=":form:tt:dt" />
-			<p:commandButton value="Cancel"
-				action="#{backingBean.assignCancelBranchBean}"
-				oncomplete="banchDialog.hide();"
-				update=":form:tt:display,:form:tt:dt" immediate="true" />
+			<p:commandButton value="Cancel" oncomplete="banchDialog.hide();"
+				immediate="true" />
 		</div>
 	</p:dialog>
 </ui:composition>

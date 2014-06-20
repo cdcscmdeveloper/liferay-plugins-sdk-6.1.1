@@ -41,7 +41,10 @@
 						<f:selectItem itemLabel="Indian" itemValue="I" />
 					</p:selectOneMenu></td> -->
 				<td><p:outputLabel value="* DOB" /></td>
-				<td><p:calendar showOn="button"
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="c-99:c+0"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" /></td>
 			</tr>
 			<tr>
@@ -87,19 +90,28 @@
 
 			<tr>
 				<td><p:outputLabel value=" EPF No." /></td>
-				<td><p:inputText title="For Malaysian Only"
+				<td><p:inputText title="For Malaysian Only" maxlength="10"
+						label="EPF No."
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
-						size="35" /></td>
+						id="equiEpfNo" size="35">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText> <p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
+						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value=" Experience" /></td>
-				<td><p:inputText
+				<td><p:inputText label="Experience" id="equiExper"
 						value="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}"
-						size="35" /></td>
+						size="35" maxlength="2">
+						<f:validateLongRange />
+					</p:inputText> <p:message id="equiExperMsg" for="equiExper" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" Email " /></td>
-				<td><p:inputText
+				<td><p:inputText label="Email" id="equiEmail"
 						value="#{backingBean.managedBean.selectedShareHolder.email}"
-						size="35" /></td>
+						size="35">
+					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
+						showDetail="false" display="icon" /></td>
 				<td>
 					<!-- <p:outputLabel value=" Job Function" /> -->
 				</td>
@@ -157,10 +169,10 @@
 			<tr>
 				<td><p:outputLabel
 						value="Is this personnel a contract signer ? "
-						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" /></td>
+						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}">
+						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
@@ -183,16 +195,23 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 13%;"><p:outputLabel value="* Amount (RM.)" /></td>
-				<td style="padding-right: 42px;"><p:inputText
+				<td style="padding-right: 42px;"><p:inputText label="Amount"
+						id="equiShrDetAmt"
 						value="#{backingBean.managedBean.selectedShareHolder.shareAmt}"
 						size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" update="shareAmtPanel"
 							listener="#{backingBean.calculateShareHolderPercent}" />
-					</p:inputText></td>
+					</p:inputText> <p:message id="equiShrDetAmtMsg" for="equiShrDetAmt"
+						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="* Percentage(%)" /></td>
 				<td><p:inputText title="Auto Populated Value"
 						value="#{backingBean.managedBean.selectedShareHolder.sharePercentage}"
-						size="10" readonly="true" disabled="true" /></td>
+						size="10" readonly="true" disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
 
 			</tr>
 		</table>
@@ -221,13 +240,26 @@
 				<f:facet name="header">
 					<h:outputText value="Year From" />
 				</f:facet>
-				<p:inputText value="#{jf.fromYear}" />
+				<p:inputText value="#{jf.fromYear}" maxlength="4" label="Year From"
+					id="equiStfExpFrmYear">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText>
+				<p:message id="equiStfExpFrmYearMsg" for="equiStfExpFrmYear"
+					showSummary="true" showDetail="false" display="icon" />
+
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Year To" />
 				</f:facet>
-				<p:inputText value="#{jf.toYear}" />
+				<p:inputText value="#{jf.toYear}" maxlength="4" label="Year To"
+					id="equiStfExpToYear">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText>
+				<p:message id="equiStfExpToYearMsg" for="equiStfExpToYear"
+					showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
@@ -259,7 +291,7 @@
 				<f:facet name="header">
 					<h:outputText value="ROC/ROB/ROS NO." />
 				</f:facet>
-				<p:inputText value="#{relCom.regNo}" />
+				<p:inputText value="#{relCom.regNo}" maxlength="20" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -271,19 +303,25 @@
 				<f:facet name="header">
 					<h:outputText value="Shareholding Total(RM.)" />
 				</f:facet>
-				<p:inputText value="#{relCom.shareAmt}" />
+				<p:inputText value="#{relCom.shareAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="Shareholding (%)" />
 				</f:facet>
-				<p:inputText value="#{relCom.sharePercentage}" />
+				<p:inputText value="#{relCom.sharePercentage}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="MOF Reg NO." />
 				</f:facet>
-				<p:inputText value="#{relCom.mofNo}" />
+				<p:inputText value="#{relCom.mofNo}" maxlength="12" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
@@ -316,10 +354,12 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Registration NO.">
-				<p:inputText size="35" value="#{profBean.regNo}" />
+				<p:inputText size="35" value="#{profBean.regNo}" maxlength="20" />
 			</p:column>
 			<p:column headerText="End Date.">
-				<p:calendar showOn="button" value="#{profBean.expDate}" />
+				<p:calendar showOn="button" navigator="true" display="inline"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					yearRange="c-99:c+0" value="#{profBean.expDate}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
@@ -372,11 +412,11 @@
 					<h:outputText value="Education Field" />
 				</f:facet>
 				<p:selectOneMenu style="margin-bottom: 5px;"
-					value="#{aq.eduFieldId}">
-					<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-					<f:selectItem itemLabel="Computers" itemValue="2" />
-					<f:selectItem itemLabel="Mechanical" itemValue="3" />
-					<f:selectItem itemLabel="Civil" itemValue="4" />
+					value="#{aq.pmEduField.eduFieldId}">
+					<f:selectItems var="eduField"
+						value="#{backingBean.managedBean.eduFieldList}"
+						itemValue="#{eduField.eduFieldId}"
+						itemLabel="#{eduField.fieldName}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>

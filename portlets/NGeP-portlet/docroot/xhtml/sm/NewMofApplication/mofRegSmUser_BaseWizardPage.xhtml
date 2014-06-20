@@ -243,8 +243,8 @@
 				</c:otherwise>
 			</c:choose>
 
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-				closable="true" />
+			<p:messages id="messages" showDetail="true" showSummary="false"
+				autoUpdate="true" closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />

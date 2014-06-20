@@ -138,11 +138,15 @@
 				<td><p:outputLabel value="
 						* Registration NO." /></td>
 				<td><p:inputText size="35"
-						value="#{backingBean.managedBean.selectedAssocBody.regNo}" /></td>
+						value="#{backingBean.managedBean.selectedAssocBody.regNo}"
+						maxlength="20" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* End Date" /></td>
-				<td><p:calendar showOn="button"
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="c-99:c+0" readonly="true"
 						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /></td>
 			</tr>
 

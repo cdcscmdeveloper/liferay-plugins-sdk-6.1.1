@@ -60,12 +60,18 @@
 
 				<p:column headerText="Procurement Date">
 					<h:outputText value="#{consBean.procurementDate}">
-						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText=" Work Progress">
-					<h:outputText value="#{consBean.progressStatus} %" />
+					<h:outputText value="In Progress"
+						rendered="#{contrBean.progressStatus eq 'P'}" />
+					<h:outputText value="Success"
+						rendered="#{contrBean.progressStatus eq 'S'}" />
+					<h:outputText value="Fail"
+						rendered="#{contrBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink
@@ -116,6 +122,8 @@
 	<p:dialog header="Project Information" widgetVar="consDialog"
 		id="consDialog" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true" width="500px">
+		<p:messages id="consultPrjMsg" showSummary="true" showDetail="false"
+			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -138,13 +146,13 @@
 							<td><p:outputLabel value="* Project Ref NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
-									size="35" /></td>
+									size="35" maxlength="20" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Location" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.projectLocation}"
-									size="35" /></td>
+									size="35" maxlength="30" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Client's Name" /></td>
@@ -154,9 +162,11 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Cost (RM.)" /></td>
-							<td><p:inputText
+							<td><p:inputText label="Project Cost (RM.)"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
-									size="35" /></td>
+									size="35">
+
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Service Provided" /></td>
@@ -165,20 +175,28 @@
 									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Work Progress(%)" /></td>
-							<td><p:inputText
-									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}"
-									size="35" /></td>
+							<td><p:outputLabel value="* Work Progress" /></td>
+							<td><p:selectOneRadio
+									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
+									<f:selectItem itemLabel="In Progress" itemValue="P" />
+									<f:selectItem itemLabel="Success" itemValue="S" />
+									<f:selectItem itemLabel="Fail" itemValue="F" />
+								</p:selectOneRadio></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Consultant Fee (RM.)" /></td>
-							<td><p:inputText
+							<td><p:inputText label=" Consultant Fee (RM.)"
 									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
-									size="35" /></td>
+									size="35">
+
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Appointment Date" /></td>
-							<td><p:calendar showOn="button"
+							<td><p:calendar showOn="button" id="consultProjAppDate"
+									navigator="true" display="inline"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									yearRange="c-99:c+0"
 									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
@@ -239,8 +257,9 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				actionListener="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				ajax="true" onclick="consDialog.hide();" update=":form:tt:consDt" />
-			<p:commandButton value="Cancel" onclick="consDialog.hide();" />
+				update=":form:tt:consDt" />
+			<p:commandButton value="Cancel" onclick="consDialog.hide();"
+				immediate="true" />
 		</div>
 
 	</p:dialog>
