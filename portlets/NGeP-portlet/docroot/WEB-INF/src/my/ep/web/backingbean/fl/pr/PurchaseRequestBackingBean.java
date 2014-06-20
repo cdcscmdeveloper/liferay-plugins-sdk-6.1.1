@@ -299,6 +299,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_750017);
 				}
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
 			}
 			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
