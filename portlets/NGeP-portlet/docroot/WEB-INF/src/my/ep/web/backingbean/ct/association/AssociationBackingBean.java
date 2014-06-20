@@ -9,10 +9,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -34,6 +35,8 @@ import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.association.AssociationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -48,7 +51,7 @@ import org.apache.log4j.Logger;
  * @since 29/01/2014
  */
 @ManagedBean (name = "associationBackingBean")
-@RequestScoped
+@ViewScoped
 public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBean> {
 
    private static Logger log = Logger.getLogger(AssociationBackingBean.class);
@@ -58,6 +61,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    private CtContract[] selectedContractList;
    private CtContract[] deleteSelectedContractList;
    private CtAssociation[] ctSelectAssociation;
+   private IPagingDataModel<CtAssociation> associationDataModel = new AssociationPagingDataModel();
    
    public AssociationBackingBean(){
 	   
@@ -69,59 +73,14 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	   if(this.getManagedBean().getCtAssociation() == null)
 		   this.getManagedBean().setCtAssociation(new CtAssociation());
    }
+
    
-   public void searchAssociation() {IContractAssociationSO contractAssociationSO = null;
-		ISearchBean<CtAssociation> searchBean = new SearchBean<CtAssociation>();
-
-		try {
-			
-			if(this.getManagedBean().getProjectName()!=null && this.getManagedBean().getProjectName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("projectName",
-				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getProjectName()));	
-			}
-			if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractName",
-				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtName()));	
-			}
-			if(this.getManagedBean().getProjectDescription()!=null && this.getManagedBean().getProjectDescription().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("description",
-				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getProjectDescription()));	
-			}			
-			if(this.getManagedBean().getCtSupplierName()!=null && this.getManagedBean().getCtSupplierName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.supplierCompanyName",
-				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtSupplierName()));	
-			}
-			if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateEnd()!=null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
-				SearchOperator.OPERATOR_GREATER_EQUAL.value(), this.getManagedBean().getCtDateStart()));	
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
-				SearchOperator.OPERATOR_LESS_EQUAL.value(), this.getManagedBean().getCtDateEnd()));	
-				
-			}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
-						SearchOperator.OPERATOR_GREATER_EQUAL.value(), this.getManagedBean().getCtDateStart()));	
-		    
-			}if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
-		    	searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
-						SearchOperator.OPERATOR_LESS_EQUAL.value(), this.getManagedBean().getCtDateEnd()));	
-					
-	        }if(this.getManagedBean().getCtProductCode()!=null && this.getManagedBean().getCtProductCode().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractPhysicalNo",
-				SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtProductCode()));	
-			}
-			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAssociationSO.class);
-			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
-			reqDTO.setSearchBean(searchBean);
-			ContractAssociationResDTO resDTO = contractAssociationSO.searchAssociation(reqDTO);
-			this.getManagedBean().setAssociationList(resDTO.getResultBean().getResultList());
-			this.getManagedBean().setSelectedIndex(0);
-
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
-
-		} finally {
-			contractAssociationSO = null;
-			searchBean = null;
+   public void searchAssociation() {
+	   try { 
+		   associationDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 		}
    }
    
@@ -314,4 +273,79 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		this.getManagedBean().setCtDateStart(null);	
 		this.getManagedBean().setCtDateEnd(null);		
 	}
+
+	public IPagingDataModel<CtAssociation> getAssociationDataModel() {
+		return associationDataModel;
+	}
+
+	public void setAssociationDataModel(
+			IPagingDataModel<CtAssociation> associationDataModel) {
+		this.associationDataModel = associationDataModel;
+	}
+	
+	private class AssociationPagingDataModel extends PagingDataModel<CtAssociation> {
+		private static final long serialVersionUID = 1L;
+
+		public AssociationPagingDataModel() {
+			super("associateSearch");
+		}
+		
+		@Override
+		public ISearchResultBean<CtAssociation> pageChangeListener(ISearchBean<CtAssociation> searchBean) {
+			IContractAssociationSO contractAssociationSO = null;
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			try {
+				
+				if(getManagedBean().getProjectName()!=null && getManagedBean().getProjectName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("projectName",
+							SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getProjectName()));	
+				}
+				if(getManagedBean().getCtName()!=null && getManagedBean().getCtName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractName",
+					SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtName()));	
+				}
+				if(getManagedBean().getProjectDescription()!=null && getManagedBean().getProjectDescription().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("description",
+					SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getProjectDescription()));	
+				}			
+				if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.supplierCompanyName",
+					SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtSupplierName()));	
+				}
+				if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
+					SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
+					SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
+					
+				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+			    
+				}if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
+			    	searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
+							SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
+						
+		        }if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractPhysicalNo",
+					SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtProductCode()));	
+				}
+				contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAssociationSO.class);
+				ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				ContractAssociationResDTO resDTO = contractAssociationSO.searchAssociation(reqDTO);
+				getManagedBean().setAssociationList(resDTO.getResultBean().getResultList());
+				getManagedBean().setSelectedIndex(0);
+				if(resDTO.isSuccessful()) {
+					return resDTO.getResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
 }

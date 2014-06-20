@@ -53,8 +53,9 @@
 	</p:panel>
 	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
       <p:dataTable id="associateSearch" var="data" 
-         value="#{associationBackingBean.managedBean.associationList}"  
-         rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}">
+         value="#{associationBackingBean.associationDataModel}"  
+         rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}"
+         lazy="true" rowIndexVar="index">
 	     <ac:paginator for="associateSearch"/>
 		 <p:column selectionMode="multiple" style="width:18px;" />
 		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
@@ -73,7 +74,8 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 		   <p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
-	       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onsuccess="dlgAssociateDel.show()" icon="ui-icon-delete"/>
+	       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"
+	          onsuccess="dlgAssociateDel.show()" icon="ui-icon-delete"/>
 	     </div>
 		<p:spacer height="4"/>
 		 <p:dialog id="dlgAssociateDel" widgetVar="dlgAssociateDel" styleClass="screen-title"
@@ -86,8 +88,8 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=associateSearch])"
-		        process="@form" actionListener="#{associationBackingBean.deleteAssociation()}" onclick="dlgAssociateDel.hide();"/>
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:associateSearch"
+		        process="@form" action="#{associationBackingBean.deleteAssociation()}" onclick="dlgAssociateDel.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgAssociateDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
