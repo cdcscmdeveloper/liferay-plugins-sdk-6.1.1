@@ -269,6 +269,9 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveDivisionList}"
 								update="manDivison,manDistrict" />
+							<p:ajax event="change"
+							listener="#{contractRequestBackingBean.retrieveDistrictList}"
+							update="manDistrict" />	
 						</p:selectOneMenu>
 					</td>
 					<td>
@@ -296,7 +299,7 @@
 								itemValue="#{divisionList.divisionId}"
 								itemLabel="#{divisionList.divisionName}" />
 							<p:ajax event="change"
-								listener="#{contractRequestBackingBean.retrieveDistrictList}"
+								listener="#{contractRequestBackingBean.retrieveDistrictListByDivisonId}"
 								update="manDistrict" />
 						</p:selectOneMenu></td>
 					<td></td>
@@ -438,10 +441,10 @@
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="Tel. No.">
-				<h:outputText />
+				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}"/>
 			</p:column>
 			<p:column headerText="Email">
-				<h:outputText />
+				<h:outputText value="#{receivingOfficer.pmUser.email}"/>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>

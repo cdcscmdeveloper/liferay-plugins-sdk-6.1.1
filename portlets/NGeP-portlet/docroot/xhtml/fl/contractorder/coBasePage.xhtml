@@ -11,25 +11,42 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	<ui:include src="/xhtml/fl/contractorder/coHeaderPage.xhtml" />
+		<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
+
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
-							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"/>
+							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>
-		<p:tabView id="cotabs" orientation="left" widgetVar="tt">
-			<p:tab title="#{lbl['lbl.tab.fl.general']}">
-				<ui:include src="coGeneral.xhtml" />
-			</p:tab>
-			<p:tab title="#{lbl['lbl.tab.fl.item']}">
-				<ui:include src="coItem.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<ui:include src="/xhtml/fl/contractorder/coHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu" style="display : table-caption;"
+						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="Order Summary" update="@form">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="coGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="coItem.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

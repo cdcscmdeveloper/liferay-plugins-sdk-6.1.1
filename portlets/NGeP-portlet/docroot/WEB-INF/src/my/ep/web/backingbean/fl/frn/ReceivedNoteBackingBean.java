@@ -91,6 +91,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if("UPDATE".equalsIgnoreCase(action)){
 				//TODO
 				// check Actual Received Date shouldnt be empty
+				 reqDTO.setPmUser(getManagedBean().getPmUser());
 				 resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
 			}else{
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);

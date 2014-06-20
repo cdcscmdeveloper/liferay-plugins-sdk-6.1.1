@@ -20,6 +20,7 @@ import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -65,6 +66,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private BigDecimal deductionAmt ;
 	
 	private String buttonVal;
+	private PmUser pmUser;
 	
 	//tab menu
 	private int selectedTabIndex;
@@ -403,5 +405,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 }

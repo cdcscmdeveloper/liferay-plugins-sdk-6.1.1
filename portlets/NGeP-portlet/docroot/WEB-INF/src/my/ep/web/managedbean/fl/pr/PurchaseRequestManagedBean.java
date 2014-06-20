@@ -23,6 +23,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -215,6 +216,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	
 	private boolean required;
+	private PmUser pmUser;
+	
+	
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -1777,5 +1781,18 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.userGroupList = userGroupList;
 	}
 
-	
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
 }

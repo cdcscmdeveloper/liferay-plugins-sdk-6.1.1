@@ -16,6 +16,7 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -57,6 +58,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String supplierAddress;
 	
 	private int selectedTabIndex;
+	private PmUser pmUser;
 	
 	/**
 	 * @return the flRemark
@@ -298,6 +300,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 
 

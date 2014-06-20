@@ -25,6 +25,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -173,6 +174,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	// manual address
 	private boolean required;
+	private Map<Long, List<CtAgencyAddress>> manualAddressMap;
+	private List<PmAddressType> manualAddressList;
+	//private List<PmAddressType> addressManualTypesList;
+	private PmUser pmUser;
 
 	public ContractRequestManagedBean(){
 
@@ -1531,5 +1536,69 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
+
+
+	/**
+	 * @return the manualAddressMap
+	 */
+	public Map<Long, List<CtAgencyAddress>> getManualAddressMap() {
+		return manualAddressMap;
+	}
+
+
+	/**
+	 * @param manualAddressMap the manualAddressMap to set
+	 */
+	public void setManualAddressMap(Map<Long, List<CtAgencyAddress>> manualAddressMap) {
+		this.manualAddressMap = manualAddressMap;
+	}
+
+
+	/**
+	 * @return the manualAddressList
+	 */
+	public List<PmAddressType> getManualAddressList() {
+		return manualAddressList;
+	}
+
+
+	/**
+	 * @param manualAddressList the manualAddressList to set
+	 */
+	public void setManualAddressList(List<PmAddressType> manualAddressList) {
+		this.manualAddressList = manualAddressList;
+	}
+
+
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
+
+	/**
+	 * @return the addressManualTypesList
+	 *//*
+	public List<PmAddressType> getAddressManualTypesList() {
+		return addressManualTypesList;
+	}
+
+
+	*//**
+	 * @param addressManualTypesList the addressManualTypesList to set
+	 *//*
+	public void setAddressManualTypesList(List<PmAddressType> addressManualTypesList) {
+		this.addressManualTypesList = addressManualTypesList;
+	}*/
 
 }

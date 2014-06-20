@@ -277,6 +277,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			PrBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 			PrBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			PrBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			NavgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals("CR")){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
@@ -287,6 +288,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase("complain")){
 				return NAV_TO_COMPLAIN_CC_ITEM;	
 			}else{
@@ -303,6 +305,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(resFlDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
@@ -319,12 +322,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			NavgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals("DO")){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			reqDTO.setDeliveryOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
-			
 			DeliveryOrderBackingBean doBB=new DeliveryOrderBackingBean();
 			doBB.getManagedBean().setButtonVal(buttonVal);
 			doBB.getManagedBean().setDocProcess(docType);
@@ -358,6 +361,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
@@ -369,6 +373,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			PaymentMatchBackingBean pmBB = new PaymentMatchBackingBean();
 			pmBB.getManagedBean().setButtonVal(buttonVal);
 			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+			pmBB.getManagedBean().setFulfilmentRequest(resDTO.getPaymentAdvice().getFlRequest());
+			pmBB.getManagedBean().getPaymentAdvice().setFlPaymentDeduction(resDTO.getPaymentAdvice().getFlPaymentDeduction());
+			pmBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			NavgPage=NAV_TO_MAINTAIN_PA;
 		}
 		return NavgPage;

@@ -16,6 +16,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -71,6 +72,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private String termDays;
 	private boolean removeFactoring;
+	private int selectedTabIndex;
+	private PmUser pmUser;
 	
 	
 
@@ -495,6 +498,34 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setRemoveFactoring(boolean removeFactoring) {
 		this.removeFactoring = removeFactoring;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the pmUser
+	 */
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	/**
+	 * @param pmUser the pmUser to set
+	 */
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
 	}
 
 }

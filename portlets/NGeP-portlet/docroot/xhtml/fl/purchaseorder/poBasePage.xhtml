@@ -12,7 +12,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<script>
+		<script>
 			$('#portlet_flDocumentMaintenance_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					'#{flOrderBB.getPortletTitle()}');
@@ -60,14 +60,28 @@
 			</tr>
 		</table>
 		<ui:include src="poReviewHeaderPage.xhtml" />
-		<p:spacer height="20px" />
-		<p:tabView id="poTabs" orientation="left" widgetVar="tt">
-			<p:tab title="General">
-				<ui:include src="poGeneral.xhtml" />
-			</p:tab>
-			<p:tab title="Order Summary">
-				<ui:include src="poItem.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu" style="display : table-caption;"
+						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="Order Summary" update="@form">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="poGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="poItem.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>
