@@ -73,13 +73,14 @@ public class BPMTaskListBackingBean extends
 		temp.put("Start MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put("MOF Application Cancellation","mof-application");
-		temp.put(SCProcessNameConst.DIRECT_PURCHASE_REVIEW, DIRECT_PURCHASE_REVIEW_PATH);
+		
+		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE, DIRECT_PURCHASE_REVIEW_PATH);
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_CREATION_PROCESS_NAME, "review-purchase-inq");
-		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_CREATION_PROCESS_NAME, "review-purchase-in-default");
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
-		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION_PROCESS_NAME, "review-simple-quote");
+		temp.put(SCProcessNameConst.DIRECT_PURCHASE_DRAFT_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, "review-purchase-inq");
+		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, "review-purchase-in-default");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME, "review-simple-quote");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_DRAFT_NAME, "review-simple-quote");
 
 		// Contract Management
 		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
