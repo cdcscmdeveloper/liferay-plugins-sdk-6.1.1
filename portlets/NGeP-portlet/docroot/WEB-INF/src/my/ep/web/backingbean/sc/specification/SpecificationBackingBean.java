@@ -477,37 +477,32 @@ public class SpecificationBackingBean extends
 	public String newProceedAction() {
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			return "specificationCreation.xhtml?faces-redirect=true";
-		}
-		else if (this.getManagedBean().getScQt().isPanel()
+		} else if (this.getManagedBean().getScQt().isPanel()
 				&& "PCR".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())
 				&& "Specific".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())
 				|| "General".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())) {
-			
+
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
 
-		else	if (this.getManagedBean().getScQt().isPanel()
+		else if (this.getManagedBean().getScQt().isPanel()
 				&& "CCR".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())) {
-			
-				
-				FacesScopes facesScopes = new FacesScopes();
-				ScQtRemark remark=new ScQtRemark();
-				remark.setScQt(this.getManagedBean().getScQt());
-				remark = new ScQtRemark();
-                setUserDetails(remark);
-				remark.setCreatedUser(facesScopes.getUserSessionBean());
-				PmStatus status = new PmStatus();
-				status.setStatusId(62651L);
-				remark.setPmStatus(status);
-				this.getManagedBean().setContractremark(remark);
-				
-				
-			
+
+			FacesScopes facesScopes = new FacesScopes();
+			ScQtRemark remark = new ScQtRemark();
+			remark.setScQt(this.getManagedBean().getScQt());
+			remark = new ScQtRemark();
+			setUserDetails(remark);
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
+			PmStatus status = new PmStatus();
+			status.setStatusId(62651L);
+			remark.setPmStatus(status);
+			this.getManagedBean().setContractremark(remark);
 
 			return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
@@ -618,6 +613,45 @@ public class SpecificationBackingBean extends
 	}
 
 	public void deleteCategoryCodes() {
+
+		List<ScQtCategory> openList = this.getManagedBean()
+				.getSuppCriteriaopenList();
+
+		if (null == openList) {
+			openList = new ArrayList<ScQtCategory>();
+		}
+
+		List<ScQtCategory> openSelectList = this.getManagedBean()
+				.getSuppCriteriaopenSelectList();
+		if (null == openSelectList) {
+			openSelectList = new ArrayList<ScQtCategory>();
+		}
+
+		if (openList.size() == openSelectList.size()) {
+			openList.clear();
+		} else {
+			for (ScQtCategory category : openSelectList)
+				openList.remove(category);
+		}
+
+		List<ScQtCategory> restrictedList = this.getManagedBean()
+				.getSuppCriteriarestrictedList();
+		if (null == restrictedList) {
+			restrictedList = new ArrayList<ScQtCategory>();
+		}
+
+		List<ScQtCategory> restrictedSelectList = this.getManagedBean()
+				.getSuppCriteriarestrictedBoSelectList();
+		if (null == restrictedSelectList) {
+			restrictedSelectList = new ArrayList<ScQtCategory>();
+		}
+
+		if (restrictedList.size() == restrictedSelectList.size()) {
+			restrictedList.clear();
+		} else {
+			for (ScQtCategory category : restrictedSelectList)
+				restrictedList.remove(category);
+		}
 
 	}
 
@@ -815,7 +849,6 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
-				
 
 				if (this.getManagedBean().getZoneTrees() != null
 						&& this.getManagedBean().getZoneTrees().size() == 0) {
@@ -2555,22 +2588,24 @@ public class SpecificationBackingBean extends
 		} else {
 			System.out.println("====panel yes save===");
 			if (null == scQt.getScQtSupplierCriteria()) {
-				
-				
-				if(null==this.getManagedBean().getSupplierCriteria()){
-					this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+
+				if (null == this.getManagedBean().getSupplierCriteria()) {
+					this.getManagedBean().setSupplierCriteria(
+							new ScQtSupplierCriteria());
 				}
-				
-				if(null==this.getManagedBean().getSupplierCriteria().getQtZoneCriterias()){
-					this.getManagedBean().getSupplierCriteria().setQtZoneCriterias(new ScQtZoneCriteria());
+
+				if (null == this.getManagedBean().getSupplierCriteria()
+						.getQtZoneCriterias()) {
+					this.getManagedBean().getSupplierCriteria()
+							.setQtZoneCriterias(new ScQtZoneCriteria());
 				}
-					
+
 				if (null != this.getManagedBean().getCtPanelZones()
 						&& !this.getManagedBean().getCtPanelZones().isEmpty()) {
-					
+
 					ScQtZoneCriteria zoneCriteria = this.getManagedBean()
 							.getSupplierCriteria().getQtZoneCriterias();
-					
+
 					zoneCriteria.setScQtSupplierCriteria(this.getManagedBean()
 							.getSupplierCriteria());
 					setUserDetails(zoneCriteria);
@@ -2581,7 +2616,7 @@ public class SpecificationBackingBean extends
 						setUserDetails(zoneDtl);
 						zoneDtl.setTplSpecZone(zoneCriteria);
 						zoneDtl.setPanelZone(panelzone);
-						zoneLocal.add(zoneDtl);    
+						zoneLocal.add(zoneDtl);
 					}
 					zoneCriteria.setTplSpecZoneDtls(zoneLocal);
 
@@ -2659,7 +2694,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
-                  System.out.println("===supplier criteria null object==");
+					System.out.println("===supplier criteria null object==");
 					ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
 					qtSupplierCriteria
 							.setQtZoneCriterias(new ScQtZoneCriteria());
@@ -6865,8 +6900,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-		}finally{
-			
+		} finally {
+
 		}
 
 	}
@@ -7436,8 +7471,7 @@ public class SpecificationBackingBean extends
 				System.out.println(panelItem.getItemName());
 				this.getManagedBean().setCtPanelItem(panelItem);
 			}
-			this.getManagedBean().setCircularExpDate(
-					circular.getEndDate());
+			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCirCularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
 			this.getManagedBean().setCircularType(
