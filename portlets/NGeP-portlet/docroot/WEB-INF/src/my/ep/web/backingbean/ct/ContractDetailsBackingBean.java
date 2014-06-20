@@ -68,7 +68,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -152,7 +151,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	List<CtContractItem> ContractItemServiceList;
 	private CtProgressivePayment[] selectedProgressive;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
-	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();
+	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	
 	public ContractDetailsBackingBean() {
 	    if(this.getManagedBean().getAction() == null) {
@@ -473,14 +472,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					getManagedBean().getCtSupplierName()));	
 				
 				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));		
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));		
 				
 				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateStart()));	
 				
 				}if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
+				   searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateEnd()));	
 				
 			   }if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),

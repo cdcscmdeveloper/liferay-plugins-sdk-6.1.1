@@ -317,12 +317,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularFileRefNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo()));	
-				}		
-				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchStartDate()));	
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getSearchEndDate()));	
-					
-				}
+				
+				}if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
+			    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchStartDate()));	
+			    searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getSearchEndDate()));		
+		
+		    }if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()==null) {
+			   searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchStartDate()));	
+		
+		    }if(getManagedBean().getSearchStartDate()==null && getManagedBean().getSearchEndDate()!=null) {
+		        searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchEndDate()));	
+		    }
+		    
 //				if(getManagedBean().getSearchStatusId()!=null) {
 //					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
 //				}					
