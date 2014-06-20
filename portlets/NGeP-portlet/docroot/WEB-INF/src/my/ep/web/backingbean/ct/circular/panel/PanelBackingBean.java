@@ -1084,6 +1084,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		
 		this.getManagedBean().setZoneName(null);
+		this.getManagedBean().setEditZone(false);
 
 	}
 	
@@ -1148,12 +1149,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			if(this.getManagedBean().isEditZone()){
-				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
-				get(this.getManagedBean().getIndex()).setName(getManagedBean().getZoneName());
-				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
-				get(this.getManagedBean().getIndex()).getPanelZoneDtls().clear();
-				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().
-				get(this.getManagedBean().getIndex()).getPanelZoneDtls().addAll(allNodes);
+				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).setName(getManagedBean().getZoneName());
+				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).getPanelZoneDtls().clear();
+				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).getPanelZoneDtls().addAll(allNodes);
 				this.getManagedBean().setEditZone(false);
 		
 			}else{
@@ -1162,9 +1160,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			zone.setName(getManagedBean().getZoneName());
 			getManagedBean().setZoneName(null);
 			if(zone.getPanelZoneDtls() == null){
-				zone.setPanelZoneDtls( new ArrayList<CtPanelZoneDtl>());
-				zone.getPanelZoneDtls().addAll(allNodes);
-			}
+				zone.setPanelZoneDtls( new ArrayList<CtPanelZoneDtl>());	
+			} zone.getPanelZoneDtls().addAll(allNodes);
+			
 			if(this.getManagedBean().getSelectedPanelItems().getCtPanelZones() == null)
 				this.getManagedBean().getSelectedPanelItems().setCtPanelZones(new ArrayList<CtPanelZone>());
 			   
