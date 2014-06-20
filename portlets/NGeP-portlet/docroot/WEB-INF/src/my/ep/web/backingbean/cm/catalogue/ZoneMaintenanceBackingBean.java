@@ -144,7 +144,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Records deleted successfully.", ""));*/
-//				throw new EpException(MessageConst.INFO-711001);
+				throw new EpException(MessageConst.INFO_711002);
 			}
          
 		} catch (Exception ex) {
@@ -154,7 +154,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Sorry We are unable to process.", ""));*/
-//			throw new EpException(MessageConst.ERROR_722527);
+			throw new EpException(MessageConst.ERROR_716001);
 		} finally {
 			zoneMaintenanceSO = null;
 		}
@@ -173,7 +173,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			deleteCmSupplierZones();
 		
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
-		try {
+//		try {
 			zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 			ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
@@ -187,15 +187,21 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			if (resDTO.isSuccessful()) {
 			
 				System.out.println("SuccessMMMMMMMMMMMMMMMMM");
+				showZonePopup();
 				
-				FacesContext.getCurrentInstance().addMessage(
+				throw new EpException(MessageConst.INFO_711001);
+				/*FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""));
-				return "/xhtml/shared/acknowledge.xhtml";
+								"Record saved successfully.", ""));*/
+//				return "/xhtml/shared/acknowledge.xhtml";
+			} else {
+				System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
+				zoneMaintenanceSO = null;
+				throw new EpException(MessageConst.ERROR_716002);
 			}
          
-		} catch (Exception ex) {
+		/*} catch (Exception ex) {
 			
 			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
 			FacesContext.getCurrentInstance().addMessage(
@@ -203,13 +209,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Sorry We are unable to process.", ""));
 			ex.printStackTrace();
-		} finally {
-			zoneMaintenanceSO = null;
-		}
+		} */
 		
-		showZonePopup();
-		
-		return null;
 	}
 	
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {

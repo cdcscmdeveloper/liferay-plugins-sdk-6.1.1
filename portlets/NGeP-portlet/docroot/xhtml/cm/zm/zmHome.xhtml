@@ -20,7 +20,7 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
-					process="@all, zoneDetailsDataTable" partialSubmit="true"
+					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable])"
 		     action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
 						style="float:right;" icon="ui-icon-save" />
 	
@@ -57,7 +57,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-					<p:commandLink process="@all" update="zoneDetailsDataTable"
+					<p:commandLink process="@all" update="zoneDetailsDataTable, @([id$=zmMsgs])"
 					     actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
 						<p:graphicImage library="ep/images/design" name="trash.png"
 							value="/resources/ep/images/design/trash.png" />
