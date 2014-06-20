@@ -21,6 +21,7 @@
 			<base-name>messageprovider-config.bundles.labels.labels</base-name>
 			<var>lbl</var>
 		</resource-bundle>
+		<message-bundle>messageprovider-config.bundles.message-validation.message-validation</message-bundle>
 	</application>
 
 	<managed-bean>
