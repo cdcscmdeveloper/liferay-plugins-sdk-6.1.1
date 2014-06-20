@@ -7771,6 +7771,15 @@ public class SpecificationBackingBean extends
 	public void searchDeliveryAddress() {
 		searchDeliveryAddress.reloadData();
 	}
+	
+	
+	public void resetTemplate(){
+		getManagedBean().setSpecName(null);
+		getManagedBean().setStandardTemplate(null);
+		getManagedBean().setSearchProcurementId(null);
+		getManagedBean().setQtNum(null);
+		getManagedBean().setSearchItemTypeId(null);
+	}
 
 	private class CreateTemplateSpecPagingDataModel extends
 			PagingDataModel<TplSpecMaster> {
