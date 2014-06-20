@@ -13,6 +13,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -36,6 +37,8 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private List<CtAttachment> attachmentList;
 	private boolean chkConceValue;
+	private List<CtContractItem> ctItemFilter;
+	
 
 	public String getEditorValue() {
 		return editorValue;
@@ -104,5 +107,15 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setChkConceValue(boolean chkConceValue) {
 		this.chkConceValue = chkConceValue;
 	}
+
+	public List<CtContractItem> getCtItemFilter() {
+		return ctItemFilter;
+	}
+
+	public void setCtItemFilter(List<CtContractItem> ctItemFilter) {
+		this.ctItemFilter = ctItemFilter;
+	}
 	
+	
+
 }
