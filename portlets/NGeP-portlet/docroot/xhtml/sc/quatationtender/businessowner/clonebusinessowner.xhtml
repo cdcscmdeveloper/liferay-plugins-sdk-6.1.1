@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
-		widgetVar="cloneBusinessOwner" width="950" height="600">
+		widgetVar="cloneBusinessOwner" width="950" height="600" position="top">
 		<p:panel header="#{lbl['lbl.so.business.owner.search']}"
-			toggleable="true" id="searchpnlid">
+			toggleable="true" id="searchpnlid" styleClass="cloneAddMember">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -60,19 +60,16 @@
 					<td />
 				</tr>
 			</table>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" style="float:right;"
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					icon="ui-icon-search"
+					action="#{qTBusinessOwnerBackingBean.cloneSearchCommitteAction}"
+					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{qTBusinessOwnerBackingBean.resetClone}"
 					update="searchpnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />
-
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					style="float:right;" icon="ui-icon-search"
-					action="#{qTBusinessOwnerBackingBean.cloneSearchCommitteAction}"
-					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
 			</div>
-			<br />
-			<br />
 		</p:panel>
 		<p:spacer height="3" />
 		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
@@ -154,14 +151,14 @@
 				</p:column>
 
 			</p:dataTable>
-
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-				style="float:right;" icon="ui-icon-cancel"
-				onclick="cloneBusinessOwner.hide();" />
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
-				action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
-				oncomplete="cloneBusinessOwner.hide();" update="businessownerId"
-				icon="ui-icon-check" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+					action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
+					oncomplete="cloneBusinessOwner.hide();" update="businessownerId"
+					icon="ui-icon-check" />
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					icon="ui-icon-cancel" onclick="cloneBusinessOwner.hide()" />
+			</div>
 		</p:panel>
 
 	</p:dialog>
