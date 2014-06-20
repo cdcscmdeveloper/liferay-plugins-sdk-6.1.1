@@ -341,14 +341,13 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("okSubmission");
 		List<ScQtSampleSubmission> list = getManagedBean()
 				.getScQtSampleSubmissionList();
-		ScQtSampleSubmission selectedSubmission = getManagedBean()
-				.getScQtSampleSubmission();
+		PmAddress address = getManagedBean().getPmAddress();
 		if (null == list) {
 			list = new ArrayList<ScQtSampleSubmission>();
 		}
 
 		for (ScQtSampleSubmission scQtSampleSubmission : list) {
-			scQtSampleSubmission.setAddress(selectedSubmission.getAddress());
+			scQtSampleSubmission.setAddress(address);
 			int index = list.indexOf(scQtSampleSubmission);
 			list.set(index, scQtSampleSubmission);
 		}

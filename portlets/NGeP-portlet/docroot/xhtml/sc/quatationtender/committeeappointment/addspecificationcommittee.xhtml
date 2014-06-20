@@ -10,16 +10,19 @@
 		header="New #{qTCommitteBackingBean.managedBean.tabTitle}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember">
-		<p:panel>
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+		<p:panel id="scPanel">
+			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:selectOneRadio
 					value="#{qTCommitteBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
 						value="#{qTCommitteBackingBean.managedBean.selections}" />
 					<p:ajax event="click"
 						listener="#{qTCommitteBackingBean.userSelcetionAction}"
-						update="newCommitteeProfile" process="@this"></p:ajax>
+						update="newCommitteeProfile" process="@this" />
 				</p:selectOneRadio>
 			</h:panelGrid>
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
@@ -120,67 +123,90 @@
 						<table>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.name']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.name']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="name1" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.name']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.memberName}"
-										size="30" /></td>
+										size="30" maxlength="50" /> <p:message id="name1Msg"
+										for="name1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td style="width: 125px;"><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /></td>
-								<td colspan="3"><p:selectOneMenu
+										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:selectOneMenu id="idtype1"
+										required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.idtype']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.idType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="idtype1Msg" for="idtype1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="idNos1" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.idno']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.icPassport}"
-										size="30" /></td>
+										size="30" maxlength="15" /> <p:message id="idNos1Msg"
+										for="idNos1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="grade1" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.grade']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.grade}"
-										size="30" /></td>
+										size="30" maxlength="10" /> <p:message id="grade1Msg"
+										for="grade1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /></td>
-								<td colspan="3"><p:selectOneRadio
+										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:selectOneRadio id="pnp1" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.pp']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.PNP}">
 										<f:selectItem itemLabel="Yes" itemValue="true" />
 										<f:selectItem itemLabel="No" itemValue="false" />
-									</p:selectOneRadio></td>
+									</p:selectOneRadio> <p:message id="pnp1Msg" for="pnp1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="designation1"
+										required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.designation']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.designation}"
-										size="30" /></td>
+										size="30" maxlength="50" /> <p:message id="designation1Msg"
+										for="designation1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.email']}" /></td>
-								<td colspan="3"><p:inputText
+										value="#{lbl['lbl.sc.committe.addscreen.email']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:inputText id="email1" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.email']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.email}"
-										size="30" /></td>
+										size="30" maxlength="80" /> <p:message id="email1Msg"
+										for="email1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.role']}" /></td>
-								<td colspan="3"><p:selectOneMenu
+										value="#{lbl['lbl.sc.committe.addscreen.role']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:selectOneMenu id="role" required="true"
+										label="#{lbl['lbl.sc.committe.addscreen.role']}"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.memberRole}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.committeeRole)}" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="roleMsg" for="role" display="icon" /></td>
 							</tr>
 						</table>
 					</p:panel>
@@ -188,10 +214,9 @@
 			</p:panel>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-					onclick="newspecificationcommittee.hide();"
-					update="@(.scMemberDtl)" process="@this, newCommitteeProfile"
-					icon="ui-icon-check"
-					actionListener="#{qTCommitteBackingBean.okCommitteeAction}" />
+					process="@this, newCommitteeProfile, scPanel"
+					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
+					icon="ui-icon-check" update="@(.scMemberDtl, scPanel)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"

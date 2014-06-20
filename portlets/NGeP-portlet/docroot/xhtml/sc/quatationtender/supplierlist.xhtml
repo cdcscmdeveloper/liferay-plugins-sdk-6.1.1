@@ -47,7 +47,7 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<p:commandLink update=":form:qtsubId:popupSuppDtl"
+					<p:commandLink update=":form:popupSuppDtl"
 						action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails}"
 						oncomplete="suppDetails.show();">
 						<f:setPropertyActionListener value="#{qtSupplier}"
@@ -60,16 +60,18 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
 					<h:outputText
-						value="#{qtSupplier.smSupplier.smMofAccounts[0].mofNo}"
-						rendered="#{false}" />
+						value="#{qtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofexp']}">
 					<h:outputText
-						value="#{qtSupplier.smSupplier.smMofAccounts[0].expDate}"
-						rendered="#{false}" />
+						value="#{qtSupplier.smSupplier.smMofAccounts[0].expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.status']}">
-					<h:outputText value="Active" />
+					<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.getStatusDescById(smSupplier.pmStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
 		</c:if>

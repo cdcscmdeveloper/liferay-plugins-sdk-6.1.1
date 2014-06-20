@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.quationtender;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -209,6 +211,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// For Restricted Tender Search Criteria
 	private String supplierName;
 	private String mofAccountNo;
+	private BigDecimal minPaidUpCapital;
 
 	private int totalSearchSupplier;
 	private int totalSupplier;
@@ -360,11 +363,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmUser> pmUsersList;
 	private List<PmUser> selectedPmUsersList;
 	private PmUser pmUser;
-	private ScQtSampleSubmission scQtSampleSubmission = new ScQtSampleSubmission();
+	private ScQtSampleSubmission scQtSampleSubmission;
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
 	private List<ScQtSampleSubmission> selectedSubmissionList;
 	private List<ScQtContactPerson> scQtContactPersons;
 	private List<ScQtContactPerson> selectedContactPersons;
+	private PmAddress pmAddress;
 
 	// Document
 	private ScQtCheckList scQtChecklist;
@@ -1592,6 +1596,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mofAccountNo = mofAccountNo;
 	}
 
+	public BigDecimal getMinPaidUpCapital() {
+		return minPaidUpCapital;
+	}
+
+	public void setMinPaidUpCapital(BigDecimal minPaidUpCapital) {
+		this.minPaidUpCapital = minPaidUpCapital;
+	}
+
 	public int getTotalSearchSupplier() {
 		return totalSearchSupplier;
 	}
@@ -2270,6 +2282,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setScQtBsvAttendanceList(
 			List<ScQtBsvAttendance> scQtBsvAttendanceList) {
 		this.scQtBsvAttendanceList = scQtBsvAttendanceList;
+	}
+
+	public PmAddress getPmAddress() {
+		return pmAddress;
+	}
+
+	public void setPmAddress(PmAddress pmAddress) {
+		this.pmAddress = pmAddress;
 	}
 
 }

@@ -60,6 +60,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -597,6 +598,9 @@ public class QTCommitteBackingBean extends
 				break;
 			}
 		}
+		
+		// Specification Committee validation
+		RequestContext.getCurrentInstance().execute("newspecificationcommittee.hide()");
 	}
 
 	public void reset() {

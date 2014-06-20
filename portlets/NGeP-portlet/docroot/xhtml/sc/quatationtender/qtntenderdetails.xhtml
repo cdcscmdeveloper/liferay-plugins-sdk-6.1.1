@@ -9,7 +9,7 @@
 	<p:panel id="qtdetailsid" header="Details" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 155px;"><p:outputLabel
+				<td style="width: 165px;"><p:outputLabel
 						value="#{lbl['lbl.so.qttentype']}" /></td>
 				<td colspan="3"><c:if
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -34,7 +34,7 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 155px;"><p:outputLabel
+								<td style="width: 165px;"><p:outputLabel
 										value="#{lbl['lbl.so.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
@@ -60,20 +60,22 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.so.existing.contract.no']}" /></td>
 				<td colspan="3"><ac:lov id="contractLovId" lovId="CT_CONTRACT"
-						headerText="Contract Lov" update=":form:qtsubId:qtdetailsid"
+						headerText="Contract Lov" update=":form:qtdetailsid"
 						saveObject="qTDetailBB.managedBean.ctContract"
 						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="publishperiod"
 						label="#{lbl['lbl.so.publishing.period']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.publishPeriod}" size="30"
 						style="text-align:right" /> <p:message id="publishperiodMsg"
 						for="publishperiod" display="icon" /></td>
 				<td style="width: 200px;"><p:outputLabel
-						value="* #{lbl['lbl.so.proposal.validity']}" /></td>
+						value="#{lbl['lbl.so.proposal.validity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="proposalvalidity"
 						label="#{lbl['lbl.so.publishing.period']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
@@ -111,7 +113,7 @@
 		rendered="#{qTDetailBB.managedBean.qt.zonal}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 155px"><p:outputLabel
+				<td style="width: 165px"><p:outputLabel
 						value="#{lbl['lbl.so.location.level']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.zoneLocationLevel)}"

@@ -9,35 +9,31 @@
 
 	<ui:include src="supplierlist.xhtml" />
 
-	<div align="right">
+	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			icon="ui-icon-search" partialSubmit="true"
-			process="@this" update="suppPopup"
+			icon="ui-icon-search" partialSubmit="true" process="@this"
 			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
-			oncomplete="suppdlg.show();"
+			update="suppPopup" oncomplete="suppdlg.show();"
 			rendered="#{qTDetailBB.managedBean.editable}" />
 
-		<p:commandButton value="#{lbl['lbl.so.delete']}" style="float:right;"
-			icon="ui-icon-delete"
+		<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"
 			action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedSupplierList}"
 			update="supplierlist" />
 	</div>
 
 
 	<p:dialog id="suppPopup" header="Search Supplier" widgetVar="suppdlg"
-		modal="true" width="800" height="400">
+		modal="true" width="800" height="600" position="top">
 		<ui:include src="restrictedSupplierSearch.xhtml" />
 
 		<br />
-
-		<div>
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-				icon="ui-icon-cancel" style="float:right;"
-				oncomplete="suppdlg.hide()" />
+		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}" icon="ui-icon-accept"
-				style="float:right;" update="supplierlist"
 				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
-				oncomplete="suppdlg.hide()" />
+				update="supplierlist" oncomplete="suppdlg.hide()" />
+
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				icon="ui-icon-cancel" oncomplete="suppdlg.hide()" />
 		</div>
 	</p:dialog>
 </ui:composition>

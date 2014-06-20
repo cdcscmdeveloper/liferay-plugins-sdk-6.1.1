@@ -11,7 +11,7 @@
 		<p:tree id="ctSupplierTreeZones" style="border:none;"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSuppliers}"
 			var="ctZones"  selectionMode="single" dynamic="true">
-			  <p:ajax event="select" update=":form:qtsubId:paneltabView:totalSupplierid" listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" /> 
+			  <p:ajax event="select" update=":form:paneltabView:totalSupplierid" listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" /> 
 			<p:treeNode type="zone">
 				<h:outputText value="#{ctZones.name}" />
 			</p:treeNode>

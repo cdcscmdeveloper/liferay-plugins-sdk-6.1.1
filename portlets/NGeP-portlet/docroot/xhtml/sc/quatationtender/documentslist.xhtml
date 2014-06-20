@@ -66,7 +66,7 @@
 				<p:commandButton value="Download" update="doctbl"
 					actionListener="#{qTDocumentsBackingBean.downloadDocumentFile(document)}"
 					rendered="#{!empty document.scQtCheckListAttachment}" />
-					
+
 			</p:column>
 
 		</p:dataTable>
@@ -91,11 +91,9 @@
 
 	</p:panel>
 
-	<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
+	<p:dialog id="attachDlgid" widgetVar="attachDlg1" dynamic="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
 			mode="advanced" id="upload1"
@@ -104,4 +102,5 @@
 			update="doctbl" oncomplete="attachDlg1.hide()">
 		</p:fileUpload>
 	</p:dialog>
+
 </ui:composition>
