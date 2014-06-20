@@ -48,6 +48,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -74,6 +75,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
@@ -772,6 +774,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
 				filePath = tempDir + "/AmendmentSuratSetujuPage.docx";
 				fileName = "AmendmentSuratSetujuPage.docx";
+			} else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)){
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_RINGKASAN_KONTRAK);
+				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+				filePath = tempDir + "/AmendmentRingkasanKontrakPage.docx";
+				fileName = "AmendmentRingkasanKontrakPage.docx";
+			} else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)){
+				reqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);
+				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+				filePath = tempDir + "/AmendmentIntegrityPactPage.docx";
+				fileName = "AmendmentIntegrityPactPage.docx";
+			} else if(ContractConst.TEMPLATE_JUDUAL_HARGA.equalsIgnoreCase(parameterCode)){
+				
+			} else if(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN.equalsIgnoreCase(parameterCode)){
+				
 			}
 			
 			content = getContent(content, parameterCode);
@@ -819,12 +837,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void downloadAll(){
 		log.debug("Inside downloadAll()");
 		IContractTemplateSO contractTemplateSO = null;
-		String filePath1;
+		String filePath1, filePath2, filePath3;
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
 		String content;
 		try{
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			
 			reqDTO.setTemplateName(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA);
 			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
@@ -832,7 +851,21 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			filePath1 = tempDir + "/AmendmentSuratSetujuPage.docx";
 			converthtmlToDocFile(content, filePath1);
 			
-			File[] all = {new File(filePath1)};   
+			reqDTO.setTemplateName(ContractConst.TEMPLATE_RINGKASAN_KONTRAK);
+			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			content = getContent(content, ContractConst.TEMPLATE_RINGKASAN_KONTRAK);
+			filePath2 = tempDir + "/AmendmentRingkasanKontrakPage.docx";
+			converthtmlToDocFile(content, filePath2);
+			
+			reqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);
+			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			content = getContent(content, ContractConst.TEMPLATE_INTEGRITY_PACT);
+			filePath3 = tempDir + "/AmendmentIntegrityPactPage.docx";
+			converthtmlToDocFile(content, filePath3);
+			
+			File[] all = {new File(filePath1), new File(filePath2), new File(filePath3)};   
 			File zipFile = new File(tempDir + "/amendment.zip");
 			try {
 				zipFile.createNewFile();
@@ -890,16 +923,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		Map<String, String> valuesMap = new HashMap<String, String>();
 		StringBuffer strBuff = new StringBuffer();
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-		AddressReqDTO addressReqDTO = new AddressReqDTO();
-		addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-		addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-		AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-		PmAddressType pmAddressType = null;
-		if(addressResDTO.getAddressTypeList().size()>0) {
-			pmAddressType = addressResDTO.getAddressTypeList().get(0);
-		}
+		
 		if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)) {
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressReqDTO addressReqDTO = new AddressReqDTO();
+			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+			PmAddressType pmAddressType = null;
+			if(addressResDTO.getAddressTypeList().size()>0) {
+				pmAddressType = addressResDTO.getAddressTypeList().get(0);
+			}
 			if(getManagedBean().getCtContract().isBondReq()){
 				strBuff.append("*3.1 mendepositkandenganKerajaan, suatu Bon PelaksanaandalambentukJaminan Bank/Jaminan Syarikat Kewangan/ JaminanInsurans " +
 						"yang takbolehbataldaripadasebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskandandidaftarkan di Malaysia " +
@@ -912,36 +946,64 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						"kecualijikadiabaikandengannyataolehKerajaan, akanmenyebabkanpenerimaan LOA** " +
 						"initerbataldanselepasituKerajaantidaklahdenganapa-apacarajugabertanggungjawabkepadatuan.<br/><br/>");
 			}
-			strBuff.append("*4. Tarikhpermulaansebagaimana yang disebutkandalamsyarat-syaratkontrakadalahpada${NEW_CONTRACT_EFFECTIVE_DATE}<br/><br/>");
-			strBuff.append("5. Penyetujuan/ penolakansuratsetujuterimainihendaklahdibuatsecaraatastaliandalamtempohempatbelas (14)  haridaritarikhsuratini.  " +
-					"SekiranyapihakKerajaantidakmenerimamaklumbalassuratsetujuterimainidalamtempoh yang dinyatakanmakatawaraninidengansendirinyaterbatal.<br/><br/>");
-			strBuff.append("Sekian, terimakasih.<br/><br/>");
-			strBuff.append("“BERKHIDMAT UNTUK NEGARA” <br/><br/>");
-			strBuff.append("Saya yang menurutperintah,<br/><br/>");
-			strBuff.append("-------------------------------------------<br/>");
-			strBuff.append("${ADMIN_NAME}** Default to Contract Signer<br/>");
-			strBuff.append("${POSITION}");
-			content = content + strBuff.toString();
 			
-			valuesMap.put("LOA_NO", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
-			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+			valuesMap.put("PERFORMANCE_BOND", strBuff.toString());
+			valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+			valuesMap.put("LOA_NO", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
+			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			if(pmAddressType!=null) {
 				valuesMap.put("ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
-				//valuesMap.put("ADDRESS", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress().getAddress1());
 			}
 			
 			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
-			valuesMap.put("PHYSICAL_CONTRACT_NO",  getManagedBean().getCtContract().getContractPhysicalNo());
-			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-			valuesMap.put("BOND_AMOUNT_IN_TEXT",  getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-			valuesMap.put("PERCENTAGE", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
-			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentEffDate()));
-			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getCtContract().getCurrentContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
-			valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
-			valuesMap.put("ADMIN_NAME", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getUserName());
-			valuesMap.put("POSITION", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getDesignation());
+			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
+			valuesMap.put("AMENDMENT_EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+			valuesMap.put("BOND_AMOUNT_IN_TEXT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+			valuesMap.put("PERCENTAGE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
+			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
+			//valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			valuesMap.put("CONTRACT_SIGNER_NAME", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getUserName());
+			valuesMap.put("CONTRACT_SIGNER_POSITION", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getDesignation());
 
+			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+			content = sub.replace(content);
+		} else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
+			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
+			valuesMap.put("SOURCING_NO",  getManagedBean().getCtContract().getLoa().getFileExtNo());
+			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getTitle());
+			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
+			double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
+			valuesMap.put("NEW_CONTRACT_VALUE", contractValue + "");
+			IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
+			valuesMap.put("FULFILLMENT_TYPE", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
+			valuesMap.put("REFER_ATTACHMENT", "");
+			valuesMap.put("DEDUCTION_TYPES", "");
+			valuesMap.put("MONTHS", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
+			valuesMap.put("EFF_START_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			valuesMap.put("EFF_END_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) + " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
+			}else {
+				valuesMap.put("AMEND_EFF_EXP_DATE", "");
+			}
+			valuesMap.put("EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+			valuesMap.put("BOND_VALUE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+			
+			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+			content = sub.replace(content);
+		}else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
+			valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+			valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
+			valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
+			valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
+			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
 		}
