@@ -20,6 +20,8 @@
 			value="#{specificationBackingBean.managedBean.suppCriteriarestrictedList}"
 			selection="#{specificationBackingBean.managedBean.suppCriteriarestrictedBoSelectList}"
 			rowIndexVar="index">
+			
+			<p:column selectionMode="multiple" style="width:2%"></p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
