@@ -89,22 +89,23 @@
 						<TD width="20%" valign="top"><p:outputLabel value="Zone Details"></p:outputLabel>
 						</TD>
 						<TD width="80%">
-						
-							<p:tree id="treeZoneLocationPopup"
-								value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
-								var="location"
-								selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
-								selectionMode="checkbox" >
-								 <p:treeNode type="state">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-								<p:treeNode type="division">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode>
-								<p:treeNode type="district">
-									<h:outputText value="#{location.locationName}" />
-								</p:treeNode> 
-							</p:tree>
+							<div style="height: 340px; overflow-y: scroll;">
+								<p:tree id="treeZoneLocationPopup"
+									value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
+									var="location"
+									selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
+									selectionMode="checkbox" >
+									 <p:treeNode type="state">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode> 
+								</p:tree>
+							</div>
 						</TD>
 					</TR>
 				</table>
