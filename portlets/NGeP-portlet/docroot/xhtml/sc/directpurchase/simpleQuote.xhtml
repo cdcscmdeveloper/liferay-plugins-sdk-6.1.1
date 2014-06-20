@@ -13,7 +13,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" valign="top">
+			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu"  id="tabMainMenu"  
 					activeIndex="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
@@ -27,7 +27,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.item.list']}" update="@form">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="@form" action="#{simpleQuoteBackingBean.tabEvent}">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="@([id$=suppCriteria])" action="#{simpleQuoteBackingBean.tabEvent}">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					

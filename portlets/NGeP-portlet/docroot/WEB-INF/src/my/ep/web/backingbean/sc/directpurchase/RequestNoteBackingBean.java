@@ -137,8 +137,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		// Target Approver
 		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-			ScRequestNoteApprovalUser approvalUser = new ScRequestNoteApprovalUser();
-		    requestNote.setApprovalUsers(createTargetApprover(approvalUser));
+		    requestNote.setApprovalUsers(createTargetApprover(requestNote));
 		}
 		 List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 		 ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
@@ -229,8 +228,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
     		// Target Approver
     		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-    			ScRequestNoteApprovalUser approvalUser = new ScRequestNoteApprovalUser();
-    			requestNote.setApprovalUsers(createTargetApprover(approvalUser));
+    			requestNote.setApprovalUsers(createTargetApprover(requestNote));
     		}
     		List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
     		ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
@@ -248,7 +246,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     		requestNote.setWorkFlowStatuses(workFlowStatuses);
 
     		// Remarks
-    		//requestNote.setRemarks(initializeRemarks(requestNote));
+    		requestNote.setRemarks(initializeRemarks(requestNote));
     		requestNoteReqDTO.setRequestNote(requestNote);
     		if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
     			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
@@ -270,7 +268,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     		}
     		
     		requestNoteReqDTO.setRequestNote(requestNote);
-    		//Hoa: when submit need to set submit in the reqDTO to true
     		requestNoteReqDTO.setSubmit(Boolean.TRUE);
     		FacesScopes face = new FacesScopes();
     		String token =face.getBPMAuthenticationCtxToken();
@@ -325,7 +322,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
     	}
     }    
     finally {
+    	requestNote.setRemarks(initializeRemarks(requestNote));
     	directPurchaseSO = null;
+    	
     }
     return null;
 	}
@@ -375,31 +374,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
-				 List<ScRequestNoteRemark> results =  new ArrayList<ScRequestNoteRemark>();
-				 if(requestNote.getRemarks() != null){
-					 for (ScRequestNoteRemark noteRemark : requestNote.getRemarks()) {
-						 noteRemark.setUser(noteRemark.getCreatedUser());
-						 results.add(noteRemark);
-					}
-					 ScRequestNoteRemark remark = new ScRequestNoteRemark();
-					 remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					 remark.setChangedBy(remark.getCreatedBy());
-					 remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					 remark.setUser(facesScopes.getUserSessionBean());
-					 remark.setCreatedUser(facesScopes.getUserSessionBean());
-					 remark.setRequestNote(requestNote);
-					 PmStatus status = new PmStatus();
-					 status.setStatusId(res.getDocStatus().longValue());
-					 StatusReqDTO statusReqDTO = new StatusReqDTO();
-					 if (status != null) {
-						 statusReqDTO.setStatusId(status.getStatusId());
-						 StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-						 remark.setPmStatus(statusResDTO.getPmStatus());
-					 }
-					 results.add(remark);
-					 requestNote.setRemarks(results);
-				 }
 				
+				// remarks
+				 requestNote.setRemarks(initializeRemarks(requestNote));
 				
 				if (requestNote.getSourceMethod().equalsIgnoreCase(ParameterConst.REQUEST_NOTE_SQ)) {
 					getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
@@ -579,26 +556,23 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public List<ScRequestNoteRemark> initializeRemarks(ScRequestNote scRequestNote) {
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		List<ScRequestNoteRemark> results = scRequestNote.getRemarks();
-		if(results == null){
-			results =  new ArrayList<ScRequestNoteRemark>();
-		}
-		
-		ScRequestNoteRemark remark = new ScRequestNoteRemark();
 		FacesScopes facesScopes = new FacesScopes();
+		List<ScRequestNoteRemark> results =   scRequestNote.getRemarks();
+
+		if(results == null){
+			results = new ArrayList<ScRequestNoteRemark>();
+		} 
+		ScRequestNoteRemark remark = new ScRequestNoteRemark();
 		if (results.size() == 0
-				|| !compareUserName(results.get(0).getUser().getLoginId())) {
+				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
 			 remark = new ScRequestNoteRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
-			remark.setUser(facesScopes.getUserSessionBean());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			if (getManagedBean().getRequestNote().getRemarks() != null && !getManagedBean().getRequestNote().getRemarks().isEmpty()) {
 			   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
-			} else {
-				 remark.setRemark("");
-			}
+			} 
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
 		    StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -808,11 +782,20 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 * Page navigation to catalogue search page in Request Note
 	 */
 	public String backToPervious() {
-		log.info("backToPervious");
+		log.info("add item");
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+		reqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+		getManagedBean().getRequestNoteDtl().setProcurementType(resDTO.getPmParameter());
+		getManagedBean().setRequestSupplierItem(null);
 		getManagedBean().setOrgProfileId(null);
-		getManagedBean().setProcurementType("");
-		getManagedBean().setJustification("");
-		getManagedBean().setJustificationType("");
+		getManagedBean().setProcurementType(null);
+		getManagedBean().setJustification(null);
+		getManagedBean().setJustificationType(null);
+        RequestContext.getCurrentInstance().update("addToCartId");
+		
 		return "catalogueSearch";
 	}
 
@@ -930,7 +913,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 			if (itemIds.size() > 0) {
 				if(itemIds.contains(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId())){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700027, 
 									new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName()}, 
@@ -947,11 +930,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		requestNote.setRequestNoteDtls(requestNoteDtls);
 		populateUserDivisionList();
+		requestNote.setRemarks(initializeRemarks(requestNote));
 		getManagedBean().setRequestNote(requestNote);
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		getCurrentStatus(status.getStatusId());
 		//initialInformation(requestNote);
-		initializeRemarks(requestNote);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		
 		// add to cart validation
@@ -1038,6 +1021,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			 getManagedBean().setItemCheck(Boolean.FALSE);
 		  }*/
 		  getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
+		  if(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null && !scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices().isEmpty()){
+			  getManagedBean().getRequestSupplierItem().setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices().get(0));
+		  }
+		 
 		 //getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
 	}
@@ -1110,11 +1097,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	/**
 	  * To get Approver Pick List  in Request Note
 	 */
-	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNoteApprovalUser approver){
+	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNote requestNote){
 		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
-		 for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
-			 approver.setPmUser(pmUser);
-		      results.add(approver);
+		for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
+			ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
+			approver.setPmUser(pmUser);
+			approver.setRequestNote(requestNote);
+			results.add(approver);
 		}
 		return results;
 	}
@@ -1173,15 +1162,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public PmOrgProfile ptjNameEvent() {
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
 		try {
-			
-		if (getManagedBean().getOrgProfileId() != null) {
-			for (PmOrgProfile orgProfile : getManagedBean().getUserDivisionList()) {
-				if (orgProfile.getOrgProfileId().equals(getManagedBean().getOrgProfileId())) {
-					ScRequestNote sRequestNote = getManagedBean().getRequestNote();
-					sRequestNote.setPmOrgProfile(orgProfile);
-					getManagedBean().setRequestNote(sRequestNote);
+
+			if (getManagedBean().getOrgProfileId() != null) {
+				if(getManagedBean().getUserDivisionList() != null && !getManagedBean().getUserDivisionList().isEmpty()){
+					for (PmOrgProfile orgProfile : getManagedBean().getUserDivisionList()) {
+						if (orgProfile.getOrgProfileId().equals(getManagedBean().getOrgProfileId())) {
+							ScRequestNote sRequestNote = getManagedBean().getRequestNote();
+							sRequestNote.setPmOrgProfile(orgProfile);
+							getManagedBean().setRequestNote(sRequestNote);
+						}
+					}
 				}
-			}
+
 			//TODO Based on ptj selection have to get pid for request note 
 			 purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
@@ -1218,9 +1210,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						requestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 					}
 					
-					ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
+					//ScRequestSupplierItem scReqSupplierItem = getManagedBean().getRequestSupplierItem();
 					requestSupplierItem.setRequestNoteItem(requestItem);
-					requestSupplierItems.add(scReqSupplierItem);
+					requestSupplierItems.add(requestSupplierItem);
 				    
 					// request Note Items
 					requestItem.setSupplierItems(requestSupplierItems);

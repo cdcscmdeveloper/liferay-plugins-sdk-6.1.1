@@ -140,7 +140,7 @@
 				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" 
 				     size="30"  required="true" maxlength="19"
 				     id="unitPrice" label="#{lbl['lbl.sc.purchase.in.default.unit.price']}"
-				     disabled="#{!purchaseInDefaultBackingBean.managedBean.approverFlag}">
+				     disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
 				      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 				   </p:inputText>
@@ -214,10 +214,10 @@
 			     <table>
 				   <tr>
 					  <td rowspan="2" style="vertical-align: top;" align="left">
-						  <h:graphicImage value="#{purchaseInDefaultBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
+						  <h:graphicImage value="#{purchaseInDefaultBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 					 </td>
 					 <td width="6"></td>
-					 <td><h:outputText value="#{remarkVar.user.userName}"/>,
+					 <td><h:outputText value="#{remarkVar.createdUser.userName}"/>,
 					     <h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 						 	<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -225,9 +225,9 @@
 					</td>
 				  </tr>
 				   <tr><td></td>
-					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}" id="remark" label="Remarks" required="true"/>
+					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" rendered="#{remarkIndex==0}" id="remark" required="true"/>
 					               
-						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
 					  <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 
 					        <p:message id="remarkMsg" for="remark" display="icon" /></td>
@@ -258,7 +258,7 @@
 				    <td rowspan="2" style="vertical-align: top;" align="left">
 					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 					  </td>
-				   <td><h:outputText value="#{attachFile.user.userName}" />, 
+				   <td><h:outputText value="#{attachFile.createdUser.userName}" />, 
 					 <h:outputText  value="#{attachFile.changedDate}">
 					  	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					 </h:outputText></td>

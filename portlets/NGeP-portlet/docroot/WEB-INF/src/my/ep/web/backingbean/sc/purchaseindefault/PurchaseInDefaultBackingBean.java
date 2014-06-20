@@ -195,7 +195,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// WorkFlow Status 
 				scPurchaseInDefault.setWorkFlowStatuses(null);
 				// remarks
-				scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+				//scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+				
 				if(getManagedBean().getAttachments() != null){
 					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
 				}
@@ -332,15 +333,18 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
     */
    private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
 	   IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-	   List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
 	   FacesScopes facesScopes = new FacesScopes();
+	   List<ScPIDRemark> results =   scPurchaseInDefault.getRemarks();
+		if(results == null){
+			results = new ArrayList<ScPIDRemark>();
+		} 
+	   
 	   if (results.size() == 0
-			   || !compareUserName(results.get(0).getUser().getLoginId())) {
+			   || !compareUserName( results.get(0).getCreatedUser().getLoginId())) {
 		   ScPIDRemark remark = new ScPIDRemark();
 		   remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		   remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		   remark.setChangedBy(remark.getCreatedBy());
-		   remark.setUser(facesScopes.getUserSessionBean());
 		   remark.setCreatedUser(facesScopes.getUserSessionBean());
 		   if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
 			   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
@@ -365,10 +369,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
     */
    private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
 	   List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-	   ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
-	   scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
 	   for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
+		   ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
 		   scPIDApprovalUser.setPmUser(pmUser);
+		   scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
 		   results.add(scPIDApprovalUser);
 	   }
 	   return results;
@@ -383,7 +387,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_SUBMISSION)){
 			   //getManagedBean().setRequisitionerFlag(true);
 			   getManagedBean().setApproverFlag(false);
-		   } else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
+		   } else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_VERIFICATION)){
 			   //getManagedBean().setRequisitionerFlag(true);
 			   getManagedBean().setApproverFlag(true);
 		   }
@@ -423,8 +427,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   attachment = new ScPurchaseInDefaultAttachment();
 			   attachment.setScPurchaseInDefault(purchaseInDefault);
 		   }
-		   attachment.setUser(facesScopes.getUserSessionBean());
 		   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		   attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		  
 		   uploadAttachment(event.getFile(), attachment);
 		   attachments.add(attachment);
 		   getManagedBean().setAttachments(attachments);
@@ -587,25 +592,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				   contractItem	=	ConIresDTO.getCtContractItem();
 				   purchaseInDefault.setContractedItem(contractItem);
 			   }
-			   List<ScPIDRemark> results =  new ArrayList<ScPIDRemark>();
-			   if(purchaseInDefault.getRemarks() != null){
-				   for (ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()) {
-					   scPIDRemark.setUser(scPIDRemark.getCreatedUser());
-					   results.add(scPIDRemark);
-				   }
+			   // remarks
+			   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
 
-				   ScPIDRemark remark = new ScPIDRemark();
-				   remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				   remark.setChangedBy(remark.getCreatedBy());
-				   remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				   remark.setUser(facesScopes.getUserSessionBean());
-				   remark.setCreatedUser(facesScopes.getUserSessionBean());
-				   remark.setPurchaseInDefault(purchaseInDefault);
-				   results.add(remark);
-				   purchaseInDefault.setRemarks(results);
-			   }
-
-
+			   if(purchaseInDefault.getScPurchaseInDefaultAttachment() != null){
+				   purchaseInDefault.getScPurchaseInDefaultAttachment().setUser(purchaseInDefault.getScPurchaseInDefaultAttachment().getCreatedUser());
+				 }
+			   
 			   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 			   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
 			   attachment.setUser(facesScopes.getUserSessionBean());
@@ -616,6 +609,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   getManagedBean().setOutComes(res.getAction());
 			   getManagedBean().setPurchaseInDefault(purchaseInDefault);
 			   getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
+			   getManagedBean().setPmOrgProfile(purchaseInDefault.getPmOrgProfile());
 			   getManagedBean().setAttachments(attachments);
 			   getCurrentStatus(res.getDocStatus().longValue()); 
 

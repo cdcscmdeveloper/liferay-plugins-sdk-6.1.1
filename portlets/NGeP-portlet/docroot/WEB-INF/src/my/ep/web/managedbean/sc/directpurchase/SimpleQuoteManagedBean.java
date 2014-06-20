@@ -155,8 +155,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private int selectedTabIndex;
 	
-	
-	
 	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
 	private String quoteNo;
 

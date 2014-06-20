@@ -62,6 +62,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -326,15 +327,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		    	directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		    	PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();	
+		    	ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 		    	FacesScopes facesScopes = new FacesScopes();
 		    	ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 
-		    	if (getManagedBean().getPriceType() != null) {
-		    		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		    		parameterReqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-		    		parameterReqDTO.setParameterCode(getManagedBean().getPriceType());
-		    		resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		    	}
 
 		    	List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 		    	ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
@@ -344,9 +340,22 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
 		    	requestNoteDtl.setScRequestNote(requestNote);
 		    	requestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
+		    	
+		    	parameterReqDTO = new ParameterReqDTO();
+		    	parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+		    	parameterReqDTO.setParameterCode(requestNoteDtl.getProcurementType().getParameterCode());
+		    	resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			    requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+		    	
+		    	if (getManagedBean().getPriceType() != null) {
+		    		parameterReqDTO = new ParameterReqDTO();
+		    		parameterReqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+		    		parameterReqDTO.setParameterCode(getManagedBean().getPriceType());
+		    		resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		    	}
 		    	requestNoteDtl.setPriceType(resDTO.getPmParameter());
 		    	requestNoteDtls.add(requestNoteDtl);
-
+		    	
 		    	List<ScRequestSupplierItem> requestSupplierItems =  new  ArrayList<ScRequestSupplierItem>();
 		    	if(prInquiry.getScRequestSupplierItems() != null && !prInquiry.getScRequestSupplierItems().isEmpty()){
 		    		for (ScRequestSupplierItem scRequestSupplierItem :  prInquiry.getScRequestSupplierItems()) {
@@ -364,7 +373,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 
 			     prInquiry.setScRequestSupplierItems(requestSupplierItems);
 			     prInquiry.setCreatedDate(DateUtils.getCurrentDate());
-			     prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 			     // setting remarks 
 			     prInquiry.setRemarks(initializeRemarks(prInquiry));
 			      // WorkFlow Status
@@ -500,14 +508,16 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	public List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		FacesScopes facesScopes = new FacesScopes();
-		List<ScPRIRemark> results =  new ArrayList<ScPRIRemark>();
+		List<ScPRIRemark> results =   prInquiry.getRemarks();
+		if(results == null){
+			results = new ArrayList<ScPRIRemark>();
+		} 
 		if (results.size() == 0
-				|| !compareUserName(results.get(0).getUser().getLoginId())) {
+				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
 			ScPRIRemark remark = new ScPRIRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
-			remark.setUser(facesScopes.getUserSessionBean());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			if (getManagedBean().getScPrInquiry().getRemarks() != null
 					&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
@@ -598,7 +608,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	
 	public	String	requisitionerAction(String action){
 		if(StringUtils.equalsIgnoreCase("PROCESSED",action)){
-			ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 			//redirect to requestNote screen
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -619,24 +628,24 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				if (requestNoteBackingBean == null) {
 					requestNoteBackingBean = new RequestNoteBackingBean();
 				}
+				
 				List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-				if( prInquiry.getScRequestSupplierItems() != null && !prInquiry.getScRequestSupplierItems().isEmpty()){
-					for (ScRequestSupplierItem requestSupplierItem : prInquiry.getScRequestSupplierItems()) {
-						requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
-						ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
-						requestItem.setSupplierItems(prInquiry.getScRequestSupplierItems());
+				if( requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
+					for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 						parameterReqDTO = new ParameterReqDTO();
 						parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
 						parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-						requestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-						requestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
-						requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
-						requestNoteDtl.setRequestItem(requestItem);
-						requestNoteDtl.setAssignedUser(new PmUser());
+						scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
+						scRequestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
+						scRequestNoteDtl.setAssignedUser(new PmUser());
+						requestNoteBackingBean.getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType());
+						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
+						requestNoteDtls.add(scRequestNoteDtl);
 					}
-					requestNoteDtls.add(requestNoteDtl);
+					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNoteDtls.get(0).getScRequestSupplierItem());
 				}
+				
 				initializeRemarks(prInquiry);
 				requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -657,12 +666,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+				
 				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
 				parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				
 				
 				scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 				requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
@@ -673,16 +682,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				//redirect to RequestNote screen
 				return "commonRequestNote";
 			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
-						MessageUtils.getMessage("Stock not available !",
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),getManagedBean().getScPrInquiry().getPrInquiryNo()},
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
-
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
+				throw new EpException("Out of stock.");
 			}
 		}else {
 			//cancel BPM task
@@ -718,7 +718,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			}
 			return null;
 		}
-		return null;
 	}
 	
 	 /**
@@ -753,31 +752,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				prInquiryReqDTO.setFetchSubEntity(true);
 				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 		        ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
-		        List<ScPRIRemark> results =  new ArrayList<ScPRIRemark>();
-		        if(prInquiry.getRemarks() != null){
-		        	for (ScPRIRemark remark : prInquiry.getRemarks()) {
-		        		remark.setUser(remark.getCreatedUser());
-		        		results.add(remark);
-		        	}
-		        	ScPRIRemark remark = new ScPRIRemark();
-		        	remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		        	remark.setChangedBy(remark.getCreatedBy());
-		        	remark.setUser(facesScopes.getUserSessionBean());
-		        	remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		        	PmStatus status = new PmStatus();
-					status.setStatusId(res.getDocStatus().longValue());
-				    StatusReqDTO statusReqDTO = new StatusReqDTO();
-				    if (status != null) {
-				     statusReqDTO.setStatusId(status.getStatusId());
-				     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-				     remark.setPmStatus(statusResDTO.getPmStatus());
-				    }
-		        	remark.setCreatedUser(facesScopes.getUserSessionBean());
-		        	results.add(remark);
-		        	remark.setPrInquiry(prInquiry);
-		        	prInquiry.setRemarks(results);
-		        }
-				 
+		        // remarks
+		        prInquiry.setRemarks(initializeRemarks(prInquiry));
+		        
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
 					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 					ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);

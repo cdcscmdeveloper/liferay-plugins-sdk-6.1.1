@@ -68,7 +68,7 @@
 									var="pmOrgProfile"
 									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change" update="@form" partialSubmit="true"
+								<p:ajax event="change" update="@([id$=requestNoteId])" partialSubmit="true"
 									process="@this"
 									listener="#{requestNoteBackingBean.ptjNameEvent}" />
 							</p:selectOneMenu>
@@ -127,7 +127,7 @@
 				  </p:commandLink> 
 				</p:column>
 
-				<p:column style="width:10%">
+				<p:column style="width:10%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
@@ -145,13 +145,13 @@
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
 				
-				<p:column style="width:10%">
+				<p:column style="width:10%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 				
-					<p:selectOneMenu id="priceType" style="margin-bottom: 5px;"
+					<p:selectOneMenu id="priceType" 
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -205,12 +205,12 @@
 					</ui:fragment>
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
 					   disabled="true" size="4" />
 				</p:column>
 				
-				<p:column style="width:10%">
+				<p:column style="width:10%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
@@ -226,7 +226,7 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column style="width:16%">
+			    <p:column style="width:20%;">
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />

@@ -141,7 +141,6 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
-		populateUserDivisionList();
 	}
 	
 	/**
@@ -255,6 +254,8 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// location level by default - district 
 		getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
+		
+		populateUserDivisionList();
 
 		return "simpleQuote";
 	}
@@ -1407,6 +1408,8 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		
+		initializeRemarks(getManagedBean().getScQuote());
 		procurementTypeEvent();
 		// update suppCriteria
 		// RequestContext.getCurrentInstance().update("suppCriteria");
