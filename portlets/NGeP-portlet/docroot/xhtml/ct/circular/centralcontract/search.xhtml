@@ -17,10 +17,10 @@
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:200px;" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
-				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  
+				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"   readonlyInput="true"
 					value="#{centralContractBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cenddt']}" />
-				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					value="#{centralContractBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" />					

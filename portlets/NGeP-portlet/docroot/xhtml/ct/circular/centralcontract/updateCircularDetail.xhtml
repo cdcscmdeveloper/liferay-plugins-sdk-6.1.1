@@ -11,8 +11,8 @@
 				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
 				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
-				<td rowspan="2"><p:inputTextarea cols="31" rows="3"
-						style=" margin-bottom:5px;"
+				<td rowspan="2"><p:inputTextarea rows="3"
+						style="width:170px; margin-bottom:5px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 				</td>
 			</tr>
@@ -49,10 +49,10 @@
 		  <tr>
 		    <td> <h:outputLabel value="Extension Start Date" /></td>
 		    <td><p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button" /></td>
+		       readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button" /></td>
 		    <td><h:outputLabel value="Extension End Date" /></td>
 		    <td><p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" /></td>
+				readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" /></td>
 		  </tr>  
 	</table>
 </ui:composition>

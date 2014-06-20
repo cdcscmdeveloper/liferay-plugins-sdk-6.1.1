@@ -23,8 +23,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt1" cols="30" rows="3" style=" margin-bottom:0px;" maxlength="200" required="true" 
-						label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
+					<p:inputTextarea id="circularNameTxt1" rows="3" style="width:190px; margin-bottom:0px;" maxlength="200"
+					   required="true" label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
 					<p:message for="circularNameTxt1" display="icon" />
@@ -126,11 +126,11 @@
 			
 			<tr>
 			<td><p:outputLabel value="#{lbl['lbl.ct.pc.extstartdt']}" /></td>
-			<td><p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
+			<td><p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" id="popupButtonCal5" showOn="button" /></td>
 			<td></td>	
 			<td><p:outputLabel value="#{lbl['lbl.ct.pc.extenddt']}" /></td>
-			<td><p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extendEndDate}" 
+			<td><p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extendEndDate}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" id="popupButtonCal6" showOn="button" /></td>				
 		    </tr>
 		 </table>

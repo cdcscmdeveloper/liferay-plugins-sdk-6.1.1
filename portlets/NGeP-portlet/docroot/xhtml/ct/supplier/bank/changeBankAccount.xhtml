@@ -95,7 +95,7 @@
 		        </h:panelGroup>
 		        <h:panelGrid>
 		           <p:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.ctContract.contractName}" 
-			           rows="3" cols="37" disabled="true" autoResize="false" />	
+			           rows="3" style="width:200px;" disabled="true" autoResize="false" />	
 			    </h:panelGrid>
 			 </h:panelGrid>
 		</p:outputPanel>
@@ -134,7 +134,7 @@
 			 </div>
 		   </h:panelGroup>
 		   <h:panelGrid>
-		       <p:inputTextarea id="bankAddress" rows="3" cols="37" disabled="true" maxlength="250" autoResize="false" 
+		       <p:inputTextarea id="bankAddress" rows="3" style="width:200px;" disabled="true" maxlength="250" autoResize="false" 
 		         value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
 		   </h:panelGrid>  		                
         </h:panelGrid>
@@ -169,7 +169,7 @@
 			   </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
-				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" cols="37" autoResize="false"  
+				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" style="width:200px;" autoResize="false"  
 				     value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"/>
 			 </h:panelGrid>
 			 <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/> 
