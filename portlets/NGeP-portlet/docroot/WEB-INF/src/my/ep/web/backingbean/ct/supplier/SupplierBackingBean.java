@@ -204,9 +204,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				this.getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
 				this.getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
 				
+				reset();
 				if (this.getManagedBean().getFactoring().getPmFinancialBranch() == null) {
 					this.getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
 				}
+				else {
+					resetBranch();
+				}
+				
 				
 				if(getManagedBean().getFactoring().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED) {
 					getManagedBean().setRemoveFactoring(true);
@@ -575,16 +580,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					this.getManagedBean().setExpDate(resDTO.getContract().getCurrentContractVer().getCtContractValue().getExpDate());
 					this.getManagedBean().setCtContract(resDTO.getContract());
 					if(resDTO.getContract().getCtFactoring()!=null) {
-						//TODO If status still in progress(not complete), should prompt error to avoid supplier for submit the request
-						
 						getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
 						getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						getManagedBean().setRemoveFactoring(true);
 						PmStatus pmStatus = new PmStatus();
 						pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
 						getManagedBean().getFactoring().setStatus(pmStatus);
+						reset();
 						if (this.getManagedBean().getFactoring().getPmFinancialBranch() == null) {
 							this.getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+						}
+						else {
+							resetBranch();
 						}
 					}
 				} else {
@@ -673,6 +680,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		IQTAwardSO qtAwardSO = null;
 		ISupplierSearchSO supplierSearchSO = null;
 		IContractAmendmentSO contractAmendmentSO = null;
+		IContractSupplierSO contractSupplierSO = null;
 		try {
 			supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO1 = new SupplierSearchReqDTO();
@@ -682,7 +690,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			for(SmSupplier smSupplier : resDTO1.getResultBean().getResultList()) {
 				supplierIdList.add(smSupplier.getSupplierId());
 			}
-			
+			// Retrieve amendment loa list
 			contractAmendmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
 			amendmentReqDTO.setSupplierIds(supplierIdList);
@@ -692,8 +700,24 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			qtAwardSO = (IQTAwardSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			reqDTO.setSupplierIdList(supplierIdList);
 			if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
-				reqDTO.setExcludeLoaIdList(amendmentResDTO.getAmendmentLoaIds());
+				if(reqDTO.getExcludeLoaIdList() == null){
+					reqDTO.setExcludeLoaIdList(new ArrayList<Long>());
+				}
+				reqDTO.getExcludeLoaIdList().addAll(amendmentResDTO.getAmendmentLoaIds());
 			}
+			
+			// Retrieve in progress factoring loa list			
+			contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			contractSupplierReqDTO.setSupplierIds(supplierIdList);
+			ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveProgressingLoaList(contractSupplierReqDTO);
+			if(contractSupplierResDTO.getProgressigLoaIds()!=null && contractSupplierResDTO.getProgressigLoaIds().size()>0) {
+				if(reqDTO.getExcludeLoaIdList() == null){
+					reqDTO.setExcludeLoaIdList(new ArrayList<Long>());
+				}
+				reqDTO.getExcludeLoaIdList().addAll(contractSupplierResDTO.getProgressigLoaIds());
+			}
+			
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAListBySupplier(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			items = new SelectItem[list.size() + 1];
