@@ -2868,14 +2868,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void preRenderSupplierCatalogue() {
 
 		
-		this.getManagedBean().setSearchDataModel(null);
-		this.getManagedBean().setItemNameFilterBean(null);
-		this.getManagedBean().setSupplierNameFilterBean(null);
-		this.getManagedBean().setContractNoFilterBean(null);
-		this.getManagedBean().setCircularNoFilterBean(null);
-		this.getManagedBean().setMofNoFilterBean(null);
-		this.getManagedBean().setEpNoFilterBean(null);
-		this.getManagedBean().setBizRegNoFilterBean(null);
+		
+		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean());
+		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean());
+		this.getManagedBean().setContractNoFilterBean(new SearchFilterBean());
+		this.getManagedBean().setCircularNoFilterBean(new SearchFilterBean());
+		this.getManagedBean().setMofNoFilterBean(new SearchFilterBean());
+		this.getManagedBean().setEpNoFilterBean(new SearchFilterBean());
+		this.getManagedBean().setBizRegNoFilterBean(new SearchFilterBean());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
