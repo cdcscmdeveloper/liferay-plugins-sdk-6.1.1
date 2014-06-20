@@ -15,7 +15,7 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -29,20 +29,20 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="Warranty" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.warranty']}" toggleable="true">
 			<h:panelGrid columns="2">
-				<h:outputLabel value="No Of Years Waranty"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.spec.score.num.yrs.warranty']}"></h:outputLabel>
 				<p:inputText></p:inputText>
 			</h:panelGrid>
 		</p:panel>
 		<p:panel>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
 				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
@@ -62,7 +62,7 @@
 						value="#{specificationBackingBean.managedBean.warantySelectScore}" />
 			<ui:param name="componentName" value="Waranty" />
 			<ui:param name="scoringPnlId" value="warantyId" />
-			<ui:param name="scoringPnlName" value="Scoring For Total Warranty"></ui:param>
+			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.tot.warranty']}"></ui:param>
 			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -77,11 +77,11 @@
 			</div>
 		</h:panelGroup>
 		</p:panel>
-		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.tot.warranty']}" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 		<table>
 		<tr>
 		<td>
-		<p:outputLabel value="Max.Score"></p:outputLabel>
+		<p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
 		</td>
 		<td>
 		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>

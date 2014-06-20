@@ -7,12 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Search Delivery/Service Address" position="top"
-		widgetVar="deliveryAddress" modal="true" width="800" height="500">
+	<p:dialog header="#{lbl['lbl.sc.spec.search.delivery.address']}"
+		position="top" widgetVar="deliveryAddress" modal="true" width="800"
+		height="500">
 		<p:panel id="searDelivery" header="Search " toggleable="true">
 			<table>
 				<tr>
-					<td><h:outputLabel value="State" /></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.search.delivery.address.state']}" /></td>
 					<td><p:selectOneMenu style="width:200px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.stateId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
@@ -24,7 +26,8 @@
 								update="districtId"
 								listener="#{specificationBackingBean.districtBystate}"></p:ajax>
 						</p:selectOneMenu></td>
-					<td style="width: 200px;"><h:outputLabel value="District" /></td>
+					<td style="width: 200px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
 					<td><p:selectOneMenu id="districtId" style="width:200px;"
 							value="#{specificationBackingBean.managedBean.districtId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
@@ -35,7 +38,8 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="*Ministry" /></td>
+					<td><h:outputLabel
+							value="*#{lbl['lbl.sc.spec.search.delivery.address.ministry']}" /></td>
 					<td colspan="3"><p:selectOneMenu
 							style="width:400px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ministryId}">
@@ -50,7 +54,8 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="*Jabatan" /></td>
+					<td><h:outputLabel
+							value="*#{lbl['lbl.sc.spec.search.delivery.address.jabatan']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="departMent"
 							style="width:400px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.departmentId}">
@@ -65,7 +70,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="*PTJ" /></td>
+					<td><h:outputLabel value="*#{lbl['lbl.sc.spec.delivery.ptj']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="ptj" style="width:400px;"
 							value="#{specificationBackingBean.managedBean.ptjId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
@@ -83,7 +88,8 @@
 					update="deliveryAddress" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-					process="@this" action="#{specificationBackingBean.deliveryAddressReset}" />
+					process="@this"
+					action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
 		</p:panel>
 		<p:panel header="PTJ Delivery Address List">
@@ -106,17 +112,17 @@
 			</p:dataTable>
 
 		</p:panel>
-		
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" onclick="deliveryAddress.hide();"
-				icon="ui-icon-cancel"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
-				style="float:right;" process="@all" partialSubmit="true"
-				onclick="deliveryAddress.hide();" icon="ui-icon-accept"
-				update="@(.deliveryUpdate)"
-				oncomplete="deliveryService.paginator.endLink.click();"
-				actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
-		
+
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			style="float:right;" onclick="deliveryAddress.hide();"
+			icon="ui-icon-cancel"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+			style="float:right;" process="@all" partialSubmit="true"
+			onclick="deliveryAddress.hide();" icon="ui-icon-accept"
+			update="@(.deliveryUpdate)"
+			oncomplete="deliveryService.paginator.endLink.click();"
+			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
+
 
 	</p:dialog>
 </ui:composition>

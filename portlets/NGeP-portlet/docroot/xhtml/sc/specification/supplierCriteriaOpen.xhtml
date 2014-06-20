@@ -121,7 +121,7 @@
 		<h:panelGroup id="supplierallStae">
 
 
-			<p:panel header="Location List/Paid Up Capital"
+			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<table style="width: 100%">
 					<tr>
@@ -135,7 +135,7 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+						<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 						<td><p:selectOneMenu id="locLevels"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
@@ -194,7 +194,7 @@
 			</p:panel>
 
 
-			<p:panel header="Location List/Paid Up Capital"
+			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
 				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<table style="width: 100%">
 					<tr>
@@ -209,7 +209,7 @@
 					</tr>
 
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+						<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
@@ -261,9 +261,9 @@
 			</p:panel>
 
 
-			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="600"
+			<p:dialog  widgetVar="ZoneLocation" modal="true" width="600"
 				position="top" height="400">
-				<p:panel id="zonePopupPanel" header="ADD LOCATION">
+				<p:panel id="zonePopupPanel" header="#{lbl['lbl.sc.spec.zone.add.location']}">
 					<table styleClass="noBorders tr,noBorders td">
 						<TR>
 
@@ -312,11 +312,11 @@
 
 
 
-	<p:panel header="Qualified Supplier">
+	<p:panel header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
 		<table>
 			<tr>
 				<td style="width: 150px"><p:outputLabel
-						value="Total Supplierrs" /></td>
+						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true" />
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 						icon="ui-icon-search" partialSubmit="true" /></td>

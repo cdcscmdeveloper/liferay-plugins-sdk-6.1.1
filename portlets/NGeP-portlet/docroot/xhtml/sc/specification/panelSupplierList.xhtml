@@ -6,17 +6,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="ctZoneList" header="Location Details" toggleable="true">
+	<p:panel id="ctZoneList"
+		header="#{lbl['lbl.sc.spec.panel.location.details']}"
+		toggleable="true">
 
 
 		<p:dataTable id="ctSupplierZones"
 			value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
-			var="Zones" rowIndexVar="index"  
+			var="Zones" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.panelZoneSelect}"
 			dynamic="true">
-			
-			
-			<p:column headerText="Zone" style="width:90%">
+
+
+			<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
+				style="width:90%">
 				<p:tree value="#{Zones}" var="location" selectionMode="single">
 					<p:ajax event="select" update=":form:paneltabView:totalSupplier"
 						listener="#{specificationBackingBean.retriveZoneBySupplier}" />
@@ -30,16 +33,16 @@
 						<h:outputText value="#{location.districtId.districtName}" />
 					</p:treeNode>
 				</p:tree>
-				</p:column>
-				</p:dataTable>
-				
+			</p:column>
+		</p:dataTable>
 
-				<div align="right">
-					<p:commandButton oncomplete="ctZone.show();" update="ctZonedetails"
-						actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"
-						value="#{lbl['lbl.ct.ded.btn.add']}" process="@this"
-						icon="ui-icon-add"></p:commandButton>
-				</div>
+
+		<div align="right">
+			<p:commandButton oncomplete="ctZone.show();" update="ctZonedetails"
+				actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"
+				value="#{lbl['lbl.ct.ded.btn.add']}" process="@this"
+				icon="ui-icon-add"></p:commandButton>
+		</div>
 	</p:panel>
 	<!-- <ui:include src="/xhtml/sc/specification/supplierZoneSelect.xhtml"  -->
 	<ui:include src="supplierlist.xhtml" />

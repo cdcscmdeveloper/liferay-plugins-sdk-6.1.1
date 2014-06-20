@@ -52,7 +52,7 @@
 
 	</p:panel>
  -->
-	<p:panel header=" Scoring Setting" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}" toggleable="true">
 
 
 
@@ -142,7 +142,7 @@
 
 		<table>
 			<tr>
-				<td><h:outputText value="Qualified to Present/Demo(%) " /></td>
+				<td><h:outputText value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
 				<td><p:inputText style="text-align:right"
 						value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}"></p:inputText>
 					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
@@ -152,7 +152,7 @@
 
 
 			<tr>
-				<td><h:outputText value="Technical(%)" /></td>
+				<td><h:outputText value="#{lbl['lbl.sc.spec.recommendation.technical']}" /></td>
 				<td><p:inputText style="text-align:right"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}"></p:inputText>
 					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>

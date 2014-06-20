@@ -81,21 +81,21 @@
 								</h:panelGrid>
 							</h:panelGroup>
 						</p:panel> <h:panelGroup id="offeredPrice">
-							<p:panel header="Scoring For Offered Price">
+							<p:panel header="#{lbl['lbl.sc.spec.fin.score.scoring.offered.price']}">
 								<p:panelGrid style="margin-top:5px;width:100%;">
 									<f:facet name="header">
 
 										<p:row>
-											<p:column colspan="1">Offered Price</p:column>
-											<p:column colspan="1">From Variance(%)</p:column>
-											<p:column colspan="1">To Variance(%)</p:column>
-											<p:column>Below Variance(Score)</p:column>
-											<p:column>Within Variance(Score)</p:column>
-											<p:column>Above Variance(Score)</p:column>
+											<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.offer.price']}</p:column>
+											<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.from.varience']}</p:column>
+											<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.to.varience']}</p:column>
+											<p:column>#{lbl['lbl.sc.spec.fin.score.below.varience']}</p:column>
+											<p:column>#{lbl['lbl.sc.spec.fin.score.within.variance']}</p:column>
+											<p:column>#{lbl['lbl.sc.spec.fin.score.above.variance']}</p:column>
 										</p:row>
 									</f:facet>
 									<p:row>
-										<p:column style="font-weight: bold;">By package</p:column>
+										<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
 										<p:column style="font-weight: bold;">
 											<p:inputText style="text-align:right;"
 												value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}" />
@@ -119,7 +119,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column style="font-weight: bold;">By Item</p:column>
+										<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
 										<p:column style="font-weight: bold;">
 											<p:inputText style="text-align:right;"
 												value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}" />
@@ -147,11 +147,11 @@
 
 
 							</p:panel>
-						</h:panelGroup> <p:panel header="Passing Score">
+						</h:panelGroup> <p:panel header="#{lbl['lbl.sc.spec.fin.pasing.score']}">
 
 						<table>
 						<tr><td style="width:100px;">
-								<h:outputText value="Financial(%)" /></td>
+								<h:outputText value="#{lbl['lbl.sc.spec.fin.scoring.financial']}" /></td>
 								<td>
 								<p:inputText style="text-align:right" value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}"></p:inputText><p:spacer width="5"></p:spacer>
 								<h:outputText value="/100 " />

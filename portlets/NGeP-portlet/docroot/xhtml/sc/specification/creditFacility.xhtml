@@ -15,7 +15,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<ui:define name="contentSection">
 	
 		<div>
-		<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+		<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 	
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -29,7 +29,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 		<p:panel>
 	<table>
 	<tr>
-	<td><h:outputLabel value="Title"></h:outputLabel>
+	<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel>
 	</td>
 		<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText>
 	</td>
@@ -66,7 +66,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 		
 		<p:panel>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
 				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
@@ -100,11 +100,11 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 		</h:panelGroup>
 		
 		</p:panel>
-		<p:panel header="Scoring For Total Credit Facilities" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 		<table>
 		<tr>
 		<td>
-		<p:outputLabel value="Max.Score"></p:outputLabel>
+		<p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
 		</td>
 		<td>
 		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>

@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="frequency">
-       
+
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
 			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq '117'}">
 			<p:selectOneRadio
@@ -61,7 +61,9 @@
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
 					</p:column>
-					<p:column headerText="Start year" style="width:15%">
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
+						style="width:15%">
 						<!-- <p:selectOneMenu value="#{frequency.startYear}">
 
 					</p:selectOneMenu> -->
@@ -80,14 +82,17 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="End year" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+						style="width:15%">
 						<!-- <p:selectOneMenu value="#{frequency.endYear}">
 
 					</p:selectOneMenu> -->
 						<p:inputText value="#{frequency.endYear}" disabled="true"></p:inputText>
 
 					</p:column>
-					<p:column headerText="Total Months" style="width:10%">
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
+						style="width:10%">
 						<h:outputText id="scheduleDetails"
 							value="#{frequency.totalMonths}"></h:outputText>
 					</p:column>
@@ -141,7 +146,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="Start year" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" style="width:15%">
 						<!-- <p:selectOneMenu value="#{payment.fromDate}">
 
 						</p:selectOneMenu> -->
@@ -159,7 +164,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="End year" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" style="width:15%">
 						<!-- <p:selectOneMenu value="#{payment.toDate}">
 
 						</p:selectOneMenu> -->

@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="circular" header="Search">
+	<p:panel id="circular" header="#{lbl['lbl.cm.search']}">
 
-		<table style="width:60%">
+		<table style="width: 60%">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.circular.no']}"></h:outputLabel></td>
 				<td><p:inputText maxlength="50"
@@ -18,11 +18,13 @@
 			<tr>
 				<td style="width: 40%"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.circular.name']}"></h:outputLabel></td>
-				<td><h:inputText style="margin-bottom:5px;" maxlength="200"  size="100"
+				<td><h:inputText style="margin-bottom:5px;" maxlength="200"
+						size="100"
 						value="#{specificationBackingBean.managedBean.circularName}" /></td>
 			</tr>
 			<tr>
-				<td style="width: 40%"><h:outputLabel value="Item Name"></h:outputLabel></td>
+				<td style="width: 40%"><h:outputLabel
+						value="#{lbl['lbl.sc.spec.circular.bo.item.name']}"></h:outputLabel></td>
 				<td><h:inputText maxlength="100"
 						value="#{specificationBackingBean.managedBean.itemName}"
 						size="100" /></td>
@@ -44,77 +46,88 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.circular.list']}" toggleable="true">
 
-		
-			<p:dataTable id="circularList" var="circular" style="width:100%"
-				value="#{specificationBackingBean.searchCircular}"
-				rowKey="#{circular}" rowIndexVar="index" lazy="true">
-				<ac:paginator for="circularList"></ac:paginator>
-				<p:ajax event="rowSelectRadio"
-					listener="#{specificationBackingBean.circularListSelect}"
-					update=":form:panelItemGroupList"></p:ajax>
-				<p:columnGroup>
-					<p:row>
 
-						<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
-							style="width:15%">
-						</p:column>
+		<p:dataTable id="circularList" var="circular" style="width:100%"
+			value="#{specificationBackingBean.searchCircular}"
+			rowKey="#{circular}" rowIndexVar="index" lazy="true">
+			<ac:paginator for="circularList"></ac:paginator>
+			<p:ajax event="rowSelectRadio"
+				listener="#{specificationBackingBean.circularListSelect}"
+				update=":form:panelItemGroupList"></p:ajax>
+			<p:columnGroup>
+				<p:row>
 
-						<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
-							style="width:20%">
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
+						style="width:15%">
+					</p:column>
 
-						<p:column headerText="Circular Type" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
+						style="width:20%">
+					</p:column>
 
-						</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.circular.bo.circular.type']}"
+						style="width:15%">
 
-
-
-						<p:column headerText="Effective Date" style="width:15%">
-
-						</p:column>
-
-						<p:column headerText="Expiry Date" style="width:15%">
-
-						</p:column>
-
-						<p:column style="width:5%">
-
-						</p:column>
-
-					</p:row>
-				</p:columnGroup>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
-					style="width:15%">
-					<h:outputText value="#{circular.circularNo}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
-					style="width:20%">
-					<h:outputText value="#{circular.name}"></h:outputText>
-				</p:column>
-
-				<p:column headerText="Circular Type" style="width:15%">
-					<h:outputText value="#{circular.ctCircular.circularType}"></h:outputText>
-				</p:column>
+					</p:column>
 
 
-				<p:column headerText="Effective Date" style="width:15%">
-					<h:outputText value="#{circular.startDate}">
-						<f:convertDateTime
+
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.circular.bo.effective.date']}"
+						style="width:15%">
+
+					</p:column>
+
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.circular.bo.expiary.date']}"
+						style="width:15%">
+
+					</p:column>
+
+					<p:column style="width:5%">
+
+					</p:column>
+
+				</p:row>
+			</p:columnGroup>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.circular.no']}"
+				style="width:15%">
+				<h:outputText value="#{circular.circularNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.circular.name']}"
+				style="width:20%">
+				<h:outputText value="#{circular.name}"></h:outputText>
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.spec.circular.bo.circular.type']}"
+				style="width:15%">
+				<h:outputText value="#{circular.ctCircular.circularType}"></h:outputText>
+			</p:column>
+
+
+			<p:column
+				headerText="#{lbl['lbl.sc.spec.circular.bo.effective.date']}"
+				style="width:15%">
+				<h:outputText value="#{circular.startDate}">
+					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</p:column>
-				<p:column headerText="Expiry Date" style="width:15%">
-					<h:outputText value="#{circular.endDate}">
-						<f:convertDateTime
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.circular.bo.expiary.date']}"
+				style="width:15%">
+				<h:outputText value="#{circular.endDate}">
+					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</p:column>
-				<p:column headerText="Selection" selectionMode="single"
-					style="width:5%"></p:column>
-			</p:dataTable>
-		
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.circular.list.selection']}"
+				selectionMode="single" style="width:5%"></p:column>
+		</p:dataTable>
+
 	</p:panel>
 	<h:panelGroup id="panelItemGroupList">
 		<ui:fragment
@@ -140,26 +153,32 @@
 
 								</p:column>
 
-								<p:column headerText="Specification" style="width:15%">
+								<p:column
+									headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+									style="width:15%">
 
 								</p:column>
-								<p:column headerText="Item Category" style="width:10%">
-
-								</p:column>
-
-								<p:column headerText="Panel Coverage" style="width:5%">
-
-								</p:column>
-
-								<p:column headerText="UOM" style="width:15%">
+								<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+									style="width:10%">
 
 								</p:column>
 
-								<p:column headerText="Min.Order Qty" style="width:15%">
+								<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+									style="width:5%">
 
 								</p:column>
 
-								<p:column headerText="Had Pembelian Luar Kontrak"
+								<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+									style="width:15%">
+
+								</p:column>
+
+								<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+									style="width:15%">
+
+								</p:column>
+
+								<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
 									style="width:18%">
 
 								</p:column>
@@ -179,36 +198,43 @@
 							<h:outputText value="#{panelItem.itemName}" />
 						</p:column>
 
-						<p:column headerText="Specification" style="width:15%">
+						<p:column
+							headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+							style="width:15%">
 							<h:outputText value="#{panelItem.specification}" />
 
 						</p:column>
-						<p:column headerText="Item Category" style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+							style="width:10%">
 							<h:outputText
 								value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
 						</p:column>
 
-						<p:column headerText="Panel Coverage" style="width:5%">
+						<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+							style="width:5%">
 							<h:outputText
 								value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
 						</p:column>
 
-						<p:column headerText="UOM" style="width:15%">
+						<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+							style="width:15%">
 							<h:outputText value="#{panelItem.pmUom.uomId}" />
 						</p:column>
 
-						<p:column headerText="Min.Order Qty" style="width:15%">
+						<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+							style="width:15%">
 							<h:outputText value="#{panelItem.minimumOrderQty}" />
 						</p:column>
 
-						<p:column headerText="Had Pembelian Luar Kontrak"
+						<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
 							style="width:18%">
 
 						</p:column>
 
 
-						<p:column headerText="Selection" selectionMode="single"
-							style="width:2%" />
+						<p:column
+							headerText="#{lbl['lbl.sc.spec.circular.list.selection']}"
+							selectionMode="single" style="width:2%" />
 
 					</p:dataTable>
 				</h:panelGrid>

@@ -27,17 +27,17 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="Title"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150" ></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
 
-		<p:panel header="Company Experience(For Federal Private)"
+		<p:panel header=" #{lbl['lbl.sc.spec.company.exp.fed.private']}"
 			toggleable="true" collapsed="true">
 			<h:panelGrid columns="2">
 				<h:outputLabel
-					value="* For company experience on the product/service which has participated since  year "></h:outputLabel>
+					value="*#{lbl['lbl.sc.spec.company.exp.since.year']} "></h:outputLabel>
 				<p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}" ></p:inputText>
 			</h:panelGrid>
 
@@ -96,7 +96,7 @@
 
 		<p:panel>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
 				<p:selectOneMenu
 					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
@@ -134,11 +134,11 @@
 					</div>
 				</h:panelGroup>
 			</p:panel>
-			<p:panel header="Scoring For Total No Of Contracts"
+			<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="Max.Score"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
 						</td>
@@ -151,7 +151,7 @@
 
 		<p:panel>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Score Type"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
 				<p:selectOneMenu
 					value="#{specificationBackingBean.managedBean.companyScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
@@ -190,11 +190,11 @@
 				</h:panelGroup>
 
 			</p:panel>
-			<p:panel header="Scoring For Total No Of Years"
+			<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}"
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="Max.Score"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{specificationBackingBean.managedBean.scQtContractScore.score}"></p:inputText>
 						</td>

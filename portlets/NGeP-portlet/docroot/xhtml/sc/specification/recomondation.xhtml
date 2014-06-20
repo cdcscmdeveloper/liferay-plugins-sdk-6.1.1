@@ -15,7 +15,8 @@
 			<p:panel id="package" header="By Package">
 				<table>
 					<tr>
-						<td><h:outputLabel value="Technical(%)"></h:outputLabel></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.recommendation.technical']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
 								<p:ajax event="blur" update="totalrecommendation"
@@ -24,7 +25,8 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="Financial(%)"></h:outputLabel></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.fin.scoring.financial']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 								<p:ajax event="blur" update="totalrecommendation"
@@ -33,30 +35,34 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="Total"></h:outputLabel></td>
-						<td><p:inputText id="totalrecommendation" style="text-align:right"
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.recommendation.total']}"></h:outputLabel></td>
+						<td><p:inputText id="totalrecommendation"
+								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageTotal}"
-								disabled="true" /><p:spacer width="5"/> <h:outputLabel value="/100%"></h:outputLabel>
-						</td>
+								disabled="true" /> <p:spacer width="5" /> <h:outputLabel
+								value="/100%"></h:outputLabel></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right"
-								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}" /><p:spacer width="5"/>
-							<h:outputLabel value="/100%"></h:outputLabel></td>
+								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}" />
+							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 			</p:panel>
 
 
 
-			<p:panel id="item" header="By Item">
+			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}">
 				<table>
 					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" /><p:spacer width="5"/>
-							<h:outputLabel value="/100%"></h:outputLabel></td>
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
+							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
@@ -64,13 +70,13 @@
 
 						<p:row>
 							<p:column colspan="1"></p:column>
-							<p:column colspan="1">Item</p:column>
-							<p:column colspan="1">Others</p:column>
-							<p:column>Score(%)</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
+							<p:column>#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
 						</p:row>
 					</f:facet>
 					<p:row>
-						<p:column style="font-weight: bold;">Technical(%)</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.recommendation.technical']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
@@ -94,7 +100,7 @@
 						</p:column>
 					</p:row>
 					<p:row>
-						<p:column style="font-weight: bold;">Financial(%)</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
@@ -126,15 +132,16 @@
 
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
-			<p:panel id="recommendTechnicalItem" header="By Package">
+			<p:panel id="recommendTechnicalItem"
+				header="#{lbl['lbl.sc.spec.fin.score.by.package']}">
 				<table>
 
 					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
-								style="text-align:right" /><p:spacer width="5"/> <h:outputLabel value="/100%"></h:outputLabel>
-						</td>
+								style="text-align:right" /> <p:spacer width="5" /> <h:outputLabel
+								value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 			</p:panel>
@@ -142,10 +149,10 @@
 			<p:panel header="By Item">
 				<table>
 					<tr>
-						<td><h:outputLabel value="Passing Score(%)"></h:outputLabel></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" /><p:spacer width="5"/>
-							<h:outputLabel value="/100%"></h:outputLabel></td>
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
+							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
@@ -153,14 +160,14 @@
 
 						<p:row>
 							<p:column colspan="1"></p:column>
-							<p:column colspan="1">Item</p:column>
-							<p:column colspan="1">Others</p:column>
-							<p:column>Score(%)</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
+							<p:column>#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
 						</p:row>
 					</f:facet>
 
 					<p:row>
-						<p:column style="font-weight: bold;">Financial(%)</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">

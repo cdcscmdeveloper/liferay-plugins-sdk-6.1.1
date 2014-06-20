@@ -28,7 +28,7 @@
 						id="estPrice" required="true"
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}">
-						
+
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{specificationBackingBean.setProcurementMode(specificationBackingBean.managedBean.scQt)}"></p:ajax>
 						<f:convertNumber
@@ -156,12 +156,12 @@
 	</p:panel>
 
 	<h:panelGroup id="generalLocationList">
-		<p:panel header="Location List"
+		<p:panel header="#{lbl['lbl.sc.spec.zone.location.list']}"
 			rendered="#{(specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 100px"><p:outputLabel value="Location Level" />
-					</td>
+					<td style="width: 100px"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 					<td><p:selectOneMenu id="locationLevels"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 							style="width: 178px;">
@@ -204,7 +204,8 @@
 						</p:tree>
 					</p:column>
 
-					<p:column headerText="Action" style="width:10%">
+					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+						style="width:10%">
 						<p:commandLink
 							actionListener="#{specificationBackingBean.editBusinessOwnerZoneLocation(zoneTree,index)}"
 							process="@this" update="@([id$=zonePopupGeneral])"
@@ -227,13 +228,15 @@
 			</div>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true"
-		width="600" position="top" height="400">
+	<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+		widgetVar="ZoneGeneral" modal="true" width="600" position="top"
+		height="400">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 
 				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></TD>
+					<TD width="20%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel></TD>
 					<TD width="80%"><p:inputText size="70"
 							value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
 					</TD>
@@ -242,7 +245,7 @@
 
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel
-							value="Zone Location" /></TD>
+							value="#{lbl['lbl.sc.spec.zone.location']}" /></TD>
 					<TD width="80%"><p:panel></p:panel>
 						<div style="height: 300px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"

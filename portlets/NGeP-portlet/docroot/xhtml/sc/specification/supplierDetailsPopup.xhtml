@@ -23,11 +23,11 @@
 						readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Registration Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Registration No" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.no']}" /></td>
 				<td><p:inputText
 						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.regNo}"
 						size="30" readonly="true" disabled="true" /></td>
@@ -38,11 +38,11 @@
 						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.smMofAccounts[0].mofNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Income Tax Reference No" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Establishment Date" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
 				<td><p:inputText
 						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.establishDate}"
 						size="30" readonly="true" disabled="true">
@@ -51,42 +51,47 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Type of Company" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.type.company']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true"
 						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.businessType}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.mofexp']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true"
-						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.smMofAccounts[0].expDate}" >
-							<f:convertDateTime
+						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.smMofAccounts[0].expDate}">
+						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-						</td>
+					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Disciplinary Rating" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.displinary.rating']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Branch" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.branch']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td valign="top"><p:outputLabel value="Address" /></td>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
 				<td><p:inputTextarea rows="3" cols="32" readonly="true"
 						disabled="true" style=" margin-bottom:5px;" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Contact Person" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.contact.person']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Designation" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.supplier.designation']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Email" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 			</tr>
 		</table>
@@ -96,8 +101,8 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Close" icon="ui-icon-back"
-						onclick="suppDetails.hide();" />
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.close']}"
+						icon="ui-icon-back" onclick="suppDetails.hide();" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>
