@@ -460,7 +460,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
 		SelectItem[] items = null;
 		IFinancialOrgSO financialOrgSO;
-		flush();
+		
 		try {
 			int i = 1;
 			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
